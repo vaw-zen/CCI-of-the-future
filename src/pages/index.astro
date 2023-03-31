@@ -1,12 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Intro from "../components/Intro.astro";
+import Intro from "../components/Intro/Intro.astro";
 import Contact from "../components/Contact.astro";
 ---
 
 <Layout title="chaabane cleaning int.">
-	<Intro />
-	<Contact />
+	<section>
+		<Intro />
+	</section>
+	<section id="contact">
+		<Contact />
+	</section>
+	<footer style="height:10vh"></footer>
 </Layout>
 
-<style></style>
+<style>
+	@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;900&display=swap");
+	* {
+		margin: 0;
+		font-family: "Nunito Sans", sans-serif;
+		font-weight: 300;
+	}
+	
+</style>

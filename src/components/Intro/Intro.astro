@@ -1,0 +1,73 @@
+---
+import Fb from "../../assets/icons/FB.svg";
+import Instagram from "../../assets/icons/instagram.svg";
+import Whatsapp from "../../assets/icons/whatsapp.svg";
+import Scroll from "./scroll.jsx";
+---
+
+<main style="width:100vw; height:100vh; padding:5vw;box-sizing: border-box;">
+	<section style="width: 100%; height: 100%; color: white">
+		<div style="display: flex; justify-content: space-between;">
+			<div>
+				<div style="font-weight: 900;">AB</div>
+				<div style="font-weight: 900; position: relative; top: -10px;">
+					CD
+				</div>
+			</div>
+
+			<div style="display: flex; font-size: 13px;">
+				<div>SERVICES</div>
+				<div style="margin-left: 5vw;">
+					<a href="#contact">CONTACT</a>
+				</div>
+			</div>
+		</div>
+
+		<section
+			style="position:absolute; transform:translate(-50%,-50%); top:50%; left:50%;"
+		>
+			<h1 style="font-weight: 900; font-size: 100px;">
+				CHAABANE
+				<div
+					style="position:absolute; right:0; font-weight: 300; font-size: 15px; color:#636466"
+				>
+					CLEANING SERVICES
+				</div>
+			</h1>
+		</section>
+
+		<section
+			style="position: absolute;  bottom:11.3vh ; width:92.5vw; left:5vw"
+		>
+			<div>
+				<img
+					style="width:17px; bottom: 100px; position:absolute"
+					src={Fb}
+				/>
+				<img
+					style="width:17px; bottom: 40px; position:absolute"
+					src={Whatsapp}
+				/>
+				<img style="width:17px; position:absolute" src={Instagram} />
+			</div>
+			<div class="scroll" style="display:flex; position:fixed;">
+				<Scroll client:load />
+			</div>
+		</section>
+	</section>
+</main>
+<style>
+	.scroll {
+		right: 2.6vw;
+	}
+	@media screen and (max-width: 600px) {
+		.scroll {
+			display: none;
+		}
+	}
+	@media screen and (max-width: 1370px) {
+		.scroll {
+			right: 1.706vw;
+		}
+	}
+</style>

@@ -23,7 +23,7 @@ import Contact from '../components/Contact.astro';
 
 				<div style="display: flex; font-size: 13px;">
 					<div>SERVICES</div>
-					<div style="margin-left: 5vw;">CONTACT</div>
+					<div style="margin-left: 5vw;" > <a href="#contact">CONTACT</a></div>
 				</div>
 			</div>
 
@@ -55,7 +55,7 @@ import Contact from '../components/Contact.astro';
 						src={Instagram}
 					/>
 				</div>
-				<div style="float: right; display:flex">
+				<div class="scroll" style="float: right; display:flex">
 					<div
 						style="position: relative; transform: rotate(90deg); top:-85px"
 					>
@@ -73,9 +73,12 @@ import Contact from '../components/Contact.astro';
 			</section>
 		</section>
 	</main>
-	<section class="Contactus">
+	<section id="contact">
 		<Contact/>
 	</section>
+	<footer style="height:10vh">
+		
+	</footer>
 </Layout>
 
 <style>
@@ -85,6 +88,10 @@ import Contact from '../components/Contact.astro';
 		font-family: "Nunito Sans", sans-serif;
 		font-weight: 300;}
 		
-
+@media screen and (max-width:600px){
+.scroll{
+	display: none;
+}
+}
 	
 </style>

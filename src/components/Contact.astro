@@ -1,14 +1,199 @@
 ---
+import Form from "./form.jsx"
+import {FaFacebookF} from "react-icons/fa"
+import {RiWhatsappLine} from "react-icons/ri"
 export interface Props {
 
 
 }
-
+const paragraph = ()=>"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Culpa nulla alias perspiciatis explicabo eos numquam doloremque in delectus labore quis blanditiis laborum dolore facere odit, veniam voluptatum perferendis nostrum porro."
+const address=()=>"Elaouina,tunisia"
+const phone =()=>"216 90 100 100 "
+const email =()=>"farescci@gmail.com"
 ---
+<container class="maincontainer">
+<div class="leftsection">
+<div class="social_medias">
+    <FaFacebookF style={{color:"#fff"}}/>
+    <RiWhatsappLine style={{color:"#fff"}} />
+</div>
+    <div class="leftsection__content">
+    <h1>Contact</h1>
+    <p>{paragraph}</p>
 
-<h2>contact</h2>
+<div class="persoInfos">    <div class="text">
+    <h2>Address</h2>
+<p>{address}</p>
+</div>
+<div class="text">
+    <h2>Phone</h2>
+    <p>{phone}</p>
+</div>
+<div class="text">
+    <h2>E-mail</h2>
+    <p>{email}</p>
+</div>
+</div>
+</div>
+</div>
+<div class="rightsection">
+   <Form />
+  <div class="scrollToTheTop">
+    <div></div>
+    <h6>Toute histoire a une fin</h6>
+  </div>
+</div>
+
+</container>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+   .persoInfos{
+    width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+   }
+   .text{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 	h2{
         color: #fff;
+        padding: 0;
+        margin: 0;
     }
+    .maincontainer{
+        display: grid;
+grid-template-columns: repeat(2, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 100px;
+font-family: 'Poppins', sans-serif;
+    }
+.text p {
+    color: #c7c7c7;
+}
+    .leftsection{
+        grid-area: 1 / 1 / 2 / 2;
+        
+        width: 100%;
+        height: 500px;
+        display: flex;
+    
+    }
+    .social_medias{
+        height: 100%;
+        width: 2%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 20px;
+    }
+        .leftsection__content{
+            width: 100%;
+            height: 100%;
+            display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #fff;
+        gap: 50px;
+
+    }
+    .scrollToTheTop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        height: 100%;
+        gap: 30px;
+    }
+    .scrollToTheTop h6 {
+        rotate : 90deg;
+        font-weight: 200;
+;
+    }
+    .scrollToTheTop div {
+        height: 30px;
+        width: 2px;
+        background-color: #fff;
+        
+    }
+    p{
+        text-align: center;
+        padding: 0 100px;
+        margin: 0;
+    }
+    h1{
+        font-size: 50px;
+        margin: 0;
+    }
+    .rightsection{
+        grid-area: 1 / 2 / 2 / 3;
+        display: flex;
+        background:transparent;
+        height: 500px;
+        width: 100%;  
+        color: #fff;  
+    }
+    @media screen and (max-width: 1267px){
+        p {
+            padding: 0 50px;
+        }
+    }
+    
+    @media screen and (max-width: 1060px){
+        .scrollToTheTop {
+            display: none;
+        }
+        p {
+            padding: 0 25px;
+        }
+    }
+    @media screen and (max-width: 845px){
+     .leftsection__content{
+        gap: 40px;
+        transition: all 1s linear;
+     }
+    }
+    @media screen and (max-width: 752px){
+     .leftsection__content{
+        gap: 30px;
+        transition: all 1s linear;
+     }
+    }
+    @media screen and (max-width: 660px){
+     .leftsection__content{
+        gap: 15px;
+        transition: all 1s linear;
+     }
+    }
+    @media screen and (max-width: 600px){
+     .leftsection__content{
+        gap: 5px;
+        transition: all 1s linear;
+     }
+    }
+    @media screen and (max-width: 580px){
+     .maincontainer{
+        display: grid;
+grid-template-columns: 1fr;
+grid-template-rows: repeat(2, 1fr);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+     }
+     .leftsection{
+        grid-area: 1 / 1 / 2 / 2;
+     }
+     .rightsection{
+        grid-area: 2 / 1 / 3 / 2;
+     }
+     .social_medias{
+        justify-content: center;
+     }
+    }
+   
 </style>

@@ -1,84 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Fb from "../assets/icons/FB.svg";
-import Instagram from "../assets/icons/instagram.svg";
-import Whatsapp from "../assets/icons/whatsapp.svg";
-import Contact from '../components/Contact.astro';
+import Intro from "../components/Intro/Intro.astro";
+import Sliders from "../components/sliders/sliders.astro"
+import Contact from "../components/Contact.astro";
 ---
 
 <Layout title="chaabane cleaning int.">
-	<main
-		style="width:100vw; height:100vh; padding:5vw;box-sizing: border-box;"
-	>
-		<section style="width: 100%; height: 100%; color: white">
-			<div style="display: flex; justify-content: space-between;">
-				<div>
-					<h1 style="font-weight: 900;">AB</h1>
-					<h1
-						style="font-weight: 900; position: relative; top: -10px;"
-					>
-						CD
-					</h1>
-				</div>
-
-				<div style="display: flex; font-size: 13px;">
-					<div>SERVICES</div>
-					<div style="margin-left: 5vw;" > <a href="#contact">CONTACT</a></div>
-				</div>
-			</div>
-
-			<section
-				style="position:absolute; transform:translate(-50%,-50%); top:50%; left:50%;"
-			>
-				<h1 style="font-weight: 900; font-size: 100px;">CHAABANE</h1>
-				<div style=" color:#636466">
-					<div style="position:absolute; right:0">
-						CLEANING SERVICES
-					</div>
-				</div>
-			</section>
-
-			<section
-				style="position: absolute;  bottom:5vw ; width:92.5vw; left:5vw"
-			>
-				<div>
-					<img
-						style="width:17px; bottom: 100px; position:absolute"
-						src={Fb}
-					/>
-					<img
-						style="width:17px; bottom: 50px; position:absolute"
-						src={Whatsapp}
-					/>
-					<img
-						style="width:17px; position:absolute"
-						src={Instagram}
-					/>
-				</div>
-				<div class="scroll" style="float: right; display:flex">
-					<div
-						style="position: relative; transform: rotate(90deg); top:-85px"
-					>
-						<span style="position: relative;">SCROLL</span>
-						<span
-							style="position: absolute;
-							 top: 50%;
-							 left: 100%; 
-							transform: translateY(-50%);
-							 border-top: 2px solid white;
-							 width: 40px; margin-left: 25px;"
-						></span>
-					</div>
-				</div>
-			</section>
-		</section>
-	</main>
-	<section id="contact">
-		<Contact/>
+	<section>
+		<Intro />
 	</section>
-	<footer style="height:10vh">
-		
-	</footer>
+	<section>
+		<Sliders />
+	</section>
+	<section id="contact">
+		<Contact />
+	</section>
+	<footer style="height:10vh"></footer>
 </Layout>
 
 <style>
@@ -86,12 +23,7 @@ import Contact from '../components/Contact.astro';
 	* {
 		margin: 0;
 		font-family: "Nunito Sans", sans-serif;
-		font-weight: 300;}
-		
-@media screen and (max-width:600px){
-.scroll{
-	display: none;
-}
-}
+		font-weight: 300;
+	}
 	
 </style>

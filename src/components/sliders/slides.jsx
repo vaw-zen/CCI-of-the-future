@@ -106,6 +106,7 @@ export default function Slides() {
                 cursor: 'grab',
                 overflow: 'hidden',
                 height: '70vh',
+                marginTop: '-30vh'
             }}
             onMouseDown={handleMouseDown}
             onMouseLeave={handleMouseLeave}
@@ -146,11 +147,12 @@ export default function Slides() {
             <h1 style={{
                 position: "absolute",
                 transform: "translate(-50%,-50%)",
-                left: "70%",
-                top: "70%",
+                top: "60%",
+                left: "50%",
                 fontSize: "5vw",
-                width: "100%",
-                textShadow: "0px 0px 10px rgba(0,0,0,1)",
+                textShadow: "0px -5px 30px rgba(0,0,0,1)",
+                fontFamily: "Cera CY Bold",
+                whiteSpace: "nowrap"
             }}>{array[selectedDivIndex].title}</h1>
 
         </div>

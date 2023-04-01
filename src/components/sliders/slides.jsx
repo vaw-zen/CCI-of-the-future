@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 export default function Slides() {
+    const [isMobile, setIsMobile] = useState(false);
     const sliderRef = useRef(null);
     const [isDown, setIsDown] = useState(false);
     const [startX, setStartX] = useState(null);
@@ -16,10 +17,16 @@ export default function Slides() {
 
 
     useEffect(() => {
-        sliderRef.current.children[selectedDivIndex].style.width = `38%`;
-        sliderRef.current.children[selectedDivIndex].style.height = `500px`;
-        sliderRef.current.children[selectedDivIndex].style.filter = `none`;
+        if (window.innerWidth < 651) {
+            setIsMobile(true)
+            sliderRef.current.children[2].style.width = `38%`;
+            sliderRef.current.children[2].style.filter = `none`;
+        } else {
+            sliderRef.current.children[2].style.height = `500px`;
+            sliderRef.current.children[2].style.width = `38%`;
+            sliderRef.current.children[2].style.filter = `none`;
 
+        }
     }, []);
 
 
@@ -78,8 +85,8 @@ export default function Slides() {
         const animate = () => {
             const nextScrollLeft = startScrollLeft + scrollStep * frame;
             sliderRef.current.scrollLeft = nextScrollLeft;
-            sliderRef.current.children[selectedDivIndex].style.height = `400px`;
-            sliderRef.current.children[index].style.height = `500px`;
+            sliderRef.current.children[selectedDivIndex].style.height = isMobile ? "250px" : "400px";
+            sliderRef.current.children[index].style.height = isMobile ? "300px" : "500px";
             sliderRef.current.children[selectedDivIndex].style.width = `30%`;
             sliderRef.current.children[index].style.width = `38%`;
 
@@ -102,10 +109,11 @@ export default function Slides() {
             style={{
                 display: 'flex',
                 alignItems: 'center',
-                width: '65vw',
+                width: isMobile ? '94vw' : '65vw',
                 cursor: 'grab',
                 overflow: 'hidden',
                 height: '70vh',
+                marginTop: '-30vh'
             }}
             onMouseDown={handleMouseDown}
             onMouseLeave={handleMouseLeave}
@@ -132,7 +140,7 @@ export default function Slides() {
                     style={{
                         transition: "1s",
                         width: '30%',
-                        height: "400px",
+                        height: isMobile ? selectedDivIndex === i ? "300px" : "250px" : "400px",
                         backgroundImage: `url(${e.imgUrl})`,
                         flexShrink: 0,
                         marginLeft: i ? 20 : 0,
@@ -146,11 +154,12 @@ export default function Slides() {
             <h1 style={{
                 position: "absolute",
                 transform: "translate(-50%,-50%)",
-                left: "70%",
-                top: "70%",
-                fontSize: "5vw",
-                width: "100%",
-                textShadow: "0px 0px 10px rgba(0,0,0,1)",
+                top: "60%",
+                left: "50%",
+                fontSize: isMobile ? "8vw" : "5vw",
+                textShadow: "0px -5px 30px rgba(0,0,0,1)",
+                fontFamily: "Cera CY Bold",
+                whiteSpace: "nowrap"
             }}>{array[selectedDivIndex].title}</h1>
 
         </div>

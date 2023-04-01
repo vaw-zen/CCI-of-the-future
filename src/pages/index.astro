@@ -1,8 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Intro from "../components/Intro/Intro.astro";
-import Sliders from "../components/sliders/sliders.astro"
+import Sliders from "../components/sliders/sliders.astro";
 import Contact from "../components/Contact.astro";
+import Cera from "../assets/fonts/Cera CY Bold.ttf";
 ---
 
 <Layout title="chaabane cleaning int.">
@@ -19,11 +20,21 @@ import Contact from "../components/Contact.astro";
 </Layout>
 
 <style>
-	@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;900&display=swap");
+	/* @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;900&display=swap"); */
+
+	@font-face {
+		font-family: "Cera CY Bold";
+		src: url("../assets/fonts/Cera CY Bold.ttf") format("truetype");
+		font-weight: bold;
+	}
+
+	@font-face {
+		font-family: "Cera CY Regular";
+		src: url("../assets/fonts/Cera CY Regular.ttf") format("truetype");
+		font-weight: normal;
+	}
 	* {
 		margin: 0;
-		font-family: "Nunito Sans", sans-serif;
-		font-weight: 300;
+		font-family: "Cera CY Regular", "Cera CY Bold", sans-serif;
 	}
-	
 </style>

@@ -1,5 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
-
+import vitre from '../../assets/w3.jpg'
+import marble from '../../assets/marble.jpg'
+import parterre from  '../../assets/marble-cleaning1.jpg'
+import carpet from '../../assets/Carpet.jpg'
+import sofa from '../../assets/sofa.jpg'
+import car from '../../assets/car.jpg'
+import window from '../../assets/window.gif'
 export default function Slides() {
     const [isMobile, setIsMobile] = useState(false);
     const sliderRef = useRef(null);
@@ -9,10 +15,14 @@ export default function Slides() {
     const [selectedDivIndex, setSelectedDivIndex] = useState(2); // initialize to the index of the div to center
 
     const array = [{ imgUrl: 'transparent' },
-    { imgUrl: 'https://picsum.photos/id/237/1000/700', title: "NETTOYAGE PLAFOND" },
-    { imgUrl: 'https://picsum.photos/id/237/1000/700', title: "NETTOYAGE INTERIEUR" },
-    { imgUrl: 'https://picsum.photos/id/237/1000/700', title: "NETTOYAGE RAPIDE" },
-    { imgUrl: 'https://picsum.photos/id/237/1000/700', title: "NETTOYAGE EFFICACE" },
+    { imgUrl: vitre, title: "NETTOYAGE VITRE" },
+    { imgUrl: marble, title: "ENTRETIEN MARBRE" },
+    { imgUrl: parterre, title: "NETTOYAGE PARTERRE & FAIENCE" },
+    { imgUrl: carpet, title: "NETTOYAGE MOQUETTE" },
+    { imgUrl: sofa, title: "NETTOYAGE SALONS" },
+    { imgUrl: car, title: "NETTOYAGE INTERIEUR DE VOITURE" },
+    // { imgUrl: window, title: "NETTOYAGE INTERIEUR DE VOITURE" }, funny meme
+
     { imgUrl: 'transparent' },];
 
 

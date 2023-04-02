@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 export default function Scroll() {
     const [scrollPosition, setScrollPosition] = useState("start")
     const [isMobile, setIsMobile] = useState(false);
-    console.log(scrollPosition)
     useEffect(() => {
         if (window.innerWidth < 651) {
             setIsMobile(true)

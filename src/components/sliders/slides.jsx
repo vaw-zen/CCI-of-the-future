@@ -141,13 +141,13 @@ export default function Slides() {
                         transition: "1s",
                         width: '30%',
                         height: isMobile ? selectedDivIndex === i ? "300px" : "250px" : "400px",
-                        backgroundImage: `url(${e.imgUrl})`,
+                        backgroundImage: i && i !== array.length - 1 ? `url(${e.imgUrl})` : "none",
                         flexShrink: 0,
                         marginLeft: i ? 20 : 0,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         filter: "blur(5px) grayscale(100%)",
-                        border: "1px solid #1b1c21"
+                        border: i && i !== array.length - 1 ? "1px solid #1b1c21" : "none",
                     }}
                 />
             ))}

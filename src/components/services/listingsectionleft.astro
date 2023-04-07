@@ -1,0 +1,81 @@
+---
+import img from "../../assets/Carpet.jpg"
+export interface Props {
+	which: string;
+}
+const { which } = Astro.props;
+---
+<div class="content_wrapper">
+    <!-- start -->
+    <div class="content">
+<img class="rounded" src={img} alt="carpet">
+<div class="content_text">
+<h2>carpet cleaning</h2>
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet in perferendis voluptatum libero esse repellat sunt quia neque non expedita commodi itaque, totam, quasi consequatur officiis voluptate? Rem, et. </p>
+    </div>
+</div>
+<!-- end -->
+
+<div class="content">
+    <img class="rounded" src={img} alt="carpet">
+    <div class="content_text">
+    <h2>carpet cleaning</h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet in perferendis voluptatum libero esse repellat sunt quia neque non expedita commodi itaque, totam, quasi consequatur officiis voluptate? Rem, et. </p>
+        </div>
+    </div>
+
+    <div class="content">
+        <img class="rounded" src={img} alt="carpet">
+        <div class="content_text">
+        <h2>carpet cleaning</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet in perferendis voluptatum libero esse repellat sunt quia neque non expedita commodi itaque, totam, quasi consequatur officiis voluptate? Rem, et. </p>
+            </div>
+        </div>
+        
+    <div class="content">
+        <img class="rounded" src={img} alt="carpet">
+        <div class="content_text">
+        <h2>carpet cleaning</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet in perferendis voluptatum libero esse repellat sunt quia neque non expedita commodi itaque, totam, quasi consequatur officiis voluptate? Rem, et. </p>
+            </div>
+        </div>
+</div>
+<style>
+    .content_text {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    h2 {
+        margin: 0;
+        padding: 0;
+    }
+    p{
+        margin: 0;
+        padding: 0;
+    }
+    .content_wrapper{
+         grid-area: 1 / 2 / 2 / 3;
+        padding-top: 100px ;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .content{
+    height: 180px;
+        background-color: #141416;
+        width: 85%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        gap: 10px;
+        color: #fff;
+    }
+.rounded {
+    padding-top: 5px;
+    width: 160px;
+    height: 160px ;
+    border-radius: 50%;
+}
+</style>

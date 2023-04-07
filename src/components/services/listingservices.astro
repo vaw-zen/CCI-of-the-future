@@ -1,0 +1,175 @@
+---
+export interface Props {
+	which: string;
+}
+import {BsArrowUpRight} from "react-icons/bs"
+const { which } = Astro.props;
+import img from "../../assets/beforeAfter.jpg"
+---
+  {which==="listing" ? 
+<div class="content-wrapper">
+  
+        
+    <div class="content">
+<p>OUR SERVICES</p>
+
+<h1>What you will get from us .</h1>
+<button>Besoin d'un Devis ?</button></div></div>:
+<div class="flex">
+    <div class="flex_left">
+<p>WHO WE ARE</p>
+<h1>We provide best solutions</h1>
+<div class="styled_list">
+    <ul class="list" >
+       <li >Started cleaning services in 2010 <BsArrowUpRight style={{fontSize:"20px",float:"right",margin:"0",paddingTop:"10px",color:"#cafb42"}}/></li>
+       <li>We work to help people feel comfortable in their homes and provide the best, fastest assistance at a fair price, reliable and professional Service with defective garbage disposal Outlets, switches, and other components
+        </li> 
+        </ul>
+        <ul class="list" >
+       <li >Started cleaning services in 2010 <BsArrowUpRight style={{fontSize:"20px",float:"right",margin:"0",paddingTop:"10px",color:"#cafb42"}}/></li>
+       <li>We work to help people feel comfortable in their homes and provide the best, fastest assistance at a fair price, reliable and professional Service with defective garbage disposal Outlets, switches, and other components
+        </li> 
+        </ul>
+        <ul class="list" >
+       <li >Started cleaning services in 2010 <BsArrowUpRight style={{fontSize:"20px",float:"right",margin:"0",paddingTop:"10px",color:"#cafb42"}}/></li>
+       <li>We work to help people feel comfortable in their homes and provide the best, fastest assistance at a fair price, reliable and professional Service with defective garbage disposal Outlets, switches, and other components
+        </li> 
+        </ul>
+    </div>
+    
+</div>
+<div class="flex_right">
+    
+    </div>
+
+</div>
+}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,500;0,700;1,500&display=swap');
+
+
+    .styled_list {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        
+    }
+    .flex {
+        font-family: 'Ubuntu', sans-serif;
+        grid-area: 1 / 1 / 2 / 2;
+padding-left: 100px;
+padding-top: 100px;
+height: 90%;
+width: 88%;
+display: flex;
+justify-content: space-between;
+
+transition: all 1s linear;
+
+    }
+    .flex_right{
+        padding-top: 100px;
+background:url("../../assets/beforeAfter.jpg");
+background-repeat: no-repeat;
+background-size: cover;
+width: 50%;
+height: 80%;
+transition: all 1s ease-in;
+
+    }
+
+    .flex_left {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 43%
+    }
+.content-wrapper{
+    font-family: 'Ubuntu', sans-serif;
+
+    grid-area: 1 / 1 / 2 / 2;
+    padding-left: 100px;
+    padding-top: 100px;
+   
+height: 90%;
+
+}
+.content {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 50px;
+    transition: all .4s linear ;
+    display: flex;
+    flex-direction: column;
+gap: 15px;
+
+}
+p:nth-child(1){
+    color: #cafb42;
+
+}
+h1{
+    color: #fff;
+    font-size: 55px;
+    margin: 0;
+
+}
+ul li:nth-child(1) {
+    cursor: pointer;
+    font-size: 30px;
+    color: #fff;
+border-bottom: #fff 1px solid;
+width: 90%;
+padding-bottom: 40px;
+}
+
+ul li:nth-child(2) {
+    padding-top: 10px;
+    text-align: center;
+    color: #fff;
+    display: none;
+    transition: all 5s linear;
+    width: 90%;
+
+}
+button{
+    border:0;
+    border-radius: 40px;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    background-color: #cafb42;
+    color: #000;
+    
+}
+button:hover{
+    
+    background-color: #ffffff;
+    color: #000;
+}
+.description {
+    display: none;
+}
+</style>
+<script is:inline>
+  var lists = document.getElementsByClassName("list");
+  
+      Array.from(lists).forEach((element, i) => {
+        const lItems = element.getElementsByTagName("li");
+        lItems[0].addEventListener('click', function handleclick() {
+            if (lItems[1].style.display === "block") {
+                lItems[1].style.display = "none";
+            lItems[0].style.color ="#fff";
+            }
+            else {
+            lItems[1].style.display = "block";
+        
+            lItems[0].style.color ="#cafb42";}
+            
+            lItems[1].style.transition = "all 5s linear";
+            
+        });
+      });
+</script>

@@ -1,0 +1,125 @@
+---
+import Navbar from "../components/navbar/navbar.jsx";
+import Listingsectionleft from "../components/services/listingsectionleft.astro";
+import Listingservices from "../components/services/listingservices.astro";
+import Servicesleft from "../components/services/servicesleft.astro";
+import Servicesright from "../components/services/servicesright.astro";
+import Layout from "../layouts/Layout.astro"
+import {AiFillHome} from "react-icons/ai"
+
+---
+
+<Layout title="Services">
+ 
+ <section class="services_header">
+    <Navbar current="Services" client:load/>
+    <div class="text">
+<p>Services</p>
+<p><a href="/"><span><AiFillHome/> HOME </span></a>/ <span>Services</span> </p>
+</div>
+ </section>
+ <section class="hero services_content ">
+<Servicesleft/>
+<Servicesright/>
+ </section>
+ <section class="listing services_content">
+<Listingservices which='listing'/>
+<Listingsectionleft which='listing' />
+ </section>
+ <section class="whoAreWe ">
+    <Listingservices which="who"/>
+  
+     </section>
+     <section class="animated-text">
+        <marquee behavior="scroll" direction="left" scrolldelay="35" truespeed="50"
+        >  <h1><span>CHAABEN CLEANING</span><span>_</span><span>Notre savoir-faire pour votre confort </span><span>_</span> <span>+20ans d'experience<span>_</span></span></h1>
+        </marquee>
+         </section>
+    
+</Layout>
+
+<style>
+      @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,500;0,700;1,500&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Bungee+Outline&display=swap');
+.services_content{
+    display: grid;
+grid-template-columns: repeat(2, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}   
+.whoAreWe{
+    display: grid;
+grid-template-columns: 1fr;
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+width: 100%;
+}
+ .services_header{
+        height: 60vh;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Ubuntu', sans-serif;
+font-weight: 300;
+     
+    }
+    .text {
+        display: flex;
+        flex-direction: column;
+        justify-content:center ;
+        align-items:center ;
+        height: 100%;
+ 
+    }
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 100px;
+        font-weight: 400;
+    }
+    .text p:nth-child(2){
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    span:nth-child(2){
+        color:#cafb42;
+    }
+    .animated-text{
+        
+        width: 100%;
+        display: flex;
+     position: absolute;
+        
+    }
+    .animated-text h1{
+        display: flex;
+        gap: 10px;
+        font-size: 50px;
+        align-items: center;
+        
+    }
+    .animated-text span:nth-child(1){
+      color: #cafb42;
+    }
+    .animated-text span:nth-child(3){
+        font-family: 'Bungee Outline', cursive;
+color: #fff;
+font-size: 45px;
+    }
+    .animated-text span:nth-child(4){
+        color: #ffffff;
+    }
+    .animated-text span:nth-child(5){
+        color: #cafb42;
+    }
+    
+    @keyframes move {
+        0%{transform:translateX(0)}
+        100% {transform:translateX(-200%)}
+    }
+    
+    </style>

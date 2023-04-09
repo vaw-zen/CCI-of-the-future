@@ -1,0 +1,110 @@
+/* Add the CSS code */
+
+:root {
+  --bg-color: #fff;
+  --text-color: #7288a2;
+  --gray-color: #4d5974;
+  --lightgray-color: #e5e5e5;
+  --blue-color: #cafb42;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Hind", sans-serif;
+  color: var(--gray-color);
+  display: flex;
+  min-height: 100vh;
+  background: radial-gradient(
+    70vh at 40% 15vh,
+    #3f4045,
+    #1b1c21
+  );
+  background-size: cover;
+  background-attachment:fixed;
+  
+}
+
+.container {
+  margin: 0 auto;
+  padding: 4rem;
+  width: 50rem;
+}
+
+.accordion-item {
+  border-bottom: 1px solid var(--lightgray-color);
+ 
+}
+
+.accordion-item button {
+  align-items: center;
+  justify-items: space-between;
+  position: relative;
+  display: flex;
+  text-align: left;
+  width: 100%;
+  padding: 1em 0;
+  color: var(--text-color);
+  font-size: 1.15rem;
+  font-weight: 400;
+  border: none;
+  background: none;
+  outline: none;
+  transition:  0.2s ease;
+}
+.accordion-item button::before {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  transition: transform 0.5s ease-out;
+  color: #cafb42; 
+}
+.accordion-item.open button::before{
+  content: "➤";
+  transform: translateY(-50%) rotate(90deg);
+  transition: transform 0.5s ease-out;
+  color: #cafb42;
+}
+.accordion-content {
+  color:#cafb42
+}
+.accordion-item button:hover {
+  cursor: pointer;
+  color: var(--blue-color);
+
+}
+.accordion-content:hover {
+  cursor: pointer;
+  color: black;
+  font-size: larger;
+  font-weight: 500;
+  padding: 10px;
+  background-color: #fff;
+  text-transform:var(--gray-color) ;
+  
+}
+
+
+.accordion-content {
+  
+  
+  transition:  0.2s ease;
+}
+
+.accordion-content p {
+  transition: transform 1s ease-in-out;
+  padding: 2px;
+  
+  margin: 2px; 
+ 
+}
+
+.accordion-item .accordion-content {
+  max-height: 100vh;
+} 

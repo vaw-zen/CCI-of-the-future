@@ -1,0 +1,215 @@
+---
+import img from '../../assets/CTN1.png'
+import img1 from '../../assets/oaca.png'
+import img2 from '../../assets/agr.png'
+import img3 from '../../assets/BT.jpg'
+import img4 from '../../assets/atct.png'
+import img5 from '../../assets/GM.png'
+import img6 from '../../assets/4mk.png'
+import img7 from '../../assets/tadaeem.png'
+import bg from '../../assets/bg360.jpg'
+---
+
+<div id="refrences">
+ 
+  <div class="logos">
+    <div id="train-container"class="puzzle-row">
+      <div class="puzzle-cell"><a href="https://www.w3schools.com/html/"><img src={img1}></a></div>
+      <div id="bt" class="puzzle-cell"><a href="https://www.w3schools.com/html/"><img src={img3}></a></div>
+      <div class="puzzle-cell"><a href="https://www.w3schools.com/html/"><img src={img}></a></div>
+    </div>
+    <div id="train-container" class="puzzle-row">
+      <div class="puzzle-cell"><a href="https://www.w3schools.com/html/"><img src={img4}></a></div>
+      <div class="puzzle-cell"><a href="https://www.w3schools.com/html/"><img src={img6}></a></div>
+      <div class="puzzle-cell"><a href="https://www.w3schools.com/html/"><img src={img5}></a></div>
+    </div>
+    <div id="train-container" class="puzzle-row">
+      
+      <div class="puzzle-cell"><a href="https://www.w3schools.com/html/"><img src={img7}></a></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #refrences {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background:transparent;
+    /* background-image: url('../../assets/bg360.jpg') ; */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    perspective: 1000px;
+    animation: rotateBg 15s linear  ;
+    animation-name:rotate1
+  }
+ 
+  h1 {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .logos {
+    max-width: 1500px;
+    margin: 0 auto;
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 10px;
+    padding:15px;
+    justify-content: center;
+    align-items: center;
+
+  }
+
+  .puzzle-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: 1 / -1;
+   
+  }
+
+  .puzzle-cell {
+    width: auto;
+    height: 0;
+    padding-bottom: calc(100% /5);
+    border-radius: 10px;
+    overflow: hidden;
+    /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); */
+    
+
+  }
+
+  .logos a {
+    display: inline-block;
+    position: relative;
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  .logos img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0.8;
+    cursor: pointer;
+    object-fit: cover;
+    scale:0.7;
+    margin-top: -10%;
+    /* margin-bottom: 10%; */
+    transform-style: preserve-3d;
+  animation-name: rotate;
+  animation-duration: 15s;
+  /* animation-iteration-count: infinite; */
+  }
+
+  .logos img:hover {
+  /* scale:0.8 ; */
+    opacity: 1;
+    background-color: #fff;
+  }
+#bt:hover{
+ 
+  transform:scale(1,1)  
+}
+
+    
+
+
+  .logos span {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s ease-in-out;
+    
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    padding: 5px 10px;
+  }
+
+  .logos a:hover span {
+    opacity: 1;
+  }
+
+ 
+
+
+
+@media screen and (max-width: 768px) {
+.logos {
+max-width: 500px;
+flex-direction: column;
+align-items: center;
+}
+
+.logos li {
+margin: 20px 0;
+text-align: center;
+}
+
+.logos img {
+max-width: 100%;
+height: auto;
+}
+.logos img {
+    position: static;
+    transform: none;
+    animation: none;
+    margin: 10px;
+  }
+
+.logos span {
+bottom: -30px;
+padding: 10px 20px;
+font-size: 1.2rem;
+}
+}
+#train-container {
+  display: flex;
+  overflow: hidden;
+  animation: train 8s linear infinite;
+  
+}
+/* #train-container:hover{
+  animation-play-state: paused ;
+} */
+
+@keyframes train {
+  0% {
+    transform: translateX(0%);
+  }
+ 
+  50% {
+    transform: translateX(-10%)
+  }
+  100%{
+    transform: translate(0%);
+  }
+}
+@keyframes rotate1 {
+  from {
+    transform: rotateY(0deg) translateZ(200px);
+  }
+  to {
+    transform: rotateY(360deg) translateZ(200px);
+  }
+}
+@keyframes rotate {
+  0% {
+    transform: translateZ(-100px) rotateY(0) rotateX(0) scale(1);
+  }
+  50% {
+    transform: translateZ(-100px) rotateY(180deg) rotateX(90deg) scale(0.7);
+    background-color: #ffffffdc;
+  }
+  100% {
+    transform: translateZ(-100px) rotateY(360deg) rotateX(0) scale(1);
+  }
+}
+  </style>

@@ -5,6 +5,8 @@ import Sliders from "../components/sliders/sliders.astro";
 import Contact from "../components/Contact.astro";
 import Cera from "../assets/fonts/Cera CY Bold.ttf";
 import Reviews from "../components/reviews/reviews.astro";
+import References from "../../src/components/references/references.astro";
+import Faq from "../../src/components/faq/faq.astro"
 ---
 
 <Layout title="chaabane cleaning int.">
@@ -18,8 +20,14 @@ import Reviews from "../components/reviews/reviews.astro";
 		<Reviews/>
 	</section>
 
+	
 	<section id="contact">
 		<Contact />
+	</section>
+	<section id="refrences">
+		<div  >
+		<References/>
+	</div>
 	</section>
 	<footer style="height:10vh"></footer>
 </Layout>
@@ -49,6 +57,9 @@ import Reviews from "../components/reviews/reviews.astro";
 	justify-content: center;
 	margin-bottom: 50px;
 	flex-wrap: wrap;
+}
+#refrences{
+	margin-top:50px
 }
 
 </style>

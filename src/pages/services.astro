@@ -19,12 +19,16 @@ import {AiFillHome} from "react-icons/ai"
 </div>
  </section>
  <section class="hero services_content ">
-<Servicesleft/>
-<Servicesright/>
+    <div class="left">
+<Servicesleft/></div>
+<div class="right">
+<Servicesright/></div>
  </section>
- <section class="listing services_content">
-<Listingservices which='listing'/>
-<Listingsectionleft which='listing' />
+ <section class="services_content listing">
+    <div class="listingleft">
+<Listingservices which='listing'/></div>
+<div class="listingright">
+<Listingsectionleft which='listing' /></div>
  </section>
  <section class="whoAreWe ">
     <Listingservices which="who"/>
@@ -35,6 +39,7 @@ import {AiFillHome} from "react-icons/ai"
         >  <h1><span>CHAABEN CLEANING</span><span>_</span><span>Notre savoir-faire pour votre confort </span><span>_</span> <span>+20ans d'experience<span>_</span></span></h1>
         </marquee>
          </section>
+      
     
 </Layout>
 
@@ -48,6 +53,13 @@ grid-template-rows: 1fr;
 grid-column-gap: 0px;
 grid-row-gap: 0px;
 }   
+@media (max-width:950px) {
+         .services_content{
+grid-column-gap: 40px;
+         }
+      }; 
+      
+
 .whoAreWe{
     display: grid;
 grid-template-columns: 1fr;
@@ -121,5 +133,28 @@ font-size: 45px;
         0%{transform:translateX(0)}
         100% {transform:translateX(-200%)}
     }
+    @media (max-width:850px) {
+        .services_content{
+            display: grid;
+            
+  grid-template-columns: 1fr; 
+  grid-template-rows: auto 1fr; 
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+grid-template-areas: 
+    "top"
+    "bottom"; 
+    padding: 10px;
+
+        }
     
+    }  
+    @media (max-width:390px) {
+        .text p:nth-child(1){
+        color: #fff;
+        font-size: 80px;
+       
+    }
+ 
+      }
     </style>

@@ -59,7 +59,7 @@ import img from "../../assets/beforeAfter.jpg"
     .flex {
         font-family: 'Ubuntu', sans-serif;
         grid-area: 1 / 1 / 2 / 2;
-padding-left: 200px;
+padding-left: 10%;
 padding-top: 100px;
 height: 90%;
 width: 85%;
@@ -90,12 +90,59 @@ transition: all 1s ease-in;
     font-family: 'Ubuntu', sans-serif;
 
     grid-area: 1 / 1 / 2 / 2;
-    padding-left: 200px;
+    padding-left:20%;
     padding-top: 100px;
    
 height: 90%;
 
+transition: all 1s linear;
+
 }
+
+
+@media (max-width:1900px) {
+         .content-wrapper{
+         padding-left:15%;
+      }
+      .flex{
+        
+width: 88%;
+        padding-left:8%;
+      }
+    .flex_left{
+        
+width: 48%;
+    }
+
+   }
+      @media (max-width:1770px) {
+         .content-wrapper{
+         padding-left:10%;
+         
+      
+      }
+      .flex{
+        
+width: 93%;
+        padding-left:5%;
+      }
+      .flex_left{
+        
+        width: 52%;
+            } 
+   }
+      @media (max-width:1670px) {
+         .content-wrapper{
+         padding-left:5%;
+      }
+      .flex{
+        
+width: 97%;
+        padding-left:3%;
+      }
+      
+      }
+   
 .content {
     position: sticky;
     position: -webkit-sticky;
@@ -104,17 +151,45 @@ height: 90%;
     display: flex;
     flex-direction: column;
 gap: 15px;
+transition: all 1s linear;
 
 }
+
+    
 p:nth-child(1){
     color: #cafb42;
 
+    transition: all 1s linear;
 }
 h1{
     color: #fff;
     font-size: 60px;
     margin: 0;
 
+    transition: all 1s linear;
+}
+@media (max-width:850px){
+    .content_wrapper{
+        grid-area: "top";
+    
+    }
+    h1{
+        
+    font-size: 50px;
+    }
+    .content{
+        position:static;
+    }
+    .flex{
+        flex-wrap: wrap;
+    }
+    .flex_left{
+        width: 100%;
+    }
+    .flex_right{
+        display: none
+        ;
+    }
 }
 ul li:nth-child(1) {
     cursor: pointer;

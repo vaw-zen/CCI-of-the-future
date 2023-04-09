@@ -71,7 +71,29 @@ const { which } = Astro.props;
         padding: 15px;
         gap: 10px;
         color: #fff;
+    
+}
+@media (max-width:850px){
+    .content_wrapper{
+        grid-area: "bottom";
     }
+    .content{
+        width: 94%;
+        margin: 10px;
+    }
+
+}
+@media (max-width:580px) {
+    .content{
+        width: 87%;
+        margin: 10px;
+    
+        height: max-content;
+    
+    } }
+    @media (max-width:580px) {
+    .content{
+    } }
 .rounded {
     padding-top: 5px;
     width: 160px;

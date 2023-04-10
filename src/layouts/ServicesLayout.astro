@@ -1,0 +1,194 @@
+---
+import Navbar from "../components/navbar/navbar.jsx";
+import Listingsectionleft from "../components/services/listingsectionleft.astro";
+import Listingservices from "../components/services/listingservices.astro";
+import Servicesleft from "../components/services/servicesleft.astro";
+import Servicesright from "../components/services/servicesright.astro";
+import Layout from "../layouts/Layout.astro"
+import {AiFillHome} from "react-icons/ai"
+export  interface Props {
+    PageName : string ,
+    ImgUrl:string,
+    title : string,
+    description:string,
+    firstimgSlider:string,
+    secimgSlider:string
+}
+const {PageName,ImgUrl,title,description,firstimgSlider,secimgSlider}= Astro.props
+
+---
+<link rel="stylesheet" href="https://unpkg.com/beerslider/dist/BeerSlider.css">
+<Layout title={PageName}>
+ <section class="services_header">
+    <Navbar current="Services" client:load/>
+    <div class="text">
+<p>{PageName}</p>
+<p><a href="/"><span><AiFillHome/> HOME </span></a>/ <span>{PageName}</span> </p>
+</div>
+ </section>
+ <div class="content_wrapper">
+ <section class="picText">
+    <img src={ImgUrl} alt="cover">
+    <article class="services_details">
+        <h1>{title}</h1>
+        <h3>{description}
+        </h3>
+     </article>
+      
+</section>
+
+<section class="gallery">
+    <h1>Gallery</h1>
+
+    
+    <div id="beer-slider" class="beer-slider" >
+        <img src={firstimgSlider} alt="">
+        <div class="beer-reveal">
+          <img src={secimgSlider} alt="">
+        </div>
+      </div>
+    
+      
+            
+      
+      
+</section>
+ 
+</div>
+
+    
+</Layout>
+
+<style>
+      @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,500;0,700;1,500&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Bungee+Outline&display=swap');
+.gallery {
+    margin-top: 200px;
+    font-size: 50px;
+    color: #fff;
+    font-family: 'Ubuntu', sans-serif;
+display: flex;
+flex-direction: column;
+}
+.gallery h1 {
+    font-size: 100%;
+}
+      .content_wrapper{
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap:50px;
+        padding: 50px;
+    }
+    .picText{
+        position: relative;
+        max-height: 500px;
+    }
+    .picText img {
+      
+  max-width: 100%;
+  height: auto;
+  min-width: 350px;
+
+
+    }
+
+    .services_details h1 {
+        margin: 0;
+        padding: 0;
+        color: #cafb42;
+        font-size: 60px;
+        font-family: 'Ubuntu', sans-serif;
+        
+
+    }
+    .services_details{
+        position: absolute;
+        left: 0;
+        bottom: -200px;
+    }
+    .services_details h3{
+    font-weight: 100;
+    color: #fff;
+    }
+      .services_header{
+        height: 60vh;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Ubuntu', sans-serif;
+font-weight: 300;
+     
+    }
+    .text {
+        display: flex;
+        flex-direction: column;
+        justify-content:center ;
+        align-items:center ;
+        height: 100%;
+ 
+    }
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 100px;
+        font-weight: 400;
+    }
+    .text p:nth-child(2){
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    span:nth-child(2){
+        color:#cafb42;
+    }
+
+    @media (max-width:950px) {
+        .picText{
+            height:310px
+        }
+        
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 80px;
+        font-weight: 400;
+    }
+    }
+    @media (max-width:750px) {
+        .services_details h1 {
+            font-size: 50px;
+        }
+    }
+    
+    @media (max-width:642px) {
+        .services_details h1 {
+            font-size: 40px;
+        }
+        
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 40px;
+        font-weight: 400;
+    }
+    }
+    @media (max-width: 533px) {
+        .services_details h1 {
+            font-size:x-large;
+        }
+    }
+    @media (max-width: 350px) {
+       .picText img {
+        min-width: 300px;
+       }
+    }
+    
+
+    </style>
+            <script is:raw src="https://unpkg.com/beerslider/dist/BeerSlider.js"></script>
+            <script is:inline >
+              var slider = new BeerSlider( document.getElementById( "beer-slider" ) );
+            </script>
+      

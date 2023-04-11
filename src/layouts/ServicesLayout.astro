@@ -11,10 +11,11 @@ export  interface Props {
     ImgUrl:string,
     title : string,
     description:string,
-    firstimgSlider:string,
-    secimgSlider:string
+    imgArray:Array<{firstimgSlider:string,
+    secimgSlider:string,}>,
 }
-const {PageName,ImgUrl,title,description,firstimgSlider,secimgSlider}= Astro.props
+const {PageName,ImgUrl,title,description,firstimgSlider,secimgSlider,imgArray}= Astro.props
+
 
 ---
 <link rel="stylesheet" href="https://unpkg.com/beerslider/dist/BeerSlider.css">
@@ -40,16 +41,9 @@ const {PageName,ImgUrl,title,description,firstimgSlider,secimgSlider}= Astro.pro
 <section class="gallery">
     <h1>Gallery</h1>
 
-    
-    <div id="beer-slider" class="beer-slider" >
-        <img src={firstimgSlider} alt="">
-        <div class="beer-reveal">
-          <img src={secimgSlider} alt="">
-        </div>
-      </div>
-    
-      
-            
+<slot/>  
+       
+  
       
       
 </section>
@@ -62,7 +56,9 @@ const {PageName,ImgUrl,title,description,firstimgSlider,secimgSlider}= Astro.pro
 <style>
       @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,500;0,700;1,500&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=Bungee+Outline&display=swap');
-.gallery {
+
+
+      .gallery {
     margin-top: 200px;
     font-size: 50px;
     color: #fff;
@@ -183,12 +179,29 @@ font-weight: 300;
        .picText img {
         min-width: 300px;
        }
+       .text h1 {
+        font-size: medium;
+       }
     }
     
+    @media (max-width: 321px) {
+       
+       .text p:nth-child(1) {
+        font-size: 35px;
+       }
+    }
 
     </style>
+    <script>
+            var i = 0 ;   
+           document.getElementsByClassName("left")[0].addEventListener("click",function(){
+            console.log(i);
+            if (i+1<2) return i=i+1
+            return i=0
+           })
+    </script>
             <script is:raw src="https://unpkg.com/beerslider/dist/BeerSlider.js"></script>
             <script is:inline >
-              var slider = new BeerSlider( document.getElementById( "beer-slider" ) );
+            
             </script>
-      
+     

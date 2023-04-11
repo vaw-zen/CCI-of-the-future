@@ -1,0 +1,117 @@
+---
+import img from "../../assets/sevices.jpg"
+---
+<div class="content-wrapper">
+    <img src={img} alt="services"/>
+    </div>
+    <style>
+       .content-wrapper{
+        grid-area: 1 / 1 / 2 / 2;
+        padding-left:20%;
+        padding-top: 100px;
+        transition: all 1s ease;
+    }
+
+       img{
+width: 650px;
+height: 500px;
+transition: all 1s linear;
+       }
+       @media (max-width:1900px) {
+         .content-wrapper{
+         padding-left:20%;
+      }
+   }
+      @media (max-width:1770px) {
+         .content-wrapper{
+         padding-left:10%;
+      }
+   }
+      @media (max-width:1670px) {
+         .content-wrapper{
+         padding-left:5%;
+      }
+      img{
+width: 650px;
+height: 500px
+       }
+      }
+      
+    
+
+
+      @media (max-width:1380px) {
+        img{
+         width: 550px;
+height: 400px;
+         }
+      }
+      
+      @media (max-width:1160px) {
+        img{
+         width: 450px;
+height: 300px;
+         }
+      }
+      
+@media (max-width:850px){
+    .content_wrapper{
+        
+      grid-area: "top";
+    
+    }
+    img {
+      width: 700px;
+      height: auto;
+    }
+}
+@media (max-width:770px) {
+        img{
+         width: 600px;
+height: auto;
+         }
+      }
+      @media (max-width:681px) {
+        img{
+         width: 520px;
+height: auto;
+         }
+      }
+      @media (max-width:580px) {
+        img{
+         width: 400px;
+height: auto;
+         }
+      }
+      @media (max-width:500px) {
+        img{
+         width: 360px;
+height: auto;
+         }
+      }
+      
+      @media (max-width:480px) {
+        img{
+         width: 390px;
+height: auto;
+         }
+      }
+      @media (max-width:430px) {
+        img{
+         width: 330px;
+height: auto;
+         }
+      }
+      .text p:nth-child(1){
+        color: #fff;
+        font-size: 100px;
+        font-weight: 400;
+    }
+    @media (max-width:340px) {
+        img{
+         width: 280px;
+height: auto;
+         }
+      }
+
+    </style>

@@ -1,0 +1,83 @@
+/* Add the CSS code */
+.container {
+  min-width: 750px;
+ max-width: 850px;
+  color: #fff;
+transition: all 0 ease;
+}
+
+.accordion-item {
+  border: 1px solid #fff;
+  margin: 10px;
+  padding: 10px;
+ 
+}
+
+.accordion-item button {
+  align-items: center;
+  justify-items: space-between;
+  position: relative;
+  display: flex;
+  text-align: left;
+  width: 100%;
+  padding: 1em 0;
+  color: var(--text-color);
+  font-size: 1.15rem;
+  font-weight: 400;
+  border: none;
+  background: none;
+  outline: none;
+  transition:  0.2s ease;
+}
+.accordion-item button::before {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  transition: transform 0.5s ease-out;
+  color: #cafb42; 
+}
+.accordion-item.open button::before{
+  content: "➤";
+  transform: translateY(-50%) rotate(90deg);
+  transition: transform 0.5s ease-out;
+  color: #cafb42;
+}
+.accordion-content {
+  color:#cafb42
+}
+.accordion-item button:hover {
+  cursor: pointer;
+  color: var(--blue-color);
+
+}
+.accordion-content:hover {
+  cursor: pointer;
+  color: black;
+  font-size: larger;
+  font-weight: 500;
+  padding: 10px;
+  background-color: #fff;
+  text-transform:var(--gray-color) ;
+  
+}
+
+
+.accordion-content {
+  
+  
+  transition:  0.2s ease;
+}
+
+.accordion-content p {
+  transition: transform 1s ease-in-out;
+  padding: 2px;
+  
+  margin: 2px; 
+ 
+}
+
+.accordion-item .accordion-content {
+  max-height: 100vh;
+} 

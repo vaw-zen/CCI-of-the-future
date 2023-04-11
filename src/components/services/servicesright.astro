@@ -1,0 +1,119 @@
+---
+import {BsArrowDownRight} from "react-icons/bs"
+---
+<div class="content-wrapper">
+    <div class="top_container">
+        <p>DETAIL VIEW</p>
+        <h1>What will you get from us</h1>
+    </div>
+    <div class="bottom_container">
+        <div class="circle" >
+<BsArrowDownRight style={{fontSize:"40px",color:'#cafb42'}}/>
+        </div>
+       <p> VIEW MORE DETAIL </p>
+
+    </div>
+    </div>
+    <style>
+       .content-wrapper{
+        grid-area: 1 / 2 / 2 / 3;
+        padding-top: 100px ;
+        font-family: 'Ubuntu', sans-serif;
+
+    }
+   
+    .top_container{
+        padding-left: 20px;
+        
+        padding-top: 20px;
+        height: 50%;
+        
+        border-left: 1.5px solid #fff;
+        
+        border-bottom: 1.5px solid #fff;
+        width: 80%;
+        margin: 0;
+        transition: all 1s ease;
+    }
+    @media (max-width:1000px) {
+        .top_container{
+height: 70%;
+       
+         
+      
+      }
+    }
+    p:nth-child(1){
+        color: #cafb42;
+
+    }
+    h1{
+        color:#fff ;
+        font-size: 50px;
+        width: 70%;
+        font-weight: 400;
+        margin: 10px 0 ;
+    }
+    
+    @media (max-width:950px) {
+        h1{
+        color:#fff ;
+        font-size: 45px;
+        width: 100%;
+        font-weight: 400;
+        margin: 10px 0 ;
+    }
+    
+    }
+    @media (max-width:850px){
+    .content-wrapper{
+        grid-area: "bottom";
+        padding-left: 45px;
+
+}
+    }
+    .bottom_container{
+        padding: 0;
+        margin: 0;
+        border-left: 1.5px solid #fff;
+        height: 40%;
+display: flex;
+align-items: center;
+padding: 20px;
+gap: 20px;
+    }
+    .circle{
+        height: 100px;
+        width: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        border: 2px solid #fff;
+ }
+       
+p {
+    color: #fff;
+}
+
+
+
+    </style>
+      <script is:inline>
+
+        const circle = document.getElementsByClassName('circle')[0];
+        
+        circle.addEventListener('mouseover', function handleMouseOver() {
+          circle.style.boxShadow = '0px 0px 7px  #cafb42';
+          circle.style.transform='rotate(90deg)';
+          
+          circle.style.transition='all ease .5s'
+        });
+        
+        circle.addEventListener('mouseout', function handleMouseOut() {
+          circle.style.boxShadow = '0px 0px 0px';
+          
+          circle.style.transform='rotate(0deg)';
+          circle.style.transition='all ease .5s'
+        });
+             </script>

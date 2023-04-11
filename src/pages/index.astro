@@ -3,19 +3,32 @@ import Layout from "../layouts/Layout.astro";
 import Intro from "../components/Intro/Intro.astro";
 import Sliders from "../components/sliders/sliders.astro";
 import Contact from "../components/Contact.astro";
+import Cera from "../assets/fonts/Cera CY Bold.ttf";
+import Reviews from "../components/reviews/reviews.astro";
+import References from "../../src/components/references/references.astro";
+import Faq from "../../src/components/faq/faq.astro";
 ---
 
 <Layout title="chaabane cleaning int.">
 	<section>
 		<Intro />
 	</section>
-	<section>
+	<!-- <section>
 		<Sliders />
 	</section>
-	<section id="contact">
+		<section id="reviews">
+		<Reviews/>
+	</section> -->
+
+	<!-- <section id="contact">
 		<Contact />
 	</section>
-	<footer style="height:10vh"></footer>
+	<section id="refrences">
+		<div  >
+		<References/>
+	</div>
+	</section> -->
+	<!-- <footer style="height:10vh"></footer> -->
 </Layout>
 
 <style>
@@ -35,5 +48,21 @@ import Contact from "../components/Contact.astro";
 	* {
 		margin: 0;
 		font-family: "Cera CY Regular", "Cera CY Bold", sans-serif;
+	}
+	
+
+	html::-webkit-scrollbar {
+		display: none;
+	}
+	#reviews {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 50px;
+		flex-wrap: wrap;
+	}
+	#refrences {
+		margin-top: 50px;
 	}
 </style>

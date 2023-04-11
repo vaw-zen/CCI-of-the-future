@@ -1,0 +1,109 @@
+---
+import img from "../../assets/Carpet.jpg"
+import sofa from '../../assets/sofa2.avif'
+import marble from "../../assets/marble.jpg"
+import tfc from "../../assets/tfc.jpg"
+
+export interface Props {
+	which: string;
+}
+const { which } = Astro.props;
+---
+<div class="content_wrapper">
+    <!-- start -->
+    <div class="content">
+<img class="rounded" src={img} alt="carpet">
+<div class="content_text">
+<h2>Nettoyage tapis et moquette</h2>
+<p>Nos experts en nettoyage de tapis et moquettes sont formés pour enlever toutes les taches et les saletés de vos sols. Nous utilisons des techniques de nettoyage à la pointe de la technologie pour éliminer les allergènes et les bactéries, laissant ainsi vos tapis et moquettes parfaitement propres et frais </p>
+    </div>
+</div>
+
+
+<div class="content">
+    <img class="rounded" src={sofa} alt="carpet">
+    <div class="content_text">
+    <h2>Nettoyage salons</h2>
+    <p>Nos services de nettoyage de salons comprennent l'enlèvement des taches, le dépoussiérage et l'aspiration de tous les coins et recoins. Nous utilisons des produits de nettoyage non-toxiques pour préserver la qualité de vos meubles et pour protéger l'environnement. Nous sommes là pour vous aider à garder vos salons impeccables. </p>
+        </div>
+    </div>
+
+    <div class="content">
+        <img class="rounded" src={marble} alt="carpet">
+        <div class="content_text">
+        <h2>Entretien marbre et carrelage</h2>
+        <p>Nous offrons un service complet d'entretien pour le marbre et le carrelage, y compris la restauration, le lustrage, la cristalisation et la protection pour le marbre ,le décapage et le nettoyage pour le carrelage . Nos professionnels expérimentés sont équipés pour traiter tous les types de marbre et de carrelage, afin de les maintenir en parfait état. Nous sommes fiers de fournir un service exceptionnel pour nos clients.</p>
+            </div>
+        </div>
+        
+    <div class="content">
+        <img class="rounded" src={tfc} alt="carpet">
+        <div class="content_text">
+        <h2>Nettoyage de fin de chantier</h2>
+        <p>Après la fin de votre chantier, vous pouvez compter sur notre équipe pour effectuer un nettoyage minutieux et professionnel. Nous nettoyons les sols, les murs, les fenêtres, les portes, les plafonds, les sanitaires et les cuisines, et nous nous assurons que tout est impeccable avant que vous n'emménagiez dans votre nouvel espace. Nous travaillons rapidement et efficacement pour que vous puissiez profiter de votre nouveau lieu de vie ou de travail le plus tôt possible. Faites confiance à notre expérience et à notre savoir-faire pour un résultat impeccable.</p>
+            </div>
+            
+        </div>
+        <!-- end -->
+</div>
+<style>
+    .content_text {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    h2 {
+        margin: 0;
+        padding: 0;
+    }
+    p{
+        margin: 0;
+        padding: 0;
+    }
+    .content_wrapper{
+         grid-area: 1 / 2 / 2 / 3;
+        padding-top: 100px ;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .content{
+    height: 180px;
+        background-color: #141416;
+        width: 85%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        gap: 10px;
+        color: #fff;
+    
+}
+@media (max-width:850px){
+    .content_wrapper{
+        grid-area: "bottom";
+    }
+    .content{
+        width: 94%;
+        margin: 10px;
+    }
+
+}
+@media (max-width:580px) {
+    .content{
+        width: 87%;
+        margin: 10px;
+    
+        height: max-content;
+    
+    } }
+    @media (max-width:580px) {
+    .content{
+    } }
+.rounded {
+    padding-top: 5px;
+    width: 160px;
+    height: 160px ;
+    border-radius: 50%;
+}
+</style>

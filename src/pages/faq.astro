@@ -1,0 +1,119 @@
+---
+import { AiFillHome } from "react-icons/ai";
+import FAQ from "../components/faq/faq.astro";
+import Navbar from "../components/navbar/navbar";
+import Layout from "../layouts/Layout.astro";
+
+
+---
+<Layout title="faq">
+    <section class="services_header">
+        <Navbar current="Services" client:load/>
+        <div class="text">
+    <p>Faq</p>
+    <p><a href="/"><span><AiFillHome/> HOME </span></a>/ <span>Faq</span> </p>
+    </div>
+     </section>
+     
+    <div class="content_wrapper">
+
+     <section style="color:#fff ">
+    <h1 style="text-align: center; font-size: 40px;">Do you have Questions?</h1>
+<p style="color:wheat ;text-align: center;padding-left:20%;padding-right: 20%;">Lorem Ipsum is simply dummy text of the printing and typesetting industry has been the industry’s standard dummy when an unknown printer.</p>
+
+</section>
+<section>
+    <FAQ/></section>
+</div>
+</Layout>
+<style>
+     .content_wrapper{
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        justify-content: center;
+        align-items: center;
+     }
+     .services_header{
+        height: 60vh;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Ubuntu', sans-serif;
+font-weight: 300;
+     margin-bottom: 100px;
+    }
+    .text {
+        display: flex;
+        flex-direction: column;
+        justify-content:center ;
+        align-items:center ;
+        height: 100%;
+ 
+    }
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 100px;
+        font-weight: 400;
+    }
+    .text p:nth-child(2){
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    span:nth-child(2){
+        color:#cafb42;
+    }
+
+    @media (max-width:950px) {
+        .picText{
+            height:310px
+        }
+        
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 80px;
+        font-weight: 400;
+    }
+    }
+    @media (max-width:750px) {
+        .services_details h1 {
+            font-size: 50px;
+        }
+    }
+    
+    @media (max-width:642px) {
+        .services_details h1 {
+            font-size: 40px;
+        }
+        
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 40px;
+        font-weight: 400;
+    }
+    }
+    @media (max-width: 533px) {
+        .services_details h1 {
+            font-size:x-large;
+        }
+    }
+    @media (max-width: 350px) {
+       .picText img {
+        min-width: 300px;
+       }
+       .text h1 {
+        font-size: medium;
+       }
+    }
+    
+    @media (max-width: 321px) {
+       
+       .text p:nth-child(1) {
+        font-size: 35px;
+       }
+    }
+
+</style>

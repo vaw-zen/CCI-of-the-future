@@ -36,7 +36,7 @@ const AccordionItem = ({ title, content ,toggleAccordion,isOpen}) => {
 
   return (
     <div className={`accordion-item ${isOpen ? "open" : ""}`}>
-      <button type="button" id="mybutton" onClick={handlecombinedclick}>
+      <button type="button" id="mybutton" onClick={handlecombinedclick} >
         {title}
        
       </button>
@@ -74,7 +74,7 @@ const items = [
 export default function FAQ() {
   return (
     <div className="container">
-      <h1>FAQ</h1>
+     
       <Accordion items={items} />
     </div>
   );

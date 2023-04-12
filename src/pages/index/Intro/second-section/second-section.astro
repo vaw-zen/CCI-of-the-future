@@ -1,0 +1,130 @@
+---
+import Cards from "./cards.astro";
+---
+
+<section style="width:100vw; display:flex;justify-content: center; 100px">
+    <div class="home-container">
+        <div class="left-section">
+            <div style="width: 98.1%;">
+                <div style="color:#cafb42;font-weight: bold;">OUR SERVICES</div>
+                <div class="left-title">What you will get form check.</div>
+                <button> VIEW ALL SERVICE</button>
+            </div>
+        </div>
+        <div class="right-section">
+            <Cards
+                title="Home maintainance"
+                paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
+                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c7ea44749c0d31f77da592_service-01-1200x800.jpg"
+                path=""
+            />
+            <Cards
+                title="Electrical services"
+                paragraph="We provide air conditioning service, repair maintenance support 24/7, delivered by qualified service engineers."
+                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c1e8caee12ad3e86defa_service-02-1200x800-p-500.jpg"
+            />
+            <Cards
+                title="Wiring and installation"
+                paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
+                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c25ec9d419f5ee4f22ff_service-03-1200x800-p-500.jpg"
+                path=""
+            />
+            <Cards
+                title="Renovation and painting"
+                paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
+                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c27023f7407a367a5b50_service-04-1200x800-p-500.jpg"
+                last={true}
+                path=""
+            />
+        </div>
+    </div>
+</section>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap");
+    *::selection {
+        color: #000;
+        background-color: #cafb42;
+    }
+
+    .home-container {
+        margin-top: 100px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-columns: 1fr;
+        grid-column-gap: 30px;
+        font-family: "DM Sans", sans-serif;
+    }
+
+    .home-container .left-section .left-title {
+        font-size: 63px;
+        color: white;
+        margin-top: 10px;
+        line-height: 75px;
+        font-weight: bold;
+    }
+    button {
+        background-color: #cafb42;
+        padding: 15px 30px;
+        border-radius: 32px;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 26px;
+        margin-top: 35px;
+        border: none;
+        cursor: pointer
+    }
+    button:hover {
+        background-color: white;
+    }
+    .home-container .right-section {
+        width: 647.5px;
+        margin-bottom: 10px;
+    }
+    .home-container .left-section {
+        width: 647.5px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        position: sticky;
+        top: 50px;
+        align-self: flex-start;
+    }
+
+    @media (max-width: 1327px) {
+        .home-container {
+            width: 100%;
+        }
+        .home-container .left-section {
+            width: calc((100vw / 2) - 25px);
+            margin-left: 10px;
+        }
+
+        .home-container .right-section {
+            width: calc((100vw / 2) - 20px);
+        }
+    }
+    @media (max-width: 990px) {
+        .home-container .left-section .left-title {
+            font-size: 45px;
+            line-height: 55px;
+        }
+        .home-container {
+            grid-template-columns: 1fr;
+            grid-auto-rows: minmax(100px, auto);
+            grid-row-gap: 30px;
+            font-family: "DM Sans", sans-serif;
+            margin-top: 60px;
+        }
+        .home-container .left-section {
+            max-width: 640px;
+            width: 100%;
+            position: static;
+            margin-left: 15px;
+        }
+        .home-container .right-section {
+            padding-left: 15px;
+            width: calc(100% - 20px);
+            /* margin-left: calc(100% * 0.03); */
+        }
+    }
+</style>

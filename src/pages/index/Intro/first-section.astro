@@ -1,0 +1,176 @@
+---
+import faresImg from "../../../assets/home-page/section-1.jpg";
+import arrow from "../../../assets/icons/arrow.svg";
+---
+<section style="width:100vw; display:flex;justify-content: center;">
+<div class="home-container">
+    <div class="left-section">
+        <div class="img-container">
+            <img alt="fares" src={faresImg} />
+        </div>
+    </div>
+    <div class="right-section">
+        <div style="height:100%;width: 98.1%;">
+            <div style="color:#cafb42; margin-top:21px; font-weight: bold;">
+                WORKING WITH EXCELLENT
+            </div>
+            <!-- font-size: 45px;
+            line-height: 55px; -->
+            <div class="right-title">
+                We are a team of professional skilled experts
+            </div>
+            <div>
+                <p style="color:white; line-height: 25px;opacity:0.6">
+                    We work to ensure people’s comfort at their home, and to
+                    provide the best and the fastest help at fair aute irure
+                    dolor prices.
+                </p>
+
+                <div
+                    style="display:flex; color:white; margin-left: 1px; margin-top: 40px;"
+                >
+                    <div
+                        style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
+                    >
+                    </div>
+                    <div style="margin-top: -4.6px; margin-left: 10px;">
+                        Reliable & Professional loreamipsum contary Boldman
+                        Great Services
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; color:white; margin-left: 1px; margin-top: 25px;"
+                >
+                    <div
+                        style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
+                    >
+                    </div>
+                    <div style="margin-top: -4.6px; margin-left: 10px;">
+                        Replacing Broken handyman popular services Garbage
+                        Disposals
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; color:white; margin-left: 1px; margin-top: 25px;"
+                >
+                    <div
+                        style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
+                    >
+                    </div>
+                    <div style="margin-top: -4.6px; margin-left: 10px;">
+                        Install Outlets, Switches, & contary populrar other
+                        Components
+                    </div>
+                </div>
+                <div class="arrow-container">
+                    <img style="width:50px" src={arrow} />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<style>
+	@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap");
+	*::selection {
+		color: #000;
+		background-color: #cafb42;
+	}
+	.home-container .arrow-container {
+		width: 90px;
+		height: 90px;
+		border: 2px solid white;
+		border-radius: 100%;
+		margin-top: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition: 0.3s;
+	}
+	.home-container .arrow-container:hover {
+		border: 2px solid #cafb42;
+		transform: rotate(-45deg);
+	}
+
+	.home-container {
+		margin-top: 10vh;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-auto-columns: 1fr;
+		grid-column-gap: 30px;
+		font-family: "DM Sans", sans-serif;
+	}
+
+	.home-container .right-section .right-title {
+		font-size: 63px;
+		color: white;
+		margin-top: 10px;
+		line-height: 75px;
+		font-weight: bold;
+	}
+	.home-container .right-section {
+		width: 647.5px;
+		margin-bottom: 10px;
+	}
+	.home-container .left-section {
+		width: 647.5px;
+		margin-bottom: 10px;
+		overflow: hidden;
+	}
+	.home-container .left-section .img-container {
+		height: 100%;
+		width: 100%;
+	}
+	.home-container .left-section img {
+		width: 620px;
+		height: auto;
+		object-fit: cover;
+		object-position: top;
+	}
+
+	@media (max-width: 1327px) {
+		.home-container {
+			width: 100%;
+		}
+		.home-container .left-section {
+			width: calc((100vw / 2) - 25px);
+			margin-left:10px
+		}
+		.home-container .left-section .img-container {
+			width: 98.1%;
+			float: right;
+		}
+		.home-container .left-section .img-container img {
+			width: 100%;
+		}
+		.home-container .right-section {
+			width: calc((100vw / 2) - 20px);
+		}
+	}
+	@media (max-width: 990px) {
+		.home-container .right-section .right-title {
+			font-size: 45px;
+			line-height: 55px;
+		}
+	}
+	@media (max-width: 768px) {
+		.home-container {
+			grid-template-columns: 1fr;
+			grid-auto-rows: minmax(100px, auto);
+			grid-row-gap: 30px;
+			font-family: "DM Sans", sans-serif;
+		}
+		.home-container .left-section {
+			max-width: 640px;
+			width: 100%;
+			margin-left: 1%;
+		}
+		.home-container .right-section {
+			width: calc(100% - 20px);
+			margin-left: calc(100% * 0.03);
+		}
+	}
+</style>

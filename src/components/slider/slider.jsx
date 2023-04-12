@@ -9,15 +9,17 @@ const slider = ({imgArray}) => {
     },[])
   return (
        <>
-    <div id="beer-slider" class="beer-slider" >
-        <img src={imgArray[counter].firstimgSlider} alt=""/>
+       
+
+    <div id="beer-slider" class="beer-slider" style={{maxWidth:"800px",height:"auto"}}>
+        <img style={{width:"900px",height:"auto"}}src={imgArray[counter].firstimgSlider} alt=""/>
         <div class="beer-reveal">
-          <img src={imgArray[counter].secimgSlider} alt=""/>
+          <img style={{width:"900px",height:"auto"}} src={imgArray[counter].secimgSlider} alt=""/>
         </div>
     </div>
     <div class="leftRight" style={{
 
-    backgroundColor: '#cafb4281',
+    backgroundColor: '#000',
     display: "flex",
     justifyContent: "center"
    

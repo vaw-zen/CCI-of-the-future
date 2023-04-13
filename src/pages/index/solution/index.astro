@@ -11,10 +11,14 @@ import CircleSection from "./circle-section/index.astro";
 </div>
 
 <style>
+    *::selection {
+        color: #000;
+        background-color: #cafb42;
+    }
     .father {
         display: flex;
         justify-content: center;
-        background-color:#141416;
+        background-color: #141416;
         padding-bottom: 90px;
     }
     .container {
@@ -27,5 +31,4 @@ import CircleSection from "./circle-section/index.astro";
             width: calc(100% - 30px);
         }
     }
-   
 </style>

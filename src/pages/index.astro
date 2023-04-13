@@ -3,9 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Intro from "./index/Intro/Intro.astro";
 import TextFlow from "./index/text-flow.astro";
 import Solution from "./index/solution/index.astro";
-import Sliders from "../components/sliders/sliders.astro";
-import Contact from "../components/Contact.astro";
-import Reviews from "../components/reviews/reviews.astro";
+import Projects from "./index/projects/index.astro";
 import References from "../../src/components/references/references.astro";
 import Faq from "../../src/components/faq/faq.astro";
 ---
@@ -32,16 +30,18 @@ import Faq from "../../src/components/faq/faq.astro";
 	</section>
 	<section>
 		<Solution />
-	</section> 
+	</section>
+	<section>
+		<Projects />
+	</section>
 
-<!-- 	
+	<!-- 	
 	<section >
 		<References/>
 	</section>  -->
 </Layout>
 
 <style>
-
 	* {
 		margin: 0;
 		font-family: "DM Sans", sans-serif;
@@ -50,5 +50,4 @@ import Faq from "../../src/components/faq/faq.astro";
 	html::-webkit-scrollbar {
 		display: none;
 	}
-	
 </style>

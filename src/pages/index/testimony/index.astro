@@ -1,9 +1,9 @@
 ---
 import AnimatedText from "./animated-text.astro";
+import Sliders from "./sliders";
 ---
 
 <div class="father-container">
-    
     <AnimatedText
         text={[
             "A large number of grateful customers",
@@ -11,4 +11,85 @@ import AnimatedText from "./animated-text.astro";
             "10+ Years of professional experience",
         ]}
     />
+
+    <div class="testimony">
+        <div class="container">
+            <div class="left-side">
+                <img
+                    width="100%"
+                    src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63ca40cc6ea27abcc8299916_single-img-03.png"
+                />
+            </div>
+            <div class="right-side">
+                <Sliders client:load />
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    *::selection {
+        color: #000;
+        background-color: #cafb42;
+    }
+    .testimony {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+    }
+    .container {
+        margin-top: 100px;
+        max-width: 1300px;
+        display: flex;
+        width: calc(100% - 30px);
+        margin-left: 15px;
+    }
+    .left-side {
+        width: 34%;
+        background-color: #141416;
+        padding-right: 100px;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+    }
+    .right-side {
+        width: calc(66% - 30px);
+        position: relative;
+    }
+    @media (max-width: 1315px) {
+        .left-side {
+            padding-right: 30px;
+        }
+    }
+    @media (max-width: 990px) {
+        .container {
+            flex-direction: column;
+        }
+        .left-side {
+            width: calc((100% - 15px) / 2);
+            position: relative;
+            transform: translate(-50%);
+            left: 50%;
+            padding-right: 0;
+        }
+        .right-side {
+            width: calc(100% - 15px);
+        }
+    }
+    /* @media (max-width: 1315px) {
+        .container {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+    .left-side {
+        width: 40%;
+        background-color: #141416;
+        padding-right: 0;
+        z-index: 5;
+    }
+    .right-side {
+        width: calc(100% - 15px);
+        position: relative;
+    } */
+</style>

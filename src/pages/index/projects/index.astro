@@ -46,7 +46,9 @@ import ImgContainer from "./img-container";
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 100vw;
+        width: calc(100% + 16px);
+        margin-left: -8px;
+
     }
     .left-side {
         max-width: 740px;
@@ -100,20 +102,22 @@ import ImgContainer from "./img-container";
             font-size: 45px;
             line-height: 55px;
         }
-    }
-
-    @media (max-width: 768px) {
-        .father-container {
-            flex-direction: column;
-        }
+      
         .left-side {
-            width: calc(100vw - 30px);
+            width: calc(50vw - 30px);
         }
         .right-side {
             width: 100%;
             margin-left: 0;
             margin-top: 40px;
-            max-width: calc(100vw - 30px);
+            max-width: calc(50vw - 30px);
+        }
+
+    }
+
+    @media (max-width: 768px) {
+        .father-container {
+            flex-direction: column;
         }
     }
 </style>

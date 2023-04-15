@@ -2,75 +2,76 @@
 import faresImg from "../../../assets/home-page/section-1.jpg";
 import arrow from "../../../assets/icons/arrow.svg";
 ---
+
 <section style="width:100vw; display:flex;justify-content: center;">
-<div class="home-container">
-    <div class="left-section">
-        <div class="img-container">
-            <img alt="fares" src={faresImg} />
-        </div>
-    </div>
-    <div class="right-section">
-        <div style="height:100%;width: 98.1%;">
-            <div style="color:#cafb42; margin-top:21px; font-weight: bold;">
-                WORKING WITH EXCELLENT
-            </div>
-            <!-- font-size: 45px;
+	<div class="home-container">
+		<div class="left-section">
+			<div class="img-container">
+				<img alt="fares" src={faresImg} />
+			</div>
+		</div>
+		<div class="right-section">
+			<div style="height:100%;width: 98.1%;">
+				<div style="color:#cafb42; margin-top:21px; font-weight: bold;">
+					WORKING WITH EXCELLENT
+				</div>
+				<!-- font-size: 45px;
             line-height: 55px; -->
-            <div class="right-title">
-                We are a team of professional skilled experts
-            </div>
-            <div>
-                <p style="color:white; line-height: 25px;opacity:0.6">
-                    We work to ensure people’s comfort at their home, and to
-                    provide the best and the fastest help at fair aute irure
-                    dolor prices.
-                </p>
+				<div class="right-title">
+					We are a team of professional skilled experts
+				</div>
+				<div>
+					<p style="color:white; line-height: 25px;opacity:0.6">
+						We work to ensure people’s comfort at their home, and to
+						provide the best and the fastest help at fair aute irure
+						dolor prices.
+					</p>
 
-                <div
-                    style="display:flex; color:white; margin-left: 1px; margin-top: 40px;"
-                >
-                    <div
-                        style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
-                    >
-                    </div>
-                    <div style="margin-top: -4.6px; margin-left: 10px;">
-                        Reliable & Professional loreamipsum contary Boldman
-                        Great Services
-                    </div>
-                </div>
+					<div
+						style="display:flex; color:white; margin-left: 1px; margin-top: 40px;"
+					>
+						<div
+							style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
+						>
+						</div>
+						<div style="margin-top: -4.6px; margin-left: 10px;">
+							Reliable & Professional loreamipsum contary Boldman
+							Great Services
+						</div>
+					</div>
 
-                <div
-                    style="display:flex; color:white; margin-left: 1px; margin-top: 25px;"
-                >
-                    <div
-                        style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
-                    >
-                    </div>
-                    <div style="margin-top: -4.6px; margin-left: 10px;">
-                        Replacing Broken handyman popular services Garbage
-                        Disposals
-                    </div>
-                </div>
+					<div
+						style="display:flex; color:white; margin-left: 1px; margin-top: 25px;"
+					>
+						<div
+							style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
+						>
+						</div>
+						<div style="margin-top: -4.6px; margin-left: 10px;">
+							Replacing Broken handyman popular services Garbage
+							Disposals
+						</div>
+					</div>
 
-                <div
-                    style="display:flex; color:white; margin-left: 1px; margin-top: 25px;"
-                >
-                    <div
-                        style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
-                    >
-                    </div>
-                    <div style="margin-top: -4.6px; margin-left: 10px;">
-                        Install Outlets, Switches, & contary populrar other
-                        Components
-                    </div>
-                </div>
-                <div class="arrow-container">
-                    <img style="width:50px" src={arrow} />
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+					<div
+						style="display:flex; color:white; margin-left: 1px; margin-top: 25px;"
+					>
+						<div
+							style="height:8px; width:8px; border: 2.5px solid white; border-radius: 100%;"
+						>
+						</div>
+						<div style="margin-top: -4.6px; margin-left: 10px;">
+							Install Outlets, Switches, & contary populrar other
+							Components
+						</div>
+					</div>
+					<div class="arrow-container">
+						<img style="width:50px" src={arrow} />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 
 <style>
@@ -137,7 +138,7 @@ import arrow from "../../../assets/icons/arrow.svg";
 		}
 		.home-container .left-section {
 			width: calc((100vw / 2) - 25px);
-			margin-left:10px
+			margin-left: 5px;
 		}
 		.home-container .left-section .img-container {
 			width: 98.1%;
@@ -164,13 +165,17 @@ import arrow from "../../../assets/icons/arrow.svg";
 			font-family: "DM Sans", sans-serif;
 		}
 		.home-container .left-section {
-			max-width: 640px;
+			/* max-width: 640px; */
+			width: calc(100% - 30px);
+			margin-left: 15px;
+		}
+		.home-container .left-section .img-container {
 			width: 100%;
-			margin-left: 1%;
+			float: none;
 		}
 		.home-container .right-section {
-			width: calc(100% - 20px);
-			margin-left: calc(100% * 0.03);
+			width: calc(100% - 30px);
+			margin-left: 15px;
 		}
 	}
 </style>

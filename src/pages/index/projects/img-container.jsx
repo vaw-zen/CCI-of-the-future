@@ -2,7 +2,6 @@ import { useState } from 'react'
 import arrow from "../../../assets/icons/long-arrow.svg"
 export default function imgContainer({ img, title, tags }) {
     const [isHovered, setIsHovered] = useState(false)
-    console.log(isHovered)
     return (
         <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} style={{ height: "calc(100% - 25px)", width: "100%", position: "relative", overflow: "hidden" }}>
             <img width={"100%"} src={img} />

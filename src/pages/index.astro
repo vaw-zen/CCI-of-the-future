@@ -5,6 +5,7 @@ import TextFlow from "./index/text-flow.astro";
 import Solution from "./index/solution/index.astro";
 import Projects from "./index/projects/index.astro";
 import Testimony from "./index/testimony/index.astro";
+import Overlay from "./index/background-overlay.astro";
 import References from "../../src/components/references/references.astro";
 import Faq from "../../src/components/faq/faq.astro";
 ---
@@ -38,7 +39,10 @@ import Faq from "../../src/components/faq/faq.astro";
 	<section>
 		<Testimony />
 	</section>
-
+	<section>
+		<Overlay />
+	</section>
+	
 	<!-- 	
 	<section >
 		<References/>
@@ -50,6 +54,7 @@ import Faq from "../../src/components/faq/faq.astro";
 		margin: 0;
 		font-family: "DM Sans", sans-serif;
 	}
+	
 	html::-webkit-scrollbar {
 		display: none;
 	}

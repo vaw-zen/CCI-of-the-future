@@ -52,16 +52,20 @@ const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
     <div class="z-parent-container">
         <div class="z-container">
             <div class="z-left">
-                Copyright © pink butterfly | Designed by pink butterfly -
-                Powered by bo7mid ras el barka
+                Copyright © <span class="copyright">pink butterfly</span>|
+                Designed by <span class="copyright">pink butterfly</span> - Powered
+                by <span class="copyright">bo7mid</span>
+                <span class="copyright">ras el barka</span>
             </div>
             <div class="z-right">
                 {
                     social.map((e, i) => (
                         <span
+                            onmouseenter="this.style.color='#cafb42'"
+                            onmouseleave="this.style.color='white'"
                             style={`margin-left: ${
                                 i ? "20px" : 0
-                            }; color: white; font-weight: bold; font-size: 18px`}
+                            }; color: white; font-weight: bold; font-size: 18px; cursor: pointer`}
                         >
                             {e}
                         </span>
@@ -95,10 +99,18 @@ const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
         float: left;
         width: calc(70% - 15px);
         margin-left: 15px;
-        color: white;
+        color: rgba(255, 255, 255, 0.233);
+        font-size: 19px;
     }
     .z-right {
         width: calc(30% - 15px);
+    }
+    .copyright {
+        color: white;
+        cursor: pointer;
+    }
+    .copyright:hover {
+        color: #cafb42;
     }
 
     .father-container {
@@ -116,6 +128,7 @@ const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
         color: #cafb42;
         cursor: pointer;
     }
+
     .container {
         display: flex;
         justify-content: center;

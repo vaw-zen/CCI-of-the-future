@@ -126,7 +126,7 @@ export default function sliders() {
                         <button onClick={() => { handlePrevClick(); handleSlide("left", setSlides, containerRef) }} onMouseEnter={() => setBtnIsHovered(1)} onMouseLeave={() => setBtnIsHovered(0)} style={{ ...styles.btn, transform: 'rotate(180deg)', backgroundColor: btnIsHovered === 1 ? "#cafb42" : "transparent", borderColor: btnIsHovered === 1 ? "#cafb42" : "white" }}>
                             <img src={btnIsHovered === 1 ? hoveredArrow : arrow} />
                         </button>
-                        <button onClick={() => { handleNextClick(); handleSlide("right", setSlides, containerRef) }} onMouseEnter={() => setBtnIsHovered(2)} onMouseLeave={() => setBtnIsHovered(0)} style={{ ...styles.btn, marginLeft: 30, backgroundColor: "transparent", backgroundColor: btnIsHovered === 2 ? "#cafb42" : "transparent", borderColor: btnIsHovered === 2 ? "#cafb42" : "white" }}>
+                        <button onClick={() => { handleNextClick(); handleSlide("right", setSlides, containerRef) }} onMouseEnter={() => setBtnIsHovered(2)} onMouseLeave={() => setBtnIsHovered(0)} style={{ ...styles.btn, marginLeft: 30, backgroundColor: btnIsHovered === 2 ? "#cafb42" : "transparent", borderColor: btnIsHovered === 2 ? "#cafb42" : "white" }}>
                             <img src={btnIsHovered === 2 ? hoveredArrow : arrow} />
                         </button>
                     </div>

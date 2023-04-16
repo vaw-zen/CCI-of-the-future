@@ -18,7 +18,7 @@ const navbar = ({current}) => {
     <p>Chaabane Cleaning int</p>
 </div>
 <div className="choices">
-    <p style={current==="Home" ? ({color:"#cafb42"}):{}}>Home</p>
+    <p style={current==="Home" ? ({color:"#cafb42",cursor:'pointer'}):{cursor:'pointer'}}>Home</p>
     <div className="services-whole" onMouseOver={e=>setOpen(true)} onMouseLeave={e=>setOpen(false)}>
 
     <div className="styled_choice">

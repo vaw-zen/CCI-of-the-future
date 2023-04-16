@@ -1,0 +1,196 @@
+---
+import Navbar from "../components/navbar/navbar.jsx";
+import Layout from "../layouts/Layout.astro"
+import {AiFillHome} from "react-icons/ai"
+import {ImArrowRight2} from "react-icons/im"
+---
+
+<Layout title="projects">
+ 
+ <section class="services_header">
+    <Navbar current="Services" client:load/>
+    <div class="text">
+<p>Our projects</p>
+<p><a href="/"><span><AiFillHome/> HOME </span></a>/ <span>Our projects</span> </p>
+</div>
+ </section>
+<section class="projects_container">
+<div class="content_wrapper">
+    <div class="image_container">
+    <img src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c92820616f6dddb45ade02_portfolio-01-740x556.jpg" alt="">
+    <div class="rectangle_info" >
+        <div class="texts">
+    <h1>Plubmbing, New york</h1>
+    <p>plumbing</p>
+    </div>
+    <div class="button">
+    <ImArrowRight2 fontSize={20}/>
+    </div>
+    </div>
+    
+</div>
+<div class="image_container">
+    <img src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c93831f818bd32ad515080_portfolio-02-740x556.jpg" alt="">
+<div class="rectangle_info" >
+    <div class="texts">
+<h1>Plubmbing, New york</h1>
+<p>plumbing</p>
+</div>
+<div class="button">
+<ImArrowRight2 fontSize={20}/>
+</div>
+</div>
+</div>
+<div class="image_container">
+    <img src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c92820616f6dddb45ade02_portfolio-01-740x556.jpg" alt="">
+    <div class="rectangle_info" >
+        <div class="texts">
+    <h1>Plubmbing, New york</h1>
+    <p>plumbing</p>
+    </div>
+    <div class="button">
+    <ImArrowRight2 fontSize={20}/>
+    </div>
+    </div>
+    
+</div>
+<div class="image_container">
+    <img src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c93831f818bd32ad515080_portfolio-02-740x556.jpg" alt="">
+    <div class="rectangle_info" >
+        <div class="texts">
+    <h1>Plubmbing, New york</h1>
+    <p>plumbing</p>
+    </div>
+    <div class="button">
+    <ImArrowRight2 fontSize={20}/>
+    </div>
+    </div>
+    
+</div>
+</div>
+</section>
+      
+    
+</Layout>
+
+<style>
+      @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,500;0,700;1,500&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Bungee+Outline&display=swap');
+      .rectangle_info{
+        background-color: #1a1a1c; width:65% ; height: 5vh;
+        position: absolute;
+        bottom: -200px;
+        left: 50%;
+  transform: translateX(-50%);
+opacity: 0;
+        transition: cubic-bezier(0.075, 0.82, 0.165, 1) 4s all;
+      padding: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      }
+      .button {
+        width: 60px;
+        height: 60px;
+        border-radius: 5px;
+        background-color: #cafb42;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .rectangle_info h1,p {
+        margin: 0;
+    padding: 0;
+    color:#fff
+      }
+      .rectangle_info p {
+    color:#ffffff97
+      }
+      .image_container{
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+ }
+ .image_container:hover .rectangle_info {
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) 1s all;
+    bottom: 40px;
+    opacity: 1;
+   }
+      .content_wrapper{
+    display: grid;
+grid-template-columns: repeat(2, minmax(10px, 1fr));
+grid-auto-rows: auto;
+
+grid-template-rows: auto;
+
+grid-column-gap: 30px;
+grid-row-gap: 30px;
+ }
+ .content_wrapper img{
+   max-width:100%;
+   min-width: 350px;
+   height: auto;
+ }
+      .projects_container{
+    margin-top: 100px;
+    margin: 100px 20px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+ 
+ @media (max-width:770px){
+    .content_wrapper{
+        
+        grid-template-columns: 1fr;
+    }
+ }
+      .services_header{
+        height: 60vh;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Ubuntu', sans-serif;
+font-weight: 300;
+     
+    }
+    .text {
+        display: flex;
+        flex-direction: column;
+        justify-content:center ;
+        align-items:center ;
+        height: 100%;
+ 
+    }
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 100px;
+        font-weight: 400;
+    }
+    .text p:nth-child(2){
+      margin-top: 10px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    span:nth-child(2){
+        color:#cafb42;
+    }
+    @media (max-width:390px) {
+        .text p:nth-child(1){
+        color: #fff;
+        font-size: x-large;
+       
+    }
+}
+    @media (max-width:579px) {
+        .text p:nth-child(1){
+        color: #fff;
+        font-size: 50px;
+       
+    }
+      }
+    </style>

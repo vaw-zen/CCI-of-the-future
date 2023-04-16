@@ -1,0 +1,340 @@
+---
+import Navbar from "../components/navbar/navbar.jsx";
+import Layout from "../layouts/Layout.astro"
+import {AiFillHome} from "react-icons/ai"
+import {ImArrowRight2} from "react-icons/im"
+export  interface Props {
+    ImgUrl:string,
+    title : string,
+    Category:string,
+    Services:string,
+    Customer:string,
+    Website : string,
+    challenges:string, 
+    summary:string,
+    imgArray:Array<{img:string}>,
+
+}
+const {PageName,ImgUrl,title,
+    Category,
+    Services,
+    Customer,
+    Website ,
+    challenges, 
+    summary,
+    imgArray,
+}= Astro.props
+
+---
+
+<Layout title="projects">
+ 
+ <section class="services_header">
+    <Navbar current="Services" client:load/>
+    <div class="text">
+<p>Details</p>
+<p><a href="/"><span><AiFillHome/> HOME </span></a>/ <span>Details</span> </p>
+</div>
+ </section>
+<section class="projects_container">
+    
+    <div class="content_wrapper">
+    <div class="img">
+        <img src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d3c5cb80188428d1310fff_pf-01-1303x564.jpg" alt="hero">
+    </div>
+    <h1>The back story of {PageName}
+    </h1>
+    <div class="info">
+        <div class="left">
+            <p>Category :
+               <span> Commercial, Offices </span></p>
+               <p>Services :
+                <span>Carpenter</span></p>
+
+        </div>
+        <div class="right">
+            <p>Customer :
+                <span> Alex Jhon Martin
+                </span></p>
+                <p>Website :
+                 <span>aaa@gm.com</span></p>
+ 
+        </div>
+
+    </div>
+    <div class="hr"></div>
+   <div class="info">
+
+   </div>
+          
+</div>
+<div class="lisitngProjects">
+    <div class="challenges">
+<h1>01. Project challenges
+</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eimod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exerciion ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+</p>
+
+</div>
+<div class="challenges_imgs">
+    <img src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d3c75e2c8dce45d63694b4_pf-01.jpg" alt="">
+    <img src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d3c77a212faf595d6e22d2_pf-02.jpg" alt="">
+    <img src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d3c78c130ff0401aa60a12_pf-03.jpg" alt="">
+    </div>
+</div>
+<div class="challenges summery">
+<h1>02. Project summery
+</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eimod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exerciion ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+</p>
+</div>  
+<div class="last_pictext">
+    <div class="las_img">
+    <img src="https://thumbs.dreamstime.com/b/handyman-cut-round-holes-electrical-outlets-marble-countertop-kitchen-using-hand-drill-handyman-cut-round-198661077.jpg" alt="">
+</div>
+
+    <div class="texts">
+<p> <ImArrowRight2 color="#cafb42" style={{marginRight:"5px"}} /> We use the best and newest product for developing technologies
+</p>
+<p> <ImArrowRight2 color="#cafb42" style={{marginRight:"5px"}}/> Manage and test all systems to our experienced qualified Experts
+</p>
+<p> <ImArrowRight2 color="#cafb42" style={{marginRight:"5px"}}/> Always ready to easy way in installing all security systems admin
+</p>
+<p> <ImArrowRight2 color="#cafb42" style={{marginRight:"5px"}}/>  and test all systems to our experienced qualified Experts
+</p>
+<p> <ImArrowRight2 color="#cafb42" style={{marginRight:"5px"}}/> We use the best and newest product for developing the our strategies
+</p>
+</div>
+</div>      
+</section>  
+</Layout>
+
+<style>
+      @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,500;0,700;1,500&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Bungee+Outline&display=swap');
+.las_img{
+    width: 800px;
+    height: 250px;
+    overflow: hidden;
+
+    animation: 1s linear all;
+}
+      .last_pictext{
+    margin: 80px 0 ;
+    display:flex;
+    gap: 20px;
+color: #ffffff85; 
+}
+ .last_pictext img {
+    width: 100%;
+    height: 100%;
+    scale: 1.5;
+ }
+ .last_pictext p {
+    display:flex;
+    align-items: center;
+    padding:10px ;
+ }
+      .challenges_imgs{
+    margin: 50px 0;
+    display: grid;
+grid-template-columns: repeat(3,1fr);
+grid-template-rows: auto;
+column-gap: 30px;
+
+}
+ .challenges_imgs img {
+    width: 100%;
+    height: auto;
+ }
+
+      .challenges{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+}
+  .challenges p {
+    width: 50%;
+    color: #ffffff85;
+  }
+  .challenges h1 {
+    font-size: 40px;
+    margin: 0;padding: 0;
+    word-spacing: 5px;
+  }
+.lisitngProjects{
+    color: #fff;
+}
+      .hr{
+        width: 100%;
+        height: 1px;
+        background-color: #ffffffab;    }
+      .info{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: wrap; 
+    }
+    .info .left{
+        display: flex;
+       flex-wrap: wrap;
+   gap: 20px;
+   width: 40%;
+     margin: 0;
+    padding: 0;
+    }
+    .info .right{
+        display: flex;
+       flex-wrap: wrap;
+        gap: 20px;
+        width: 40%;  
+    }
+    .img {
+        width: 100%;
+    }
+    
+    .img img{
+width: 100%;
+     height: auto;
+    
+     
+    }
+      .content_wrapper{
+        margin-top: 100px;
+        display:flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 30px;
+   justify-items: start;
+
+   animation: 1s linear all;    
+}
+    .info .left p , .info .right p {
+        color: #fff;
+font-weight: 600;
+font-size: 20px;
+    }
+    .content_wrapper span {
+        color: #fff;
+font-weight: 100;
+    }
+    .content_wrapper h1{
+        color:#fff ;
+        font-size: 46px;
+        font-weight: 400;
+
+        margin: 0;
+        padding: 0;
+    }
+      .projects_container{
+        display: flex;
+ flex-direction: column;
+ width: 80%;
+margin: 0 auto;    
+animation: 1s linear all;
+}
+ 
+ @media (max-width:770px){
+    .content_wrapper{
+        
+        grid-template-columns: 1fr;
+    }
+    
+    .info .left ,.info .right {
+        gap: 0px;
+        width: 100%;
+    }
+    .info, .left , .right {
+        display: flex;
+        flex-direction: column;
+
+    } }
+ @media (max-width:1564px){
+    .projects_container{
+        width: 90%;
+    }
+    
+ }
+ @media(max-width:1411px){
+    .las_img{
+        width: 500px;
+        height: 300px;
+    }
+
+    .challenges h1 {
+    width: 45%;
+  }
+ }
+ @media (max-width:650px){
+    .challenges{
+        display: flex;
+        flex-direction: column;
+    }
+    .challenges h1 ,.challenges p  {
+    
+        width: 100%;
+    }
+    .challenges_imgs{
+        grid-template-columns: 1fr;
+        row-gap: 20px;
+    }
+    .last_pictext{
+        flex-direction: column;
+    }
+    .last_pictext .las_img {
+        width: 100%;
+        height: auto;
+    }
+ }
+ 
+      .services_header{
+        height: 60vh;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Ubuntu', sans-serif;
+font-weight: 300;
+     
+    }
+    .text {
+        display: flex;
+        flex-direction: column;
+        justify-content:center ;
+        align-items:center ;
+        height: 100%;
+ 
+    }
+.text p:nth-child(1){
+        color: #fff;
+        font-size: 100px;
+        font-weight: 400;
+    }
+    .text p:nth-child(2){
+      margin-top: 10px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    span:nth-child(2){
+        color:#cafb42;
+    }
+    @media (max-width:390px) {
+        .text p:nth-child(1){
+        color: #fff;
+        font-size: x-large;
+       
+    }
+}
+    @media (max-width:579px) {
+        .text p:nth-child(1){
+        color: #fff;
+        font-size: 50px;
+       
+    }
+      }
+    </style>

@@ -42,7 +42,7 @@ import bg from '../../assets/bg360.jpg'
     background-attachment: fixed;
     perspective: 1000px;
     animation: rotateBg 15s linear  ;
-		margin-top: 50px;
+    animation-name:rotate1
   }
  
   h1 {
@@ -103,8 +103,8 @@ import bg from '../../assets/bg360.jpg'
     margin-top: -10%;
     /* margin-bottom: 10%; */
     transform-style: preserve-3d;
-    animation-name: rotate;
-    animation-duration: 15s;
+  animation-name: rotate;
+  animation-duration: 15s;
   /* animation-iteration-count: infinite; */
   }
 
@@ -206,6 +206,7 @@ font-size: 1.2rem;
   }
   50% {
     transform: translateZ(-100px) rotateY(180deg) rotateX(90deg) scale(0.7);
+    background-color: #ffffffdc;
   }
   100% {
     transform: translateZ(-100px) rotateY(360deg) rotateX(0) scale(1);

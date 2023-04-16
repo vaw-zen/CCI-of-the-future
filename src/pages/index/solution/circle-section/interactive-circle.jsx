@@ -7,13 +7,13 @@ export default function interactiveCircle() {
             fontSize: "22px", position: "relative", left: "-15px", cursor: "pointer"
         },
         img: {
-            position: "relative", top: "6px", position: "absolute", right: "-25px"
+            position: "relative", top: "6px", right: "-25px"
         },
         container: {
             cursor: "pointer", transition: "0.5s", overflowy: "hidden"
         },
         p: {
-            fontWeigh: "regular", fontSize: 15, position: "absolute", width: 300, transition: "1s", color:"white"
+            fontWeigh: "regular", fontSize: 15, position: "relative", width: 300, transition: "1s", color:"white"
         }
     }
     function handleClick(nth) {

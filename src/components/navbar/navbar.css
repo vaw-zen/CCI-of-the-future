@@ -9,24 +9,27 @@
     gap:100px;
     font-size: 20px;
     border-bottom: #ffffff39 .5px solid;
-	width:100vw;
-	background-color: #00000073;
+    
     font-family: 'Ubuntu', sans-serif;
     font-weight: 400;
+    background-color: transparent;
+
 }
 .services-whole{
     
     display: flex;
     gap: 10px;
     top: 0;
-    height:80px;
-	z-index: 5 !important;
+    min-height: 500px;
+	width: auto;
+    
 }
 .choices{
     gap: 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+	
 }
 .styled_choice{
     
@@ -49,11 +52,12 @@
 
 }
 .services_dropdown{
-    height: 25vh;
-    width: 15vw;
+    min-height:max-content;
+	height: 200px;
+    width: max-content;
     background-color: #24272a;
     position: absolute;
-    top: 77px;
+    top: 87px;
     padding: 50px 20px;
     display: flex;
     flex-direction: column;
@@ -61,6 +65,7 @@
     gap: 20px;
     border-radius: 10px;
     text-transform: capitalize;
+	font-weight: 100;
     border-top-left-radius: 8px;
 }
 p{
@@ -72,7 +77,7 @@ p{
 	width: 0;
 	height: 0;
     position: absolute;
-    top: 65px;
+    top: 75px;
 	border-width: 0 15px 15px 15px;
 	border-color: transparent transparent #24272a transparent;
 	border-style: solid;

@@ -1,6 +1,7 @@
 ---
 const menu = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
 const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
+
 ---
 
 <div class="father-container">
@@ -204,6 +205,35 @@ const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
         font-weight: bold;
     }
 
+    .menu .line {
+        max-width: 40px;
+        border-top: 2px solid rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .menu:hover .line {
+        max-width: 80px;
+        border-top: 2px solid #cafb42;
+    }
+
+    .menu .menu-number {
+        color: rgba(255, 255, 255, 0.8);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .menu:hover .menu-number {
+        color: #cafb42;
+    }
+
+    .menu .menu-link {
+        color: white;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .menu:hover .menu-link {
+        color: #cafb42;
+    }
+
     @media (max-width: 1190px) {
         .container {
             flex-direction: column;
@@ -263,25 +293,3 @@ const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
         }
     }
 </style>
-
-<script>
-    document.querySelectorAll(".menu").forEach((menu) => {
-        const line = menu.querySelector(".line");
-        const number = menu.querySelector(".menu-number");
-        const link = menu.querySelector(".menu-link");
-
-        menu.addEventListener("mouseenter", () => {
-            line.style.maxWidth = "80px";
-            line.style.borderTop = "2px solid #cafb42";
-            number.style.color = "#cafb42";
-            link.style.color = "#cafb42";
-        });
-
-        menu.addEventListener("mouseleave", () => {
-            line.style.maxWidth = "40px";
-            line.style.borderTop = "2px solid rgba(255, 255, 255, 0.5)";
-            number.style.color = "rgba(255, 255, 255, 0.8)";
-            link.style.color = "white";
-        });
-    });
-</script>

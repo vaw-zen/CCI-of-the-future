@@ -13,7 +13,7 @@ export default function interactiveCircle() {
             cursor: "pointer", transition: "0.5s", overflowy: "hidden"
         },
         p: {
-            fontWeigh: "regular", fontSize: 15, position: "relative", width: 300, transition: "1s", color:"white"
+            fontWeigh: "regular", fontSize: 15, position: "relative", width: 300, transition: "1s", color: "white"
         }
     }
     function handleClick(nth) {
@@ -22,9 +22,9 @@ export default function interactiveCircle() {
     return (
         <div >
             <div onClick={() => handleClick(1)} style={{ ...styles.container, height: isClicked === 1 ? 70 : 30 }}>
-                <h1 style={{ ...styles.h1, top: -25, color: isClicked === 1 ? "#cafb42" : "white"  }}>
+                <h1 style={{ ...styles.h1, top: -25, color: isClicked === 1 ? "#cafb42" : "white" }}>
                     Large of services provided
-                    <img style={styles.img} src={arrow} />
+                    {isClicked !== 1 ? <img style={styles.img} src={arrow} /> : null}
                     <p style={{ ...styles.p, opacity: isClicked === 1 ? 0.6 : 0, }}>
                         We Strive for 100% customer satisfaction <br />
                         in everything we do.</p>
@@ -33,16 +33,16 @@ export default function interactiveCircle() {
             <div onClick={() => handleClick(2)} style={{ ...styles.container, height: isClicked === 2 ? 70 : 30 }}>
                 <h1 style={{ ...styles.h1, color: isClicked === 2 ? "#cafb42" : "white" }}>
                     Professional experience
-                    <img style={styles.img} src={arrow} />
+                    {isClicked !== 2 ? <img style={styles.img} src={arrow} /> : null}
                     <p style={{ ...styles.p, opacity: isClicked === 2 ? 0.6 : 0, }}>
                         We Strive for 100% customer satisfaction <br />
                         in everything we do.</p>
                 </h1>
             </div>
             <div onClick={() => handleClick(3)} style={{ ...styles.container, height: isClicked === 3 ? 70 : 30 }}>
-                <h1 style={{ ...styles.h1, top: 25, color: isClicked === 3 ? "#cafb42" : "white"  }}>
+                <h1 style={{ ...styles.h1, top: 25, color: isClicked === 3 ? "#cafb42" : "white" }}>
                     Number grateful customers
-                    <img style={styles.img} src={arrow} />
+                    {isClicked !== 3 ? <img style={styles.img} src={arrow} /> : null}
                     <p style={{ ...styles.p, opacity: isClicked === 3 ? 0.6 : 0, }}>
                         We Strive for 100% customer satisfaction <br />
                         in everything we do.</p>

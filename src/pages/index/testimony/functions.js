@@ -63,7 +63,6 @@ export const handleSlide = (direction, setSlides, containerRef) => {
             containerRef.current.scrollLeft = containerRef.current.offsetWidth;
             lastAction = direction
             setSlides(result)
-            console.log(result.map(e => e.tag))
             loading = false
         }, 600);
     }

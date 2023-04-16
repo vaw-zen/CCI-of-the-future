@@ -1,67 +1,122 @@
 ---
 const menu = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
+const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
 ---
 
 <div class="father-container">
-    <div class="left-side">
-        <div>
-            <h1>Just drop me a line</h1>
-            <h1>boldman@example.com</h1>
-            <div style="display:flex">
-                <div style="width: 40%;">
-                    <p>Our phone number</p>
-                    <h3>+0123 456 18 100</h3>
-                </div>
-                <div style="width: 60%;">
-                    <p>Our location</p>
-                    <h3>schemns wuendksd,wensd ch-34532 NY</h3>
+    <div class="container">
+        <div class="left-side">
+            <div>
+                <h1>Just drop me a line</h1>
+                <h1
+                    class="email"
+                    style="position: relative;transition:0.3s; cursor:pointer"
+                >
+                    <div
+                        class="email-line"
+                        style="height:100%; position:absolute; width: 712px; bottom: -10px; transition: 1s"
+                    >
+                    </div>
+                    boldman@example.com
+                </h1>
+                <div style="display:flex">
+                    <div style="width: 40%;">
+                        <p style="line-height: 0px;">Our phone number</p>
+                        <h3 class="infos">+0123 456 18 100</h3>
+                    </div>
+                    <div style="width: 60%;">
+                        <p style="line-height: 0px;">Our location</p>
+                        <h3 class="infos">
+                            schemns wuendksd,wensd ch-34532 NY
+                        </h3>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="right-side">
+            {
+                menu.map((e, i) => (
+                    <div class="menu">
+                        <div class="menu-container">
+                            <div class="line" />
+                            <h3 class="menu-number">01</h3>
+                        </div>
+                        <a class="menu-link">{e}</a>
+                    </div>
+                ))
+            }
         </div>
     </div>
-
-    <div class="right-side">
-        <div class="menu">
-            <div class="menu-container">
-                <div class="line"></div>
-                <h3 class="menu-number">01</h3>
+    <hr style="border-color: white; opacity: 0.2" />
+    <div class="z-parent-container">
+        <div class="z-container">
+            <div class="z-left">
+                Copyright © pink butterfly | Designed by pink butterfly -
+                Powered by bo7mid ras el barka
             </div>
-            <a class="menu-link">HOME</a>
-        </div>
-
-        <div class="menu">
-            <div class="menu-container">
-                <div class="line"></div>
-                <h3 class="menu-number">01</h3>
+            <div class="z-right">
+                {
+                    social.map((e, i) => (
+                        <span
+                            style={`margin-left: ${
+                                i ? "20px" : 0
+                            }; color: white; font-weight: bold; font-size: 18px`}
+                        >
+                            {e}
+                        </span>
+                    ))
+                }
             </div>
-            <a class="menu-link">ABOUT</a>
         </div>
-        <div class="menu">
-            <div class="menu-container">
-                <div class="line"></div>
-                <h3 class="menu-number">01</h3>
-            </div>
-            <a class="menu-link">SERVICES</a>
-        </div>
-        <div class="menu">
-            <div class="menu-container">
-                <div class="line"></div>
-                <h3 class="menu-number">01</h3>
-            </div>
-            <a class="menu-link">CONTACT</a>
-        </div>
-
-        <div></div>
     </div>
 </div>
-
 <style>
     *::selection {
         color: #000;
         background-color: #cafb42;
     }
+
+    .z-parent-container {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        margin-top: -9px;
+    }
+    .z-container {
+        max-width: 1330px;
+        width: 100%;
+        display: flex;
+        height: 60px;
+        align-items: center;
+    }
+
+    .z-left {
+        float: left;
+        width: calc(70% - 15px);
+        margin-left: 15px;
+        color: white;
+    }
+    .z-right {
+        width: calc(30% - 15px);
+    }
+
     .father-container {
         background-color: #1a1a1c;
+    }
+    .email:hover {
+        color: #cafb42;
+        text-decoration: underline;
+    }
+
+    .email:hover .email-line {
+        border-bottom: 7px solid #cafb42;
+    }
+    .infos:hover {
+        color: #cafb42;
+        cursor: pointer;
+    }
+    .container {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -137,7 +192,49 @@ const menu = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
     }
 
     @media (max-width: 1190px) {
-        .father-container {
+        .container {
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .left-side {
+            min-width: calc(100vw - 30px);
+            margin-left: 0;
+        }
+        .right-side {
+            width: 100%;
+            margin-left: 0;
+            margin-top: 40px;
+            max-width: calc(100vw - 30px);
+        }
+    }
+
+    @media (max-width: 1330px) {
+        .z-parent-container {
+            display: flex;
+            margin-top: 20px;
+        }
+        .z-container {
+            height: 85px;
+            flex-direction: column;
+        }
+
+        .z-left {
+            width: 100%;
+            margin-left: 0;
+            color: white;
+            display: flex;
+            justify-content: center;
+        }
+        .z-right {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    }
+
+    @media (max-width: 1190px) {
+        .container {
             flex-direction: column;
             justify-content: flex-end;
         }

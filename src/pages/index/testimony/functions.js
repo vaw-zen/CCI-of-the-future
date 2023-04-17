@@ -68,6 +68,3 @@ export const handleSlide = (direction, setSlides, containerRef) => {
     }
 }
 
-
-
-

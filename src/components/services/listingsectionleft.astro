@@ -66,10 +66,11 @@ const { which } = Astro.props;
         display: flex;
         flex-direction: column;
         gap: 15px;
+        
     }
     .content{
     height: max-content;
-        background-color: #141416;
+        background-color: #1a1a1c;
         width: 85%;
         display: flex;
         align-items: center;
@@ -100,6 +101,13 @@ const { which } = Astro.props;
     @media (max-width:580px) {
     .content{
     } }
+    @media (max-width:357px){
+        
+.content{
+padding:8px;   
+    
+}
+    }
 .rounded {
     padding-top: 5px;
     width: 160px;

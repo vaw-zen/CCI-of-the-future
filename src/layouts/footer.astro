@@ -1,0 +1,178 @@
+---
+const menu = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
+---
+
+<div class="father-container" style="overflow: hidden;">
+    <div class="left-side">
+        <div>
+            <h1>Just drop me a line</h1>
+            <h1 style="word-wrap: break-word;">boldman@example.com</h1>
+            <div style="display:flex">
+                <div style="width: 40%;">
+                    <p>Our phone number</p>
+                    <h3>+0123 456 18 100</h3>
+                </div>
+                <div style="width: 60%;">
+                    <p>Our location</p>
+                    <h3>schemns wuendksd,wensd ch-34532 NY</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-side">
+        <div class="menu">
+            <div class="menu-container">
+                <div class="line"></div>
+                <h3 class="menu-number">01</h3>
+            </div>
+            <a class="menu-link">HOME</a>
+        </div>
+
+        <div class="menu">
+            <div class="menu-container">
+                <div class="line"></div>
+                <h3 class="menu-number">01</h3>
+            </div>
+            <a class="menu-link">ABOUT</a>
+        </div>
+        <div class="menu">
+            <div class="menu-container">
+                <div class="line"></div>
+                <h3 class="menu-number">01</h3>
+            </div>
+            <a class="menu-link">SERVICES</a>
+        </div>
+        <div class="menu">
+            <div class="menu-container">
+                <div class="line"></div>
+                <h3 class="menu-number">01</h3>
+            </div>
+            <a class="menu-link">CONTACT</a>
+        </div>
+
+        <div></div>
+    </div>
+</div>
+
+<style>
+    *::selection {
+        color: #000;
+        background-color: #cafb42;
+    }
+    .father-container {
+        background-color: #1a1a1c;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: calc(100%);
+        padding-top: 50px;
+        padding-bottom: 50px;
+  
+    }
+    .left-side {
+        max-width: 980px;
+        width: calc(80% - 30px);
+        margin-left: 15px;
+    }
+    .right-side {
+        width: calc(30% - 30px);
+        margin-left: 30px;
+        max-width: 320px;
+    }
+
+    .left-side div {
+        width: 100%;
+    }
+    .right-side div {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 60px;
+        line-height: 40px;
+        color: white;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    h3 {
+        font-weight: bold;
+        font-size: 25px;
+    }
+    p {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    h3 {
+        color: white;
+    }
+    .menu {
+        display: flex;
+        height: 50px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+    .menu:nth-child(1) {
+        margin-top: 0;
+    }
+    .menu-container {
+        max-width: 90px;
+        position: relative;
+    }
+    .line {
+        max-width: 40px;
+        border-top: 2px solid rgba(255, 255, 255, 0.5);
+        position: absolute;
+        transition: 0.4s;
+    }
+    .menu-number {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 21px;
+    }
+    .menu-link {
+        font-size: 38px;
+        color: white;
+        margin-top: -12px;
+        font-weight: bold;
+    }
+
+    @media (max-width: 1190px) {
+        .father-container {
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .left-side {
+            min-width: calc(100vw - 30px);
+            margin-left: 0;
+        }
+        .right-side {
+            width: 100%;
+            margin-left: 0;
+            margin-top: 40px;
+            max-width: calc(100vw - 30px);
+        }
+    }
+</style>
+
+<script>
+    document.querySelectorAll(".menu").forEach((menu) => {
+        const line = menu.querySelector(".line");
+        const number = menu.querySelector(".menu-number");
+        const link = menu.querySelector(".menu-link");
+
+        menu.addEventListener("mouseenter", () => {
+            line.style.maxWidth = "80px";
+            line.style.borderTop = "2px solid #cafb42";
+            number.style.color = "#cafb42";
+            link.style.color = "#cafb42";
+        });
+
+        menu.addEventListener("mouseleave", () => {
+            line.style.maxWidth = "40px";
+            line.style.borderTop = "2px solid rgba(255, 255, 255, 0.5)";
+            number.style.color = "rgba(255, 255, 255, 0.8)";
+            link.style.color = "white";
+        });
+    });
+</script>

@@ -1,0 +1,67 @@
+---
+const { text } = Astro.props;
+---
+
+<div class="papa-container">
+    <div class="container">
+        {
+            [...text, ...text].map((e) => {
+                return (
+                    <div class="text-container">
+                        <h1 style="color: #141416">{e}</h1>
+                        <div class="_"> * </div>
+                    </div>
+                );
+            })
+        }
+    </div>
+</div>
+
+<style>
+    *::selection {
+        color: #000;
+        background-color: #cafb42;
+    }
+
+    .papa-container {
+        display: flex;
+        width: 100vw;
+        background-color: #cafb42;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        margin-top: 30px;
+    }
+
+    .container {
+        display: flex;
+        animation: move-left 50s linear infinite;
+        align-items: center;
+    }
+
+    .text-container {
+        display: flex;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    ._ {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 50px;
+        font-weight: bold;
+        margin: 20px 20px 0 20px;
+    }
+    h1{
+        font-size: 28px;
+    }
+
+    @keyframes move-left {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+</style>

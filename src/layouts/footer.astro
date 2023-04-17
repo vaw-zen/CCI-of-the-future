@@ -1,74 +1,141 @@
 ---
 const menu = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
+const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
 ---
 
-<div class="father-container" style="overflow: hidden;">
-    <div class="left-side">
-        <div>
-            <h1>Just drop me a line</h1>
-            <h1 style="word-wrap: break-word;">boldman@example.com</h1>
-            <div style="display:flex">
-                <div style="width: 40%;">
-                    <p>Our phone number</p>
-                    <h3>+0123 456 18 100</h3>
-                </div>
-                <div style="width: 60%;">
-                    <p>Our location</p>
-                    <h3>schemns wuendksd,wensd ch-34532 NY</h3>
+<div class="father-container">
+    <div class="container">
+        <div class="left-side">
+            <div>
+                <h1>Just drop me a line</h1>
+                <h1
+                    class="email"
+                    style="position: relative;transition:0.3s; cursor:pointer"
+                >
+                    <div
+                        class="email-line"
+                        style="height:100%; position:absolute; width: 712px; bottom: -10px; transition: 1s"
+                    >
+                    </div>
+                    boldman@example.com
+                </h1>
+                <div style="display:flex">
+                    <div style="width: 40%;">
+                        <p style="line-height: 0px;">Our phone number</p>
+                        <h3 class="infos">+0123 456 18 100</h3>
+                    </div>
+                    <div style="width: 60%;">
+                        <p style="line-height: 0px;">Our location</p>
+                        <h3 class="infos">
+                            schemns wuendksd,wensd ch-34532 NY
+                        </h3>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="right-side">
+            {
+                menu.map((e, i) => (
+                    <div class="menu">
+                        <div class="menu-container">
+                            <div class="line" />
+                            <h3 class="menu-number">01</h3>
+                        </div>
+                        <a class="menu-link">{e}</a>
+                    </div>
+                ))
+            }
         </div>
     </div>
-
-    <div class="right-side">
-        <div class="menu">
-            <div class="menu-container">
-                <div class="line"></div>
-                <h3 class="menu-number">01</h3>
+    <hr style="border-color: white; opacity: 0.2" />
+    <div class="z-parent-container">
+        <div class="z-container">
+            <div class="z-left">
+                Copyright © <span class="copyright">pink butterfly</span>|
+                Designed by <span class="copyright">pink butterfly</span> - Powered
+                by <span class="copyright">bo7mid</span>
+                <span class="copyright">ras el barka</span>
             </div>
-            <a class="menu-link">HOME</a>
-        </div>
-
-        <div class="menu">
-            <div class="menu-container">
-                <div class="line"></div>
-                <h3 class="menu-number">01</h3>
+            <div class="z-right">
+                {
+                    social.map((e, i) => (
+                        <span
+                            onmouseenter="this.style.color='#cafb42'"
+                            onmouseleave="this.style.color='white'"
+                            style={`margin-left: ${
+                                i ? "20px" : 0
+                            }; color: white; font-weight: bold; font-size: 18px; cursor: pointer`}
+                        >
+                            {e}
+                        </span>
+                    ))
+                }
             </div>
-            <a class="menu-link">ABOUT</a>
         </div>
-        <div class="menu">
-            <div class="menu-container">
-                <div class="line"></div>
-                <h3 class="menu-number">01</h3>
-            </div>
-            <a class="menu-link">SERVICES</a>
-        </div>
-        <div class="menu">
-            <div class="menu-container">
-                <div class="line"></div>
-                <h3 class="menu-number">01</h3>
-            </div>
-            <a class="menu-link">CONTACT</a>
-        </div>
-
-        <div></div>
     </div>
 </div>
-
 <style>
     *::selection {
         color: #000;
         background-color: #cafb42;
     }
+
+    .z-parent-container {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        margin-top: -9px;
+    }
+    .z-container {
+        max-width: 1330px;
+        width: 100%;
+        display: flex;
+        height: 60px;
+        align-items: center;
+    }
+
+    .z-left {
+        float: left;
+        width: calc(70% - 15px);
+        margin-left: 15px;
+        color: rgba(255, 255, 255, 0.233);
+        font-size: 19px;
+    }
+    .z-right {
+        width: calc(30% - 15px);
+    }
+    .copyright {
+        color: white;
+        cursor: pointer;
+    }
+    .copyright:hover {
+        color: #cafb42;
+    }
+
     .father-container {
         background-color: #1a1a1c;
+    }
+    .email:hover {
+        color: #cafb42;
+        text-decoration: underline;
+    }
+
+    .email:hover .email-line {
+        border-bottom: 7px solid #cafb42;
+    }
+    .infos:hover {
+        color: #cafb42;
+        cursor: pointer;
+    }
+
+    .container {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: calc(100%);
+        width: calc(100% + 16px);
         padding-top: 50px;
         padding-bottom: 50px;
-  
     }
     .left-side {
         max-width: 980px;
@@ -137,8 +204,79 @@ const menu = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
         font-weight: bold;
     }
 
+    .menu .line {
+        max-width: 40px;
+        border-top: 2px solid rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .menu:hover .line {
+        max-width: 80px;
+        border-top: 2px solid #cafb42;
+    }
+
+    .menu .menu-number {
+        color: rgba(255, 255, 255, 0.8);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .menu:hover .menu-number {
+        color: #cafb42;
+    }
+
+    .menu .menu-link {
+        color: white;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .menu:hover .menu-link {
+        color: #cafb42;
+    }
+
     @media (max-width: 1190px) {
-        .father-container {
+        .container {
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .left-side {
+            min-width: calc(100vw - 30px);
+            margin-left: 0;
+        }
+        .right-side {
+            width: 100%;
+            margin-left: 0;
+            margin-top: 40px;
+            max-width: calc(100vw - 30px);
+        }
+    }
+
+    @media (max-width: 1330px) {
+        .z-parent-container {
+            display: flex;
+            margin-top: 20px;
+        }
+        .z-container {
+            height: 85px;
+            flex-direction: column;
+        }
+
+        .z-left {
+            width: 100%;
+            margin-left: 0;
+            color: white;
+            display: flex;
+            justify-content: center;
+        }
+        .z-right {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    }
+
+    @media (max-width: 1190px) {
+        .container {
             flex-direction: column;
             justify-content: flex-end;
         }
@@ -154,25 +292,3 @@ const menu = ["HOME", "ABOUT", "SERVICES", "CONTACT"];
         }
     }
 </style>
-
-<script>
-    document.querySelectorAll(".menu").forEach((menu) => {
-        const line = menu.querySelector(".line");
-        const number = menu.querySelector(".menu-number");
-        const link = menu.querySelector(".menu-link");
-
-        menu.addEventListener("mouseenter", () => {
-            line.style.maxWidth = "80px";
-            line.style.borderTop = "2px solid #cafb42";
-            number.style.color = "#cafb42";
-            link.style.color = "#cafb42";
-        });
-
-        menu.addEventListener("mouseleave", () => {
-            line.style.maxWidth = "40px";
-            line.style.borderTop = "2px solid rgba(255, 255, 255, 0.5)";
-            number.style.color = "rgba(255, 255, 255, 0.8)";
-            link.style.color = "white";
-        });
-    });
-</script>

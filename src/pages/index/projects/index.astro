@@ -3,35 +3,37 @@ import ImgContainer from "./img-container";
 ---
 
 <div class="father-container">
-    <div class="left-side">
-        <h2>RECENT PROJECTS</h2>
-        <h1>Featured projects</h1>
-        <div>
-            <ImgContainer
-                client:visible
-                title="Heating Tune up, Manham"
-                tags={["Plumbing"]}
-                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c92820616f6dddb45ade02_portfolio-01-740x556.jpg"
-            />
+    <div class="container">
+        <div class="left-side">
+            <h2>RECENT PROJECTS</h2>
+            <h1>Featured projects</h1>
+            <div>
+                <ImgContainer
+                    client:visible
+                    title="Heating Tune up, Manham"
+                    tags={["Plumbing"]}
+                    img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c92820616f6dddb45ade02_portfolio-01-740x556.jpg"
+                />
+            </div>
+            <button> <a>VIEW ALL PROJECTS</a></button>
         </div>
-        <button> <a>VIEW ALL PROJECTS</a></button>
-    </div>
-    <div class="right-side">
-        <div>
-            <ImgContainer
-                client:visible
-                title="Plumbing, New York"
-                tags={["Roofing"]}
-                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c93831f818bd32ad515080_portfolio-02-740x556.jpg"
-            />
-        </div>
-        <div>
-            <ImgContainer
-                client:visible
-                title="Wiring installation, Alabama"
-                tags={["Electrical", "Roofing"]}
-                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c9384a5381dd1cf965f133_portfolio-03-740x556.jpg"
-            />
+        <div class="right-side">
+            <div>
+                <ImgContainer
+                    client:visible
+                    title="Plumbing, New York"
+                    tags={["Roofing"]}
+                    img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c93831f818bd32ad515080_portfolio-02-740x556.jpg"
+                />
+            </div>
+            <div>
+                <ImgContainer
+                    client:visible
+                    title="Wiring installation, Alabama"
+                    tags={["Electrical", "Roofing"]}
+                    img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c9384a5381dd1cf965f133_portfolio-03-740x556.jpg"
+                />
+            </div>
         </div>
     </div>
 </div>
@@ -45,15 +47,24 @@ import ImgContainer from "./img-container";
         background-color: #141416;
         display: flex;
         justify-content: center;
+    }
+    .container {
+        max-width: 1330px;
+        width: calc(100% - 40px);
+        margin-left: 20px;
+        margin-right: 20px;
+        display: flex;
+        justify-content: center;
         align-items: center;
-        width: calc(100% + 16px);
-        margin-left: -8px;
-
     }
     .left-side {
-        max-width: 740px;
-        width: calc(55.5% - 30px);
+        width: calc(60% - 30px);
+        padding-right: 30px;
     }
+    .right-side {
+        width: 40%;
+    }
+
     .left-side div {
         width: 100%;
     }
@@ -63,11 +74,7 @@ import ImgContainer from "./img-container";
     .right-side div:nth-child(1) {
         margin-bottom: 25px;
     }
-    .right-side {
-        width: calc(44.5% - 30px);
-        margin-left: 30px;
-        max-width: 540px;
-    }
+
     h1 {
         font-size: 63px;
         color: white;
@@ -98,6 +105,11 @@ import ImgContainer from "./img-container";
         font-size: 16px;
     }
     @media (max-width: 990px) {
+        .container {
+            width: calc(100% - 30px);
+            margin-left: 15px;
+            margin-right: 15px;
+        }
         h1 {
             font-size: 45px;
             line-height: 55px;
@@ -106,21 +118,25 @@ import ImgContainer from "./img-container";
         .left-side {
             width: calc(50vw - 30px);
         }
+        .left-side div {
+            width: 100%;
+        }
         .right-side {
             width: 100%;
             margin-left: 0;
             margin-top: 40px;
             max-width: calc(50vw - 30px);
         }
-
     }
 
     @media (max-width: 768px) {
-        .father-container {
+        .container {
             flex-direction: column;
+            position: relative;
         }
         .left-side {
-            width: calc(100vw - 30px);
+            width: 100%;
+            padding: 0;
         }
         .right-side {
             width: 100%;
@@ -130,3 +146,4 @@ import ImgContainer from "./img-container";
         }
     }
 </style>
+

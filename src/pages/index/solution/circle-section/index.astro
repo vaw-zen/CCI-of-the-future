@@ -3,9 +3,9 @@ import InteractiveCircle from "./interactive-circle.jsx";
 ---
 
 <div class="container">
-    <div class="circle"><InteractiveCircle client:load /></div>
-    <div class="circle"></div>
-    <div class="circle">
+    <div class="circle left-circle"><InteractiveCircle client:load /></div>
+    <div class="circle fade"></div>
+    <div class="circle right-circle">
         <div class="text-container">
             <h1>10k</h1>
             <p>
@@ -30,12 +30,11 @@ import InteractiveCircle from "./interactive-circle.jsx";
     </div>
 </div>
 <style>
-      *::selection {
+    *::selection {
         color: #000;
         background-color: #cafb42;
     }
     .circle {
-        /* background-color: red; */
         width: 478px;
         height: 478px;
         border-radius: 100%;
@@ -113,5 +112,52 @@ import InteractiveCircle from "./interactive-circle.jsx";
             margin-top: -60px;
         }
     }
-   
 </style>
+<script>
+    const leftCircle = new IntersectionObserver((entries) => {
+        entries.forEach((element) => {
+            if (element.isIntersecting) {
+                element.target.style.opacity = "1";
+                element.target.style.filter = "blur(0px)";
+                element.target.style.transform = "rotate(0deg)";
+            } else {
+                element.target.style.opacity = "0";
+                element.target.style.filter = "blur(5px)";
+                element.target.style.transform = "rotate(-180deg)";
+            }
+        });
+    });
+
+    const left = document.querySelectorAll(".left-circle");
+    left.forEach((el) => {
+        // el.style.opacity = "0";
+        el.style.filter = "blur(5px)";
+        el.style.transition = "1s linear";
+        el.style.transform = "rotate(-180deg)";
+        leftCircle.observe(el);
+    });
+
+
+    const rightCircle = new IntersectionObserver((entries) => {
+        entries.forEach((element) => {
+            if (element.isIntersecting) {
+                element.target.style.opacity = "1";
+                element.target.style.filter = "blur(0px)";
+                element.target.style.transform = "rotate(0deg)";
+            } else {
+                element.target.style.opacity = "0";
+                element.target.style.filter = "blur(5px)";
+                element.target.style.transform = "rotate(180deg)";
+            }
+        });
+    });
+
+    const right = document.querySelectorAll(".right-circle");
+    right.forEach((el) => {
+        // el.style.opacity = "0";
+        el.style.filter = "blur(5px)";
+        el.style.transition = "1s linear";
+        el.style.transform = "rotate(180deg)";
+        rightCircle.observe(el);
+    });
+</script>

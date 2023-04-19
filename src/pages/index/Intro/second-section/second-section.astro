@@ -2,7 +2,9 @@
 import Cards from "./cards.astro";
 ---
 
-<section style="width:100vw; display:flex;justify-content: center; 100px">
+<section
+    style="width:100vw; display:flex;justify-content: center; contain: paint;"
+>
     <div class="home-container">
         <div class="left-section">
             <div style="width: 98.1%;">
@@ -12,30 +14,38 @@ import Cards from "./cards.astro";
             </div>
         </div>
         <div class="right-section">
-            <Cards
-                title="Home maintainance"
-                paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
-                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c7ea44749c0d31f77da592_service-01-1200x800.jpg"
-                path=""
-            />
-            <Cards
-                title="Electrical services"
-                paragraph="We provide air conditioning service, repair maintenance support 24/7, delivered by qualified service engineers."
-                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c1e8caee12ad3e86defa_service-02-1200x800-p-500.jpg"
-            />
-            <Cards
-                title="Wiring and installation"
-                paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
-                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c25ec9d419f5ee4f22ff_service-03-1200x800-p-500.jpg"
-                path=""
-            />
-            <Cards
-                title="Renovation and painting"
-                paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
-                img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c27023f7407a367a5b50_service-04-1200x800-p-500.jpg"
-                last={true}
-                path=""
-            />
+            <div class="hidden">
+                <Cards
+                    title="Home maintainance"
+                    paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
+                    img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c7ea44749c0d31f77da592_service-01-1200x800.jpg"
+                    path=""
+                />
+            </div>
+            <div class="hidden">
+                <Cards
+                    title="Electrical services"
+                    paragraph="We provide air conditioning service, repair maintenance support 24/7, delivered by qualified service engineers."
+                    img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c1e8caee12ad3e86defa_service-02-1200x800-p-500.jpg"
+                />
+            </div>
+            <div class="hidden">
+                <Cards
+                    title="Wiring and installation"
+                    paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
+                    img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c25ec9d419f5ee4f22ff_service-03-1200x800-p-500.jpg"
+                    path=""
+                />
+            </div>
+            <div class="hidden">
+                <Cards
+                    title="Renovation and painting"
+                    paragraph="Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas."
+                    img="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63c8c27023f7407a367a5b50_service-04-1200x800-p-500.jpg"
+                    last={true}
+                    path=""
+                />
+            </div>
         </div>
     </div>
 </section>
@@ -72,7 +82,7 @@ import Cards from "./cards.astro";
         line-height: 26px;
         margin-top: 35px;
         border: none;
-        cursor: pointer
+        cursor: pointer;
     }
     button:hover {
         background-color: white;
@@ -84,10 +94,19 @@ import Cards from "./cards.astro";
     .home-container .left-section {
         width: 647.5px;
         margin-bottom: 10px;
-        overflow: hidden;
         position: sticky;
         top: 50px;
         align-self: flex-start;
+    }
+    .hidden {
+        transform: translateX(100%);
+        opacity: 0;
+        filter: blur(5px);
+    }
+    .show {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateX(0);
     }
 
     @media (max-width: 1327px) {
@@ -128,3 +147,68 @@ import Cards from "./cards.astro";
         }
     }
 </style>
+
+<script>
+    const rightObserver = new IntersectionObserver((entries) => {
+        entries.forEach((element) => {
+            if (element.isIntersecting) {
+                if (element.boundingClientRect.top > 0) {
+                    element.target.children[0].classList.add("show");
+                    element.target.children[0].style.transition = "0.6s linear";
+
+                    if (element.target.children[1]?.classList) {
+                        element.target.children[1].style.transition =
+                            "0.8s linear";
+                        element.target.children[1].classList.add("show");
+                    }
+                    if (element.target.children[2]?.classList) {
+                        element.target.children[2].classList.add("show");
+                        element.target.children[2].style.transition =
+                            "1s linear";
+                    }
+                    if (element.target.children[3]?.classList) {
+                        element.target.children[3].style.transition =
+                            "1.2s linear";
+                        element.target.children[3].classList.add("show");
+                    }
+                } else {
+                    element.target.children[0].classList.add("show");
+                    element.target.children[0].style.transition = "1.2s linear";
+
+                    if (element.target.children[1]?.classList) {
+                        element.target.children[1].style.transition =
+                            "1s linear";
+                        element.target.children[1].classList.add("show");
+                    }
+                    if (element.target.children[2]?.classList) {
+                        element.target.children[2].classList.add("show");
+                        element.target.children[2].style.transition =
+                            "0.8s linear";
+                    }
+                    if (element.target.children[3]?.classList) {
+                        element.target.children[3].style.transition =
+                            "0.6s linear";
+                        element.target.children[3].classList.add("show");
+                    }
+                }
+            } else {
+                element.target.children[0].classList.remove("show");
+                if (element.target.children[1]?.classList) {
+                    element.target.children[1].classList.remove("show");
+                }
+                if (element.target.children[2]?.classList) {
+                    element.target.children[2].classList.remove("show");
+                }
+                if (element.target.children[3]?.classList) {
+                    element.target.children[3].classList.remove("show");
+                }
+            }
+        });
+    });
+
+    const hiddenSections = document.querySelectorAll(".right-section");
+
+    hiddenSections.forEach((el) => {
+        rightObserver.observe(el);
+    });
+</script>

@@ -3,9 +3,9 @@ import faresImg from "../../../assets/home-page/section-1.jpg";
 import arrow from "../../../assets/icons/arrow.svg";
 ---
 
-<section style="width:100vw; display:flex;justify-content: center;">
+<section style="width:100vw; display:flex;justify-content: center; overflow: hidden">
 	<div class="home-container">
-		<div class="left-section">
+		<div class="left-section fade">
 			<div class="img-container">
 				<img alt="fares" src={faresImg} />
 			</div>
@@ -17,7 +17,7 @@ import arrow from "../../../assets/icons/arrow.svg";
 				</div>
 				<!-- font-size: 45px;
             line-height: 55px; -->
-				<div class="right-title">
+				<div class="right-title fade">
 					We are a team of professional skilled experts
 				</div>
 				<div>
@@ -66,7 +66,7 @@ import arrow from "../../../assets/icons/arrow.svg";
 						</div>
 					</div>
 					<div class="arrow-container">
-						<img style="width:50px" src={arrow} />
+						<img class="arrow-img" style="width:50px" src={arrow} />
 					</div>
 				</div>
 			</div>
@@ -90,6 +90,11 @@ import arrow from "../../../assets/icons/arrow.svg";
 		justify-content: center;
 		align-items: center;
 		transition: 0.3s;
+	}
+	.arrow-img{
+		opacity: 0;
+		transition: 0.5s linear;
+		transform: rotate(150deg);
 	}
 	.home-container .arrow-container:hover {
 		border: 2px solid #cafb42;
@@ -179,3 +184,18 @@ import arrow from "../../../assets/icons/arrow.svg";
 		}
 	}
 </style>
+<script>
+	const observer = new IntersectionObserver((entries) => {
+		entries.forEach((element) => {
+			if (element.isIntersecting) {
+				element.target.style.opacity = "1";
+				element.target.style.transform = "rotate(0)";
+			}else {
+				element.target.style.opacity = "0";
+				element.target.style.transform = "rotate(150deg)";
+			}
+		});
+	});
+	const hiddenSections = document.querySelectorAll(".arrow-img");
+	hiddenSections.forEach((el) => observer.observe(el));
+</script>

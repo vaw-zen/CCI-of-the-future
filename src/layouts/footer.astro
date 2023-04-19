@@ -8,10 +8,7 @@ const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
         <div class="left-side">
             <div>
                 <h1>Just drop me a line</h1>
-                <h1
-                    class="email"
-                    style="position: relative;transition:0.3s; cursor:pointer"
-                >
+                <h1 class="email">
                     <div
                         class="email-line"
                         style="height:100%; position:absolute; minWidth: 712px; bottom: -10px; transition: 1s"
@@ -100,7 +97,7 @@ const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
         width: calc(70% - 15px);
         margin-left: 15px;
         color: rgba(255, 255, 255, 0.233);
-        font-size: 19px;
+        font-size: 14px;
     }
     .z-right {
         width: calc(30% - 15px);
@@ -115,6 +112,13 @@ const social = ["Facebook", "Twitter", "Linkedin", "Instagram"];
 
     .father-container {
         background-color: #1a1a1c;
+    }
+    .email {
+        position: relative;
+        transition: 0.3s;
+        cursor: pointer;
+        z-index: 5;
+        height: 53px;
     }
     .email:hover {
         color: #cafb42;

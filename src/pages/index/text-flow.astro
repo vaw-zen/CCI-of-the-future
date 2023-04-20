@@ -1,5 +1,16 @@
 ---
-const { text } = Astro.props;
+const text = [
+    "Handyman",
+    "Services",
+    "Webflow",
+    "Theme",
+    "Handyman",
+    "Boldman",
+    "Webflow",
+    "Services",
+    "Boldman",
+    "Theme",
+];
 ---
 
 <div class="text-flow fade">
@@ -18,7 +29,9 @@ const { text } = Astro.props;
                                     ? `-2px -2px 0 white,2px -2px 0 white,-2px 2px 0 white,2px 2px 0 white`
                                     : "none"
                             };
-                        color: ${i % 2 === 0 ? "#141416" : "white"}; padding-left: 130px;`}
+                        color: ${
+                            i % 2 === 0 ? "#141416" : "white"
+                        }; padding-left: 130px;`}
                         >
                             {e}
                         </h1>
@@ -67,7 +80,7 @@ const { text } = Astro.props;
         margin-right: 30px;
         position: absolute;
         bottom: 40px;
-        }
+    }
     h1 {
         font-size: 110px;
         cursor: default;

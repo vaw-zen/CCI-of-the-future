@@ -1,5 +1,5 @@
 
-import {IoIosArrowDown} from 'react-icons/io'
+import {IoIosArrowDown} from 'react-icons/io/index.js'
 import "./navbar.css"
 import React, { useState } from 'react'
 

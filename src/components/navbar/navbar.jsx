@@ -52,7 +52,7 @@ const navbar = ({current}) => {
 
 </div>
 <a href="#" className={menuActive ? 'menuBtn act' : 'menuBtn'} onClick={handleMenuClick}>
-				<span class="lines"></span>
+				<span className="lines"></span>
 			</a>
 			<nav className={menuActive ? 'mainMenu act' : 'mainMenu'}>
 				<ul>

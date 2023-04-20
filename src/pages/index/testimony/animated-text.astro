@@ -1,12 +1,17 @@
 ---
-const { text } = Astro.props;
+const text = [
+    "A large number of grateful customers",
+    "Premium handyman services",
+    "10+ Years of professional experience",
+];
 ---
 
 <div class="papa-container">
-    <div class="container"
-    onmouseover="this.style.animationPlayState='paused';"
-    onmouseout="this.style.animationPlayState='running';"
->
+    <div
+        class="container"
+        onmouseover="this.style.animationPlayState='paused';"
+        onmouseout="this.style.animationPlayState='running';"
+    >
         {
             [...text, ...text].map((e) => {
                 return (
@@ -56,7 +61,7 @@ const { text } = Astro.props;
         font-weight: bold;
         margin: 20px 20px 0 20px;
     }
-    h1{
+    h1 {
         font-size: 28px;
     }
 

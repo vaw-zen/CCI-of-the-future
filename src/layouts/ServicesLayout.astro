@@ -1,5 +1,4 @@
 ---
-import Navbar from "../components/navbar/navbar.jsx";
 import Listingsectionleft from "../components/services/listingsectionleft.astro";
 import Listingservices from "../components/services/listingservices.astro";
 import Servicesleft from "../components/services/servicesleft.astro";
@@ -23,7 +22,6 @@ const {PageName,ImgUrl,title,description,firstimgSlider,secimgSlider,imgArray}= 
 <Layout title={PageName}>
     <Anim client:load/>
  <section class="services_header">
-    <Navbar current="Services" client:load/>
     <div class="text">
 <p>{PageName}</p>
 <p><a href="/"><span><AiFillHome/> HOME </span></a>/ <span>{PageName}</span> </p>

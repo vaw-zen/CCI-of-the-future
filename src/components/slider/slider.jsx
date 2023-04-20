@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward} from "react-icons/io/index.js";
 const slider = ({imgArray}) => {
     const [counter,setcounter]=useState(0)
     useEffect(()=>{

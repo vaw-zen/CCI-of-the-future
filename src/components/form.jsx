@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './form.css'
-import {BsArrowBarRight} from "react-icons/bs"
+import {BsArrowBarRight} from "react-icons/bs/index.js"
 const form = () => {
   const [inputs,setinputs]=useState({sujet:"",nom:"",tel:"",email:"",object:""})
   return (

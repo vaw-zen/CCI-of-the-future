@@ -8,76 +8,24 @@ import Testimony from "./index/testimony/index.astro";
 import Overlay from "./index/background-overlay.astro";
 import References from "../../src/components/references/references.astro";
 import Faq from "../../src/components/faq/faq.astro";
-import hero from "../assets/home-page/hero.webp"
-import wave from "../assets/home-page/wavesidhia.png"
+import hero from "../assets/home-page/hero.webp";
 import Contact from "../components/Contact.astro";
-
+import Hero from "./index/hero.astro";
 ---
 
 <Layout title="chaabane cleaning int.">
-	<section class="hero">
-		
-		<img src={wave} alt="wave">
-<div class="heroinside">
-		<div class="hero_text">
-			<div class="left">
-				<div class="texts">
-				<div class="header">
-				<div class="circle"></div>
-				<h1>Large of services provided
-				</h1>
-			</div>
-				<p>We are a company providing a wide range of
-					maintenance services</p>
-				</div>
-				<div class="texts">
-					<div class="header">
-					<div class="circle"></div>
-					<h1>
-						Professional experiances
-					</h1>
-				</div>
-					<p>We are a company providing a wide range of
-						maintenance services</p>
-					</div>
-		
-			</div>
-			<div class="center">
-				<h1>Increase your</h1>
-			
-			<div class="middle">
-				<p>We are a team of professional and
-					skilled experts in all domestic spheres. We offer a wide range of services and at the same time
-					
-					</p>
-					<h1>handyman</h1>
-			</div>
-			<h1>service quality</h1>
-			</div>
-			
-				<div class="right">
-					<p>28  Kiviision St, Jew Work,
-	</p>
-	<p>					+21650984752
-		</p>
-		<p>contact@cci.com</p>
-		
-			</div>
-	
-			
-			</div>
-		</div>
-	</section>
 	<section>
-		<Intro />	
+		<Hero />
 	</section>
-	
-	<section >
+
+	<section>
+		<Intro />
+	</section>
+
+	<section>
 		<TextFlow />
 	</section>
-	<!-- <section>
-		<Contact/>
-	</section> -->
+
 	<section>
 		<Solution />
 	</section>
@@ -98,161 +46,6 @@ import Contact from "../components/Contact.astro";
 </Layout>
 
 <style>
-	.heroinside {
-		width: 100%;height: 100%;
-		background-color: rgba(0, 0, 0, 0.657);
-	}
-	.center {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		width: 30%;
-	}
-	.center h1 {
-		font-size: 50px;
-	}
-	.middle {
-		display: flex;
-	}
-	.middle p {
-		width: 30%;
-	}
-	.texts {
-		color: #fff;
-	}
-	.circle {
-		height: 20px;
-		width: 20px;
-		border-radius: 50%;
-border: #fff 1px solid;
-	}
-	.header {
-color: #fff;
-display: flex;
-align-items: center;
-gap:10px
-	}
-	.hero_text {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: space-around;
-		color: #fff;
-
-	}
-	.left {
-		width: 20%;
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
-	}
-	.hero {
-		width: 100%;
-		height: 700px;
-
-		background:url("../assets/home-page/hero.webp");
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position-y:20%;
-
-border-bottom-left-radius: 110px;
-border-bottom-right-radius: 110px;
-position: relative;
-border-bottom: 1px solid #fff;
-margin-bottom: 20px;
-}
-
-@media (max-width:1275px) {
-.hero_text{
-	flex-direction: column;
-	align-items: flex-start;
-	padding-left: 50px;
-	justify-content: stretch;
-	padding-top: 100px;
-	width: 90%;
-}
-
-h1{
-	font-size: large;
-}
-.middle p {
-		width: 100%;
-		
-	}
-	.middle{
-		flex-direction: column;
-	}
-.right {
-	display: none;
-}
-.center{
-	width: 30%;
-}
-}
-@media (max-width:1096px) {
-.center{
-	width: 32%;
-}
-}
-@media(max-width:1192px){
-	.middle{
-		flex-direction: row;
-	}
-	.middle p {
-		font-size: 13px;	}
-h1 {
-	font-size: medium;
-}
-
-@media (max-width:946px) {
-	.center{
-	width: 37%;
-}
-}
-.left {
-	width: 100%;
-}
-}
-	.hero img:nth-child(1) {
-		
-		width: 100%;
-bottom: 0;
-position: absolute;
-bottom: 0;
-left: 0;
-	}
-	
-@media (max-width 556px) {
-	.center{
-	width: 40%;
-}
-
-.left {
-	width: 10%;
-}
-}
- @media (max-width : 493px ){
-	.center{
-	width: 60%;
-}
-
-.left {
-	width: 70%;
-}
-.hero{
-	height: 750px;
-}
-
-}
-@media (max-width : 400px ) {
-.center h1 {
-		font-size: 30px;
-	}
-}
- 
-
-
 	* {
 		margin: 0;
 		font-family: "DM Sans", sans-serif;

@@ -2,9 +2,7 @@
 import Cards from "./cards.astro";
 ---
 
-<section
-    style="width:100vw; display:flex;justify-content: center; contain: paint;"
->
+<section class="father-container">
     <div class="home-container">
         <div class="left-section">
             <div style="width: 98.1%;">
@@ -56,7 +54,12 @@ import Cards from "./cards.astro";
         color: #000;
         background-color: #cafb42;
     }
-
+    .father-container {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        contain: paint;
+    }
     .home-container {
         margin-top: 100px;
         display: grid;
@@ -123,6 +126,9 @@ import Cards from "./cards.astro";
         }
     }
     @media (max-width: 990px) {
+        .father-container {
+            contain: none;
+        }
         .home-container .left-section .left-title {
             font-size: 45px;
             line-height: 55px;
@@ -144,6 +150,11 @@ import Cards from "./cards.astro";
             padding-left: 15px;
             width: calc(100% - 20px);
             /* margin-left: calc(100% * 0.03); */
+        }
+    }
+    @media (max-width: 500px) {
+        .home-container .left-section .left-title {
+            font-size: 30px;
         }
     }
 </style>

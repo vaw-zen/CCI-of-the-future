@@ -120,51 +120,53 @@ import InteractiveCircle from "./interactive-circle.jsx";
     }
 </style>
 <script>
-    if (window.innerWidth > 478) {
-        const leftCircle = new IntersectionObserver((entries) => {
-            entries.forEach((element) => {
-                if (element.isIntersecting) {
-                    element.target.style.opacity = "1";
-                    element.target.style.filter = "blur(0px)";
-                    element.target.style.transform = "rotate(0deg)";
-                } else {
+    const leftCircle = new IntersectionObserver((entries) => {
+        entries.forEach((element) => {
+            if (element.isIntersecting) {
+                element.target.style.opacity = "1";
+                element.target.style.filter = "blur(0px)";
+                element.target.style.transform = "rotate(0deg)";
+            } else {
+                if (window.innerWidth > 478) {
                     element.target.style.opacity = "0";
                     element.target.style.filter = "blur(5px)";
                     element.target.style.transform = "rotate(-180deg)";
                 }
-            });
+            }
         });
+    });
 
-        const left = document.querySelectorAll(".left-circle");
-        left.forEach((el) => {
-            // el.style.opacity = "0";
-            el.style.filter = "blur(5px)";
-            el.style.transition = "1s linear";
-            el.style.transform = "rotate(-180deg)";
-            leftCircle.observe(el);
-        });
+    const left = document.querySelectorAll(".left-circle");
+    left.forEach((el) => {
+        // el.style.opacity = "0";
+        el.style.filter = "blur(5px)";
+        el.style.transition = "1s linear";
+        el.style.transform = "rotate(-180deg)";
+        leftCircle.observe(el);
+    });
 
-        const rightCircle = new IntersectionObserver((entries) => {
-            entries.forEach((element) => {
-                if (element.isIntersecting) {
-                    element.target.style.opacity = "1";
-                    element.target.style.filter = "blur(0px)";
-                    element.target.style.transform = "rotate(0deg)";
-                } else {
+    const rightCircle = new IntersectionObserver((entries) => {
+        entries.forEach((element) => {
+            if (element.isIntersecting) {
+                element.target.style.opacity = "1";
+                element.target.style.filter = "blur(0px)";
+                element.target.style.transform = "rotate(0deg)";
+            } else {
+                if (window.innerWidth > 478) {
                     element.target.style.opacity = "0";
                     element.target.style.filter = "blur(5px)";
                     element.target.style.transform = "rotate(180deg)";
                 }
-            });
+            }
         });
+    });
 
-        const right = document.querySelectorAll(".right-circle");
-        right.forEach((el) => {
-            // el.style.opacity = "0";
-            el.style.filter = "blur(5px)";
-            el.style.transition = "1s linear";
-            el.style.transform = "rotate(180deg)";
-            rightCircle.observe(el);
-        });
-    }
+    const right = document.querySelectorAll(".right-circle");
+    right.forEach((el) => {
+        // el.style.opacity = "0";
+        el.style.filter = "blur(5px)";
+        el.style.transition = "1s linear";
+        el.style.transform = "rotate(180deg)";
+        rightCircle.observe(el);
+    });
 </script>

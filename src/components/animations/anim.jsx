@@ -3,7 +3,7 @@ import { gsap } from 'gsap'
 const anim = () => {
     useEffect(()=>{
 const t = gsap.timeline()
-t.from(".animationup",{duration:.4}).from(".animationup",{y:1000,duration:1}).to(".animationup",{display:"none"}) 
+t.from(".animationup",{y:1000,duration:.2}).to(".animationup",{display:"none"}) 
 t.play()  },[])
   return (
     <div class="animationup" style={{height:"100vh",width:"100vw",zIndex:"15"}}>

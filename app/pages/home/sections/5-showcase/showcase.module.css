@@ -42,7 +42,7 @@
 }
 
 @media (max-width: 480px) {
-    .circleContainer { margin-top: 15vw; gap: 4.5vw; }
+    .circleContainer { margin-top: 15vw; gap: 7vw }
     .circle { min-width: 70vw ; min-height: 70vw ; width: 70vw ;height: 70vw ;border-radius: 50%; }
 
     .leftCircle  { justify-content: flex-start; border: none; gap: 1vw;}
@@ -54,12 +54,12 @@
 
     .shadow { visibility: hidden;}
 
-   .rightCircle { border: none;  gap: 0vw; justify-content: center; }
+   .rightCircle { border: none;  gap: 0vw; justify-content: flex-start; }
 
-   .rightCircle .numberContainer { width: 35vw; }
-   .rightCircle .descContainer { width: 20vw; }
+   .rightCircle .numberContainer { width: 35vw; align-items: flex-start; }
+   .rightCircle .descContainer { width: 25vw; }
 
    .rightCircle .number { height: auto; flex: 1; font-size: 13.34vw;  }
-   .rightCircle .description { height: auto; flex: 1; font-size: 4vw; color: var(--t-primary);  }
+   .rightCircle .description { height: auto; flex: 1; font-size: 4vw; color: var(--t-primary); line-height: 1.5; }
    
 }

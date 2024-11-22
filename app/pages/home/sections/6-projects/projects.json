@@ -1,0 +1,21 @@
+{
+    "slug": "Nos projets récents",
+    "highlight": "Projets Réalisés.",
+    "lefSide": {
+        "img": "/home/about.png",
+        "tags": [
+            {
+                "name": "Tapisserie",
+                "link": "/"
+            },
+            {
+                "name": "Rpholestry",
+                "link": "/"
+            },
+            {
+                "name": "Revétement",
+                "link": "/"
+            }
+        ]
+    }
+}

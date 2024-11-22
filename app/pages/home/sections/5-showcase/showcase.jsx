@@ -13,14 +13,11 @@ export default function Showcase() {
                 {content.circles.map((circle, index) => {
                     return (
                         <div key={index} className={styles.circle}>
-                            {!index ? (
-                                <LeftCircle circle={circle} />
-                            ) : index === 1 ? (
-                                <img
-                                    className={styles.circleImage}
-                                    src={circle.img}
-                                />
-                            ) : <RightCircle circle={circle} />}
+                            {!index ?
+                                <LeftCircle circle={circle} /> :
+                                index === 1 ?
+                                    <img className={styles.circleImage} src={circle.img} /> :
+                                    <RightCircle circle={circle} />}
                         </div>
                     );
                 })}

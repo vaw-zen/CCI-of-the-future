@@ -23,3 +23,17 @@
 .image { height: 50vw; }
     
 }
+
+
+
+@media (max-width: 480px) {
+    .section { margin: 14.57vw 3.75vw;gap: 3vw; flex-direction: column;}
+    .slug {font-size:  3.885vw; line-height: 6.31vw; }
+    .highlight { font-size: 8.495vw; line-height: 10.9225vw; margin: 1vw 0; }
+    .paragraph { font-size:  3.885vw; margin: 6vw 0; line-height: 1.5; }
+    .listItem { padding-left: 7vw;  font-size: 3.885vw; margin: 5vw 0; color: var(--t-thri); }
+    .bullet {  font-size: 3.885vw; font-weight: 600; color: var(--t-thri); }
+    .circleContainer { width: 24.27vw; height: 24.27vw; margin-top: 7vw; }
+    .image { height: 96.22vw; z-index: -2; position: relative; }
+        
+    }

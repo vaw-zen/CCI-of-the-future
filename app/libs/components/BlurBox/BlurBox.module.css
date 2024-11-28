@@ -14,7 +14,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .blurBox {
         box-shadow: 0 0 30vw 37vw var(--ac-primary);
     }

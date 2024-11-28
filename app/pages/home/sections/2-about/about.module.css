@@ -1,0 +1,9 @@
+.section { margin: 5.9375vw 17.5vw 5.9375vw 15.72vw; display: flex; gap: 2.86vw; position: relative; }
+.flexContainer { flex: 1; }
+.contentContainer { flex: 1; padding: 1vw 0; }
+.slug { color: var(--ac-primary); font-size: 0.84vw; }
+.highlight { font-size: 3.333vw; line-height: 3.86vw; margin: .75vw 0; }
+.paragraph { font-size: 0.833vw; color: var(--t-secondary); margin: 1.5vw 0; font-weight: 500; line-height: 1.5; }
+.list { list-style-type: none; padding-left: 0; }
+.listItem { position: relative; padding-left: 1.2vw; list-style-type: none; font-size: .8vw; color: var(--t-secondary); margin: .9vw 0; }
+.bullet { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: .8vw; font-weight: 600; }

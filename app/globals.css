@@ -3,6 +3,7 @@
   /* Text */
   --t-primary: #FFFFFF;
   --t-secondary: #FFFFFF99;
+  --t-thri: hsla(0, 0%, 100%, 0.8);
   --t-highlight: #010001;
 
   /* Background */
@@ -10,7 +11,7 @@
   --bg-elevated: #1B1A1D;
 
   /* Accent */
-  --ac-primary: #CBFB43;
+  --ac-primary: #CBFB42;
 }
 
 ::selection { background-color: var(--ac-primary); color: var(--t-highlight);  }

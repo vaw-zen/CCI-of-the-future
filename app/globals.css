@@ -7,8 +7,8 @@
   --t-highlight: #010001;
 
   /* Background */
-  --bg-base: #141517;
-  --bg-elevated: #1B1A1D;
+  --bg-base: #141416;
+  --bg-elevated: rgb(26, 26, 28);
 
   /* Accent */
   --ac-primary: #CBFB42;

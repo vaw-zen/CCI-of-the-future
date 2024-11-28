@@ -1,0 +1,34 @@
+{
+    "list": [
+        {
+            "link": "/",
+            "title": "Home maintainance",
+            "desc": "Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas.",
+            "img": "/home/about.png"
+        },
+        {
+            "link": "/",
+            "title": "Home maintainance",
+            "desc": "Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas.",
+            "img": "/home/about.png"
+        },
+        {
+            "link": "/",
+            "title": "Home maintainance",
+            "desc": "Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas.",
+            "img": "/home/about.png"
+        },
+        {
+            "link": "/",
+            "title": "Home maintainance",
+            "desc": "Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas.",
+            "img": "/home/about.png"
+        }
+    ],
+    "slug": "NOS SERVICES",
+    "highlight": "Ce que vous obtiendrez a la demande.",
+    "button": {
+        "name": "Découvrez nos services",
+        "link": "/"
+    }
+}

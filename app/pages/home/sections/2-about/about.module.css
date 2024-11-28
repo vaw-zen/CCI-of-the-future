@@ -1,35 +1,30 @@
-.section { margin: 5.9375vw 17.5vw 5.9375vw 15.72vw; display: flex; gap: 2.86vw; position: relative; }
+.section { margin: 5.9375vw 0; display: flex; gap: 2.86vw; position: relative; }
 .flexContainer { flex: 1; }
 .image { width: 100%; height: 32.916vw; object-fit: cover; }
 .contentContainer { flex: 1; padding: 1vw 0; }
-.slug { color: var(--ac-primary); font-size: 0.84vw; }
-.highlight { font-size: 3.333vw; line-height: 3.86vw; margin: .75vw 0; }
 .paragraph { font-size: 0.833vw; color: var(--t-secondary); margin: 1.5vw 0; font-weight: 500; line-height: 1.5; }
 .list { list-style-type: none; padding-left: 0; }
 .listItem { position: relative; padding-left: 1.2vw; list-style-type: none; font-size: .8vw; color: var(--t-secondary); margin: .9vw 0; }
 .bullet { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: .8vw; font-weight: 600; }
 .circleContainer { width: 5.2083vw; height: 5.2083vw; border-radius: 50%; border: 2px solid white; display: flex; justify-content: center; align-items: center; margin-top: 2.5vw; }
 .arrow { width: 50%; height: 50%; color: var(--ac-primary); }
-
+.BlurBox { top: 0; left: 82.5vw ;}
 
 @media (max-width: 1024px) {
-.section { margin: 7.8125vw 1.953125vw;gap: 3vw;}
-.slug {font-size: 2.34vw; line-height: 3.385vw; }
-.highlight { font-size: 5.859375vw; line-height: 7.2vw; margin: 1vw 0; }
+.section { margin: 7.8125vw 0;gap: 3vw;}
 .paragraph { font-size:  2.0835vw; margin: 4vw 0; line-height: 1.5; }
 .listItem { padding-left: 4vw;  font-size: 2.0835vw; margin: 3vw 0; color: var(--t-thri); }
 .bullet {  font-size: 2.0835vw; font-weight: 600; color: var(--t-thri); }
 .circleContainer { width: 13.0208vw; height: 13.0208vw; margin-top: 5vw; }
 .image { height: 50vw; }
+.BlurBox { top: 5vw; left: 95vw ;}
     
 }
 
 
 
 @media (max-width: 480px) {
-    .section { margin: 14.57vw 3.75vw;gap: 3vw; flex-direction: column;}
-    .slug {font-size:  3.885vw; line-height: 6.31vw; }
-    .highlight { font-size: 8.495vw; line-height: 10.9225vw; margin: 1vw 0; }
+    .section { margin: 14.57vw 0;gap: 3vw; flex-direction: column;}
     .paragraph { font-size:  3.885vw; margin: 6vw 0; line-height: 1.5; }
     .listItem { padding-left: 7vw;  font-size: 3.885vw; margin: 5vw 0; color: var(--t-thri); }
     .bullet {  font-size: 3.885vw; font-weight: 600; color: var(--t-thri); }

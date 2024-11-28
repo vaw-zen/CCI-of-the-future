@@ -6,3 +6,8 @@
     0% {transform: translateX(-25%);}
     100% {transform: translateX(-428%);}
 }
+
+@media (max-width: 1024px) {
+.container { margin: 7.5vw 0;  }
+.band strong { font-size: 10vw;  }
+}

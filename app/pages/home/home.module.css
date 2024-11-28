@@ -1,0 +1,19 @@
+.Home { margin: 0 17.5vw 0 15.72vw; }
+.slug { color: var(--ac-primary); font-size: 0.84vw; }
+.highlight { font-size: 3.333vw; line-height: 3.86vw; margin: .75vw 0; }
+ 
+
+
+@media (max-width: 1024px) {
+     .Home { margin: 0 1.953125vw}
+     .slug {font-size: 2.34vw; line-height: 3.385vw; }
+     .highlight { font-size: 5.859375vw; line-height: 7.2vw; margin: 1vw 0; }
+}
+
+@media (max-width: 480px) {
+    .Home {margin: 0 3.75vw;}
+    .slug {font-size:  3.885vw; line-height: 6.31vw; }
+    .highlight { font-size: 8.495vw; line-height: 10.9225vw; margin: 1vw 0; }
+}
+
+

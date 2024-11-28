@@ -19,7 +19,13 @@
 .serviceImage { width: 20.833333333333vw; height: 20.833333333333vw;}
 .serviceTitle { font-size:  3.3854166666667vw; font-weight: bold; line-height:  4.6875vw; }
 .serviceDescription { line-height:  3.3854166666667vw; font-size:  2.0833333333333vw; color: var(--t-secondary); }
+.BlurBox { bottom: auto; top: 50vw; left: calc(50vw - 2px) }
 
 }
 @media (max-width: 480px) {
+.serviceCard { height: 88.3495vw; flex-direction: column; justify-content: start; align-items: start; padding: 7.28155vw 3.64vw 3.64vw 3.64vw;}
+.serviceImage { width: 38.83495vw; height: 38.83495vw; margin-top: 2vw; }
+.serviceTitle { font-size:  6.3106796116505vw; line-height: 8.7378640776699vw; margin-bottom: 2.4271844660194vw; }
+.serviceDescription { font-size: 3.8834951456311vw; line-height: 6.3106796116505vw;}
+
     }

@@ -30,6 +30,7 @@ export default function BlurBox({ top, left }) {
                     .blurBox {
                         top: ${top[2]};
                         left: ${left[2]};
+                        box-shadow: 0 0 30vw 37vw var(--ac-primary); 
                     }
                 }
             `}</style>

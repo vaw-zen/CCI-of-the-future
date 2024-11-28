@@ -8,7 +8,7 @@ import { ArrowUpRight } from 'lucide-react'
 export default function About() {
     return (
         <section className={styles.section}>
-            <BlurBox top={[0, '5vw']} left={['82.5vw', '95vw']} />
+            <BlurBox top={[0, '5vw', '5vw']} left={['82.5vw', '95vw', '95vw']} />
             <div className={styles.flexContainer}>
                 <Image
                     src={content.img}

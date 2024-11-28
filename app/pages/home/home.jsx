@@ -8,7 +8,7 @@ import Band from './sections/4-band/band'
 export default function Home() {
     return <>
         <Hero />
-        <main style={{ height: '300vh' }} className={styles.Home}>
+        <main className={styles.Home}>
             <About />
             <Services />
             <Band/>

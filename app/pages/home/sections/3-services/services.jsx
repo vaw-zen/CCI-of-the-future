@@ -17,12 +17,13 @@ export default function Services() {
                     <button className={styles.button}>{content.button.name}</button>
                 </div>
             </div>
+
             <div className={styles.rightColumn}>
                 {content.list.map((service, index) => (
                     <article key={index} className={styles.serviceCard}>
                         <img
                             src={service.img}
-                            alt="hello"
+                            alt={service.title}
                             width={0}
                             height={0}
                             sizes="(max-width: 768px) 100vw, 30vw"

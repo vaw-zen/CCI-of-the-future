@@ -9,3 +9,17 @@
 .serviceTitle { font-size: 1.3541666666667vw; font-weight: bold; line-height: 1.875vw; }
 .serviceDescription { line-height: 1.3541666666667vw; font-size: 0.83333333333333vw; color: var(--t-secondary); }
 .BlurBox { bottom: 2.5vw; left: 17.5vw }
+
+
+@media (max-width: 1024px) {
+.section { display: flex; gap: 2.86vw; flex-direction: column; margin-top: 2vw;}
+.button { padding: 2.75vw 4vw;  font-size: 2vw;margin-top: 5vw; margin-bottom: 2vw; }
+.serviceCard { height: 28.645833333333vw; padding: 1.5625vw; gap: 3.90625vw; }
+.rightColumn {gap: 3vw; }
+.serviceImage { width: 20.833333333333vw; height: 20.833333333333vw;}
+.serviceTitle { font-size:  3.3854166666667vw; font-weight: bold; line-height:  4.6875vw; }
+.serviceDescription { line-height:  3.3854166666667vw; font-size:  2.0833333333333vw; color: var(--t-secondary); }
+
+}
+@media (max-width: 480px) {
+    }

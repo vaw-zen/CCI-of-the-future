@@ -12,11 +12,7 @@ export default function Showcase() {
             <div className={styles.circleContainer}>
                 {content.circles.map((circle, index) => {
                     return (
-                        <div key={index} className={styles.circle} style={{
-                            zIndex: index === 1 ? 1 : 0,
-                            marginLeft: !index ? 0 : '-4vw',
-                            position: 'relative'
-                        }}>
+                        <div key={index} className={styles.circle}>
                             {!index ? (
                                 <LeftCircle circle={circle} />
                             ) : index === 1 ? (

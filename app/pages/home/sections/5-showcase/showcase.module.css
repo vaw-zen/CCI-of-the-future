@@ -1,6 +1,8 @@
 .circleContainer { margin-top: 3vw; display: flex; }
 .shadow { transform:scale(.95); width: 100%; height: 100%; background: var(--ac-primary); position: absolute; left: 0; top: 0; box-shadow: 0px 0px 0.3vw 0.2vw rgba(203,251,66,0.75); border-radius: 50%; transition: transform .3s;}
-.circle { min-width: 25vw; min-height: 25vw; border-radius: 50%; }
+.circle { min-width: 25vw; min-height: 25vw; border-radius: 50%; position: relative;}
+.circle:not(:nth-of-type(1)) {margin-left: -4vw;}
+.circle:nth-of-type(2) {z-index: 2; overflow: hidden;}
 .circleImage { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .circle:hover .shadow {transform: scale(1);}
 
@@ -17,3 +19,47 @@
 .rightCircle .number { height: 5vw; display: flex; justify-content: center; align-items: center; font-size: 3.334vw; width: 100%; color: var(--ac-primary); }
 .rightCircle .descContainer { width: 5vw; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 .rightCircle .description { height: 5vw; display: flex; justify-content: center; align-items: center; font-size: .9vw; color: var(--t-thri); }
+
+
+@media (max-width: 1024px) {
+.circleContainer { margin-top: 7.5vw; flex-direction: column; height: auto; width: 100%; height: 100%; align-items: center; gap: 4.5vw; }
+.circle { min-width: 63.41146vw ; min-height: 63.41146vw ; width: 63.41146vw ;height: 63.41146vw ;border-radius: 50%; }
+.circle:not(:nth-of-type(1)) {margin-left: 0;}
+.leftCircle .title { font-size: 2.86458vw; }
+.leftCircle { gap: 7.5vw; }
+.leftCircle .caret { width: 5vw; height: 5vw; top: 50%; transform: translateY(-45%); }
+.leftCircle .description { font-size: 2vw; margin-top: 1vw; }
+
+
+.rightCircle { gap: 3vw; }
+
+.rightCircle .numberContainer { width: 15vw; }
+.rightCircle .descContainer { width: 14vw; }
+
+.rightCircle .number { height: 13vw; font-size: 8.334vw;  }
+.rightCircle .description { height: 13vw; font-size: 2.23vw; color: var(--t-primary);  }
+
+}
+
+@media (max-width: 480px) {
+    .circleContainer { margin-top: 15vw; gap: 4.5vw; }
+    .circle { min-width: 70vw ; min-height: 70vw ; width: 70vw ;height: 70vw ;border-radius: 50%; }
+
+    .leftCircle  { justify-content: flex-start; border: none; gap: 1vw;}
+    .leftCircle .title { font-size: 5.4vw; width: 70%;  }
+    .leftCircle .item { width: 95%; flex: 1 !important; }
+    .leftCircle .titleContainer { width: 95%}
+    .leftCircle .caret { width: 7.5vw; height: 7.5vw; }
+    .leftCircle .description { font-size:  3.34vw; margin-top: 1vw; }
+
+    .shadow { visibility: hidden;}
+
+   .rightCircle { border: none;  gap: 0vw; justify-content: center; }
+
+   .rightCircle .numberContainer { width: 35vw; }
+   .rightCircle .descContainer { width: 20vw; }
+
+   .rightCircle .number { height: auto; flex: 1; font-size: 13.34vw;  }
+   .rightCircle .description { height: auto; flex: 1; font-size: 4vw; color: var(--t-primary);  }
+   
+}

@@ -4,7 +4,7 @@ import content from './about.json'
 import styles from './about.module.css'
 import pageStyles from '../../home.module.css'
 import Image from 'next/image'
-import { ArrowUpRight } from 'lucide-react'
+import { IconoirArrowUpRight } from '@/app/libs/components/icons'
 
 export default function About() {
     return (
@@ -33,7 +33,7 @@ export default function About() {
                     ))}
                 </ul>
                 <div className={styles.circleContainer}>
-                    <ArrowUpRight className={styles.arrow} />
+                    <IconoirArrowUpRight className={styles.arrow} />
                 </div>
             </div>
         </section>

@@ -1,4 +1,37 @@
 {
     "slug": "Pour tous vos besoins",
-    "highlight": "Vous ne savez pas par où commencer ? Trouvez une solution."
+    "highlight": "Vous ne savez pas par où commencer ? Trouvez une solution.",
+    "circles": [
+        [
+            {
+                "title": "Un large choix de services",
+                "desc": "Nous nous engageons à satisfaire 100 % de nos clients."
+            },
+            {
+                "title": "Expérience professionnelle",
+                "desc": "Nous visons 100 % de satisfaction client dans toutes nos actions."
+            },
+            {
+                "title": "Clients reconnaissants",
+                "desc": "Nous faisons tout pour atteindre 100 % de satisfaction client."
+            }
+        ],
+        {
+            "img": "/home/about.png"
+        },
+        [
+            {
+                "number": "+1k",
+                "desc": "Projets Réalisés"
+            },
+            {
+                "number": "+120",
+                "desc": "Agent déployé"
+            },
+            {
+                "number": "15+",
+                "desc": "Années d'expérience"
+            }
+        ]
+    ]
 }

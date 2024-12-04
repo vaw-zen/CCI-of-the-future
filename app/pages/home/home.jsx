@@ -6,6 +6,7 @@ import styles from './home.module.css'
 import Band from './sections/4-band/band'
 import Showcase from './sections/5-showcase/showcase'
 import Project from './sections/6-projects/project'
+import Clients from './sections/7-clients/clients'
 
 export default function Home() {
     return <>
@@ -16,6 +17,7 @@ export default function Home() {
             <Band />
             <Showcase />
             <Project />
+            <Clients />
             <div style={{ height: '200vw' }} />
         </main>
     </>

@@ -1,21 +1,63 @@
 {
     "slug": "Nos projets récents",
     "highlight": "Projets Réalisés.",
-    "lefSide": {
-        "img": "/home/about.png",
-        "tags": [
-            {
-                "name": "Tapisserie",
-                "link": "/"
-            },
-            {
-                "name": "Rpholestry",
-                "link": "/"
-            },
-            {
-                "name": "Revétement",
-                "link": "/"
-            }
-        ]
-    }
+    "articles": [
+        {
+            "title": "Wiring installation, Alabama",
+            "link": "/",
+            "img": "/home/about.png",
+            "tags": [
+                {
+                    "name": "Tapisserie",
+                    "link": "/"
+                },
+                {
+                    "name": "Rpholestry",
+                    "link": "/"
+                },
+                {
+                    "name": "Revétement",
+                    "link": "/"
+                }
+            ]
+        },
+        {
+            "title": "Heating Tune up, Manham",
+            "link": "/",
+            "img": "/home/about.png",
+            "tags": [
+                {
+                    "name": "Tapisserie",
+                    "link": "/"
+                },
+                {
+                    "name": "Rpholestry",
+                    "link": "/"
+                },
+                {
+                    "name": "Revétement",
+                    "link": "/"
+                }
+            ]
+        },
+        {
+            "title": "Plumbing, New York",
+            "link": "/",
+            "img": "/home/about.png",
+            "tags": [
+                {
+                    "name": "Tapisserie",
+                    "link": "/"
+                },
+                {
+                    "name": "Rpholestry",
+                    "link": "/"
+                },
+                {
+                    "name": "Revétement",
+                    "link": "/"
+                }
+            ]
+        }
+    ]
 }

@@ -42,7 +42,7 @@
 }
 
 @media (max-width: 480px) {
-    .circleContainer { margin-top: 15vw; gap: 7vw }
+    .circleContainer { margin-top: 22.5vw; gap: 7vw }
     .circle { min-width: 70vw ; min-height: 70vw ; width: 70vw ;height: 70vw ;border-radius: 50%; }
 
     .leftCircle  { justify-content: flex-start; border: none; gap: 1vw;}

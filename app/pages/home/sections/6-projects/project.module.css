@@ -6,7 +6,7 @@
 .image { object-fit: cover; position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 .overlay { width: 100%; background: var(--bg-elevated); z-index: 1; border-radius: .25vw; padding: 1.75vw; display: flex; gap: 1vw; align-self: flex-end; transform: translatey(150%); opacity: 0; transition: transform .4s ease-out, opacity .3s; }
 .contentWrapper { flex: 1; display: flex; flex-direction: column; gap: .5vw; }
-.title { font-size: .9vw; }
+.title { font-size: .9vw; hyphens: auto; word-wrap: break-word; }
 .tags { display: flex; gap: .5vw; color: var(--t-secondary); font-size: 0.675vw; flex-wrap: wrap; }
 .buttonWrapper { display: flex; }
 .button { width: 2.66vw; height: 2.66vw; background: var(--ac-primary); border-radius: .2vw; }
@@ -18,7 +18,7 @@
 .articleContainer:hover .overlay, .imageContainer:hover .overlay { transform: none; opacity: 1;}
 .projects a:hover {color: var(--ac-primary);}
 
-.showProjects { background: var(--bg-base); width: 8vw; height: 8vw; font-size: 1vw; border-radius: 50%; position: relative; display: flex; justify-content: center; align-items: center; }
+.showProjects { background: var(--bg-base); margin-top: 6vw; width: 8vw; height: 8vw; border-radius: 50%; position: relative; display: flex; justify-content: center; align-items: center; }
 .showProjects .spinContainer { width: 100%; height: 100%; border-radius: inherit; position: absolute; left: 0; top: 0; animation: spin 10s linear infinite; }
 .showProjects .line { position: absolute; left: 50%; top: 50%; height: 15%; width: 120%; background: var(--ac-primary); border-radius: 50%; }
 .showProjects .innerButton {padding: 15%; border-radius: inherit; width: 100%; height: 100%; background: var(--ac-primary); position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; }
@@ -37,7 +37,21 @@
     .contentWrapper { gap: 2vw; }
     .title { font-size: 3vw; }
     .tags {  font-size: 2vw; }
+    .showProjects { margin-top: 6vw; width: 15vw; height: 15vw; }
+    .showProjects .text { font-size: 1.7vw; }
+}
 
-    /* 3.90 */
+@media (max-width: 480px) {
+    .projects { margin-top: 22.5vw; gap: 5vw; flex-direction: column; }
+    .imageContainer { height: 70vw; margin-top: 12.5vw; padding: 10%; width: 100%; }
+    .articleContainer { height: 70vw; padding: 10%; }
+    .articleGrid { gap: 5vw; margin-top: 3vw; }
+    .overlay { border-radius: .5vw; padding: 7.5vw; gap: 6vw; height: auto; align-self: center; }
+    .button { width: 11vw; height: 11vw; border-radius: .75vw; }
+    .contentWrapper { gap: 3vw; }
+    .title { font-size: 5.5vw; font-weight: 700; }
+    .tags {  font-size: 3.5vw; }
+    .showProjects { margin-top: 11vw 0; width: 25vw; height: 25vw; }
+    .showProjects .text { font-size: 3vw; }
 
 }

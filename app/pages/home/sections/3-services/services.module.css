@@ -27,5 +27,5 @@
 .serviceImage { width: 38.83495vw; height: 38.83495vw; margin-top: 2vw; }
 .serviceTitle { font-size:  6.3106796116505vw; line-height: 8.7378640776699vw; margin-bottom: 2.4271844660194vw; }
 .serviceDescription { font-size: 3.8834951456311vw; line-height: 6.3106796116505vw;}
-
+.button { padding: 3.25vw 5vw;  font-size: 3vw;margin-top: 5vw; margin-bottom: 8vw; }
     }

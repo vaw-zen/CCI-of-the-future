@@ -1,0 +1,8 @@
+.clientsGrid{
+    --grid-width: calc((100% / 4) - 1px * 0.75);
+    --grid-height: 9.48vw;
+}
+.clientsGrid { display: flex; flex-wrap: wrap; background: hsla(0, 0%, 100%, 0.1); border: 1px solid hsla(0, 0%, 100%, 0.1); gap: 1px 1px; position: relative; }
+.clientCell { width: var(--grid-width); height: var(--grid-height); background: var(--bg-base); }
+.clientCell:nth-of-type(1) { width: calc(var(--grid-width) + 1px); margin-left: -1px;  height: calc(var(--grid-height) + 1px); margin-top: -1px;}
+.clientCell:nth-last-of-type(1) { width: calc(var(--grid-width) + 1px); margin-right: -1px;  height: calc(var(--grid-height) + 1px); margin-bottom: -1px;}

@@ -18,7 +18,7 @@
 .articleContainer:hover .overlay, .imageContainer:hover .overlay { transform: none; opacity: 1;}
 .projects a:hover {color: var(--ac-primary);}
 
-.showProjects { background: var(--bg-base); margin-top: 6vw; width: 8vw; height: 8vw; border-radius: 50%; position: relative; display: flex; justify-content: center; align-items: center; }
+.showProjects { background: var(--bg-base); margin: 6vw 0; width: 8vw; height: 8vw; border-radius: 50%; position: relative; display: flex; justify-content: center; align-items: center; }
 .showProjects .spinContainer { width: 100%; height: 100%; border-radius: inherit; position: absolute; left: 0; top: 0; animation: spin 10s linear infinite; }
 .showProjects .line { position: absolute; left: 50%; top: 50%; height: 15%; width: 120%; background: var(--ac-primary); border-radius: 50%; }
 .showProjects .innerButton {padding: 15%; border-radius: inherit; width: 100%; height: 100%; background: var(--ac-primary); position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; }
@@ -27,7 +27,7 @@
 .showProjects:hover .spinContainer {  animation-play-state: paused ;}
 
 @media (max-width: 1024px) {
-    .mainColumn { flex: 1; }
+    .mainColumn { flex: 1; width: 100%; }
     .imageContainer { height: 34.64vw; margin-top: 5vw; padding: 9%; }
     .articleContainer { height: 34.64vw; padding: 9%; }
     .projects { margin-top: 7.5vw; gap: 3.5vw; }

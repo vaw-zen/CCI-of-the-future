@@ -1,0 +1,28 @@
+@keyframes translate {from { transform: translateX(-0%); }to { transform: translateX(-103.05%); }}
+
+.greenBand { margin: 7vw 0; }
+.container { position: absolute; left: 0; width: 100vw; height: 3.646vw; background: var(--ac-primary); }
+.animated { animation: translate 30s infinite linear; height: 100%; display: flex; align-items: center; flex-wrap: nowrap;}
+.text { font-size: 1.35417vw; color: #000; white-space: nowrap; }
+.separator { font-size: 2.5vw; font-weight: bolder; color: #000; margin: 0 2vw; transform: translateY(15%); }
+
+.greenBand:hover .animated {  animation-play-state: paused ;}
+
+
+
+
+@media (max-width: 1024px) {
+    .greenBand { margin: 8vw 0; }
+    .container { height: 9.1146vw; }
+    .text { font-size: 3.386vw; }
+    .separator { font-size: 6vw; margin: 0 3vw; }
+    
+}
+
+@media (max-width: 480px) {
+    .greenBand { margin: 17.5vw 0; }
+    .container { height: 14.5834vw; }
+    .text { font-size: 5.4167vw; }
+    .separator { font-size: 8vw; margin: 0 6vw; }
+    
+}

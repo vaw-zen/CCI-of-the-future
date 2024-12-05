@@ -7,6 +7,7 @@ import Band from './sections/4-band/band'
 import Showcase from './sections/5-showcase/showcase'
 import Project from './sections/6-projects/project'
 import Clients from './sections/7-clients/clients'
+import GreenBand from '@/app/libs/components/GreenBand/GreenBand'
 
 export default function Home() {
     return <>
@@ -18,6 +19,7 @@ export default function Home() {
             <Showcase />
             <Project />
             <Clients />
+            <GreenBand />
             <div style={{ height: '200vw' }} />
         </main>
     </>

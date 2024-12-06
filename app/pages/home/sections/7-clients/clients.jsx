@@ -1,4 +1,3 @@
-// Clients.jsx
 import React from 'react'
 import styles from './clients.module.css'
 import Link from 'next/link'

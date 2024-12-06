@@ -16,7 +16,6 @@ export const useShowcaseCircle = (circle) => {
     }
 
     const handleFocus = (index) => {
-        // Only handle focus for keyboard navigation
         if (!document.hasFocus()) {
             setSelected(index)
         }

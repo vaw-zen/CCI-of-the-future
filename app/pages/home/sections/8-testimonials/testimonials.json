@@ -1,0 +1,36 @@
+{
+    "highlight": "Projets Réalisés.",
+    "img": "/home/about.png",
+    "testimonials": [
+        {
+            "testimonial": "1.",
+            "img": "/home/about.png",
+            "name": "Mathew Hunt",
+            "position": "plumber"
+        },
+        {
+            "testimonial": "2.",
+            "img": "/home/about.png",
+            "name": "Mathew Hunt",
+            "position": "plumber"
+        },
+        {
+            "testimonial": "3.",
+            "img": "/home/about.png",
+            "name": "Mathew Hunt",
+            "position": "plumber"
+        },
+        {
+            "testimonial": "4.",
+            "img": "/home/about.png",
+            "name": "Mathew Hunt",
+            "position": "plumber"
+        },
+        {
+            "testimonial": "5.",
+            "img": "/home/about.png",
+            "name": "Mathew Hunt",
+            "position": "plumber"
+        }
+    ]
+}

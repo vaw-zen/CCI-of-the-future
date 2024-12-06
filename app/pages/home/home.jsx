@@ -9,20 +9,25 @@ import Project from './sections/6-projects/project'
 import Clients from './sections/7-clients/clients'
 import GreenBand from '@/app/libs/components/GreenBand/GreenBand'
 import Testimonials from './sections/8-testimonials/testimonials'
+import Overlay from './sections/9-overlay/overlay'
 
 export default function Home() {
     return <>
         <Hero />
         <main className={styles.Home}>
-            <About />
-            <Services />
-            <Band />
-            <Showcase />
-            <Project />
-            <Clients />
-            <GreenBand />
-            <Testimonials />
-            <div style={{ height: '200vw' }} />
+            <div className={styles.wrapper}>
+                <About />
+                <Services />
+                <Band />
+                <Showcase />
+                <Project />
+                <Clients />
+                <GreenBand />
+                <Testimonials />
+            </div>
         </main>
+        <Overlay />
+
+        <div style={{ height: '200vw' }} />
     </>
 }

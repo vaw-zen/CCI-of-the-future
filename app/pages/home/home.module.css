@@ -1,4 +1,5 @@
-.Home { margin: 0 17.5vw 0 15.72vw; }
+.Home {contain: paint;}
+.wrapper { margin: 0 17.5vw 0 15.72vw; }
 .slug { color: var(--ac-primary); font-size: 0.84vw; text-transform: uppercase; }
 .highlight { font-size: 3.333vw; line-height: 3.86vw; margin: .75vw 0; }
  

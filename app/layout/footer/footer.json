@@ -1,0 +1,20 @@
+{
+    "socialMedias": [
+        {
+            "name": "facebook",
+            "link": "/"
+        },
+        {
+            "name": "tiktok",
+            "link": "/"
+        },
+        {
+            "name": "linkedin",
+            "link": "/"
+        },
+        {
+            "name": "instagram",
+            "link": "/"
+        }
+    ]
+}

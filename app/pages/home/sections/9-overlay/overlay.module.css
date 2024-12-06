@@ -1,0 +1,18 @@
+.section { width: 100%; height: 26.05vw; margin: 6vw 0; contain: paint; }
+.filter {position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,.35)}
+.container { position: absolute; left: 0; width: 100vw; background: url(/public/home/9-overlay/overlay.jpg); background-attachment: fixed; background-size: cover; background-position: center;background-repeat: no-repeat; height: 26.05vw; display: flex; justify-content: center; align-items: center; }
+.playButton { width: 7vw; height: 7vw; background: var(--ac-primary); border-radius: 50%; overflow: hidden; position: relative; display: flex; justify-content: center; align-items: center; }
+.textContainer { width: 85%; height: 85%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.circularText { width: 100%; height: 100%; animation: spin linear 10s infinite; }
+.innerButton { width: 60%; height: 60%; background: var(--bg-base); border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+.playIcon { color: var(--t-primary); height: 50%; width: 50%; }
+.modal { position: fixed; top: 0; left: 0; background: rgba(0, 0, 0, .8); width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
+.closeIcon { position: absolute; height: 1.25vw; width: 1.25vw; right: 1.5vw; top: 1.5vw; cursor: pointer; }
+.loadingIcon {position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 5vw; height: 5vw}
+.videoContainer { width: 940px; height: 528px; background: black; z-index: 2; position: relative; }
+.iframe { position: absolute; top: 0; left: 0; }
+
+@keyframes spin { 
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

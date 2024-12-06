@@ -42,5 +42,16 @@
 }
 
 @media (max-width: 480px) {
+    .container { height: auto; margin-top: 50vw; gap: 17.5vw; }
+    .mainImage { width:  85.4368vw; height:  85.4368vw;  }
+    .profileContainer { height: auto; min-width: 51.6vw; justify-content: flex-start; align-items: flex-start; }
+    .profileImage { width: 42.5vw; height: 42.5vw;  }
+    .slide { flex-direction: column; align-items: flex-start; gap: 5vw; }
+    .divider {display: none;}
+    .name { font-size: 5vw; margin-top: 5vw; margin-left: 2vw; }
+    .role { font-size: 4vw; margin-top: 1vw; margin-left: 2vw; }
+    .testimonialText { font-size: 5vw; align-items: flex-start; height: auto; }
+    .testimonialWrapper { height: auto; }
+    .testimonialContent { height: auto; }
 
 }

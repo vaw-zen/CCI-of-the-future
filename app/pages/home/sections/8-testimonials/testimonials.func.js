@@ -8,7 +8,7 @@ const sliderContainer = createRef();
 function moveLeft() {
     if (!sliderContainer.current) return
     count.current -= 1
-    const slider = sliderContainer.current.children[0]
+    const slider = sliderContainer.current?.children[0]
     slider.style.transition = '.4s'
     slider.style.transform = `translatex(-${count.current}00%)`
     slider.addEventListener('transitionend', function resetSlider() {
@@ -24,7 +24,7 @@ function moveLeft() {
 function moveRight() {
     if (!sliderContainer.current) return
     count.current += 1
-    const slider = sliderContainer.current.children[0]
+    const slider = sliderContainer.current?.children[0]
     slider.style.transition = '.4s'
     slider.style.transform = `translatex(-${count.current}00%)`
     slider.addEventListener('transitionend', function resetSlider() {
@@ -73,7 +73,7 @@ export function useSliderLogic() {
     const handleInteractionStart = (clientX, clientY) => {
         if (sliderContainer.current) {
             isDraggingRef.current = true;
-            const slider = sliderContainer.current.children[0]
+            const slider = sliderContainer.current?.children[0]
             dragStartRef.current = {
                 startX: clientX,
                 startY: clientY,
@@ -86,36 +86,36 @@ export function useSliderLogic() {
 
     const handleInteractionMove = (clientX, clientY) => {
         if (dragStartRef.current && sliderContainer.current && isDraggingRef.current) {
-            const deltaX = clientX - dragStartRef.current.startX;
-            const deltaY = clientY - dragStartRef.current.startY;
+            const deltaX = clientX - dragStartRef.current?.startX;
+            const deltaY = clientY - dragStartRef.current?.startY;
 
-            if (dragStartRef.current.isScrolling === null) {
+            if (dragStartRef.current?.isScrolling === null) {
                 dragStartRef.current.isScrolling = Math.abs(deltaY) > Math.abs(deltaX);
             }
 
-            if (dragStartRef.current.isScrolling) {
+            if (dragStartRef.current?.isScrolling) {
                 return;
             }
 
             event.preventDefault();
 
-            const slider = sliderContainer.current.children[0]
-            const newTransform = dragStartRef.current.startTransform - (deltaX / slider.offsetWidth * 100)
+            const slider = sliderContainer.current?.children[0]
+            const newTransform = dragStartRef.current?.startTransform - (deltaX / slider.offsetWidth * 100)
             slider.style.transform = `translatex(-${newTransform}00%)`
         }
     }
 
     const handleInteractionEnd = (clientX) => {
         if (dragStartRef.current && sliderContainer.current && isDraggingRef.current) {
-            if (dragStartRef.current.isScrolling) {
+            if (dragStartRef.current?.isScrolling) {
                 isDraggingRef.current = false;
                 dragStartRef.current = null;
                 return;
             }
 
             isDraggingRef.current = false;
-            const slider = sliderContainer.current.children[0]
-            const dragDistance = clientX - dragStartRef.current.startX
+            const slider = sliderContainer.current?.children[0]
+            const dragDistance = clientX - dragStartRef.current?.startX
             const sliderWidth = slider.offsetWidth
             const threshold = sliderWidth * 0.1
 

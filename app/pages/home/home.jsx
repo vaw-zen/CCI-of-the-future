@@ -27,7 +27,5 @@ export default function Home() {
             </div>
         </main>
         <Overlay />
-
-        <div style={{ height: '200vw' }} />
     </>
 }

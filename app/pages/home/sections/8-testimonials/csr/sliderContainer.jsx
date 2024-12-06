@@ -12,6 +12,9 @@
                 onMouseEnter={MI}
                 onMouseLeave={MI}
                 onMouseDown={MI}
+                onTouchMove={MI}
+                onTouchStart={MI}
+                onTouchEnd={MI}
             >
                 {children}
             </div>

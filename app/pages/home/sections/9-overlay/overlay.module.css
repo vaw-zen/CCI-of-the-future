@@ -27,10 +27,10 @@
 }
 
 @media (max-width: 480px) {
-.section { height:  121.36vw; margin: 20vw 0; }
-.container { position: absolute; height: 121.36vw; }
-.playButton { width: 32.5vw; height: 32.5vw;  }
-.videoContainer { width: 95vw; height:  54vw; }
-.closeIcon { height: 7.5vw; width: 7.5vw; right: 5vw; top: 7.5vw; cursor: pointer; }
-
-}
+    .section { height:  121.36vw; margin: 20vw 0; }
+    .container { position: absolute; height: 121.36vw; }
+    .playButton { width: 32.5vw; height: 32.5vw;  }
+    .videoContainer { width: 95vw; height:  54vw; }
+    .closeIcon { height: 7.5vw; width: 7.5vw; right: 5vw; top: 7.5vw; cursor: pointer; }
+    
+    }

@@ -19,3 +19,28 @@
 .arrowIcon { width: 60%; height: 60%; }
 
 .buttonsContainer button:hover {background: var(--ac-primary); border: 2px solid var(--ac-primary); color: var(--bg-base);}
+
+
+
+@media (max-width: 1024px) {
+    .container { height: 105.34vw; margin-top: 25vw; gap: 0; flex-direction: column; justify-content: space-between; align-items: center;}
+    .mainImage { width: 54.167vw; height: 54.167vw; }
+    .sliderContainer { width: 100%; }
+    .slide { padding: 0 2vw; }
+
+    .divider {margin: 0 7vw; }
+
+    .profileContainer { height: 100%; width: 22.4vw; }
+    .profileImage { width: 22.4vw; height: 22.4vw; }
+
+    .name { font-size: 2.75vw; margin-top: 2vw; }
+    .role { font-size: 2vw; margin-top: .5vw; }
+    .testimonialText { font-size: 3.5vw; }
+    .testimonialWrapper { align-items: center; }
+    .buttonsContainer {display: none;}
+
+}
+
+@media (max-width: 480px) {
+
+}

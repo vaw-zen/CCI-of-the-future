@@ -27,7 +27,7 @@
 }
 
 @media (max-width: 480px) {
-    .section { height:  121.36vw; margin: 20vw 0; }
+    .section { height:  121.36vw; margin: 30vw 0; }
     .container { position: absolute; height: 121.36vw; }
     .playButton { width: 32.5vw; height: 32.5vw;  }
     .videoContainer { width: 95vw; height:  54vw; }

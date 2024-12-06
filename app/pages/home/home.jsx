@@ -8,6 +8,7 @@ import Showcase from './sections/5-showcase/showcase'
 import Project from './sections/6-projects/project'
 import Clients from './sections/7-clients/clients'
 import GreenBand from '@/app/libs/components/GreenBand/GreenBand'
+import Testimonials from './sections/8-testimonials/testimonials'
 
 export default function Home() {
     return <>
@@ -20,6 +21,7 @@ export default function Home() {
             <Project />
             <Clients />
             <GreenBand />
+            <Testimonials />
             <div style={{ height: '200vw' }} />
         </main>
     </>

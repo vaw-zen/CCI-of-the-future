@@ -1,13 +1,36 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, createRef } from 'react'
 import content from './testimonials.json'
 
 const slideAncor = Math.floor((content.testimonials.length * 3) / 2)
+const count = createRef(slideAncor)
+const sliderContainer = createRef();
 
+function moveLeft() {
+    count.current -= 1
+    const slider = sliderContainer.current.children[0]
+    slider.style.transform = `translatex(-${count.current}00%)`
+    slider.addEventListener('transitionend', function resetSlider() {
+        this.removeEventListener('transitionend', resetSlider)
+        this.style.transition = 'none'
+        count.current = slideAncor + 1
+        slider.style.transform = `translatex(-${count.current}00%)`
+    })
+}
+
+function moveRight() {
+    count.current += 1
+    const slider = sliderContainer.current.children[0]
+    slider.style.transform = `translatex(-${count.current}00%)`
+    slider.addEventListener('transitionend', function resetSlider() {
+        this.removeEventListener('transitionend', resetSlider)
+        this.style.transition = 'none'
+        count.current = slideAncor - 1
+        slider.style.transform = `translatex(-${count.current}00%)`
+    })
+}
 export function useSliderLogic() {
-    const sliderContainer = useRef();
     const intervalRef = useRef(null);
     const dragStartRef = useRef(null);
-    const count = useRef(slideAncor)
 
     const animate = () => {
         if (!sliderContainer.current) return
@@ -49,9 +72,6 @@ export function useSliderLogic() {
         }
     }
 
-    const handleMouseLeave = animate
-
-
     const handleMouseDown = (e) => {
         if (sliderContainer.current) {
             const slider = sliderContainer.current.children[0]
@@ -73,48 +93,35 @@ export function useSliderLogic() {
 
     const handleMouseUp = (e) => {
         if (dragStartRef.current && sliderContainer.current) {
-          const slider = sliderContainer.current.children[0]
-          const dragDistance = e.clientX - dragStartRef.current.startX
-          const sliderWidth = slider.offsetWidth
-          const threshold = sliderWidth * 0.1
-      
-          slider.style.transition = '.4s'
-      
-          // Determine direction and update count
-          if (Math.abs(dragDistance) > threshold) {
-            if (dragDistance > 0) {
-              count.current -= 1
-            } else {
-              count.current += 1
+            const slider = sliderContainer.current.children[0]
+            const dragDistance = e.clientX - dragStartRef.current.startX
+            const sliderWidth = slider.offsetWidth
+            const threshold = sliderWidth * 0.1
+
+            slider.style.transition = '.4s'
+
+            // Determine direction and update count
+            if (Math.abs(dragDistance) > threshold) {
+                if (dragDistance > 0) {
+                    count.current -= 1
+                } else {
+                    count.current += 1
+                }
             }
-          }
-      
-          // Handle edge cases and infinite scroll
-          if (count.current >= slideAncor + content.testimonials.length) {
-            slider.style.transform = `translatex(-${count.current}00%)`
-            slider.addEventListener('transitionend', function resetSlider() {
-              this.removeEventListener('transitionend', resetSlider)
-              this.style.transition = 'none'
-              count.current = slideAncor + 1
-              slider.style.transform = `translatex(-${count.current}00%)`
-            })
-          } else if (count.current <= slideAncor - content.testimonials.length) {
-            slider.style.transform = `translatex(-${count.current}00%)`
-            slider.addEventListener('transitionend', function resetSlider() {
-              this.removeEventListener('transitionend', resetSlider)
-              this.style.transition = 'none'
-              count.current = slideAncor - 1
-              slider.style.transform = `translatex(-${count.current}00%)`
-            })
-          } else {
-            slider.style.transform = `translatex(-${count.current}00%)`
-          }
-      
-          document.removeEventListener('mousemove', handleMouseMove)
-          document.removeEventListener('mouseup', handleMouseUp)
-          dragStartRef.current = null
+
+            if (count.current >= slideAncor + content.testimonials.length) {
+                moveLeft()
+            } else if (count.current <= slideAncor - content.testimonials.length) {
+                moveRight()
+            } else {
+                slider.style.transform = `translatex(-${count.current}00%)`
+            }
+
+            document.removeEventListener('mousemove', handleMouseMove)
+            document.removeEventListener('mouseup', handleMouseUp)
+            dragStartRef.current = null
         }
-      }
+    }
 
 
     const MI = (e) => {
@@ -135,4 +142,10 @@ export function useSliderLogic() {
         ref: sliderContainer,
         MI,
     }
+}
+
+
+export function useSliderBTNLogic() {
+
+    return { moveLeft, moveRight }
 }

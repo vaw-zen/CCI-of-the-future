@@ -1,0 +1,51 @@
+.refrencesGrid{
+    --gap: 1px;
+    --grid-width: calc((100% / 4) - (var(--gap) * 0.75));
+    --grid-height: 9.48vw;
+}
+.refrencesGrid { display: flex; flex-wrap: wrap; background: hsla(0, 0%, 100%, 0.1); border: 1px solid hsla(0, 0%, 100%, 0.1); gap: 1px 1px; position: relative; }
+.refrenceCell { width: var(--grid-width); height: var(--grid-height); background: var(--bg-base);  display: flex; justify-content: center; align-items: center; }
+.refrenceCell:nth-of-type(1) { width: calc(var(--grid-width) + calc(var(--gap) * 3)); margin-left: calc(var(--gap) * -3);  height: calc(var(--grid-height) + calc(var(--gap) * 3)); margin-top: calc(var(--gap) * -3); justify-content: flex-start;}
+.refrenceCell:nth-last-of-type(1) { width: calc(var(--grid-width) + calc(var(--gap) * 3)); margin-right: calc(var(--gap) * -3);  height: calc(var(--grid-height) + calc(var(--gap) * 3)); margin-bottom: calc(var(--gap) * -3);}
+
+.heading { width: 100%; justify-self: flex-start; margin-left: -5%; font-size: 1.2vw; line-height: 1.875vw; color: #fff; }
+.refrenceLink { display: flex; align-items: center; gap: 0.25vw; font-size: 0.8vw; font-weight: bolder; text-transform: uppercase; }
+.arrow { width: 1.5vw; height: 1.5vw; }
+.refrenceSiteLink { width: 100%; height: 100%; justify-content: center; align-items: center; display: flex; }
+.refrenceImage { width: 60%; height: 60%; object-fit: contain; object-position: center; transition: transform .6s ; transform-style: preserve-3d; transform: scale3d(1, 1, 1) ; }
+
+.refrenceCell:hover .refrenceImage {transform: scale3d(1.2, 1.1, 1)}
+.refrenceLink:hover { color: var(--ac-primary); }
+
+
+@media (max-width: 1024px) {
+    .refrencesGrid {
+        --grid-width: calc((100% / 2) - (var(--gap) * 0.75));
+        --grid-height: 22.4vw;
+    }
+
+.refrencesGrid { margin-top: 5vw; }
+.heading { margin-left: 0; font-size: 3.39vw; line-height: 4.6875vw; }
+.refrenceLink { display: flex; gap: 0.5vw; font-size: 2.084vw; }
+.arrow { width: 3.5vw; height: 3.5vw; }
+
+}
+
+
+
+
+@media (max-width: 480px) {
+    .refrencesGrid {
+        --grid-width: calc(100% - (var(--gap) * 0.75));
+        --grid-height: 35.84vw;
+    }
+
+.refrencesGrid { margin-top: 12.5vw; }
+.heading { margin-left: 0; font-size: 5.8vw; line-height: 1.5; }
+.refrenceLink { gap: 0.5vw; font-size: 4vw; }
+.arrow { width: 6vw; height: 6vw; }
+
+.refrenceCell:nth-of-type(1) {width: calc(var(--grid-width) + calc(var(--gap) * 6)); margin-right: calc(var(--gap) * -3); }
+.refrenceCell:nth-last-of-type(1) { width: var(--grid-width); height: calc(var(--grid-height) / 2); margin: 0;}
+
+}

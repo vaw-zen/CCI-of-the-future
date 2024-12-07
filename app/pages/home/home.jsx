@@ -6,11 +6,11 @@ import styles from './home.module.css'
 import Band from './sections/4-band/band'
 import Showcase from './sections/5-showcase/showcase'
 import Project from './sections/6-projects/project'
-import Clients from './sections/7-clients/clients'
 import GreenBand from '@/app/utils/components/GreenBand/GreenBand'
 import Testimonials from './sections/8-testimonials/testimonials'
 import Overlay from './sections/9-overlay/overlay'
 import Initalizer from '@/app/utils/initializer/initalizer'
+import Refrences from './sections/7-refrences/refrences'
 
 export default function Home() {
     return <>
@@ -23,7 +23,7 @@ export default function Home() {
                 <Band />
                 <Showcase />
                 <Project />
-                <Clients />
+                <Refrences />
                 <GreenBand />
                 <Testimonials />
             </div>

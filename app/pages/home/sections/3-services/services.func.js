@@ -19,7 +19,7 @@ export function servicesSI() {
         });
 
         return () => {
-            cards.forEach((element, index) => scrollTrigger.removeInstance('service-card' + index, element));
+            cards.forEach((element, index) => scrollTrigger.removeInstance('service-card' + index));
         };
     }, [])
 }

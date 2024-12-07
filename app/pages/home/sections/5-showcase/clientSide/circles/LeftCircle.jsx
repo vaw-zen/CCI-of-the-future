@@ -1,14 +1,14 @@
 'use client'
 import { RadixIconsCaretRight } from '@/app/utils/components/icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '../../showcase.module.css'
 import { useShowcaseCircle } from './circles.func'
+import { dimensionsStore } from '@/app/utils/store/store'
 
 export default function LeftCircle({ circle }) {
     const [selected, setSelected] = useState(-1)
     const { refs, handleFocus, handleBlur, handleClick } = useShowcaseCircle(circle)
-
-
+    const { isMobile } = dimensionsStore()
 
     return <>
         <div className={styles.shadow} />
@@ -22,7 +22,7 @@ export default function LeftCircle({ circle }) {
                     onFocus={() => handleFocus(index)}
                     onBlur={(e) => handleBlur(e, selected, setSelected, refs)}
                     className={styles.item}
-                    style={{ height: index === selected ? '3vw' : '2vw' }}
+                    style={{ height: index === selected ? isMobile() ? '5vw' : '3vw' : '2vw' }}
                 >
                     <div className={styles.titleContainer}>
                         <h3

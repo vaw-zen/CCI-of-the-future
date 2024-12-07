@@ -1,0 +1,29 @@
+.footer { height: 26.823vw; display: flex; flex-direction: column; contain: paint; background: #1a1a1c; }
+.contentWrapper { display: flex; flex: 1; padding: 0 17.5vw 0 15.72vw; align-items: center; justify-content: space-between; }
+.leftSection { display: flex; flex-direction: column; }
+.title { font-size: 3vw; width: fit-content; }
+.mailLink { position: relative; transition: color .4s;}
+.underline { width: 100%; height: .25vw; background: var(--t-primary); position: absolute; opacity: 0; bottom: .4vw; right: 0; transition: background .4s; }
+.infoGrid { display: flex; width: 100%; justify-content: space-between; margin-top: 2vw; }
+.infoBlock { display: flex; flex-direction: column; gap: .5vw; }
+.label { color: var(--t-secondary); font-size: .834vw; }
+.value { font-size: 1.25vw; font-weight: bolder; }
+.navigation { display: flex; flex-direction: column; font-size: 1.97vw; text-transform: uppercase; font-weight: bolder; gap: 2vw; list-style: none; line-height: .85; }
+.navLink { display: flex; gap: .75vw; height: auto; }
+.index { max-width: 3.75vw; min-width: 3.75vw; flex: 1; position: relative; font-size: 1.25vw; color: var(--t-secondary); display: flex; flex-direction: column; justify-content: space-between; }
+.line { transition: width .4s; height: 2px; width: 60%; background: var(--t-secondary); border-radius: 1vw; }
+.pageName { font-size: 1.97vw; }
+.bottom { font-size: .834vw; height: 3.073vw; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; padding: 0 17.5vw 0 15.72vw; align-items: center; }
+.copyright { font-size: 0.9375vw; color: var(--t-secondary); }
+.highlight { color: var(--t-primary); }
+.divider { margin: 0 .5vw; }
+.socials { display: flex; list-style: none; gap: 1vw; font-weight: bolder; text-transform: capitalize; font-size: .9vw; }
+
+.mailLink:hover {color: var(--ac-primary); }
+.mailLink:hover .underline{ opacity: 1;background: var(--ac-primary); }
+.value:hover {color: var(--ac-primary);}
+.highlight:hover {color: var(--ac-primary);}
+.socials li :hover {color: var(--ac-primary);}
+.navLink:hover {color: var(--ac-primary);}
+.navLink:hover span {color: var(--ac-primary);}
+.navLink:hover .line {background: var(--ac-primary); width: 92.5%;}

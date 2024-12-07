@@ -1,1 +1,12 @@
-.nav {position: fixed; transition: .5s cubic-bezier(0.165,0.840,0.440,1.000);}
+.nav { width: 100%; height: 5vw; background: rgba(0, 0, 0, .5); backdrop-filter: blur(5px); position: fixed; top: 0; left: 0; z-index: 99999; transition: transform .5s cubic-bezier(0.165,0.840,0.440,1.000); border-bottom: 1px solid rgba(255, 255, 255, .2); display: flex; justify-content: space-between; align-items: center; padding: 0 6.5vw }
+.logo { width: 10.7vw }
+.menu { display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) }
+.menuItem { list-style: none; height: 2vw; display: flex; align-items: center; position: relative }
+.dot { height: .3vw; width: .3vw; margin: 0 1.5vw 0 .75vw; border-radius: 50%; background: var(--ac-primary) }
+.button, .link { font-size: .8vw; color: inherit; font-weight: bolder; text-transform: uppercase; display: flex; align-items: center }
+.icon { width: 1.75vw; height: 1.75vw; margin: -.1vw 0 0 -.2vw; transition: transform .3s }
+.dropdown { width: 12vw; height: 0; opacity: 0; background: rgb(36, 39, 42); position: absolute; top: calc(100% + 1.5vw); left: 0; border-radius: .75vw; pointer-events: none; padding: 0; display: flex; flex-direction: column; transition: opacity .3s, height .3s }
+.dropdownActive { height: auto; opacity: 1; pointer-events: all; padding: .75vw 0 }
+.dropdownArrow { width: 1.5vw; height: 1.5vw; color: rgb(36, 39, 42); position: absolute; left: 1vw; top: 0; transform: translateY(-75%) }
+.subLink { font-size: .9vw; padding: .4vw 1.1vw; text-transform: capitalize }
+.menuIcon { width: 2.97vw; height: 2.97vw; display: flex; justify-content: center; align-items: center; border-radius: 50%; background: var(--bg-elevated); cursor: pointer }

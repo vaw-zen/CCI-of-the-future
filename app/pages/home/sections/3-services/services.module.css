@@ -3,7 +3,7 @@
 .stickyContent { width: 100%; position: sticky; top: 3.6458333333333vw; }
 .button { padding: 1vw 2vw; background: var(--ac-primary); color: var(--t-highlight); font-size: .85vw; font-weight: bold; border-radius: 50vw; text-transform: uppercase; margin-top: 1vw; }
 .rightColumn { flex: 1; display: flex; flex-direction: column; gap: 1.5vw; }
-.serviceCard { width: 100%; height: 11.458vw; padding: 1.5625vw; background: var(--bg-elevated); display: flex; align-items: center; gap: 1vw; }
+.serviceCard { will-change: transform; width: 100%; height: 11.458vw; padding: 1.5625vw; background: var(--bg-elevated); display: flex; align-items: center; gap: 1vw; }
 .serviceImage { width: 8.334vw; height: 8.334vw; object-fit: cover; border-radius: 50%; }
 .serviceContent { display: flex; flex-direction: column; gap: 1vw; margin-top: -1vw; }
 .serviceTitle { font-size: 1.3541666666667vw; font-weight: bold; line-height: 1.875vw; }

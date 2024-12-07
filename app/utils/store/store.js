@@ -1,4 +1,4 @@
-import { create } from './provider';
+import { create } from '../../libs/vz/store/provider';
 
 export const dimensionsStore = create((set) => ({
     vw: 0, 

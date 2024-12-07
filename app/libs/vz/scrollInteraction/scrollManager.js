@@ -58,7 +58,7 @@ class ScrollEventManager {
   // Attach global scroll listener only once
   attachGlobalListener() {
     if (!this.isListenerAttached) {
-      window.addEventListener('scroll', this.boundHandleScroll);
+      window.addEventListener('scroll', this.boundHandleScroll, { passive: true });
       this.isListenerAttached = true;
     }
   }

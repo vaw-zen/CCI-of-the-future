@@ -1,0 +1,47 @@
+[
+    {
+        "name": "accueil",
+        "link": "/"
+    },
+    {
+        "name": "pages",
+        "subLinks": [
+            {
+                "name": "à propos de nous",
+                "link": "/"
+            },
+            {
+                "name": "services",
+                "link": "/"
+            },
+            {
+                "name": "contact",
+                "link": "/"
+            },
+            {
+                "name": "notre equipe",
+                "link": "/"
+            },
+            {
+                "name": "FAQ",
+                "link": "/"
+            }
+        ]
+    },
+    {
+        "name": "services",
+        "subLinks": []
+    },
+    {
+        "name": "projects",
+        "subLinks": []
+    },
+    {
+        "name": "blog",
+        "subLinks": []
+    },
+    {
+        "name": "contact",
+        "link": "/"
+    }
+]

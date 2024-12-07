@@ -10,9 +10,11 @@ import Clients from './sections/7-clients/clients'
 import GreenBand from '@/app/utils/components/GreenBand/GreenBand'
 import Testimonials from './sections/8-testimonials/testimonials'
 import Overlay from './sections/9-overlay/overlay'
+import Initalizer from '@/app/utils/initializer/initalizer'
 
 export default function Home() {
     return <>
+        <Initalizer />
         <Hero />
         <main className={styles.Home}>
             <div className={styles.wrapper}>

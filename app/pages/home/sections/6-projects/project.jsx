@@ -1,7 +1,7 @@
 import content from './projects.json'
 import pageStyles from '../../home.module.css'
 import styles from './project.module.css'
-import { MdiArrowTopRightThin } from '@/app/libs/components/icons'
+import { MdiArrowTopRightThin } from '@/app/utils/components/icons'
 import Link from 'next/link'
 
 export default function Project() {

@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './clients.module.css'
 import Link from 'next/link'
-import { UilArrowRight } from '@/app/libs/components/icons'
+import { UilArrowRight } from '@/app/utils/components/icons'
 
 export default function Clients() {
   return (

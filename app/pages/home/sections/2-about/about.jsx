@@ -1,10 +1,10 @@
-import BlurBox from '@/app/libs/components/BlurBox/BlurBox'
+import BlurBox from '@/app/utils/components/BlurBox/BlurBox'
 import React from 'react'
 import content from './about.json'
 import styles from './about.module.css'
 import pageStyles from '../../home.module.css'
 import Image from 'next/image'
-import { IconoirArrowUpRight } from '@/app/libs/components/icons'
+import { IconoirArrowUpRight } from '@/app/utils/components/icons'
 
 export default function About() {
     return (

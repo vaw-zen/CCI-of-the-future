@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-export class StoreManager {
+class StoreManager {
   constructor(initialState = {}) {
     this.state = initialState;
     this.listeners = new Set();
@@ -53,7 +53,7 @@ export class StoreManager {
   // Deep comparison to prevent unnecessary updates
   isEqual(obj1, obj2) {
     if (obj1 === obj2) return true;
-    
+
     if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || obj1 === null || obj2 === null) {
       return false;
     }
@@ -83,7 +83,7 @@ export class StoreManager {
 // Utility to create a store similar to Zustand
 export function create(storeCreator) {
   const storeManager = new StoreManager();
-  
+
   // Initialize the store
   const initialStore = storeCreator(
     storeManager.createSetter(),
@@ -95,9 +95,9 @@ export function create(storeCreator) {
 
   // Create hook and setter methods
   const useStore = storeManager.createHook();
-  
+
   // Add methods to the hook
   useStore.setState = storeManager.createSetter();
-  
+
   return useStore;
 }

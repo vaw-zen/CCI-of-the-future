@@ -3,7 +3,7 @@ import content from './services.json'
 import Image from 'next/image'
 import Link from 'next/link'
 import pageStyles from '../../home.module.css'
-import BlurBox from '@/app/libs/components/BlurBox/BlurBox'
+import BlurBox from '@/app/utils/components/BlurBox/BlurBox'
 import styles from './services.module.css'
 
 export default function Services() {

@@ -1,5 +1,5 @@
 'use client'
-import { RadixIconsCaretRight } from '@/app/libs/components/icons'
+import { RadixIconsCaretRight } from '@/app/utils/components/icons'
 import { useState } from 'react'
 import styles from '../../showcase.module.css'
 import { useShowcaseCircle } from './circles.func'
@@ -22,7 +22,7 @@ export default function LeftCircle({ circle }) {
                     onFocus={() => handleFocus(index)}
                     onBlur={(e) => handleBlur(e, selected, setSelected, refs)}
                     className={styles.item}
-                    style={{ height: index === selected ? '5vw' : '2vw' }}
+                    style={{ height: index === selected ? '3vw' : '2vw' }}
                 >
                     <div className={styles.titleContainer}>
                         <h3

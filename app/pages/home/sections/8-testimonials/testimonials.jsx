@@ -1,7 +1,7 @@
 import styles from './testimonials.module.css'
 import content from './testimonials.json'
 import SliderContainer from './csr/sliderContainer'
-import { UilArrowRight } from '@/app/libs/components/icons'
+import { UilArrowRight } from '@/app/utils/components/icons'
 import ButtonContainer from './csr/buttonContainer'
 
 export default function Testimonials() {

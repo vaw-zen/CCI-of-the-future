@@ -1,5 +1,5 @@
 'use client'
-import { BiPlayFill, CircularText, EosIconsBubbleLoading, EpCloseBold } from '@/app/libs/components/icons'
+import { BiPlayFill, CircularText, EosIconsBubbleLoading, EpCloseBold } from '@/app/utils/components/icons'
 import styles from './overlay.module.css'
 import { useOverlayLogic } from './overlay.func'
 import content from './overlay.json'

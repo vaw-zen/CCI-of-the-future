@@ -1,1 +1,1 @@
-.nav {position: fixed;}
+.nav {position: fixed; transition: .5s cubic-bezier(0.165,0.840,0.440,1.000);}

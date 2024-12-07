@@ -1,30 +1,58 @@
 import Link from 'next/link'
-import React from 'react'
 import content from './footer.json'
+import styles from './footer.module.css'
 
 export default function Footer() {
+    const mail = `mailto:${content.mail.link}?subject=${content.mail.subject}&body=${content.mail.body}`
+    const phone = 'tel:' + content.phone
     return (
-        <footer style={{ height: '26.823vw', display: 'flex', flexDirection: 'column', contain: 'paint', background: '#1a1a1c' }}>
-            <div style={{ display: 'flex', flex: 1, padding: '0 17.5vw 0 15.72vw' }}>
-                <div style={{ flex: 1 }}></div>
-                <div></div>
-            </div>
-
-            <div style={{
-                height: '3.073vw', width: '100%', borderTop: '1px solid rgba(255, 255, 255, 0.1)', display: 'flex', justifyContent: 'space-between', padding: '0 17.5vw 0 15.72vw',
-                alignItems: 'center'
-
-            }}>
-                <div style={{ fontSize: '0.9375vw', color: 'var(--t-secondary)' }}>
-                    Copyright © <strong style={{ color: 'var(--t-primary)' }}>CCI</strong> <span style={{ margin: '0 .5vw' }}>|</span> Designed and developed by - <Link
-                        href='https://www.vawzen.org/' target='_blank' style={{ color: 'var(--t-primary)' }}>
-                        Vawzen
-                    </Link>
+        <footer className={styles.footer}>
+            <div className={styles.contentWrapper}>
+                <div className={styles.leftSection}>
+                    <h2 className={styles.title}>
+                        Contactez-nous à <br />
+                        <a href={mail} className={styles.mailLink}>
+                            {content.mail.link}
+                            <div className={styles.underline} />
+                        </a>
+                    </h2>
+                    <div className={styles.infoGrid}>
+                        <div className={styles.infoBlock}>
+                            <p className={styles.label}>Notre Numéro</p>
+                            <a href={phone} className={styles.value}>{content.number}</a>
+                        </div>
+                        <div className={styles.infoBlock}>
+                            <p className={styles.label}>Notre localisation</p>
+                            <h4 className={styles.value}>{content.location}</h4>
+                        </div>
+                    </div>
                 </div>
 
-                <ul style={{ display: 'flex', listStyle: 'none', gap: '1vw', fontWeight: 'bolder', textTransform: 'capitalize', fontSize: '.9vw' }}>
+                <ul className={styles.navigation}>
+                    {content.pages.map((element, index) => (
+                        <Link href={element.link} key={index} className={styles.navLink}>
+                            <div className={styles.index}>
+                                <div className={styles.line} />
+                                <span>0{index + 1}</span>
+                            </div>
+                            <div className={styles.pageName}>{element.name}</div>
+                        </Link>
+                    ))}
+                </ul>
+            </div>
+
+            <div className={styles.bottom}>
+                <div className={styles.copyright}>
+                    Copyright © <strong className={styles.highlight}>CCI</strong>
+                    <span className={styles.divider}>|</span>
+                    Designed and developed by - <Link href='https://www.vawzen.org/' target='_blank' className={styles.highlight}>Vawzen</Link>
+                </div>
+
+                <ul className={styles.socials}>
                     {content.socialMedias.map((element, index) => (
-                        <li style={{}} key={index}><Link href={element.link}>{element.name}</Link></li>
+                        <li key={index}>
+                            <Link target='_blank' href={element.link}>{element.name}</Link>
+                        </li>
                     ))}
                 </ul>
             </div>

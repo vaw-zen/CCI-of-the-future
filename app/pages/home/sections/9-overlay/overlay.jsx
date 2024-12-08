@@ -3,6 +3,7 @@ import { BiPlayFill, CircularText, EosIconsBubbleLoading, EpCloseBold } from '@/
 import styles from './overlay.module.css'
 import { useOverlayLogic } from './overlay.func'
 import content from './overlay.json'
+import { parallax } from '@/app/libs/vz/mi/mi'
 
 export default function Overlay() {
     const { isActive, handleOpen, handleClose } = useOverlayLogic()
@@ -11,7 +12,7 @@ export default function Overlay() {
         <div className={styles.section}>
             <div className={styles.container} style={{ backgroundImage: `url(${content.BG})` }}>
                 <div className={styles.filter} />
-                <button onClick={handleOpen} className={styles.playButton}>
+                <button onMouseMove={parallax} onMouseLeave={parallax} onClick={handleOpen} className={styles.playButton}>
                     <div className={styles.textContainer}>
                         <CircularText className={styles.circularText} />
                     </div>

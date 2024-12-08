@@ -5,12 +5,19 @@ import content from './header.json'
 import Link from 'next/link'
 import { useHeaderLogic } from './header.func'
 
-export default function Header() {
+export default function Header({ roboto }) {
     const { toggleDropdown, isActive, closeDropdown } = useHeaderLogic()
-
+    console.log(roboto.className);
     return (
         <nav className={styles.nav}>
-            <div className={styles.logo}>LOGO</div>
+            <div className={styles.logo}>
+                <img src='/layout/logo.png' />
+                <h2
+                    className={roboto.className}
+                    style={{ fontWeight: 'normal', fontSize: '.7vw', marginTop: '.25vw' }}>
+                    Chaabane Cleaning Inteligence
+                </h2>
+            </div>
             <ul className={styles.menu}>
                 {content.map((element, index) => (
                     <li
@@ -20,7 +27,25 @@ export default function Header() {
                         tabIndex={0}
                     >
                         {!index ? null : <div className={styles.dot} />}
-                        {element.subLinks ? (
+
+                        {element.link && (
+                            <Link href={element.link} className={styles.link}>
+                                {element.name}
+                            </Link>
+                        )}
+                        {element.subLinks && <>
+                            <div className={`${styles.dropdown} ${isActive(index) ? styles.dropdownActive : ''}`}>
+                                <FaCaretUp className={styles.dropdownArrow} />
+                                {element.subLinks.map((link, subIndex) => (
+                                    <Link
+                                        key={subIndex}
+                                        href={link.link}
+                                        className={styles.subLink}
+                                    >
+                                        {link.name}
+                                    </Link>
+                                ))}
+                            </div>
                             <button
                                 onClick={() => toggleDropdown(index)}
                                 className={styles.button}
@@ -34,28 +59,7 @@ export default function Header() {
                                     className={styles.icon}
                                 />
                             </button>
-                        ) : (
-                            <Link href={element.link} className={styles.link}>
-                                {element.name}
-                            </Link>
-                        )}
-                        {element.subLinks && (
-                            <div
-                                className={`${styles.dropdown} ${isActive(index) ? styles.dropdownActive : ''
-                                    }`}
-                            >
-                                <FaCaretUp className={styles.dropdownArrow} />
-                                {element.subLinks.map((link, subIndex) => (
-                                    <Link
-                                        key={subIndex}
-                                        href={link.link}
-                                        className={styles.subLink}
-                                    >
-                                        {link.name}
-                                    </Link>
-                                ))}
-                            </div>
-                        )}
+                        </>}
                     </li>
                 ))}
             </ul>

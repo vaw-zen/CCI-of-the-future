@@ -47,7 +47,7 @@
 
     .leftCircle  { justify-content: flex-start; border: none; gap: 1vw;}
     .leftCircle .title { font-size: 5.4vw; width: 70%;  }
-    .leftCircle .item { width: 95%; flex: 1 !important; }
+    .leftCircle .item { width: 95%; flex: 1 !important; transition: margin-bottom .3s; }
     .leftCircle .titleContainer { width: 95%}
     .leftCircle .caret { width: 7.5vw; height: 7.5vw; }
     .leftCircle .description { font-size:  3.34vw; margin-top: 1vw; }

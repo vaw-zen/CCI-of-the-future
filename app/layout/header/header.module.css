@@ -37,3 +37,21 @@
     .dropdownActive { padding: 1vw 0 }
     .dropdownArrow { width: 2vw; height: 2vw; color: rgb(36, 39, 42); position: absolute; left: 5vw; top: 0; transform: translateY(-75%) }
 }
+
+
+@media (max-width: 480px) {
+    .container { padding: 0 3.75vw;; height: 17.5vw; z-index: 1; position: relative;}
+    .logo {  gap: 1vw; }
+    .logo img { width: 9.5vw; height: 9.5vw;  }
+    .logo h2 {  font-size: 3.5vw;}
+    .menuIcon svg { height: 5vw; width: 5vw; }
+
+    .menu { border-radius: 0 0 5vw 5vw; box-shadow: 0px 1px 5px 0px rgba(203, 251, 66, .75);}
+    .activeMenu { padding: 4vw 0;}
+    .button, .link { font-size: 4vw; padding: 4vw 6vw; width: 100%; display: flex; position: relative;  }
+    .icon { width: 7.5vw; height: 7.5vw; position: absolute; right: 0; top: 0%; transform: translate(-20%, 40%); }
+    .activeIcon {transform: rotate(180deg) translate(20%, -40%); }
+    .subLink { font-size: 3.75vw; padding: 2vw 7.5vw; }
+    .dropdownActive { padding: 2vw 0 }
+
+}

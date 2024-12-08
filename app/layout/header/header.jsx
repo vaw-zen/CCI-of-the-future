@@ -6,24 +6,38 @@ import Link from 'next/link'
 import { useHeaderLogic } from './header.func'
 
 export default function Header({ roboto }) {
-    const { toggleDropdown, isActive, closeDropdown } = useHeaderLogic()
-    console.log(roboto.className);
+    const {
+        handleDropdownBlur,
+        toggleDropdown,
+        isActive,
+        handleMenuButton,
+        handleMenuStyles,
+        handleNavBlur
+    } = useHeaderLogic()
+
+
     return (
-        <nav className={styles.nav}>
-            <div className={styles.logo}>
-                <img src='/layout/logo.png' />
-                <h2
-                    className={roboto.className}
-                    style={{ fontWeight: 'normal', fontSize: '.7vw', marginTop: '.25vw' }}>
-                    Chaabane Cleaning Inteligence
-                </h2>
+        <nav
+            tabIndex={0}
+            onBlur={handleNavBlur}
+            className={styles.nav}>
+            <div className={styles.container}>
+                <div className={styles.logo}>
+                    <img src='/layout/logo.png' />
+                    <h2 className={roboto.className}>
+                        Chaabane Cleaning Inteligence
+                    </h2>
+                </div>
+                <button onClick={handleMenuButton} className={styles.menuIcon}>
+                    <MingcuteMenuFill />
+                </button>
             </div>
-            <ul className={styles.menu}>
+            <ul className={handleMenuStyles(styles.menu, styles.activeMenu)}>
                 {content.map((element, index) => (
                     <li
                         key={index}
                         className={styles.menuItem}
-                        onBlur={closeDropdown}
+                        onBlur={handleDropdownBlur}
                         tabIndex={0}
                     >
                         {!index ? null : <div className={styles.dot} />}
@@ -52,20 +66,13 @@ export default function Header({ roboto }) {
                             >
                                 {element.name}
                                 <CiCaretDownSm
-                                    style={{
-                                        transform: `rotate(${isActive(index) ? 180 : 0}deg)`,
-                                        color: isActive(index) ? 'var(--ac-primary)' : 'var(--t-primary)',
-                                    }}
-                                    className={styles.icon}
+                                    className={`${styles.icon} ${isActive(index) ? styles.activeIcon : ''}`}
                                 />
                             </button>
                         </>}
                     </li>
                 ))}
             </ul>
-            <div className={styles.menuIcon}>
-                <MingcuteMenuFill />
-            </div>
         </nav>
     )
 }

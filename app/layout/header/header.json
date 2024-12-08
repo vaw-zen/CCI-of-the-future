@@ -30,15 +30,42 @@
     },
     {
         "name": "services",
-        "subLinks": []
+        "subLinks": [
+            {
+                "name": "notre equipe",
+                "link": "/"
+            },
+            {
+                "name": "FAQ",
+                "link": "/"
+            }
+        ]
     },
     {
         "name": "projects",
-        "subLinks": []
+        "subLinks": [
+            {
+                "name": "notre equipe",
+                "link": "/"
+            },
+            {
+                "name": "FAQ",
+                "link": "/"
+            }
+        ]
     },
     {
         "name": "blog",
-        "subLinks": []
+        "subLinks": [
+            {
+                "name": "notre equipe",
+                "link": "/"
+            },
+            {
+                "name": "FAQ",
+                "link": "/"
+            }
+        ]
     },
     {
         "name": "contact",

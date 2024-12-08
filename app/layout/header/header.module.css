@@ -1,15 +1,39 @@
-.nav { width: 100%; height: 5vw; background: rgba(0, 0, 0, .5); backdrop-filter: blur(5px); position: fixed; top: 0; left: 0; z-index: 99999; transition: transform .5s cubic-bezier(0.165,0.840,0.440,1.000); border-bottom: 1px solid rgba(255, 255, 255, .2); display: flex; justify-content: space-between; align-items: center; padding: 0 6.5vw }
+.nav { width: 100%; height: auto; position: fixed; top: 0; left: 0; z-index: 1; transition: transform .5s cubic-bezier(0.165,0.840,0.440,1.000);}
+.container { width: 100%; height: 5vw; background: rgba(0, 0, 0, .5); backdrop-filter: blur(5px); border-bottom: 1px solid rgba(255, 255, 255, .2); display: flex; justify-content: space-between; align-items: center; padding: 0 6.5vw }
 .logo { display: flex; align-items: center; width: auto; flex-direction: column }
 .logo img { width: 2.5vw; height: 2.5vw; object-fit: contain }
-.logo img { width: 2.5vw; height: 2.5vw; object-fit: contain }
+.logo h2 {  font-weight: normal; font-size: .7vw; margin-top: .25vw }
 .menu { display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) }
 .menuItem { list-style: none; height: 2vw; display: flex; align-items: center; position: relative }
 .dot { height: .3vw; width: .3vw; margin: 0 1.5vw 0 .75vw; border-radius: 50%; background: var(--ac-primary) }
 .button, .link { font-size: .8vw; color: inherit; font-weight: bolder; text-transform: uppercase; display: flex; align-items: center }
 .icon { width: 1.75vw; height: 1.75vw; margin: -.1vw 0 0 -.2vw; transition: transform .3s }
+.activeIcon {transform: rotate(180deg); color: var(--ac-primary); }
 .dropdown { width: 12vw; height: 0; opacity: 0; background: rgb(36, 39, 42); position: absolute; top: calc(100% + 1.5vw); left: 0; border-radius: .75vw; pointer-events: none; padding: 0; display: flex; flex-direction: column; transition: opacity .3s, height .3s; opacity: 0; }
 .dropdownActive { height: auto; opacity: 1; pointer-events: all; padding: .75vw 0 }
 .dropdownArrow { width: 1.5vw; height: 1.5vw; color: rgb(36, 39, 42); position: absolute; left: 1vw; top: 0; transform: translateY(-75%) }
 .subLink { font-size: .9vw; padding: .4vw 1.1vw; text-transform: capitalize }
 .menuIcon {  display: flex; justify-content: center; align-items: center; border-radius: 50%; background: var(--bg-elevated); cursor: pointer }
-.menuIcon svg { height: 2.97vw; padding: 1vw; width: 2.97vw; padding: 1vw;}
+.menuIcon svg { height: 2.97vw; padding: 1vw; width: 2.97vw; color: var(--t-primary); }
+
+@media (max-width: 1024px) {
+    .container { padding: 0 1.953125vw; height: 13.02vw; z-index: 1; position: relative;}
+    .menuIcon {  background: transparent; }
+    .menuIcon svg { height: 3.5vw; padding: 0; width: 3.5vw; }
+
+    .logo { display: flex; flex-direction: row; gap: 1vw; }
+    .logo img { width: 7.5vw; height: 7.5vw;  }
+    .logo h2 {  font-size: 2.9vw; margin-top: 0 }
+
+    .menu { top: 100%; background-color: var(--bg-base); transform: none; width: 100%; left: 0; flex-direction: column; padding:0; height: 0; overflow: hidden; transition: padding.2s; }
+    .activeMenu { padding:1vw 0; height: auto;}
+    .dot { display: none;  }
+    .menuItem { height: auto; flex-direction: column-reverse; }
+    .button, .link { font-size: 2vw; padding: 2vw 3vw; width: 100%; display: flex; position: relative;  }
+    .icon { width: 5vw; height: 5vw; position: absolute; right: 0; top: 0%; transform: translate(-20%, 20%);}
+    .activeIcon {transform: rotate(180deg) translate(20%, -20%); }
+    .dropdown { position: relative; width: 98%; margin: 0 1%; transition: none; padding:0;  border-radius: 1.5vw;}
+    .subLink { font-size: 2.25vw; padding: 1.5vw 5vw; }
+    .dropdownActive { padding: 1vw 0 }
+    .dropdownArrow { width: 2vw; height: 2vw; color: rgb(36, 39, 42); position: absolute; left: 5vw; top: 0; transform: translateY(-75%) }
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Hero.module.css';
+import styles from './hero.module.css';
 import {
     LineMdTiktok, LineMdFacebook, LineMdInstagram, LineMdLinkedin
 } from '@/app/utils/components/icons';
@@ -28,10 +28,10 @@ export default function Hero() {
                     <div className={styles.addressAndSocial}>
                         <a href='/'>06 - Rue Galants de nuits - l'aouina</a>
                         <div className={styles.socialIcons}>
-                            <LineMdFacebook className={styles.icon} />
-                            <LineMdInstagram className={styles.icon} />
-                            <LineMdLinkedin className={styles.icon} />
-                            <LineMdTiktok className={styles.icon} />
+                          <a href='/'><LineMdFacebook className={styles.icon} /></a> 
+                          <a href='/'><LineMdInstagram className={styles.icon} /></a> 
+                          <a href='/'><LineMdLinkedin className={styles.icon} /></a> 
+                          <a href='/'><LineMdTiktok className={styles.icon} /></a> 
                         </div>
                     </div>
                 </div>

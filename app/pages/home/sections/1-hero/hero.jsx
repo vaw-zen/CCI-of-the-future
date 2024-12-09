@@ -8,12 +8,12 @@ export default function Hero() {
     return (
         <div className={styles.heroContainer}>
             <div className={styles.backgroundImages}>
-                <img src='/home/1-hero/background.jpg' alt="Background" className={styles.backgroundImage} />
-                <img src='/home/1-hero/lines-glow.png' alt="Glow Lines" className={styles.glowLines} />
+                <img src='/home/1-hero/background.webp' alt="Background" className={styles.backgroundImage} />
+                <img src='/home/1-hero/lines-glow.webp' alt="Glow Lines" className={styles.glowLines} />
                 <div className={styles.mainImageContainer}>
-                    <img src='/home/1-hero/main.png' alt="Main Image" className={styles.mainImage} />
+                    <img src='/home/1-hero/main.webp' alt="Main Image" className={styles.mainImage} />
                 </div>
-                <img src='/home/1-hero/circle.png' alt="Circle" className={styles.circleImage} />
+                <img src='/home/1-hero/circle.webp' alt="Circle" className={styles.circleImage} />
             </div>
 
             <div className={styles.content}>

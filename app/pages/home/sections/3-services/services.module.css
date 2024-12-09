@@ -1,7 +1,8 @@
 .section { display: flex; gap: 2.86vw; position: relative; }
 .leftColumn { flex: 1; }
 .stickyContent { width: 100%; position: sticky; top: 3.6458333333333vw; }
-.button { padding: 1vw 2vw; background: var(--ac-primary); color: var(--t-highlight); font-size: .85vw; font-weight: bold; border-radius: 50vw; text-transform: uppercase; margin-top: 1vw; }
+.button { color: var(--t-highlight); font-size: .85vw; font-weight: bold; border-radius: 50vw; text-transform: uppercase; margin-top: 1vw; }
+.button a { padding: 1vw 2vw; background: var(--ac-primary);  border-radius: 50vw;}
 .rightColumn { flex: 1; display: flex; flex-direction: column; gap: 1.5vw; }
 .serviceCard { border-radius: .25vw; will-change: transform; width: 100%; height: 11.458vw; padding: 1.5625vw; background: var(--bg-elevated); display: flex; align-items: center; gap: 1vw; }
 .serviceImage { width: 8.334vw; height: 8.334vw; object-fit: cover; border-radius: 50%; }
@@ -13,7 +14,8 @@
 
 @media (max-width: 1024px) {
 .section { display: flex; gap: 2.86vw; flex-direction: column; margin-top: 2vw;}
-.button { padding: 2.75vw 4vw;  font-size: 2vw;margin-top: 5vw; margin-bottom: 2vw; }
+.button { font-size: 2vw;margin-top: 5vw; margin-bottom: 5vw; }
+.button a { padding: 2.75vw 4vw; }
 .serviceCard { border-radius: 1vw; height: 28.645833333333vw; padding: 1.5625vw; gap: 3.90625vw; }
 .rightColumn {gap: 3vw; }
 .serviceImage { width: 20.833333333333vw; height: 20.833333333333vw;}
@@ -27,5 +29,7 @@
 .serviceImage { width: 38.83495vw; height: 38.83495vw; margin-top: 2vw; }
 .serviceTitle { font-size:  6.3106796116505vw; line-height: 8.7378640776699vw; margin-bottom: 2.4271844660194vw; }
 .serviceDescription { font-size: 3.8834951456311vw; line-height: 6.3106796116505vw;}
-.button { padding: 3.25vw 5vw;  font-size: 3vw;margin-top: 5vw; margin-bottom: 8vw; }
+.button { font-size: 3vw;margin-top: 5vw; margin-bottom: 10vw; }
+.button a { padding: 3.25vw 5vw;  }
+
     }

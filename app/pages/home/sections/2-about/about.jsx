@@ -5,6 +5,7 @@ import styles from './about.module.css'
 import pageStyles from '../../home.module.css'
 import Image from 'next/image'
 import { IconoirArrowUpRight } from '@/app/utils/components/icons'
+import Link from 'next/link'
 
 export default function About() {
     return (
@@ -32,9 +33,9 @@ export default function About() {
                         </li>
                     ))}
                 </ul>
-                <div className={styles.circleContainer}>
+                <Link href='/' className={styles.circleContainer} >
                     <IconoirArrowUpRight className={styles.arrow} />
-                </div>
+                </Link>
             </div>
         </section>
     )

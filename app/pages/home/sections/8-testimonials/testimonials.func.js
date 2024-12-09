@@ -49,9 +49,9 @@ export function useSliderLogic() {
         }
 
         intervalRef.current = setInterval(() => {
-            requestAnimationFrame(() => {
+            // requestAnimationFrame(() => {
                 moveRight()
-            })
+            // })
         }, 3000);
     }
 

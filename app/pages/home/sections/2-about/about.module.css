@@ -6,9 +6,10 @@
 .list { list-style-type: none; padding-left: 0; }
 .listItem { position: relative; padding-left: 1.2vw; list-style-type: none; font-size: .8vw; color: var(--t-secondary); margin: .9vw 0; }
 .bullet { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: .8vw; font-weight: 600; }
-.circleContainer { width: 5.2083vw; height: 5.2083vw; border-radius: 50%; border: 2px solid white; display: flex; justify-content: center; align-items: center; margin-top: 2.5vw; }
+.circleContainer { transition: transform .3s; transform: rotate(0deg); width: 5.2083vw; height: 5.2083vw; border-radius: 50%; border: 2px solid white; display: flex; justify-content: center; align-items: center; margin-top: 2.5vw; }
 .arrow { width: 50%; height: 50%; color: var(--ac-primary); }
 .BlurBox { top: 0; left: 82.5vw ;}
+.circleContainer:hover { border: 2px solid var(--ac-primary);transform: rotate(-45deg); }
 
 @media (max-width: 1024px) {
 .section { margin: 7.8125vw 0;gap: 3vw;}

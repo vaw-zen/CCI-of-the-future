@@ -19,7 +19,7 @@ export default function Showcase() {
                                 index === 1 ?
                                     <Image width={0}
                                         height={0}
-                                        sizes="(max-width: 768px) 100vw, 50vw" className={styles.circleImage} src={circle.img} /> :
+                                        sizes="(max-width: 768px) 100vw, 50vw" className={styles.circleImage} src={circle.img} alt='showcase' /> :
                                     <RightCircle circle={circle} />}
                         </div>
                     );

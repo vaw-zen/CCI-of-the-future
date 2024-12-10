@@ -16,7 +16,7 @@ export default function Project() {
                 <div className={styles.imageContainer}>
                     <Image width={0}
                         height={0}
-                        sizes="(max-width: 768px) 100vw, 50vw" className={styles.image} src={firstArticle.img} />
+                        sizes="(max-width: 768px) 100vw, 50vw" className={styles.image} src={firstArticle.img} alt='project 1' />
                     <div className={styles.overlay}>
                         <div className={styles.contentWrapper}>
                             <Link href={firstArticle.link} className={styles.title}>{firstArticle.title}</Link>
@@ -53,6 +53,7 @@ export default function Project() {
                     <div className={styles.articleContainer} key={i}>
                         <Image width={0}
                             height={0}
+                            alt={'project ' + (i+ 1)}
                             sizes="(max-width: 768px) 100vw, 50vw" className={styles.articleImage} src={article.img} />
                         <div className={styles.overlay}>
                             <div className={styles.contentWrapper}>

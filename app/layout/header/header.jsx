@@ -4,6 +4,7 @@ import styles from './header.module.css'
 import content from './header.json'
 import Link from 'next/link'
 import { useHeaderLogic } from './header.func'
+import Image from 'next/image'
 
 export default function Header({ roboto }) {
     const {
@@ -23,7 +24,9 @@ export default function Header({ roboto }) {
             className={styles.nav}>
             <div className={styles.container}>
                 <div className={styles.logo}>
-                    <img src='/layout/logo.png' />
+                    {/* <img src='/layout/logo.png' /> */}
+                    <Image width={0} height={0} priority sizes="25vw" src='/layout/logo.png' alt="cci-logo" />
+
                     <h2 className={roboto.className}>
                         Chaabane Cleaning Inteligence
                     </h2>

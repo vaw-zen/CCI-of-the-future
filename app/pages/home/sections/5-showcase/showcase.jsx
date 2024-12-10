@@ -3,6 +3,7 @@ import pageStyles from '../../home.module.css'
 import styles from './showcase.module.css'
 import LeftCircle from './clientSide/circles/LeftCircle';
 import RightCircle from './clientSide/circles/RightCircle';
+import Image from 'next/image';
 
 export default function Showcase() {
     return (
@@ -16,7 +17,9 @@ export default function Showcase() {
                             {!index ?
                                 <LeftCircle circle={circle} /> :
                                 index === 1 ?
-                                    <img className={styles.circleImage} src={circle.img} /> :
+                                    <Image width={0}
+                                        height={0}
+                                        sizes="(max-width: 768px) 100vw, 50vw" className={styles.circleImage} src={circle.img} /> :
                                     <RightCircle circle={circle} />}
                         </div>
                     );

@@ -3,13 +3,16 @@ import content from './testimonials.json'
 import SliderContainer from './csr/sliderContainer'
 import { UilArrowRight } from '@/app/utils/components/icons'
 import ButtonContainer from './csr/buttonContainer'
+import Image from 'next/image'
 
 export default function Testimonials() {
     const slideAncor = Math.floor((content.testimonials.length * 3) / 2)
 
     return (
         <section className={styles.container}>
-            <img src={content.img} className={styles.mainImage} />
+            <Image width={0}
+                height={0}
+                sizes="30vw" src={content.img} className={styles.mainImage} />
             <SliderContainer className={styles.sliderContainer}>
                 <div
                     className={styles.slider}
@@ -18,7 +21,9 @@ export default function Testimonials() {
                     {[...content.testimonials, ...content.testimonials, ...content.testimonials].map((element, index) => (
                         <div key={index} className={styles.slide}>
                             <div className={styles.profileContainer}>
-                                <img className={styles.profileImage} src={element.img} />
+                                <Image width={0}
+                                    height={0}
+                                    sizes="30vw" className={styles.profileImage} src={element.img} />
                                 <h3 className={styles.name}>Mattew Hunt</h3>
                                 <p className={styles.role}>plumber</p>
                             </div>
@@ -38,7 +43,7 @@ export default function Testimonials() {
                         </ButtonContainer>
 
                         <ButtonContainer className={styles.navButton} >
-                            <UilArrowRight className={styles.arrowIcon}  />
+                            <UilArrowRight className={styles.arrowIcon} />
                         </ButtonContainer>
                     </div>
                 </div>

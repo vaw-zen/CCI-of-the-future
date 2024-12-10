@@ -3,6 +3,7 @@ import styles from './refrences.module.css'
 import Link from 'next/link'
 import { UilArrowRight } from '@/app/utils/components/icons'
 import content from './refrences.json'
+import Image from 'next/image'
 
 export default function Refrences() {
   const refrences = [null, ...content, null]
@@ -22,7 +23,10 @@ export default function Refrences() {
             </Link>
           ) : (
             <Link href={refrence.link} target='_blank' className={styles.refrenceSiteLink}>
-              <img
+              <Image
+                width={0}
+                height={0}
+                sizes="(max-width: 768px) 30vw, 75vw"
                 src={refrence.img}
                 className={styles.refrenceImage}
                 alt={`refrence ${index}`}

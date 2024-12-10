@@ -21,14 +21,14 @@ export default function Services() {
             <div className={styles.rightColumn}>
                 {content.list.map((service, index) => (
                     <article key={index} className={styles.serviceCard}>
-                        <img
-                            src={service.img}
-                            alt={service.title}
+                        <Image
                             width={0}
                             height={0}
-                            sizes="(max-width: 768px) 100vw, 30vw"
+                            sizes="(max-width: 768px) 30vw, 75vw"
                             className={styles.serviceImage}
-                        />
+                            src={service.img}
+                            alt={service.title} />
+
                         <div className={styles.serviceContent}>
                             <Link href={service.link} className={styles.serviceTitle}>
                                 {service.title}

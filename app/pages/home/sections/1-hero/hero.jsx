@@ -3,17 +3,20 @@ import styles from './hero.module.css';
 import {
     LineMdTiktok, LineMdFacebook, LineMdInstagram, LineMdLinkedin
 } from '@/app/utils/components/icons';
+import Image from 'next/image';
+import HeroImage from './Image';
 
-export default function Hero() {
+export default function HeroContent() {
     return (
-        <div className={styles.heroContainer}>
+        <div className={`${styles.heroContainer} ${styles.skeleton}`}>
             <div className={styles.backgroundImages}>
-                <img src='/home/1-hero/background.webp' alt="Background" className={styles.backgroundImage} />
-                <img src='/home/1-hero/lines-glow.webp' alt="Glow Lines" className={styles.glowLines} />
+                <HeroImage sizes="100vw" src='/home/1-hero/background.webp' alt="Background" priority className={styles.backgroundImage}  />
+                <HeroImage sizes="100vw" src='/home/1-hero/lines-glow.webp' alt="Glow Lines" className={styles.glowLines}  />
                 <div className={styles.mainImageContainer}>
-                    <img src='/home/1-hero/main.webp' alt="Main Image" className={styles.mainImage} />
+                    <HeroImage sizes="50vw" src='/home/1-hero/main.webp' alt="Main Image" priority className={styles.mainImage} skeletonClassName={styles.skeletonMainImage} />
+
                 </div>
-                <img src='/home/1-hero/circle.webp' alt="Circle" className={styles.circleImage} />
+                <HeroImage sizes="25vw" src='/home/1-hero/circle.webp' alt="Circle" priority className={styles.circleImage} skeletonClassName={styles.skeletonCircle} />
             </div>
 
             <div className={styles.content}>
@@ -28,10 +31,10 @@ export default function Hero() {
                     <div className={styles.addressAndSocial}>
                         <a href='/'>06 - Rue Galants de nuits - l'aouina</a>
                         <div className={styles.socialIcons}>
-                          <a href='/'><LineMdFacebook className={styles.icon} /></a> 
-                          <a href='/'><LineMdInstagram className={styles.icon} /></a> 
-                          <a href='/'><LineMdLinkedin className={styles.icon} /></a> 
-                          <a href='/'><LineMdTiktok className={styles.icon} /></a> 
+                            <a href='/'><LineMdFacebook className={styles.icon} /></a>
+                            <a href='/'><LineMdInstagram className={styles.icon} /></a>
+                            <a href='/'><LineMdLinkedin className={styles.icon} /></a>
+                            <a href='/'><LineMdTiktok className={styles.icon} /></a>
                         </div>
                     </div>
                 </div>

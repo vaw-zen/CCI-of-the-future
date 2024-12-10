@@ -3,7 +3,7 @@
 .greenBand { margin: 7vw 0; }
 .container { position: absolute; left: 0; width: 100vw; height: 3.646vw; background: var(--ac-primary); }
 .animated { animation: translate 30s infinite linear; height: 100%; display: flex; align-items: center; flex-wrap: nowrap;}
-.text { font-size: 1.35417vw; color: #000; white-space: nowrap; }
+.text { font-size: 1.35417vw; color: #000; white-space: nowrap; font-weight: bolder; }
 .separator { font-size: 2.5vw; font-weight: bolder; color: #000; margin: 0 2vw; transform: translateY(15%); }
 
 .greenBand:hover .animated {  animation-play-state: paused ;}

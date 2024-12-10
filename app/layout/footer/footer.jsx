@@ -23,7 +23,7 @@ export default function Footer() {
                         </div>
                         <div className={styles.infoBlock}>
                             <p className={styles.label}>Notre localisation</p>
-                            <h4 className={styles.value}>{content.location}</h4>
+                            <h3 className={styles.value}>{content.location}</h3>
                         </div>
                     </div>
                 </div>

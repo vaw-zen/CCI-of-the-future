@@ -14,7 +14,7 @@ export default function GreenBand() {
                 <div className={styles.animated}>
                     {[...slugs, ...slugs].map((slug, index) => (
                         <React.Fragment key={index}>
-                            <h3 className={styles.text}>{slug}</h3>
+                            <div className={styles.text} aria-hidden="true" >{slug}</div>
                             <strong className={styles.separator}>*</strong>
                         </React.Fragment>
                     ))}

@@ -27,7 +27,7 @@ export default function Project() {
                             </p>
                         </div>
                         <div className={styles.buttonWrapper}>
-                            <button className={styles.button}>
+                            <button className={styles.button} aria-label="voir-projet">
                                 <MdiArrowTopRightThin className={styles.icon} />
                             </button>
                         </div>
@@ -53,7 +53,7 @@ export default function Project() {
                     <div className={styles.articleContainer} key={i}>
                         <Image width={0}
                             height={0}
-                            alt={'project ' + (i+ 1)}
+                            alt={'project ' + (i + 1)}
                             sizes="(max-width: 768px) 100vw, 50vw" className={styles.articleImage} src={article.img} />
                         <div className={styles.overlay}>
                             <div className={styles.contentWrapper}>
@@ -65,7 +65,7 @@ export default function Project() {
                                 </p>
                             </div>
                             <div className={styles.buttonWrapper}>
-                                <button className={styles.button}>
+                                <button className={styles.button} aria-label="voir-projet" >
                                     <MdiArrowTopRightThin className={styles.icon} />
                                 </button>
                             </div>

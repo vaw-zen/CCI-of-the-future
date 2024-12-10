@@ -12,7 +12,7 @@ export default function Overlay() {
         <div className={styles.section}>
             <div className={styles.container} style={{ backgroundImage: `url(${content.BG})` }}>
                 <div className={styles.filter} />
-                <button onMouseMove={parallax} onMouseLeave={parallax} onClick={handleOpen} className={styles.playButton}>
+                <button onMouseMove={parallax} onMouseLeave={parallax} onClick={handleOpen} className={styles.playButton} aria-label="voir-video">
                     <div className={styles.textContainer}>
                         <CircularText className={styles.circularText} />
                     </div>

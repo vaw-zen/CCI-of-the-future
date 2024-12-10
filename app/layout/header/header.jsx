@@ -24,14 +24,13 @@ export default function Header({ roboto }) {
             className={styles.nav}>
             <div className={styles.container}>
                 <div className={styles.logo}>
-                    {/* <img src='/layout/logo.png' /> */}
                     <Image width={0} height={0} priority sizes="25vw" src='/layout/logo.png' alt="cci-logo" />
 
                     <h2 className={roboto.className}>
                         Chaabane Cleaning Inteligence
                     </h2>
-                </div>
-                <button onClick={handleMenuButton} className={styles.menuIcon}>
+                </div>          
+                <button onClick={handleMenuButton} className={styles.menuIcon} aria-label="fermer-menu">
                     <MingcuteMenuFill />
                 </button>
             </div>
@@ -66,6 +65,7 @@ export default function Header({ roboto }) {
                             <button
                                 onClick={() => toggleDropdown(index)}
                                 className={styles.button}
+                                aria-label="ouvrir-dropdown"
                             >
                                 {element.name}
                                 <CiCaretDownSm

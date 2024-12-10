@@ -12,7 +12,7 @@ export default function Testimonials() {
         <section className={styles.container}>
             <Image width={0}
                 height={0}
-                sizes="30vw" src={content.img} className={styles.mainImage} />
+                sizes="30vw" src={content.img} className={styles.mainImage} alt='testimonials' />
             <SliderContainer className={styles.sliderContainer}>
                 <div
                     className={styles.slider}
@@ -23,7 +23,7 @@ export default function Testimonials() {
                             <div className={styles.profileContainer}>
                                 <Image width={0}
                                     height={0}
-                                    sizes="30vw" className={styles.profileImage} src={element.img} />
+                                    sizes="30vw" className={styles.profileImage} src={element.img} alt={'testimonial' + index} />
                                 <h3 className={styles.name}>Mattew Hunt</h3>
                                 <p className={styles.role}>plumber</p>
                             </div>

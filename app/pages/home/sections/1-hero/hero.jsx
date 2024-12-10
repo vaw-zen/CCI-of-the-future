@@ -10,13 +10,13 @@ export default function HeroContent() {
     return (
         <div className={`${styles.heroContainer} ${styles.skeleton}`}>
             <div className={styles.backgroundImages}>
-                <HeroImage sizes="100vw" src='/home/1-hero/background.webp' alt="Background" priority className={styles.backgroundImage}  />
-                <HeroImage sizes="100vw" src='/home/1-hero/lines-glow.webp' alt="Glow Lines" className={styles.glowLines}  />
+                <HeroImage responsiveWidth sizes="150vw" src='/home/1-hero/background.webp' alt="Background" priority className={styles.backgroundImage}  />
+                <HeroImage responsiveWidth sizes="100vw" src='/home/1-hero/linesGlow.webp' alt="Glow Lines" className={styles.glowLines}  />
                 <div className={styles.mainImageContainer}>
-                    <HeroImage sizes="50vw" src='/home/1-hero/main.webp' alt="Main Image" priority className={styles.mainImage} skeletonClassName={styles.skeletonMainImage} />
+                    <HeroImage responsiveWidth sizes="50vw" src='/home/1-hero/main.webp' alt="Main Image" className={styles.mainImage} skeletonClassName={styles.skeletonMainImage} />
 
                 </div>
-                <HeroImage sizes="25vw" src='/home/1-hero/circle.webp' alt="Circle" priority className={styles.circleImage} skeletonClassName={styles.skeletonCircle} />
+                <HeroImage sizes="25vw" src='/home/1-hero/circle.webp' alt="Circle" className={styles.circleImage} skeletonClassName={styles.skeletonCircle} />
             </div>
 
             <div className={styles.content}>

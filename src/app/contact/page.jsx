@@ -1,7 +1,12 @@
 import React from 'react'
+import styles from "./contact.module.css"
+import HeroHeader from '@/utils/components/reusableHeader/HeroHeader'
 
-export default function page() {
+export default function ContactPage() {
   return (
-    <div>page</div>
+    <>
+      <HeroHeader title="Contact Us" />
+     
+    </>
   )
 }

@@ -1,3 +1,14 @@
+@keyframes skeletonLoading {0% {    background-position: 200% 0;}100% {    background-position: -200% 0;}}
+.skeleton .skeletonBackground,
+.skeleton .skeletonGlow,
+.skeleton .skeletonMainImage,
+.skeleton .skeletonCircle,
+.skeleton .skeletonButton {background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%);background-size: 200% 100%;animation: skeletonLoading 1.5s infinite;border-radius: 4px;;}
+.skeleton .skeletonBackground {width: 100%;height: 100%;position: absolute;z-index: 1;}
+.skeleton .skeletonGlow { width: 100%; height: 100%; position: absolute; opacity: 0.5; }
+.skeleton .skeletonMainImage { width: 100%; height: 100%; object-fit: cover; transform: translate(0% , -0%);; position: absolute; z-index: 1; }
+.skeleton .skeletonSecondaryButton {background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%);}
+
 .heroContainer { width: 100%; height: 100vh; background: black; contain: paint; }
 .heroContainer img { transition: opacity .2s; }
 .backgroundImage { position: absolute; left: 0; top: 0; width: 100vw; height: 100vh; object-fit: cover; object-position: center; }
@@ -19,68 +30,17 @@
 .button { font-size: .8vw; text-transform: uppercase; width: 11.5vw; height: 2.9vw; border-radius: 50vw; font-weight: bolder; border: 1px solid var(--t-primary); cursor: pointer; }
 .primaryButton { background: var(--ac-primary); color: var(--bg-base); border-color: var(--ac-primary); }
 .secondaryButton { color: var(--t-primary); background: transparent; }
-
-/* Skeleton Loading Styles */
-.skeleton .skeletonBackground,
-.skeleton .skeletonGlow,
-.skeleton .skeletonMainImage,
-.skeleton .skeletonCircle,
-.skeleton .skeletonTitle,
-.skeleton .skeletonSubtitle,
-.skeleton .skeletonEmail,
-.skeleton .skeletonPhone,
-.skeleton .skeletonAddress,
-.skeleton .skeletonIcon,
-.skeleton .skeletonButton {
-    background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%);
-    background-size: 200% 100%;
-    animation: skeletonLoading 1.5s infinite;
-    border-radius: 4px;;
-}
-
-@keyframes skeletonLoading {
-    0% {
-        background-position: 200% 0;
-    }
-    100% {
-        background-position: -200% 0;
-    }
-}
-
-/* Specific sizing for skeleton elements */
-.skeleton .skeletonBackground {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 1;
-}
-
-.skeleton .skeletonGlow {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    opacity: 0.5;
-}
-
-.skeleton .skeletonMainImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: translate(0% , -0%);;
-    position: absolute;
-    z-index: 1;
-}
+.socialIcons > a:nth-of-type(1) {display: none; }
+.socialIcons > a:nth-of-type(2) {display: none; }
 
 
-.skeleton .skeletonSecondaryButton {
-    background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%);
-}
+
 @media (max-width: 1024px) {
     .glowLines { height: 100%; width: 100%; object-fit: cover; object-position: bottom right; position: absolute; right: 20vw; position: absolute; }
     .content { width: 70vw; height: auto; padding: 5vw 0 0 2vw; margin-top: -24vw; margin-left: 23.5vw; }
     .heroContainer { display: flex; align-items: center; justify-content: center; }
     .title { font-size: 5vw; }
-    .subtitle { margin-left: 1vw; font-size: 1.92vw; width: 35vw; margin-top: -6vw; margin-left: 1vw; }
+    .subtitle { font-size: 1.92vw; width: 35vw; margin-top: -6vw; margin-left: 1vw; }
     .contactDetails {  margin-top: 4vw; margin-left: 1vw; font-size: 2.1vw; }
     .addressAndSocial { display: flex; flex-direction: column; gap: 1vw; }
     .socialIcons { display: flex; gap: 2.25vw; margin-left: 1vw; margin-top:  2vw; justify-content: flex-end; }
@@ -90,5 +50,27 @@
     .mainImageContainer { right: -8vw; bottom: -30vw; height: 80vw; width: 65vw; }
     .mainImage { object-position: 42%; }
     .circleImage { width: 30vw; height: 30vw; right: 44vw; bottom: 2.5vw; }
+    .skeleton .skeletonCircle {    width: 30vw; height: 30vw; right: 44vw; bottom: 2.5vw; border-radius: 50% !important; position: absolute; z-index: 2; }
     
         }
+
+
+@media (max-width: 480px) {
+    .content { width: 100vw; height: auto; padding: 5vw 0 0 2vw; margin-top: -35vw; margin-left:-5vw; }
+    .title { font-size: 7.5vw; }
+    .subtitle { font-size: 2.9vw; width: 40vw; margin-top: -9vw; margin-left: 8vw; }
+    .contactDetails > div:nth-of-type(1) { display: none; }
+    .contactDetails > div:nth-of-type(2) > a{ display: none; }
+    .contactDetails > div:nth-of-type(2) { position: absolute; top: -10vw; right: 1vw;}
+    .icon { width: 6vw; height: 6vw; }
+    .socialIcons > a:nth-of-type(2) { margin-right: 10vw; display: block; }
+    .socialIcons > a:nth-of-type(1) {  display: block; }
+
+    .buttons { gap: 3vw; margin-top: 10vw; }
+    .button { font-size: 3.5vw;width: 39vw;height: 11vw; }
+
+    .mainImageContainer { right: -8vw; bottom: -6.5vw; height: 85vw; width: 70vw; }
+    .circleImage { width: 40vw; height: 40vw; right: 44vw; bottom: 2.5vw; }
+
+
+}

@@ -1,7 +1,9 @@
 import React from 'react';
 import styles from './hero.module.css';
 import {
-    LineMdTiktok, LineMdFacebook, LineMdInstagram, LineMdLinkedin
+    LineMdTiktok, LineMdFacebook, LineMdInstagram, LineMdLinkedin,
+    LineMdPhoneTwotone,
+    SiMailDuotone,
 } from '@/utils/components/icons';
 import HeroImage from './Image';
 
@@ -9,8 +11,8 @@ export default function Hero() {
     return (
         <div className={`${styles.heroContainer} ${styles.skeleton}`}>
             <div className={styles.backgroundImages}>
-                <HeroImage responsiveWidth sizes="150vw" src='/home/1-hero/background.jpg' alt="Background" priority className={styles.backgroundImage}  />
-                <HeroImage responsiveWidth sizes="100vw" src='/home/1-hero/linesGlow.webp' alt="Glow Lines" className={styles.glowLines}  />
+                <HeroImage responsiveWidth sizes="150vw" src='/home/1-hero/background.jpg' alt="Background" priority className={styles.backgroundImage} />
+                <HeroImage responsiveWidth sizes="100vw" src='/home/1-hero/linesGlow.webp' alt="Glow Lines" className={styles.glowLines} />
                 <div className={styles.mainImageContainer}>
                     <HeroImage responsiveWidth sizes="50vw" src='/home/1-hero/main.webp' alt="Main Image" className={styles.mainImage} skeletonClassName={styles.skeletonMainImage} />
                 </div>
@@ -29,8 +31,10 @@ export default function Hero() {
                     <div className={styles.addressAndSocial}>
                         <a href='/'>06 - Rue Galants de nuits - l'aouina</a>
                         <div className={styles.socialIcons}>
-                            <a href='/'><LineMdFacebook className={styles.icon} /></a>
+                            <a href='/'><LineMdPhoneTwotone className={styles.icon} /></a>
+                            <a href='/'><SiMailDuotone className={styles.icon} /></a>
                             <a href='/'><LineMdInstagram className={styles.icon} /></a>
+                            <a href='/'><LineMdFacebook className={styles.icon} /></a>
                             <a href='/'><LineMdLinkedin className={styles.icon} /></a>
                             <a href='/'><LineMdTiktok className={styles.icon} /></a>
                         </div>

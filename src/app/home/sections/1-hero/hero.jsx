@@ -11,8 +11,8 @@ export default function Hero() {
     return (
         <div className={`${styles.heroContainer} ${styles.skeleton}`}>
             <div className={styles.backgroundImages}>
-                <HeroImage responsiveWidth sizes="150vw" src='/home/1-hero/background.jpg' alt="Background" priority className={styles.backgroundImage} />
-                <HeroImage responsiveWidth sizes="100vw" src='/home/1-hero/linesGlow.webp' alt="Glow Lines" className={styles.glowLines} />
+                <HeroImage responsiveWidth sizes="150vw" src='/home/1-hero/background.jpg' alt="Background" className={styles.backgroundImage} />
+                <HeroImage responsiveWidth sizes="100vw" src='/home/1-hero/linesGlow.webp' alt="Glow Lines" priority className={styles.glowLines} />
                 <div className={styles.mainImageContainer}>
                     <HeroImage responsiveWidth sizes="50vw" src='/home/1-hero/main.webp' alt="Main Image" className={styles.mainImage} skeletonClassName={styles.skeletonMainImage} />
                 </div>

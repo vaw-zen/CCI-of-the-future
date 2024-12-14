@@ -56,49 +56,70 @@ export function useHeaderLogic() {
         if (isDesktop()) return normal
         return menu ? normal + ' ' + active : normal
     }
-    return { handleMenuButton, handleDropdownBlur, toggleDropdown, isActive, handleMenuStyles, handleNavBlur }
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+    return { handleMenuButton, handleDropdownBlur, toggleDropdown, isActive, handleMenuStyles, handleNavBlur, scrollToTop }
 }
 
+const nav = createRef()
+const container = createRef()
+const topBTN = createRef()
+
 export function headerScrollInteraction() {
-    const nav = document.querySelector('.' + styles.nav)
-    const container = nav.children[0]
-
-    if (!nav) return;
-    if (scrollY <= nav.clientHeight) {
-        if (nav.style.transform !== 'translateY(0px)') {
-            direction.current = 'up'
-            nav.style.transform = 'translateY(0px)'
+    if (!topBTN.current) {
+        topBTN.current = document.querySelector('.' + styles.topButton)
+    } else {
+        if (window.scrollY > innerHeight * 0.25) {
+            if (!topBTN.current.style.transform !== 'scale(1)') topBTN.current.style.transform = 'scale(1)'
+        } else {
+            if (!topBTN.current.style.transform !== 'scale(0)') topBTN.current.style.transform = 'scale(0)'
         }
-        if (container.style.background !== 'rgba(0, 0, 0, 0.1)') {
-            container.style.background = 'rgba(0, 0, 0, .1)'
-            container.style.backdropFilter = 'none'
+    }
 
+    if (!nav.current) {
+        nav.current = document.querySelector('.' + styles.nav)
+        container.current = nav.current.children[0]
+    }
+    if (!nav.current) return;
+    if (scrollY <= nav.current.clientHeight) {
+        if (nav.current.style.transform !== 'translateY(0px)') {
+            direction.current = 'up'
+            nav.current.style.transform = 'translateY(0px)'
+        }
+        if (container.current.style.background !== 'rgba(0, 0, 0, 0)') {
+            container.current.style.background = 'rgba(0, 0, 0, 0)'
+            container.current.style.backdropFilter = 'none'
         }
 
     } else {
-        if (container.style.background !== 'rgba(0, 0, 0, 0.5)') {
-            container.style.background = 'rgba(0, 0, 0, .5)'
-            container.style.backdropFilter = 'blur(5px)'
+        if (container.current.style.background !== 'rgba(0, 0, 0, 0.5)') {
+            container.current.style.background = 'rgba(0, 0, 0, .5)'
+            container.current.style.backdropFilter = 'blur(5px)'
 
         }
 
         if (!direction.current) {
-            nav.style.transform = 'translateY(-100%)'
-            Array.from(nav.children).forEach((child) => child.blur());
+            nav.current.style.transform = 'translateY(-100%)'
+            Array.from(nav.current.children).forEach((child) => child.blur());
             closeDropdownGlobal();
 
             direction.current = 'down'
         } else {
             if (prevScroll.current < scrollY) {
                 if (direction.current === 'up') {
-                    nav.style.transform = 'translateY(-100%)'
-                    Array.from(nav.children).forEach((child) => child.blur());
+                    nav.current.style.transform = 'translateY(-100%)'
+                    Array.from(nav.current.children).forEach((child) => child.blur());
                     closeDropdownGlobal();
                 }
                 direction.current = 'down'
             } else if (prevScroll.current > scrollY) {
                 if (direction.current === 'down') {
-                    nav.style.transform = 'translateY(0px)'
+                    nav.current.style.transform = 'translateY(0px)'
                 }
                 direction.current = 'up'
             }

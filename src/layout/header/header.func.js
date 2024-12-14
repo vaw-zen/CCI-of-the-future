@@ -38,9 +38,9 @@ export function useHeaderLogic() {
         if (event.currentTarget.contains(event.relatedTarget)) {
             return;
         }
-            if (isDesktop()) return
-            setActive(-1)
-            setMenu(false)
+        if (isDesktop()) return
+        setActive(-1)
+        setMenu(false)
     }
 
     function handleMenuButton() {
@@ -61,13 +61,27 @@ export function useHeaderLogic() {
 
 export function headerScrollInteraction() {
     const nav = document.querySelector('.' + styles.nav)
+    const container = nav.children[0]
+
     if (!nav) return;
     if (scrollY <= nav.clientHeight) {
         if (nav.style.transform !== 'translateY(0px)') {
             direction.current = 'up'
             nav.style.transform = 'translateY(0px)'
         }
+        if (container.style.background !== 'rgba(0, 0, 0, 0.1)') {
+            container.style.background = 'rgba(0, 0, 0, .1)'
+            container.style.backdropFilter = 'none'
+
+        }
+
     } else {
+        if (container.style.background !== 'rgba(0, 0, 0, 0.5)') {
+            container.style.background = 'rgba(0, 0, 0, .5)'
+            container.style.backdropFilter = 'blur(5px)'
+
+        }
+
         if (!direction.current) {
             nav.style.transform = 'translateY(-100%)'
             Array.from(nav.children).forEach((child) => child.blur());

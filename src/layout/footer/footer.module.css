@@ -57,8 +57,8 @@
     .contentWrapper { display: flex; flex: 1; padding: 5vw 3.75vw 7.5vw 3.75vw;  flex-direction: column; justify-content: space-between; align-items: flex-start;}
     
     .title { font-size:  6.75vw;}
-    .infoGrid { margin-top: 15vw; flex-direction: column; }
-    .infoBlock {  gap: 4.25vw; }
+    .infoGrid { margin-top: 15vw; flex-direction: column; gap: 5vw; }
+    .infoBlock {  gap: 2vw; }
     .label {font-size: 4.25vw; }
     .value { font-size: 5.75vw;}
     

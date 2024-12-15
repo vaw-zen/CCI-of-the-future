@@ -29,10 +29,14 @@ export function useHeaderLogic() {
 
     closeDropdownGlobal = closeDropdown;
 
-    function handleDropdownBlur() {
+    function handleDropdownBlur(event) {
         if (!isDesktop()) return
+        if (event.currentTarget.contains(event.relatedTarget)) {
+            return;
+        }
         setActive(-1)
     }
+
 
     function handleNavBlur(event) {
         if (event.currentTarget.contains(event.relatedTarget)) {
@@ -63,6 +67,7 @@ export function useHeaderLogic() {
             behavior: 'smooth'
         });
     };
+    
     return { handleMenuButton, handleDropdownBlur, toggleDropdown, isActive, handleMenuStyles, handleNavBlur, scrollToTop }
 }
 
@@ -70,7 +75,7 @@ const nav = createRef()
 const container = createRef()
 const topBTN = createRef()
 
-export function headerScrollInteraction() {
+export function headerSI() {
     if (!topBTN.current) {
         topBTN.current = document.querySelector('.' + styles.topButton)
     } else {
@@ -128,6 +133,5 @@ export function headerScrollInteraction() {
     prevScroll.current = scrollY
 }
 
-export const headerSI = throttle(headerScrollInteraction, 100);
 
 

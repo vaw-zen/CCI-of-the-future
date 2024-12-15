@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useHeaderLogic } from './header.func'
 import Image from 'next/image'
 import { CiCaretDownSm, FaCaretUp, MingcuteMenuFill, UilArrowRight } from '@/utils/components/icons'
-    
+
 export default function Header({ roboto }) {
     const {
         handleDropdownBlur,

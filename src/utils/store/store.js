@@ -1,7 +1,7 @@
 import { create } from '../../libs/vz/store/provider';
 
 export const dimensionsStore = create((set) => ({
-    vw: 0, 
+    vw: 0,
     setVw: (width) => set({ vw: width }),
 
     isMobile: () => {
@@ -15,5 +15,8 @@ export const dimensionsStore = create((set) => ({
     isDesktop: () => {
         const { vw } = dimensionsStore.getState();
         return vw >= 1024;
-    }
+    },
+    vh: 0,
+    setVh: (height) => set({ vh: height }),
+
 }));

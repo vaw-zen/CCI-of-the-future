@@ -37,21 +37,21 @@ class ScrollEventManager {
 
   // Global scroll event handler
   handleScroll(event) {
-    const now = Date.now();
+    // const now = Date.now();
 
     this.instances.forEach(instance => {
       // Skip if instance is disabled
       if (!instance.enabled) return;
 
       // Check throttling
-      if (now - instance.lastCall >= instance.throttle) {
-        instance.lastCall = now;
+      // if (now - instance.lastCall >= instance.throttle) {
+        // instance.lastCall = now;
         try {
           instance.callback(event);
         } catch (error) {
           console.error(`Scroll event error for ${instance.key}:`, error);
         }
-      }
+      // }
     });
   }
 

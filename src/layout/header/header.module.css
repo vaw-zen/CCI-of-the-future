@@ -13,7 +13,7 @@
 .dropdownActive { height: auto; opacity: 1; pointer-events: all; padding: .75vw 0 }
 .dropdownArrow { width: 1.5vw; height: 1.5vw; color: rgb(36, 39, 42); position: absolute; left: 1vw; top: 0; transform: translateY(-75%) }
 .subLink { font-size: .9vw; padding: .4vw 1.1vw; text-transform: capitalize }
-.menuIcon {  display: flex; justify-content: center; align-items: center; border-radius: 50%; background: var(--bg-elevated); cursor: pointer }
+.menuIcon {  display: flex; justify-content: center; align-items: center; border-radius: 50%; background: var(--bg-elevated); cursor: pointer;z-index: 2; }
 .menuIcon svg { height: 2.97vw; padding: 1vw; width: 2.97vw; color: var(--t-primary); }
 
 .topButton { position: fixed; width: 2.5vw; height: 2.5vw; background: var(--ac-primary); bottom: 2vw; right: 2vw; z-index: 99; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; border: none; opacity: 0.8; transform: scale(0); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }

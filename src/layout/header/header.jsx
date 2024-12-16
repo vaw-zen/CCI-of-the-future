@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useHeaderLogic } from './header.func'
 import Image from 'next/image'
 import { CiCaretDownSm, FaCaretUp, MingcuteMenuFill, UilArrowRight } from '@/utils/components/icons'
+import DesktopMenu from './components/desktopMenu/desktopMenu'
 
 export default function Header({ roboto }) {
     const {
@@ -84,6 +85,10 @@ export default function Header({ roboto }) {
             <button onClick={scrollToTop} className={styles.topButton} >
                 <UilArrowRight />
             </button>
+            <DesktopMenu />
+
+
+
         </>
 
     )

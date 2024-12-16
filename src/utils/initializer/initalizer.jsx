@@ -7,7 +7,7 @@ import { homeScrollTriggers } from "@/app/home/home.func";
 import { headerSI } from "@/layout/header/header.func";
 
 export default function Initializer() {
-    const { setVw, vw } = dimensionsStore();
+    const { setVw, setVh } = dimensionsStore();
     const { resizeEvent, scrollEvent } = useInitializerLogic();
 
     homeScrollTriggers()
@@ -15,7 +15,7 @@ export default function Initializer() {
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
-        const handleResize = resizeEvent(setVw);
+        const handleResize = resizeEvent(setVw, setVh);
 
         handleResize();
         window.addEventListener('resize', handleResize);

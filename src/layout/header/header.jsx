@@ -14,6 +14,7 @@ export default function Header({ roboto }) {
         isActive,
         handleMenuButton,
         handleMenuStyles,
+        desktopMenuStyles,
         handleNavBlur,
         scrollToTop
     } = useHeaderLogic()
@@ -85,7 +86,7 @@ export default function Header({ roboto }) {
             <button onClick={scrollToTop} className={styles.topButton} >
                 <UilArrowRight />
             </button>
-            {/* <DesktopMenu /> */}
+            <DesktopMenu desktopMenuStyles={desktopMenuStyles} handleMenuButton={handleMenuButton} />
 
 
 

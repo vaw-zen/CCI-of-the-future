@@ -61,14 +61,19 @@ export function useHeaderLogic() {
         return menu ? normal + ' ' + active : normal
     }
 
+    function desktopMenuStyles(normal, active) {
+        if (!isDesktop()) return normal
+        return menu ? normal + ' ' + active : normal
+    }
+
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
     };
-    
-    return { handleMenuButton, handleDropdownBlur, toggleDropdown, isActive, handleMenuStyles, handleNavBlur, scrollToTop }
+
+    return { handleMenuButton, handleDropdownBlur, toggleDropdown, isActive, handleMenuStyles, handleNavBlur, scrollToTop, desktopMenuStyles }
 }
 
 const nav = createRef()

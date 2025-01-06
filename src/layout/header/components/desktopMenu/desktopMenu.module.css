@@ -1,0 +1,38 @@
+.menu { transition: .5s cubic-bezier(0.230,1.000,0.320,1.000); transform: scale3d(2, 2, 2); opacity: 0; pointer-events: none; width: 100vw; height: 100vh; position: fixed; left: 0; top: 0; z-index: 100; background: linear-gradient(45deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%); }
+.activeMenu { transform: scale3d(1, 1, 1);  opacity: 1; pointer-events: all; }
+.backgroundImage { position: absolute; left: 0; top: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.overlay { background: rgba(255, 255, 255, .025); width: 100%; height: 100%; position: absolute; z-index: 2; left: 0; top: 0; padding: 4vw 12.5vw 0vw 12.5vw; backdrop-filter: blur(2px); }
+.content { display: flex; height: 100%; width: 100%; }
+.leftSection { width: 60%; height: 100%; display: flex; padding-top: 12.5vw; gap: 2vw; }
+.leftSidebarLabels { width: 30%; font-size: 1.1vw; color: var(--t-secondary); margin-top: 1.5vw; display: flex; flex-direction: column; gap: 10.5vw; }
+.leftLinks { flex: 1; display: flex; flex-direction: column; gap: 5vw; font-size: 2.25vw; }
+.linkGroup { display: flex; flex-direction: column; gap: 1vw; }
+.socialLinks { display: flex; flex-direction: column; font-size: 2.25vw; gap: 1vw; }
+.rightSection { width: 60%; height: 100%; }
+.menuTitle { font-size: 6vw; border-bottom: 2px solid white; margin-bottom: 1vw; }
+.rightContent { display: flex; padding: 0 0; gap: 4.5vw; margin-top: 5vw; }
+.rightSidebarLabels { width: 22%; font-size: 1.1vw; color: var(--t-secondary); margin-top: .75vw; display: flex; flex-direction: column; gap: 10.5vw; }
+.rightLinks { display: flex; flex-direction: column; font-size: 2.25vw; font-weight: 500; flex: 1; gap: 5vw; }
+.pageLinks { display: flex; flex-direction: column; gap: 1vw; }
+.newsletterForm { display: block; position: relative; }
+.emailInput { padding: .75vw 0; margin-top: 1vw; width: 100%; background: transparent; border: none; color: var(--t-primary); font-size: .9vw; outline: none; border-bottom: 1px solid rgba(255, 255,255, .2); }
+.submitButton { width: 3.25vw; height: 3.25vw; border-radius: 50%; border: 2px solid var(--t-primary); color: var(--t-primary); position: absolute; right: 0; bottom: 0; transform: translateY(50%); }
+.arrowIcon { color: var(--ac-primary); width: 55%; height: 55%; transform: rotate(-45deg); }
+.checkboxContainer { display: flex; align-items: center; gap: .75vw; margin-top: 1.25vw; position: relative; }
+.checkbox { appearance: none; width: .75vw; height: .75vw; border: 2px solid var(--t-primary); border-radius: 50%; outline: none; cursor: pointer; position: relative; background-color: transparent; transition: background-color 0.2s ease; }
+.checkboxLabel { font-size: 0.8vw; cursor: pointer; }
+.contactSection { display: flex; margin-top: 4vw; height: 7.5vw; position: relative; }
+.locationLink { flex: 1; }
+.locationImage { object-fit: cover; object-position: center; width: 100%; height: 100%; }
+.contactItem { flex: 1; background: var(--bg-elevated); display: flex; gap: .25vw; flex-direction: column; align-items: center; justify-content: center; }
+.contactIcon { height: 2.05vw; width: 2.05vw; margin-bottom: .75vw; color: var(--ac-primary); }
+.divider { width: 1px; height: 80%; background: #323234; position: absolute; right: calc(100% / 3); top: 50%; transform: translate(-50%, -50%); }
+.closeButton { width: 2.97vw; height: 2.97vw; border-radius: 50%; position: absolute; right: 2.25vw; top: 2.25vw; border: 2px solid hsla(0, 0%, 100%, 0.08); display: flex; justify-content: center; align-items: center; }
+.closeIcon { width: 50%; height: 50%; color: var(--t-secondary); }
+.closeButton:hover { background: hsla(0, 0%, 100%, 0.08); }
+.closeButton:hover .closeIcon { color: var(--t-primary); }
+
+
+@media (max-width: 1024px) {
+    .menu {display:  none;}
+}

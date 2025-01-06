@@ -27,12 +27,12 @@
 .socialIcons { display: flex; gap: .5vw; margin-left: 1vw; margin-top: -.5vw; justify-content: flex-end; }
 .icon { width: 1.5vw; height: 1.5vw; color: var(--ac-primary); }
 .buttons { display: flex; justify-content: center; gap: 1.1vw; margin-top: 3vw; }
-.button { transition: background .3s, color .3s; font-size: .8vw; text-transform: uppercase; width: 11.5vw; height: 2.9vw; border-radius: 50vw; font-weight: bolder; border: 1px solid var(--t-primary); cursor: pointer; }
+.button { transition: background .3s, border-color .3s, color .3s; font-size: .8vw; text-transform: uppercase; width: 11.5vw; height: 2.9vw; border-radius: 50vw; font-weight: bolder; border: 1px solid var(--t-primary); cursor: pointer; }
 .primaryButton { background: var(--ac-primary); color: var(--bg-base); border-color: var(--ac-primary); }
 .secondaryButton { color: var(--t-primary); background: transparent; }
 .socialIcons > a:nth-of-type(1) {display: none; }
 .socialIcons > a:nth-of-type(2) {display: none; }
-.button:hover { background:var(--t-primary); color: var(--bg-base); }
+.button:hover { background: var(--t-primary); border-color: var(--t-primary); color: var(--bg-base);  }
 
 
 

@@ -1,117 +1,104 @@
+import styles from './desktopMenu.module.css';
 import HeroImage from '@/app/home/sections/1-hero/Image';
-import { UilArrowRight } from '@/utils/components/icons';
+import { EpCloseBold, LineMdPhoneTwotone, SiMailDuotone, UilArrowRight } from '@/utils/components/icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react'
+import contact from '@/app/contact/data.json';
 
-export default function DesktopMenu() {
+export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
+    const mail = `mailto:${contact.mail.link}?subject=${contact.mail.subject}&body=${contact.mail.body}`;
+    const phone = 'tel:' + contact.phone;
+
+    const handleCheckboxChange = (e) => {
+        e.target.style.background = e.target.checked
+            ? `radial-gradient(circle at center, var(--t-primary) 50%, transparent 50%)`
+            : 'transparent';
+    };
+
     return (
-        <div style={{ width: '100vw', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 1, background: 'linear-gradient(45deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%)' }}>
-            <HeroImage responsiveWidth sizes="150vw" src='/home/1-hero/background.jpg' alt="menu-background" style={{ position: 'absolute', left: 0, top: 0, zIndex: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
-            <div style={{ background: 'rgba(255, 255, 255, .025)', width: '100%', height: '100%', position: 'absolute', zIndex: 2, left: 0, top: 0, padding: '4vw 12.5vw 0vw 12.5vw', backdropFilter: 'blur(2px)' }}>
-                <div style={{ display: 'flex', height: '100%', width: '100%' }}>
-                    <div style={{ width: '60%', height: '100%', display: 'flex', paddingTop: '12.5vw', gap: '2vw' }}>
-                        <div style={{ width: '30%', fontSize: '1.1vw', color: 'var(--t-secondary)', marginTop: '1.5vw', display: 'flex', flexDirection: 'column', gap: '10.5vw' }}>
+        <div className={desktopMenuStyles(styles.menu, styles.activeMenu)}>
+            <HeroImage
+                responsiveWidth
+                sizes="150vw"
+                src='/home/1-hero/background.jpg'
+                alt="menu-background"
+                className={styles.backgroundImage}
+            />
+            <div className={styles.overlay}>
+                <div className={styles.content}>
+                    <div className={styles.leftSection}>
+                        <div className={styles.leftSidebarLabels}>
                             <p>Qui sommes-nous ?</p>
                             <p>Réseaux sociaux</p>
                         </div>
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5vw', fontSize: '2.25vw' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
-                                <Link href='/' style={{ fontWeight: 'normal' }}>À propos de nous</Link>
-                                <Link href='/' style={{ fontWeight: 'normal' }}>Carrière</Link>
+                        <div className={styles.leftLinks}>
+                            <div className={styles.linkGroup}>
+                                <Link href='/'>À propos de nous</Link>
+                                <Link href='/'>Carrière</Link>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', fontSize: '2.25vw', gap: '1vw' }}>
-                                <Link href='/' >Facebook</Link>
-                                <Link href='/' >Instagram</Link>
-                                <Link href='/' >Twitter</Link>
-                                <Link href='/' >Linkedin</Link>
+                            <div className={styles.socialLinks}>
+                                <Link href='/'>Facebook</Link>
+                                <Link href='/'>Instagram</Link>
+                                <Link href='/'>Twitter</Link>
+                                <Link href='/'>Linkedin</Link>
                             </div>
                         </div>
                     </div>
-                    <div style={{ width: '60%', height: '100%' }}>
-                        <h2 style={{ fontSize: '6vw', borderBottom: '2px solid white', marginBottom: '1vw' }}>Menu</h2>
-                        <div style={{ display: 'flex', padding: '0   0', gap: '4.5vw' }}>
-                            <div style={{ width: '22%', fontSize: '1.1vw', color: 'var(--t-secondary)', marginTop: '.75vw', display: 'flex', flexDirection: 'column', gap: '10.5vw' }}>
-                                <p style={{}}>Plus de pages</p>
-                                <p style={{}}>Newsletter</p>
+                    <div className={styles.rightSection}>
+                        <h2 className={styles.menuTitle}>Menu</h2>
+                        <div className={styles.rightContent}>
+                            <div className={styles.rightSidebarLabels}>
+                                <p>Plus de pages</p>
+                                <p>Newsletter</p>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', fontSize: '2.25vw', fontWeight: '500', flex: 1, gap: '5vw' }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1vw' }}>
+                            <div className={styles.rightLinks}>
+                                <div className={styles.pageLinks}>
                                     <Link href='/'>Contact</Link>
                                     <Link href='/'>Nouveauté</Link>
                                 </div>
-                                <form style={{ display: 'block', position: 'relative' }}>
-                                    <label style={{ fontWeight: 'normal' }}>Restez à jour</label>
-                                    <input placeholder='Adresse Email' style={{
-                                        padding: '.75vw 0', marginTop: '1vw', width: '100%', background: 'transparent', border: 'none', color: 'var(--t-primary)', fontSize: '.9vw',
-                                        outline: 'none', borderBottom: '1px solid rgba(255, 255,255, .2)'
-                                    }} />
-                                    <button style={{
-                                        width: '3.25vw', height: '3.25vw', borderRadius: '50%', border: '2px solid var(--t-primary)', color: 'var(--t-primary)',
-                                        position: 'absolute', right: 0, bottom: 0, transform: 'translateY(50%)'
-
-                                    }}>
-                                        <UilArrowRight style={{ color: 'var(--ac-primary)', width: '55%', height: '55%', transform: 'rotate(-45deg)' }} />
-
+                                <form className={styles.newsletterForm}>
+                                    <label>Restez à jour</label>
+                                    <input placeholder='Adresse Email' className={styles.emailInput} />
+                                    <button className={styles.submitButton}>
+                                        <UilArrowRight className={styles.arrowIcon} />
                                     </button>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '.75vw', marginTop: '1.25vw', position: 'relative' }}>
+                                    <div className={styles.checkboxContainer}>
                                         <input
                                             type="checkbox"
                                             id="privacy-checkbox"
-                                            style={{
-                                                appearance: 'none',
-                                                width: '.75vw',
-                                                height: '.75vw',
-                                                border: '2px solid var(--t-primary)',
-                                                borderRadius: '50%',
-                                                outline: 'none',
-                                                cursor: 'pointer',
-                                                position: 'relative',
-                                                backgroundColor: 'transparent',
-                                                transition: 'background-color 0.2s ease'
-                                            }}
-                                            onChange={(e) => {
-                                                if (e.target.checked) {
-                                                    e.target.style.background = `
-                                                                  radial-gradient(
-                                                                    circle at center, 
-                                                                    var(--t-primary) 50%, 
-                                                                    transparent 50%
-                                                                  )
-                                                                `;
-                                                } else {
-                                                    e.target.style.background = 'transparent';
-                                                }
-                                            }}
+                                            className={styles.checkbox}
+                                            onChange={handleCheckboxChange}
                                         />
-                                        <label
-                                            htmlFor="privacy-checkbox"
-                                            style={{
-                                                fontSize: '0.8vw',
-                                                // color: 'var(--t-secondary)',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
+                                        <label htmlFor="privacy-checkbox" className={styles.checkboxLabel}>
                                             J'accepte la politique de confidentialité
                                         </label>
                                     </div>
                                 </form>
-
                             </div>
                         </div>
-                        <div style={{ display: 'flex', marginTop: '4vw', height: '6vw' }}>
-                            <a href='/' target='_blank' style={{ flex: 1 }}>
-                                <Image style={{ objectFit: 'cover', objectPosition: 'center', width: '100%', height: '100%' }} src='/contact/location.png' alt='location' width={650} height={382} />
+                        <div className={styles.contactSection}>
+                            {/* link for google map or google search here */}
+                            <a href='/' target='_blank' className={styles.locationLink}>
+                                <Image src='/contact/location.png' alt='location' width={650} height={382} className={styles.locationImage} />
                             </a>
-                            <a href='/' style={{ flex: 1, background: 'green' }}>
+                            <a href={phone} className={styles.contactItem}>
+                                <LineMdPhoneTwotone className={styles.contactIcon} />
+                                <strong>Appelez maintenant</strong>
+                                <abbr>+216 98 55 77 66</abbr>
                             </a>
-                            <a href='/' style={{ flex: 1, background: 'blue' }}>
+                            <a href={mail} className={styles.contactItem}>
+                                <SiMailDuotone className={styles.contactIcon} />
+                                <strong>E-mail</strong>
+                                <abbr>contact@cciservices.online</abbr>
                             </a>
+                            <div className={styles.divider} />
                         </div>
                     </div>
-
+                    <button onClick={handleMenuButton} className={styles.closeButton}>
+                        <EpCloseBold className={styles.closeIcon} />
+                    </button>
                 </div>
-
             </div>
-        </div>)
+        </div>
+    );
 }

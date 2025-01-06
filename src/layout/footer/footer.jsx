@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import content from './footer.json'
+import contact from '@/app/contact/data.json'
 import styles from './footer.module.css'
 
 export default function Footer() {
-    const mail = `mailto:${content.mail.link}?subject=${content.mail.subject}&body=${content.mail.body}`
+    const mail = `mailto:${contact.mail.link}?subject=${contact.mail.subject}&body=${contact.mail.body}`
     const phone = 'tel:' + content.phone
+
     return (
         <footer className={styles.footer}>
             <div className={styles.contentWrapper}>
@@ -12,14 +14,14 @@ export default function Footer() {
                     <h2 className={styles.title}>
                         Contactez-nous à <br />
                         <a href={mail} className={styles.mailLink}>
-                            {content.mail.link}
+                            {contact.mail.link}
                             <div className={styles.underline} />
                         </a>
                     </h2>
                     <div className={styles.infoGrid}>
                         <div className={styles.infoBlock}>
                             <p className={styles.label}>Notre Numéro</p>
-                            <a href={phone} className={styles.value}>{content.number}</a>
+                            <a href={phone} className={styles.value}>{contact.phone}</a>
                         </div>
                         <div className={styles.infoBlock}>
                             <p className={styles.label}>Notre localisation</p>

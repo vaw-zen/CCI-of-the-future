@@ -7,25 +7,39 @@ import { homeScrollTriggers } from "@/app/home/home.func";
 import { headerSI } from "@/layout/header/header.func";
 
 export default function Initializer() {
-    const { setVw, setVh } = dimensionsStore();
-    const { resizeEvent, scrollEvent } = useInitializerLogic();
+    const { setVw, setVh, isDesktop } = dimensionsStore()
+    const { resizeEvent, initializeLenis, startLenisRaf, lenisRef, rafIdRef } = useInitializerLogic()
 
     homeScrollTriggers()
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
-        const handleResize = resizeEvent(setVw, setVh);
+        // Initialize Lenis
+        lenisRef.current = initializeLenis(isDesktop)
 
-        handleResize();
-        window.addEventListener('resize', handleResize);
+        // Start RAF if Lenis is initialized
+        if (lenisRef.current) {
+            rafIdRef.current = startLenisRaf(lenisRef.current)
+        }
+
+        const handleResize = resizeEvent(setVw, setVh)
+        handleResize()
+        window.addEventListener('resize', handleResize)
         window.addEventListener('scroll', headerSI);
-
         return () => {
-            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', handleResize)
             window.removeEventListener('scroll', headerSI);
-        };
-    }, [setVw]);
+            if (rafIdRef.current) {
+                cancelAnimationFrame(rafIdRef.current)
+            }
+            if (lenisRef.current) {
+                lenisRef.current.destroy()
+                lenisRef.current = null
+            }
+        }
+
+    }, [setVw, setVh, isDesktop])
 
     return null;
 }

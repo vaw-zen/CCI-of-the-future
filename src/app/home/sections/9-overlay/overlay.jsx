@@ -3,7 +3,7 @@ import { BiPlayFill, CircularText, EosIconsBubbleLoading, EpCloseBold } from '@/
 import styles from './overlay.module.css'
 import { useOverlayLogic } from './overlay.func'
 import content from './overlay.json'
-import { parallax } from '@/libs/vz/mi/mi'
+import { parallax } from '@/libs/vz/mouseInteraction/parallax'
 
 export default function Overlay() {
     const { isActive, handleOpen, handleClose } = useOverlayLogic()

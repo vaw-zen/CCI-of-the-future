@@ -1,7 +1,8 @@
-import { createRef, useState } from 'react';
+import { createRef, useCallback, useState } from 'react';
 import styles from './header.module.css'
 import { throttle } from '@/libs/vz/utils';
 import { dimensionsStore } from '@/utils/store/store';
+import { lenisRef } from '@/utils/initializer/initializer.func';
 
 
 
@@ -66,13 +67,30 @@ export function useHeaderLogic() {
         return menu ? normal + ' ' + active : normal
     }
 
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    };
+  
+    const scrollToTop = useCallback(() => {
+        if (typeof window === 'undefined') return;
+        if (window.scrollY === 0) return;
+    
+        if (lenisRef.current) {
+          requestAnimationFrame(() => {
+            const currentPosition = window.scrollY || document.documentElement.scrollTop;
+            if (currentPosition > 0) {
+              lenisRef.current.scrollTo(0, {
+                duration: 0.8,
+                easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+                force: true,
+                lock: false,
+                immediate: false
+              });
+            }
+          });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, []);
 
+      
     return { handleMenuButton, handleDropdownBlur, toggleDropdown, isActive, handleMenuStyles, handleNavBlur, scrollToTop, desktopMenuStyles }
 }
 

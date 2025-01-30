@@ -3,16 +3,15 @@ import content from './testimonials.json'
 import SliderContainer from './csr/sliderContainer'
 import { UilArrowRight } from '@/utils/components/icons'
 import ButtonContainer from './csr/buttonContainer'
-import Image from 'next/image'
+import ResponsiveImage from '@/utils/components/Image/Image'
 
 export default function Testimonials() {
     const slideAncor = Math.floor((content.testimonials.length * 3) / 2)
 
     return (
         <section className={styles.container}>
-            <Image width={0}
-                height={0}
-                sizes="30vw" src={content.img} className={styles.mainImage} alt='testimonials' />
+            <ResponsiveImage
+                sizes={[22, 55, 86]} skeleton src={content.img} className={styles.mainImage} alt='testimonials' />
             <SliderContainer className={styles.sliderContainer}>
                 <div
                     className={styles.slider}
@@ -21,9 +20,9 @@ export default function Testimonials() {
                     {[...content.testimonials, ...content.testimonials, ...content.testimonials].map((element, index) => (
                         <div key={index} className={styles.slide}>
                             <div className={styles.profileContainer}>
-                                <Image width={0}
-                                    height={0}
-                                    sizes="30vw" className={styles.profileImage} src={element.img} alt={'testimonial' + index} />
+                                <ResponsiveImage
+                                    skeleton sizes={[9, 23, 43]}
+                                    className={styles.profileImage} src={element.img} alt={'testimonial' + index} />
                                 <h3 className={styles.name}>Mattew Hunt</h3>
                                 <p className={styles.role}>plumber</p>
                             </div>

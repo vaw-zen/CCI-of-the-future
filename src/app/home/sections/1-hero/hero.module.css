@@ -1,22 +1,10 @@
-@keyframes skeletonLoading {0% {    background-position: 200% 0;}100% {    background-position: -200% 0;}}
-.skeleton .skeletonBackground,
-.skeleton .skeletonGlow,
-.skeleton .skeletonMainImage,
-.skeleton .skeletonCircle,
-.skeleton .skeletonButton {background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%);background-size: 200% 100%;animation: skeletonLoading 1.5s infinite;border-radius: 4px;;}
-.skeleton .skeletonBackground {width: 100%;height: 100%;position: absolute;z-index: 1;}
-.skeleton .skeletonGlow { width: 100%; height: 100%; position: absolute; opacity: 0.5; }
-.skeleton .skeletonMainImage { width: 100%; height: 100%; object-fit: cover; transform: translate(0% , -0%);; position: absolute; z-index: 1; }
-.skeleton .skeletonSecondaryButton {background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%);}
-
 .heroContainer { width: 100%; height: 100svh; background: black; contain: paint; }
 .heroContainer img { transition: opacity .2s; }
-.backgroundImage { position: absolute; left: 0; top: 0; width: 100vw; height: 100svh; object-fit: cover; object-position: center; }
-.glowLines { z-index: 1; height: 100%; width: 50%; object-fit: cover; object-position: bottom; position: absolute; right: 20vw; top: 0; transition: opacity .5s !important; }
+.backgroundImage { position: absolute !important; left: 0; top: 0; width: 100vw; height: 100svh; object-fit: cover; object-position: center; }
+.glowLines { z-index: 1; height: 100%; width: 50%; object-fit: cover; object-position: bottom; position: absolute !important; right: 20vw; top: 0; transition: opacity .5s !important; }
 .mainImageContainer { z-index: 1; position: absolute; right: -5vw; bottom: -13vw; border-radius: 50vw 50vw 0 0; height: 60vw; width: 35vw; transform: rotate(-40deg); overflow: hidden; border: .5vw solid var(--bg-elevated); }
 .mainImage { width: 125%; height: 100%; object-fit: cover; object-position: center; transform: rotate(45deg) translatex(-25%); }
-.circleImage { z-index: 1; width: 17.5vw; height: 17.5vw; border-radius: 50%; object-fit: contain; object-position: center; position: absolute; right: 25vw; bottom: 2.5vw; }
-.skeleton .skeletonCircle {    width: 18vw; height: 18vw; border-radius: 50% !important; position: absolute; right: 25vw; bottom: 2.5vw; z-index: 2; }
+.circleImage { z-index: 1; width: 17.5vw; height: 17.5vw; border-radius: 50%; object-fit: contain; object-position: center; position: absolute !important; right: 25vw; bottom: 2.5vw; }
 .content { width: 39vw; height: 100%; padding: 5vw 0 0 2vw; z-index: 1; position: relative; display: flex; flex-direction: column; justify-content: center; }
 .title { font-size: 3vw; text-transform: uppercase; text-align: end; }
 .subtitle { color: var(--t-secondary); font-weight: 500; font-size: .9vw; width: 17vw; margin-top: -3.25vw; margin-left: 1vw; }
@@ -34,10 +22,8 @@
 .socialIcons > a:nth-of-type(2) {display: none; }
 .button:hover { background: var(--t-primary); border-color: var(--t-primary); color: var(--bg-base);  }
 
-
-
 @media (max-width: 1024px) {
-    .glowLines { height: 100%; width: 100%; object-fit: cover; object-position: bottom right; position: absolute; right: 20vw; position: absolute; }
+    .glowLines { height: 100%; width: 100%; object-fit: cover; object-position: bottom right; position: absolute; right: 20vw; position: absolute !important; }
     .content { width: 70vw; height: auto; padding: 5vw 0 0 2vw; margin-top: -24vw; margin-left: 23.5vw; }
     .heroContainer { display: flex; align-items: center; justify-content: center; }
     .title { font-size: 5vw; }
@@ -51,10 +37,7 @@
     .mainImageContainer { right: -8vw; bottom: -30vw; height: 80vw; width: 65vw; }
     .mainImage { object-position: 42%; }
     .circleImage { width: 30vw; height: 30vw; right: 44vw; bottom: 2.5vw; }
-    .skeleton .skeletonCircle {    width: 30vw; height: 30vw; right: 44vw; bottom: 2.5vw; border-radius: 50% !important; position: absolute; z-index: 2; }
-    
-        }
-
+}
 
 @media (max-width: 480px) {
     .content { width: 100vw; height: auto; padding: 5vw 0 0 2vw; margin-top: -35vw; margin-left:-5vw; }
@@ -66,12 +49,8 @@
     .icon { width: 6vw; height: 6vw; }
     .socialIcons > a:nth-of-type(2) { margin-right: 10vw; display: block; }
     .socialIcons > a:nth-of-type(1) {  display: block; }
-
     .buttons { gap: 3vw; margin-top: 10vw; }
     .button { font-size: 3.5vw;width: 39vw;height: 11vw; }
-
     .mainImageContainer { right: -8vw; bottom: -6.5vw; height: 85vw; width: 70vw; }
     .circleImage { width: 40vw; height: 40vw; right: 44vw; bottom: 2.5vw; }
-
-
 }

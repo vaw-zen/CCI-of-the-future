@@ -5,18 +5,18 @@ import {
     LineMdPhoneTwotone,
     SiMailDuotone,
 } from '@/utils/components/icons';
-import HeroImage from './Image';
+import ResponsiveImage from '@/utils/components/Image/Image';
 
 export default function Hero() {
     return (
-        <div className={`${styles.heroContainer} ${styles.skeleton}`}>
+        <div className={styles.heroContainer}>
             <div className={styles.backgroundImages}>
-                <HeroImage responsiveWidth sizes="150vw" src='/home/1-hero/background.jpg' alt="Background" className={styles.backgroundImage} />
-                <HeroImage responsiveWidth sizes="100vw" src='/home/1-hero/linesGlow.webp' alt="Glow Lines" priority className={styles.glowLines} />
+                <ResponsiveImage sizes={[100, 150, 200]} src='/home/1-hero/background.jpg' alt="Background" className={styles.backgroundImage} />
+                <ResponsiveImage sizes={[80, 150, 200]} src='/home/1-hero/linesGlow.webp' position='bottom right' alt="Glow Lines" priority className={styles.glowLines} />
                 <div className={styles.mainImageContainer}>
-                    <HeroImage responsiveWidth sizes="50vw" src='/home/1-hero/main.webp' alt="Main Image" className={styles.mainImage} skeletonClassName={styles.skeletonMainImage} />
+                    <ResponsiveImage skeleton sizes={[60, 80, 85]} src='/home/1-hero/main.webp' alt="Main Image" className={styles.mainImage} />
                 </div>
-                <HeroImage sizes="25vw" src='/home/1-hero/circle.webp' alt="Circle" className={styles.circleImage} skeletonClassName={styles.skeletonCircle} />
+                <ResponsiveImage skeleton sizes={[60, 80, 85]} src='/home/1-hero/circle.webp' alt="Circle" className={styles.circleImage} />
             </div>
 
             <div className={styles.content}>

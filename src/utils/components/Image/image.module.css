@@ -1,0 +1,18 @@
+@keyframes responsive-image-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.imageSkeleton {
+    animation: responsive-image-shimmer 2s infinite linear;
+    background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-elevated) 50%, var(--bg-base) 75%);
+    background-size: 200% 100%;
+    pointer-events: none;
+    border-radius: inherit;
+    object-fit: inherit;
+}

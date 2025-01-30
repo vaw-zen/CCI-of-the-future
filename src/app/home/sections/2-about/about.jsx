@@ -2,24 +2,22 @@ import React from 'react'
 import content from './about.json'
 import styles from './about.module.css'
 import pageStyles from '../../home.module.css'
-import Image from 'next/image'
 import { IconoirArrowUpRight } from '@/utils/components/icons'
 import Link from 'next/link'
 import BlurBox from '@/utils/components/BlurBox/BlurBox'
+import ResponsiveImage from '@/utils/components/Image/Image'
 
 export default function About() {
     return (
         <section className={styles.section}>
             <BlurBox className={styles.BlurBox} />
             <div className={styles.flexContainer}>
-                <Image
-                    src={content.img}
+
+                <ResponsiveImage src={content.img}
+                    skeleton
                     alt="about us"
-                    width={0}
-                    height={0}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className={styles.image}
-                />
+                    sizes={[40, 50,97]}
+                    className={styles.image} />
             </div>
             <div className={styles.contentContainer}>
                 <h2 className={pageStyles.slug}>{content.slug}</h2>

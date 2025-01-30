@@ -3,7 +3,7 @@ import pageStyles from '../../home.module.css'
 import styles from './project.module.css'
 import { MdiArrowTopRightThin } from '@/utils/components/icons'
 import Link from 'next/link'
-import Image from 'next/image'
+import ResponsiveImage from '@/utils/components/Image/Image'
 
 export default function Project() {
     const [firstArticle] = content.articles
@@ -14,9 +14,8 @@ export default function Project() {
                 <h2 className={pageStyles.slug}>{content.slug}</h2>
                 <h3 className={pageStyles.highlight}>{content.highlight}</h3>
                 <div className={styles.imageContainer}>
-                    <Image width={0}
-                        height={0}
-                        sizes="(max-width: 768px) 100vw, 50vw" className={styles.image} src={firstArticle.img} alt='project 1' />
+                    <ResponsiveImage
+                        sizes={[40, 47.5, 93]} skeleton className={styles.image} src={firstArticle.img} alt='project 1' />
                     <div className={styles.overlay}>
                         <div className={styles.contentWrapper}>
                             <Link href={firstArticle.link} className={styles.title}>{firstArticle.title}</Link>
@@ -51,10 +50,9 @@ export default function Project() {
             <div className={styles.articleGrid}>
                 {content.articles.map((article, i) => !i ? null : (
                     <div className={styles.articleContainer} key={i}>
-                        <Image width={0}
-                            height={0}
-                            alt={'project ' + (i + 1)}
-                            sizes="(max-width: 768px) 100vw, 50vw" className={styles.articleImage} src={article.img} />
+                        <ResponsiveImage
+                            alt={'project ' + (i + 1)} skeleton
+                            sizes={[27, 47.5, 93]} className={styles.articleImage} src={article.img} />
                         <div className={styles.overlay}>
                             <div className={styles.contentWrapper}>
                                 <Link href={article.link} className={styles.title}>{article.title}</Link>

@@ -1,19 +1,20 @@
-import Initializer from "@/utils/initializer/initalizer";
+import dynamic from 'next/dynamic';
 import Hero from "./sections/1-hero/hero";
-import About from "./sections/2-about/about";
-import Services from "./sections/3-services/services";
-import Band from "./sections/4-band/band";
-import Showcase from "./sections/5-showcase/showcase";
-import Project from "./sections/6-projects/project";
-import Refrences from "./sections/7-refrences/refrences";
-import GreenBand from "@/utils/components/GreenBand/GreenBand";
-import Testimonials from "./sections/8-testimonials/testimonials";
-import Overlay from "./sections/9-overlay/overlay";
-import styles from './home.module.css'
+import styles from './home.module.css';
+
+const About = dynamic(() => import("./sections/2-about/about"));
+const Services = dynamic(() => import("./sections/3-services/services"));
+const Band = dynamic(() => import("./sections/4-band/band"));
+const Showcase = dynamic(() => import("./sections/5-showcase/showcase"));
+const Project = dynamic(() => import("./sections/6-projects/project"));
+const Refrences = dynamic(() => import("./sections/7-refrences/refrences"));
+const GreenBand = dynamic(() => import("@/utils/components/GreenBand/GreenBand"));
+const Testimonials = dynamic(() => import("./sections/8-testimonials/testimonials"));
+const Overlay = dynamic(() => import("./sections/9-overlay/overlay"));
+const Initializer = dynamic(() => import("@/utils/initializer/initalizer"));
 
 export default function Home() {
     return <>
-        <Initializer />
         <Hero />
         <main className={styles.Home}>
             <div className={styles.wrapper}>
@@ -28,5 +29,6 @@ export default function Home() {
             </div>
         </main>
         <Overlay />
+        <Initializer />
     </>
 }

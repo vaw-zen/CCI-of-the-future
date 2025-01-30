@@ -1,11 +1,6 @@
 @keyframes responsive-image-shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 .imageSkeleton {
@@ -14,5 +9,5 @@
     background-size: 200% 100%;
     pointer-events: none;
     border-radius: inherit;
-    object-fit: inherit;
+    object-fit: 1vw;
 }

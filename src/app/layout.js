@@ -1,7 +1,8 @@
 import { DM_Sans, Roboto_Condensed } from 'next/font/google';
 import "./globals.css";
-import Header from '@/layout/header/header';
-import Footer from '@/layout/footer/footer';
+import dynamic from 'next/dynamic';
+const Footer = dynamic(() => import('@/layout/footer/footer'));
+const Header = dynamic(() => import('@/layout/header/header'));
 
 const dmSans = DM_Sans({
   subsets: ['latin'],

@@ -1,10 +1,10 @@
 import React from 'react'
 import content from './services.json'
-import Image from 'next/image'
 import Link from 'next/link'
 import pageStyles from '../../home.module.css'
 import styles from './services.module.css'
 import BlurBox from '@/utils/components/BlurBox/BlurBox'
+import ResponsiveImage from '@/utils/components/Image/Image'
 
 export default function Services() {
     return (
@@ -21,10 +21,9 @@ export default function Services() {
             <div className={styles.rightColumn}>
                 {content.list.map((service, index) => (
                     <article key={index} className={styles.serviceCard}>
-                        <Image
-                            width={0}
-                            height={0}
-                            sizes="(max-width: 768px) 30vw, 75vw"
+                        <ResponsiveImage
+                            skeleton
+                            sizes={[9, 21, 40]}
                             className={styles.serviceImage}
                             src={service.img}
                             alt={service.title} />

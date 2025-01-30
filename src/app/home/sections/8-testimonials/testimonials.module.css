@@ -1,10 +1,12 @@
 .container { height: 21.67vw; width: 100%; position: relative; margin-top: 17.5vw; display: flex; gap: 5vw; }
 .mainImage { width: 21.67vw; height: 21.67vw; object-fit: cover; object-position: center; border-radius: 50%; }
+.mainImage img { border-radius: 50%; }
 .sliderContainer { flex: 1; overflow: hidden; position: relative; display: flex; align-items: flex-end; }
 .slider { min-width: 100%; min-height: 80%; display: flex; position: relative; flex-wrap: nowrap; transition: transform .4s; pointer-events: none; }
 .slide { display: flex; align-items: center; min-width: 100%; min-height: 100%; }
 .profileContainer { height: 100%; width: 8.9584vw; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 .profileImage { width: 8.9584vw; height: 8.9584vw; object-fit: cover; object-position: center; border-radius: 50%; }
+.profileImage img { border-radius: 50%; }
 .name { font-size: 1.2vw; margin-top: .75vw; }
 .role { font-size: .85vw; color: var(--t-secondary); font-weight: 600; }
 .divider { height: 100%; width: 1px; background: rgba(255, 255, 255, 0.1); margin: 0 3vw; }

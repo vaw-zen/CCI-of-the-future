@@ -3,9 +3,9 @@ import styles from './header.module.css'
 import content from './header.json'
 import Link from 'next/link'
 import { useHeaderLogic } from './header.func'
-import Image from 'next/image'
 import { CiCaretDownSm, FaCaretUp, MingcuteMenuFill, UilArrowRight } from '@/utils/components/icons'
 import DesktopMenu from './components/desktopMenu/desktopMenu'
+import ResponsiveImage from '@/utils/components/Image/Image'
 
 export default function Header({ roboto }) {
     const {
@@ -28,7 +28,7 @@ export default function Header({ roboto }) {
                 className={styles.nav}>
                 <div className={styles.container}>
                     <div className={styles.logo}>
-                        <Image width={0} height={0} priority sizes="25vw" src='/layout/logo.png' alt="cci-logo" />
+                        <ResponsiveImage skeleton priority sizes={[3, 8, 10]} contain src='/layout/logo.png' alt="cci-logo" />
 
                         <h2 className={roboto.className}>
                             Chaabane Cleaning Inteligence

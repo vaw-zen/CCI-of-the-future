@@ -3,7 +3,7 @@ import styles from './refrences.module.css'
 import Link from 'next/link'
 import { UilArrowRight } from '@/utils/components/icons'
 import content from './refrences.json'
-import Image from 'next/image'
+import ResponsiveImage from '@/utils/components/Image/Image'
 
 export default function Refrences() {
   const refrences = [null, ...content, null]
@@ -23,13 +23,13 @@ export default function Refrences() {
             </Link>
           ) : (
             <Link href={refrence.link} target='_blank' className={styles.refrenceSiteLink}>
-              <Image
-                width={0}
-                height={0}
-                sizes="(max-width: 768px) 30vw, 75vw"
+              <ResponsiveImage
+                sizes={[10, 30, 56]}
                 src={refrence.img}
                 className={styles.refrenceImage}
                 alt={`refrence ${index}`}
+                skeleton
+                contain
               />
             </Link>
           )}

@@ -1,9 +1,8 @@
 import styles from './desktopMenu.module.css';
-import HeroImage from '@/app/home/sections/1-hero/Image';
 import { EpCloseBold, LineMdPhoneTwotone, SiMailDuotone, UilArrowRight } from '@/utils/components/icons';
-import Image from 'next/image';
 import Link from 'next/link';
 import contact from '@/app/contact/data.json';
+import ResponsiveImage from '@/utils/components/Image/Image';
 
 export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
     const mail = `mailto:${contact.mail.link}?subject=${contact.mail.subject}&body=${contact.mail.body}`;
@@ -17,13 +16,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
 
     return (
         <div className={desktopMenuStyles(styles.menu, styles.activeMenu)}>
-            <HeroImage
-                responsiveWidth
-                sizes="150vw"
-                src='/home/1-hero/background.jpg'
-                alt="menu-background"
-                className={styles.backgroundImage}
-            />
+            <ResponsiveImage sizes={[100]} quality={100} src='/home/1-hero/background.jpg' alt="Background" className={styles.backgroundImage} skeleton />
             <div className={styles.overlay}>
                 <div className={styles.content}>
                     <div className={styles.leftSection}>
@@ -79,7 +72,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                         <div className={styles.contactSection}>
                             {/* link for google map or google search here */}
                             <a href='/' target='_blank' className={styles.locationLink}>
-                                <Image src='/contact/location.png' alt='location' width={650} height={382} className={styles.locationImage} />
+                                <ResponsiveImage src='/contact/location.png' alt='location' skeleton sizes={12.5} className={styles.locationImage} />
                             </a>
                             <a href={phone} className={styles.contactItem}>
                                 <LineMdPhoneTwotone className={styles.contactIcon} />

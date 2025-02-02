@@ -12,7 +12,7 @@ export default function Hero() {
         <div className={styles.heroContainer}>
             <div className={styles.backgroundImages}>
                 <ResponsiveImage sizes={[100, 150, 200]} src='/home/1-hero/background.jpg' alt="Background" className={styles.backgroundImage} />
-                <ResponsiveImage sizes={[80, 150, 200]} src='/home/1-hero/linesGlow.webp' position='bottom right' alt="Glow Lines" priority className={styles.glowLines} />
+                <ResponsiveImage sizes={[100, 90]} src='/home/1-hero/linesGlow.webp' position='bottom right' alt="Glow Lines" priority className={styles.glowLines} />
                 <div className={styles.mainImageContainer}>
                     <ResponsiveImage skeleton sizes={[60, 80, 85]} src='/home/1-hero/main.webp' alt="Main Image" className={styles.mainImage} />
                 </div>

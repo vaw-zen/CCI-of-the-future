@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import Hero from "./sections/1-hero/hero";
 import styles from './home.module.css';
+import Head from 'next/head';
 
 const About = dynamic(() => import("./sections/2-about/about"));
 const Services = dynamic(() => import("./sections/3-services/services"));
@@ -15,20 +16,28 @@ const Initializer = dynamic(() => import("@/utils/initializer/initalizer"));
 
 export default function Home() {
     return <>
-        <Hero />
-        <main className={styles.Home}>
-            <div className={styles.wrapper}>
-                <About />
-                <Services />
-                <Band />
-                <Showcase />
-                <Project />
-                <Refrences />
-                <GreenBand />
-                <Testimonials />
-            </div>
-        </main>
-        <Overlay />
-        <Initializer />
-    </>
+      <Head>
+        <link
+          rel="preload"
+          as="image"
+          href="/home/1-hero/linesGlow.webp"
+          fetchpriority="high"
+        />
+      </Head>
+    <Hero />
+    <main className={styles.Home}>
+      <div className={styles.wrapper}>
+        <About />
+        <Services />
+        <Band />
+        <Showcase />
+        <Project />
+        <Refrences />
+        <GreenBand />
+        <Testimonials />
+      </div>
+    </main>
+    <Overlay />
+    <Initializer />
+  </>
 }

@@ -1,6 +1,6 @@
 .section { width: 100%; height: 26.05vw; margin-top: 6vw; contain: paint; }
 .filter {position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,.35)}
-.container { position: absolute; left: 0; width: 100vw; background: url(/public/home/9-overlay/overlay.jpg); background-attachment: fixed; background-size: cover; background-position: center;background-repeat: no-repeat; height: 26.05vw; display: flex; justify-content: center; align-items: center; }
+.container { position: absolute; left: 0; width: 100vw; background: url(/public/home/9-overlay/overlay.webp); background-attachment: fixed; background-size: cover; background-position: center;background-repeat: no-repeat; height: 26.05vw; display: flex; justify-content: center; align-items: center; }
 .playButton { transition: transform .5s ease-out; width: 7vw; height: 7vw; background: var(--ac-primary); border-radius: 50%; overflow: hidden; position: relative; display: flex; justify-content: center; align-items: center; }
 .textContainer { width: 85%; height: 85%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 .circularText { width: 100%; height: 100%; animation: spin linear 10s infinite; }

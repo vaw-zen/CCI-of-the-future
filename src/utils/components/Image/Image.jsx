@@ -14,7 +14,7 @@ const ResponsiveImage = ({
     priority = false,
     quality = 80,
     contain,
-    position, 
+    position,
     skeleton = false
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -36,12 +36,15 @@ const ResponsiveImage = ({
     } else {
         effectiveSize = sizes;
     }
+    if (src.includes('Glow')) {
+        console.log(effectiveSize);
+    }
 
     return (
         <div
             className={className}
             style={{
-                position: 'relative', 
+                position: 'relative',
                 display: 'flex',
                 ...style
             }}
@@ -50,13 +53,13 @@ const ResponsiveImage = ({
                 src={src}
                 alt={alt}
                 fill
-                sizes={`${effectiveSize}vw`}
+                sizes={typeof effectiveSize === 'number' ? effectiveSize + 'vw' : effectiveSize}
                 style={{
                     flex: 1,
                     objectFit: contain ? 'contain' : 'cover',
-                    objectPosition: position || 'center', 
+                    objectPosition: position || 'center',
                     opacity: isLoaded ? 1 : 0,
-                    transition: 'opacity 0.5s ease-in-out',
+                    transition: 'none',
                 }}
                 onLoad={handleLoadingComplete}
                 quality={quality}

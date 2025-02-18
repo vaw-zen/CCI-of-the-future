@@ -2,7 +2,7 @@
     width: 100%; 
     height: 23.08vw; 
     background: black; 
-    contain: paint; 
+    
   }
   
   .backgroundImages {
@@ -79,4 +79,67 @@
     font-weight: 400;
     text-transform: capitalize;
   }
+  /* @media screen and (min-width: 1024px) {
+    .heroContainer {
+        height: 40vw;
+    }
+    .titleContainer h1 {
+        font-size: 5vw;
+        line-height: 4.5vw;
+    }
+  } */
+  
+  /* Tablets */
+  @media screen and (max-width: 1023px) {
+    .heroContainer {
+        height: 60vw;
+    }
+    .titleContainer h1 {
+        font-size: 7vw;
+        line-height: 6vw;
+    }
+  }
+  
+  /* Mobile Devices */
+  @media screen and (max-width: 768px) {
+    .heroContainer {
+        height: 70vw;
+    }
+    .titleContainer h1 {
+        font-size: 8vw;
+        line-height: 7vw;
+    }
+    .pagetitleHomeLink {
+        font-size: 2vw;
+    }
+    .highlightedTitle h2 {
+        font-size: 2vw;
+        line-height: 2.5vw;
+    }
+  }
+  
+  /* Small Mobile Devices */
+  @media screen and (max-width: 480px) {
+    .heroContainer {
+        height: 80vw;
+    }
+    .titleContainer h1 {
+        font-size: 9vw;
+        line-height: 8vw;
+        line-height: 12vw;
+    }
+    .pagetitleHomeLink {
+        font-size: 3.7vw;
+    }
+    .highlightedTitle h2 {
+        font-size: 3.7vw;
+        line-height: 3vw;
+    }
+  .icon{
+    height:3vw;
+    width:3vw;
+  }
+  }
+  
+  
   

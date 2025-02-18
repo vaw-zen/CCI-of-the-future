@@ -33,7 +33,7 @@ export default function HeroHeader({ title }) {
           <div className={styles.resusableTitle}>
             <div className={styles.anchors}>
               <a href="#" className={styles.homeLinkIcon}>
-                <LineMdHomeTwotone style={{ width: '2.1vh', height: '2.1vh' }} />
+                <LineMdHomeTwotone style={{ width: '0.9vw', height: '0.9vw' }} />
               </a>
               <a href="#" className={styles.pagetitleHomeLink}>Home</a>
             </div>

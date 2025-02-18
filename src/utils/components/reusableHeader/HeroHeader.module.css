@@ -1,6 +1,6 @@
 .heroContainer { 
     width: 100%; 
-    height: 60vh; 
+    height: 23.08vw; 
     background: black; 
     contain: paint; 
   }
@@ -34,8 +34,8 @@
     margin-top: 0px;
     font-family: 'DM Sans', sans-serif;
     color: #fff;
-    font-size: 6vw;
-    line-height: 5.908vw;
+    font-size: 4.69vw;
+    line-height: 3.908vw;
     text-transform: capitalize;
     margin-bottom: 1.042vw;
     
@@ -67,14 +67,14 @@
   .pagetitleHomeLink {
     font-family: 'DM Sans', sans-serif;
     color: #fff;
-    font-size: 2.2vh;
+    font-size: 0.83vw;
   }
   
   .highlightedTitle h2 {
     margin-top: 0px;
     margin-bottom: 0px;
     color: #cafb42;
-    font-size: 2.2vh;
+    font-size: 0.83vw;
     line-height: 1.042vw;
     font-weight: 400;
     text-transform: capitalize;

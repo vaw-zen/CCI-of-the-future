@@ -1,0 +1,49 @@
+{
+    "section": {
+        "slug": "Services",
+        "title": "Solution we provide",
+        "desc": "With every single one of our clients we bring forth a deep passion for creative problem solving innovations forward thinking brands boundaries",
+        "link": {
+            "slug": "View All Services",
+            "to": "/"
+        }
+    },
+    "services": [
+        {
+            "title": [
+                "Web & Mobile",
+                "Development"
+            ],
+            "desc": "Embark on a transformative journey with Call for Development Agency a compelling exploration of innovative strategies and sustainable solutions in fostering growth and progress within communities.",
+            "link": "/",
+            "img": "/home/about.png"
+        },
+        {
+            "title": [
+                "Video",
+                "Production"
+            ],
+            "desc": "Dive into the world of storytelling and visual excellence with Call for Video Production where every frame is crafted to captivate and inspire your audience.",
+            "link": "/",
+            "img": "/home/about.png"
+        },
+        {
+            "title": [
+                "Digital",
+                "Maketing"
+            ],
+            "desc": "Join the digital revolution with Call for Digital Marketing where strategic campaigns and creative content propel your brand to new heights in the online landscape.",
+            "link": "/",
+            "img": "/home/about.png"
+        },
+        {
+            "title": [
+                "Branding and",
+                "Strategy"
+            ],
+            "desc": "Elevate your brand identity and strategic vision with Call for Branding and Strategy a dynamic platform for crafting impactful narratives and driving business success.",
+            "link": "/",
+            "img": "/home/about.png"
+        }
+    ]
+}

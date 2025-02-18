@@ -1,6 +1,7 @@
 import { DM_Sans, Roboto_Condensed } from 'next/font/google';
 import "./globals.css";
 import dynamic from 'next/dynamic';
+import Initializer from '@/utils/initializer/initalizer';
 const Footer = dynamic(() => import('@/layout/footer/footer'));
 const Header = dynamic(() => import('@/layout/header/header'));
 
@@ -24,6 +25,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={dmSans.className}>
+      <Initializer />
+
       <body>
         <Header roboto={roboto} />
         {children}

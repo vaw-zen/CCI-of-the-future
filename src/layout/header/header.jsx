@@ -31,7 +31,7 @@ export default function Header({ roboto }) {
                         <ResponsiveImage skeleton priority sizes={[3, 8, 10]} contain src='/layout/logo.png' alt="cci-logo" />
 
                         <h2 className={roboto.className}>
-                            Chaabane Cleaning Inteligence
+                            Chaabane's Cleaning Intelligence
                         </h2>
                     </div>
                     <button onClick={handleMenuButton} className={styles.menuIcon} aria-label="fermer-menu">

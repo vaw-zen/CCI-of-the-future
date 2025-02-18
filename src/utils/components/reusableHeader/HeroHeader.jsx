@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import styles from './HeroHeader.module.css'
 import { LineMdHomeTwotone } from '../icons'
+import Link from 'next/link'
 
 export default function HeroHeader({ title }) {
   return (
@@ -13,34 +14,15 @@ export default function HeroHeader({ title }) {
           fill
           style={{ objectFit: 'cover', objectPosition: 'left' }}
         />
-        {/* <Image 
-          src="/home/1-hero/linesGlow.webp" 
-          alt="Glow Lines" 
-          fill 
-          style={{ 
-            objectFit: 'contain', 
-            objectPosition: 'bottom', 
-            position: 'absolute',
-            right: 0, 
-            top: 0, 
-            opacity: .6 ,
-            height:"100%",
-            
-          }}
-        /> */}
         <div className={styles.titleContainer}>
           <h1>{title}</h1>
-          <div className={styles.resusableTitle}>
-            <div className={styles.anchors}>
-              <a href="#" className={styles.homeLinkIcon}>
-                <LineMdHomeTwotone style={{ width: '0.9vw', height: '0.9vw' }} />
-              </a>
-              <a href="#" className={styles.pagetitleHomeLink}>Home</a>
-            </div>
-            <div>/</div>
-            <div className={styles.highlightedTitle}>
-              <h2>{title}</h2>
-            </div>
+          <div className={styles.title}>
+            <Link href='/' className={styles.anchors}>
+              <LineMdHomeTwotone className={styles.icon} />
+              <span>Home</span>
+            </Link>
+            <span>/</span>
+            <span>{title}</span>
           </div>
         </div>
       </div>

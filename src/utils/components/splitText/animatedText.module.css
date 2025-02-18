@@ -1,0 +1,22 @@
+.line {  white-space: pre; width: fit-content; display: block; line-height: inherit; 
+  opacity: 0;
+}
+.desktop { display: block; }
+.tablet, .mobile { display: none !important; }
+.animate {animation: revealTxT 1s forwards;  transform-origin: 50% 0;}
+
+  @media (max-width: 1024px) and (min-width: 480px) { 
+    .desktop, .mobile { display: none !important; } 
+    .tablet { display: block !important; }
+  }
+  
+  @media (max-width: 480px) {
+    .desktop, .tablet { display: none !important; }
+    .mobile { display: block !important; }
+  }
+
+
+  @keyframes revealTxT {
+    0% { transform: translate3d(0px,  2.6041vw, -2.1875vw) rotateX(-80deg); opacity: 0;  }
+    100% {transform: translate3d(0, 0, 0) rotateX(0deg);opacity: 1; }
+  }

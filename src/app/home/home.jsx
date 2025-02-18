@@ -15,15 +15,15 @@ const Overlay = dynamic(() => import("./sections/9-overlay/overlay"));
 const Initializer = dynamic(() => import("@/utils/initializer/initalizer"));
 
 export default function Home() {
-    return <>
-      <Head>
-        <link
-          rel="preload"
-          as="image"
-          href="/home/1-hero/linesGlow.webp"
-          fetchpriority="high"
-        />
-      </Head>
+  return <>
+    <Head>
+      <link
+        rel="preload"
+        as="image"
+        href="/home/1-hero/linesGlow.webp"
+        fetchpriority="high"
+      />
+    </Head>
     <Hero />
     <main className={styles.Home}>
       <div className={styles.wrapper}>
@@ -38,6 +38,5 @@ export default function Home() {
       </div>
     </main>
     <Overlay />
-    <Initializer />
   </>
 }

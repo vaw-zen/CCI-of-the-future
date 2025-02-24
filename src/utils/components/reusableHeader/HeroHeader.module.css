@@ -12,7 +12,7 @@
   .heroContainer { height: 55.99vw } 
   .titleContainer { gap: 3.25vw; } 
   .titleContainer h1 { font-size: 7.81vw; } 
-  .icon { height: 2.5vw; width: 2.5vw }
+  .icon { height: 2.5vw; width: 2.5vw; margin-right: .5vw;  }
   .title { font-size: 2.1vw; }
   .title > span:nth-of-type(1) { margin: 0 1vw; color: var(--t-secondary); }
 

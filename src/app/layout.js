@@ -24,7 +24,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={dmSans.className}>
+    <html lang="fr" className={dmSans.className}>
       <Initializer />
 
       <body>

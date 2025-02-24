@@ -6,6 +6,34 @@
 .title { font-size: 3.33vw }
 .linkContainer { display: flex; align-items: center; flex: 1; padding: 1.5vw }
 .linkWrapper { display: flex; gap: 1.5vw; align-items: center }
-.iconWrapper { width: 5.21vw; height: 5.21vw; border-radius: 50%; border: 1px solid white; display: flex; justify-content: center; align-items: center }
+.iconWrapper { transition: transform .2s, border-color .2s ; width: 5.21vw; height: 5.21vw; border-radius: 50%; border: 2px solid white; display: flex; justify-content: center; align-items: center }
 .icon { width: 50%; height: 50%; color: var(--ac-primary) }
 .linkText { width: 40%; font-size: 0.83vw; line-height: 1.75; text-transform: uppercase }
+.linkWrapper:hover .iconWrapper { transform: rotate(-45deg); border-color: var(--ac-primary); }
+
+
+@media screen and (max-width: 1024px) {
+    .detailsSection { padding: 11.71875vw 3vw; gap: 6vw }
+    .image { width: 42.84vw; height: 30.50vw; }
+    .slug { font-size: 2.08vw; }
+    .title { font-size: 5.86vw; }
+    .linkText { width: 60%; font-size: 2.08vw; line-height: 2; font-weight: bold; }
+    .iconWrapper { width: 13.02vw; height: 13.02vw; }
+    .detailsContent { padding-left: 0; padding-top: 3.91vw; }
+    .linkContainer {padding: 5vw 0 0 3.91vw;}
+    .header { padding: 0 0 3vw 3.91vw; }
+    .linkWrapper {  gap: 4vw; }
+
+}
+
+@media screen and (max-width: 480px) {
+    .detailsSection { gap: 6vw; flex-direction: column; }
+    .image { width: 100%; height: 66.06vw; }
+    .slug { font-size: 3.88vw; font-weight: bold; }
+    .title { font-size: 8.50vw; line-height: 10.92vw;}
+    .linkText { width: 50%; font-size: 3.88vw; line-height: 2; font-weight: bold; }
+    .linkContainer {padding: 10vw 0 0 7.28vw;}
+    .header { padding: 0 0 7.5vw 7.28vw; gap: 2.5vw; height: auto; display: flex; flex-direction: column; }
+    .iconWrapper { width: 24.27vw; height: 24.27vw; }
+    .linkWrapper {  gap: 7.5vw; }
+}

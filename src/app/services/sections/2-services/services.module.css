@@ -2,7 +2,7 @@
 .container { flex: 1; display: flex; flex-direction: column; gap: 4vw; }
 .topContent { display: flex; width: 100%; }
 .headerContainer { width: 22.92vw; }
-.slug { font-size: 0.96vw; font-weight: 500; opacity: 0.9; }
+.slug { font-size: 0.96vw; font-weight: 500; opacity: 0.9; color: var(--ac-primary); }
 .title { font-size: 3.125vw; font-weight: 500; line-height: 1; margin-top: 0.75vw; font-weight: bolder; }
 .descriptionContainer { flex: 1; display: flex; justify-content: space-between; }
 .description { display: flex; flex-direction: column; justify-content: center; color: var(--t-secondary); font-size: 1.0417vw; }
@@ -33,7 +33,7 @@
 
 @media screen and (max-width: 1024px) {
     .imagesContainer { display: none; }
-    .section { padding: 11.71875vw 3vw; }
+    .section { padding: 0 3vw; }
     .slug { font-size: 2.34375vw; }
     .title { font-size: 4.6875vw; margin-top: 1vw; }
     .headerContainer { width: 31.25vw; transform: translateY(2vw); }

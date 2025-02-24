@@ -1,0 +1,9 @@
+{
+    "img": "/home/about.png",
+    "title": "Explorer nos services en detail",
+    "slug": "apercu details",
+    "link": {
+        "text": "Decouvrir plus sur nos services",
+        "url": "/"
+    }
+}

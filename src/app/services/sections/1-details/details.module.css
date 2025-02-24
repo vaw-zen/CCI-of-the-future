@@ -1,4 +1,4 @@
-.detailsSection { padding: 8vw 15.975vw; display: flex; gap: 2.75vw }
+.detailsSection { padding: 8vw 0; display: flex; gap: 2.75vw }
 .image { width: 31.77vw; height: 22.62vw; object-fit: cover }
 .detailsContent { flex: 1; border-left: 1px solid white; display: flex; flex-direction: column }
 .header { border-bottom: 1px solid white; padding: 1.5vw }
@@ -13,7 +13,7 @@
 
 
 @media screen and (max-width: 1024px) {
-    .detailsSection { padding: 11.71875vw 3vw; gap: 6vw }
+    .detailsSection { padding: 11.71875vw 0; gap: 6vw }
     .image { width: 42.84vw; height: 30.50vw; }
     .slug { font-size: 2.08vw; }
     .title { font-size: 5.86vw; }

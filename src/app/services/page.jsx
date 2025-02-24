@@ -2,13 +2,22 @@ import React from 'react'
 import Services from './sections/2-services/services'
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader'
 import Details from './sections/1-details/details'
+import Band from '../home/sections/4-band/band'
+import Testimonials from '../home/sections/8-testimonials/testimonials'
+import GreenBand from '@/utils/components/GreenBand/GreenBand'
+import styles from './page.module.css'
 
 export default function page() {
     return (
-        <main style={{ width: '100%', paddingBottom: '0' }}>
+        <main>
             <HeroHeader title={'Services'} />
-            <Details />
-            <Services />
+            <div className={styles.services}>
+                <Details />
+                <Services />
+                <Band />
+                <Testimonials className={styles.testimonialsWrapper} />
+                <GreenBand className={styles.greenBandWrapper} />
+            </div>
         </main>
     )
 }

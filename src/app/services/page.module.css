@@ -1,0 +1,16 @@
+.services { padding: 0 15.975vw; contain: paint; width: 100%; }
+.greenBandWrapper { margin: 7vw 0 16vw 0 !important;  }
+.testimonialsWrapper { margin-top: 0;  }
+
+
+@media screen and (max-width: 1024px) {
+.services { padding: 0 3vw; }
+.testimonialsWrapper { margin-top: -17.5vw;  }
+.greenBandWrapper { margin: 8vw 0 25vw 0 !important;  }
+
+}
+
+@media screen and (max-width: 1024px) {
+    .greenBandWrapper { margin: 17.5vw 0 45vw 0 !important;  }
+    
+    }

@@ -5,11 +5,11 @@ import { UilArrowRight } from '@/utils/components/icons'
 import ButtonContainer from './csr/buttonContainer'
 import ResponsiveImage from '@/utils/components/Image/Image'
 
-export default function Testimonials() {
+export default function Testimonials({ className }) {
     const slideAncor = Math.floor((content.testimonials.length * 3) / 2)
 
     return (
-        <section className={styles.container}>
+        <section className={`${styles.container} ${className || ''}`}>
             <ResponsiveImage
                 sizes={[22, 55, 86]} skeleton src={content.img} className={styles.mainImage} alt='testimonials' />
             <SliderContainer className={styles.sliderContainer}>

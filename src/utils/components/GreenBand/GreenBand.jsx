@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './GreenBand.module.css'
 
-export default function GreenBand() {
+export default function GreenBand({ className }) {
     const slugs = [
         "20+ ans et plus d'expérience professionnelle",
         "De nombreux clients satisfaits et reconnaissants",
@@ -9,7 +9,7 @@ export default function GreenBand() {
     ]
 
     return (
-        <div className={styles.greenBand}>
+        <div className={`${styles.greenBand} ${className || ''}`}>
             <div className={styles.container}>
                 <div className={styles.animated}>
                     {[...slugs, ...slugs].map((slug, index) => (

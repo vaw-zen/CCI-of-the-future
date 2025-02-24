@@ -36,9 +36,6 @@ const ResponsiveImage = ({
     } else {
         effectiveSize = sizes;
     }
-    if (src.includes('Glow')) {
-        console.log(effectiveSize);
-    }
 
     return (
         <div

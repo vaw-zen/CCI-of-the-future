@@ -13,7 +13,7 @@
 .serviceImage { transition: transform .5s , opacity .5s; width: 100%; height: auto; position: absolute !important; opacity: 0;  height: 100%;}
 .serviceImage:nth-of-type(1) { transform: rotate(15deg) translate(21.5%, 7.9%); opacity: 1; }
 .decorativeElements { width: 9.1146vw; height: 3.6459vw; position: relative; margin-bottom: 7%; }
-.decorativeElement { transition: transform .3s, opacity .3s; transition-delay: .2s; width: 100%; height: 100%; background: blue; position: absolute; left: 0; top: 0; transform: rotate(-26deg) translate(-100%,-100%); opacity: 0; }
+.decorativeElement { transition: transform .3s, opacity .3s; transition-delay: .2s; width: 100%; height: 100%; background: var(--ac-primary); position: absolute; left: 0; top: 0; transform: rotate(-26deg) translate(-100%,-100%); opacity: 0; }
 .decorativeElement:nth-of-type(1) { transform: rotate(-26deg) translate(120px,-100%); opacity: 1; }
 .servicesList { flex: 1; }
 .serviceItem { display: flex; height: 9.45vw; align-items: center; border-bottom: 1px solid var(--ac-primary); color: var(--gray-2); overflow: hidden; }

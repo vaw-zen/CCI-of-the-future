@@ -1,5 +1,5 @@
 import React from 'react'
-import Services from './sections/4-services/services'
+import Services from './sections/2-services/services'
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader'
 
 export default function page() {

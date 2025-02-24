@@ -1,0 +1,11 @@
+.detailsSection { padding: 8vw 15.975vw; display: flex; gap: 2.75vw }
+.image { width: 31.77vw; height: 22.62vw; object-fit: cover }
+.detailsContent { flex: 1; border-left: 1px solid white; display: flex; flex-direction: column }
+.header { border-bottom: 1px solid white; padding: 1.5vw }
+.slug { font-size: 0.83vw; color: var(--ac-primary); text-transform: uppercase; font-weight: normal }
+.title { font-size: 3.33vw }
+.linkContainer { display: flex; align-items: center; flex: 1; padding: 1.5vw }
+.linkWrapper { display: flex; gap: 1.5vw; align-items: center }
+.iconWrapper { width: 5.21vw; height: 5.21vw; border-radius: 50%; border: 1px solid white; display: flex; justify-content: center; align-items: center }
+.icon { width: 50%; height: 50%; color: var(--ac-primary) }
+.linkText { width: 40%; font-size: 0.83vw; line-height: 1.75; text-transform: uppercase }

@@ -42,8 +42,8 @@ function handleAnimations(index) {
 
         if (i === index) {
             if (icon2.style.opacity !== '1') {
-                num.style.color = 'var(--white)'
-                title.style.color = 'var(--white)'
+                num.style.color = 'var(--t-primary)'
+                title.style.color = 'var(--t-primary)'
                 icon1.style.transform = 'translate(75%, -125%)'
                 icon2.style.transform = 'translate(0%, -50%)'
                 icon1.style.opacity = 0
@@ -52,8 +52,8 @@ function handleAnimations(index) {
             }
         } else {
             if (icon2.style.opacity !== '0') {
-                num.style.color = 'var(--gray-2)'
-                title.style.color = 'var(--gray-2)'
+                num.style.color = 'var(--t-secondary)'
+                title.style.color = 'var(--t-secondary)'
                 icon1.style.transform = 'translate(0%, -50%)'
                 icon2.style.transform = 'translate(-50%, 0%)'
                 icon1.style.opacity = 1

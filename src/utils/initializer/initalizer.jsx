@@ -9,8 +9,7 @@ import { headerSI } from "@/layout/header/header.func";
 export default function Initializer() {
     const { setVw, setVh, isDesktop } = dimensionsStore()
     const { resizeEvent, initializeLenis, startLenisRaf, lenisRef, rafIdRef } = useInitializerLogic()
-
-    homeScrollTriggers()
+  
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -40,6 +39,9 @@ export default function Initializer() {
         }
 
     }, [setVw, setVh, isDesktop])
+
+
+    homeScrollTriggers()
 
     return null;
 }

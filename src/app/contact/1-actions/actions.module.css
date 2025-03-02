@@ -1,6 +1,6 @@
 .container { display: flex; flex-direction: column; padding: 0 15.975vw; gap: 30px; padding-top: 110px; padding-bottom: 105px; }
-.header { display: flex; height: 204px; width: 100%; }
-.headerLeft { flex: 1; }
+.header { display: flex; height: 204px; max-width: 100%; }
+.headerLeft { flex: 1;}
 .subtitle { margin-top: 0px; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 16px; line-height: 26px; text-transform: uppercase; }
 .title { margin-top: 0; margin-bottom: 20px; font-size: 64px; line-height: 74px; text-transform: none; }
 .headerRight { flex: 1; display: flex; flex-direction: column; justify-content: center; }
@@ -24,3 +24,13 @@
 .emailInfoBottom { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 20px; font-size: 16px; }
 .emailInfoText { font-weight: 400; color: var(--t-secondary); }
 .emailHours { font-weight: 500; }
+.container, .header, .infoSection, .mapContainer, .infoContainer {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+@media screen and (max-width: 1024px) {
+    .container { padding: 60px 3vw; max-width: 100%;}
+    .header {flex-direction: column;height: auto;}
+    .infoSection{flex-direction: column;min-height:98vw;overflow: hidden;}
+    .infoContainer{display:flex;max-height:  329px;}
+    }

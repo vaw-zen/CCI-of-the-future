@@ -34,6 +34,7 @@
     max-width: 100%;
     overflow-x: hidden;
 }
+
 @media screen and (max-width: 1024px) {
     .container { padding: 60px 2vw; max-width: 100%;}
     .header {flex-direction: column;height: auto;}
@@ -51,9 +52,9 @@
         .infoSection{min-height:382px;height: 100%;}
         .infoContainer{flex-direction: column;gap: 30px;padding:3vw 3vw}
         .title{font-size: 35px;font-weight: 700;height:90px;line-height: 45px;}
-        .phoneSection{gap:20px;border-right:none}
+        .phoneSection{gap:20px;border-right:none ;height:345px}
         .phoneInfoTop{gap:20px;}
         .emailInfoTop{gap:20px}
-        .emailSection{gap:20px}
+        .emailSection{gap:20px;height:345px}
         .socialList{gap:15px}
         }

@@ -1,28 +1,20 @@
 import React from "react";
 import styles from "./actions.module.css";
 import { LineMdPhoneTwotone, SiMailDuotone } from "@/utils/components/icons";
+import content from "./content.json"; // Import JSON file
 
 export default function Actions() {
-  const socials = {
-    facebook: "https://www.facebook.com/your-profile",
-    twitter: "https://twitter.com/your-profile",
-    linkedin: "https://www.linkedin.com/in/your-profile",
-    instagram: "https://www.instagram.com/your-profile",
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <h3 className={styles.subtitle}>CONTACT US</h3>
-          <h2 className={styles.title}>We'd love to hear from you.</h2>
+          <h3 className={styles.subtitle}>{content.contactUs}</h3>
+          <h2 className={styles.title}>{content.contactTitle}</h2>
         </div>
         <div className={styles.headerRight}>
-          <h3 className={styles.headerMessage}>
-            Get in touch and let's create together
-          </h3>
+          <h3 className={styles.headerMessage}>{content.headerMessage}</h3>
           <ul className={styles.socialList}>
-            {Object.entries(socials).map(([key, url]) => (
+            {Object.entries(content.socials).map(([key, url]) => (
               <li className={styles.socialItem} key={key}>
                 <a href={url} target="_blank" rel="noopener noreferrer">
                   {key.charAt(0).toUpperCase() + key.slice(1)}
@@ -39,45 +31,34 @@ export default function Actions() {
             width="100%"
             height="100%"
             loading="lazy"
-            
           ></iframe>
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.phoneSection}>
             <div className={styles.phoneInfoTop}>
               <LineMdPhoneTwotone className={styles.icon} />
-              <h3 className={styles.label}>Call now</h3>
-              <h4 className={styles.phoneNumber}>+216 98 55 77 66</h4>
+              <h3 className={styles.label}>{content.callNow}</h3>
+              <h4 className={styles.phoneNumber}>{content.phoneNumber}</h4>
             </div>
             <div className={styles.phoneInfoBottom}>
-              <p className={styles.phoneInfoText}>
-                Team of professional and skilled experts in all domestic
-                spheres.
-              </p>
-              <strong className={styles.phoneHours}>
-                Working hours: 9am to 6pm
-              </strong>
+              <p className={styles.phoneInfoText}>{content.phoneInfoText}</p>
+              <strong className={styles.phoneHours}>{content.phoneHours}</strong>
             </div>
           </div>
           <div className={styles.emailSection}>
             <div className={styles.emailInfoTop}>
               <SiMailDuotone className={styles.icon} />
-              <h3 className={styles.label}>E-mail</h3>
-              <h4 className={styles.emailAddress}>
-                contact@cciservices.online
-              </h4>
+              <h3 className={styles.label}>{content.emailLabel}</h3>
+              <h4 className={styles.emailAddress}>{content.emailAddress}</h4>
             </div>
             <div className={styles.emailInfoBottom}>
-              <p className={styles.emailInfoText}>
-                Our online scheduling and payment system is safe.
-              </p>
-              <strong className={styles.emailHours}>
-                Working hours: 8am to 5pm
-              </strong>
+              <p className={styles.emailInfoText}>{content.emailInfoText}</p>
+              <strong className={styles.emailHours}>{content.emailHours}</strong>
             </div>
           </div>
         </div>
       </div>
     </div>
+    
   );
 }

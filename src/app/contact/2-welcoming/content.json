@@ -1,0 +1,19 @@
+{
+    "welcomeCards": [
+      {
+        "imageSrc": "/contact/welcome1.jpg",
+        "title": "Want to join our dream team?",
+        "name": "Jack Carter",
+        "position": "Clients of boldmen",
+        "email": "contact@cciservices.online"
+      },
+      {
+        "imageSrc": "/contact/welcome2.jpg",
+        "title": "Want to join our dream team?",
+        "name": "Jack Carter",
+        "position": "Clients of boldmen",
+        "email": "contact@cciservices.online"
+      }
+    ]
+  }
+  

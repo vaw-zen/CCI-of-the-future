@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./contact.module.css";
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
+import { LineMdPhoneTwotone, SiMailDuotone } from "@/utils/components/icons";
 
 export default function ContactPage() {
   const socials = {
@@ -49,7 +50,14 @@ export default function ContactPage() {
               We'd love to hear from you.
             </h2>
           </div>
-          <div style={{ flex: 1,display:"flex",flexDirection:"column",justifyContent:"center" }}>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
             <h3
               style={{
                 marginTop: 0,
@@ -104,7 +112,7 @@ export default function ContactPage() {
             style={{
               display: "flex",
               flex: 1,
-              background: "green",
+
               width: "100%",
               padding: "1vw 0",
             }}
@@ -114,22 +122,40 @@ export default function ContactPage() {
                 display: "flex",
                 flexDirection: "column",
                 flex: "1",
-                background: "black",
+
+                padding: "0 1vw",
+
+                borderRight: "1px solid grey",
               }}
             >
-              <div style={{ flex: "1", background: "white" }}></div>
-              <div style={{ flex: 1, background: "blue" }}></div>
+              <div style={{ gap:"10px",flex: "1", borderBottom: "1px solid grey",display:"flex",flexDirection:"column", alignItems:"center",justifyContent:"center" }}>
+                <LineMdPhoneTwotone style={{color:"var(--ac-primary)", width:"40px",height:"40px"}}/>
+                <h3>Call now</h3>
+             <h4 style={{fontSize:"16px",fontWeight:400}}>+216 98 55 77 66</h4>           
+                </div>
+              <div style={{ flex: 1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",gap:"20px",fontSize:"16px" }}>
+                <p style={{fontWeight:"400",color:"var( --t-secondary)"}}>Team of professional and skilled experts in all domestic spheres.</p>
+                <strong style={{fontWeight:"500"}}>Working hours: 9am to 6pm</strong>
+              </div>
             </div>
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
                 flex: "1",
-                background: "yellow",
+
+                padding: "0 1vw",
               }}
             >
-              <div style={{ flex: 1, background: "red" }}></div>
-              <div style={{ flex: 1, background: "#cafb42" }}></div>
+               <div style={{ gap:"10px",flex: "1", borderBottom: "1px solid grey",display:"flex",flexDirection:"column", alignItems:"center",justifyContent:"center" }}>
+               <SiMailDuotone style={{color:"var(--ac-primary)", width:"40px",height:"40px"}}/>
+                <h3>E-mail</h3>
+             <h4 style={{fontSize:"16px",fontWeight:400}}>contact@cciservices.online</h4>           
+                </div>
+              <div style={{ flex: 1 ,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",gap:"20px",fontSize:"16px"}}>
+                <p style={{fontWeight:"400",color:"var( --t-secondary)"}}>Our online scheduling and payment system is safe.</p>
+                <strong style={{fontWeight:"500"}}>Working hours: 8am to 5pm</strong>
+              </div>
             </div>
           </div>
         </div>

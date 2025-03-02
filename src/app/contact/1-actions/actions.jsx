@@ -37,7 +37,10 @@ export default function Actions() {
                         width="100%"
                         height="100%"
                         loading="lazy"
+
                     ></iframe>
+
+            
                 </div>
                 <div className={styles.infoContainer}>
                     <div className={styles.phoneSection}>

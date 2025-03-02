@@ -1,0 +1,24 @@
+.welcome { display: flex;flex-direction: row; min-height: 274px; width: 100%;  padding: 0 15.975vw; gap: 30px; padding-bottom: 105px;height:100%;line-height: 26px;}
+.welcomeleft{display:flex;flex: 1;min-height: 174px;height:100%}
+.welcomeright{display:flex;flex:1;min-height: 174px;height:100%}
+.image{border-radius: 50%;vertical-align: middle;width:174px;height:174px}
+.welcomeinfotext{height:138px;padding:30 0 0 30px;justify-content: center;align-items:flex-start;display:flex;flex-direction: column;gap:15px}
+.welcomeinfotext h3{font-size: 28px;}
+.welcomeinfotext h4{font-size: 16px; color: rgba(255, 255, 255, 0.7)}
+.nameandposition{display: flex;gap:5px}
+.nameandposition h5{font-size: 22px;font-weight: 700;}
+.nameandposition h6{font-size: 16px;font-weight: 400;color: hsla(0, 0%, 100%, 0.7);padding:0;margin:0;}
+.slash{font-size: 22px;font-weight: 700;padding:0;margin:0}
+
+
+
+
+@media screen and (max-width: 1024px) {
+
+    .welcome{flex-direction: column;padding:0 2vw 50 2vw; justify-content: center;align-items: baseline;}
+}
+@media screen and (max-width: 500px) {
+
+    .welcomeleft{flex-direction: column; }
+    .welcomeright{flex-direction: column; }
+}

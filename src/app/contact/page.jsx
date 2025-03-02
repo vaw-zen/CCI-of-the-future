@@ -1,7 +1,7 @@
 import React from "react";
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import Actions from "./1-actions/actions";
-
+import Welcome from "./2-welcoming/welcome"
 export default function ContactPage() {
   const socials = {
     facebook: "https://www.facebook.com/your-profile",
@@ -14,6 +14,7 @@ export default function ContactPage() {
     <>
       <HeroHeader title="Contact Us" />
       <Actions />
+      <Welcome/>
     </>
   );
 }

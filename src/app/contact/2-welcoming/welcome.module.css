@@ -10,57 +10,6 @@
     line-height: 26px;
 }
 
-.welcomeCard {
-    display: flex;
-    flex: 1;
-    min-height: 174px;
-    height: 100%;
-    width:100%;
-}
-
-.image {
-    border-radius: 50%;
-    vertical-align: middle;
-    width: 174px;
-    height: 174px
-}
-
-.welcomeinfotext {
-    height: 138px;
-    padding: 30 0 0 30px;
-    justify-content: center;
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    gap: 15px
-}
-
-.welcomeinfotext h3 {
-    font-size: 28px;
-}
-
-.welcomeinfotext h4 {
-    font-size: 16px;
-    color: hsla(0, 0%, 100%, 0.7);
-}
-
-.nameandposition {
-    display: flex;
-    gap: 5px
-}
-
-.nameandposition h5 {
-    font-size: 22px;
-    font-weight: 700;
-}
-
-.nameandposition h6 {
-    font-size: 16px;
-    font-weight: 400;
-    color: hsla(0, 0%, 100%, 0.7);
-    padding: 0;
-    margin: 0;
-}
 
 .slash {
     font-size: 22px;

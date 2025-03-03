@@ -10,11 +10,11 @@
 .infoSection { display: flex; height: 382px; width: 100%; }
 .mapContainer { flex: 1; overflow: hidden;min-height: 382px;}
 .infoContainer { display: flex; flex: 1; width: 100%; padding: 1vw 0; background: var(--bg-elevated);height: 100%; }
-.phoneSection { display: flex; flex-direction: column; flex: 1; padding: 0 1vw; border-right: 1px solid grey; }
+.phoneSection { display: flex; flex-direction: column; flex: 1; padding: 0 1vw; border-right: 1px solid rgba(255, 255, 255, 0.09); }
 .phoneSection:hover{
     .phoneNumber{color:var(--ac-primary)}    
 }
-.phoneInfoTop { gap: 10px; flex: 1; border-bottom: 1px solid grey; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.phoneInfoTop { gap: 10px; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.09); display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .icon { color: var(--ac-primary); width: 40px; height: 40px; }
 .label { font-size: 26px;}
 .phoneNumber { font-size: 16px; font-weight: 400; }
@@ -25,7 +25,7 @@
 .emailSection:hover{
     .emailAddress{color:var(--ac-primary)}
 }
-.emailInfoTop { gap: 10px; flex: 1; border-bottom: 1px solid grey; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.emailInfoTop { gap: 10px; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.09); display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .emailAddress { font-size: 16px; font-weight: 400; }
 .emailInfoBottom { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 20px; font-size: 16px; }
 .emailInfoText { font-weight: 400; color: var(--t-secondary); }

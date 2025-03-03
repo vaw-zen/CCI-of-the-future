@@ -1,0 +1,70 @@
+.formContainer {  
+    min-height: 274px;
+    height: 100%;
+    width: 100%;
+    padding: 0 15.975vw;
+    /* padding-bottom: 105px; */
+    height: 100%;
+    line-height: 26px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 20px;
+    grid-template-areas:
+      "name email"
+      "phone project"
+      "message message";
+}
+
+.formGroup {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    outline: none;
+    width: 100%;
+    background: transparent !important;
+   
+    padding: 9px 15px 9px 0px
+}
+.formGroup:focus{
+    border-bottom: 1px solid #cafb42
+
+}
+.textAreaContainer {
+    grid-column: span 2; /* Makes the textarea span across both columns */
+    height: 100px;
+}
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    grid-column: span 2; /* Ensures it spans the full width */
+  }
+  
+  .checkboxContainer input {
+    width: 14px;
+    height: 14px;
+    accent-color:  rgba(103, 101, 101, 0.169); /* Adjust color as needed */
+  }
+
+  .submitButton {
+    background-color: #fff;
+    color: #000;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 15px;
+    grid-column: span 2; /* Ensures it aligns properly */
+    text-align: center;
+    border-radius: 32px;
+  }
+  
+  .submitButton:hover {
+    background-color: #cafb42;
+  }
+  .greenBandWrapper { margin: 7vw 0 4vw 0 !important;  }

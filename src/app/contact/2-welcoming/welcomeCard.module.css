@@ -27,7 +27,7 @@
     font-size: 28px;
     font-weight: 700;
     white-space: nowrap;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .welcomeinfotext h4 {
@@ -51,4 +51,22 @@
     color: hsla(0, 0%, 100%, 0.7);
     padding: 0;
     margin: 0;
+}
+@media screen and (max-width: 480px) {
+    .welcomeCard{
+        flex-direction: column;
+    }
+    .welcomeinfotext h3 {
+        font-size: 26px;
+        
+        font-weight: 600;
+        white-space: wrap;
+    }
+    .welcomeinfotext{
+        padding: 10 0vw;
+        line-height: 36px;
+    }
+    /* .image{
+        padding-left: 4vw;
+    } */
 }

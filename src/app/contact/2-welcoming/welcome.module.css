@@ -1,10 +1,9 @@
 .welcome {
     display: flex;
-    flex-direction: row;
     min-height: 274px;
     width: 100%;
     padding: 0 15.975vw;
-    gap: 30px;
+    gap: 20px;
     padding-bottom: 105px;
     height: 100%;
     line-height: 26px;
@@ -25,18 +24,9 @@
 
     .welcome {
         flex-direction: column;
-        padding: 0 2vw 50 2vw;
+        padding: 0 4vw 50 4vw;
         justify-content: center;
         align-items: baseline;
     }
 }
 
-@media screen and (max-width: 500px) {
-
-    .welcomeCard {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-}

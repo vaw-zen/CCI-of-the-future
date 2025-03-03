@@ -24,7 +24,7 @@
 
     .welcome {
         flex-direction: column;
-        padding: 0 4vw 50 4vw;
+        padding: 0 3vw 50 3vw;
         justify-content: center;
         align-items: baseline;
     }

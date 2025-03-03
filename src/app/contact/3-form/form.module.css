@@ -72,11 +72,11 @@
 
 
   @media screen and (max-width: 1024px) {
-    .formContainer {padding: 30px 2vw !important; width: 100%;}
-    .greenBandWrapper {margin: 10vw 0 4.6vw 0 !important;   overflow: hidden; }
+    .formContainer {padding: 10px 2vw !important; width: 100%;}
+    .greenBandWrapper {margin: 10vw 0 7vw 0 !important;   overflow: hidden; }
 }
 
-@media screen and (max-width: 1024px) {
-    .formContainer {padding: 30px 2vw !important; width: 100%;}
-    .greenBandWrapper {margin: 10vw 0 4.6vw 0 !important;   overflow: hidden; }
+@media screen and (max-width: 500px) {
+    .formContainer {padding: 0px 3vw !important; width: 100%;}
+    .greenBandWrapper {margin: 10vw 0 15vw 0 !important;   overflow: hidden; }
 }

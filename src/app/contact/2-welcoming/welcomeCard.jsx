@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./welcome.module.css";
+import styles from "./welcomeCard.module.css";
 
 const WelcomeCard = ({ imageSrc, title, name, position, email }) => {
   return (

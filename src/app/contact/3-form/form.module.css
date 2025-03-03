@@ -37,11 +37,13 @@
 }
 .checkboxContainer {
     display: flex;
-    align-items: center;
+    align-items: center ;
     gap: 8px;
     font-size: 14px;
+    font-weight: 400;
     color: rgba(255, 255, 255, 0.7);
     grid-column: span 2; /* Ensures it spans the full width */
+    
   }
   
   .checkboxContainer input {
@@ -73,10 +75,34 @@
 
   @media screen and (max-width: 1024px) {
     .formContainer {padding: 10px 2vw !important; width: 100%;}
-    .greenBandWrapper {margin: 10vw 0 7vw 0 !important;   overflow: hidden; }
+    .greenBandWrapper {margin: 10vw 0 8vw 0 !important;   overflow: hidden; }
 }
 
-@media screen and (max-width: 500px) {
-    .formContainer {padding: 0px 3vw !important; width: 100%;}
-    .greenBandWrapper {margin: 10vw 0 15vw 0 !important;   overflow: hidden; }
-}
+
+    @media screen and (max-width: 700px) {
+        .formContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px 3vw !important;
+            width: 100%;
+        }
+    
+        .checkboxContainer {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            width: 100%; /* Ensure it spans full width */
+            justify-content: flex-start;
+        }
+    
+        .checkboxContainer input {
+            width: 16px;
+            height: 16px;
+            margin: 0; /* Removes any unwanted spacing */
+        }
+        .greenBandWrapper {margin: 10vw 0 15vw 0 !important;   overflow: hidden; }
+    }

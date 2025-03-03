@@ -2,7 +2,7 @@
     "socialMedias": [
         {
             "name": "facebook",
-            "link": "/"
+            "link": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/"
         },
         {
             "name": "tiktok",
@@ -10,11 +10,11 @@
         },
         {
             "name": "linkedin",
-            "link": "/"
+            "link": "https://www.linkedin.com/company/chaabanes-cleaning-int"
         },
         {
             "name": "instagram",
-            "link": "/"
+            "link": "https://www.instagram.com/cci.services/"
         }
     ],
     "pages": [
@@ -28,11 +28,11 @@
         },
         {
             "name": "services",
-            "link": "/"
+            "link": "/seervices"
         },
         {
             "name": "contact",
-            "link": "/"
+            "link": "/contact"
         }
     ]
 }

@@ -14,6 +14,7 @@
       "name email"
       "phone project"
       "message message";
+      contain: paint;
 }
 
 .formGroup {
@@ -67,4 +68,4 @@
   .submitButton:hover {
     background-color: #cafb42;
   }
-  .greenBandWrapper { margin: 7vw 0 4vw 0 !important;  }
+  .greenBandWrapper { margin: 7vw 0 4vw 0 !important;   overflow: hidden; }

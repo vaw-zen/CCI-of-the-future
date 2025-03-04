@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./hero.module.css";
 import {
-
+  LineMdTiktok,
   LineMdFacebook,
   LineMdInstagram,
   LineMdLinkedin,
@@ -80,9 +80,9 @@ export default function Hero() {
               <a href="/">
                 <LineMdLinkedin className={styles.icon} />
               </a>
-              {/* <a href="/">
+              <a href="/">
                 <LineMdTiktok className={styles.icon} />
-              </a> */}
+              </a>
             </div>
           </div>
         </div>

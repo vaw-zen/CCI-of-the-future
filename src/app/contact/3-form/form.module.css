@@ -81,7 +81,7 @@
 
     @media screen and (max-width: 700px) {
         
-    
+      .formContainer {padding: 10px 4vw !important; width: 100%;}
         .checkboxContainer {
             display: flex;
             align-items: center;

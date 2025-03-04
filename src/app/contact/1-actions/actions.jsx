@@ -31,6 +31,7 @@ export default function Actions() {
             width="100%"
             height="100%"
             loading="lazy"
+            allowFullScreen=""
           ></iframe>
         </div>
         <div className={styles.infoContainer}>

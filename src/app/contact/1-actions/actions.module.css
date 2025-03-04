@@ -8,7 +8,7 @@
 .socialList { display: flex; flex-direction: row; gap: 20px; max-width: 650px; list-style: none; }
 .socialItem { font-size: 18px; line-height: 28px; text-align: left; font-weight: 700; }
 .infoSection { display: flex; height: 382px; width: 100%; }
-.mapContainer { flex: 1; overflow: hidden;min-height: 382px;}
+.mapContainer { flex: 1;display:flex; overflow: hidden; height: 100%;}
 .infoContainer { display: flex; flex: 1; width: 100%; padding: 1vw 0; background: var(--bg-elevated);height: 100%; }
 .phoneSection { display: flex; flex-direction: column; flex: 1; padding: 0 1vw; border-right: 1px solid rgba(255, 255, 255, 0.09); }
 .phoneSection:hover{
@@ -40,20 +40,19 @@
     .header {flex-direction: column;height: auto;}
     .infoSection{flex-direction: column;min-height:98vw;z-index: 0;}
     .infoContainer{display:flex;min-height:  329px;z-index: 0;}
-    .mapContainer{
-        min-height:50vw ;
-    }
+   
     .title{font-size: 45px;font-weight: 700;height: 55px;}
     }
     @media screen and (max-width: 500px) {
-     
-        .container{padding: 60px vw;}
-        .infoSection{min-height:382px;height: 100%;}
-        .infoContainer{flex-direction: column;gap: 30px;padding:3vw 3vw}
+        
+        .container{padding: 60px 4vw;}
+        .infoSection{height: max-content;}
+        .infoContainer{flex-direction: column;gap: 50px;padding:10vw 3vw}
         .title{font-size: 35px;font-weight: 700;height:90px;line-height: 45px;}
         .phoneSection{gap:20px;border-right:none ;height:345px}
-        .phoneInfoTop{gap:20px;}
-        .emailInfoTop{gap:20px}
+        .phoneInfoTop{gap:20px;padding-bottom: 20px;}
+        .emailInfoTop{gap:20px;padding-bottom: 20px;}
         .emailSection{gap:20px;height:345px}
         .socialList{gap:15px}
+      
         }

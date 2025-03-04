@@ -44,7 +44,7 @@
    
     .title{font-size: 45px;font-weight: 700;height: 55px;}
     }
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 700px) {
         
         .container{padding: 60px 4vw;}
         .infoSection{height: max-content;}
@@ -61,14 +61,10 @@
              
         }
         .socialItem {
-            flex: 1 1 calc(33.333% - 15px); /* Ensures 3 items per row */
-            text-align: center;
+            flex: 1 1 calc(33.333%); /* Ensures 3 items per row */
+            text-align:start;
             max-width: calc(33.333% - 15px); /* Prevents items from stretching too much */
         }
-        
-        .socialItem:nth-child(4) {
-            flex: 1 1 100%; /* Makes the last item take the full row */
-            text-align: center;
-        }
+   
         
         }

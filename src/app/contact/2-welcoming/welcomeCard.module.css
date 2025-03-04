@@ -64,10 +64,11 @@
 @media screen and (max-width: 480px) {
     .welcomeCard{
         flex-direction: column;
+       
     }
     .welcomeinfotext h3 {
         font-size: 26px;
-        
+        line-height: 36px;
         font-weight: 600;
         white-space: wrap;
     }

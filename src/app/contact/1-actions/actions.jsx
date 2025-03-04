@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./actions.module.css";
 import { LineMdPhoneTwotone, SiMailDuotone } from "@/utils/components/icons";
 import content from "./content.json"; // Import JSON file
-
+ 
 export default function Actions() {
   return (
     <div className={styles.container}>

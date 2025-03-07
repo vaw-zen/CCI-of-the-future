@@ -1,0 +1,160 @@
+.container {
+    color: rgba(255, 255, 255, 0.7);
+    column-gap: 0px;
+    display: grid;
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.833vw; /* 16px */
+    font-weight: 400;
+    grid-auto-columns: 1fr;
+    grid-template-columns: 33.85vw 33.85vw; /* 650px */
+    grid-template-rows: 31.4vw; /* 603px */
+    max-height: 31.4vw; /* 603px */
+    height: 100%;
+    line-height: 26px; /* 26px */
+    overflow-wrap: break-word;
+    row-gap: 0px;    
+    padding: 0 15.975vw;
+    min-width: 67.7vw; /* 1300px */
+    width: 100%;
+    contain:paint
+}
+
+.imageSection {
+    background-image: url("https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63cf64190642931c666c152e_single-img-04.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.833vw; /* 16px */
+    font-weight: 400;
+    font-family: "DM Sans", sans-serif;
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+.textSection {
+    display: block;
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.833vw; /* 16px */
+    font-weight: 400;
+    grid-column: span 1;
+    grid-row: span 1;
+    height: 31.4vw; /* 603px */
+    line-height: 1.35vw; /* 26px */
+    margin-left: -7.81vw; /* -150px */
+    overflow-wrap: break-word;
+    padding: 2.6vw 6.25vw 2.86vw 0; /* 50px 120px 55px 0 */
+    min-width: 41.67vw; /* 800px */
+    width: 100%;
+}
+
+.textSection h3 {
+    margin: 0 0 0.52vw; /* 10px */
+    font-family: 'DM Sans', sans-serif;
+    color: #cafb42;
+    font-size: 0.833vw; /* 16px */
+    line-height: 1.35vw; /* 26px */
+    text-transform: uppercase;
+}
+
+.textSection h2 {
+    font-size: 3.33vw; /* 64px */
+    line-height: 3.85vw; /* 74px */
+    text-transform: none;
+    margin: 0 0 2.08vw; /* 40px */
+    font-family: "DM Sans", sans-serif;
+    width: 100%;
+    color: #fff;
+}
+
+.textSection p {
+    margin: 0 0 0.52vw; /* 10px */
+    font-family: 'DM Sans', sans-serif;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.833vw; /* 16px */
+}
+
+.line {
+    border-top: 0.052vw solid rgb(255, 255, 255); /* 1px */
+    color: rgba(255, 255, 255, 0.7);
+    display: block;
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.833vw; /* 16px */
+    font-weight: 400;
+    height: 2.66vw; /* 51px */
+    line-height: 1.35vw; /* 26px */
+    margin-top: 2.6vw; /* 50px */
+    overflow-wrap: break-word;
+    padding-bottom: 2.6vw; /* 50px */
+    position: relative;
+    min-width: 35.42vw; /* 680px */
+    width: 100%;
+}
+
+.button {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 5.21vw; /* 100px */
+    height: 5.21vw; /* 100px */
+    border: 0.104vw solid rgb(255, 255, 255); /* 2px */
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.833vw; /* 16px */
+    font-weight: 400;
+    line-height: 1.35vw; /* 26px */
+    overflow-wrap: break-word;
+    margin-top: 1.82vw; /* 35px */
+}
+
+.arrow {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 2.5vw; /* 48px */
+    height: 5.21vw; /* 100px */
+    background-color: transparent;
+    color: rgb(202, 251, 66);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    transform: rotate(-45deg);
+    transform-style: preserve-3d;
+    text-decoration: none;
+    border: 0.104vw solid rgb(202, 251, 66); /* 2px */
+    transition: all 0.3s ease;
+}
+ 
+@media screen and (max-width: 1024px) {
+    .container { padding: 0 2vw;
+        grid-auto-columns: 1fr;
+        grid-template-columns: 50vw 72.477vw; /* 650px */
+        grid-template-rows: 603px; /* 603px */
+        min-height: 591px;
+        height: 100%;
+    }
+    .imageSection{
+        min-height: 591px;
+    }
+    .textSection{
+        min-height: 591px !important;
+        height: 100%;
+        overflow-wrap: break-word;
+        margin-left: -100px;
+        justify-content: center;
+       padding:50px 100px 55px 0;
+       gap:30px
+    }
+    .textSection h3{font-size: 16px;line-height: 26px;font-weight: 700;}
+    .textSection h2 {font-size: 45px;line-height: 55px;}
+    .textSection p{font-size: 16px;line-height: 26px;font-weight: 400;}
+    .button{height: 100px;width:100px;}
+    .arrow{width:48px;height:100px} 
+    
+}

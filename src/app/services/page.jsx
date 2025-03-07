@@ -6,6 +6,7 @@ import Band from '../home/sections/4-band/band'
 import Testimonials from '../home/sections/8-testimonials/testimonials'
 import GreenBand from '@/utils/components/GreenBand/GreenBand'
 import styles from './page.module.css'
+import FAQ from './sections/3-FAQ/FAQ'
 
 export default function page() {
     return (
@@ -14,6 +15,7 @@ export default function page() {
             <div className={styles.services}>
                 <Details />
                 <Services />
+                <FAQ />
                 <Band />
                 <Testimonials className={styles.testimonialsWrapper} />
                 <GreenBand className={styles.greenBandWrapper} />

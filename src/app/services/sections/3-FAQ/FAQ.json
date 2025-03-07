@@ -1,0 +1,19 @@
+{
+    "slug": "who we are",
+    "title": "We provide best solutions",
+    "img": "/home/about.png",
+    "QA": [
+        {
+            "Q": "Started handyman services in 2015",
+            "A": "We work to help people feel comfortable in their homes and provide the best, fastest assistance at a fair price, reliable and professional Service with defective garbage disposal Outlets, switches, and other components"
+        },
+        {
+            "Q": "We are passionate",
+            "A": "We work to help people feel comfortable in their homes and provide the best, fastest assistance at a fair price, reliable and professional Service with defective garbage disposal Outlets, switches, and other components"
+        },
+        {
+            "Q": "Call us today we answer our phones 24/7",
+            "A": "We work to help people feel comfortable in their homes and provide the best, fastest assistance at a fair price, reliable and professional Service with defective garbage disposal Outlets, switches, and other components"
+        }
+    ]
+}

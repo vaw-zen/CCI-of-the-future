@@ -1,26 +1,41 @@
-.welcome {
-    display: flex;
-    min-height: 274px;
-    width: 100%;
-    padding: 0 15.975vw;
-    /* gap: 20px; */
-    padding-bottom: 105px;
-    height: 100%;
-    line-height: 26px;
-}
-
-
-
-
+.welcome { display: flex; min-height: 17.84vw; width: 100%; padding: 0 15.975vw; padding-bottom: 6.84vw; height: 100%; line-height: 1.69vw; }
+.welcomeCard { display: flex; min-height: 11.33vw; height: 100%; width: 100%; }
+.image { border-radius: 50%; width: 11.33vw; height: 11.33vw; }
+.welcomeinfotext { padding: 1.30vw 0 0 1.95vw; justify-content: center; align-items: flex-start; display: flex; flex-direction: column; gap: 0.65vw; width: 100%; height: 100%; }
+.welcomeinfotext h3 { font-size: 1.69vw; font-weight: 700; padding: 1.30vw 0 0.65vw; }
+.welcomeinfotext h4 { font-size: 1.04vw; font-weight: 400; color: hsla(0, 0%, 100%, 0.7); }
+.nameandposition { display: flex; gap: 0.20vw; padding: 0 0 0.78vw; }
+.slash { font-size: 1.43vw; font-weight: 700; padding: 0; margin: 0; }
+.nameandposition h5 { font-size: 1.43vw; font-weight: 700; }
+.nameandposition h6 { font-size: 1.04vw; font-weight: 400; color: hsla(0, 0%, 100%, 0.7); padding: 0; margin: 0; }
 
 
 @media screen and (max-width: 1024px) {
-
-    .welcome {
-        flex-direction: column;
-        padding: 0 4vw 50 4vw;
-        justify-content: center;
-        align-items: baseline;
-    }
+    .welcomeCard { min-height: 22.66vw; }
+    .image { width: 22.66vw; height: 22.66vw; }
+    .welcomeinfotext { padding: 2.60vw 0 0 3.91vw; gap: 1.30vw; }
+    .welcomeinfotext h3 { font-size: 3.39vw; padding: 2.60vw 0 1.30vw; }
+    .welcomeinfotext h4 { font-size: 2.08vw; }
+    .nameandposition { gap: 0.39vw; padding: 0 0 1.56vw; }
+    .slash { font-size: 2.86vw; }
+    .nameandposition h5 { font-size: 2.86vw; }
+    .nameandposition h6 { font-size: 2.08vw; }
+    .welcome { flex-direction: column; padding: 0 4vw 50 4vw; justify-content: center; align-items: baseline; gap: 3.5vw; }
 }
 
+
+@media screen and (max-width: 480px) {
+    .welcomeCard { min-height: 42.23vw; }
+    .image { width: 42.23vw; height: 42.23vw; }
+    .welcomeinfotext { padding: 4.85vw 0 0 7.28vw; gap: 2.43vw; }
+    .welcomeinfotext h3 { font-size: 6.31vw; padding: 4.85vw 0 2.43vw; }
+    .welcomeinfotext h4 { font-size: 3.88vw; }
+    .nameandposition { gap: 0.73vw; padding: 0 0 2.91vw; }
+    .slash { font-size: 5.34vw; }
+    .nameandposition h5 { font-size: 5.34vw; }
+    .nameandposition h6 { font-size: 3.88vw; }
+
+    .welcomeCard { flex-direction: column; }
+    .welcomeinfotext h3 { font-size: 6.31vw; line-height: 8.74vw; font-weight: 600; white-space: wrap; }
+    .welcomeinfotext { padding: 2.43vw 0vw; line-height: 8.74vw; }
+}

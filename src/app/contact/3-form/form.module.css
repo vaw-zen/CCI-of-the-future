@@ -1,103 +1,37 @@
-.formContainer {  
-    min-height: 274px;
-    height: 100%;
-    width: 100%;
-    padding: 0 15.975vw;
-    height: 100%;
-    line-height: 26px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 20px;
-    grid-template-areas:
-      "name email"
-      "phone project"
-      "message message";
-      contain: paint;
+.formContainer { min-height: 17.84vw; height: 100%; width: 100%; padding: 0 15.975vw; line-height: 1.69vw; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; gap: 1.30vw; grid-template-areas: "name email" "phone project" "message message"; contain: paint; }
+.formGroup { color: rgba(255, 255, 255, 0.7); font-size: 0.91vw; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.09); outline: none; width: 100%; background: transparent !important; padding: 0.59vw 0.98vw 0.59vw 0; }
+.formGroup::placeholder { color: rgba(255, 255, 255, 0.3); font-size: 0.78vw; }
+.formGroup:focus { border-bottom: 1px solid #cafb42; }
+.textAreaContainer { grid-column: span 2; height: 6.51vw; }
+.checkboxContainer { display: flex; align-items: center; gap: 0.52vw; font-size: 0.91vw; font-weight: 400; color: rgba(255, 255, 255, 0.7); grid-column: span 2; }
+.checkboxContainer input { width: 0.91vw; height: 0.91vw; accent-color: rgba(103, 101, 101, 0.169); }
+.submitButton { background-color: #fff; color: #000; border: none; padding: 0.98vw 1.95vw; font-size: 1.04vw; font-weight: 700; cursor: pointer; margin-top: 0.98vw; grid-column: span 2; text-align: center; border-radius: 2.08vw; }
+.submitButton:hover { background-color: #cafb42; }
+.greenBandWrapper { margin: 7vw 0 3.8vw 0 !important; 
 }
 
-.formGroup {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
-    outline: none;
-    width: 100%;
-    background: transparent !important;
-   
-    padding: 9px 15px 9px 0px
-}
-.formGroup::placeholder{color: rgba(255, 255, 255, 0.3); font-size: 12px;}
-.formGroup:focus{
-    border-bottom: 1px solid #cafb42
-
-}
-.textAreaContainer {
-    grid-column: span 2; /* Makes the textarea span across both columns */
-    height: 100px;
-}
-.checkboxContainer {
-    display: flex;
-    align-items: center ;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.7);
-    grid-column: span 2; /* Ensures it spans the full width */
-    
-  }
-  
-  .checkboxContainer input {
-    width: 14px;
-    height: 14px;
-    accent-color:  rgba(103, 101, 101, 0.169); /* Adjust color as needed */
-  }
-
-  .submitButton {
-    background-color: #fff;
-    color: #000;
-    border: none;
-    padding: 15px 30px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 15px;
-    grid-column: span 2; /* Ensures it aligns properly */
-    text-align: center;
-    border-radius: 32px;
-  }
-  
-  .submitButton:hover {
-    background-color: #cafb42;
-  }
-  .greenBandWrapper { margin: 7vw 0 3.8vw 0 !important;    }
-
-
-
-  @media screen and (max-width: 1024px) {
-    .formContainer {padding: 10px 2vw !important; width: 100%;}
-    .greenBandWrapper {margin: 10vw 0 8vw 0 !important;   overflow: hidden; }
+@media screen and (max-width: 1024px) {
+  .formContainer { min-height: 35.68vw; line-height: 3.39vw; gap: 2.60vw; padding: 1.30vw 2vw !important; width: 100%; }
+  .formGroup { font-size: 1.82vw; padding: 1.17vw 1.95vw 1.17vw 0; }
+  .formGroup::placeholder { font-size: 1.56vw; }
+  .textAreaContainer { height: 13.02vw; }
+  .checkboxContainer { gap: 1.04vw; font-size: 1.82vw; }
+  .checkboxContainer input { width: 1.82vw; height: 1.82vw; }
+  .submitButton { padding: 1.95vw 3.91vw; font-size: 2.08vw; margin-top: 1.95vw; border-radius: 4.17vw; }
+  .greenBandWrapper { margin: 10vw 0 8vw 0 !important; overflow: hidden; }
 }
 
+@media screen and (max-width: 480px) {
+  .formContainer { min-height: 66.50vw; line-height: 6.31vw; gap: 4.85vw; }
+  .formGroup { font-size: 3.40vw; padding: 2.18vw 3.64vw 2.18vw 0; }
+  .formGroup::placeholder { font-size: 2.91vw; }
+  .textAreaContainer { height: 24.27vw; }
+  .checkboxContainer { gap: 1.94vw; font-size: 3.40vw; }
+  .checkboxContainer input { width: 3.40vw; height: 3.40vw; }
+  .submitButton { padding: 3.64vw 7.28vw; font-size: 3.88vw; margin-top: 3.64vw; border-radius: 7.77vw; }
 
-    @media screen and (max-width: 700px) {
-        
-      .formContainer {padding: 10px 4vw !important; width: 100%;}
-        .checkboxContainer {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 14px;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.7);
-            width: 100%; /* Ensure it spans full width */
-            justify-content: flex-start;
-        }
-    
-        .checkboxContainer input {
-            width: 16px;
-            height: 16px;
-            margin: 0; /* Removes any unwanted spacing */
-        }
-        .greenBandWrapper {margin: 10vw 0 15vw 0 !important;   overflow: hidden; }
-    }
+    .formContainer { padding: 2.43vw 4vw !important; width: 100%; }
+    .checkboxContainer { display: flex; align-items: center; gap: 3.64vw; font-size: 3.40vw; font-weight: 400; color: rgba(255, 255, 255, 0.7); width: 100%; justify-content: flex-start; }
+    .checkboxContainer input { width: 3.88vw; height: 3.88vw; margin: 0; }
+    .greenBandWrapper { margin: 10vw 0 15vw 0 !important; overflow: hidden; }
+}

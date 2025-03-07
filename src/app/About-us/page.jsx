@@ -1,4 +1,4 @@
-"use client"
+
 import React from 'react'
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import Presentation from './1-section/presentation';

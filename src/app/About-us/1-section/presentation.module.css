@@ -1,77 +1,150 @@
-.container{
-    min-height: 30.781vw;
-    width:100%;
-    height:100%;
-    padding: 0 15.975vw;
-    /* background-color: red; */
-    display:flex;
-    padding-top: 110px;
-     padding-bottom: 105px;
-     contain: paint;
+.container {
+    min-height: 16.04vw; /* 30.781px */
+    width: 100%;
+    height: 100%;
+    padding: 0 15.975vw; /* 305px */
+    display: flex;
+    padding-top: 5.73vw; /* 110px */
+    padding-bottom: 5.47vw; /* 105px */
+    contain: paint;
 }
-.first{
-    flex:3;
-    height:100%;
-    width:100%;
-    display:flex;
-    flex-direction: column;
-   margin-right: 20px;
-   max-width: 740.828px;
-    
-}
-.first h3{
-    margin:0 0 10px; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 16px; line-height: 26px; text-transform: uppercase;
-}
-.first h2{
-    font-size: 64px; line-height: 74px; text-transform: none;margin: 0 0 40px;font-family: "DM Sans", sans-serif;width: 100%;
-}
-.first p{
-    margin:0 0 10px; font-family: 'DM Sans', sans-serif; color: rgba(255,255,255,0.7); font-size: 16px;  
-}
-.second{
-    flex : 2;
-    height:100%;
-    width:100%;
+
+.first {
+    flex: 3;
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap:30px;
-    padding:100px 0 0;
-    
+    margin-right: 1.04vw; /* 20px */
+    min-width: 38.67vw; /* 740.828px */
 }
+
+.first h3 {
+    margin: 0 0 0.52vw; /* 10px */
+    font-family: 'DM Sans', sans-serif;
+    color: #cafb42;
+    font-size: 0.833vw; /* 16px */
+    line-height: 1.35vw; /* 26px */
+    text-transform: uppercase;
+}
+
+.first h2 {
+    font-size: 3.33vw; /* 64px */
+    line-height: 3.85vw; /* 74px */
+    text-transform: none;
+    margin: 0 0 2.08vw; /* 40px */
+    font-family: "DM Sans", sans-serif;
+    width: 100%;
+}
+
+.first p {
+    margin: 0 0 0.52vw; /* 10px */
+    font-family: 'DM Sans', sans-serif;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.833vw; /* 16px */
+}
+
+.second {
+    flex: 2;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.56vw; /* 30px */
+    padding: 5.21vw 0 0; /* 100px */
+}
+
 .bar {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width:  529.172px;
-    height: 39px;
+    min-width: 27.58vw; /* 529.172px */
+    height: 2.04vw; /* 39px */
 }
 
 .barText {
     display: flex;
-    justify-content: space-between; /* Ensures text and percentage are on the same row */
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 0.52vw; /* 10px */
 }
-.barText h3{
+
+.barText h3 {
     font-family: 'DM Sans', sans-serif;
     color: white;
-    font-size: 16px;
+    font-size: 0.833vw; /* 16px */
     text-transform: uppercase;
-    line-height: 26px;
+    line-height: 1.35vw; /* 26px */
 }
 
 .barBorder {
-    height: 3px;
+    height: 0.16vw; /* 3px */
     width: 100%;
-    background: rgba(255, 255, 255, 0.2); /* Background for progress bar */
+    background: rgba(255, 255, 255, 0.2);
     position: relative;
-    border-radius: 5px;
+    border-radius: 0.26vw; /* 5px */
     overflow: hidden;
 }
 
 .progress {
     height: 100%;
-    background: #ffffff; /* Active progress color */
-    border-radius: 5px;
+    background: #ffffff;
+    border-radius: 0.26vw; /* 5px */
     transition: width 0.5s ease-in-out;
 }
+
+
+@media screen and (max-width: 1024px) {
+    .container { padding: 60px 2vw; flex-direction: column;}
+      .first, .second {
+        flex: 1 1 100%; /* Allow both sections to take full width */
+        max-width: 100%; /* Ensure full width */
+        margin-right: 0; /* Remove right margin */
+        line-height: 26px;
+    }
+
+    .first h2 {
+        font-size: 45px; /* 64px -> responsive */
+        line-height: 55px;
+        font-weight: 700;
+        overflow-wrap: break-word;
+    }
+
+    .first p {
+        font-size: 16px; /* 16px -> responsive */
+         line-height: 26px;
+         font-weight: 400;
+
+    }
+    .first h3 {
+        font-size: 16px; /* 16px -> responsive */
+         line-height: 26px;
+         font-weight: 700;
+    }
+    .second{
+        gap:30px
+    }
+    .bar{
+        height:6vw ;
+    }
+    .barText { margin-bottom:2.2vw;}
+    .barText h3 {
+        font-size: 16px; /* 16px -> responsive */
+    }
+
+    .progress {
+        height: 6vw; /* Adjusted height for responsiveness */
+    }
+}
+@keyframes progressAnimation {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+.progress {
+    height: 100%;
+    background: #ffffff;
+    border-radius: 0.26vw;
+    transition: width 1.5s ease-in-out;
+}
+

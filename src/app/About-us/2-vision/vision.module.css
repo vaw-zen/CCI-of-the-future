@@ -131,7 +131,8 @@
     transition: all 0.3s ease;
 }
  
-@media screen and (max-width: 1024px) {
+@media screen and (min-width: 768px) and (max-width: 1366px)
+ {
     .container { padding: 0 2vw;
         grid-auto-columns: 1fr;
         grid-template-columns: 50vw 72.477vw; /* 650px */

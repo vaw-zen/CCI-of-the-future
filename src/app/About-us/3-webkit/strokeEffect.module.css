@@ -55,8 +55,12 @@
     line-height: 25px;
     font-weight: 400;
 }
-@media (max-width: 1024px) {
+@media screen and (min-width: 768px) and (max-width: 1366px)
+ {
+    .container { padding: 30px 2vw;}
+
     .flexItem {
-        flex: 2 /* Ensure two items per row */
+        flex:2; 
+        min-width: 500px;
     }
 }

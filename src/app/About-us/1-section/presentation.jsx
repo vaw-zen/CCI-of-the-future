@@ -10,8 +10,8 @@ export default function Presentation() {
 
   useEffect(() => {
     setTimeout(() => {
-      setProgressValues(content.map((el) => parseInt(el.percentage))); // Update with actual values
-    }, 300); // Delay for smooth animation
+      setProgressValues(content.map((el) => parseInt(el.percentage))); 
+    }, 300); 
   }, []);
 
   return (

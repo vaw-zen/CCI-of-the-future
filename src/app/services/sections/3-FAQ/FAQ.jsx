@@ -21,6 +21,7 @@ export default function FAQ() {
         </strong>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.56vw' }}>
+          {QA.map()}
           <div style={{
             fontSize: '26px', padding: '1.30vw 0'
 

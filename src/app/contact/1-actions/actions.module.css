@@ -1,34 +1,34 @@
-.container { display: flex; flex-direction: column; padding: 0 15.975vw; gap: 30px; padding-top: 110px; padding-bottom: 105px; }
-.header { display: flex; height: 204px; max-width: 100%; }
+.container { display: flex; flex-direction: column; padding: 0 15.975vw; gap: 1.56vw; padding-top: 110px; padding-bottom: 5.47vw; }
+.header { display: flex; height: 10.63vw; }
 .headerLeft { flex: 1;}
-.subtitle { margin:0 0 10px; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 16px; line-height: 26px; text-transform: uppercase; }
-.title {  font-size: 64px; line-height: 74px; text-transform: none;margin: 0 0 20px;font-family: "DM Sans", sans-serif;}
+.subtitle { margin:0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase; }
+.title {  font-size: 3.33vw; line-height: 3.85vw; text-transform: none;margin: 0 0 1.04vw;font-family: "DM Sans", sans-serif;}
 .headerRight { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.headerMessage { margin-top: 0; margin-bottom: 15px; font-size: 24px; line-height: 30px; }
-.socialList { display: flex;flex-wrap: wrap;  gap: 25px; max-width: 650px; list-style: none; }
+.headerMessage { margin-top: 0; margin-bottom: 0.78vw; font-size: 1.25vw; line-height: 1.56vw; }
+.socialList { display: flex;flex-wrap: wrap;  gap: 1.30vw;  list-style: none; }
 
-.socialItem { font-size: 18px; line-height: 28px; text-align: left; font-weight: 700; }
-.infoSection { display: flex; height: 382px; width: 100%; }
-.mapContainer { flex: 1;display:flex; overflow: hidden; height: 100%;}
+.socialItem { font-size: 0.94vw; line-height: 1.46vw; text-align: left; font-weight: 700; }
+.infoSection { display: flex; height: 19.90vw; width: 100%; }
+.mapContainer { flex: 1;display:flex; overflow: hidden; }
 .infoContainer { display: flex; flex: 1; width: 100%; padding: 1.5vw .5vw; background: var(--bg-elevated);height: 100%; }
 .phoneSection { display: flex; flex-direction: column; flex: 1; padding: 0 1vw; border-right: 1px solid rgba(255, 255, 255, 0.09); }
 .phoneSection:hover{
     .phoneNumber{color:var(--ac-primary)}    
 }
-.phoneInfoTop { gap: 10px; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.09); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.phoneInfoTop { gap: 0.52vw; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.09); display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .icon { color: var(--ac-primary); width: 40px; height: 40px; }
-.label { font-size: 26px;}
-.phoneNumber { font-size: 16px; font-weight: 400; }
-.phoneInfoBottom { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 20px; font-size: 16px; }
+.label { font-size: 1.35vw;}
+.phoneNumber { font-size: 0.83vw; font-weight: 400; }
+.phoneInfoBottom { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1.04vw; font-size: 0.83vw; }
 .phoneInfoText { font-weight: 400; color: var(--t-secondary); }
 .phoneHours { font-weight: 500; }
 .emailSection { display: flex; flex-direction: column; flex: 1; padding: 0 1vw; }
 .emailSection:hover{
     .emailAddress{color:var(--ac-primary)}
 }
-.emailInfoTop { gap: 10px; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.09); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.emailAddress { font-size: 16px; font-weight: 400; }
-.emailInfoBottom { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 20px; font-size: 16px; }
+.emailInfoTop { gap: 0.52vw; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.09); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.emailAddress { font-size: 0.83vw; font-weight: 400; }
+.emailInfoBottom { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1.04vw; font-size: 0.83vw; }
 .emailInfoText { font-weight: 400; color: var(--t-secondary); }
 .emailHours { font-weight: 500; }
 .container, .header, .infoSection, .mapContainer, .infoContainer {
@@ -37,34 +37,57 @@
 }
 
 @media screen and (max-width: 1024px) {
-    .container { padding: 60px 2vw; max-width: 100%;}
-    .header {flex-direction: column;height: auto;}
-    .infoSection{flex-direction: column;min-height:98vw;z-index: 0;}
-    .infoContainer{display:flex;min-height:  329px;z-index: 0;}
+  
+    .container { padding: 7.81vw 2vw; }
+    .header {flex-direction: column; height: auto;}
+    .infoSection{flex-direction: column; height: 99.31vw; z-index: 0;}
+    .infoContainer { max-height: 42.84vw; }
+    
+    .subtitle {font-size: 2.08vw; line-height: 3.39vw; margin-bottom: 1.30vw;}
+    .title{font-size: 5.86vw; line-height: 3.85vw; margin: 3vw 0;}
+    .headerMessage { font-size: 3.13vw; margin: 2.60vw 0;}
+    .socialItem { font-size: 2.34vw; margin: 2vw 0 3vw} 
+    
+    .phoneNumber { font-size: 2.08vw; }
+    .emailAddress { font-size: 2.08vw; }
+    .label { font-size: 3.39vw; margin-top: 1vw;}
+    .icon { width: 6.5vw; height: 6.5vw; }
+    .phoneInfoBottom { gap: 3vw; font-size: 2.08vw; flex: none; height: 19.14vw; }
+    .emailInfoBottom { gap: 3vw; font-size: 2.08vw; flex: none; height: 19.14vw; }
+    .emailSection { padding: 0 3.91vw; }
+    .phoneSection { padding: 0 3.91vw; }
+
+
+
+}
    
-    .title{font-size: 45px;font-weight: 700;height: 55px;}
-    }
-    @media screen and (max-width: 700px) {
+@media screen and (max-width: 480px) {
         
-        .container{padding: 60px 4vw;}
-        .infoSection{height: max-content;}
-        .infoContainer{flex-direction: column;gap: 50px;padding:10vw 3vw}
-        .title{font-size: 35px;font-weight: 700;height:90px;line-height: 45px;}
-        .phoneSection{gap:20px;border-right:none ;height:345px}
-        .phoneInfoTop{gap:20px;padding-bottom: 20px;}
-        .emailInfoTop{gap:20px;padding-bottom: 20px;}
-        .emailSection{gap:20px;height:345px}
-        .socialList {
-            gap:15px;
-            list-style: none;
-            width: 100%;
-             
-        }
-        .socialItem {
-            flex: 1 1 calc(33.333%); /* Ensures 3 items per row */
-            text-align:start;
-            max-width: calc(33.333% - 15px); /* Prevents items from stretching too much */
-        }
-   
-        
-        }
+        .container{padding: 14.56vw 3vw;}
+        .subtitle {font-size: 3.88vw; margin-bottom: 2.43vw;}
+        .title{font-size: 8.50vw; line-height: 10.92vw; width: 90%;}
+        .headerMessage { font-size: 5.83vw; margin: 3.64vw 0; line-height: 1.2;}
+        .socialItem { margin: 0; font-size: 4.37vw; line-height: .75;} 
+        .socialList { gap: 3.5vw 7vw;  list-style: none; padding: 2vw 0 7.5vw 0; }
+       
+        .infoContainer{flex-direction: column;gap: 12.14vw;padding:10vw 3vw}
+        .infoSection { height: auto; }
+        .infoContainer { max-height: auto; min-height: fit-content; }
+        .mapContainer { flex: none; height: 54.49vw; }
+
+        .icon { width: 13vw; height: 13vw; }
+        .label { font-size: 7.28vw; margin-top: 1vw; font-weight: normal;}
+
+        .phoneNumber { font-size: 3.88vw; }
+        .emailAddress { font-size: 3.88vw; }
+        .phoneInfoBottom { font-size: 3.88vw; height: 22.5vw; gap: 5vw; }
+        .emailInfoBottom { font-size: 3.88vw; height: 22.5vw; gap: 5vw; }
+    
+        .phoneSection{ gap:4.85vw; border-right:none ;}
+        .emailSection{ gap:4.85vw; }
+
+        .phoneInfoTop{ gap:4.85vw; padding-bottom: 4.85vw; }
+        .emailInfoTop{ gap:4.85vw; padding-bottom: 4.85vw; }
+      
+          
+}

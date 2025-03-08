@@ -57,6 +57,7 @@ const ResponsiveImage = ({
                     objectPosition: position || 'center',
                     opacity: isLoaded ? 1 : 0,
                     transition: 'none',
+                    borderRadius: 'inherit'
                 }}
                 onLoad={handleLoadingComplete}
                 quality={quality}

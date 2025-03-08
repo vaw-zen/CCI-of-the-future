@@ -132,9 +132,11 @@
     .barText h3 {
         font-size: 16px; /* 16px -> responsive */
     }
-
+    .barBorder{
+        height: 0.3vw;
+    }
     .progress {
-        height: 8vw; /* Adjusted height for responsiveness */
+        height:0.3vw; /* Adjusted height for responsiveness */
     }
 }
 @keyframes progressAnimation {

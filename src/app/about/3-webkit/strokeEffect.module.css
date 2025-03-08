@@ -1,0 +1,79 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 115px 15.975vw;
+    justify-content: space-between;
+    contain: paint;
+    width: 100%;
+}
+
+.flexItem {
+    flex: 1; /* Two items per row with gap considered */
+    display: flex;
+    min-width: auto;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-left: 0;
+}
+
+.strokeText {
+    padding: 0;
+    margin: 0;
+    font-size: 110px;
+    line-height: 1.2;
+    transition: all 0.6s ease-in-out;
+    color: transparent;
+    position: relative;
+    -webkit-background-clip: text;
+    -webkit-text-stroke: 1px #5e5d5d;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-weight: 700;
+}
+
+.labelText {
+    z-index: 2;
+    font-size: 0.89vw;
+    line-height: 0.89vw;
+    font-weight: 400;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    margin-left: -.25vw;
+}
+
+.strokeText h4 {
+    z-index: 2;
+    font-size: 80px;
+    line-height: 25px;
+    font-weight: 400;
+    padding: 0;
+    margin: 0;
+}
+
+.suffix {
+    z-index: 2;
+    font-size: 80px;
+    line-height: 25px;
+    font-weight: 400;
+}
+
+/* Responsive behavior */
+@media screen and (min-width: 768px) and (max-width: 1366px) {
+    .container {
+        padding: 30px 2vw;
+        gap: 30px;
+    }
+
+    .flexItem {
+        flex: 1 1 calc(50% - 30px); /* Ensures 2 per row with gap */
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .flexItem {
+        flex: 1 1 100%; /* One item per row on smaller screens */
+    }
+}

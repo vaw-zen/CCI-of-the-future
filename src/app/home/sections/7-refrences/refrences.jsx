@@ -5,11 +5,11 @@ import { UilArrowRight } from '@/utils/components/icons'
 import content from './refrences.json'
 import ResponsiveImage from '@/utils/components/Image/Image'
 
-export default function Refrences() {
+export default function Refrences({ className }) {
   const refrences = [null, ...content, null]
 
   return (
-    <section className={styles.refrencesGrid}>
+    <section className={`${styles.refrencesGrid} ${className}`}>
       {refrences.map((refrence, index) => (
         <div key={index} className={styles.refrenceCell}>
           {!index ? (

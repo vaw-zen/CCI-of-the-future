@@ -5,9 +5,9 @@ import LeftCircle from './clientSide/circles/LeftCircle';
 import RightCircle from './clientSide/circles/RightCircle';
 import ResponsiveImage from '@/utils/components/Image/Image';
 
-export default function Showcase() {
+export default function Showcase({...props}) {
     return (
-        <section>
+        <section {...props}>
             <h2 className={pageStyles.slug}>{content.slug}</h2>
             <h3 className={pageStyles.highlight}>{content.highlight}</h3>
             <div className={styles.circleContainer}>

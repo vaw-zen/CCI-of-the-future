@@ -1,0 +1,46 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    padding: 0 15.975vw 5.469vw 15.975vw;
+    min-height: 32vw;
+    height: 100%;
+    width: 100%;
+    contain: paint;
+}
+.container h3{
+    margin:0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase;
+}
+.container h2{
+    font-size: 3.33vw; line-height: 3.85vw; text-transform: none;margin: 0 0 1.04vw;font-family: "DM Sans", sans-serif;
+}
+.cardsContainer{
+    display: flex;
+
+    
+    /* justify-content:space-between; */
+    margin-top: 1.56vw;
+    width: 100%;
+    height: 100%;
+    gap: 1vw;
+}
+.card{
+    display: flex;
+    flex:1;
+    flex-direction: column;
+   flex-wrap: wrap;
+    width:100%;
+  
+    height: 100%;
+    background: var(--bg-elevated);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+   
+   
+  
+
+}
+.image{
+    width:100%;
+    height:100%
+}

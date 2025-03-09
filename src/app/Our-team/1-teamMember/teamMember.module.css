@@ -1,0 +1,62 @@
+.container{
+    display: flex;
+    padding: 5.99vw 15.975vw 5.469vw 15.975vw;
+    min-height: 32vw;
+    height: 100%;
+
+}
+.imageContainer{
+    flex:1.399;
+    background-image: url("/our-team/team-member.png");
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.infoContainer{
+    flex:3;
+  padding-left: 2.60vw;
+  display:flex;
+  flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.infoContainer h2{
+    font-size: 3.33vw;
+    line-height: 3.85vw;
+    font-weight: 700;
+    margin-bottom:0.781vw;
+}
+.infoContainer p{
+    font-size: 0.83vw;
+    line-height: 1.35vw;
+    font-weight: 400;
+    color:hsla(0, 0%, 100%, 0.7);
+    margin-bottom:2.34vw;
+}
+.memberInfo{
+    display: flex;
+    align-items: flex-start;
+    /* background-color: red; */
+    width:60%;
+}
+.memberCard{
+    display: flex;
+    align-items: flex-start;
+    align-items: center;
+    width: 100%;
+}
+.memberCard img{
+    width: 3.646vw;
+    height: 3.646vw;
+    border-radius: 50%;
+}
+.memberCard h3{
+    font-size:0.94vw;
+    line-height:1.46vw;
+    font-weight: 700;
+   padding: 0 0 0 1.04vw;
+}
+.memberAutograph{
+    padding-left:1.042vw
+}

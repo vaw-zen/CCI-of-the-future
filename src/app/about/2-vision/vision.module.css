@@ -179,12 +179,12 @@
         padding: 0;
 
     }
-    .textSection h3{font-size: 3.88vw;line-height: 6.31vw;font-weight: 700;margin:0 0 6.71vw ;overflow-wrap: break-word;}
-    .textSection h2 {font-size: 8.50vw;line-height: 10.92vw;margin:0 0 4.85vw ;}
-    .textSection p{font-size: 3.88vw;line-height: 26px;font-weight: 400;}
-    .button{height: 27.778vw;width:27.778vw;margin:8.50vw 0 0;border-width: 0.49vw;}
+    .textSection h3{font-size: 4.444vw;line-height: 6.31vw;font-weight: 700;margin:0 0 2.778vw ;overflow-wrap: break-word;}
+    .textSection h2 {font-size: 8.50vw;line-height: 12.5vw;margin:0 0 4.85vw ;}
+    .textSection p{font-size: 4.444vw;line-height: 26px;font-weight: 400;}
+    .button{height: 27.778vw;width:27.778vw;margin:8.50vw 0 0;border-width: 0.556vw;}
     .arrow{width:48px;height:27.778vw}
-    .line{margin-top: 12.14vw;padding-bottom: 12.14vw;}
+    .line{margin-top: 13.889vw;padding-bottom: 13.889vw ;}
     
     
 }

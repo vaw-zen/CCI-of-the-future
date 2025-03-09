@@ -152,14 +152,14 @@
     .container { padding: 60px 3.64vw 45px; }
   
     .first h2 {
-        font-size: 8.50vw;  
-        line-height: 10.92vw !important;
+        font-size: 9.722vw;  
+        line-height: 12.5vw !important;
         font-weight: 700;
-        margin: 0 0 9.71vw;
+        margin: 0 0 11.111vw;
     }
 
     .first p {
-        font-size: 3.88vw; /* 16px -> responsive */
+        font-size: 4.444vw; /* 16px -> responsive */
          line-height: 6.31vw;
          font-weight: 400;
          margin: 0 0 9.71vw;
@@ -167,7 +167,7 @@
 
     
     .first h3 {
-        margin: 0 0 9.71vw;
+        margin: 0 0 2.778vw;
         font-weight: bold;
     }
   

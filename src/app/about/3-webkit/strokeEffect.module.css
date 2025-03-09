@@ -61,9 +61,9 @@
 }
 
 /* Responsive behavior */
-@media screen and (min-width: 768px) and (max-width: 1366px) {
+@media screen and  (max-width: 1024px) {
     .container {
-        padding: 30px 2vw;
+        padding: 60px 2vw;
         gap: 30px;
         justify-content: center;
         align-items:center;
@@ -104,7 +104,7 @@
         flex-direction: column; /* Ensures items stack vertically */
         align-items: flex-start; /* Aligns items to the start */
         justify-content: flex-start; /* Optional: Ensures everything starts from the top */
-        padding: 60px 3.88vw;
+        padding: 0 3.88vw  7.282vw;
         gap:5.96vw;
     }
 
@@ -116,14 +116,14 @@
 
     .strokeText {
         text-align: start;
-        font-size: 20.556vw;
+        font-size: 17.961vw;
         font-weight: 700;
         -webkit-text-stroke:  0.56vw #5e5d5d
        
     }
 
     .labelText {
-        font-size: 4.722vw;
+        font-size:4.126vw;
         margin-left: -4.25vw;/* Removed negative margin */
         text-align: start;
         line-height: 6.07vw;
@@ -141,8 +141,8 @@
     }
 
     .suffix {
-        font-size: 20.556vw !important;
-        line-height: 20.556vw !important;
+        font-size: 17.961vw !important;
+        line-height: 17.961vw !important;
         
     }
 }

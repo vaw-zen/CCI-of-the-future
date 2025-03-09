@@ -1,7 +1,7 @@
 "use client";
 
 import styles from './image.module.css'
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { dimensionsStore } from '@/utils/store/store';
 
@@ -18,20 +18,40 @@ const ResponsiveImage = ({
     skeleton = false
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
-    const { isTablet, isDesktop } = dimensionsStore();
-
+    // Track whether we're rendering on the client
+    const [isMounted, setIsMounted] = useState(false);
+    
+    // Get safe dimensions on client side only
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+    
     const handleLoadingComplete = useCallback(() => {
         setIsLoaded(true);
     }, []);
 
+    // Determine effective size based on client or server rendering
     let effectiveSize;
     if (Array.isArray(sizes)) {
         if (sizes.length === 1) {
             effectiveSize = sizes[0];
         } else if (sizes.length === 2) {
-            effectiveSize = isDesktop() ? sizes[0] : sizes[1];
+            // Use largest size for server rendering (first render)
+            effectiveSize = isMounted ? 
+                (dimensionsStore.getState().vw >= 1024 ? sizes[0] : sizes[1]) : 
+                sizes[0];
         } else {
-            effectiveSize = isDesktop() ? sizes[0] : isTablet() ? sizes[1] : sizes[2];
+            // Use largest size for server rendering (first render)
+            if (!isMounted) {
+                effectiveSize = sizes[0];
+            } else {
+                const state = dimensionsStore.getState();
+                effectiveSize = state.vw >= 1024 ? 
+                    sizes[0] : 
+                    (state.vw > 480 && state.vw <= 1024) ? 
+                        sizes[1] : 
+                        sizes[2];
+            }
         }
     } else {
         effectiveSize = sizes;

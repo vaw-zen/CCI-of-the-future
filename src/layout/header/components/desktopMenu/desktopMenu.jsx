@@ -1,3 +1,5 @@
+'use client'
+import { useState, useEffect } from 'react';
 import styles from './desktopMenu.module.css';
 import { EpCloseBold, LineMdPhoneTwotone, SiMailDuotone, UilArrowRight } from '@/utils/components/icons';
 import Link from 'next/link';
@@ -7,11 +9,12 @@ import ResponsiveImage from '@/utils/components/Image/Image';
 export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
     const mail = `mailto:${contact.mail.link}?subject=${contact.mail.subject}&body=${contact.mail.body}`;
     const phone = 'tel:' + contact.phone;
+    
+    // Track checkbox state in React state instead of directly manipulating the DOM
+    const [checkboxChecked, setCheckboxChecked] = useState(false);
 
     const handleCheckboxChange = (e) => {
-        e.target.style.background = e.target.checked
-            ? `radial-gradient(circle at center, var(--t-primary) 50%, transparent 50%)`
-            : 'transparent';
+        setCheckboxChecked(e.target.checked);
     };
 
     return (
@@ -61,6 +64,12 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                                             id="privacy-checkbox"
                                             className={styles.checkbox}
                                             onChange={handleCheckboxChange}
+                                            checked={checkboxChecked}
+                                            style={{
+                                                background: checkboxChecked 
+                                                    ? `radial-gradient(circle at center, var(--t-primary) 50%, transparent 50%)`
+                                                    : 'transparent'
+                                            }}
                                         />
                                         <label htmlFor="privacy-checkbox" className={styles.checkboxLabel}>
                                             J'accepte la politique de confidentialité

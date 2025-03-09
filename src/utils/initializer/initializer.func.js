@@ -1,5 +1,5 @@
 import Lenis from '@studio-freight/lenis'
-import { createRef } from 'react'
+import { createRef, useCallback } from 'react'
 
 
 export const lenisRef = createRef(null)
@@ -16,40 +16,65 @@ const easings = {
     }
 }
 
-const resizeEvent = (setVw, setVh) => () => {
-    setVw(window.innerWidth);
-    setVh(window.innerHeight);
+// Safe check for window to prevent hydration errors
+const isBrowser = typeof window !== 'undefined';
+
+// Safe resize function that checks browser context
+const createResizeEvent = (setVw, setVh) => {
+    return () => {
+        if (!isBrowser) return;
+        setVw(window.innerWidth);
+        setVh(window.innerHeight);
+    };
 };
 
 export const useInitializerLogic = () => {
-    const initializeLenis = (isDesktop) => {
-        if (typeof window === 'undefined' || !isDesktop) return null;
-
-        return new Lenis({
-            duration: 1.2,
+    // Wrap functions in useCallback to maintain reference stability
+    const initializeLenis = useCallback((isDesktop) => {
+        // Additional check to ensure we're in the browser
+        if (!isBrowser) return null;
+        
+        // If not desktop, we might want different settings or no Lenis at all
+        // In this implementation, we'll still initialize Lenis but with different settings
+        const options = {
+            duration: isDesktop ? 1.2 : 1.0,  // Shorter duration on mobile
             easing: easings.parallaxEase,
-            lerp: 0.1,
+            lerp: isDesktop ? 0.1 : 0.15,     // Different lerp value for mobile
             smoothWheel: true,
-            wheelMultiplier: 1.2,
+            wheelMultiplier: isDesktop ? 1.2 : 1.0,  // Different multiplier for mobile
             direction: 'vertical',
             gestureDirection: 'vertical',
             smooth: true,
-            smoothTouch: false,
-            touchMultiplier: 2,
-        });
-    };
-
-    const startLenisRaf = (lenis) => {
-        if (!lenis) return null;
-
-        const rafCallback = (time) => {
-            lenis.raf(time);
-            return requestAnimationFrame(rafCallback);
+            smoothTouch: isDesktop ? false : true,   // Enable smooth touch on mobile
+            touchMultiplier: isDesktop ? 2 : 1.5,    // Different touch multiplier for mobile
         };
+        
+        try {
+            return new Lenis(options);
+        } catch (error) {
+            return null;
+        }
+    }, []);
 
-        const rafId = requestAnimationFrame(rafCallback);
-        return rafId;
-    };
+    const startLenisRaf = useCallback((lenis) => {
+        if (!isBrowser || !lenis) return null;
+
+        try {
+            const rafCallback = (time) => {
+                lenis.raf(time);
+                return requestAnimationFrame(rafCallback);
+            };
+
+            const rafId = requestAnimationFrame(rafCallback);
+            return rafId;
+        } catch (error) {
+            return null;
+        }
+    }, []);
+    
+    const resizeEvent = useCallback((setVw, setVh) => {
+        return createResizeEvent(setVw, setVh);
+    }, []);
 
     return {
         resizeEvent,

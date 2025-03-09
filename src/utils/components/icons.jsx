@@ -1,5 +1,5 @@
-export function IconoirArrowUpRight(props) {
-	return (<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 19L19 6m0 0v12.48M19 6H6.52"></path></svg>);
+export function IconoirArrowUpRight({ strokeWidth = 1.5, ...props }) {
+	return (<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={strokeWidth} d="M6 19L19 6m0 0v12.48M19 6H6.52"></path></svg>);
 }
 
 export function RadixIconsCaretRight(props) {

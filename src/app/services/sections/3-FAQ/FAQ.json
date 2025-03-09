@@ -1,19 +1,19 @@
 {
-    "slug": "qui nous sommes",
-    "title": "Nous fournissons les meilleures solutions",
+    "slug": "qui sommes-nous",
+    "title": "Nos solutions optimales",
     "img": "/home/about.png",
     "QA": [
         {
             "Q": "Services de bricolage depuis 2015",
-            "A": "Nous travaillons pour aider les gens à se sentir à l'aise dans leur maison et fournir l'assistance la meilleure et la plus rapide à un prix équitable, un service fiable et professionnel pour les broyeurs de déchets défectueux, les prises, les interrupteurs et autres composants"
+            "A": "On aide les gens à se sentir bien chez eux en offrant une aide rapide à prix juste, un service fiable et pro pour tout problème: broyeurs, prises, interrupteurs et autres éléments défectueux"
         },
         {
-            "Q": "Nous sommes passionnés",
-            "A": "Nous travaillons pour aider les gens à se sentir à l'aise dans leur maison et fournir l'assistance la meilleure et la plus rapide à un prix équitable, un service fiable et professionnel pour les broyeurs de déchets défectueux, les prises, les interrupteurs et autres composants"
+            "Q": "Notre passion",
+            "A": "On aide les gens à se sentir bien chez eux en offrant une aide rapide à prix juste, un service fiable et pro pour tout problème: broyeurs, prises, interrupteurs et autres éléments défectueux"
         },
         {
-            "Q": "Appelez-nous aujourd'hui, nous répondons à nos téléphones 24h/24 et 7j/7",
-            "A": "Nous travaillons pour aider les gens à se sentir à l'aise dans leur maison et fournir l'assistance la meilleure et la plus rapide à un prix équitable, un service fiable et professionnel pour les broyeurs de déchets défectueux, les prises, les interrupteurs et autres composants"
+            "Q": "Appelez-nous, disponible 24h/24 et 7j/7",
+            "A": "On aide les gens à se sentir bien chez eux en offrant une aide rapide à prix juste, un service fiable et pro pour tout problème: broyeurs, prises, interrupteurs et autres éléments défectueux"
         }
     ]
 }

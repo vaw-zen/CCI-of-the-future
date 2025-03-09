@@ -2,6 +2,7 @@
 import ResponsiveImage from '@/utils/components/Image/Image'
 import content from './FAQ.json'
 import { useState, useRef, useEffect } from 'react'
+import { IconoirArrowUpRight } from '@/utils/components/icons'
 
 export default function FAQ() {
   const { img, title, slug, QA } = content
@@ -17,14 +18,14 @@ export default function FAQ() {
   // Measure heights of all answers
   useEffect(() => {
     const newHeights = {}
-    
+
     answerRefs.current.forEach((ref, index) => {
       if (ref) {
         // Store the scroll height (actual content height)
         newHeights[index] = ref.scrollHeight
       }
     })
-    
+
     setHeights(newHeights)
   }, [QA]) // Re-measure if QA content changes
 
@@ -32,7 +33,7 @@ export default function FAQ() {
     <section style={{ display: 'flex', gap: '2.60vw', marginTop: '5.99vw' }}>
       <div style={{
         flex: 1,
-        display: 'flex', flexDirection: 'column',paddingBottom:'1vw', 
+        display: 'flex', flexDirection: 'column', paddingBottom: '1vw',
       }}>
         <abbr style={{
           color: 'var(--ac-primary)', fontSize: '0.83vw', textTransform: 'uppercase',
@@ -47,31 +48,33 @@ export default function FAQ() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.56vw' }}>
           {QA.map((qa, index) => {
             return <div key={index} style={{ marginBottom: '1vw' }}>
-              <strong 
-                onClick={() => setActiveIndex(activeIndex === index ? null : index)} 
-                style={{ 
-                  fontSize: '1.35vw', 
-                  fontWeight: 700, 
-                  borderBottom: '1px solid white', 
-                  padding: '1.04vw 0', 
-                  display: 'block',
-                  cursor: 'pointer'
+              <div
+                onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  borderBottom: '1px solid white',
+                  padding: '1.04vw 0',
+                  cursor: 'pointer', width: '100%'
                 }}
               >
-                {qa.Q}
-              </strong>
-              <div 
-                style={{ 
-                  fontSize: '0.83vw', 
-                  fontWeight: 400, 
-                  paddingTop: activeIndex === index ? '1.04vw' : '0', 
-                  height: activeIndex === index ? `${heights[index]}px` : '0', 
-                  overflow: 'hidden', 
-                  transition: 'padding 0.3s ease-in-out, height 0.3s ease-in-out, margin-bottom 0.3s ease-in-out' ,
-                  marginBottom:activeIndex === index ?'-2vw': '0' 
+                <strong style={{ fontSize: '1.35vw', fontWeight: 700, }}>
+                  {qa.Q}
+                </strong>
+                <IconoirArrowUpRight strokeWidth={2.5} style={{ width: '1vw', height: '1vw', color: 'var(--ac-primary)' }} />
+              </div>
+              <div
+                style={{
+                  fontSize: '0.83vw',
+                  fontWeight: 400,
+                  paddingTop: activeIndex === index ? '1.04vw' : '0',
+                  height: activeIndex === index ? `${heights[index]}px` : '0',
+                  overflow: 'hidden',
+                  transition: 'padding 0.3s ease-in-out, height 0.3s ease-in-out, margin-bottom 0.3s ease-in-out',
+                  marginBottom: activeIndex === index ? '-2vw' : '0'
                 }}
               >
-                <p 
+                <p
                   ref={el => answerRefs.current[index] = el}
                 >
                   {qa.A}

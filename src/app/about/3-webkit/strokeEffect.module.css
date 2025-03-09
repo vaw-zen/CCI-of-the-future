@@ -72,6 +72,30 @@
     .flexItem {
         flex: 1 1 calc(50% - 30px); /* Ensures 2 per row with gap */
     }
+    .labelText {
+        font-size: 2.214vw;
+        margin-left: -1.65vw;/* Removed negative margin */
+        text-align: start;
+        line-height: 3.255vw;
+        white-space: nowrap; /* Keeps text on one line */
+        overflow: hidden; /* Prevents wrapping */
+        text-overflow: ellipsis; /* Adds "..." if text overflows */
+        font-family: "DM Sans", sans-serif;
+       
+       
+
+    }
+    .strokeText {
+        font-size: 10.742vw;
+        font-weight: 700;
+        -webkit-text-stroke:  0.26vw #5e5d5d
+       
+    }
+    .suffix {
+        font-size: 10.742vw !important;
+        line-height: 10.742vw !important;
+        
+    }
 }
 
 @media screen and (max-width: 480px) {

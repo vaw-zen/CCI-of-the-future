@@ -17,9 +17,10 @@ export default function FAQ() {
       <ResponsiveImage
         className={styles.image}
         src={img}
-        sizes={[40, 40, 40]}
+        sizes={[40, 100, 100]}
         alt='FAQ'
         skeleton
+        priority
       />
     </section>
   )

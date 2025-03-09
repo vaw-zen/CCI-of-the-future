@@ -21,13 +21,13 @@ export default function FAQ() {
         </strong>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.56vw' }}>
-          {QA.map()}
-          <div style={{
-            fontSize: '26px', padding: '1.30vw 0'
-
-          }}>
-            Started handyman services in 2015
-          </div>
+          {QA.map((qa, index) => {
+            return <div key={index} style={{ marginBottom: '1vw' }}>
+              <strong style={{ fontSize: '1.35vw', fontWeight: 700, borderBottom: '1px solid white', padding: '1.04vw 0', display: 'block' }}>
+                {qa.Q}
+              </strong>
+            </div>
+          })}
         </div>
       </div>
       <ResponsiveImage

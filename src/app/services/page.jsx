@@ -15,7 +15,7 @@ export default function page() {
             <div className={styles.services}>
                 <Details />
                 <Services />
-                {/* <FAQ /> */}
+                <FAQ />
                 <Band />
                 <Testimonials className={styles.testimonialsWrapper} />
                 <GreenBand className={styles.greenBandWrapper} />

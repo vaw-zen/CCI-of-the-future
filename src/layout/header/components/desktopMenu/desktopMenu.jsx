@@ -26,7 +26,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                         </div>
                         <div className={styles.leftLinks}>
                             <div className={styles.linkGroup}>
-                                <Link href='/'>À propos de nous</Link>
+                                <Link href='/about'>À propos de nous</Link>
                                 <Link href='/'>Carrière</Link>
                             </div>
                             <div className={styles.socialLinks}>

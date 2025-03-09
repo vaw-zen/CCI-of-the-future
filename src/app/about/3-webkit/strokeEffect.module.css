@@ -65,6 +65,8 @@
     .container {
         padding: 30px 2vw;
         gap: 30px;
+        justify-content: center;
+        align-items:center;
     }
 
     .flexItem {
@@ -72,8 +74,52 @@
     }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 480px) {
+    .container {
+        display: flex;
+        flex-direction: column; /* Ensures items stack vertically */
+        align-items: flex-start; /* Aligns items to the start */
+        justify-content: flex-start; /* Optional: Ensures everything starts from the top */
+        padding: 60px 3.88vw;
+        gap:5.96vw;
+    }
+
     .flexItem {
-        flex: 1 1 100%; /* One item per row on smaller screens */
+        flex: none; /* Prevents items from stretching */
+        width: 100%; /* Ensures full width */
+        max-width: 90vw;
+    }
+
+    .strokeText {
+        text-align: start;
+        font-size: 20.556vw;
+        font-weight: 700;
+        -webkit-text-stroke:  0.56vw #5e5d5d
+       
+    }
+
+    .labelText {
+        font-size: 4.722vw;
+        margin-left: -4.25vw;/* Removed negative margin */
+        text-align: start;
+        line-height: 6.07vw;
+        white-space: nowrap; /* Keeps text on one line */
+        overflow: hidden; /* Prevents wrapping */
+        text-overflow: ellipsis; /* Adds "..." if text overflows */
+        font-family: "DM Sans", sans-serif;
+       
+       
+
+    }
+
+    .labelText br {
+        display: none; /* Hide line breaks on mobile */
+    }
+
+    .suffix {
+        font-size: 20.556vw !important;
+        line-height: 20.556vw !important;
+        
     }
 }
+

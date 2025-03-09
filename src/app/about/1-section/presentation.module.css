@@ -95,7 +95,7 @@
 
 
 @media screen and (max-width: 1024px) {
-    .container { padding: 100px 2vw; flex-direction: column;}
+    .container { padding: 60px 2vw; flex-direction: column;}
       .first, .second {
         flex: 1 1 100%; /* Allow both sections to take full width */
         max-width: 100%; /* Ensure full width */
@@ -104,14 +104,16 @@
     }
 
     .first h2 {
-        font-size: 45px; /* 64px -> responsive */
-        line-height: 55px;
+        font-size: 5.859vw; /* 45px -> responsive */
+        line-height: 7.161vw    /* 55px -> responsive */;
         font-weight: 700;
-        overflow-wrap: break-word;
+        width: 90%;
+        margin: 0 0 5.208vw; /* 40px */
+      
     }
 
     .first p {
-        font-size: 16px; /* 16px -> responsive */
+        font-size: 2.083vw; /* 16px -> responsive */
          line-height: 26px;
          font-weight: 400;
 
@@ -120,23 +122,25 @@
         font-size: 16px; /* 16px -> responsive */
          line-height: 26px;
          font-weight: 700;
+         margin: 0 0 0.977vw;
     }
-    .second{
-        gap:30px;
-        
-    }
+   .second€{
+    gap: 1.04vw; /* 20px */
+   }
     .bar{
-        height:8vw ;
+        height:auto ;
+        margin: 0 0 3.255vw;
     }
-    .barText { margin-bottom:2.2vw;}
+    .barText { margin-bottom:2.255vw;}
     .barText h3 {
         font-size: 16px; /* 16px -> responsive */
     }
     .barBorder{
-        height: 0.3vw;
+        height: 0.5vw;
     }
     .progress {
-        height:0.3vw; /* Adjusted height for responsiveness */
+        height:0.5vw; 
+        color:#ffffff/* Adjusted height for responsiveness */
     }
 }
 @keyframes progressAnimation {
@@ -152,15 +156,16 @@
     .container { padding: 60px 3.64vw 45px; }
   
     .first h2 {
-        font-size: 9.722vw;  
-        line-height: 12.5vw !important;
+        font-size: 8.495vw;  
+        line-height: 10.922vw ;
         font-weight: 700;
         margin: 0 0 11.111vw;
+        width: 100%;
     }
 
     .first p {
-        font-size: 4.444vw; /* 16px -> responsive */
-         line-height: 6.31vw;
+        font-size:3.883vw; /* 16px -> responsive */
+         line-height: 6.311vw;
          font-weight: 400;
          margin: 0 0 9.71vw;
     }
@@ -170,19 +175,22 @@
         margin: 0 0 2.778vw;
         font-weight: bold;
     }
-  
+  .second{
+    gap: 2.778vw;}
     .bar{
         height:auto ;
-        gap:12px;
+        margin: 0 0 6.068vw;
+
     }
-    .barText { margin-bottom:2.2vw;}
+    .barText { margin-bottom:4.8vw;}
     .barText h3 {
-        font-size: 3.88vw; /* 16px -> responsive */
+        font-size: 3.883vw; /* 16px -> responsive */
     }
     .barBorder{
         height:0.7vw;
     }
     .progress {
-        height:0.7vw; /* Adjusted height for responsiveness */
+        height:0.7vw;
+        color:#ffffff /* Adjusted height for responsiveness */
     }
 }

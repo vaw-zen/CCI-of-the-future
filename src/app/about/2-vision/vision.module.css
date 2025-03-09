@@ -132,7 +132,7 @@
     transition: all 0.3s ease;
 }
  
-@media screen and (min-width: 768px) and (max-width: 1366px)
+@media screen and (max-width: 1024px)
  {
     .container { padding: 0 2vw;
         grid-auto-columns: 1fr;
@@ -140,6 +140,8 @@
         grid-template-rows: 603px; /* 603px */
         min-height: 591px;
         height: 100%;
+        contain: paint;
+        max-width: 100vw;
     }
     .imageSection{
         min-height: 591px;
@@ -160,6 +162,11 @@
     .arrow{width:48px;height:100px} 
     
 }
+@media screen and (min-width: 768px) and (max-width: 1366px){
+    .textSection{
+        margin-left: -180px;
+    }
+}
 @media screen and (max-width: 480px)
  {
     .container { padding: 0 3.64vw;
@@ -179,12 +186,13 @@
         padding: 0;
 
     }
-    .textSection h3{font-size: 4.444vw;line-height: 6.31vw;font-weight: 700;margin:0 0 2.778vw ;overflow-wrap: break-word;}
-    .textSection h2 {font-size: 8.50vw;line-height: 12.5vw;margin:0 0 4.85vw ;}
-    .textSection p{font-size: 4.444vw;line-height: 26px;font-weight: 400;}
+    .textSection h3{font-size: 3.883vw;line-height: 6.31vw;font-weight: 700;margin:0 0 2.778vw ;overflow-wrap: break-word;}
+    .textSection h2 {font-size: 8.5vw;  
+        line-height: 10.922vw ;margin:0 0 4.854vw ;}
+    .textSection p{font-size: 3.883vw;line-height: 26px;font-weight: 400;}
     .button{height: 27.778vw;width:27.778vw;margin:8.50vw 0 0;border-width: 0.556vw;}
     .arrow{width:48px;height:27.778vw}
-    .line{margin-top: 13.889vw;padding-bottom: 13.889vw ;}
+    .line{margin-top: 12.136vw;padding-bottom: 12.136vw ;}
     
     
 }

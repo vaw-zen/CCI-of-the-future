@@ -6,9 +6,9 @@ import styles from './services.module.css'
 import ResponsiveImage from '@/utils/components/Image/Image'
 import { CiArrowUpRightMd } from '@/utils/components/icons'
 
-export default function Services() {
+export default function Services({ className = '' }) {
   return (
-    <section className={styles.section}>
+    <section className={`${styles.section} ${className}`}>
       <div className={styles.container}>
         <div className={styles.topContent}>
           <div className={styles.headerContainer}>

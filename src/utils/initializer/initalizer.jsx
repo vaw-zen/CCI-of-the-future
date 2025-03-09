@@ -4,13 +4,13 @@ import { useEffect } from "react"
 import { dimensionsStore } from "../store/store";
 import { useInitializerLogic } from "./initializer.func";
 import { homeScrollTriggers } from "@/app/home/home.func";
+import { servicesScrollTriggers } from "@/app/services/services.func";
 import { headerSI } from "@/layout/header/header.func";
 
 export default function Initializer() {
     const { setVw, setVh, isDesktop } = dimensionsStore()
     const { resizeEvent, initializeLenis, startLenisRaf, lenisRef, rafIdRef } = useInitializerLogic()
   
-
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
@@ -26,6 +26,11 @@ export default function Initializer() {
         handleResize()
         window.addEventListener('resize', handleResize)
         window.addEventListener('scroll', headerSI);
+        
+        // Initialize all scroll triggers for the current page
+        homeScrollTriggers()
+        servicesScrollTriggers()
+        
         return () => {
             window.removeEventListener('resize', handleResize)
             window.removeEventListener('scroll', headerSI);
@@ -39,9 +44,6 @@ export default function Initializer() {
         }
 
     }, [setVw, setVh, isDesktop])
-
-
-    homeScrollTriggers()
 
     return null;
 }

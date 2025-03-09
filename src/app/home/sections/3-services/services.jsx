@@ -6,9 +6,9 @@ import styles from './services.module.css'
 import BlurBox from '@/utils/components/BlurBox/BlurBox'
 import ResponsiveImage from '@/utils/components/Image/Image'
 
-export default function Services() {
+export default function Services({ className = '' }) {
     return (
-        <section className={styles.section}>
+        <section className={`${styles.section} ${className}`}>
             <BlurBox className={styles.BlurBox} />
             <div className={styles.leftColumn}>
                 <div className={styles.stickyContent}>

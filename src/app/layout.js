@@ -3,6 +3,7 @@ import "./globals.css";
 import dynamic from 'next/dynamic';
 import Initializer from '@/utils/initializer/initalizer';
 import Header from '@/layout/header/header';
+import HydrationSuppressor from '@/utils/HydrationSuppressor';
 
 const Footer = dynamic(() => import('@/layout/footer/footer'));
 
@@ -30,9 +31,12 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr" className={dmSans.className}>
+    <html lang="fr" className={dmSans.className} suppressHydrationWarning>
+      <head>
+        <HydrationSuppressor />
+      </head>
       <Initializer />
-      <body>
+      <body suppressHydrationWarning>
         <Header roboto={roboto} />
         {children}
         <Footer />

@@ -4,10 +4,10 @@ import styles from "./strokeEffect.module.css";
 
 export default function StrokeEffect() {
   const counters = [
-    { value: 10, label: "projects <br /> completed", suffix: "K" },
-    { value: 120, label: "worked <br /> employees", suffix: "+" },
-    { value: 15, label: "years of <br /> experience", suffix: "+" },
-    { value: 18, label: "skilled <br /> professionals", suffix: "+" },
+    { value: 10, label: "Projects  completed", suffix: "K" },
+    { value: 120, label: "Worked  employees" },
+    { value: 15, label: "years of  experience", suffix: "+" },
+    { value: 18, label: "Skilled  professionals", suffix: "+" },
   ];
 
   const [counts, setCounts] = useState(counters.map(() => 0));

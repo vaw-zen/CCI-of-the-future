@@ -146,8 +146,43 @@
 
 
 
-@media screen and (min-width: 768px) and (max-width: 1366px)
-{
-    .container { padding: 100px 2vw; }
 
+@media screen and (max-width: 480px)
+{
+    .container { padding: 60px 3.64vw 45px; }
+  
+    .first h2 {
+        font-size: 8.50vw;  
+        line-height: 10.92vw !important;
+        font-weight: 700;
+        margin: 0 0 9.71vw;
+    }
+
+    .first p {
+        font-size: 3.88vw; /* 16px -> responsive */
+         line-height: 6.31vw;
+         font-weight: 400;
+         margin: 0 0 9.71vw;
+    }
+
+    
+    .first h3 {
+        margin: 0 0 9.71vw;
+        font-weight: bold;
+    }
+  
+    .bar{
+        height:auto ;
+        gap:12px;
+    }
+    .barText { margin-bottom:2.2vw;}
+    .barText h3 {
+        font-size: 3.88vw; /* 16px -> responsive */
+    }
+    .barBorder{
+        height:0.7vw;
+    }
+    .progress {
+        height:0.7vw; /* Adjusted height for responsiveness */
+    }
 }

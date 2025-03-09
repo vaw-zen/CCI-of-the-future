@@ -8,7 +8,7 @@
         "subLinks": [
             {
                 "name": "à propos de nous",
-                "link": "/"
+                "link": "/about"
             },
             {
                 "name": "services",

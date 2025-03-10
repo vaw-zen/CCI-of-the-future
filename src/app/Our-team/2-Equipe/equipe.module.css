@@ -15,7 +15,7 @@
 }
 .cardsContainer{
     display: flex;
-
+    flex-wrap: wrap;
     
     /* justify-content:space-between; */
     margin-top: 1.56vw;
@@ -25,11 +25,9 @@
 }
 .card{
     display: flex;
-    flex:1;
+    flex: 1;
     flex-direction: column;
-   flex-wrap: wrap;
-    width:100%;
-  
+    min-width: 200px;
     height: 100%;
     background: var(--bg-elevated);
     justify-content: center;
@@ -40,7 +38,8 @@
   
 
 }
-.image{
+.imageContainer img{
     width:100%;
     height:100%
 }
+

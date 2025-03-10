@@ -47,6 +47,33 @@ export function useHeaderLogic() {
         };
     }, [closeDropdown]);
 
+    // Close dropdowns when page URL changes
+    useEffect(() => {
+        if (!isBrowser) return;
+        
+        let currentPath = window.location.pathname;
+        
+        // Function to check for URL changes
+        const checkForNavigation = () => {
+            if (currentPath !== window.location.pathname) {
+                currentPath = window.location.pathname;
+                closeDropdown();
+            }
+        };
+        
+        // Set up a MutationObserver to detect DOM changes which might indicate navigation
+        const observer = new MutationObserver(checkForNavigation);
+        observer.observe(document.body, { childList: true, subtree: true });
+        
+        // Also check periodically as a fallback
+        const interval = setInterval(checkForNavigation, 300);
+        
+        return () => {
+            observer.disconnect();
+            clearInterval(interval);
+        };
+    }, [closeDropdown]);
+
     const handleDropdownBlur = useCallback((event) => {
         if (!safeIsDesktop()) return;
         if (event.currentTarget.contains(event.relatedTarget)) {

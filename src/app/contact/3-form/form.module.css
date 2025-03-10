@@ -10,7 +10,7 @@
 .greenBandWrapper { margin: 7vw 0 3.8vw 0 !important; 
 }
 
-@media screen and (min-width: 768px) and (max-width: 1366px) {
+@media screen and (max-width: 1024px) {
   .formContainer { min-height: 35.68vw; line-height: 3.39vw; gap: 2.60vw; padding: 1.30vw 2vw !important; width: 100%; }
   .formGroup { font-size: 1.82vw; padding: 1.17vw 1.95vw 1.17vw 0; }
   .formGroup::placeholder { font-size: 1.56vw; }

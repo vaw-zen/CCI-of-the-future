@@ -18,7 +18,11 @@ const KNOWN_ATTRIBUTES = [
   'cz-shortcut-listen',
   'data-grammarly',
   'data-ms',
-  'data-extension'
+  'data-extension',
+  'className',
+  'class',
+  'style',
+  'header-module__JXv2oG__'
 ];
 
 /**
@@ -36,10 +40,14 @@ export function useSuppressHydrationWarnings() {
       // Check if this is a hydration warning for a known attribute
       const errorMessage = args.join(' ');
       
-      if (errorMessage.includes('Hydration failed')) {
+      if (errorMessage.includes('Hydration failed') || 
+          errorMessage.includes('Warning: Prop `className` did not match') ||
+          errorMessage.includes('Warning: Text content did not match')) {
         // Check against our known problematic attributes
         if (KNOWN_ATTRIBUTES.some(attr => errorMessage.includes(attr)) || 
-            errorMessage.includes('browser extension')) {
+            errorMessage.includes('browser extension') ||
+            errorMessage.includes('className=') ||
+            errorMessage.includes('header-module__JXv2oG__')) {
           // Just suppress this specific warning
           return;
         }

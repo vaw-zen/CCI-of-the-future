@@ -12,6 +12,12 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
     
     // Track checkbox state in React state instead of directly manipulating the DOM
     const [checkboxChecked, setCheckboxChecked] = useState(false);
+    // Add client-side flag to prevent hydration mismatch
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleCheckboxChange = (e) => {
         setCheckboxChecked(e.target.checked);
@@ -65,11 +71,11 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                                             className={styles.checkbox}
                                             onChange={handleCheckboxChange}
                                             checked={checkboxChecked}
-                                            style={{
+                                            style={isClient ? {
                                                 background: checkboxChecked 
                                                     ? `radial-gradient(circle at center, var(--t-primary) 50%, transparent 50%)`
                                                     : 'transparent'
-                                            }}
+                                            } : {}}
                                         />
                                         <label htmlFor="privacy-checkbox" className={styles.checkboxLabel}>
                                             J'accepte la politique de confidentialité

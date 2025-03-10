@@ -21,6 +21,9 @@
 .topButton:hover { opacity: 1; transform: scale(1.1) rotate(-45deg) !important; }
 .topButton svg { color: var(--bg-base); transform: rotate(-45deg); width: 70%; height: 70%; }
 
+.activeLink {
+    color: var(--ac-primary) !important;
+}
 
 @media (max-width: 1024px) {
     .container { padding: 0 1.953125vw; height: 13.02vw; z-index: 1; position: relative;}

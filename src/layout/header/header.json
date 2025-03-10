@@ -20,11 +20,11 @@
             },
             {
                 "name": "notre equipe",
-                "link": "/"
+                "link": "/team"
             },
             {
                 "name": "FAQ",
-                "link": "/"
+                "link": "/faq"
             }
         ]
     },
@@ -32,12 +32,12 @@
         "name": "services",
         "subLinks": [
             {
-                "name": "notre equipe",
-                "link": "/"
+                "name": "tapisserie",
+                "link": "/tapisserie"
             },
             {
-                "name": "FAQ",
-                "link": "/"
+                "name": "nettoyage",
+                "link": "/nettoyage"
             }
         ]
     },
@@ -45,12 +45,12 @@
         "name": "projects",
         "subLinks": [
             {
-                "name": "notre equipe",
-                "link": "/"
+                "name": "project1",
+                "link": "/project1"
             },
             {
-                "name": "FAQ",
-                "link": "/"
+                "name": "project2",
+                "link": "/project2"
             }
         ]
     },
@@ -58,12 +58,12 @@
         "name": "blog",
         "subLinks": [
             {
-                "name": "notre equipe",
-                "link": "/"
+                "name": "blog1",
+                "link": "/blog1"
             },
             {
-                "name": "FAQ",
-                "link": "/"
+                "name": "blog2",
+                "link": "/blog2"
             }
         ]
     },

@@ -11,7 +11,7 @@
   --bg-elevated: rgb(26, 26, 28);
 
   /* Accent */
-  --ac-primary: #cbfb42;
+  --ac-primary: rgb(203, 251, 66);
 }
 
 ::selection { background-color: var(--ac-primary); color: var(--t-highlight);  }

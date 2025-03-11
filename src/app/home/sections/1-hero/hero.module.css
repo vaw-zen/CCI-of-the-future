@@ -1,7 +1,7 @@
 .heroContainer { width: 100%; height: clamp(32vw, 100svh, 100svh); background: black; contain: paint; }
 .heroContainer img { transition: opacity .2s; }
 .backgroundImage { position: absolute !important; left: 0; top: 0; width: 100vw; height: 100svh; object-fit: cover; object-position: center; }
-.glowLines { z-index: 1; height: 100%; width: 50%; object-fit: cover; object-position: bottom; position: absolute !important; right: 20vw; top: 0; transition: opacity .5s !important; }
+.glowLines { opacity: .75; z-index: 1; height: 100%; width: 50%; object-fit: cover; object-position: bottom; position: absolute !important; right: 20vw; top: 0; transition: opacity .5s !important; }
 .mainImageContainer { z-index: 1; position: absolute; right: -5vw; bottom: -13vw; border-radius: 50vw 50vw 0 0; height: 60vw; width: 35vw; transform: rotate(-40deg); overflow: hidden; border: .5vw solid var(--bg-elevated); }
 .mainImage { width: 125%; height: 100%; object-fit: cover; object-position: center; transform: rotate(45deg) translatex(-25%); }
 .circleImage { z-index: 1; width: 17.5vw; height: 17.5vw; border-radius: 50%; object-fit: contain; object-position: center; position: absolute !important; right: 25vw; bottom: 2.5vw; }
@@ -23,7 +23,7 @@
 .button:hover { background: var(--t-primary); border-color: var(--t-primary); color: var(--bg-base);  }
 
 @media (max-width: 1024px) {
-    .glowLines { height: 100%; width: 100%; object-fit: cover; object-position: bottom right; position: absolute; right: 20vw; position: absolute !important; }
+    .glowLines { height: 100%; width: 100%; object-fit: cover; object-position: bottom right; position: absolute; right: 20vw; position: absolute !important;  }
     .content { width: 70vw; height: auto; padding: 5vw 0 0 2vw; margin-top: -24vw; margin-left: 23.5vw; }
     .heroContainer { height: clamp(129vw, 100svh, 100svh); display: flex; align-items: center; justify-content: center; }
     .backgroundImage { height: clamp(129vw, 100svh, 100svh); }

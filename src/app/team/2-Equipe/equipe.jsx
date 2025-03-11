@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './equipe.module.css';
-
+import { LineMdPhoneTwotone, SiMailDuotone, LineMdInstagram, LineMdFacebook, LineMdLinkedin } from '@/utils/components/icons';
 export default function Equipe() {
   const cards = [
     {
@@ -63,18 +63,16 @@ export default function Equipe() {
               <h3>{card.name}</h3>
               <h4>{card.position}</h4>
               <div className={styles.socials}>
-                <a href={card.socials.facebook} target="_blank" rel="noreferrer">
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a href={card.socials.twitter} target="_blank" rel="noreferrer">
-                  <i className="fab fa-twitter"></i>
-                </a>
-                <a href={card.socials.linkedin} target="_blank" rel="noreferrer">
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-                <a href={card.socials.instagram} target="_blank" rel="noreferrer">
-                  <i className="fab fa-instagram"></i>
-                </a>
+          
+              <a href="/">
+                <LineMdInstagram className={styles.icon} />
+              </a>
+              <a href="/">
+                <LineMdFacebook className={styles.icon} />
+              </a>
+              <a href="/">
+                <LineMdLinkedin className={styles.icon} />
+              </a>
               </div>
             </div>
           </div>

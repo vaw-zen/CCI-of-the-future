@@ -39,19 +39,19 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    min-width: 200px;
-    max-height: 24.40vw;
+   width: 20.63vw;
+  height: 24.40vw;
    gap:0;
     justify-content: center;
     align-items: center;
     text-align: center;
-    /* background: var(--bg-elevated); */
     position: relative;
 }
 .imageContainer{
     padding:0;
     margin:0;
-    height: 21.14vw;
+    height: 19.51vw;
+    width: 100%;
 }
 .imageContainer img {
     width: 100%;
@@ -68,7 +68,7 @@
     margin:-2.82vw 0 0 0;
      background: var(--bg-elevated);
      width:100%;
-     height: 4vw;
+     height: 5vw;
      z-index:2;
      position: absolute;
      bottom: 0;
@@ -87,7 +87,7 @@
     font-weight: 400;
     color:#9dabaf;
 }
-  
+
 .socials{
     justify-content: center;
     align-items: center;
@@ -96,21 +96,29 @@
     width:100%;
     margin-top: 0.94vw;
     display:none;
-
+    
 }
 .icon{
     width:0.83vw;
     height:auto;
     color:rgba(255, 255, 255, 0.7);
     background-color:transparent;
-
+    
 }
 
+@keyframes fadeBack {
+    0% {
+        background-color: rgba(71, 71, 71, 0.918);; /* Fully transparent */
+    }
+    100% {
+        background-color: var(--bg-elevated); /* Fully visible */
+    }
+}
 .card:hover .textContainer {
     transform: translateY(-0.32vw);
-    transition: transform .7s ease;
+    transition: transform .9s ease;
     bottom: -7;
-    animation: fadeBack .7s forwards;
+    animation: fadeBack .9s forwards;
     height:fit-content;
 }
 
@@ -118,11 +126,10 @@
 .card:hover .socials {
     display: flex;
 }
-@keyframes fadeBack {
-    0% {
-        background-color: rgba(71, 71, 71, 0.7);; /* Fully transparent */
-    }
-    100% {
-        background-color: var(--bg-elevated); /* Fully visible */
+
+
+@media screen and (max-width: 1024px) {
+    .container {
+        padding: 0 1.95vw;
     }
 }

@@ -2,11 +2,16 @@
 .container h3 { margin: 0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase; }
 .container h2 { font-size: 3.33vw; line-height: 3.85vw; text-transform: none; margin: 0 0 1.04vw; font-family: 'DM Sans', sans-serif; }
 
-.cardsContainer { display: flex; flex-wrap: wrap; margin-top: 1vw; width: 100%; height: 100%; gap: 1.5vw; }
+.cardsContainer { display: flex; flex-wrap: wrap; margin-top: 1vw; width: 100%; height: 100%; gap: 1.5vw; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Hide scrollbar for Webkit-based browsers */
+.cardsContainer::-webkit-scrollbar {
+    display: none;
+}
 
 .card { overflow: hidden; display: flex; flex: 1; flex-direction: column; width: 20.63vw; height: calc(19.51vw + 5vw); gap: 0; align-items: center; text-align: center; position: relative; }
 
-.imageContainer { padding: 0; margin: 0; height: 19.51vw; width: 100%; }
+.imageContainer { padding: 0; margin: 0;height: 19.51vw; width: 100%; }
 .imageContainer img { width: 100%; height: 100%; z-index: 1; }
 
 .textContainer { margin: -2.82vw 0 0 0; background: var(--bg-elevated); width: 100%; height: auto; z-index: 2; position: absolute; bottom: -1.75vw; }
@@ -15,10 +20,46 @@
 .textContainer h4 { font-size: 0.79vw; font-weight: 400; color: #9dabaf; }
 
 .textContainerContentTop { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .3vw;  width: 100%;  display: flex; height: 5vw; overflow: hidden;  transition: height .3s;}
-.socials { height: 1.75vw; justify-content: center; align-items: flex-start; gap: .3vw;  width: 100%;  display: flex; }
+.socials { min-height: 1.75vw; justify-content: center; align-items: flex-start; gap: .3vw;  width: 100%;  display: flex; }
 .icon { width: 0.83vw; height: auto; color: rgba(255, 255, 255, 0.7); background-color: transparent; }
 
 
 .card:hover .textContainerContent { transform: translateY(-35%); height: fit-content; background: rgba(26, 26, 28, 1); }
 
-@media screen and (max-width: 1024px) { .container { padding: 0 1.95vw; } }
+@media screen and (max-width: 1024px) { 
+    .container { padding: 2vw 1.95vw; padding-bottom: 5vw;}
+
+    .cardsContainer {
+         flex-wrap: nowrap;
+         overflow-x: auto;
+        height: 52.52vw;
+         -webkit-overflow-scrolling: touch;
+         scroll-snap-type: x mandatory;
+    
+    }
+    
+    .card {
+         flex: 0 0 calc((100% - 3vw)/3);
+         width: calc((100% - 3vw)/3);
+         height: 100%;
+         
+    }
+    .container h3{  font-size: 2.08vw;padding-bottom: 1.30vw; }
+    .container h2{ font-size: 5.86vw;line-height: 7.16vw; padding-bottom: 1.30vw;}
+    .imageContainer{height: 41vw;}
+    .textContainer{bottom:-3.39vw;margin:0;}
+    .textContainerContent{height: 15.75vw;}
+    .textContainerContentTop{height: 15.42vw;}
+    .textContainer h4 {font-size: 2.08vw;}
+    .textContainer h3 {font-size: 2.47vw;}
+    .socials{height: 3.39vw;}
+    .icon{width: 2.38vw;}
+}
+@media screen and (max-width: 480px) {
+    .card {
+        flex: 0 0  calc((100% - 3vw)/2);
+     
+        height: 100%;
+        
+   }
+}

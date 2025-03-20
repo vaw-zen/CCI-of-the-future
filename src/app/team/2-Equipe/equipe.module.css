@@ -1,15 +1,46 @@
-.container { display: flex; flex-direction: column; padding: 0 15.975vw 0 15.975vw; height: 100%; width: 100%; contain: paint; }
+.container { 
+    display: flex; 
+    flex-direction: column; 
+    padding: 0 15.975vw 0 15.975vw; 
+    height: 100%; 
+    width: 100%; 
+    contain: paint; 
+    overflow-x: hidden; /* Ensure outer container doesn't scroll */
+}
 .container h3 { margin: 0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase; }
 .container h2 { font-size: 3.33vw; line-height: 3.85vw; text-transform: none; margin: 0 0 1.04vw; font-family: 'DM Sans', sans-serif; }
 
-.cardsContainer { display: flex; flex-wrap: wrap; margin-top: 1vw; width: 100%; height: 100%; gap: 1.5vw; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; }
+.cardsContainer { 
+    display: flex; 
+    flex-wrap: nowrap;
+    margin-top: 1vw; 
+    width: 100%; 
+    height: 100%; 
+    gap: 1.5vw; 
+    overflow-x: auto;
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
 
 /* Hide scrollbar for Webkit-based browsers */
 .cardsContainer::-webkit-scrollbar {
     display: none;
 }
 
-.card { overflow: hidden; display: flex; flex: 1; flex-direction: column; width: 20.63vw; height: calc(19.51vw + 5vw); gap: 0; align-items: center; text-align: center; position: relative; }
+.card { 
+    overflow: hidden; 
+    display: flex; 
+    flex: 0 0 calc((100% - 4.5vw)/4);
+    width: calc((100% - 4.5vw)/4); 
+    height: calc(19.51vw + 5vw); 
+    gap: 0; 
+    align-items: center; 
+    text-align: center; 
+    position: relative;
+    scroll-snap-align: start;
+}
 
 .imageContainer { padding: 0; margin: 0;height: 19.51vw; width: 100%; }
 .imageContainer img { width: 100%; height: 100%; z-index: 1; }
@@ -62,15 +93,15 @@
 
 @media screen and (max-width: 480px) {
     .card {
-        flex: 0 0 calc((100% - 2.5vw)/2);
-        width:calc((100% - 2.5vw)/2);
+        flex: 0 0 calc((100% - 7vw)/2);
+        width:calc((100% - 7vw)/2);
         height: 100%;
         scroll-snap-align: start;
     }
     
     .cardsContainer {
         scroll-padding: 0 1vw;
-        gap: 2.5vw;
+        gap: 7vw;
     }
     
     .imageContainer {

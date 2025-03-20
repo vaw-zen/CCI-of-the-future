@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './equipe.module.css';
-import { LineMdPhoneTwotone, SiMailDuotone, LineMdInstagram, LineMdFacebook, LineMdLinkedin } from '@/utils/components/icons';
+import { LineMdInstagram, LineMdFacebook, LineMdLinkedin } from '@/utils/components/icons';
+import GreenBand from '@/utils/components/GreenBand/GreenBand';
 export default function Equipe() {
   const cards = [
     {
@@ -83,6 +84,7 @@ export default function Equipe() {
           </div>
         ))}
       </div>
+      <GreenBand className={styles.greenBandWrapper}/>
     </div>
   );
 }

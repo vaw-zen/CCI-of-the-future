@@ -60,20 +60,25 @@ export default function Equipe() {
               <img src={card.image} alt={card.name} />
             </div>
             <div className={styles.textContainer}>
-              <h3>{card.name}</h3>
-              <h4>{card.position}</h4>
-              <div className={styles.socials}>
-          
-              <a href="/">
-                <LineMdInstagram className={styles.icon} />
-              </a>
-              <a href="/">
-                <LineMdFacebook className={styles.icon} />
-              </a>
-              <a href="/">
-                <LineMdLinkedin className={styles.icon} />
-              </a>
+              <div className={styles.textContainerContent}>
+                <div className={styles.textContainerContentTop}>
+                  <h3>{card.name}</h3>
+                  <h4>{card.position}</h4>
+                </div>
+
+                <div className={styles.socials} >
+                  <a href="/">
+                    <LineMdInstagram className={styles.icon} />
+                  </a>
+                  <a href="/">
+                    <LineMdFacebook className={styles.icon} />
+                  </a>
+                  <a href="/">
+                    <LineMdLinkedin className={styles.icon} />
+                  </a>
+                </div>
               </div>
+
             </div>
           </div>
         ))}

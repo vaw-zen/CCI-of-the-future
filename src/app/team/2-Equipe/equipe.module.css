@@ -1,135 +1,24 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    padding: 0 15.975vw 5.469vw 15.975vw;
-    min-height: 32vw;
-    height: 100%;
-    width: 100%;
-    contain: paint;
-}
+.container { display: flex; flex-direction: column; padding: 0 15.975vw 5.469vw 15.975vw; min-height: 32vw; height: 100%; width: 100%; contain: paint; }
+.container h3 { margin: 0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase; }
+.container h2 { font-size: 3.33vw; line-height: 3.85vw; text-transform: none; margin: 0 0 1.04vw; font-family: 'DM Sans', sans-serif; }
 
-.container h3 {
-    margin: 0 0 0.52vw;
-    font-family: 'DM Sans', sans-serif;
-    color: #cafb42;
-    font-size: 0.83vw;
-    line-height: 1.35vw;
-    text-transform: uppercase;
-}
+.cardsContainer { display: flex; flex-wrap: wrap; margin-top: 1vw; width: 100%; height: 100%; gap: 1.5vw; }
 
-.container h2 {
-    font-size: 3.33vw;
-    line-height: 3.85vw;
-    text-transform: none;
-    margin: 0 0 1.04vw;
-    font-family: "DM Sans", sans-serif;
-}
+.card { overflow: hidden; display: flex; flex: 1; flex-direction: column; width: 20.63vw; height: calc(19.51vw + 5vw); gap: 0; align-items: center; text-align: center; position: relative; }
 
-.cardsContainer {
-    display: flex;
-    flex-wrap: wrap;
+.imageContainer { padding: 0; margin: 0; height: 19.51vw; width: 100%; }
+.imageContainer img { width: 100%; height: 100%; z-index: 1; }
 
-    margin-top:1vw;
-    width: 100%;
-    height: 100%;
-    gap: 1.5vw;
-}
+.textContainer { margin: -2.82vw 0 0 0; background: var(--bg-elevated); width: 100%; height: auto; z-index: 2; position: absolute; bottom: -1.75vw; }
+.textContainerContent { transition: transform .3s , background .3s; background: rgba(26, 26, 28, 0.5); width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.textContainer h3 { font-size: 0.88vw; font-weight: 700; text-decoration-style: solid; color: #fff; text-transform: uppercase; margin-bottom: 0; }
+.textContainer h4 { font-size: 0.79vw; font-weight: 400; color: #9dabaf; }
 
-.card {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-   width: 20.63vw;
-  height: 24.40vw;
-   gap:0;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: relative;
-}
-.imageContainer{
-    padding:0;
-    margin:0;
-    height: 19.51vw;
-    width: 100%;
-}
-.imageContainer img {
-    width: 100%;
-    height: 100%;
-    z-index:1;
-}
-
-.textContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center ;
-    align-items: center;
-    padding: 1.30vw 0 1.35vw 0;
-    margin:-2.82vw 0 0 0;
-     background: var(--bg-elevated);
-     width:100%;
-     height: 5vw;
-     z-index:2;
-     position: absolute;
-     bottom: 0;
-     /* line-height: 1.30vw; */
-}
-.textContainer h3{
-    font-size:0.88vw ;
-    font-weight: 700;
-    text-decoration-style:solid ;
-    color:#fff;
-    text-transform: uppercase;
-    margin-bottom: 0;
-}
-.textContainer h4{
-    font-size:0.79vw;
-    font-weight: 400;
-    color:#9dabaf;
-}
-
-.socials{
-    justify-content: center;
-    align-items: center;
-    gap:.3vw;
-    height:100%;
-    width:100%;
-    margin-top: 0.94vw;
-    display:none;
-    
-}
-.icon{
-    width:0.83vw;
-    height:auto;
-    color:rgba(255, 255, 255, 0.7);
-    background-color:transparent;
-    
-}
-
-@keyframes fadeBack {
-    0% {
-        background-color: rgba(71, 71, 71, 0.918);; /* Fully transparent */
-    }
-    100% {
-        background-color: var(--bg-elevated); /* Fully visible */
-    }
-}
-.card:hover .textContainer {
-    transform: translateY(-0.32vw);
-    transition: transform .9s ease;
-    bottom: -7;
-    animation: fadeBack .9s forwards;
-    height:fit-content;
-}
-
-/* Make socials appear on hover */
-.card:hover .socials {
-    display: flex;
-}
+.textContainerContentTop { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .3vw;  width: 100%;  display: flex; height: 5vw; overflow: hidden;  transition: height .3s;}
+.socials { height: 1.75vw; justify-content: center; align-items: flex-start; gap: .3vw;  width: 100%;  display: flex; }
+.icon { width: 0.83vw; height: auto; color: rgba(255, 255, 255, 0.7); background-color: transparent; }
 
 
-@media screen and (max-width: 1024px) {
-    .container {
-        padding: 0 1.95vw;
-    }
-}
+.card:hover .textContainerContent { transform: translateY(-35%); height: fit-content; background: rgba(26, 26, 28, 1); }
+
+@media screen and (max-width: 1024px) { .container { padding: 0 1.95vw; } }

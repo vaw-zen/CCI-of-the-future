@@ -116,3 +116,9 @@
         padding-left:6.51vw;
     }
 }
+@media screen and (max-width: 1024px) {
+.memberInfo{
+    flex-direction: column;
+    width: 100%;
+}
+}

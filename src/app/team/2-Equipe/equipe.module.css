@@ -1,4 +1,4 @@
-.container { display: flex; flex-direction: column; padding: 0 15.975vw 5.469vw 15.975vw; min-height: 32vw; height: 100%; width: 100%; contain: paint; }
+.container { display: flex; flex-direction: column; padding: 0 15.975vw 0 15.975vw; height: 100%; width: 100%; contain: paint; }
 .container h3 { margin: 0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase; }
 .container h2 { font-size: 3.33vw; line-height: 3.85vw; text-transform: none; margin: 0 0 1.04vw; font-family: 'DM Sans', sans-serif; }
 
@@ -25,9 +25,11 @@
 
 
 .card:hover .textContainerContent { transform: translateY(-35%); height: fit-content; background: rgba(26, 26, 28, 1); }
+.greenBandWrapper { margin: 6vw 0 3.8vw 0 !important; 
+}
 
 @media screen and (max-width: 1024px) { 
-    .container { padding: 2vw 1.95vw; padding-bottom: 5vw;}
+    .container { padding: 2vw 1.95vw;}
 
     .cardsContainer {
          flex-wrap: nowrap;
@@ -54,12 +56,32 @@
     .textContainer h3 {font-size: 2.47vw;}
     .socials{height: 3.39vw;}
     .icon{width: 2.38vw;}
+    .greenBandWrapper { margin: 8vw 0 7.65vw 0 !important; 
+    }
 }
+
 @media screen and (max-width: 480px) {
     .card {
-        flex: 0 0  calc((100% - 3vw)/2);
-     
+        flex: 0 0 calc((100% - 2.5vw)/2);
+        width:calc((100% - 2.5vw)/2);
         height: 100%;
-        
-   }
+        scroll-snap-align: start;
+    }
+    
+    .cardsContainer {
+        scroll-padding: 0 1vw;
+        gap: 2.5vw;
+    }
+    
+    .imageContainer {
+        height: 45vw;
+    }
+    
+    .textContainer {
+        bottom: -4.5vw;
+    }
+    
+    .greenBandWrapper { 
+        margin: 15vw 0 13vw 0 !important; 
+    }
 }

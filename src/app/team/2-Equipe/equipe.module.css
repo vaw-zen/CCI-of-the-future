@@ -129,5 +129,22 @@
     
     .greenBandWrapper { 
         margin: 15vw 0 13vw 0 !important; 
+        
     }
+    .textContainerContentTop{
+        height: 26vw;
+
+    }
+  .textContainerContent{
+    height: 26vw;
+  }
+   .textContainerContentTop h3{
+    font-size: 4.61vw;
+   }
+   .textContainerContentTop h4{
+    font-size: 3.88vw;
+   }
+   .textContainer{bottom:-6.39vw;}
+   .socials{height: 6.39vw;}
+   .icon{height:3.88vw;width: 3.88vw;}
 }

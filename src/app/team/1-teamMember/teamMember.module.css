@@ -77,16 +77,10 @@
     flex:none;
     width: 54.04vw;
     height: 54.04vw; 
-    padding: 10vw 0;       /* display: flex; */
+    padding: 10vw 0;       
     }
     
-    .infoContainer{
-        /* display:flex; */
-        /* flex:1; */
-
-        padding-left: 0;
-    
-    }
+   
     .infoContainer h2{
         font-size: 8.33vw;
         line-height: 9.46vw;
@@ -112,13 +106,47 @@
     .memberInfo{
         width:70%
     }
-    .memberAutograph{
-        padding-left:6.51vw;
-    }
+ 
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 480px) {
+    .infoContainer{
+        padding-top: 4.85vw;
+    }
+    .infoContainer h2{
+        font-size: 9.71vw;
+        line-height:12.14vw ;
+        margin-bottom: 3.64vw;
+    }
+.infoContainer p{
+    font-size: 3.88vw;
+    line-height:6.31vw ;
+    margin-bottom: 4.85vw;
+}    
 .memberInfo{
     flex-direction: column;
     width: 100%;
+}
+.memberInfo img{
+    height: 16.99vw;
+    width: 16.99vw;
+
+}
+.memberInfo h3{
+    font-size: 4.37vw;
+    padding-left: 4.85vw;
+}
+.memberAutograph{
+    font-size: 3.88vw;
+    padding-top:4.85vw ;
+}
+.memberAutograph img{
+    width:24.76vw;
+    height: 20.39vw;
+}
+.imageContainer{flex: none; width:70.39vw !important;
+    height: 70.39vw !important;}
+
+.container{
+    padding: 14.56vw 3.64vw ;
 }
 }

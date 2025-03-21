@@ -107,7 +107,7 @@
     }
     .card {
         flex: 0 0 calc((100% - 7vw)/2);
-        width:52.80vw !important;
+        width:42vw!important;
         height: 100%;
         scroll-snap-align: start;
     }
@@ -123,28 +123,34 @@
         height: 52.80vw;
     }
     
-    /* .textContainer {
-        bottom: -4.5vw;
-    } */
-    
+   
     .greenBandWrapper { 
         margin: 15vw 0 13vw 0 !important; 
         
     }
     .textContainerContentTop{
-        height: 26vw;
-
+        height:25vw;
+        padding: 10vw 0;
+gap: .1vw;
     }
   .textContainerContent{
-    height: 26vw;
+    height:25vw;
+gap: .1vw;
+
   }
    .textContainerContentTop h3{
     font-size: 4.61vw;
+    line-height: .1vw;
    }
    .textContainerContentTop h4{
     font-size: 3.88vw;
    }
-   .textContainer{bottom:-6.39vw;}
+   .textContainer{bottom:-6.39vw;
+    gap: .1vw;
+
+
+
+}
    .socials{height: 6.39vw;}
    .icon{height:3.88vw;width: 3.88vw;}
 }

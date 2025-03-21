@@ -1,9 +1,7 @@
 import React from "react";
-import styles from './page.module.css'
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import TeamMember from "./1-teamMember/teamMember";
 import Equipe from "./2-Equipe/equipe";
-import GreenBand from '@/utils/components/GreenBand/GreenBand';
 export default function ContactPage() {
   const socials = {
     facebook: "https://www.facebook.com/your-profile",
@@ -17,7 +15,7 @@ export default function ContactPage() {
       <HeroHeader title="Our team" />
         <TeamMember />
         <Equipe />
-        {/* <GreenBand  className={styles.greenBandWrapper}/> */}
+
     </>
   );
 }

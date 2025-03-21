@@ -5,19 +5,20 @@
     height: 100%; 
     width: 100%; 
     contain: paint; 
-    overflow-x: hidden; /* Ensure outer container doesn't scroll */
+    /* overflow-x: hidden; Ensure outer container doesn't scroll */
 }
 .container h3 { margin: 0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase; }
-.container h2 { font-size: 3.33vw; line-height: 3.85vw; text-transform: none; margin: 0 0 1.04vw; font-family: 'DM Sans', sans-serif; }
+.container h2 { font-size: 3.33vw; line-height: 3.85vw; text-transform: none; font-family: 'DM Sans', sans-serif; }
+
+
 
 .cardsContainer { 
     display: flex; 
-    flex-wrap: nowrap;
-    margin-top: 1vw; 
-    width: 100%; 
-    height: 100%; 
+    flex-wrap: nowrap; /* Ensure cards are in a single row */
+    width: 100%; /* Ensure it takes full width */
+    height: fit-content; 
     gap: 1.5vw; 
-    overflow-x: auto;
+    overflow-x: auto; /* Enable horizontal scrolling */
     -ms-overflow-style: none; 
     scrollbar-width: none; 
     scroll-snap-type: x mandatory;
@@ -32,7 +33,7 @@
 .card { 
     overflow: hidden; 
     display: flex; 
-    flex: 0 0 calc((100% - 4.5vw)/4);
+    flex: 0 0 calc((100% - 4.5vw)/4); /* Ensure 4 cards fit */
     width: calc((100% - 4.5vw)/4); 
     height: calc(19.51vw + 5vw); 
     gap: 0; 
@@ -54,22 +55,22 @@
 .socials { min-height: 1.75vw; justify-content: center; align-items: flex-start; gap: .3vw;  width: 100%;  display: flex; }
 .icon { width: 0.83vw; height: auto; color: rgba(255, 255, 255, 0.7); background-color: transparent; }
 
-
+.icon:hover {
+    color: #cafb42; 
+}
 .card:hover .textContainerContent { transform: translateY(-35%); height: fit-content; background: rgba(26, 26, 28, 1); }
 .greenBandWrapper { margin: 6vw 0 3.8vw 0 !important; 
 }
+.textContainerContent h3:hover{
+    color: #cafb42; 
 
+}
 @media screen and (max-width: 1024px) { 
-    .container { padding: 2vw 1.95vw;}
+    .container { padding: 2vw 1.95vw; }
 
     .cardsContainer {
-         flex-wrap: nowrap;
-         overflow-x: auto;
         height: 52.52vw;
-         -webkit-overflow-scrolling: touch;
-         scroll-snap-type: x mandatory;
-    
-    }
+        }
     
     .card {
          flex: 0 0 calc((100% - 3vw)/3);
@@ -78,7 +79,7 @@
          
     }
     .container h3{  font-size: 2.08vw;padding-bottom: 1.30vw; }
-    .container h2{ font-size: 5.86vw;line-height: 7.16vw; padding-bottom: 1.30vw;}
+    .container h2{ font-size: 5.86vw;line-height: 7.16vw; }
     .imageContainer{height: 41vw;}
     .textContainer{bottom:-3.39vw;margin:0;}
     .textContainerContent{height: 15.75vw;}
@@ -92,25 +93,39 @@
 }
 
 @media screen and (max-width: 480px) {
+    .container{
+        padding: 2vw 3.64vw;
+    }
+    .container h3{
+        font-size: 3.88vw;
+        margin-bottom: 2.43vw;
+    }
+    .container h2{
+        font-size: 8.50vw;
+        line-height: 10.92vw;
+   
+    }
     .card {
         flex: 0 0 calc((100% - 7vw)/2);
-        width:calc((100% - 7vw)/2);
+        width:52.80vw !important;
         height: 100%;
         scroll-snap-align: start;
     }
     
     .cardsContainer {
-        scroll-padding: 0 1vw;
-        gap: 7vw;
+ 
+        height: 75.62vw;
+        gap: 6vw;
+
     }
     
     .imageContainer {
-        height: 45vw;
+        height: 52.80vw;
     }
     
-    .textContainer {
+    /* .textContainer {
         bottom: -4.5vw;
-    }
+    } */
     
     .greenBandWrapper { 
         margin: 15vw 0 13vw 0 !important; 

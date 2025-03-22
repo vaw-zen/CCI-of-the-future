@@ -66,7 +66,7 @@ export default function Equipe() {
     <div className={styles.container}>
       <h3>Our Team</h3>
       <h2>Meet the experienced team behind our success.</h2>
-      {/* <div className={styles.scrollWrapper}> */}
+     
         <div className={styles.cardsContainer}>
           {cards.map((card, index) => (
             <div className={styles.card} key={index}>

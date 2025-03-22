@@ -107,7 +107,7 @@
     }
     .card {
         flex: 0 0 calc((100% - 7vw)/2);
-        width:42vw!important;
+        width:42.5vw!important;
         height: 100%;
         scroll-snap-align: start;
     }

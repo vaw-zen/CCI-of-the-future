@@ -1,4 +1,4 @@
-import { createRef, useCallback, useState, useEffect, useMemo } from 'react';
+import { createRef, useCallback, useState, useEffect, useMemo, useRef } from 'react';
 import styles from './header.module.css'
 import { dimensionsStore } from '@/utils/store/store';
 import { lenisRef } from '@/utils/initializer/initializer.func';
@@ -23,6 +23,7 @@ export function useHeaderLogic() {
     
     // Use Next.js pathname hook instead of manually tracking
     const currentPath = usePathname();
+    const prevPathRef = useRef(currentPath);
 
     // Use this safe version of isDesktop to prevent hydration issues
     const safeIsDesktop = useCallback(() => {
@@ -34,6 +35,15 @@ export function useHeaderLogic() {
     useEffect(() => {
         setIsClientSide(true);
     }, []);
+
+    // Close menu when navigating to a different page
+    useEffect(() => {
+        if (isClientSide && menu && prevPathRef.current !== currentPath) {
+            setMenu(false);
+            setActive(-1);
+        }
+        prevPathRef.current = currentPath;
+    }, [currentPath, isClientSide, menu]);
 
     const toggleDropdown = useCallback((index) => {
         setActive((prev) => (prev === index ? -1 : index));
@@ -175,7 +185,8 @@ export function useHeaderLogic() {
         hasActiveSublink,
         findActiveSublink,
         activeLinks,
-        currentPath
+        currentPath,
+        menu
     };
 }
 

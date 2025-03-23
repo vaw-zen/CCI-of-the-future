@@ -1,0 +1,47 @@
+{
+    "title": "Do you have Questions?",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry has been the industry’s standard dummy when an unknown printer.",
+    "faqs": [
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        },
+        {
+            "question": "What is the purpose of this website?",
+            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+        }
+        
+    ]
+}

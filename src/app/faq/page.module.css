@@ -1,0 +1,20 @@
+.section { padding: 5.63vw 0; }
+.header { display: flex; justify-content: center; flex-direction: column; align-items: center; }
+.title { margin-bottom: 1.04vw; font-size: 3.33vw; text-align: center; }
+.description { width: 42.5%; font-size: 0.83vw; text-align: center; color: var(--t-secondary); }
+
+/* ClientFAQ styles */
+.faqContainer { display: flex; padding: 0 16.25vw; margin-top: 2vw; gap: 1.2vw; }
+.column { width: 50%; display: flex; flex-direction: column; gap: 1.2vw; }
+
+/* FaqItem styles */
+.faqItem { width: 100%; }
+.faqHeader { height: 3.54vw; border-width: 1px; border-style: solid; border-color: var(--t-secondary); display: flex; align-items: center; justify-content: space-between; gap: 1vw; padding: 0.94vw 0.78vw; cursor: pointer; background: transparent; transition: background .3s; }
+.faqHeaderActive { border-color: var(--ac-primary); background: var(--ac-primary); }
+.question { font-size: 1.25vw; transition: color .3s; }
+.activeText { color: var(--bg-base); }
+.icon { transition: transform 0.3s ease, color 0.3s ease; }
+.activeIcon { transform: rotate(45deg); color: var(--bg-base); }
+.content { overflow: hidden; transition: height 0.3s ease; }
+.answer { padding: 1.04vw 0; }
+.answer p { font-size: 0.83vw; line-height: 1.5; }

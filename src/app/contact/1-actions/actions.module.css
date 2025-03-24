@@ -1,4 +1,4 @@
-.container { display: flex; flex-direction: column; padding: 0 15.975vw; gap: 1.56vw; padding-top: 110px; padding-bottom: 5.47vw; }
+.container { display: flex; flex-direction: column; padding: 0 var(--padding-base); gap: 1.56vw; padding-top: 110px; padding-bottom: 5.47vw; }
 .header { display: flex; height: 10.63vw; }
 .headerLeft { flex: 1;}
 .subtitle { margin:0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase; }

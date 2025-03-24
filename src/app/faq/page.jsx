@@ -1,7 +1,8 @@
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader'
 import content from './faq.json'
-import ClientFAQ from './ClientFAQ'
+import ClientFAQ from './components/ClientFAQ'
 import styles from './page.module.css'
+import GreenBand from '@/utils/components/GreenBand/GreenBand';
 
 export default function FAQ() {
     const { title, description, faqs } = content;
@@ -17,6 +18,7 @@ export default function FAQ() {
                 
                 {/* Pass data to client component */}
                 <ClientFAQ faqs={faqs} />
+                <GreenBand className={styles.greenBand} />
             </section>
         </>
     );

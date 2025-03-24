@@ -1,7 +1,7 @@
 'use client'
 import { memo, useRef, useState, useEffect } from 'react'
 import { LineMdPlus } from '@/utils/components/icons'
-import styles from './page.module.css'
+import styles from '../page.module.css'
 
 const FaqItem = memo(({ faq, index, isActive, onToggle }) => {
     const contentRef = useRef(null);

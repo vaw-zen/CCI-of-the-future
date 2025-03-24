@@ -1,8 +1,8 @@
 'use client'
 import React from 'react'
 import FaqItem from './FaqItem'
-import { useFaqLogic } from './faq.func'
-import styles from './page.module.css'
+import { useFaqLogic } from '../faq.func'
+import styles from '../page.module.css'
 
 export default function ClientFAQ({ faqs }) {
     const { 

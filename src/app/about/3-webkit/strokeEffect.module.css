@@ -2,7 +2,7 @@
 .container {
     display: flex;
     flex-wrap: wrap;
-    padding: 115px 15.975vw;
+    padding: 115px var(--padding-base);
     justify-content: space-between;
     contain: paint;
     width: 100%;

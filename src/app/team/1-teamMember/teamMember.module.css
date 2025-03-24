@@ -1,6 +1,6 @@
 .container{
     display: flex;
-    padding: 5.99vw 15.975vw 5.469vw 15.975vw;
+    padding: 5.99vw var(--padding-base) 5.469vw var(--padding-base);
     /* min-height: 32vw; */
     height: 32vw;
 

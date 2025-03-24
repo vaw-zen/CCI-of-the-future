@@ -1,4 +1,4 @@
-.services { padding: 0 15.975vw; contain: paint; width: 100%; }
+.services { padding: 0 var(--padding-base); contain: paint; width: 100%; }
 .greenBandWrapper { margin: 7vw 0 16vw 0 !important;  }
 .testimonialsWrapper { margin-top: 0;  }
 .mobileServices { display: none; }

@@ -1,6 +1,6 @@
 .page {width: 100%; contain: paint;}
-.showCase { padding: 0 15.975vw; }
-.refrences { margin: 10vw 15.975vw; }
+.showCase { padding: 0 var(--padding-base); }
+.refrences { margin: 10vw var(--padding-base); }
 .greenBandWrapper { margin: 0 0 13.75vw 0 !important;  }
 
 

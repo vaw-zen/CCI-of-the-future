@@ -2,7 +2,7 @@
     min-height: 16.04vw; /* 30.781px */
     width: 100%;
     height: 100%;
-    padding: 0 15.975vw; /* 305px */
+    padding: 0 var(--padding-base); /* 305px */
     display: flex;
     padding-top: 5.73vw; /* 110px */
     padding-bottom: 5.47vw; /* 105px */

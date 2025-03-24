@@ -13,7 +13,7 @@
     line-height: 26px; /* 26px */
     overflow-wrap: break-word;
     row-gap: 0px;    
-    padding: 0 15.975vw;
+    padding: 0 var(--padding-base);
     min-width: 67.7vw; /* 1300px */
     width: 100%;
     contain:paint

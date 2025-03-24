@@ -1,4 +1,4 @@
-.section { padding: 5.63vw 0; }
+.section { padding: 5.63vw 0; contain: paint; }
 .header { display: flex; justify-content: center; flex-direction: column; align-items: center; }
 .title { margin-bottom: 1.04vw; font-size: 3.33vw; text-align: center; }
 .description { width: 42.5%; font-size: 0.83vw; text-align: center; color: var(--t-secondary); }
@@ -12,9 +12,37 @@
 .faqHeader { height: 3.54vw; border-width: 1px; border-style: solid; border-color: var(--t-secondary); display: flex; align-items: center; justify-content: space-between; gap: 1vw; padding: 0.94vw 0.78vw; cursor: pointer; background: transparent; transition: background .3s; }
 .faqHeaderActive { border-color: var(--ac-primary); background: var(--ac-primary); }
 .question { font-size: 1.25vw; transition: color .3s; }
-.activeText { color: var(--bg-base); }
+.activeText { color: var(--bg-base) !important; }
 .icon { transition: transform 0.3s ease, color 0.3s ease; }
-.activeIcon { transform: rotate(45deg); color: var(--bg-base); }
+.activeIcon { transform: rotate(45deg); color: var(--bg-base) !important; }
 .content { overflow: hidden; transition: height 0.3s ease; }
 .answer { padding: 1.04vw 0; }
 .answer p { font-size: 0.83vw; line-height: 1.5; }
+
+@media (max-width: 1024px) {
+    .title { margin-bottom: 2.60vw; font-size: 5.86vw; }
+    .description { width: 100%; font-size: 2.08vw; color: var(--t-thri); margin: 1.30vw 0}
+    
+
+    .faqContainer { padding: 0 1.953125vw; flex-direction: column; margin-top: 7.5vw; }
+    .column { width: 100%; gap: 3vw; margin-bottom: 2vw; }
+
+    .greenBand { margin: 8vw 0 11.5vw 0 !important; }
+    .faqHeader { height: 8.85vw; width: 100%; padding: 2.34vw 1.95vw; }
+    .question { font-size: 3.39vw; }
+    .answer p { font-size: 2.08vw; padding: 2vw 0 0 0; color: var(--t-thri); }
+}
+
+@media (max-width: 480px) {
+    .title { margin-bottom: 4.85vw; font-size: 8.50vw; width: 90%; }
+    .description { font-size: 3.88vw; margin: 0 0 2.43vw 0; width: 90%; }
+    .column { gap: 4vw; margin-bottom: 3vw; }
+
+    .faqHeader { height: 23.79vw; padding: 4.37vw 3.64vw; }
+    .question { font-size: 5vw; color: var(--t-thri);font-weight: 600; }
+    .icon { width: 7vw; height: 7vw; color: var(--t-thri); }
+    .answer p { font-size: 3.88vw; padding: 2.5vw 0 0 0; color: var(--t-thri); }
+
+    .greenBand { margin: 17.5vw 0 27vw 0 !important; }
+
+}

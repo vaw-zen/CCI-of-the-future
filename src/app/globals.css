@@ -3,7 +3,7 @@
   /* Text */
   --t-primary: #FFFFFF;
   --t-secondary: #FFFFFF99;
-  --t-thri: hsla(0, 0%, 100%, 0.8);
+  --t-thri: rgba(255, 255, 255, 0.7)  ;
   --t-highlight: #010001;
 
   /* Background */

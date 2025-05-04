@@ -1,0 +1,18 @@
+.container { display: flex; flex-direction: column; gap: 0.78vw; /* 15px/1920*100 */ padding: var(--padding-base); }
+.title { font-size: 1.30vw; /* 25px/1920*100 */ line-height: 1.82vw; /* 35px/1920*100 */ color: var(--t-primary); font-weight: 700; }
+.textContainer { display: flex; flex-direction: column; gap: 0; margin-top: 2.60vw; /* 50px/1920*100 */ }
+.text { font-size: 0.83vw; /* 16px/1920*100 */ color: var(--t-thri); line-height: 1.35vw; /* 26px/1920*100 */ }
+
+@media screen and (max-width: 1024px) {
+    .container { gap: 1.46vw; /* 15px/1024*100 */ }
+    .title { font-size: 2.44vw; /* 25px/1024*100 */ line-height: 3.42vw; /* 35px/1024*100 */ }
+    .textContainer { margin-top: 4.88vw; /* 50px/1024*100 */ }
+    .text { font-size: 1.56vw; /* 16px/1024*100 */ line-height: 2.54vw; /* 26px/1024*100 */ }
+}
+
+@media screen and (max-width: 480px) {
+    .container { gap: 3.64vw; /* 15px/412*100 */ }
+    .title { font-size: 6.07vw; /* 25px/412*100 */ }
+    
+    .text { font-size: 3.88vw; /* 16px/412*100 */ line-height: 6.31vw; /* 26px/412*100 */ }
+}

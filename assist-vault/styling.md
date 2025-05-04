@@ -17,14 +17,14 @@ Convert **ALL** `px` units to `vw` units throughout the entire stylesheet, with 
 ## 2. **Media Queries Conversion:**
 
 ### a. **Tablet screens (@media screen and (max-width: 1024px)):**
-- Convert ALL `px` values to `vw` using: `vw = (px / 1024) * 100`
-- Example: `16px` → `1.56vw` (16 / 1024 * 100)
+- Convert ALL `px` values to `vw` using: `vw = (px / 768) * 100`
+- Example: `16px` → `1.56vw` (16 / 768 * 100)
 - If this media query doesn't exist, create it and include converted base styles
 - **No `px` units should remain** inside this media query
 
-### b. **Mobile screens (@media screen and (max-width: 600px)):**
-- Convert ALL `px` values to `vw` using: `vw = (px / 393) * 100`
-- Example: `14px` → `3.56vw` (14 / 393 * 100)
+### b. **Mobile screens (@media screen and (max-width: 480px)):**
+- Convert ALL `px` values to `vw` using: `vw = (px / 412) * 100`
+- Example: `14px` → `3.56vw` (14 / 412 * 100)
 - If this media query doesn't exist, create it and include converted base styles
 - **No `px` units should remain** inside this media query
 

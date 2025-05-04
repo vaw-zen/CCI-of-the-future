@@ -23,15 +23,8 @@ const TabData = [
   }
 ]
 
-export default function PartnerTab(layout) {
+export default function PartnerTab() {
   const [activeTab, setActiveTab] = useState('vision')
-  function getFlexDirection(index, layout) {
-    if (layout === 'column') {
-      return index % 2 === 0 ? 'column' : 'column-reverse';
-    } else {
-      return index % 2 === 0 ? 'row' : 'row-reverse';
-    }
-  }
   
   return (
     <div className={styles.container}>
@@ -50,11 +43,10 @@ export default function PartnerTab(layout) {
       <div className={styles.tabContent}>
         {TabData.map((tab,i) => (
           activeTab === tab.id && (
-            <div key={tab.id} className={styles.tabPanel} style={{
-              display: 'flex',
-              flexDirection: getFlexDirection(i, layout), // layout = "row" or "column"
-            }}
-        >
+            <div 
+              key={tab.id} 
+              className={`${styles.tabPanel} ${i % 2 === 1 ? styles.evenPanel : ''}`}
+            >
               <div className={styles.tabDesc}>
                 <h2 className={styles.tabTitle}>{tab.title}</h2>
                 <div className={styles.tabText}>

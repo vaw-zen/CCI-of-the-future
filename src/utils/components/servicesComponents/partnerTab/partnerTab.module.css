@@ -31,20 +31,11 @@
     padding-top: 50px;
     /* flex-direction: row-reverse; */
 }
-.row {
-    flex-direction: row;
-  }
-  .rowReverse {
+
+.tabPanel.evenPanel {
     flex-direction: row-reverse;
-  }
-  
-  /* Column layouts */
-  .column {
-    flex-direction: column;
-  }
-  .columnReverse {
-    flex-direction: column-reverse;
-  }
+}
+
 .tabDesc {
     
     display: flex;
@@ -136,5 +127,8 @@
         width: 100%;
         height: auto;
         aspect-ratio: 330/180.85;
+    }
+    .tabPanel.evenPanel {
+        flex-direction: column-reverse !important;
     }
 }

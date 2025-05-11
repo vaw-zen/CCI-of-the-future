@@ -1,17 +1,23 @@
 import React from 'react'
 import styles from './serviceDetails.module.css'
+import PropTypes from 'prop-types'
 
-export default function ServiceDetails() {
+export default function ServiceDetails({ title, text }) {
   return (
     <div className={styles.container}>
         <h2 className={styles.title}>
-            Wiring and installation
+            {title}
         </h2>
         <div className={styles.textContainer}>
             <p className={styles.text}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.
+                {text}
             </p>
         </div>
     </div>
   )
+}
+
+ServiceDetails.propTypes = {
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired
 }

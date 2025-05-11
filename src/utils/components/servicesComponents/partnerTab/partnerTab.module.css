@@ -1,4 +1,4 @@
-.container { padding: var(--padding-base);height:fit-content; }
+.container { padding: var(--padding-base);height:323.922px;display:flex;flex-direction: column; justify-content: center;}
 
 .tabMenu { 
     display: flex;
@@ -14,6 +14,7 @@
     border: none;
     background: transparent;
     position: relative;
+    padding-bottom: 15px;
 }
 
 .tabButton.active {
@@ -22,7 +23,7 @@
 
 .tabContent {
     border-top: 1px solid #2B2B2C;
-    /* padding: 2.65vw; 51px/1920*100 */
+   
 }
 
 .tabPanel {
@@ -70,7 +71,7 @@
 }
 
 @media screen and (max-width: 1024px) {
-    .container { padding: var(--padding-base); }
+    .container { padding: var(--padding-base); height:auto;}
     .tabMenu { 
         height: auto;
        
@@ -94,7 +95,7 @@
 }
 
 @media screen and (max-width: 480px) {
-    .container { padding: var(--padding-base); }
+    .container { padding: var(--padding-base); height: auto;}
     .tabMenu { 
         flex-direction: column; 
         text-align: start ;

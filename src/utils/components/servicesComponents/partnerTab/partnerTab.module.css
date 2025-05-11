@@ -1,4 +1,4 @@
-.container { padding: var(--padding-base); }
+.container { padding: var(--padding-base);height:fit-content; }
 
 .tabMenu { 
     display: flex;

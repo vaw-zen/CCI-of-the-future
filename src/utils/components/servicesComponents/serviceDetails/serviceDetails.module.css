@@ -1,4 +1,4 @@
-.container { display: flex; flex-direction: column; gap: 0.78vw; /* 15px/1920*100 */ padding: var(--padding-base); }
+.container { display: flex; flex-direction: column; gap: 0.78vw; /* 15px/1920*100 */ padding: var(--padding-base);height: fit-content; }
 .title { font-size: 1.30vw; /* 25px/1920*100 */ line-height: 1.82vw; /* 35px/1920*100 */ color: var(--t-primary); font-weight: 700; }
 .textContainer { display: flex; flex-direction: column; gap: 0; margin-top: 2.60vw; /* 50px/1920*100 */ }
 .text { font-size: 0.83vw; /* 16px/1920*100 */ color: var(--t-thri); line-height: 1.35vw; /* 26px/1920*100 */ }

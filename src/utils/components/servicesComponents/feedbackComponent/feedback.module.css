@@ -1,0 +1,147 @@
+.container {
+  background-color:var(--bg-elevated);
+  padding: var(--padding-base);
+  height:fit-content;
+  contain:paint;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  padding: 30px;
+}
+
+.feedbackImage {
+  max-width: 413.34px;
+  height: 361px;
+  object-fit: cover;
+  flex:1;
+  aspect-ratio: 413.34 / 361;
+
+}
+
+  
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+ 
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.title {
+  font-size: 26px;
+  color: var(--t-primary);
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.ratingImage {
+  width: 121px;
+  height: 18px;
+  display: flex;
+  margin-bottom: 40px;
+
+}
+
+.trustScore {
+  font-size: 16px;
+  color: var(--t-primary);
+  display: flex;
+}
+
+.readMoreContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 35px;
+}
+
+.iconContainer {
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--t-primary);
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.iconContainer img{
+    display:flex;
+    height: 100%;
+    width: 100%;
+    
+
+    /* object-fit: cover; */
+}
+.icon {
+  color: var(--ac-primary);
+  /* font-size: 30px; */
+  width: 30px;
+  height: 30px;
+  transform: rotate(-45deg);
+  display: flex;
+}
+
+.readMoreText {
+  color: var(--t-primary);
+  font-size: 16px;
+display: flex;
+font-weight: 700;
+}
+
+@media screen and (max-width: 1024px) {
+  .content {
+  
+    margin: 0 auto;
+    padding: 30px;
+    gap: 30px;
+    flex-direction: column;
+  }
+
+  .feedbackImage {
+    width: 729px;
+    height: 636.96px;
+    max-width: 100%;
+    aspect-ratio: 729/636.96;
+  }
+
+  .infoContainer {
+    width: 288.49px;
+    margin: 0 auto;
+    
+  }
+
+  /* .readMoreContainer {
+    width: 288.49px;
+  } */
+}
+
+@media screen and (max-width: 480px) {
+  .content {
+  
+    margin: 0 auto;
+    padding: 30px 15px;
+    gap: 26px;
+    flex-direction: column;
+  }
+
+  .feedbackImage {
+    
+    max-width: 100%;
+    aspect-ratio: 315/275.22;
+  }
+
+  .infoContainer {
+    width: 285px;
+    margin: 0 auto;
+  }
+
+  .readMoreContainer {
+    
+    margin-top: 26px;
+  }
+}

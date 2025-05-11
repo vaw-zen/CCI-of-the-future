@@ -2,13 +2,13 @@
 
 .tabMenu { 
     display: flex;
-    gap: 1.56vw;;
+    gap: 2vw;;
     height: 3.70vw; /* 71px/1920*100 */
 
 }
 
 .tabButton {
-    font-size: 1.30vw; /* 25px/1920*100 */
+    font-size: 1.350vw; /* 25px/1920*100 */
     font-weight: 700;
     color: var(--t-primary);
     border: none;
@@ -27,8 +27,10 @@
 
 .tabPanel {
     display: flex;
-    gap: 2.60vw; /* 50px/1920*100 */
+    gap: 2vw; /* 50px/1920*100 */
     padding-top: 50px;
+    /* justify-content: center; */
+    align-items: center;
     /* flex-direction: row-reverse; */
 }
 
@@ -37,14 +39,14 @@
 }
 
 .tabDesc {
-    
+    width:932.016px;
     display: flex;
     flex-direction: column;
     gap: 0.78vw; /* 15px/1920*100 */
 }
 
 .tabTitle {
-    font-size: 1.30vw; /* 25px/1920*100 */
+    font-size: 1.35vw; /* 25px/1920*100 */
     color: var(--t-primary);
     margin-bottom: 0.78vw; /* 15px/1920*100 */
 }
@@ -56,8 +58,9 @@
 }
 
 .tabImage {
-    width: 19.17vw; /* 368px/1920*100 */
-    height: 10.50vw; /* 202px/1920*100 */
+    max-width:367.984px;
+    height:201.922px;
+    
 }
 
 .tabImage img {
@@ -102,6 +105,7 @@
     }
     .tabPanel{
         padding-top: 25px;
+        align-items: flex-start;
         flex-direction: column !important;
     }
     .tabButton { 
@@ -132,3 +136,14 @@
         flex-direction: column-reverse !important;
     }
 }
+
+
+
+
+
+
+/* 
+https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01-p-500.jpg 500w,
+ https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01-p-800.jpg 800w, 
+ https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01-p-1080.jpg 1080w,
+  https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01.jpg 1200w */

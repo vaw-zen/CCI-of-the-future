@@ -3,6 +3,7 @@ import ServiceDetails from '@/utils/components/servicesComponents/serviceDetails
 import PartnerTab from '@/utils/components/servicesComponents/partnerTab/PartnerTab'
 import React from 'react'
 import Feedback from '@/utils/components/servicesComponents/feedbackComponent/feedback'
+import AboutUsTab from '@/utils/components/servicesComponents/aboutUsTab/AboutUsTab'
 
 export default function Page() {
     return (
@@ -17,6 +18,7 @@ export default function Page() {
                 title="What we do"
                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida."
             />
+            <AboutUsTab />
             <PartnerTab />
         </div>
     )

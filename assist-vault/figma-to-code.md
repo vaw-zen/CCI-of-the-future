@@ -118,16 +118,6 @@ Apply `className={styles.foo}` to each one.
 
 ## 💬 Text & Typography
 
-### Font Size
-
-Always match Figma but subtract \~10px to get real browser rendering.
-
-```css
-.container__heading {
-  font-size: 20px; /* if Figma shows 30px */
-  color: var(--text-heading);
-}
-```
 
 Use `font-weight`, `line-height`, `letter-spacing` if defined.
 

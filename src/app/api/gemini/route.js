@@ -1,8 +1,22 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { getSystemPromptServer, getAIConfigServer, getChatMessagesServer } from '../../../utils/tuning-loader-server';
+// Dynamic import for Google Generative AI - only loaded when API is called
+let genAI = null;
+let getSystemPromptServer = null;
+let getAIConfigServer = null;
+let getChatMessagesServer = null;
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Initialize AI libraries only when needed
+async function initializeAI() {
+  if (!genAI) {
+    const { GoogleGenerativeAI } = await import('@google/generative-ai');
+    const tuningModule = await import('../../../utils/tuning-loader-server');
+    
+    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    getSystemPromptServer = tuningModule.getSystemPromptServer;
+    getAIConfigServer = tuningModule.getAIConfigServer;
+    getChatMessagesServer = tuningModule.getChatMessagesServer;
+  }
+  return { genAI, getSystemPromptServer, getAIConfigServer, getChatMessagesServer };
+}
 
 console.log(process.env.GEMINI_API_KEY, 'az key');
 export async function POST(request) {
@@ -11,6 +25,9 @@ export async function POST(request) {
   console.log('API Key length:', process.env.GEMINI_API_KEY?.length);
   
   try {
+    // Initialize AI libraries
+    const { genAI, getSystemPromptServer, getAIConfigServer, getChatMessagesServer } = await initializeAI();
+    
     const body = await request.json();
     console.log('Request body:', body);
     
@@ -79,7 +96,11 @@ export async function POST(request) {
       message: error.message,
       stack: error.stack
     });
+    
+    // Initialize chat messages for error response
+    const { getChatMessagesServer } = await initializeAI();
     const chatMessages = getChatMessagesServer();
+    
     return Response.json({ 
       success: false, 
       error: chatMessages.errorMessages.aiResponseError,

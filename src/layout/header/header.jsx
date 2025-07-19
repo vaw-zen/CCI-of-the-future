@@ -4,10 +4,9 @@ import styles from './header.module.css'
 import content from './header.json'
 import Link from 'next/link'
 import { useHeaderLogic } from './header.func'
-import { CiCaretDownSm, FaCaretUp, MingcuteMenuFill, UilArrowRight } from '@/utils/components/icons'
+import { ChatIcon, CiCaretDownSm, FaCaretUp, MingcuteMenuFill, UilArrowRight } from '@/utils/components/icons'
 import DesktopMenu from './components/desktopMenu/desktopMenu'
 import ResponsiveImage from '@/utils/components/Image/Image'
-import ChatIcon from './components/chatIcon/chatIcon'
 import ChatWidget from './components/chatWidget/chatWidget'
 
 // Memoized navigation link component
@@ -150,7 +149,7 @@ function Header({ roboto }) {
                 </button>
             </div>
 
-            {/* Chat Widget */}
+            {/* Chat Widget - Always rendered for smooth animations */}
             <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
 
             <DesktopMenu desktopMenuStyles={desktopMenuStyles} handleMenuButton={handleMenuButton} />

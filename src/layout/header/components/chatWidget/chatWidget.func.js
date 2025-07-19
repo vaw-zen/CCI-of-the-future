@@ -84,6 +84,10 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
         }
     };
 
+    const handleMessagesScroll = (e) => {
+        e.stopPropagation();
+    };
+
     const quickReplies = ['Book a Cleaning', 'View Services', 'Get a Quote'];
 
     return {
@@ -99,6 +103,7 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
         handleClose,
         handleKeyDown,
         handleExpandToggle,
-        handleOverlayClick
+        handleOverlayClick,
+        handleMessagesScroll
     };
 }

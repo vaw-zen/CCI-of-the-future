@@ -44,7 +44,7 @@ const ChatWidget = ({ isOpen, onClose }) => {
                         </div>
                         <div className={styles.headerText}>
                             <h3 className={styles.title}>Fares Chaabane</h3>
-                            <p className={styles.subtitle}>Online now</p>
+                            <p className={styles.subtitle}>En ligne maintenant</p>
                         </div>
                     </div>
                     <div className={styles.headerButtons}>
@@ -112,7 +112,7 @@ const ChatWidget = ({ isOpen, onClose }) => {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Type your message..."
+                        placeholder="Tapez votre message..."
                         disabled={isTyping}
                     />
                     <button

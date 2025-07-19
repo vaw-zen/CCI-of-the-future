@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@studio-freight/lenis": "^1.0.42",
     "next": "15.1.0",
     "prop-types": "^15.8.1",

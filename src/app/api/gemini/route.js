@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getSystemPromptServer, getAIConfigServer, getChatMessagesServer } from '../../../utils/tuning-loader-server';
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -19,35 +20,29 @@ export async function POST(request) {
 
     if (!process.env.GEMINI_API_KEY) {
       console.error('No API key found');
+      const chatMessages = getChatMessagesServer();
       return Response.json({ 
         success: false, 
-        error: 'Clé API non configurée' 
+        error: chatMessages.errorMessages.apiKeyError,
+        details: 'GEMINI_API_KEY environment variable not set'
       }, { status: 500 });
     }
 
+    // Load configurations
+    const systemPrompt = getSystemPromptServer();
+    const aiConfig = getAIConfigServer();
+    
     // Create a chat model instance
     console.log('Creating Gemini model...');
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    // System context for cleaning business
-    const systemPrompt = `Tu es Fares Chaabane, le propriétaire de Chaabane's Cleaning Intelligence. Tu es un expert professionnel et amical en services de nettoyage. Tu aides les clients avec:
-
-- Services de nettoyage résidentiel et commercial
-- Tarification et devis
-- Prise de rendez-vous
-- Conseils et astuces de nettoyage
-- Services de nettoyage d'urgence
-- Nettoyage spécialisé (tapis, fenêtres, nettoyage en profondeur)
-
-Sois toujours serviable, professionnel et concentré sur les services de nettoyage. Garde tes réponses concises mais informatives. Réponds toujours en français.`;
+    const model = genAI.getGenerativeModel({ model: aiConfig.model.name });
 
     // Create a chat session
     console.log('Starting chat session...');
     const chat = model.startChat({
       history: chatHistory || [],
       generationConfig: {
-        maxOutputTokens: 1000,
-        temperature: 0.7,
+        maxOutputTokens: aiConfig.model.maxOutputTokens,
+        temperature: aiConfig.model.temperature,
       },
     });
 
@@ -84,9 +79,10 @@ Sois toujours serviable, professionnel et concentré sur les services de nettoya
       message: error.message,
       stack: error.stack
     });
+    const chatMessages = getChatMessagesServer();
     return Response.json({ 
       success: false, 
-      error: 'Échec de la réponse de l\'IA',
+      error: chatMessages.errorMessages.aiResponseError,
       details: error.message
     }, { status: 500 });
   }

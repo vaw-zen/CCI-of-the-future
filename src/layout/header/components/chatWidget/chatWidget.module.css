@@ -264,8 +264,8 @@
   border-radius: 1.56vw; 
   box-shadow: 
     0 0.78vw 3.13vw rgba(0, 0, 0, 0.6),
-    0 0 0 0.10vw rgba(203, 251, 66, 0.15),
-    inset 0 0 0 0.10vw rgba(203, 251, 66, 0.05);
+    0 0 0 0.10vw rgba(203, 251, 66, 0.3),
+    inset 0 0 0 0.10vw rgba(203, 251, 66, 0.1);
   display: flex; 
   flex-direction: column; 
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -289,7 +289,7 @@
   left: var(--padding-base); 
   right: var(--padding-base); 
   width: calc(100% - 2 * var(--padding-base)); 
-  height: calc(100vh - 5vw); 
+  height: calc(90svh - 5vw); 
   transform: none; 
 }
 .chatWindowExpandedClosed { 
@@ -512,8 +512,8 @@
   border-radius: 3.88vw; 
   box-shadow: 
     0 1.94vw 7.77vw rgba(0, 0, 0, 0.6),
-    0 0 0 0.24vw rgba(203, 251, 66, 0.15),
-    inset 0 0 0 0.24vw rgba(203, 251, 66, 0.05);
+    0 0 0 0.24vw rgba(203, 251, 66, 0.3),
+    inset 0 0 0 0.24vw rgba(203, 251, 66, 0.1);
   display: flex; 
   flex-direction: column; 
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -537,7 +537,7 @@
   left: var(--padding-base); 
   right: var(--padding-base); 
   width: calc(100% - 2 * var(--padding-base)); 
-  height: calc(100vh - 5vw); 
+  height: calc(90svh - 5vw); 
   transform: none; 
 }
 .chatWindowExpandedClosed { 

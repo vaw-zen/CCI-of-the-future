@@ -1,31 +1,28 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { getChatMessages, getAIConfig } from '../../../../utils/tuning-loader';
 
 export function useChatWidgetLogic({ isOpen, onClose }) {
-    const chatMessages = getChatMessages();
-    const aiConfig = getAIConfig();
+    // Memoize these to prevent re-renders
+    const chatMessages = React.useMemo(() => getChatMessages(), []);
+    const aiConfig = React.useMemo(() => getAIConfig(), []);
     
     const [isExpanded, setIsExpanded] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
-    const [messages, setMessages] = useState([
-        {
-            id: 1,
-            text: chatMessages.initialMessage.text,
-            sender: chatMessages.initialMessage.sender,
-            timestamp: new Date().toLocaleTimeString(aiConfig.chat.locale, aiConfig.chat.timeFormat)
-        }
-    ]);
+    const [messages, setMessages] = useState(() => []);
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
 
-    const scrollToBottom = () => {
+    const scrollToBottom = useCallback(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+    }, []);
 
     useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+        // Only scroll if chat is open to prevent unnecessary scrolling
+        if (isOpen) {
+            scrollToBottom();
+        }
+    }, [messages, isOpen, scrollToBottom]);
 
     useEffect(() => {
         if (!isOpen) {
@@ -150,11 +147,23 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
         }
     };
 
-    const handleMessagesScroll = (e) => {
+    const handleMessagesScroll = useCallback((e) => {
         e.stopPropagation();
-    };
+    }, []);
 
-    const quickReplies = chatMessages.quickReplies;
+    const quickReplies = useMemo(() => chatMessages.quickReplies, [chatMessages.quickReplies]);
+
+    const showInitialMessage = useCallback(() => {
+        if (messages.length === 0) {
+            const initialMessage = {
+                id: 1,
+                text: chatMessages.initialMessage.text,
+                sender: chatMessages.initialMessage.sender,
+                timestamp: new Date().toLocaleTimeString(aiConfig.chat.locale, aiConfig.chat.timeFormat)
+            };
+            setMessages([initialMessage]);
+        }
+    }, [messages.length, chatMessages.initialMessage, aiConfig.chat.locale, aiConfig.chat.timeFormat]);
 
     return {
         isExpanded,
@@ -170,6 +179,7 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
         handleKeyDown,
         handleExpandToggle,
         handleOverlayClick,
-        handleMessagesScroll
+        handleMessagesScroll,
+        showInitialMessage
     };
 }

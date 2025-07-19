@@ -16,6 +16,7 @@ This folder contains all the configuration files for the AI chat widget. Edit th
 - Add/remove services
 - Modify response style
 - Change language (multilingual support)
+- Enable/disable markdown formatting
 
 ### 💬 `chat-messages.json`
 **Chat UI Messages & Content**
@@ -103,6 +104,14 @@ In `chat-messages.json`:
 }
 ```
 
+### Enable/Disable Markdown Formatting
+In `ai-system-prompt.json`:
+```json
+"behavior": [
+  "Utilise le formatage markdown pour améliorer la lisibilité : **gras** pour les points importants, *italique* pour l'emphase, des listes à puces pour les étapes, et des titres pour organiser l'information"
+]
+```
+
 ## Important Notes
 
 - ✅ **Safe to edit**: These files are safe to modify
@@ -113,6 +122,7 @@ In `chat-messages.json`:
 - 🎯 **No code changes**: Pure configuration
 - 📞 **Phone fallback**: Error messages include phone contact
 - 🔧 **Server/Client**: JSON files read on server, defaults used on client
+- 📄 **Markdown Support**: AI responses are rendered with rich formatting
 
 ## File Structure
 ```

@@ -1,14 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
+import { getChatMessages, getAIConfig } from '../../../../utils/tuning-loader';
 
 export function useChatWidgetLogic({ isOpen, onClose }) {
+    const chatMessages = getChatMessages();
+    const aiConfig = getAIConfig();
+    
     const [isExpanded, setIsExpanded] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [messages, setMessages] = useState([
         {
             id: 1,
-            text: "Bonjour! Je suis Fares de Chaabane's Cleaning Intelligence. Je suis ici pour vous aider avec tous vos besoins de nettoyage! Que vous ayez besoin de nettoyage résidentiel, de services commerciaux, ou que vous ayez des questions sur nos offres, n'hésitez pas à me le faire savoir. Comment puis-je vous aider aujourd'hui?",
-            sender: 'ai',
-            timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+            text: chatMessages.initialMessage.text,
+            sender: chatMessages.initialMessage.sender,
+            timestamp: new Date().toLocaleTimeString(aiConfig.chat.locale, aiConfig.chat.timeFormat)
         }
     ]);
     const [inputValue, setInputValue] = useState('');
@@ -34,7 +38,7 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
             id: Date.now(),
             text,
             sender: 'user',
-            timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+            timestamp: new Date().toLocaleTimeString(aiConfig.chat.locale, aiConfig.chat.timeFormat)
         };
 
         setMessages(prev => [...prev, userMessage]);
@@ -81,17 +85,18 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
                     id: Date.now() + 1,
                     text: data.message,
                     sender: 'ai',
-                    timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+                    timestamp: new Date().toLocaleTimeString(aiConfig.chat.locale, aiConfig.chat.timeFormat)
                 };
                 setMessages(prev => [...prev, aiMessage]);
             } else {
                 console.error('API returned error:', data.error, data.details);
-                // Fallback response if API fails
+                // Fallback response if API fails - console log error, show human message
+                console.error('API Error Details:', data.error, data.details);
                 const fallbackMessage = {
                     id: Date.now() + 1,
-                    text: `Je suis désolé, j'ai des difficultés à me connecter en ce moment. Erreur: ${data.error || 'Erreur inconnue'}`,
+                    text: chatMessages.errorMessages.apiError,
                     sender: 'ai',
-                    timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+                    timestamp: new Date().toLocaleTimeString(aiConfig.chat.locale, aiConfig.chat.timeFormat)
                 };
                 setMessages(prev => [...prev, fallbackMessage]);
             }
@@ -102,12 +107,12 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
                 message: error.message,
                 stack: error.stack
             });
-            // Fallback response on error
+            // Fallback response on error - console log error, show human message
             const errorMessage = {
                 id: Date.now() + 1,
-                text: `Je suis désolé, quelque chose s'est mal passé. Veuillez réessayer plus tard. Erreur: ${error.message}`,
+                text: chatMessages.errorMessages.unknownError,
                 sender: 'ai',
-                timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+                timestamp: new Date().toLocaleTimeString(aiConfig.chat.locale, aiConfig.chat.timeFormat)
             };
             setMessages(prev => [...prev, errorMessage]);
         } finally {
@@ -149,7 +154,7 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
         e.stopPropagation();
     };
 
-    const quickReplies = ['Réserver un Service de Nettoyage', 'Voir Nos Services', 'Obtenir un Devis Gratuit', 'Nettoyage d\'Urgence'];
+    const quickReplies = chatMessages.quickReplies;
 
     return {
         isExpanded,

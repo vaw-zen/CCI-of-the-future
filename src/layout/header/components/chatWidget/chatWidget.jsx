@@ -1,8 +1,10 @@
 import React from 'react';
 import { useChatWidgetLogic } from './chatWidget.func';
+import { getChatMessages } from '../../../../utils/tuning-loader';
 import styles from './chatWidget.module.css';
 
 const ChatWidget = ({ isOpen, onClose }) => {
+    const chatMessages = getChatMessages();
     const {
         isExpanded,
         messages,
@@ -43,8 +45,8 @@ const ChatWidget = ({ isOpen, onClose }) => {
                             />
                         </div>
                         <div className={styles.headerText}>
-                            <h3 className={styles.title}>Fares Chaabane</h3>
-                            <p className={styles.subtitle}>En ligne maintenant</p>
+                            <h3 className={styles.title}>{chatMessages.ui.headerTitle}</h3>
+                            <p className={styles.subtitle}>{chatMessages.ui.onlineStatus}</p>
                         </div>
                     </div>
                     <div className={styles.headerButtons}>
@@ -112,7 +114,7 @@ const ChatWidget = ({ isOpen, onClose }) => {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Tapez votre message..."
+                        placeholder={chatMessages.ui.inputPlaceholder}
                         disabled={isTyping}
                     />
                     <button

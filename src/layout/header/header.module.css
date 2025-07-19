@@ -24,31 +24,50 @@
 .stickyBottom button svg { color: var(--bg-base); width: 70%; height: 70%; }
 .topButton  svg { transform: rotate(-45deg); }
 .topButton.active { width: 2.5vw !important; height: 2.5vw !important; overflow: visible; }
-.chatButton { opacity: 0.8; }
+.chatButton { opacity: 0.8; transition: all 0.3s ease; }
 .chatButton:hover { transform: scale(1.1); opacity: 1; }
 
-/* Chat button pulse animation */
+/* Chat button heartbeat animation */
 @keyframes chatPulse {
-  0% {
+  50% {
     transform: scale(1);
+    opacity: 0.8;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+  70% {
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  80% {
+    transform: scale(1.08);
+    opacity: 1;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+  90% {
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
   100% {
     transform: scale(1);
+    opacity: 0.8;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
 }
 
 .chatButton {
   animation: chatPulse 3s ease-in-out infinite;
+  opacity: 0.8;
 }
 
 .chatButton:hover {
-  animation: none;
+  animation: none !important;
   transform: scale(1.1);
   opacity: 1;
 }
@@ -82,7 +101,11 @@
     .stickyBottom { bottom: 3.13vw; right: 3.13vw; gap: 1vw; }
     .topButton { width: 0 !important; height: 0 !important; overflow: hidden; }
     .topButton.active { width: 6vw !important; height: 6vw !important; overflow: visible; }
-    .chatButton { width: 6vw !important; height: 6vw !important; }
+    .chatButton { 
+      width: 6vw !important; 
+      height: 6vw !important; 
+      animation: chatPulse 3s ease-in-out infinite;
+    }
     .active { width: 6vw !important; height: 6vw !important; overflow: visible !important; }
 
 }
@@ -105,7 +128,11 @@
     .stickyBottom { bottom: 7.77vw; right: 7.77vw; gap: 2vw; }
     .topButton { width: 0 !important; height: 0 !important; overflow: hidden; }
     .topButton.active { width: 10vw !important; height: 10vw !important; overflow: visible; }
-    .chatButton { width: 10vw !important; height: 10vw !important; }
+    .chatButton { 
+      width: 10vw !important; 
+      height: 10vw !important; 
+      animation: chatPulse 3s ease-in-out infinite;
+    }
     .active { width: 10vw !important; height: 10vw !important; overflow: visible !important; }
 
 }

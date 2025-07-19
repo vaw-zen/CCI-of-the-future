@@ -48,10 +48,8 @@ const ChatWidget = React.memo(({ isOpen, onClose }) => {
         }
     }, [markdownLoaded, isOpen, messages.length, showInitialMessage]);
 
-    // Don't render anything if chat is not open and markdown hasn't been loaded yet
-    if (!isOpen && !markdownLoaded) {
-        return null;
-    }
+    // Always render the chat widget for smooth animations
+    // The visibility is controlled by CSS classes instead of conditional rendering
 
     // Show loading state when chat opens but markdown isn't loaded yet
     const showLoadingState = isOpen && !markdownLoaded;

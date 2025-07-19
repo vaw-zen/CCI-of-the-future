@@ -34,6 +34,28 @@
     margin-left: .5vw;
 }
 
+@keyframes shakePulse {
+    0% {
+      transform: scale(1) rotate(0deg);
+    }
+    25% {
+      transform: scale(1.1) rotate(-2deg);
+    }
+    50% {
+      transform: scale(1.05) rotate(2deg);
+    }
+    75% {
+      transform: scale(1.1) rotate(-1deg);
+    }
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+  }
+  
+  .chatButton:hover svg {
+    animation: shakePulse 0.6s ease-in-out;
+  }
+
   .chatButton svg {
     animation: chatPulse 0.5s infinite ease-in-out;
   }

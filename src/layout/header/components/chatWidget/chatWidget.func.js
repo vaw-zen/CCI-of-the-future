@@ -62,19 +62,38 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
             
             console.log('Request body:', requestBody);
 
+            // Create an AbortController for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout (matches server + buffer)
+
             const response = await fetch('/api/gemini', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(requestBody),
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
 
             console.log('Response status:', response.status);
             console.log('Response ok:', response.ok);
 
-            const data = await response.json();
-            console.log('Response data:', data);
+            // Check if response is ok before trying to parse JSON
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            let data;
+            try {
+                data = await response.json();
+                console.log('Response data:', data);
+            } catch (jsonError) {
+                console.error('Failed to parse JSON response:', jsonError);
+                // If JSON parsing fails, it's likely an HTML error page
+                throw new Error(`Server error (${response.status}): Unable to parse response`);
+            }
 
             if (data.success) {
                 console.log('Success! AI response:', data.message);
@@ -104,10 +123,24 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
                 message: error.message,
                 stack: error.stack
             });
+            
+            // Choose appropriate error message based on error type
+            let errorText = chatMessages.errorMessages.unknownError;
+            
+            if (error.name === 'AbortError' || error.message.includes('aborted')) {
+                errorText = "Désolé, la réponse prend trop de temps. Pouvez-vous réessayer ? Ou si c'est urgent, appelez-moi au 98-557-766.";
+            } else if (error.message.includes('504') || error.message.includes('Gateway Timeout')) {
+                errorText = "Désolé, la réponse prend trop de temps. Pouvez-vous réessayer dans quelques instants ? Ou si c'est urgent, appelez-moi au 98-557-766.";
+            } else if (error.message.includes('timeout') || error.message.includes('Timeout')) {
+                errorText = "Désolé, la connexion a pris trop de temps. Pouvez-vous réessayer ? Ou si c'est urgent, appelez-moi au 98-557-766.";
+            } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                errorText = "Désolé, problème de connexion. Vérifiez votre internet et réessayez. Ou si c'est urgent, appelez-moi au 98-557-766.";
+            }
+            
             // Fallback response on error - console log error, show human message
             const errorMessage = {
                 id: Date.now() + 1,
-                text: chatMessages.errorMessages.unknownError,
+                text: errorText,
                 sender: 'ai',
                 timestamp: new Date().toLocaleTimeString(aiConfig.chat.locale, aiConfig.chat.timeFormat)
             };

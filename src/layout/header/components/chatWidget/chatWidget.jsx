@@ -2,6 +2,7 @@ import React from 'react';
 import { useChatWidgetLogic } from './chatWidget.func';
 import { getChatMessages } from '../../../../utils/tuning-loader';
 import styles from './chatWidget.module.css';
+import MarkdownRenderer from '@/utils/components/MarkdownRenderer';
 
 const ChatWidget = ({ isOpen, onClose }) => {
     const chatMessages = getChatMessages();
@@ -69,11 +70,15 @@ const ChatWidget = ({ isOpen, onClose }) => {
                 <div className={styles.messagesContainer} onWheel={handleMessagesScroll}>
                     {messages.map((message, index) => (
                         <div key={message.id} className={styles.messageGroup}>
-                            <div
-                                className={`${styles.message} ${message.sender === 'ai' ? styles.aiMessage : styles.userMessage}`}
-                            >
-                                {message.text}
-                            </div>
+                                                    <div
+                            className={`${styles.message} ${message.sender === 'ai' ? styles.aiMessage : styles.userMessage}`}
+                        >
+                            {message.sender === 'ai' ? (
+                                <MarkdownRenderer content={message.text} />
+                            ) : (
+                                message.text
+                            )}
+                        </div>
                             <div className={`${styles.timestamp} ${message.sender === 'ai' ? styles.timestampAi : styles.timestampUser}`}>
                                 {message.timestamp}
                             </div>

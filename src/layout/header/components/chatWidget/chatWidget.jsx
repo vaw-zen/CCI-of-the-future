@@ -16,7 +16,8 @@ const ChatWidget = ({ isOpen, onClose }) => {
         handleClose,
         handleKeyDown,
         handleExpandToggle,
-        handleOverlayClick
+        handleOverlayClick,
+        handleMessagesScroll
     } = useChatWidgetLogic({ isOpen, onClose });
 
 
@@ -63,7 +64,7 @@ const ChatWidget = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Messages */}
-                <div className={styles.messagesContainer}>
+                <div className={styles.messagesContainer} onWheel={handleMessagesScroll}>
                     {messages.map((message, index) => (
                         <div key={message.id} className={styles.messageGroup}>
                             <div

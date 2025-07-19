@@ -15,6 +15,8 @@
 .headerButton { background: none; border: none; color: #FFFFFF99; cursor: pointer; padding: 0.21vw; border-radius: 0.21vw; transition: color 0.2s ease; }
 .headerButton:hover { color: white; }
 .messagesContainer { flex: 1; padding: 0.83vw 1.04vw; overflow-y: auto; display: flex; flex-direction: column; gap: 0.83vw; }
+.messagesContainer::-webkit-scrollbar { width: 0.4vw; background-color: var(--bg-elevated); max-width: 0.4vw; }
+.messagesContainer::-webkit-scrollbar-thumb { background-color: var(--ac-primary); border-radius: 5px; transition: 0.7s; }
 .messageGroup { display: flex; flex-direction: column; gap: 0.42vw; }
 .message { max-width: 80%; padding: 0.63vw 0.83vw; border-radius: 0.63vw; font-size: 0.73vw; line-height: 1.4; }
 .aiMessage { align-self: flex-start; background-color: #1A1A1C; color: white; }
@@ -27,7 +29,7 @@
 .quickReply:hover { background-color: #CBFB42; color: #141416; }
 .typingIndicator { align-self: flex-start; background-color: #1A1A1C; color: white; padding: 0.63vw 0.83vw; border-radius: 0.63vw; display: flex; gap: 0.21vw; align-items: center; }
 .dot { width: 0.31vw; height: 0.31vw; background-color: #FFFFFF99; border-radius: 50%; animation: typing 1.4s infinite; }
-.inputContainer { padding: 0.83vw 1.04vw; border-top: 0.05vw solid #2A2A2C; display: flex; gap: 0.63vw; align-items: flex-end; }
+.inputContainer { padding: 0.83vw 1.04vw; border-top: 0.05vw solid #2A2A2C; display: flex; gap: 0.63vw; align-items: flex-end; flex-shrink: 0; min-height: 3.13vw; }
 .input { flex: 1; background-color: transparent; border: none; color: white; font-size: 0.73vw; padding: 0.63vw 0; outline: none; resize: none; }
 .sendButton { background-color: #CBFB42; border: none; border-radius: 0.42vw; padding: 0.42vw; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
 .sendButton:hover:not(:disabled) { background-color: #B8E633; }
@@ -50,7 +52,9 @@
 .headerButtons { display: flex; gap: 0.78vw; }
 .headerButton { background: none; border: none; color: #FFFFFF99; cursor: pointer; padding: 0.39vw; border-radius: 0.39vw; transition: color 0.2s ease; }
 .headerButton:hover { color: white; }
-.messagesContainer { flex: 1; padding: 1.56vw 1.95vw; overflow-y: auto; display: flex; flex-direction: column; gap: 1.56vw; }
+.messagesContainer { flex: 1; padding: 1.56vw 1.95vw; overflow-y: auto; display: flex; flex-direction: column; gap: 1.56vw; max-height: 0; }
+.messagesContainer::-webkit-scrollbar { width: 0.4vw; background-color: var(--bg-elevated); max-width: 0.4vw; }
+.messagesContainer::-webkit-scrollbar-thumb { background-color: var(--ac-primary); border-radius: 5px; transition: 0.7s; }
 .messageGroup { display: flex; flex-direction: column; gap: 0.78vw; }
 .message { max-width: 80%; padding: 1.17vw 1.56vw; border-radius: 1.17vw; font-size: 1.37vw; line-height: 1.4; }
 .aiMessage { align-self: flex-start; background-color: #1A1A1C; color: white; }
@@ -63,7 +67,7 @@
 .quickReply:hover { background-color: #CBFB42; color: #141416; }
 .typingIndicator { align-self: flex-start; background-color: #1A1A1C; color: white; padding: 1.17vw 1.56vw; border-radius: 1.17vw; display: flex; gap: 0.39vw; align-items: center; }
 .dot { width: 0.59vw; height: 0.59vw; background-color: #FFFFFF99; border-radius: 50%; animation: typing 1.4s infinite; }
-.inputContainer { padding: 1.56vw 1.95vw; border-top: 0.10vw solid #2A2A2C; display: flex; gap: 1.17vw; align-items: flex-end; }
+.inputContainer { padding: 1.56vw 1.95vw; border-top: 0.10vw solid #2A2A2C; display: flex; gap: 1.17vw; align-items: flex-end; flex-shrink: 0; min-height: 5.86vw; }
 .input { flex: 1; background-color: transparent; border: none; color: white; font-size: 1.37vw; padding: 1.17vw 0; outline: none; resize: none; }
 .sendButton { background-color: #CBFB42; border: none; border-radius: 0.78vw; padding: 0.78vw; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
 .sendButton:hover:not(:disabled) { background-color: #B8E633; }
@@ -87,7 +91,9 @@
 .headerButtons { display: flex; gap: 1.94vw; }
 .headerButton { background: none; border: none; color: #FFFFFF99; cursor: pointer; padding: 0.97vw; border-radius: 0.97vw; transition: color 0.2s ease; }
 .headerButton:hover { color: white; }
-.messagesContainer { flex: 1; padding: 3.88vw 4.85vw; overflow-y: auto; display: flex; flex-direction: column; gap: 3.88vw; }
+.messagesContainer { flex: 1; padding: 3.88vw 4.85vw; overflow-y: auto; display: flex; flex-direction: column; gap: 3.88vw; max-height: 0; }
+.messagesContainer::-webkit-scrollbar { width: 0.4vw; background-color: var(--bg-elevated); max-width: 0.4vw; }
+.messagesContainer::-webkit-scrollbar-thumb { background-color: var(--ac-primary); border-radius: 5px; transition: 0.7s; }
 .messageGroup { display: flex; flex-direction: column; gap: 1.94vw; }
 .message { max-width: 80%; padding: 2.91vw 3.88vw; border-radius: 2.91vw; font-size: 3.40vw; line-height: 1.4; }
 .aiMessage { align-self: flex-start; background-color: #1A1A1C; color: white; }
@@ -100,7 +106,7 @@
 .quickReply:hover { background-color: #CBFB42; color: #141416; }
 .typingIndicator { align-self: flex-start; background-color: #1A1A1C; color: white; padding: 2.91vw 3.88vw; border-radius: 2.91vw; display: flex; gap: 0.97vw; align-items: center; }
 .dot { width: 1.46vw; height: 1.46vw; background-color: #FFFFFF99; border-radius: 50%; animation: typing 1.4s infinite; }
-.inputContainer { padding: 3.88vw 4.85vw; border-top: 0.24vw solid #2A2A2C; display: flex; gap: 2.91vw; align-items: flex-end; }
+.inputContainer { padding: 3.88vw 4.85vw; border-top: 0.24vw solid #2A2A2C; display: flex; gap: 2.91vw; align-items: flex-end; flex-shrink: 0; min-height: 14.56vw; }
 .input { flex: 1; background-color: transparent; border: none; color: white; font-size: 3.40vw; padding: 2.91vw 0; outline: none; resize: none; }
 .sendButton { background-color: #CBFB42; border: none; border-radius: 1.94vw; padding: 1.94vw; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
 .sendButton:hover:not(:disabled) { background-color: #B8E633; }

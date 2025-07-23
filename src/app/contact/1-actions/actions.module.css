@@ -16,8 +16,8 @@
     .phoneNumber{color:var(--ac-primary)}    
 }
 .phoneInfoTop { gap: 0.52vw; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.09); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.icon { color: var(--ac-primary); width: 40px; height: 40px; }
-.label { font-size: 1.35vw;}
+.icon { color: var(--ac-primary); width: 40px; height: 45px; }
+.label { font-size: 1.35vw; text-align: center;}
 .phoneNumber { font-size: 0.83vw; font-weight: 400; }
 .phoneInfoBottom { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1.04vw; font-size: 0.83vw; }
 .phoneInfoText { font-weight: 400; color: var(--t-secondary); }

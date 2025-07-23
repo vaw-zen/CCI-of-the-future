@@ -1,49 +1,49 @@
 {
     "section": {
         "slug": "Services",
-        "title": "Solution we provide",
-        "desc": "With every single one of our clients we bring forth a deep passion for creative problem solving innovations forward thinking brands boundaries",
+        "title": "Solutions que nous proposons",
+        "desc": "Nous mettons notre passion et notre expertise au service de chaque client pour offrir des solutions innovantes et un service irréprochable.",
         "link": {
-            "slug": "View All Services",
+            "slug": "Voir tous les services",
             "to": "/"
         }
     },
     "services": [
         {
             "title": [
-                "Web & Mobile",
-                "Development"
+                "Nettoyage",
+                "tapis et moquette"
             ],
-            "desc": "Embark on a transformative journey with Call for Development Agency a compelling exploration of innovative strategies and sustainable solutions in fostering growth and progress within communities.",
-            "link": "/",
-            "img": "/home/about.png"
+            "desc": "Nos services de nettoyage des tapis comprennent l'enlèvement des taches, le dépoussiérage et l'aspiration de tous les coins. Nous utilisons des produits non-toxiques pour préserver la qualité de vos tapis et l'environnement.",
+            "link": "/moquette",
+            "img": "/home/5.webp"
         },
         {
             "title": [
-                "Video",
-                "Production"
+                "Nettoyage",
+                "salons"
             ],
-            "desc": "Dive into the world of storytelling and visual excellence with Call for Video Production where every frame is crafted to captivate and inspire your audience.",
-            "link": "/",
-            "img": "/home/about.png"
+            "desc": "Nous nettoyons vos salons en profondeur : enlèvement des taches, dépoussiérage et aspiration. Nos produits sont non-toxiques pour préserver vos meubles et l'environnement.",
+            "link": "/salon",
+            "img": "/home/6.webp"
         },
         {
             "title": [
-                "Digital",
-                "Maketing"
+                "Entretien marbre",
+                "et carrelage"
             ],
-            "desc": "Join the digital revolution with Call for Digital Marketing where strategic campaigns and creative content propel your brand to new heights in the online landscape.",
-            "link": "/",
-            "img": "/home/about.png"
+            "desc": "Entretien complet du marbre et carrelage : restauration, lustrage, cristallisation, protection et nettoyage. Nos experts assurent un résultat impeccable.",
+            "link": "/marbre",
+            "img": "/home/4.webp"
         },
         {
             "title": [
-                "Branding and",
-                "Strategy"
+                "Nettoyage de",
+                "fin de chantier"
             ],
-            "desc": "Elevate your brand identity and strategic vision with Call for Branding and Strategy a dynamic platform for crafting impactful narratives and driving business success.",
-            "link": "/",
-            "img": "/home/about.png"
+            "desc": "Après travaux, notre équipe assure un nettoyage minutieux : sols, murs, vitres, sanitaires, cuisines. Profitez rapidement de votre nouvel espace, propre et sain.",
+            "link": "/marbre",
+            "img": "/home/tfc.webp"
         }
     ]
 }

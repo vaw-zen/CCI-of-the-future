@@ -1,4 +1,4 @@
-.container { padding: var(--padding-base);height:323.922px;display:flex;flex-direction: column; justify-content: center;}
+.container { padding: 0 var(--padding-base);height:323.922px;display:flex;flex-direction: column; justify-content: center;margin-top: 50px;margin-bottom: 50px;}
 
 .tabMenu { 
     display: flex;
@@ -40,7 +40,7 @@
 }
 
 .tabDesc {
-    width:932.016px;
+    /* width:932.016px; */
     display: flex;
     flex-direction: column;
     gap: 0.78vw; /* 15px/1920*100 */
@@ -58,15 +58,11 @@
     line-height: 1.35vw; /* 26px/1920*100 */
 }
 
-.tabImage {
-    max-width:367.984px;
-    height:201.922px;
-    
-}
+
 
 .tabImage img {
-    width: 100%;
-    height: 100%;
+   width:367.984px;
+    height:201.922px;
     object-fit: cover;
 }
 

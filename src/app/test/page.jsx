@@ -6,9 +6,25 @@ import Feedback from '@/utils/components/servicesComponents/feedbackComponent/fe
 
 export default function Page() {
     return (
-        <div style={{background:"#141416"}}>
-            <HeroHeader title={'Test'} />
-            <ServiceDetails 
+    <>
+      <style>{`
+        .responsive-padding {
+          padding: 115px 0px;
+        }
+        @media (max-width: 900px) {
+          .responsive-padding {
+            padding: 60px 0px;
+          }
+        }
+        @media (max-width: 600px) {
+          .responsive-padding {
+            padding: 0px 0px;
+          }
+        }
+      `}</style>
+      <HeroHeader title={'Tapisserie'} />
+      <div className="responsive-padding">
+              <ServiceDetails 
                 title="Wiring and installation"
                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida."
             />
@@ -18,6 +34,7 @@ export default function Page() {
                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida."
             />
             <PartnerTab />
-        </div>
+          </div>
+      </> 
     )
 }

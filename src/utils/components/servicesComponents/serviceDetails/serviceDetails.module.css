@@ -1,7 +1,7 @@
-.container { display: flex; flex-direction: column; gap: 2vw; /* 15px/1920*100 */ padding: var(--padding-base);margin-top: 50px;margin-bottom: 50px; height:167px !important;}
-.title { font-size: 64px; /* 25px/1920*100 */ line-height: 1.82vw; /* 35px/1920*100 */ color: var(--t-primary); font-weight: 700; }
+.container { display: flex; flex-direction: column; gap: 1.5vw; /* 15px/1920*100 */ padding: 0 var(--padding-base);margin:60px 0px 50px;}
+.title { font-size: 64px; /* 25px/1920*100 */ line-height: 1.82vw; /* 35px/1920*100 */ color: var(--t-primary); font-weight: 700;}
 .textContainer { display: flex; flex-direction: column; gap: 0;  /* 50px/1920*100 */ }
-.text { font-size: 0.83vw; /* 16px/1920*100 */ color: var(--t-thri); line-height: 1.35vw; /* 26px/1920*100 */ }
+.text { font-size: 0.83vw; /* 16px/1920*100 */ color: var(--t-thri); line-height: 26px; /* 26px/1920*100 */ }
 
 @media screen and (max-width: 1024px) {
     .container{height: auto;}

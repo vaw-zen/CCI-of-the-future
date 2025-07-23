@@ -16,11 +16,11 @@
   gap: 60px;
   padding: 30px;
   background-color:var(--bg-elevated);
+  width: 100%;
 }
 
 .feedbackImage {
   width: 413.34px;
-  height: 361px;
   object-fit: cover;
   flex:1;
   aspect-ratio: 413.34 / 361;

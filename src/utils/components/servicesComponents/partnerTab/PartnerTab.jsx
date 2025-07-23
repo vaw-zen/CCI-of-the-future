@@ -5,19 +5,19 @@ import styles from './partnerTab.module.css'
 const TabData = [
   {
     id: 'mission',
-    title: 'Our mission',
+    title: 'Notre mission',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.',
     image: 'https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01.jpg'
   },
   {
     id: 'vision',
-    title: 'Our vision',
+    title: 'Notre vision',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.',
     image: 'https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267dbdb29fef4a994f1cb_tab-02.jpg'
   },
   {
     id: 'philosophy',
-    title: 'Philosophy',
+    title: 'Philosophie',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     image: 'https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01.jpg'
 

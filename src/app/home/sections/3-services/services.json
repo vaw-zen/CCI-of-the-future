@@ -2,27 +2,27 @@
     "list": [
         {
             "link": "/",
-            "title": "Home maintainance",
-            "desc": "Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas.",
-            "img": "/home/about.png"
+            "title": "Entretien et restauration du marbre",
+            "desc": " Notre service se spécialise dans le traitement du marbre, en utilisant des techniques avancées pour nettoyer, polir et restaurer le marbre à son état d'origine.",
+            "img": "/home/3.webp"
         },
         {
             "link": "/",
-            "title": "Home maintainance",
-            "desc": "Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas.",
-            "img": "/home/about.png"
+            "title": "Travaux de fin de chantier",
+            "desc": "Nous nous spécialisons dans le nettoyage et le traitement de différents revêtements de sol, qu'ils soient en bois, en carrelage, ou en marbre  en assurant leur protection et leur brillance.",
+            "img": "/home/tfc.webp"
         },
         {
             "link": "/",
-            "title": "Home maintainance",
-            "desc": "Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas.",
-            "img": "/home/about.png"
+            "title": "Nettoyage de tous type de tapisserie",
+            "desc": "Notre équipe professionnelle est bien équipée pour redonner à vos tapisseries un aspect neuf et frais.",
+            "img": "/home/6.webp"
         },
         {
             "link": "/",
-            "title": "Home maintainance",
-            "desc": "Maintenance requests, landscaping, servicing and repairing systems, performing pest control, or even cleaning or painting areas.",
-            "img": "/home/about.png"
+            "title": "Tapisserie",
+            "desc": "Notre entreprise excelle dans la création de tapisseries sur mesure et dans le retapissage de meubles, en offrant une nouvelle vie à vos pièces anciennes.",
+            "img": "/home/tapisserie1.webp"
         }
     ],
     "slug": "NOS SERVICES",

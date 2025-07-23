@@ -5,13 +5,12 @@ export default function Presentation() {
   return (
     <div className={styles.container}>
       <div className={styles.first}>
-        <h3>Trusted  Experience</h3>
-        <h2>We are a team of professional & skilled experts</h2>
+        <h3>Trusted Experience</h3>
+        <h2>Nous sommes une équipe d'experts qualifiés.</h2>
         <p>
-          We work to ensure people's comfort at their home and to provide the
-          best and the fastest help at fair prices. We work to ensure people's
-          comfort at their home and to provide the best and the fastest help at
-          a fair price.
+          Nous travaillons pour garantir le confort des gens chez eux et des
+          lieux publics qu'ils' visitent, pour fournir la meilleure et la plus
+          rapide des aides à des prix justes et raisonnables.
         </p>
       </div>
       <ProgressBars />

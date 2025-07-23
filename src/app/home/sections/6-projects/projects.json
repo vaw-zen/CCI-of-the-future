@@ -3,46 +3,46 @@
     "highlight": "Projets Réalisés.",
     "articles": [
         {
-            "title": "Wiring installation, Alabama",
+            "title": "Retapissage bar night , care ferry Carthage.",
             "link": "/",
-            "img": "/home/about.png",
+            "img": "/home/night.webp",
             "tags": [
                 {
                     "name": "Tapisserie",
                     "link": "/"
                 },
                 {
-                    "name": "Rpholestry",
+                    "name": "Upholustry",
                     "link": "/"
                 }
             ]
         },
         {
-            "title": "Heating Tune up, Manham",
+            "title": "Retapissage salon en cuir réception , care ferry Carthage",
             "link": "/",
-            "img": "/home/about.png",
+            "img": "/home/salon1.webp",
             "tags": [
                 {
                     "name": "Tapisserie",
                     "link": "/"
                 },
                 {
-                    "name": "Rpholestry",
+                    "name": "Upholustry",
                     "link": "/"
                 }
             ]
         },
         {
-            "title": "Plumbing, New York",
+            "title": "Retapissage bar Amilcar, care ferry Carthage",
             "link": "/",
-            "img": "/home/about.png",
+            "img": "/home/salon.webp",
             "tags": [
                 {
                     "name": "Tapisserie",
                     "link": "/"
                 },
                 {
-                    "name": "Rpholestry",
+                    "name": "Upholustry",
                     "link": "/"
                 }
             ]

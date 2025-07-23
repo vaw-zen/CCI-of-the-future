@@ -4,6 +4,23 @@ Convert **ALL** `px` units to `vw` units throughout the entire stylesheet, with 
 
 ---
 
+## CSS Formatting Rules:
+- One line per class/selector
+- No line breaks within declarations
+- Space after colon in properties
+- No space before colon
+- Semi-colon after each declaration 
+- Single quotes for string values
+- Space after comma in values
+- No trailing semi-colon on last property
+
+Example Format:
+```css
+.className { color: #000; font-size: 16px; background: linear-gradient(to right, #fff, #000); }
+```
+
+---
+
 ## 1. **Base/Desktop Styles (outside media queries):**
 - **Convert all styles with `px` units to `vw` using desktop reference: `vw = (px / 1920) * 100`**
 - Example: `20px` → `1.04vw` (20 / 1920 * 100)

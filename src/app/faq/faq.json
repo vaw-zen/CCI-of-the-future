@@ -1,47 +1,46 @@
 {
-    "title": "Do you have Questions?",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry has been the industry’s standard dummy when an unknown printer.",
+    "title": "Vous avez des questions ?",
+    "description": "Voici les réponses aux questions fréquentes sur nos services de nettoyage et rénovation.",
     "faqs": [
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Comment nettoyer efficacement un tapis en profondeur ?",
+            "answer": "Nous utilisons des machines injecteur-extracteur et des produits professionnels pour éliminer taches et saletés."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Faites-vous le nettoyage complet des salons et canapés ?",
+            "answer": "Oui, nous proposons un service complet pour tissus, cuirs et rembourrages."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Proposez-vous le lavage intérieur de voitures ?",
+            "answer": "Oui, nettoyage des sièges, moquettes, plafonniers et désinfection complète."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Offrez-vous le nettoyage et entretien de bateaux ?",
+            "answer": "Oui, intérieur et extérieur, incluant tissus, pont et vitres."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Pouvez-vous restaurer un marbre rayé ou terni ?",
+            "answer": "Nous effectuons ponçage, polissage et cristallisation pour redonner brillance et protection."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Le nettoyage enlève-t-il les odeurs incrustées ?",
+            "answer": "Oui, nous utilisons des produits spécifiques contre les mauvaises odeurs et bactéries."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Quel est le délai pour un nettoyage de tapis ?",
+            "answer": "En moyenne 24 à 48h selon la taille et l’état du tapis."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Intervenez-vous à domicile pour le nettoyage des canapés ?",
+            "answer": "Oui, nous nous déplaçons avec tout le matériel nécessaire."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Vos produits sont-ils sûrs pour les enfants et animaux ?",
+            "answer": "Oui, nous utilisons des produits certifiés non toxiques et respectueux de l’environnement."
         },
         {
-            "question": "What is the purpose of this website?",
-            "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry."
+            "question": "Comment obtenir un devis rapide ?",
+            "answer": "Contactez-nous par téléphone ou via notre site, nous répondons sous 1h."
         }
-        
     ]
 }

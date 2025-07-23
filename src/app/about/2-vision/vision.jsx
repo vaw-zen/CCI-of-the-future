@@ -8,10 +8,16 @@ export default function vision() {
            
         </div>
         <div className={styles.textSection}>
-    <h3 >our vision</h3>
-    <h2>Reliable and affordable repairs</h2>
+    <h3 >Notre vision</h3>
+    <h2> Rénovations fiables et abordables </h2>
     <div className={styles.line}></div>
-    <p>We work to help people feel comfortable in their homes and provide the best, fastest assistance at a fair price. We stand for quality, safety and credibility, so you can be sure of our work. Initially, we started as a cleaning service company.</p>
+    <p>
+          Nous sommes spécialisés dans la fourniture de services de nettoyage
+          industriel et de tapisserie de premier ordre. Notre équipe, dotée
+          d'une expertise approfondie et de technologies de pointe, s'engage à
+          offrir des solutions de nettoyage inégalées dans une variété
+          d'industries.
+        </p>
     <div className={styles.button}>
     <IconoirArrowUpRight className={styles.arrow} />
     </div>

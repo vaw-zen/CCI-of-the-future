@@ -1,17 +1,18 @@
 'use client'
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import styles from './header.module.css'
 import content from './header.json'
 import Link from 'next/link'
 import { useHeaderLogic } from './header.func'
-import { CiCaretDownSm, FaCaretUp, MingcuteMenuFill, UilArrowRight } from '@/utils/components/icons'
+import { ChatIcon, CiCaretDownSm, FaCaretUp, MingcuteMenuFill, UilArrowRight } from '@/utils/components/icons'
 import DesktopMenu from './components/desktopMenu/desktopMenu'
 import ResponsiveImage from '@/utils/components/Image/Image'
+import ChatWidget from './components/chatWidget/chatWidget'
 
 // Memoized navigation link component
 const NavLink = memo(({ link, name, isActive }) => (
-    <Link 
-        href={link} 
+    <Link
+        href={link}
         className={isActive ? `${styles.link} ${styles.activeLink}` : styles.link}
     >
         {name}
@@ -59,26 +60,26 @@ const NavItem = memo(({ element, index, handleDropdownBlur, toggleDropdown, isAc
         {index !== 0 && <div className={styles.dot} />}
 
         {element.link && (
-            <NavLink 
-                link={element.link} 
-                name={element.name} 
-                isActive={currentPath === element.link} 
+            <NavLink
+                link={element.link}
+                name={element.name}
+                isActive={currentPath === element.link}
             />
         )}
-        
+
         {element.subLinks && (
             <>
-                <DropdownMenu 
-                    isActive={isActive(index)} 
-                    subLinks={element.subLinks} 
-                    currentPath={currentPath} 
+                <DropdownMenu
+                    isActive={isActive(index)}
+                    subLinks={element.subLinks}
+                    currentPath={currentPath}
                 />
-                
-                <DropdownButton 
-                    name={element.name} 
-                    onClick={() => toggleDropdown(index)} 
-                    isActive={isActive(index)} 
-                    hasActiveSublink={hasActiveSublink(element.subLinks)} 
+
+                <DropdownButton
+                    name={element.name}
+                    onClick={() => toggleDropdown(index)}
+                    isActive={isActive(index)}
+                    hasActiveSublink={hasActiveSublink(element.subLinks)}
                 />
             </>
         )}
@@ -87,6 +88,8 @@ const NavItem = memo(({ element, index, handleDropdownBlur, toggleDropdown, isAc
 
 // Main header component
 function Header({ roboto }) {
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    
     const {
         handleDropdownBlur,
         toggleDropdown,
@@ -97,7 +100,8 @@ function Header({ roboto }) {
         handleNavBlur,
         scrollToTop,
         hasActiveSublink,
-        currentPath
+        currentPath,
+        showTopButton
     } = useHeaderLogic();
 
     return (
@@ -136,9 +140,17 @@ function Header({ roboto }) {
                 </ul>
             </nav>
 
-            <button onClick={scrollToTop} className={styles.topButton}>
-                <UilArrowRight />
-            </button>
+            <div className={styles.stickyBottom}>
+                <button onClick={() => setIsChatOpen(!isChatOpen)} className={styles.chatButton}>
+                    <ChatIcon />
+                </button>
+                <button onClick={scrollToTop} className={`${styles.topButton} ${showTopButton ? styles.active : ''}`}>
+                    <UilArrowRight />
+                </button>
+            </div>
+
+            {/* Chat Widget - Always rendered for smooth animations */}
+            <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
 
             <DesktopMenu desktopMenuStyles={desktopMenuStyles} handleMenuButton={handleMenuButton} />
         </>

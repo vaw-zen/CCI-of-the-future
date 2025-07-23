@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from './serviceDetails.module.css'
-import PropTypes from 'prop-types'
 
 export default function ServiceDetails({ title, text }) {
   return (
@@ -15,9 +14,4 @@ export default function ServiceDetails({ title, text }) {
         </div>
     </div>
   )
-}
-
-ServiceDetails.propTypes = {
-  title: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired
 }

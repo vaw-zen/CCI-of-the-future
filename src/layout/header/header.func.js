@@ -20,6 +20,7 @@ export function useHeaderLogic() {
     const [active, setActive] = useState(-1)
     const [menu, setMenu] = useState(false)
     const [isClientSide, setIsClientSide] = useState(false)
+    const [showTopButton, setShowTopButton] = useState(false)
     
     // Use Next.js pathname hook instead of manually tracking
     const currentPath = usePathname();
@@ -35,6 +36,19 @@ export function useHeaderLogic() {
     useEffect(() => {
         setIsClientSide(true);
     }, []);
+
+    // Handle scroll for top button visibility
+    useEffect(() => {
+        if (!isClientSide) return;
+
+        const handleScroll = () => {
+            const shouldShow = window.scrollY > window.innerHeight * 0.25;
+            setShowTopButton(shouldShow);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isClientSide]);
 
     // Close menu when navigating to a different page
     useEffect(() => {
@@ -186,32 +200,18 @@ export function useHeaderLogic() {
         findActiveSublink,
         activeLinks,
         currentPath,
-        menu
+        menu,
+        showTopButton
     };
 }
 
 const nav = createRef()
 const container = createRef()
-const topBTN = createRef()
 
 // Modified headerSI function to safely handle DOM operations
 export function headerSI() {
     // Early return if not in browser environment
     if (typeof window === 'undefined') return;
-
-    // Safely get top button element
-    if (!topBTN.current) {
-        topBTN.current = document.querySelector('.' + styles.topButton)
-    }
-
-    // Only manipulate the DOM if we have the element
-    if (topBTN.current) {
-        if (window.scrollY > window.innerHeight * 0.25) {
-            topBTN.current.style.transform = 'scale(1)'
-        } else {
-            topBTN.current.style.transform = 'scale(0)'
-        }
-    }
 
     // Safely get nav elements
     if (!nav.current) {

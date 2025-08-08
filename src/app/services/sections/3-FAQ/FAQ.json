@@ -1,19 +1,19 @@
 {
-    "slug": "qui sommes-nous",
-    "title": "Nos solutions optimales",
-    "img": "/home/about.png",
+    "slug": "ce que nou proposons",
+    "title": "Des solutions optimales",
+    "img": "/home/beforeafter.webp",
     "QA": [
         {
-            "Q": "Services de nettoyage depuis 2006",
-            "A": "On aide les gens à se sentir bien chez eux en offrant une aide rapide à prix juste, un service fiable et pro pour tout problème: broyeurs, prises, interrupteurs et autres éléments défectueux"
+            "Q": "Services de nettoyage depuis 2019",
+            "A": "Depuis 2019, nous proposons des services de nettoyage professionnels pour particuliers et entreprises, avec une équipe expérimentée et des résultats garantis."
         },
         {
             "Q": "Notre passion",
-            "A": "On aide les gens à se sentir bien chez eux en offrant une aide rapide à prix juste, un service fiable et pro pour tout problème: broyeurs, prises, interrupteurs et autres éléments défectueux"
+            "A": "Notre passion est d’offrir un environnement propre et sain à nos clients, en utilisant des méthodes modernes et respectueuses de l’environnement."
         },
         {
             "Q": "Appelez-nous, disponible 24h/24 et 7j/7",
-            "A": "On aide les gens à se sentir bien chez eux en offrant une aide rapide à prix juste, un service fiable et pro pour tout problème: broyeurs, prises, interrupteurs et autres éléments défectueux"
+            "A": "Notre équipe est disponible à toute heure, tous les jours, pour répondre à vos besoins urgents de nettoyage ou pour toute question."
         }
     ]
 }

@@ -1,0 +1,32 @@
+
+.ListContainer { padding: 2.60vw var(--padding-base); max-width: 67.71vw; }
+.columns { display: flex; gap: 5rem; align-items: flex-start }
+.col { flex: 1 1 0; display: flex; flex-direction: column; gap: 0.73vw }
+.item { display: flex; align-items: center; gap: 0.63vw }
+.iconWrap { width: 1.46vw; height: 1.46vw; display: flex; align-items: center; justify-content: center }
+.icon { width: 1.04vw; height: 1.04vw; object-fit: contain }
+.text { color: rgba(255,255,255,0.7); font-size: 0.83vw; line-height: 1.35vw; white-space: nowrap }
+.image { width: 33.02vw; height: 15.63vw; position: relative; overflow: hidden; flex: 0 0 33.02vw; border-radius: 0.42vw }
+
+@media screen and (max-width: 1024px) {
+	.ListContainer { padding: 6.51vw var(--padding-base); max-width: 169.27vw; }
+	.columns { display: flex; gap: 3.5rem; align-items: flex-start; flex-wrap: wrap; }
+	.col { flex: 1 1 0; display: flex; flex-direction: column; gap: 1.82vw }
+	.item { display: flex; align-items: center; gap: 1.56vw }
+	.iconWrap { width: 3.65vw; height: 3.65vw; display: flex; align-items: center; justify-content: center }
+	.icon { width: 2.60vw; height: 2.60vw; object-fit: contain }
+	.text { color: rgba(255,255,255,0.7); font-size: 2.08vw; line-height: 3.39vw; white-space: nowrap }
+	.image { width: 46.28vw; height: 21.86vw; position: relative; overflow: hidden; flex: 0 0 46.28vw; border-radius: 1.04vw }
+}
+
+@media screen and (max-width: 480px) {
+	.ListContainer { padding: 12.14vw var(--padding-base); max-width: 315.53vw; }
+	.columns { display: flex; flex-direction: column; gap: 5rem; align-items: flex-start }
+    .columns > .col:nth-of-type(1) { margin-bottom: calc(-4rem + 2.91vw);}
+	.col { flex: 1 1 0; display: flex; flex-direction: column; gap: 3.40vw }
+	.item { display: flex; align-items: center; gap: 2.91vw }
+	.iconWrap { width: 6.80vw; height: 6.80vw; display: flex; align-items: center; justify-content: center }
+	.icon { width: 4.85vw; height: 4.85vw; object-fit: contain }
+	.text { color: rgba(255,255,255,0.7); font-size: 3.88vw; line-height: 6.31vw; white-space: normal }
+	.image { width: 153.88vw; height: 43.80vw; position: relative; overflow: hidden; border-radius: 1.94vw; width: 100% }
+}

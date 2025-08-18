@@ -42,6 +42,8 @@ export function CiCaretDownSm(props) {
 	return (<svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" {...props}><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m15 11l-3 3l-3-3"></path></svg>);
 }
 
+export function BulletIcon({ strokeWidth = 1.5, animate, ...props }) { return (<svg xmlns="http://www.w3.org/2000/svg" width={15} height={15} viewBox="0 0 15 15" {...props}><path d="M7.49609 2.55469C4.76172 2.55469 2.54688 4.76953 2.54688 7.50391C2.54688 10.2383 4.76172 12.4531 7.49609 12.4531C10.2305 12.4531 12.4453 10.2383 12.4453 7.50391C12.4453 4.76953 10.2305 2.55469 7.49609 2.55469ZM7.49609 11.6328C5.22656 11.6328 3.36719 9.77344 3.36719 7.50391C3.36719 5.23438 5.22656 3.375 7.49609 3.375C9.76562 3.375 11.625 5.23438 11.625 7.50391C11.625 9.77344 9.76562 11.6328 7.49609 11.6328Z" fill="currentColor" fillOpacity={0.7} /></svg>); }
+
 export function FaCaretUp(props) {
 	return (<svg xmlns="http://www.w3.org/2000/svg" width={1024} height={1280} viewBox="0 0 1024 1280" {...props}><path fill="currentColor" d="M1024 960q0 26-19 45t-45 19H64q-26 0-45-19T0 960t19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45"></path></svg>);
 }

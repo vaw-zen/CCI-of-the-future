@@ -3,6 +3,7 @@ import React from 'react'
 import styles from './serviceList.module.css'
 import { BulletIcon } from '../../icons'
 import ResponsiveImage from '@/utils/components/Image/Image'
+import ServiceDetails from '../serviceDetails/serviceDetails'
 
 const DEFAULT_ICON = '/home/6.webp'
 
@@ -41,7 +42,7 @@ export default function ServiceList({ items = [] }) {
 
     return (
         <div className={styles.wrapper}>
-
+            <ServiceDetails title='test' text="hello world" className={styles.ServiceDetails} />
             <div className={styles.ListContainer}>
                 <div className={styles.columns}>
                     <div className={styles.col}>

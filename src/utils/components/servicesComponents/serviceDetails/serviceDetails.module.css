@@ -12,7 +12,7 @@
 }
 
 @media screen and (max-width: 480px) {
-    .container { min-height:167px;margin-bottom: 100px; }
+    .container { min-height:167px;margin-bottom: 30px; }
     .title { font-size: 25px; /* 25px/412*100 */ }
     
     .text { font-size: 16px; /* 16px/412*100 */ line-height: 6.31vw; /* 26px/412*100 */ }

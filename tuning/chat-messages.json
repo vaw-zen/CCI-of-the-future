@@ -1,6 +1,6 @@
 {
   "initialMessage": {
-    "text": "Salut ! 👋 C'est Fares ici. Comment puis-je vous aider avec vos besoins de nettoyage aujourd'hui ?",
+    "text": "Salut !👋 Bienvenue chez CCI. Comment puis-je vous aider aujourd'hui ?",
     "sender": "ai"
   },
   "quickReplies": [
@@ -18,6 +18,7 @@
   "ui": {
     "onlineStatus": "En ligne maintenant",
     "inputPlaceholder": "Tapez votre message...",
-    "headerTitle": "Fares Chaabane"
+    "headerTitle": "Assistant vituel CCI",
+    "headerSubtitle": "Votre assistant de nettoyage personnel"
   }
 } 

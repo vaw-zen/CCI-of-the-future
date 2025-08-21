@@ -2,34 +2,19 @@
 import React, { useState } from 'react'
 import styles from './partnerTab.module.css'
 
-const TabData = [
-  {
-    id: 'mission',
-    title: 'Notre mission',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.',
-    image: 'https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01.jpg'
-  },
-  {
-    id: 'vision',
-    title: 'Notre vision',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.',
-    image: 'https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267dbdb29fef4a994f1cb_tab-02.jpg'
-  },
-  {
-    id: 'philosophy',
-    title: 'Philosophie',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    image: 'https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01.jpg'
+const tabImages = {
+  mission: '/mission.jpg',
+  vision: '/vision.jpg',
+  philosophy: '/philosophy.jpg',
+}
 
-  }
-]
-export default function PartnerTab() {
-  const [activeTab, setActiveTab] = useState('vision')
-  
+export default function PartnerTab({ tabData }) {
+  const [activeTab, setActiveTab] = useState(tabData?.[0]?.id || '')
+
   return (
     <div className={styles.container}>
       <div className={styles.tabMenu}>
-        {TabData.map((tab) => (
+        {tabData.map((tab) => (
           <button 
             key={tab.id}
             className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
@@ -41,7 +26,7 @@ export default function PartnerTab() {
       </div>
       
       <div className={styles.tabContent}>
-        {TabData.map((tab,i) => (
+        {tabData.map((tab,i) => (
           activeTab === tab.id && (
             <div 
               key={tab.id} 
@@ -54,7 +39,7 @@ export default function PartnerTab() {
                 </div>
               </div>
               <div className={styles.tabImage}>
-                <img src={tab.image} alt={tab.title} />
+                <img src={tabImages[tab.id]} alt={tab.title} />
               </div>
             </div>
           )

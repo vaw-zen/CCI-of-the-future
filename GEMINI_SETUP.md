@@ -26,7 +26,7 @@
 
 ## Model Configuration
 
-- **Model**: `gemini-1.5-flash` (fast and free)
+- **Model**: `gemini-2.0-flash` (fast and free)
 - **Max Tokens**: 1000 (configurable)
 - **Temperature**: 0.7 (balanced creativity)
 

@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from './serviceDetails.module.css'
 
-export default function ServiceDetails({ title, text }) {
+export default function ServiceDetails({ title, text, className }) {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className}`}>
         <h2 className={styles.title}>
             {title}
         </h2>

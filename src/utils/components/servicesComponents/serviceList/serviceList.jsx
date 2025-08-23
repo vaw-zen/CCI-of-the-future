@@ -28,7 +28,7 @@ function ServiceItem({ icon, text }) {
  * Props:
  *  - items: Array<{ id?: string, text: string, icon?: string }>
  */
-export default function ServiceList({ items = [] }) {
+export default function ServiceList({ items = [], title = 'Nos solutions', text = "Des solutions de tapisserie adaptées à tous vos besoins" }) {
     const defaults = [
         'Dedicated Team Members',
         'Specific gravity of soil conduct',
@@ -42,7 +42,7 @@ export default function ServiceList({ items = [] }) {
 
     return (
         <div className={styles.wrapper}>
-            <ServiceDetails title='Nos solutions' text="Des solutions de tapisserie adaptées à tous vos besoins" className={styles.ServiceDetails} />
+            <ServiceDetails title={title} text={text} className={styles.ServiceDetails} />
             <div className={styles.ListContainer}>
                 <div className={styles.columns}>
                     <div className={styles.col}>

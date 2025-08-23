@@ -1,145 +1,40 @@
-.container { padding: 0 var(--padding-base);height:323.922px;display:flex;flex-direction: column; justify-content: center;margin-top: 50px;margin-bottom: 50px;}
-
-.tabMenu { 
-    display: flex;
-    gap: 2vw;;
-    height: 3.70vw; /* 71px/1920*100 */
-
-}
-
-.tabButton {
-    font-size: 1.350vw; /* 25px/1920*100 */
-    font-weight: 700;
-    color: var(--t-primary);
-    border: none;
-    background: transparent;
-    position: relative;
-    padding-bottom: 15px;
-}
-
-.tabButton.active {
-    border-bottom: 2px solid var(--ac-primary);
-}
-
-.tabContent {
-    border-top: 1px solid #2B2B2C;
-   
-}
-
-.tabPanel {
-    display: flex;
-    gap: 2vw; /* 50px/1920*100 */
-    padding-top: 50px;
-    /* justify-content: center; */
-    align-items: center;
-    /* flex-direction: row-reverse; */
-}
-
-.tabPanel.evenPanel {
-    flex-direction: row-reverse;
-}
-
-.tabDesc {
-    /* width:932.016px; */
-    display: flex;
-    flex-direction: column;
-    gap: 0.78vw; /* 15px/1920*100 */
-}
-
-.tabTitle {
-    font-size: 1.35vw; /* 25px/1920*100 */
-    color: var(--t-primary);
-    margin-bottom: 0.78vw; /* 15px/1920*100 */
-}
-
-.tabText {
-    font-size: 0.83vw; /* 16px/1920*100 */
-    color: var(--t-thri);
-    line-height: 1.35vw; /* 26px/1920*100 */
-}
-
-
-
-.tabImage img {
-   width:367.984px;
-    height:201.922px;
-    object-fit: cover;
-}
+.container { padding: 0 var(--padding-base); height: 16.87vw; display: flex; flex-direction: column; justify-content: center; margin-top: 2.60vw; margin-bottom: 2.60vw }
+.tabMenu { display: flex; gap: 2vw; height: 3.70vw }
+.tabButton { font-size: 1.35vw; font-weight: 700; color: var(--t-primary); border: none; background: transparent; position: relative; padding-bottom: 0.78vw }
+.tabButton.active { border-bottom: 0.10vw solid var(--ac-primary) }
+.tabContent { border-top: 0.05vw solid #2B2B2C }
+.tabPanel { display: flex; gap: 2vw; padding-top: 2.60vw; align-items: center }
+.tabPanel.evenPanel { flex-direction: row-reverse }
+.tabDesc { display: flex; flex-direction: column; gap: 0.78vw }
+.tabTitle { font-size: 1.35vw; color: var(--t-primary); margin-bottom: 0.78vw }
+.tabText { font-size: 0.83vw; color: var(--t-thri); line-height: 1.35vw }
+.tabImage img { width: 19.17vw; height: 10.52vw; object-fit: cover }
 
 @media screen and (max-width: 1024px) {
-    .container { padding: var(--padding-base); height:auto;}
-    .tabMenu { 
-        height: auto;
-       
-    }
-    .tabButton { 
-        font-size: 3vw; /* 25px/1024*100 */ 
-        padding: 15px 0;
-    }
-    .tabTitle{
-        font-size: 3vw;
-    }
-    .tabText { 
-        font-size: 1.56vw; /* 16px/1024*100 */ 
-        line-height: 2.31vw; 
-    }
-    .tabImage {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 330/180.85;
-    }
+    .container { padding: var(--padding-base); height: auto; margin-top: 6.51vw; margin-bottom: 6.51vw }
+    .tabMenu { height: auto }
+    .tabButton { font-size: 3vw; padding: 1.95vw 0 }
+    .tabButton.active { border-bottom: 0.26vw solid var(--ac-primary) }
+    .tabContent { border-top: 0.13vw solid #2B2B2C }
+    .tabPanel { display: flex; gap: 2.60vw; padding-top: 6.51vw; align-items: center }
+    .tabPanel.evenPanel { flex-direction: row-reverse }
+    .tabDesc { display: flex; flex-direction: column; gap: 1.95vw }
+    .tabTitle { font-size: 3vw; margin-bottom: 1.95vw }
+    .tabText { font-size: 1.56vw; color: var(--t-thri); line-height: 2.31vw }
+    .tabImage { width: 100%; height: auto; aspect-ratio: 330/180.85 }
+    .tabImage img { width: 100%; height: auto }
 }
 
 @media screen and (max-width: 480px) {
-    .container { padding: var(--padding-base); height: auto;}
-    .tabMenu { 
-        flex-direction: column; 
-        text-align: start ;
-        /* gap: 30px; */
-        padding-top: 26px;
-        align-items: flex-start;
-        text-align: left;
-    }
-    .tabPanel{
-        padding-top: 25px;
-        flex-direction: column !important;
-    }
-    .tabButton { 
-        font-size: 6.07vw; /* 25px/412*100 */
-        /* padding: 15px 0;      */
-        text-align: left;
-        width: 100%;
-        padding: 15px 0;
-    }
-    .tabTitle {
-        font-size: 6.07vw; /* 25px/412*100 */
-        margin-bottom: 15px;
-    }
-    .tabText { 
-        font-size: 3.88vw; /* 16px/412*100 */ 
-        line-height: 6.31vw; /* 26px/412*100 */
-    }
-    .tabDesc { 
-        width: 100%;
-        gap: 15px;
-    }
-    .tabImage { 
-        width: 100%;
-        height: auto;
-        aspect-ratio: 330/180.85;
-    }
-    .tabPanel.evenPanel {
-        flex-direction: column-reverse !important;
-    }
+    .container { padding: var(--padding-base); height: auto; margin-top: 12.14vw; margin-bottom: 12.14vw; min-height: 40.53vw }
+    .tabMenu { flex-direction: column; text-align: start; padding-top: 6.31vw; align-items: flex-start }
+    .tabPanel { padding-top: 6.07vw; flex-direction: column !important }
+    .tabButton { font-size: 6.07vw; text-align: left; width: 100%; padding: 3.64vw 0 }
+    .tabButton.active { border-bottom: 0.49vw solid var(--ac-primary) }
+    .tabTitle { font-size: 6.07vw; margin-bottom: 3.64vw }
+    .tabText { font-size: 3.88vw; line-height: 6.31vw }
+    .tabDesc { width: 100%; gap: 3.64vw }
+    .tabImage { width: 100%; height: auto; aspect-ratio: 330/180.85 }
+    .tabImage img { width: 100%; height: auto }
+    .tabPanel.evenPanel { flex-direction: column-reverse !important }
 }
-
-
-
-
-
-
-/* 
-https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01-p-500.jpg 500w,
- https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01-p-800.jpg 800w, 
- https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01-p-1080.jpg 1080w,
-  https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d267daedcc413255de10bf_tab-01.jpg 1200w */

@@ -64,6 +64,7 @@ export default function Page() {
         <PartnerTab tabData={tapisserieTabData} />
 
         <ServiceList 
+        title='Nos solutions' text="Des solutions de tapisserie adaptées à tous vos besoins"
   items={[
     { id: '1', text: 'Retapissage de tout type de tapisserie', icon: '/icons/needle.png' },
     { id: '2', text: 'Remplacement de mousse', icon: '/icons/sponge.png' },

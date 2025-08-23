@@ -2,15 +2,15 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    gap: 20px;
-    padding: 40px var(--padding-base);
+    gap: 1.04vw;
+    padding: 2.08vw var(--padding-base);
 }
 
 .background {
     background-color: var(--bg-elevated);
     width: 100%;
     height: auto;
-    min-height: 188px;
+    min-height: 9.79vw;
     display: flex;
     flex-direction: column;
 }
@@ -18,17 +18,17 @@
 .content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 36px 30px 24px;
+    gap: 0.52vw;
+    padding: 1.88vw 1.56vw 1.25vw;
 }
 
 .heading {
-    font-size: 24px;
+    font-size: 1.25vw;
     word-wrap: break-word;
 }
 
 .text {
-    font-size: 16px;
+    font-size: 0.83vw;
     color: var(--t-thri);
     line-height: 1.5;
     word-wrap: break-word;
@@ -38,26 +38,50 @@
 @media screen and (max-width: 1024px) {
     .container {
         flex-direction: column;
-        gap: 16px;
-        padding: 30px var(--padding-base);
+        gap: 2.60vw;
+        padding: 5.20vw var(--padding-base);
+    }
+
+    .background {
+        min-height: 24.48vw;
+    }
+
+    .content {
+        gap: 1.30vw;
+        padding: 4.70vw 3.90vw 3.12vw;
+    }
+
+    .heading {
+        font-size: 3.12vw;
+    }
+
+    .text {
+        font-size: 2.08vw;
     }
 }
 
 /* Mobile styles */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 480px) {
     .container {
-        padding: 20px var(--padding-base);
+        flex-direction: column;
+        gap: 4.84vw;
+        padding: 9.69vw var(--padding-base);
+    }
+
+    .background {
+        min-height: 45.60vw;
     }
 
     .content {
-        padding: 24px 20px;
+        gap: 2.42vw;
+        padding: 8.76vw 7.27vw 5.83vw;
     }
 
     .heading {
-        font-size: 20px;
+        font-size: 5.83vw;
     }
 
     .text {
-        font-size: 14px;
+        font-size: 3.87vw;
     }
 }

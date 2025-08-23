@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { UilArrowRight } from "../../icons";
 import styles from './feedback.module.css';
 
@@ -27,9 +28,9 @@ export default function Feedback() {
           </p>
 
           <div className={styles.readMoreContainer}>
-            <div className={styles.iconContainer}>
+            <Link href="/" className={styles.iconContainer}>
               <UilArrowRight className={styles.icon} />
-            </div>
+            </Link>
             <span className={styles.readMoreText}>
               READ FEEDBACK
             </span>

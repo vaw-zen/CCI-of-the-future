@@ -45,7 +45,8 @@ export default function ServiceList({ items = [], title = 'Nos solutions', text 
             <ServiceDetails title={title} text={text} className={styles.ServiceDetails} />
             <div className={styles.ListContainer}>
                 <div className={styles.columns}>
-                    <div className={styles.col}>
+                    <div style={{display:'flex', minWidth:'calc(100% - 2.6vw)'}}>
+                        <div className={styles.col}>
                         {list.slice(0, Math.ceil(list.length / 2)).map((it) => (
                             <ServiceItem key={it.id ?? it.text} icon={it.icon} text={it.text} />
                         ))}
@@ -54,6 +55,7 @@ export default function ServiceList({ items = [], title = 'Nos solutions', text 
                         {list.slice(Math.ceil(list.length / 2)).map((it) => (
                             <ServiceItem key={it.id ?? it.text} icon={it.icon} text={it.text} />
                         ))}
+                    </div>
                     </div>
                     <ResponsiveImage
                         src={DEFAULT_ICON}

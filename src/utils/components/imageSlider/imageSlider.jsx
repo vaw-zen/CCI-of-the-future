@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useRef } from 'react';
  // use local icon components so we can keep SVGs in one place
 import { RadixIconsCaretRight } from '../icons';
 import styles from './imageSlider.module.css';
@@ -64,6 +65,45 @@ export const ImageSlider = ({
     setIsAutoPlaying(false);
   };
 
+  // Swipe / touch handling for mobile and tablets
+  const startXRef = useRef(0);
+  const currentXRef = useRef(0);
+  const isDraggingRef = useRef(false);
+
+  const handlePointerStart = (clientX) => {
+    startXRef.current = clientX;
+    currentXRef.current = clientX;
+    isDraggingRef.current = true;
+    setIsAutoPlaying(false);
+  };
+
+  const handlePointerMove = (clientX) => {
+    if (!isDraggingRef.current) return;
+    currentXRef.current = clientX;
+  };
+
+  const handlePointerEnd = () => {
+    if (!isDraggingRef.current) return;
+    const delta = currentXRef.current - startXRef.current;
+    const threshold = 50; // px
+    if (delta > threshold) {
+      goToPrevious();
+    } else if (delta < -threshold) {
+      goToNext();
+    }
+    isDraggingRef.current = false;
+    startXRef.current = 0;
+    currentXRef.current = 0;
+  };
+
+  const onTouchStart = (e) => handlePointerStart(e.touches[0].clientX);
+  const onTouchMove = (e) => handlePointerMove(e.touches[0].clientX);
+  const onTouchEnd = () => handlePointerEnd();
+
+  const onPointerDown = (e) => handlePointerStart(e.clientX);
+  const onPointerMoveEvt = (e) => handlePointerMove(e.clientX);
+  const onPointerUp = () => handlePointerEnd();
+
   return (
     <section className={styles.showcase}>
       <div className={styles.container}>
@@ -78,7 +118,17 @@ export const ImageSlider = ({
 
         <div className={styles.carouselWrapper}>
           {/* Main Image Container */}
-          <div className={styles.imageContainer}>
+          <div
+            className={styles.imageContainer}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMoveEvt}
+            onPointerUp={onPointerUp}
+            role="region"
+            aria-label="Image carousel"
+          >
             <div 
               className={styles.imageSlider}
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}

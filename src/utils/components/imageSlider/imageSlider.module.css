@@ -4,7 +4,7 @@
 }
 
 .container {
-  max-width: 62.5vw;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -43,7 +43,7 @@
   height: 31.25rem;
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 1.30vw 2.60vw -0.62vw rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .imageSlider {
@@ -145,7 +145,7 @@
 .dotActive {
   background: hsl(var(--primary));
   transform: scale(1.25);
-  box-shadow: 0 0.21vw 0.42vw rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .thumbnails {
@@ -173,8 +173,8 @@
 .thumbnailActive {
   opacity: 1;
   transform: scale(1.05);
-  box-shadow: 0 0.21vw 0.42vw rgba(0, 0, 0, 0.2);
-  border: 0.10vw solid hsl(var(--primary));
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid hsl(var(--primary));
 }
 
 .thumbnailImage {
@@ -218,7 +218,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(1.04vw);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -229,46 +229,10 @@
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(2.60vw);
+    transform: translateX(50px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
-  }
-}
-
-/* Tablet (max-width: 1024px) – convert px -> vw using 768px reference */
-@media screen and (max-width: 1024px) {
-  .container { max-width: 156.25vw; }
-  .imageContainer { box-shadow: 0 3.26vw 6.51vw -1.56vw rgba(0, 0, 0, 0.25); }
-  .dotActive { box-shadow: 0 0.52vw 1.04vw rgba(0, 0, 0, 0.2); }
-  .thumbnailActive { box-shadow: 0 0.52vw 1.04vw rgba(0, 0, 0, 0.2); border: 0.26vw solid hsl(var(--primary)); }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(2.60vw); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(6.51vw); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-}
-
-/* Mobile (max-width: 480px) – convert px -> vw using 412px reference */
-@media screen and (max-width: 480px) {
-  .container { max-width: 291.26vw; }
-  .imageContainer { box-shadow: 0 6.07vw 12.14vw -2.91vw rgba(0, 0, 0, 0.25); }
-  .dotActive { box-shadow: 0 0.97vw 1.94vw rgba(0, 0, 0, 0.2); }
-  .thumbnailActive { box-shadow: 0 0.97vw 1.94vw rgba(0, 0, 0, 0.2); border: 0.49vw solid hsl(var(--primary)); }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4.85vw); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(12.14vw); }
-    to { opacity: 1; transform: translateX(0); }
   }
 }

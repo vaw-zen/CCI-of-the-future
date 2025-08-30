@@ -30,12 +30,6 @@ const marbreTabData = [
 ];
 
 export default function Page() {
-  const sliderImages = [
-    { src: '/home/1.webp', title: 'Before', description: 'Before restoration' },
-    { src: '/home/3.webp', title: 'During', description: 'Work in progress' },
-    { src: '/home/4.webp', title: 'After', description: 'Final result' },
-    { src: '/home/4.webp', title: 'After', description: 'Final result' },
-  ];
   return (
     <>
       <style>{`
@@ -84,14 +78,7 @@ export default function Page() {
           title="Restauration et entretien de marbre"
           text="CCI vous propose des services spécialisés pour la restauration et l’entretien de vos surfaces en marbre et carrelage : ponçage, lustrage, cristallisation et protection. Notre équipe utilise des techniques professionnelles et des produits adaptés pour redonner éclat, brillance et durabilité à vos sols et surfaces. Confiez-nous vos projets pour un résultat haut de gamme et durable."
         />
-        <ImageSlider
-          images={sliderImages}
-          autoPlay={true}
-          interval={4000}
-          showThumbnails={true}
-          showDots={true}
-          startIndex={0}
-        />
+        <ImageSlider/>
       </div>
     </>
   );

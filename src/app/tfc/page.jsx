@@ -1,0 +1,81 @@
+import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
+import ServiceDetails from "@/utils/components/servicesComponents/serviceDetails/serviceDetails";
+import PartnerTab from "@/utils/components/servicesComponents/partnerTab/PartnerTab";
+import React from "react";
+import Feedback from "@/utils/components/servicesComponents/feedbackComponent/feedback";
+import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUsTab";
+import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
+import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
+
+const tfcTabData = [
+  {
+    id: "mission",
+    title: "Notre mission",
+    content:
+      "Proposer des prestations de nettoyage après travaux (TFC) et réaménagement : élimination des poussières fines, nettoyages des surfaces, vitrification des sols si nécessaire, et remise en état pour livraison.",
+  },
+  {
+    id: "vision",
+    title: "Notre vision",
+    content:
+      "Assurer une transition propre et sans stress entre la fin du chantier et la remise des lieux, en garantissant sécurité et propreté irréprochable.",
+  },
+  {
+    id: "philosophy",
+    title: "Notre philosophie",
+    content:
+      "Organiser les opérations de fin de chantier avec méthode : tri des déchets, nettoyage technique, traitement des sols et surfaces, et vérification qualité avant livraison.",
+  },
+];
+
+export default function Page() {
+  return (
+    <>
+      <style>{`
+        .responsive-padding { padding: 115px 0px; }
+        @media (max-width: 900px) { .responsive-padding { padding: 60px 0px; } }
+        @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
+      `}</style>
+      <HeroHeader title={"Travaux de fin de chantier (TFC)"} />
+      <div className="responsive-padding">
+        <ServiceDetails
+          title="Nettoyage technique après chantier"
+          text="Nettoyage complet après travaux : dépoussiérage industriel, nettoyage des menuiseries, élimination des traces de peintures et enduits, lavage des sols et surfaces, et mise en conformité pour réception."
+        />
+
+        <Feedback />
+
+        <ServiceDetails
+          title="Gestion de réaménagement"
+          text="Nous proposons aussi des services de remise en état post-rénovation et aide au réaménagement : enlèvement des gravats, nettoyage ciblé, et préparation des surfaces pour les finitions."
+        />
+
+        <AboutUsTab
+          historyText="CCI intervient sur des chantiers de toutes tailles pour garantir une livraison propre et professionnelle."
+          missionText="Offrir un service TFC rigoureux, sécurisé et respectueux des délais convenus."
+          visionText="Être le partenaire fiable pour les entreprises du bâtiment et les particuliers lors de la phase finale des projets."
+        />
+
+        <PartnerTab tabData={tfcTabData} />
+
+        <ServiceList
+          title="Services TFC"
+          text="Prestations complètes pour la remise en état post-chantiers."
+          items={[
+            { id: "1", text: "Dépoussiérage technique", icon: "/icons/polisher.png" },
+            { id: "2", text: "Nettoyage sols et vitreries", icon: "/icons/polisher1.png" },
+            { id: "3", text: "Enlèvement gravats", icon: "/icons/crystal3.png" },
+            { id: "4", text: "Vérification qualité & livraison", icon: "/icons/shield.png" },
+          ]}
+        />
+
+        <ServiceDetails
+          title="Pourquoi choisir notre service TFC"
+          text="Méthodologie professionnelle, équipe équipée et respect des normes de sécurité : nous assurons une livraison prête à l’usage."
+        />
+
+        <ImageSlider />
+      </div>
+    </>
+  );
+}

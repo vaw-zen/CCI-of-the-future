@@ -36,9 +36,22 @@
                 "link": "/tapisserie"
             },
             {
-                "name": "nettoyage",
-                "link": "/nettoyage"
+                "name": "marbre",
+                "link": "/marbre"
+            },
+               {
+                "name": "Nettoyage tapis & moquettes",
+                "link": "/tapis"
+            },
+               {
+                "name": "Nettoyage salon",
+                "link": "/salon"
+            },
+               {
+                "name": "Travaux de fin de chantier",
+                "link": "/tfc"
             }
+               
         ]
     },
     {

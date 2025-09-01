@@ -1,12 +1,14 @@
 import { DM_Sans, Roboto_Condensed } from 'next/font/google';
 import "./globals.css";
 import dynamic from 'next/dynamic';
+import Script from 'next/script';
 import Initializer from '@/utils/initializer/initalizer';
 import ClientHeader from '@/layout/header/ClientHeader';
 import HydrationSuppressor from '@/utils/HydrationSuppressor';
 
 // Dynamically import components that might cause hydration issues
 const Footer = dynamic(() => import('@/layout/footer/footer'));
+
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -31,16 +33,44 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  const FB_APP_ID = process.env.NEXT_PUBLIC_FB_APP_ID || '';
+  const FB_API_VERSION = process.env.NEXT_PUBLIC_FB_API_VERSION || 'v17.0';
   return (
     <html lang="fr" className={dmSans.className} suppressHydrationWarning>
       <head>
         <HydrationSuppressor />
+        {/* Conditionally load Facebook SDK: only when app id is set and in production or when explicitly allowed in env */}
+        {FB_APP_ID && (process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_ALLOW_FB_IN_DEV === 'true') && (
+          <>
+            <Script
+              id="fb-init"
+              strategy="beforeInteractive"
+              dangerouslySetInnerHTML={{ __html: `
+                window.fbAsyncInit = function() {
+                  try {
+                    FB.init({
+                      appId      : '${FB_APP_ID}',
+                      cookie     : true,
+                      xfbml      : true,
+                      version    : '${FB_API_VERSION}'
+                    });
+                    if (FB.AppEvents && FB.AppEvents.logPageView) FB.AppEvents.logPageView();
+                  } catch (e) {
+                    console.warn('FB SDK init failed', e);
+                  }
+                };
+              ` }}
+            />
+            <Script id="facebook-jssdk" src="https://connect.facebook.net/en_US/sdk.js" strategy="afterInteractive" />
+          </>
+        )}
       </head>
       <Initializer />
       <body suppressHydrationWarning>
         <ClientHeader roboto={roboto} />
         {children}
-        <Footer />
+  <Footer />
+
       </body>
     </html>
   );

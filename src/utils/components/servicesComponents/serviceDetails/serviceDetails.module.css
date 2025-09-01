@@ -12,7 +12,7 @@
 
 @media screen and (max-width: 480px) {
     .container { display: flex; flex-direction: column; gap: 6.99vw; padding: 0 var(--padding-base); margin: 14.56vw 0vw 7.28vw; min-height: 40.53vw }
-    .title { font-size: 15.53vw; line-height: 1; color: var(--t-primary); font-weight: 700 }
+    .title { font-size: 11.53vw; line-height: 1; color: var(--t-primary); font-weight: 700 }
     .textContainer { display: flex; flex-direction: column; gap: 0 }
     .text { font-size: 3.87vw; color: var(--t-thri); line-height: 7.28vw }
 }

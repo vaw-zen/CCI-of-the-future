@@ -57,7 +57,7 @@ export async function GET() {
 
     cache = { ts: now, data: { facebook } };
 
-    return NextResponse.json({ facebook, posts: normalizeFbPosts(facebook), cached: false });
+    return NextResponse.json({ facebook, posts: normalizeFbPosts(facebook), cached: true });
   } catch (err) {
     console.error('FB posts fetch error:', err);
     const msg = err && err.message ? err.message : 'Unknown error';
@@ -67,3 +67,4 @@ export async function GET() {
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
+                                                

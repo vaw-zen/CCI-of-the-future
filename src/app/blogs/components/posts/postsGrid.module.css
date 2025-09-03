@@ -1,31 +1,48 @@
-.posts-section { width: 100%; padding: 3.33vw 1.25vw; background:var(--bg-elevated);}
+.posts-section { width: 100%; padding: 3.33vw 1.25vw; background: linear-gradient(135deg, rgba(203, 251, 66, .02), var(--bg-base));}
 
 .posts-container { margin: 0 auto;max-width: 1200px; }
 
 .posts-header { text-align: center; margin-bottom: 2.50vw }
 
-.posts-title { font-size: 1.88vw; font-weight: bold; margin-bottom: 0.83vw; color: #f9fafb }
+.posts-title { font-size: 1.88vw; font-weight: bold; margin-bottom: 0.83vw; color: var(--t-primary) }
 
-.posts-subtitle { font-size: 1.04vw; color: #9ca3af; max-width: 26.67vw; margin: 0 auto }
+.posts-subtitle { font-size: 1.04vw; color: var(--t-secondary); max-width: 26.67vw; margin: 0 auto }
 
 .posts-grid { display: grid; grid-template-columns:repeat(3, 1fr) ;gap: 1.67vw;}
 
+.posts-grid-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3.33vw 1.67vw; border: 0.05vw dashed rgba(203, 251, 66, 0.25); border-radius: 0.63vw; background: var(--bg-elevated); min-height: 16.67vw; text-align: center; grid-column: 1 / -1; }
+.empty-illustration { width: 6.25vw; height: 6.25vw; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(203, 251, 66, 0.35), rgba(203, 251, 66, 0.15)); margin-bottom: 0.83vw; position: relative; }
+.empty-illustration::after { content: ""; position: absolute; inset: 0.83vw; border-radius: 50%; background: radial-gradient(circle at 70% 70%, rgba(203, 251, 66, 0.25), rgba(20, 20, 22, 0.6)); filter: blur(0.10vw); }
+.empty-title { margin: 0; font-size: 1.25rem; color: var(--t-primary); margin-bottom: 0.42vw; }
+.empty-subtitle { margin: 0; font-size: 0.95rem; color: var(--t-secondary); margin-bottom: 1.25vw; max-width: 33.33vw; }
+.empty-action { background: var(--ac-primary); color: var(--t-highlight); border: none; padding: 0.63vw 1.25vw; border-radius: 999px; cursor: pointer; font-weight: 600; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.empty-action:hover { transform: translateY(-0.10vw); box-shadow: 0 0.94vw 1.88vw -0.52vw rgba(203, 251, 66, 0.35); }
+
 @media screen and (max-width: 1024px) {
-  .posts-section { width: 100%; padding: 8.33vw 3.13vw; background:var(--bg-elevated)
+  .posts-section { width: 100%; padding: 8.33vw 3.13vw; background: linear-gradient(135deg, var(--bg-base), var(--bg-elevated));
     }
       .posts-container { margin: 0 auto }
   .posts-header { text-align: center; margin-bottom: 6.25vw }
   .posts-title { font-size: 4.69vw; font-weight: bold; margin-bottom: 2.08vw; color: #f9fafb }
   .posts-subtitle { font-size: 2.60vw; color: #9ca3af; max-width: 66.67vw; margin: 0 auto }
   .posts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4.17vw }
+  .posts-grid-empty { padding: 8.33vw 4.17vw; border: 0.13vw dashed rgba(203, 251, 66, 0.25); border-radius: 1.56vw; min-height: 41.67vw; }
+  .empty-illustration { width: 15.63vw; height: 15.63vw; margin-bottom: 2.08vw; }
+  .empty-illustration::after { inset: 2.08vw; filter: blur(0.26vw); }
+  .empty-subtitle { max-width: 83.33vw; }
+  .empty-action { padding: 1.56vw 3.13vw; }
 }
 
 @media screen and (max-width: 480px) {
-  .posts-section { width: 100%; padding: 15.53vw 5.83vw; background:var(--bg-elevated)
+  .posts-section { width: 100%; padding: 15.53vw 5.83vw; background: linear-gradient(135deg, var(--bg-base), var(--bg-elevated));
     }
       .posts-container { margin: 0 auto }
   .posts-header { text-align: center; margin-bottom: 11.65vw }
   .posts-title { font-size: 8.74vw; font-weight: bold; margin-bottom: 3.88vw; color: #f9fafb }
   .posts-subtitle { font-size: 4.85vw; color: #9ca3af; max-width: 124.27vw; margin: 0 auto }
   .posts-grid { display: grid; grid-template-columns: 1fr; gap: 7.77vw }
+  .posts-grid-empty { padding: 15.53vw 7.77vw; border: 0.24vw dashed rgba(203, 251, 66, 0.25); border-radius: 2.91vw; min-height: 83.33vw; }
+  .empty-illustration { width: 31.07vw; height: 31.07vw; margin-bottom: 3.88vw; }
+  .empty-illustration::after { inset: 3.88vw; filter: blur(0.49vw); }
+  .empty-action { padding: 2.91vw 5.83vw; }
 }

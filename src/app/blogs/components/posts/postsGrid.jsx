@@ -95,9 +95,9 @@ const PostsGrid = () => {
     <section className={styles['posts-section']}>
       <div className={styles['posts-container']}>
         <div className={styles['posts-header']}>
-          <h2 className={styles['posts-title']}>Latest Posts</h2>
+          <h2 className={styles['posts-title']}>Dernières publications</h2>
           <p className={styles['posts-subtitle']}>
-            A collection of thoughts, experiences, and moments worth sharing
+            Une sélection d'idées, d'expériences et de moments à partager
           </p>
         </div>
 
@@ -121,7 +121,10 @@ const PostsGrid = () => {
               />
             )):
             <div className={styles['posts-grid-empty']}>
-              <p>No posts found</p>
+              <div className={styles['empty-illustration']}></div>
+              <h3 className={styles['empty-title']}>Aucune publication trouvée</h3>
+              <p className={styles['empty-subtitle']}>Revenez plus tard pour découvrir nos nouvelles publications.</p>
+              <button className={styles['empty-action']} onClick={() => window.location.reload()}>Rafraîchir</button>
             </div>
           )}
           

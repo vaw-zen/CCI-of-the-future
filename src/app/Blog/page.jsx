@@ -6,7 +6,7 @@ import ReelsSection from "@/utils/components/blogComponents/reels/ReelsSection";
 export default function Page() {
   return (
     <>
-      <HeroHeader title={"Blog & Reels"} />
+      <HeroHeader title={"Posts & Reels"} />
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
         <ReelsSection />
         <PostsGrid />

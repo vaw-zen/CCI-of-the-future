@@ -33,14 +33,14 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
-  const FB_APP_ID = process.env.NEXT_PUBLIC_FB_APP_ID || '';
-  const FB_API_VERSION = process.env.NEXT_PUBLIC_FB_API_VERSION || 'v17.0';
+  const FB_APP_ID = process.env.FB_APP_ID || '';
+  const FB_API_VERSION = process.env.FB_API_VERSION || 'v17.0';
   return (
     <html lang="fr" className={dmSans.className} suppressHydrationWarning>
       <head>
         <HydrationSuppressor />
         {/* Conditionally load Facebook SDK: only when app id is set and in production or when explicitly allowed in env */}
-        {FB_APP_ID && (process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_ALLOW_FB_IN_DEV === 'true') && (
+        {FB_APP_ID && (process.env.NODE_ENV === 'production' || process.env.ALLOW_FB_IN_DEV === 'true') && (
           <>
             <Script
               id="fb-init"

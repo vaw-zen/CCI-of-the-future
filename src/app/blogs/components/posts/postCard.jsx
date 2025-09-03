@@ -1,4 +1,4 @@
-import styles from './PostCard.module.css';
+import styles from './postCard.module.css';
 import { Heart, Share2, MessageCircle, Calendar } from "lucide-react";
 
 const PostCard = ({ title, content, image, date, likes, comments, type }) => {

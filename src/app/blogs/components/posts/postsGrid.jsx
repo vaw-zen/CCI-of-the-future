@@ -1,21 +1,29 @@
 "use client";
-import './PostsGrid.module.css';
-import PostCard from "./PostCard.jsx";
-import styles from './PostsGrid.module.css';
+import PostCard from "./postCard.jsx";
+import PostCardSkeleton from "./postCardSkeleton.jsx";
+import styles from './postsGrid.module.css';
 import { useEffect, useState } from 'react';
 
 
 
 const PostsGrid = () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     async function loadPosts() {
-      const res = await fetch('/api/social/facebook');
-      const data = await res.json();
-      // Here you can directly use normalized posts
-      console.log("Facebook posts data:", data); // Debugging line to check the fetched data
-      setPosts(data.posts,[]);
+      try {
+        const res = await fetch('/api/social/facebook');
+        const data = await res.json();
+        // Here you can directly use normalized posts
+        console.log("Facebook posts data:", data); // Debugging line to check the fetched data
+        setPosts(data.posts || []);
+      } catch (error) {
+        console.error("Error loading posts:", error);
+        setPosts([]);
+      } finally {
+        setLoading(false);
+      }
     }
     loadPosts();
   }, []);
@@ -94,18 +102,29 @@ const PostsGrid = () => {
         </div>
 
         <div className={styles['posts-grid']}>
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              title={post.title}
-              content={post.message}
-              image={post.attachments}
-              date={post.created_time}
-              likes={post.likes}
-              comments={post.comments}
-              type={post.type}
-            />
-          ))}
+          {loading ? (
+            // Show 4 skeleton cards while loading
+            Array.from({ length: 6 }).map((_, index) => (
+              <PostCardSkeleton key={`skeleton-${index}`} />
+            ))
+          ) : (
+            posts.length > 0 ? posts.map((post) => (
+              <PostCard
+                key={post.id}
+                title={post.title}
+                content={post.message}
+                image={post.attachments}
+                date={post.created_time}
+                likes={post.likes}
+                comments={post.comments}
+                type={post.type}
+              />
+            )):
+            <div className={styles['posts-grid-empty']}>
+              <p>No posts found</p>
+            </div>
+          )}
+          
         </div>
       </div>
     </section>

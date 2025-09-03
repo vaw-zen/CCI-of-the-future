@@ -69,16 +69,7 @@
     },
     {
         "name": "blog",
-        "subLinks": [
-            {
-                "name": "blog1",
-                "link": "/blog1"
-            },
-            {
-                "name": "blog2",
-                "link": "/blog2"
-            }
-        ]
+        "link": "/blog"
     },
     {
         "name": "contact",

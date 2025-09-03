@@ -52,12 +52,14 @@ export async function GET() {
       return NextResponse.json({ facebook: cache.data.facebook, posts: normalizeFbPosts(cache.data.facebook), cached: true });
     }
 
-    const fbUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments}&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
-    const facebook = await fetchJson(fbUrl);
+    const fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments}&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+
+    const facebook = await fetchJson(fbPostsUrl);
 
     cache = { ts: now, data: { facebook } };
 
     return NextResponse.json({ facebook, posts: normalizeFbPosts(facebook), cached: true });
+    
   } catch (err) {
     console.error('FB posts fetch error:', err);
     const msg = err && err.message ? err.message : 'Unknown error';

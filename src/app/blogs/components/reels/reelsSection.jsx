@@ -1,4 +1,4 @@
-import styles from './ReelsSection.module.css';
+import styles from './reelsSection.module.css';
 import { Play, Heart, Share2 } from "lucide-react";
 
 const ReelsSection = () => {

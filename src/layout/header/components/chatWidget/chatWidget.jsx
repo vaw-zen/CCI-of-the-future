@@ -4,7 +4,7 @@ import { getChatMessages } from '../../../../utils/tuning-loader';
 import styles from './chatWidget.module.css';
 
 // Lazy load the markdown renderer
-const MarkdownRenderer = lazy(() => import('@/utils/components/MarkdownRenderer'));
+const MarkdownRenderer = lazy(() => import('@/utils/components/markdownRenderer/markdownRenderer'));
 
 const ChatWidget = React.memo(({ isOpen, onClose }) => {
     const chatMessages = useMemo(() => getChatMessages(), []);

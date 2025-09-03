@@ -2,7 +2,7 @@ import React from "react";
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import PostsGrid from "@/utils/components/blogComponents/Posts/PostsGrid";
 import ReelsSection from "@/utils/components/blogComponents/reels/ReelsSection";
-
+ 
 export default function Page() {
   return (
     <>

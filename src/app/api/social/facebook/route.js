@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 const FB_API_VERSION = process.env.FB_API_VERSION || 'v17.0';
-const FB_PAGE_ID = process.env.FB_PAGE_ID || process.env.NEXT_PUBLIC_FB_PAGE_ID;
-const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || process.env.NEXT_PUBLIC_FB_PAGE_ACCESS_TOKEN;
+const FB_PAGE_ID = process.env.FB_PAGE_ID || process.env.FB_PAGE_ID;
+const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || process.env.FB_PAGE_ACCESS_TOKEN;
 
 let cache = { ts: 0, data: null };
 const CACHE_TTL = 60; // seconds

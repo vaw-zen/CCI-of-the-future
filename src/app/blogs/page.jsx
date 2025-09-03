@@ -6,7 +6,7 @@ import PostsGrid from "./components/posts/postsGrid";
 export default function Page() {
   return (
     <>
-      <HeroHeader title={"Posts & Reels"} />
+      <HeroHeader title={"Publications & Reels"} />
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
         <ReelsSection />
         <PostsGrid />

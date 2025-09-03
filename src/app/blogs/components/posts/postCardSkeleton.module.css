@@ -9,7 +9,7 @@
   border: 0.05vw solid rgba(59, 130, 246, 0.1); 
   border-radius: 0.63vw; 
   overflow: hidden; 
-  max-width: 400px;
+  max-width: 20.83vw;
   opacity: 0.7;
 }
 
@@ -122,6 +122,7 @@
     backdrop-filter: blur(1.56vw); 
     border: 0.13vw solid rgba(59, 130, 246, 0.1); 
     border-radius: 1.56vw; 
+    max-width: 52.08vw;
   }
   
   .skeleton-image { 
@@ -189,6 +190,7 @@
     backdrop-filter: blur(2.91vw); 
     border: 0.24vw solid rgba(59, 130, 246, 0.1); 
     border-radius: 2.91vw; 
+    max-width: 97.09vw;
   }
   
   .skeleton-image { 

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 const FB_API_VERSION = process.env.FB_API_VERSION || 'v17.0';
-const FB_PAGE_ID = process.env.FB_PAGE_ID || process.env.FB_PAGE_ID;
-const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || process.env.FB_PAGE_ACCESS_TOKEN;
+const FB_PAGE_ID = process.env.FB_PAGE_ID;
+const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 
 let cache = { ts: 0, data: null };
 const CACHE_TTL = 60; // seconds
@@ -20,11 +20,11 @@ function normalizeFbPosts(raw) {
     const attachments = [];
     if (item.attachments && Array.isArray(item.attachments.data)) {
       for (const att of item.attachments.data) {
-        if (att.media && att.media.image && att.media.image.src) attachments.push(att.media.image.src);
+        if (att.media?.image?.src) attachments.push(att.media.image.src);
         else if (att.media_url) attachments.push(att.media_url);
-        else if (att.subattachments && Array.isArray(att.subattachments.data)) {
+        else if (att.subattachments?.data) {
           for (const sub of att.subattachments.data) {
-            if (sub.media && sub.media.image && sub.media.image.src) attachments.push(sub.media.image.src);
+            if (sub.media?.image?.src) attachments.push(sub.media.image.src);
             else if (sub.media_url) attachments.push(sub.media_url);
           }
         }
@@ -36,11 +36,45 @@ function normalizeFbPosts(raw) {
       message: item.message || null,
       created_time: item.created_time || null,
       permalink_url: item.permalink_url || null,
+      
       attachments,
     };
   });
 }
+function normalizeFbReels(raw) {
+  if (!raw || !Array.isArray(raw.data)) return [];
 
+  return raw.data.map(item => {
+    let views = 0;
+    let engaged = 0;
+
+    // Parse insights data
+    if (item.insights?.data) {
+      for (const metric of item.insights.data) {
+        if (metric.name === "video_views") {
+          views = metric.values?.[0]?.value || 0;
+        }
+        if (metric.name === "post_engaged_users") {
+          engaged = metric.values?.[0]?.value || 0;
+        }
+      }
+    }
+
+    return {
+      id: item.id,
+      message: item.description || null,
+      created_time: item.created_time || null,
+      permalink_url: item.permalink_url || null,
+      video_url: item.source || null, // direct video link
+      thumbnail: item.picture || item.thumbnails?.data?.[0]?.uri || null, // preview image
+      views:item.views?.summary?.total_count || views,
+      engaged_users: engaged,
+      likes: item.likes?.summary?.total_count || 0,
+      comments: item.comments?.summary?.total_count || 0,
+      shares: item.shares?.count || 0,
+    };
+  });
+}
 export async function GET() {
   try {
     if (!FB_PAGE_ID || !FB_PAGE_ACCESS_TOKEN) {
@@ -49,24 +83,35 @@ export async function GET() {
 
     const now = Math.floor(Date.now() / 1000);
     if (cache.data && now - cache.ts < CACHE_TTL) {
-      return NextResponse.json({ facebook: cache.data.facebook, posts: normalizeFbPosts(cache.data.facebook), cached: true });
+      return NextResponse.json({ 
+        posts: cache.data.posts, 
+        reels: cache.data.reels, 
+        cached: true 
+      });
     }
 
-    const fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments}&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    const fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    const fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,source,description,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
 
-    const facebook = await fetchJson(fbPostsUrl);
+    // Fetch both in parallel
+    const [facebookPosts, facebookReels] = await Promise.all([
+      fetchJson(fbPostsUrl),
+      fetchJson(fbReelsUrl)
+    ]);
 
-    cache = { ts: now, data: { facebook } };
+    const posts = normalizeFbPosts(facebookPosts);
+    const reels = normalizeFbReels(facebookReels);
 
-    return NextResponse.json({ facebook, posts: normalizeFbPosts(facebook), cached: true });
-    
+    cache = { ts: now, data: { posts, reels } };
+
+    return NextResponse.json({ posts, reels, cached: false });
+
   } catch (err) {
-    console.error('FB posts fetch error:', err);
-    const msg = err && err.message ? err.message : 'Unknown error';
+    console.error('FB fetch error:', err);
+    const msg = err?.message || 'Unknown error';
     if (msg.toLowerCase().includes('oauth') || msg.includes('190') || msg.toLowerCase().includes('invalid') || msg.toLowerCase().includes('access_token')) {
       return NextResponse.json({ error: 'invalid_token', message: msg }, { status: 401 });
     }
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
-                                                

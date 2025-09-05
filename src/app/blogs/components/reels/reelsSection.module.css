@@ -124,7 +124,7 @@
   color: #f9fafb;
   transition: color 0.3s ease;
   display: -webkit-box;
-  line-clamp: 2;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

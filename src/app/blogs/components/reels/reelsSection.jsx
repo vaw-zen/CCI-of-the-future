@@ -3,7 +3,8 @@ import styles from './reelsSection.module.css';
 import { Play, Heart, Share2 } from "lucide-react";
 import { useEffect, useState, useRef } from 'react';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
-
+import { parallax } from '@/libs/vz/mouseInteraction/parallax'
+ import { BiPlayFill,CircularText } from '@/utils/components/icons';
 const ReelsSection = () => {
   const [reels, setReels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -70,14 +71,20 @@ const ReelsSection = () => {
 
                 {/* Play Overlay */}
                 {activeReelId !== reel.id && (
-                  <div className={styles['reel-play-overlay']}>
-                    <button
-                      onClick={() => handlePlay(reel.id)}
-                      className={styles['reel-play-button']}
-                    >
-                      <Play className={styles['reel-play-icon']} fill="currentColor" />
-                    </button>
-                  </div>
+                  
+                    <div className={styles.container} >
+                <div className={styles.filter} />
+                <button onMouseMove={parallax} onMouseLeave={parallax} onClick={() => handlePlay(reel.id)} className={styles.playButton} aria-label="voir-video">
+                    <div className={styles.textContainer}>
+                        <CircularText className={styles.circularText} />
+                    </div>
+                    <div className={styles.innerButton}>
+                        <BiPlayFill className={styles.playIcon} />
+                    </div>
+                </button>
+            </div>
+                   
+                 
                 )}
 
                 {/* Views Badge */}

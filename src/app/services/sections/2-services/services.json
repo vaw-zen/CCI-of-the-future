@@ -5,17 +5,26 @@
         "desc": "Nous mettons notre passion et notre expertise au service de chaque client pour offrir des solutions innovantes et un service irréprochable.",
         "link": {
             "slug": "Voir tous les services",
-            "to": "/"
+            "to": "/services"
         }
     },
     "services": [
+            {
+            "title": [
+                "Tapisserie"
+                
+            ],
+            "desc": "Redonnez vie à vos fauteuils, canapés et chaises grâce à notre service de tapisserie : rénovation, changement de housses, rembourrage et nettoyage en profondeur pour un confort et une élégance durables.",
+            "link": "/tfc",
+            "img": "/home/tapisserie1.webp"
+        },
         {
             "title": [
                 "Nettoyage",
                 "tapis et moquette"
             ],
             "desc": "Nos services de nettoyage des tapis comprennent l'enlèvement des taches, le dépoussiérage et l'aspiration de tous les coins. Nous utilisons des produits non-toxiques pour préserver la qualité de vos tapis et l'environnement.",
-            "link": "/moquette",
+            "link": "/tapis",
             "img": "/home/5.webp"
         },
         {
@@ -42,7 +51,7 @@
                 "fin de chantier"
             ],
             "desc": "Après travaux, notre équipe assure un nettoyage minutieux : sols, murs, vitres, sanitaires, cuisines. Profitez rapidement de votre nouvel espace, propre et sain.",
-            "link": "/marbre",
+            "link": "/tfc",
             "img": "/home/tfc.webp"
         }
     ]

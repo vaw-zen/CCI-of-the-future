@@ -54,19 +54,7 @@
                
         ]
     },
-    {
-        "name": "projects",
-        "subLinks": [
-            {
-                "name": "project1",
-                "link": "/project1"
-            },
-            {
-                "name": "project2",
-                "link": "/project2"
-            }
-        ]
-    },
+
     {
         "name": "blog",
         "link": "/blogs"

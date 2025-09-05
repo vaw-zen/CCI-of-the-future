@@ -1,7 +1,7 @@
 .post-card { background: rgba(15, 13, 29, 0.5); backdrop-filter: blur(0.63vw); border: 0.05vw solid rgba(59, 130, 246, 0.1); border-radius: 0.63vw; overflow: hidden; transition: all 0.3s ease; cursor: pointer;max-width: 20.83vw;}
 .post-card:hover { box-shadow: 0 1.30vw 2.60vw -0.63vw rgba(15, 13, 29, 0.25); transform: translateY(-0.42vw); }
 .post-card-image-container { position: relative; overflow: hidden; }
-.post-card-image { width: 100%; height: 15vw; object-fit: center; transition: transform 0.3s ease; }
+.post-card-image { width: 100%; height: 15vw; object-fit: center ;object-position: center; transition: transform 0.3s ease; }
 .post-card:hover .post-card-image { transform: scale(1.05); }
 .post-card-badge { position: absolute; top: 0.63vw; right: 0.63vw; background: rgba(15, 13, 29, 0.9); backdrop-filter: blur(0.63vw); color: white; padding: 0.21vw 0.42vw; border-radius: 0.31vw; font-size: 0.88rem; font-weight: 500; }
 .post-card-badge.reel { background: rgba(192, 132, 252, 0.9); color: #0f0d1d; }

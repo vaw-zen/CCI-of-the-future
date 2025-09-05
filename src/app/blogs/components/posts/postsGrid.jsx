@@ -59,12 +59,8 @@ const PostsGrid = () => {
                 likes={post.likes}
                 comments={post.comments}
                 type={post.type}
-                  
-     permalink_url={post.permalink_url}
-       
-              
-        
-        
+                permalink_url={post.permalink_url}
+                id={post.id}
               />
             )):
             <div className={styles['posts-grid-empty']}>

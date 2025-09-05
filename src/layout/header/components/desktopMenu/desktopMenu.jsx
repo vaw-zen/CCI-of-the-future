@@ -36,13 +36,13 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                         <div className={styles.leftLinks}>
                             <div className={styles.linkGroup}>
                                 <Link href='/about'>À propos de nous</Link>
-                                <Link href='/'>Carrière</Link>
+                                <Link href='/services'>Carrière</Link>
                             </div>
                             <div className={styles.socialLinks}>
-                                <Link href='/'>Facebook</Link>
-                                <Link href='/'>Instagram</Link>
+                                <Link href='/https://www.facebook.com/Chaabanes.Cleaning.Intelligence'>Facebook</Link>
+                                <Link href='/https://www.instagram.com/cci.services/'>Instagram</Link>
                                 <Link href='/'>Twitter</Link>
-                                <Link href='/'>Linkedin</Link>
+                                <Link href='/https://www.linkedin.com/company/chaabanes-cleaning-int'>Linkedin</Link>
                             </div>
                         </div>
                     </div>
@@ -55,8 +55,8 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                             </div>
                             <div className={styles.rightLinks}>
                                 <div className={styles.pageLinks}>
-                                    <Link href='/'>Contact</Link>
-                                    <Link href='/'>Nouveauté</Link>
+                                    <Link href='/contact'>Contact</Link>
+                                    <Link href='/blogs'>Nouveauté</Link>
                                 </div>
                                 <form className={styles.newsletterForm}>
                                     <label>Restez à jour</label>

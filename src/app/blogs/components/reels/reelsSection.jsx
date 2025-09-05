@@ -53,7 +53,7 @@ const ReelsSection = () => {
 
         <div className={styles['reels-grid']}>
           {loading ? (
-            Array.from({ length: 3 }).map((_, index) => (
+            Array.from({ length: 6 }).map((_, index) => (
               <PostCardSkeleton key={`skeleton-${index}`} />
             ))
           ) : reels && reels.map((reel) => (

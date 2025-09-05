@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./hero.module.css";
+import Link from "next/link"; // ✅ Import Link from Next.js
 import {
   LineMdTiktok,
   LineMdFacebook,
@@ -71,10 +72,10 @@ export default function Hero() {
               <a href="/">
                 <SiMailDuotone className={styles.icon} />
               </a>
-              <a href="/">
+              <a href="/https://www.instagram.com/cci.services/">
                 <LineMdInstagram className={styles.icon} />
               </a>
-              <a href="/">
+              <a href="/https://www.facebook.com/Chaabanes.Cleaning.Intelligence">
                 <LineMdFacebook className={styles.icon} />
               </a>
               <a href="/">
@@ -87,12 +88,16 @@ export default function Hero() {
           </div>
         </div>
         <div className={styles.buttons}>
-          <button className={`${styles.button} ${styles.primaryButton}`}>
-            Nous contacter
-          </button>
-          <button className={`${styles.button} ${styles.secondaryButton}`}>
-            Nos Services
-          </button>
+            <Link href="/contact">
+            <button className={`${styles.button} ${styles.primaryButton}`}>
+              Nous contacter
+            </button>
+          </Link>
+          <Link href="/services">
+            <button className={`${styles.button} ${styles.secondaryButton}`}>
+              Nos Services
+            </button>
+          </Link>
         </div>
       </div>
     </div>

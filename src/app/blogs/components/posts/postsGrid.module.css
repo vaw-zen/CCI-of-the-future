@@ -1,6 +1,6 @@
 .posts-section { width: 100%; padding: 3.33vw 1.25vw; background: linear-gradient(135deg, rgba(203, 251, 66, .02), var(--bg-base));}
 
-.posts-container { margin: 0 auto;max-width: 62.50vw; }
+.posts-container { margin: 0 auto; padding: 0 var(--padding-base);}
 
 .posts-header { text-align: center; margin-bottom: 2.50vw }
 
@@ -36,7 +36,7 @@
 @media screen and (max-width: 480px) {
   .posts-section { width: 100%; padding: 15.53vw 5.83vw; background: linear-gradient(135deg, var(--bg-base), var(--bg-elevated));
     }
-      .posts-container { margin: 0; min-width: 100%; }
+      .posts-container { margin: 0;  padding: 0 ; }
   .posts-header { text-align: center; margin-bottom: 11.65vw }
   .posts-title { font-size: 8.74vw; font-weight: bold; margin-bottom: 3.88vw; color: #f9fafb }
   .posts-subtitle { font-size: 4.85vw; color: #9ca3af; max-width: 124.27vw; margin: 0 auto }

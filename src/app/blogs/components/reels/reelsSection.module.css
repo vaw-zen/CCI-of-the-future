@@ -4,7 +4,7 @@
 }
 
 .reels-container {
-  max-width:1280px;
+ padding: 0 var(--padding-base);
   margin: 0 auto;
 }
 
@@ -32,21 +32,11 @@
 
 .reels-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns:repeat(3,1fr) ;
   gap: 24px;
 }
 
-@media (min-width: 640px) {
-  .reels-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-@media (min-width: 1024px) {
-  .reels-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 
 .reel-card {
   background: rgba(15, 13, 29, 0.5);
@@ -93,7 +83,7 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease; }
-.playButton { transition: transform .5s ease-out; width: 5vw; height: 5vw; background: var(--ac-primary); border-radius: 50%;  position: relative; display: flex; justify-content: center; align-items: center; }
+.playButton { transition: transform .5s ease-out; width: 6vw; height: 6vw; background: var(--ac-primary); border-radius: 50%;  position: relative; display: flex; justify-content: center; align-items: center; }
 .textContainer { width: 85%; height: 85%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 .circularText { width: 100%; height: 100%; animation: spin linear 10s infinite; }
 .innerButton { width: 60%; height: 60%; background: var(--bg-base); border-radius: 50%; display: flex; justify-content: center; align-items: center; }
@@ -134,7 +124,7 @@
   color: #f9fafb;
   transition: color 0.3s ease;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -164,4 +154,26 @@
 
 .reel-share:hover {
   color: #c084fc;
+}
+
+@media (max-width: 480px) {
+  .playButton { width: 25vw !important; height: 25vw !important;  } 
+.container {
+  opacity: 1 !important;
+}
+ .reels-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .playButton { width: 13vw; height: 13vw;  }
+  .reels-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .container {
+  opacity: 1 !important;
+
+}
+.reels-container{ padding: 0  !important;}
 }

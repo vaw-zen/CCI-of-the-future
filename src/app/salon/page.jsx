@@ -28,7 +28,37 @@ const salonTabData = [
   },
 ];
 
+export const metadata = {
+  title: "Nettoyage salon & Ameublement — CCI",
+  description:
+    "Nettoyage et rénovation de canapés, fauteuils et textiles d’ameublement : détachage, shampooing et désinfection pour un intérieur sain et accueillant.",
+};
+
 export default function Page() {
+  const salonImages = [
+    "/home/1.webp",
+    "/home/3.webp",
+    "/home/4.webp",
+  ];
+
+  const localBusinessJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "CCI",
+    url: "https://cciservices.online/",
+    logo: "https://cciservices.online/layout/logo.png",
+    telephone: "+216-XX-XXX-XXX",
+    address: { "@type": "PostalAddress", streetAddress: "", addressLocality: "Tunisie", addressCountry: "TN" },
+  };
+
+  const serviceJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Nettoyage salon & ameublement",
+    description:
+      "Nettoyage et entretien de canapés, rideaux et textiles d’ameublement. Détachage, désodorisation et protection des fibres.",
+    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
+  };
   return (
     <>
       <style>{`
@@ -37,6 +67,8 @@ export default function Page() {
         @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
       `}</style>
       <HeroHeader title={"Nettoyage salon & ameublement"} />
+  <script type="application/ld+json">{JSON.stringify(localBusinessJSONLD)}</script>
+  <script type="application/ld+json">{JSON.stringify(serviceJSONLD)}</script>
       <div className="responsive-padding">
         <ServiceDetails
           title="Nettoyage canapé et tissus d’ameublement"
@@ -62,10 +94,32 @@ export default function Page() {
           title="Services salon"
           text="Solutions sur mesure pour tous les textiles d’ameublement."
           items={[
-            { id: "1", text: "Nettoyage canapé", icon: "/icons/polisher.png" },
-            { id: "2", text: "Détachage & désodorisation", icon: "/icons/polisher1.png" },
+            {
+              id: "1",
+              text: "Nettoyage canapé et tissue d'ameublement",
+              icon: "/icons/polisher.png",
+            },
+            {
+              id: "2",
+              text: "Détachage & désodorisation",
+              icon: "/icons/polisher1.png",
+            },
             { id: "3", text: "Nettoyage rideaux", icon: "/icons/crystal3.png" },
-            { id: "4", text: "Protection fibres", icon: "/icons/shield.png" },
+            {
+              id: "4",
+              text: "Nettoyage intérieur de voitures et bus",
+              icon: "/icons/shield.png",
+            },
+            {
+              id: "5",
+              text: "Nettoayeg siéges cinéma",
+              icon: "/icons/shield.png",
+            },
+            {
+              id: "6",
+              text: "Nettoyage bateaux et avions",
+              icon: "/icons/shield.png",
+            },
           ]}
         />
 
@@ -74,7 +128,7 @@ export default function Page() {
           text="Équipements professionnels, produits adaptés et techniciens formés : nous intervenons avec soin et rapidité pour rendre vos espaces sains et accueillants."
         />
 
-        <ImageSlider />
+  <ImageSlider images={salonImages} />
       </div>
     </>
   );

@@ -9,9 +9,21 @@ import styles from './page.module.css'
 import Refrences from '../home/sections/7-refrences/refrences';
 import GreenBand from '@/utils/components/GreenBand/GreenBand';
 
+export const metadata = {
+  title: 'À propos — CCI',
+  description: 'CCI, experts en restauration de marbre, nettoyage de moquettes et tapisserie en Tunisie. Notre équipe s’engage pour qualité et durabilité.',
+};
+
 export default function page  ()  {
   return (
     <main className={styles.page}>
+    <script type="application/ld+json">{JSON.stringify({
+      "@context":"https://schema.org",
+      "@type":"Organization",
+      name: "CCI",
+      url: "https://cciservices.online/about",
+      logo: "https://cciservices.online/layout/logo.png"
+    })}</script>
     <HeroHeader title={"About us"}/>
     <Presentation/>
     <Vision/>

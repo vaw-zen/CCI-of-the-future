@@ -8,11 +8,40 @@ import GreenBand from '@/utils/components/GreenBand/GreenBand'
 import styles from './page.module.css'
 import FAQ from './sections/3-FAQ/FAQ'
 import MobileServices from '../home/sections/3-services/services'
+import { ImageSlider } from '@/utils/components/imageSlider/imageSlider'
+import servicesData from './sections/2-services/services.json'
+
+export const metadata = {
+    title: 'Services CCI — Polissage marbre, Nettoyage moquettes, Tapisserie',
+    description: 'Découvrez nos prestations professionnelles : polissage du marbre, nettoyage de moquettes, rénovation de tapisserie et nettoyages post-chantier. Devis gratuit.',
+};
+
+const servicesImages = [
+    '/home/1.webp',
+    '/home/3.webp',
+    '/home/4.webp'
+];
 
 export default function ServicesPage() {
+    const servicesSchema = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Services CCI",
+        itemListElement: servicesData.services.map((s, i) => ({
+            "@type": "ListItem",
+            position: i+1,
+            item: {
+                "@type": "Service",
+                name: Array.isArray(s.title) ? s.title.join(' ') : s.title,
+                description: s.desc,
+                url: `https://cciservices.online${s.link}`
+            }
+        }))
+    };
     return (
         <main>
             <HeroHeader title={'Services'} />
+            <script type="application/ld+json">{JSON.stringify(servicesSchema)}</script>
             <div className={styles.services}>
                 <Details />
                 <Services className={styles.desktopServices} />

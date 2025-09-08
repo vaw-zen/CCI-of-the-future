@@ -28,7 +28,37 @@ const tfcTabData = [
   },
 ];
 
+export const metadata = {
+  title: "Nettoyage après chantier (TFC) — CCI",
+  description:
+    "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces et préparation avant livraison. Interventions pro et rapides.",
+};
+
 export default function Page() {
+  const tfcImages = [
+    "/home/1.webp",
+    "/home/3.webp",
+    "/home/4.webp",
+  ];
+
+  const localBusinessJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "CCI",
+    url: "https://cciservices.online/",
+    logo: "https://cciservices.online/layout/logo.png",
+    telephone: "+216-XX-XXX-XXX",
+    address: { "@type": "PostalAddress", streetAddress: "", addressLocality: "Tunisie", addressCountry: "TN" },
+  };
+
+  const serviceJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Nettoyage après chantier",
+    description:
+      "Prestations de fin de chantier : nettoyage technique, enlèvement gravats et préparation des locaux pour réception.",
+    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
+  };
   return (
     <>
       <style>{`
@@ -37,6 +67,8 @@ export default function Page() {
         @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
       `}</style>
       <HeroHeader title={"Travaux de fin de chantier (TFC)"} />
+  <script type="application/ld+json">{JSON.stringify(localBusinessJSONLD)}</script>
+  <script type="application/ld+json">{JSON.stringify(serviceJSONLD)}</script>
       <div className="responsive-padding">
         <ServiceDetails
           title="Nettoyage technique après chantier"
@@ -66,15 +98,17 @@ export default function Page() {
             { id: "2", text: "Nettoyage sols et vitreries", icon: "/icons/polisher1.png" },
             { id: "3", text: "Enlèvement gravats", icon: "/icons/crystal3.png" },
             { id: "4", text: "Vérification qualité & livraison", icon: "/icons/shield.png" },
+              { id: "5", text: "Entretien de tout type de sol", icon: "/icons/shield.png" },
+
           ]}
         />
 
         <ServiceDetails
-          title="Pourquoi choisir notre service TFC"
-          text="Méthodologie professionnelle, équipe équipée et respect des normes de sécurité : nous assurons une livraison prête à l’usage."
+          title="Pourquoi choisir nos service TFC"
+          text="Méthodologie professionnelle, équipe professionnelle trés bien équipée et respect des normes de sécurité : nous assurons une livraison prête à l’usage."
         />
 
-        <ImageSlider />
+  <ImageSlider images={tfcImages} />
       </div>
     </>
   );

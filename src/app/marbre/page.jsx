@@ -29,7 +29,42 @@ const marbreTabData = [
   
 ];
 
+export const metadata = {
+  title: "Restauration & Polissage du Marbre — CCI",
+  description:
+    "Restauration professionnelle du marbre : ponçage, polissage, cristallisation et protections pour sols et plans de travail. Devis gratuit.",
+};
+
 export default function Page() {
+  const marbreImages = [
+    "/home/1.webp",
+    "/home/3.webp",
+    "/home/4.webp",
+  ];
+
+  const localBusinessJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "CCI",
+    url: "https://cciservices.online/",
+    logo: "https://cciservices.online/layout/logo.png",
+    telephone: "+216-98-557-766",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "06 Rue Galant de nuit, El Aouina,Tunis",
+      addressLocality: "Tunisie",
+      addressCountry: "TN",
+    },
+  };
+
+  const serviceJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Restauration du marbre",
+    description:
+      "Ponçage, polissage, cristallisation et protection des surfaces en marbre pour particuliers et professionnels.",
+    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
+  };
   return (
     <>
       <style>{`
@@ -47,7 +82,9 @@ export default function Page() {
           }
         }
       `}</style>
-      <HeroHeader title={"Marbre"} />
+  <HeroHeader title={"Marbre"} />
+  <script type="application/ld+json">{JSON.stringify(localBusinessJSONLD)}</script>
+  <script type="application/ld+json">{JSON.stringify(serviceJSONLD)}</script>
       <div className="responsive-padding">
         <ServiceDetails
           title="Restauration et entretien de marbre"
@@ -58,27 +95,29 @@ export default function Page() {
           title="Notre expertise"
           text="Notre équipe maîtrise toutes les étapes de la restauration et de l’entretien du marbre : du diagnostic précis à la mise en œuvre des techniques les plus adaptées, nous assurons un accompagnement personnalisé pour chaque projet. Nous utilisons des matériaux et équipements de qualité afin de garantir la durabilité, la brillance et la protection optimale de vos surfaces. Faites confiance à CCI pour redonner vie et éclat à vos sols, escaliers ou plans de travail."
         />
+          <PartnerTab tabData={marbreTabData} />
         <AboutUsTab
           historyText="Depuis sa création, CCI s’est spécialisée dans la restauration et l’entretien du marbre et du carrelage pour répondre aux besoins des particuliers et des professionnels. Notre histoire est marquée par la passion du travail bien fait et l’innovation dans les techniques de traitement des surfaces."
           missionText="Notre mission est d’offrir des solutions de restauration et d’entretien de haute qualité pour le marbre et le carrelage : ponçage, lustrage, cristallisation et protection. Nous nous engageons à garantir beauté, durabilité et sécurité à nos clients."
           visionText="Être la référence en Tunisie pour la rénovation et la préservation du marbre, reconnue pour notre savoir-faire, notre accompagnement personnalisé et la qualité de nos finitions."
         />
-        <PartnerTab tabData={marbreTabData} />
         <ServiceList
-          title="Nos services marbre"
+          title="Nos services pour l'entretien et la réstauration marbre"
           text="Des solutions professionnelles pour la restauration et l’entretien du marbre."
           items={[
             { id: "1", text: "Ponçage", icon: "/icons/polisher.png" },
             { id: "2", text: "Lustrage", icon: "/icons/polisher1.png" },
             { id: "3", text: "Cristallisation", icon: "/icons/crystal3.png" },
             { id: "4", text: "Protection", icon: "/icons/shield.png" },
+            { id: "5", text: "Réstauration", icon: "/icons/shield.png" },
+             { id: "6", text: "Ebauche", icon: "/icons/shield.png" },
           ]}
         />
- <ServiceDetails
+ {/* <ServiceDetails
           title="Restauration et entretien de marbre"
           text="CCI vous propose des services spécialisés pour la restauration et l’entretien de vos surfaces en marbre et carrelage : ponçage, lustrage, cristallisation et protection. Notre équipe utilise des techniques professionnelles et des produits adaptés pour redonner éclat, brillance et durabilité à vos sols et surfaces. Confiez-nous vos projets pour un résultat haut de gamme et durable."
-        />
-        <ImageSlider/>
+        /> */}
+  <ImageSlider images={marbreImages} />
       </div>
     </>
   );

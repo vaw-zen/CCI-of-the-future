@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /wp-admin/
+Disallow: /private/
+Allow: /
+
+Sitemap: https://cciservices.online/sitemap.xml
+Host: https://cciservices.online

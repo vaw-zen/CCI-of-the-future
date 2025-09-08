@@ -3,6 +3,11 @@ import Hero from "./sections/1-hero/hero";
 import styles from './home.module.css';
 import Head from 'next/head';
 
+export const metadata = {
+  title: "CCI — Solutions de nettoyage & restauration",
+  description: "Polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier en Tunisie. Devis gratuit.",
+};
+
 const About = dynamic(() => import("./sections/2-about/about"));
 const Services = dynamic(() => import("./sections/3-services/services"));
 const Band = dynamic(() => import("./sections/4-band/band"));
@@ -24,6 +29,7 @@ export default function Home() {
         fetchpriority="high"
       />
     </Head>
+  {/* site JSON-LD is injected globally in layout.js; page-specific Service JSON-LD could be added here if needed */}
     <Hero />
     <main className={styles.Home}>
       <div className={styles.wrapper}>

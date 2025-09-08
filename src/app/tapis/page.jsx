@@ -28,7 +28,42 @@ const tapisTabData = [
   },
 ];
 
+export const metadata = {
+  title: "Nettoyage de Tapis & Moquettes — CCI",
+  description:
+    "Nettoyage professionnel de tapis et moquettes : shampooing, détachage, désinfection et traitement anti-acariens. Intervention rapide en Tunisie.",
+};
+
 export default function Page() {
+  const tapisImages = [
+    "/home/1.webp",
+    "/home/3.webp",
+    "/home/4.webp",
+  ];
+
+  const localBusinessJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "CCI",
+    url: "https://cciservices.online/",
+    logo: "https://cciservices.online/layout/logo.png",
+    telephone: "+216-XX-XXX-XXX",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "",
+      addressLocality: "Tunisie",
+      addressCountry: "TN",
+    },
+  };
+
+  const serviceJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Nettoyage de tapis et moquettes",
+    description:
+      "Shampooing, détachage et désinfection pour tapis et moquettes, avec méthodes adaptées aux fibres et séchage rapide.",
+    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
+  };
   return (
     <>
       <style>{`
@@ -47,6 +82,8 @@ export default function Page() {
         }
       `}</style>
   <HeroHeader title={"Nettoyage tapis et moquette"} />
+  <script type="application/ld+json">{JSON.stringify(localBusinessJSONLD)}</script>
+  <script type="application/ld+json">{JSON.stringify(serviceJSONLD)}</script>
       <div className="responsive-padding">
         <ServiceDetails
           title="Nettoyage professionnel de tapis"
@@ -71,6 +108,8 @@ export default function Page() {
             { id: "2", text: "Détachage professionnel", icon: "/icons/polisher1.png" },
             { id: "3", text: "Désinfection & anti-acariens", icon: "/icons/crystal3.png" },
             { id: "4", text: "Traitement anti-taches & protection", icon: "/icons/shield.png" },
+              { id: "5", text: "Plusieurs méthodes de nettoyage", icon: "/icons/shield.png" },
+                { id: "6", text: "Une fléxibilité technique", icon: "/icons/shield.png" },
           ]}
         />
 
@@ -78,7 +117,7 @@ export default function Page() {
           title="Pourquoi choisir CCI pour vos tapis"
           text="Nous utilisons des équipements professionnels, des produits adaptés et des protocoles testés pour prolonger la vie de vos textiles, assurer l’élimination des allergènes et rendre vos espaces plus sains."
         />
-        <ImageSlider/>
+  <ImageSlider images={tapisImages} />
       </div>
     </>
   );

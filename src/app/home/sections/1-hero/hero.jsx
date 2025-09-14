@@ -57,30 +57,34 @@ export default function Hero() {
         </h2>
         <div className={styles.contactDetails}>
           <div>
-           <a href="mailto:contact@cciservices.online">
-      contact@cciservices.online
-    </a>
-    <br />
-             <a
-      href="https://wa.me/21698557766"
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.phoneLink}
-    >
-      +216 98 557 766
-    </a>
+            <a href="mailto:contact@cciservices.online">
+              contact@cciservices.online
+            </a>
+            <br />
+            <a
+              href="https://wa.me/21698557766"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.phoneLink}
+            >
+              +216 98 557 766
+            </a>
           </div>
           <div className={styles.addressAndSocial}>
-          <a
-  href="https://www.google.com/maps/dir/?api=1&destination=06+Rue+Galant+de+nuit,+L'Aouina,+Tunis,+2045,+Tunisie"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  06 - Rue Galants de nuits - l'aouina
-</a>
+            <a
+              href="https://www.google.com/maps/dir/?api=1&destination=06+Rue+Galant+de+nuit,+L'Aouina,+Tunis,+2045,+Tunisie"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              06 - Rue Galants de nuits - l'aouina
+            </a>
 
             <div className={styles.socialIcons}>
-              <a href="/">
+              <a
+                href="https://wa.me/21698557766"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <LineMdPhoneTwotone className={styles.icon} />
               </a>
               <a href="/">
@@ -102,7 +106,7 @@ export default function Hero() {
           </div>
         </div>
         <div className={styles.buttons}>
-            <Link href="/contact">
+          <Link href="/contact">
             <button className={`${styles.button} ${styles.primaryButton}`}>
               Nous contacter
             </button>

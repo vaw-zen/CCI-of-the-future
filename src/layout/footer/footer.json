@@ -24,11 +24,11 @@
         },
         {
             "name": "about",
-            "link": "/"
+            "link": "/about"
         },
         {
             "name": "services",
-            "link": "/seervices"
+            "link": "/services"
         },
         {
             "name": "contact",

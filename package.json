@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@google/generative-ai": "^0.24.1",
     "@studio-freight/lenis": "^1.0.42",
+    "emailjs": "^4.0.3",
     "franc": "^6.2.0",
     "franc-min": "^6.2.0",
     "lucide-react": "^0.542.0",
@@ -18,6 +20,7 @@
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-google-recaptcha": "^3.1.0",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1"
   }

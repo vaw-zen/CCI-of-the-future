@@ -2,8 +2,12 @@ import React from "react";
 import styles from "./actions.module.css";
 import { LineMdPhoneTwotone, SiMailDuotone } from "@/utils/components/icons";
 import content from "./content.json";
- 
+
 export default function Actions() {
+  const phoneNumber = content.phoneNumber.replace(/\s+/g, ""); // remove spaces
+  const whatsappLink = `https://wa.me/${phoneNumber}`;
+  const emailLink = `mailto:${content.emailAddress}`;
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -24,6 +28,7 @@ export default function Actions() {
           </ul>
         </div>
       </div>
+
       <div className={styles.infoSection}>
         <div className={styles.mapContainer}>
           <iframe
@@ -34,10 +39,14 @@ export default function Actions() {
             allowFullScreen=""
           ></iframe>
         </div>
+
         <div className={styles.infoContainer}>
+          {/* WhatsApp Section */}
           <div className={styles.phoneSection}>
             <div className={styles.phoneInfoTop}>
-              <LineMdPhoneTwotone className={styles.icon} />
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                <LineMdPhoneTwotone className={styles.icon} />
+              </a>
               <h3 className={styles.label}>{content.callNow}</h3>
               <h4 className={styles.phoneNumber}>{content.phoneNumber}</h4>
             </div>
@@ -46,9 +55,13 @@ export default function Actions() {
               <strong className={styles.phoneHours}>{content.phoneHours}</strong>
             </div>
           </div>
+
+          {/* Email Section */}
           <div className={styles.emailSection}>
             <div className={styles.emailInfoTop}>
-              <SiMailDuotone className={styles.icon} />
+              <a href={emailLink}>
+                <SiMailDuotone className={styles.icon} />
+              </a>
               <h3 className={styles.label}>{content.emailLabel}</h3>
               <h4 className={styles.emailAddress}>{content.emailAddress}</h4>
             </div>
@@ -60,6 +73,5 @@ export default function Actions() {
         </div>
       </div>
     </div>
-    
   );
 }

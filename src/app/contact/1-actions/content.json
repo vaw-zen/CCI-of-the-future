@@ -4,16 +4,16 @@
     "headerMessage": "Suivez-nous sur les réseaux sociaux",
     "socials": {
       "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
-      "twitter": "https://twitter.com/your-profile",
-      "linkedin": "https://linkedin.com/company/cci",
-      "instagram": "https://www.instagram.com/cci.services/"
+      "instagram": "https://www.instagram.com/cci.services/",
+      "linkedin": "https://linkedin.com/company/cci"
+      
     },
     "callNow": "Appelez maintenant",
     "phoneNumber": "+216 98 55 77 66",
     "phoneInfoText": "Disponible pour vos questions et demandes.",
     "phoneHours": "Lun-Ven : 8h-18h",
     "emailLabel": "Envoyez-nous un email",
-    "emailAddress": "contact@cci.com",
+    "emailAddress": "contact@cciservices.online",
     "emailInfoText": "Nous répondons rapidement à vos emails.",
     "emailHours": "24h/24, 7j/7"
   }

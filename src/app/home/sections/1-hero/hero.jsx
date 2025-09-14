@@ -76,7 +76,7 @@ export default function Hero() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              06 - Rue Galants de nuits - l'aouina
+              06 - Rue Galant de nuit - l'Aouina
             </a>
 
             <div className={styles.socialIcons}>
@@ -87,7 +87,7 @@ export default function Hero() {
               >
                 <LineMdPhoneTwotone className={styles.icon} />
               </a>
-              <a href="/">
+              <a  href="mailto:contact@cciservices.online">
                 <SiMailDuotone className={styles.icon} />
               </a>
               <a href="/https://www.instagram.com/cci.services/">

@@ -3,7 +3,7 @@ import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import Actions from "./1-actions/actions";
 import Welcome from "./2-welcoming/welcome";
 import Form from "./3-form/form";
-import { ImageSlider } from '@/utils/components/imageSlider/imageSlider'
+
 
 export const metadata = {
   title: 'Contact & Devis — CCI',

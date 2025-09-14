@@ -1,26 +1,26 @@
 [
-    {
-        "img": "/home/7-refrences/1.webp",
-        "link": "/"
-    },
-    {
-        "img": "/home/7-refrences/2.webp",
-        "link": "/"
-    },
-    {
-        "img": "/home/7-refrences/3.webp",
-        "link": "/"
-    },
-    {
-        "img": "/home/7-refrences/4.webp",
-        "link": "/"
-    },
-    {
-        "img": "/home/7-refrences/5.webp",
-        "link": "/"
-    },
-    {
-        "img": "/home/7-refrences/6.webp",
-        "link": "/"
-    }
+  {
+    "img": "/home/7-refrences/1.webp",
+    "link": "https://4mk.com.tn"
+  },
+  {
+    "img": "/home/7-refrences/2.webp",
+    "link": "https://www.banquedetunisie.com.tn"
+  },
+  {
+    "img": "/home/7-refrences/3.webp",
+    "link": "https://www.ctn.com.tn"
+  },
+  {
+    "img": "/home/7-refrences/4.webp",
+    "link": "https://generalmetal.tn"
+  },
+  {
+    "img": "/home/7-refrences/5.webp",
+    "link": "https://www.kilanigroupe.com/en/activity/ikel"
+  },
+  {
+    "img": "/home/7-refrences/6.webp",
+    "link": "https://www.oaca.nat.tn"
+  }
 ]

@@ -24,7 +24,7 @@ export default function Services({ className = '' }) {
               <AnimatedText selector={styles.description} text={content.section.desc} parse={[60, 40, 40]} delay={0.25} />
             </div>
             <div className={styles.viewAllButton}>
-              <AnimatedLink observer href="/">
+              <AnimatedLink observer href="/services">
                 View <br /> All Services
               </AnimatedLink>
             </div>

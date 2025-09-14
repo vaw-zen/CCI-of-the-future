@@ -37,9 +37,9 @@ export const metadata = {
 
 export default function Page() {
   const marbreImages = [
-    "/home/1.webp",
-    "/home/3.webp",
-    "/home/4.webp",
+     // { src: "/gallery/moquette/moquette2.jpg", title: "Moquette 2", description: "Entretien textile" },
+  { src: "/gallery/marbre/marbre.jpg", title: "marbre 1", description: "Service professionnel" },
+  { src: "/gallery/marbre/marbre1.png", title: "marbre 2", description: "Entretien textile" },
   ];
 
   const localBusinessJSONLD = {

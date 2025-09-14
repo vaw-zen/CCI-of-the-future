@@ -36,9 +36,8 @@ export const metadata = {
 
 export default function Page() {
   const tfcImages = [
-    "/home/1.webp",
-    "/home/3.webp",
-    "/home/4.webp",
+  { src: "/gallery/tfc/marbre.jpg", title: "tfc 1", description: "Service professionnel" },
+  { src: "/gallery/tfc/tfc.webp", title: "tfc 2", description: "Entretien textile" },
   ];
 
   const localBusinessJSONLD = {

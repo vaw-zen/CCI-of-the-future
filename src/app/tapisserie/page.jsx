@@ -35,11 +35,14 @@ export const metadata = {
 };
 
 export default function Page() {
-  const tapisserieImages = [
-    "/home/1.webp",
-    "/home/3.webp",
-    "/home/4.webp",
-  ];
+   const tapisserieImages = [
+  { src: "/gallery/tapisserie/tapisserie1.jpg", title: "tapisserie 1", description: "Service professionnel" },
+  { src: "/gallery/tapisserie/tapisserie2.jpg", title: "tapisserie 2", description: "Entretien textile" },
+  { src: "/gallery/tapisserie/tapisserie3.jpg", title: "tapisserie 3", description: "Anti-acariens" },
+  { src: "/gallery/tapisserie/tapisserie4.jpg", title: "tapisserie 4", description: "Nettoyage rapide" },
+  { src: "/gallery/tapisserie/tapisserie5.jpg", title: "tapisserie 5", description: "Résultat impeccable" },
+  { src: "/gallery/tapisserie/tapisserie6.jpg", title: "tapisserie 6", description: "Confort préservé" },
+];
 
   const localBusinessJSONLD = {
     "@context": "https://schema.org",

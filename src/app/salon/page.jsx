@@ -35,12 +35,13 @@ export const metadata = {
 };
 
 export default function Page() {
-  const salonImages = [
-    "/home/1.webp",
-    "/home/3.webp",
-    "/home/4.webp",
-  ];
-
+ const salonImages = [
+  { src: "/gallery/salon/beforeAfter.png", title: "upholstry cleaning 1", description: "Service professionnel" },
+  { src: "/gallery/salon/salon.jpg", title: "upholstry cleaning 2", description: "Entretien textile" },
+  { src: "/gallery/salon/salon2.jpg", title: "upholstry cleaning 3", description: "Anti-acariens" },
+  { src: "/gallery/salon/car.jpg", title: "upholstry cleaning 4", description: "Nettoyage rapide et confort préservé" },
+  { src: "/gallery/salon/car2.jpg", title: "upholstry cleaning 5", description: "Résultat impeccable" },
+];
   const localBusinessJSONLD = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",

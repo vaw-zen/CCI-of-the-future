@@ -4,6 +4,7 @@ import { useRef } from 'react';
  // use local icon components so we can keep SVGs in one place
 import { RadixIconsCaretRight } from '../icons';
 import styles from './imageSlider.module.css';
+import Image from "next/image";
 
 const defaultImages = [
   {
@@ -133,27 +134,24 @@ export const ImageSlider = ({
               className={styles.imageSlider}
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-              {images.map((image, index) => (
-                <div key={index} className={styles.slide}>
-                  <img
-                    src={image.src}
-                    alt={image.title}
-                    className={styles.slideImage}
-                  />
-                  {/* Gradient Overlay */}
-                  <div className={styles.slideOverlay} />
-                  
-                  {/* Text Content */}
-                  <div className={styles.slideContent}>
-                    <h3 className={styles.slideTitle}>
-                      {image.title}
-                    </h3>
-                    <p className={styles.slideDescription}>
-                      {image.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            {images.map((image, index) => (
+  <div key={index} className={styles.slide}>
+    <Image
+      src={image.src}
+      alt={image.title}
+      className={styles.slideImage}
+      width={1200} // adjust depending on your design
+      height={600} // adjust depending on your design
+      priority={index === 0} // preload first image
+    />
+    <div className={styles.slideOverlay} />
+    <div className={styles.slideContent}>
+      <h3 className={styles.slideTitle}>{image.title}</h3>
+      <p className={styles.slideDescription}>{image.description}</p>
+    </div>
+  </div>
+))}
+
             </div>
 
             {/* Navigation Arrows */}

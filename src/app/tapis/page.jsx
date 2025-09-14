@@ -35,11 +35,15 @@ export const metadata = {
 };
 
 export default function Page() {
-  const tapisImages = [
-    "/home/1.webp",
-    "/home/3.webp",
-    "/home/4.webp",
-  ];
+ const tapisImages = [
+  { src: "/gallery/moquette/moquette1.jpg", title: "Moquette 1", description: "Service professionnel" },
+  // { src: "/gallery/moquette/moquette2.jpg", title: "Moquette 2", description: "Entretien textile" },
+  { src: "/gallery/moquette/moquette3.jpg", title: "Moquette 3", description: "Anti-acariens" },
+  { src: "/gallery/moquette/moquette4.jpg", title: "Moquette 4", description: "Nettoyage rapide" },
+  { src: "/gallery/moquette/moquette5.jpg", title: "Moquette 5", description: "Résultat impeccable" },
+  { src: "/gallery/moquette/moquette6.jpg", title: "Moquette 6", description: "Confort préservé" },
+];
+
 
   const localBusinessJSONLD = {
     "@context": "https://schema.org",

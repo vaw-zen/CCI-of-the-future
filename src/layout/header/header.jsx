@@ -113,13 +113,13 @@ function Header({ roboto }) {
                 suppressHydrationWarning
             >
                 <div className={styles.container}>
-                    <div className={styles.logo}>
-                        <ResponsiveImage skeleton priority sizes={[3, 8, 10]} contain src='/layout/logo.png' alt="cci-logo" />
+                    <Link href="/" className={styles.logo}>
+                        <ResponsiveImage skeleton priority sizes={[3, 8, 10]} contain src='/layout/logo.png' alt="cci-logo" title="cci-logo"/>
 
                         <h2 className={roboto.className}>
                             Chaabane's Cleaning Intelligence
                         </h2>
-                    </div>
+                    </Link>
                     <button onClick={handleMenuButton} className={styles.menuIcon} aria-label="fermer-menu">
                         <MingcuteMenuFill />
                     </button>

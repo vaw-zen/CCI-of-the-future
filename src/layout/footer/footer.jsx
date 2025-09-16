@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import content from './footer.json'
-import contact from '@/app/contact/data.json'
+import contact from '../../app/contact/data.json'
 import styles from './footer.module.css'
 
 export default function Footer() {
@@ -25,7 +25,14 @@ export default function Footer() {
                         </div>
                         <div className={styles.infoBlock}>
                             <p className={styles.label}>Notre localisation</p>
-                            <h3 className={styles.value}>{contact.location}</h3>
+                      <a
+              href="https://www.google.com/maps/dir/36.8432852,10.2488076/Chaabane's+Cleaning+Intelligence,+06+Rue+Galant+De+Nuit%D8%8C+Tunis+2045%E2%80%AD/@36.8379036,10.206256,14z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0xa2d22c796dfcf437:0x7dec63fbbbefa5c2!2m2!1d10.254949!2d36.8527438!5m1!1e2?entry=ttu&g_ep=EgoyMDI1MDkxNS4wIKXMDSoASAFQAw%3D%3D"
+              target="_blank"
+              rel="noopener noreferrer"
+            >       <h3 className={styles.value}>               {contact.location}
+              
+            </h3></a>
+             
                         </div>
                     </div>
                 </div>

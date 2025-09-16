@@ -76,7 +76,7 @@ export default function Hero() {
           </div>
           <div className={styles.addressAndSocial}>
             <a
-              href="https://www.google.com/maps/dir/?api=1&destination=06+Rue+Galant+de+nuit,+L'Aouina,+Tunis,+2045,+Tunisie"
+              href="https://www.google.com/maps/dir/36.8432852,10.2488076/Chaabane's+Cleaning+Intelligence,+06+Rue+Galant+De+Nuit%D8%8C+Tunis+2045%E2%80%AD/@36.8379036,10.206256,14z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0xa2d22c796dfcf437:0x7dec63fbbbefa5c2!2m2!1d10.254949!2d36.8527438!5m1!1e2?entry=ttu&g_ep=EgoyMDI1MDkxNS4wIKXMDSoASAFQAw%3D%3D"
               target="_blank"
               rel="noopener noreferrer"
             >

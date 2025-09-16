@@ -6,19 +6,45 @@ import GreenBand from "@/utils/components/GreenBand/GreenBand";
 
 export default function Form() {
   const formRef = useRef();
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [result, setResult] = useState({ type: '', message: '' });
 
-
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  }
-    
-    // Replace these with your actual EmailJS credentials
- 
+    if (isSubmitting) return;
+    setResult({ type: '', message: '' });
+    setIsSubmitting(true);
 
-  // Show loading state while EmailJS is loading
- 
+    const form = formRef.current;
+    const formData = {
+      name: form.name.value,
+      email: form.email.value,
+      phone: form.phone.value,
+      projectType: form.projectType.value,
+      message: form.message.value,
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ formData }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.status !== 'mail_sent') {
+        throw new Error(data?.message || 'Failed to send message');
+      }
+
+      setResult({ type: 'success', message: 'Votre message a été envoyé. Merci !' });
+      form.reset();
+    } catch (err) {
+      setResult({ type: 'error', message: 'Une erreur est survenue. Réessayez plus tard.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <div>
       <form ref={formRef} className={styles.formContainer} onSubmit={handleSubmit}>
@@ -71,10 +97,16 @@ export default function Form() {
         <button 
           className={styles.submitButton} 
           type="submit" 
-        
+          disabled={isSubmitting}
         >
-        ENVOYER
+        {isSubmitting ? 'ENVOI…' : 'ENVOYER'}
         </button>
+
+        {result.message && (
+          <div style={{ marginTop: 12, color: result.type === 'error' ? '#b91c1c' : 'var(--ac-primary)', fontWeight: 600 }}>
+            {result.message}
+          </div>
+        )}
         
         <GreenBand className={styles.greenBandWrapper} />
       </form>

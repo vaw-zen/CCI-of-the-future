@@ -15,7 +15,7 @@ export default function Project() {
                 <h3 className={pageStyles.highlight}>{content.highlight}</h3>
                 <div className={styles.imageContainer}>
                     <ResponsiveImage
-                        sizes={[40, 47.5, 93]} skeleton className={styles.image} src={firstArticle.img} alt='project 1' />
+                        sizes={[40, 47.5, 93]} skeleton className={styles.image} src={firstArticle.img} alt='project 1'  title={firstArticle.title}/>
                     <div className={styles.overlay}>
                         <div className={styles.contentWrapper}>
                             <Link href={firstArticle.link} className={styles.title}>{firstArticle.title}</Link>
@@ -51,6 +51,7 @@ export default function Project() {
                 {content.articles.map((article, i) => !i ? null : (
                     <div className={styles.articleContainer} key={i}>
                         <ResponsiveImage
+                            title={article.title}
                             alt={'project ' + (i + 1)} skeleton
                             sizes={[27, 47.5, 93]} className={styles.articleImage} src={article.img} />
                         <div className={styles.overlay}>

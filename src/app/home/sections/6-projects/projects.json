@@ -4,46 +4,46 @@
     "articles": [
         {
             "title": "Retapissage bar night , care ferry Carthage.",
-            "link": "/",
+            "link": "/tapisserie",
             "img": "/home/night.webp",
             "tags": [
                 {
                     "name": "Tapisserie",
-                    "link": "/"
+                    "link": "/tapisserie"
                 },
                 {
                     "name": "Upholustry",
-                    "link": "/"
+                    "link": "/tapisserie"
                 }
             ]
         },
         {
             "title": "Retapissage salon en cuir réception , care ferry Carthage",
-            "link": "/",
+            "link": "/tapisserie",
             "img": "/home/salon1.webp",
             "tags": [
                 {
                     "name": "Tapisserie",
-                    "link": "/"
+                    "link": "/tapisserie"
                 },
                 {
                     "name": "Upholustry",
-                    "link": "/"
+                    "link": "/tapisserie"
                 }
             ]
         },
         {
             "title": "Retapissage bar Amilcar, care ferry Carthage",
-            "link": "/",
+            "link": "/tapisserie",
             "img": "/home/salon.webp",
             "tags": [
                 {
                     "name": "Tapisserie",
-                    "link": "/"
+                    "link": "/tapisserie"
                 },
                 {
                     "name": "Upholustry",
-                    "link": "/"
+                    "link": "/tapisserie"
                 }
             ]
         }

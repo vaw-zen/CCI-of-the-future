@@ -20,12 +20,14 @@ export default function Hero() {
           src="/home/1-hero/background.jpg"
           alt="Background"
           className={styles.backgroundImage}
+          title={"Hero Background"}
         />
         <ResponsiveImage
           sizes={[100, 90]}
           src="/home/1-hero/linesGlow.webp"
           position="bottom right"
           alt="Glow Lines"
+          title={"Glow Lines"}
           priority
           className={styles.glowLines}
         />
@@ -36,6 +38,7 @@ export default function Hero() {
             src="/home/1-hero/main.webp"
             alt="Main Image"
             className={styles.mainImage}
+            title={"Upholstery Cleaning-sofas, cars, chairs, mattresses,  curtains, carpets"}
           />
         </div>
         <ResponsiveImage
@@ -44,6 +47,7 @@ export default function Hero() {
           src="/home/1-hero/circle.webp"
           alt="Circle"
           className={styles.circleImage}
+          title={"premiére éssoreuse automatique de tapis"}
         />
       </div>
 

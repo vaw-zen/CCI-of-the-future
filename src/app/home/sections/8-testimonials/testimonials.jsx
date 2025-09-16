@@ -22,7 +22,7 @@ export default function Testimonials({ className }) {
                             <div className={styles.profileContainer}>
                                 <ResponsiveImage
                                     skeleton sizes={[9, 23, 43]}
-                                    className={styles.profileImage} src={element.img} alt={'testimonial' + index} />
+                                    className={styles.profileImage} src={element.img} alt={'testimonial' + index} title={'client' + index} />
                                 <h3 className={styles.name}>Mattew Hunt</h3>
                                 <p className={styles.role}>plumber</p>
                             </div>

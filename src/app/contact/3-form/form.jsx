@@ -1,48 +1,19 @@
 
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "./form.module.css";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
-const emailjs = dynamic(() => import('@emailjs/browser'), { ssr: false });
 
 export default function Form() {
   const formRef = useRef();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+  
 
-  const handleSubmit = async (e) => {
+
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
-
-    try {
-      // Validate required EmailJS configuration
-      const serviceId = "service_a8ouscx" // replace with your service ID
-      const templateId = "template_rjqylkj" // replace with your template ID
-      const publicKey = "MIZT6AZwbY6JCI-jQ" // replace with your public key
-
-      if (!serviceId || !templateId || !publicKey) {
-        throw new Error("EmailJS configuration is missing");
-      }
-
-      const result = await emailjs.sendForm(
-        serviceId,
-        templateId,
-        formRef.current,
-        publicKey
-      );
-
-      console.log("Email sent successfully:", result);
-      setSubmitStatus('success');
-      formRef.current.reset();
-      
-    } catch (error) {
-      console.error("Error sending email:", error);
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+   
+  }
 
   return (
     <div>
@@ -53,7 +24,7 @@ export default function Form() {
           name="name" 
           placeholder="Votre nom" 
           required 
-          disabled={isSubmitting}
+     
         />
         <input 
           className={styles.formGroup} 
@@ -61,34 +32,34 @@ export default function Form() {
           name="email" 
           placeholder="Adresse e-mail" 
           required 
-          disabled={isSubmitting}
+        
         />
         <input 
           className={styles.formGroup} 
           type="tel" 
           name="phone" 
           placeholder="Numéro de téléphone" 
-          disabled={isSubmitting}
+       
         />
         <input 
           className={styles.formGroup} 
           type="text" 
           name="projectType" 
           placeholder="Type de projet" 
-          disabled={isSubmitting}
+     
         />
         <textarea 
           className={`${styles.formGroup} ${styles.textAreaContainer}`} 
           name="message" 
           placeholder="Votre message"
-          disabled={isSubmitting}
+     
         />
         <label className={styles.checkboxContainer}>
           <input 
             type="checkbox" 
             name="terms" 
             required 
-            disabled={isSubmitting}
+       
           /> 
           J'accepte les conditions du service et la politique de confidentialité
         </label>
@@ -96,7 +67,7 @@ export default function Form() {
         <button 
           className={styles.submitButton} 
           type="submit" 
-          disabled={isSubmitting}
+     
         >
           {isSubmitting ? "ENVOI EN COURS..." : "ENVOYER"}
         </button>
@@ -104,15 +75,28 @@ export default function Form() {
         <GreenBand className={styles.greenBandWrapper} />
       </form>
 
-      {/* Status Messages */}
       {submitStatus === 'success' && (
-        <div className={styles.successMessage || "success-message"}>
+        <div style={{
+          color: 'green',
+          padding: '10px',
+          marginTop: '10px',
+          border: '1px solid green',
+          backgroundColor: '#f0fff0',
+          borderRadius: '4px'
+        }}>
           ✅ Message envoyé avec succès !
         </div>
       )}
       
       {submitStatus === 'error' && (
-        <div className={styles.errorMessage || "error-message"}>
+        <div style={{
+          color: 'red',
+          padding: '10px',
+          marginTop: '10px',
+          border: '1px solid red',
+          backgroundColor: '#fff0f0',
+          borderRadius: '4px'
+        }}>
           ❌ Erreur lors de l'envoi. Veuillez réessayer.
         </div>
       )}

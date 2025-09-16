@@ -84,15 +84,18 @@ export default function Page() {
   <script type="application/ld+json">{JSON.stringify(localBusinessJSONLD)}</script>
   <script type="application/ld+json">{JSON.stringify(serviceJSONLD)}</script>
       <div className="responsive-padding">
-        <ServiceDetails
-          title="Services de tapisserie"
-          text="CCI propose des services de tapisserie sur mesure pour tous vos besoins : retapissage, remplacement de mousse, rembourrage et fourniture de tissus ignifuges pour bateaux et yachts. Notre équipe expérimentée garantit un travail soigné, durable et conforme aux normes de sécurité. Confiez-nous la rénovation ou l’aménagement de vos sièges, banquettes ou mobiliers pour un résultat à la hauteur de vos attentes."
-        />
-        <Feedback />
-        <ServiceDetails
-          title="Notre expertise"
-          text="Nous intervenons sur tous types de supports et proposons des solutions adaptées à chaque projet, que ce soit pour des particuliers, des professionnels ou le secteur nautique. Nous sélectionnons des matériaux de qualité et assurons un accompagnement personnalisé, de la conception à la réalisation. Faites confiance à CCI pour valoriser et protéger vos espaces grâce à notre savoir-faire en tapisserie."
-        />
+    <ServiceDetails
+  title="Services de tapisserie"
+  text="CCI propose des services de tapisserie sur mesure adaptés à vos besoins : retapissage de sièges et banquettes, remplacement de mousse, rembourrage professionnel et fourniture de tissus ignifuges spécialement conçus pour bateaux, yachts et espaces publics. Le saviez-vous ? Le choix d’une mousse de densité adaptée améliore non seulement le confort mais aussi la durée de vie de vos assises. De plus, les tissus ignifuges que nous utilisons respectent des normes de sécurité strictes, essentielles dans le secteur nautique ou hôtelier. En choisissant CCI, vous bénéficiez d’un tapissier professionnel qui allie savoir-faire artisanal et matériaux certifiés pour des résultats soignés, esthétiques et durables. Confiez-nous vos projets de rénovation ou d’aménagement : vos sièges, banquettes et mobiliers retrouveront confort, élégance et valeur ajoutée."
+/>
+
+<Feedback />
+
+<ServiceDetails
+  title="Notre expertise"
+  text="Grâce à notre expertise en tapisserie nautique, résidentielle et professionnelle, nous intervenons sur tous types de supports – bois, métal, plastique ou composites – en proposant des solutions adaptées à chaque projet. Chaque matériau requiert une technique spécifique : par exemple, une banquette en structure métallique demandera un rembourrage différent d’un fauteuil en bois massif. Pour garantir la durabilité, nous utilisons des mousses haute résilience, des tissus hydrofuges et anti-UV, parfaits pour résister aux environnements marins ou extérieurs. Notre accompagnement personnalisé couvre chaque étape, de la conception à la réalisation, en intégrant vos attentes esthétiques, techniques et budgétaires. Avec CCI, vous profitez d’un service de tapisserie haut de gamme, de conseils pratiques pour entretenir vos assises et de solutions durables qui valorisent vos espaces intérieurs comme extérieurs."
+/>
+
           <PartnerTab tabData={tapisserieTabData} />
         <AboutUsTab
           historyText="Depuis sa création, CCI s’est spécialisée dans la tapisserie sur mesure pour répondre aux besoins des particuliers, professionnels et du secteur nautique. Notre histoire est marquée par la passion du travail bien fait et l’innovation dans les techniques de tapisserie."

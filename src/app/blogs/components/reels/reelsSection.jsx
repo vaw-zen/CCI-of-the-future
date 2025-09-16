@@ -1,10 +1,10 @@
 "use client";
 import styles from './reelsSection.module.css';
-import { Play, Heart, Share2 } from "lucide-react";
 import { useEffect, useState, useRef } from 'react';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
 import { parallax } from '@/libs/vz/mouseInteraction/parallax'
- import { BiPlayFill,CircularText } from '@/utils/components/icons';
+import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText } from '@/utils/components/icons';
+
 const ReelsSection = () => {
   const [reels, setReels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,7 +84,7 @@ const ReelsSection = () => {
                 </button>
             </div>
                    
-                 
+                
                 )}
 
                 {/* Views Badge */}
@@ -100,10 +100,10 @@ const ReelsSection = () => {
 
                 <div className={styles['reel-footer']}>
                   <div className={styles['reel-likes']}>
-                    <Heart className={styles.icon} />
+                    <MdiHeartOutline className={styles.icon} />
                     {reel.likes}
                   </div>
-                  <Share2 className={`${styles['reel-share']} ${styles.icon}`} />
+                  <MdiShareOutline className={`${styles['reel-share']} ${styles.icon}`} />
                 </div>
               </div>
             </div>

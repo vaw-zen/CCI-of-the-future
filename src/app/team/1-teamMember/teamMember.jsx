@@ -15,11 +15,11 @@ export default function teamMember() {
         </p>
         <div className={styles.memberInfo}>
           <div className={styles.memberCard}>
-            <img src="/our-team/photo.png" alt="" />
+            <img src="/our-team/photo.png" alt="Chaabane Fares" title="Chaabane Fares" />
             <h3>Chaabane Fares Co-Founder</h3>
           </div>
           <div className={styles.memberAutograph}>
-            <img src="/our-team/autograph.png" alt="" />
+            <img src="/our-team/autograph.png" alt="Autograph of Chaabane Fares" title="Autograph of Chaabane Fares" />
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@ function ServiceItem({ icon, text }) {
         <div className={styles.item}>
             <div className={styles.iconWrap}>
                 {typeof icon === 'string' && icon ? (
-                    <img src={icon} alt="" className={styles.icon} />
+                    <img src={icon} alt={`icon for ${text}`} title={text} className={styles.icon} />
                 ) : (
                     <BulletIcon className={styles.icon} />
                 )}

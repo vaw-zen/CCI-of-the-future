@@ -39,11 +39,11 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                                 <Link href='/services'>Carrière</Link>
                             </div>
                             <div className={styles.socialLinks}>
-                                <Link href='/https://www.facebook.com/Chaabanes.Cleaning.Intelligence'>Facebook</Link>
-                                <Link href='/https://www.instagram.com/cci.services/'>Instagram</Link>
-                                <Link href='/'>Twitter</Link>
-                                <Link href='/https://www.linkedin.com/company/chaabanes-cleaning-int'>Linkedin</Link>
-                            </div>
+                                    <a href="https://www.facebook.com/Chaabanes.Cleaning.Intelligence" target="_blank" rel="noopener noreferrer">Facebook</a>
+                                    <a href="https://www.instagram.com/cci.services/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                                    <a href="https://twitter.com/your-profile" target="_blank" rel="noopener noreferrer">Twitter</a>
+                                    <a href="https://www.linkedin.com/company/chaabanes-cleaning-int" target="_blank" rel="noopener noreferrer">Linkedin</a>
+                                </div>
                         </div>
                     </div>
                     <div className={styles.rightSection}>

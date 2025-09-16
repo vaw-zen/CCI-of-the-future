@@ -39,7 +39,7 @@ export default function PartnerTab({ tabData }) {
                 </div>
               </div>
               <div className={styles.tabImage}>
-                <img src={tabImages[tab.id]} alt={tab.title} />
+                <img src={tabImages[tab.id]} alt={tab.title} title={tab.title} />
               </div>
             </div>
           )

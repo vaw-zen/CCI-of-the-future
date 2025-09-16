@@ -17,10 +17,10 @@ const teamOrgSchema = {
 
 export default function ContactPage() {
   const socials = {
-    facebook: "https://www.facebook.com/your-profile",
+    facebook: "	https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
     twitter: "https://twitter.com/your-profile",
-    linkedin: "https://www.linkedin.com/in/your-profile",
-    instagram: "https://www.instagram.com/your-profile",
+    linkedin: "https://www.linkedin.com/company/chaabanes-cleaning-int",
+    instagram: "https://www.instagram.com/cci.services/",
   };
   const teamImages = ['/home/1.webp','/home/3.webp'];
 

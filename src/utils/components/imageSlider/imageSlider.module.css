@@ -1,5 +1,5 @@
 .showcase {
-  padding: 6rem 0;
+  padding: 5.00vw 0;
   background: linear-gradient(to bottom, hsl(var(--background)), hsl(var(--secondary) / 0.2));
 }
 
@@ -7,19 +7,19 @@
   padding:0 15.75vw;
   /* max-width: 1200px; */
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 0.83vw;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3.33vw;
   animation: fadeIn 0.6s ease-out;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2.08vw;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25vw;
   background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary-glow)));
   background-clip: text;
   -webkit-background-clip: text;
@@ -27,24 +27,24 @@
 }
 
 .subtitle {
-  font-size: 1.25rem;
+  font-size: 1.04vw;
   color: hsl(var(--muted-foreground));
-  max-width: 48rem;
+  max-width: 40.00vw;
   margin: 0 auto;
 }
 
 .carouselWrapper {
   position: relative;
-  max-width: 60rem;
+  max-width: 50.00vw;
   margin: 0 auto;
 }
 
 .imageContainer {
   position: relative;
-  height: 31.25rem;
-  border-radius: 1rem;
+  height: 26.04vw;
+  border-radius: 0.83vw;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1.30vw 2.60vw -0.63vw rgba(0, 0, 0, 0.25);
 }
 
 .imageSlider {
@@ -75,23 +75,23 @@
 
 .slideContent {
   position: absolute;
-  bottom: 2rem;
-  left: 2rem;
-  right: 2rem;
+  bottom: 1.67vw;
+  left: 1.67vw;
+  right: 1.67vw;
   color: white;
   animation: slideIn 0.6s ease-out;
 }
 
 .slideTitle {
-  font-size: 1.875rem;
+  font-size: 1.56vw;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.42vw;
 }
 
 .slideDescription {
-  font-size: 1.125rem;
+  font-size: 0.94vw;
   opacity: 0.9;
-  max-width: 28rem;
+  max-width: 23.33vw;
 }
 
 .navButton {
@@ -100,10 +100,10 @@
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 0.05vw solid rgba(255, 255, 255, 0.2);
   color: white;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
+  padding: 0.63vw;
+  border-radius: 0.42vw;
   opacity: 0;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -114,11 +114,11 @@
 }
 
 .navButtonLeft {
-  left: 1rem;
+  left: 0.83vw;
 }
 
 .navButtonRight {
-  right: 1rem;
+  right: 0.83vw;
 }
 
 .imageContainer:hover .navButton {
@@ -128,13 +128,13 @@
 .dots {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
-  gap: 0.75rem;
+  margin-top: 1.67vw;
+  gap: 0.63vw;
 }
 
 .dot {
-  width: 0.75rem;
-  height: 0.75rem;
+  width: 0.63vw;
+  height: 0.63vw;
   border-radius: 50%;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -148,20 +148,20 @@
 .dotActive {
   background: hsl(var(--primary));
   transform: scale(1.25);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.21vw 0.42vw rgba(0, 0, 0, 0.2);
 }
 
 .thumbnails {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: 0.83vw;
+  margin-top: 1.67vw;
 }
 
 .thumbnail {
   position: relative;
-  height: 5rem;
-  border-radius: 0.5rem;
+  height: 4.17vw;
+  border-radius: 0.42vw;
   overflow: hidden;
   transition: all 0.3s ease;
   opacity: 0.7;
@@ -176,8 +176,8 @@
 .thumbnailActive {
   opacity: 1;
   transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 2px solid hsl(var(--primary));
+  box-shadow: 0 0.21vw 0.42vw rgba(0, 0, 0, 0.2);
+  border: 0.10vw solid hsl(var(--primary));
 }
 
 .thumbnailImage {
@@ -192,30 +192,59 @@
   background: hsl(var(--primary) / 0.2);
 }
 
-@media (min-width: 768px) {
-  .title {
-    font-size: 3rem;
-  }
-
-  .imageContainer {
-    height: 37.5rem;
-  }
-
-  .slideTitle {
-    font-size: 1.875rem;
-  }
-
-  .thumbnail {
-    height: 6rem;
-  }
+.iconPlaceholder {
+  width: 1.25vw;
+  height: 1.25vw;
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 0.21vw;
+  display: inline-block;
 }
 
-.iconPlaceholder {
-  width: 1.5rem;
-  height: 1.5rem;
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 0.25rem;
-  display: inline-block;
+@media screen and (max-width: 1024px) {
+  .showcase { padding: 12.50vw 0; }
+  .container { padding:0 39.38vw; margin: 0 auto; padding: 0 2.08vw; }
+  .header { margin-bottom: 8.33vw; }
+  .title { font-size: 5.21vw; margin-bottom: 3.13vw; }
+  .subtitle { font-size: 2.60vw; max-width: 100.00vw; }
+  .carouselWrapper { max-width: 125.00vw; }
+  .imageContainer { height: 65.10vw; border-radius: 2.08vw; box-shadow: 0 3.26vw 6.51vw -1.56vw rgba(0, 0, 0, 0.25); }
+  .slideContent { bottom: 4.17vw; left: 4.17vw; right: 4.17vw; }
+  .slideTitle { font-size: 3.91vw; margin-bottom: 1.04vw; }
+  .slideDescription { font-size: 2.34vw; max-width: 58.33vw; }
+  .navButton { border: 0.13vw solid rgba(255, 255, 255, 0.2); padding: 1.56vw; border-radius: 1.04vw; }
+  .navButtonLeft { left: 2.08vw; }
+  .navButtonRight { right: 2.08vw; }
+  .dots { margin-top: 4.17vw; gap: 1.56vw; }
+  .dot { width: 1.56vw; height: 1.56vw; }
+  .dotActive { box-shadow: 0 0.52vw 1.04vw rgba(0, 0, 0, 0.2); }
+  .thumbnails { gap: 2.08vw; margin-top: 4.17vw; }
+  .thumbnail { height: 10.42vw; border-radius: 1.04vw; }
+  .thumbnailActive { box-shadow: 0 0.52vw 1.04vw rgba(0, 0, 0, 0.2); border: 0.26vw solid hsl(var(--primary)); }
+  .iconPlaceholder { width: 3.13vw; height: 3.13vw; border-radius: 0.52vw; }
+}
+
+@media screen and (max-width: 480px) {
+  .showcase { padding: 23.30vw 0; }
+  .container { padding:0 73.40vw; margin: 0 auto; padding: 0 3.88vw; }
+  .header { margin-bottom: 15.53vw; }
+  .title { font-size: 9.71vw; margin-bottom: 5.83vw; }
+  .subtitle { font-size: 4.85vw; max-width: 186.41vw; }
+  .carouselWrapper { max-width: 233.98vw; }
+  .imageContainer { height: 121.36vw; border-radius: 3.88vw; box-shadow: 0 6.07vw 12.14vw -2.91vw rgba(0, 0, 0, 0.25); }
+  .slideContent { bottom: 7.77vw; left: 7.77vw; right: 7.77vw; }
+  .slideTitle { font-size: 7.28vw; margin-bottom: 1.94vw; }
+  .slideDescription { font-size: 4.37vw; max-width: 108.74vw; }
+  .navButton { border: 0.24vw solid rgba(255, 255, 255, 0.2); padding: 2.91vw; border-radius: 1.94vw; opacity: 1; }
+  .imageContainer:hover .navButton { opacity: 1; }
+  .navButtonLeft { left: 3.88vw; }
+  .navButtonRight { right: 3.88vw; }
+  .dots { margin-top: 7.77vw; gap: 2.91vw; }
+  .dot { width: 2.91vw; height: 2.91vw; }
+  .dotActive { box-shadow: 0 0.97vw 1.94vw rgba(0, 0, 0, 0.2); }
+  .thumbnails { gap: 3.88vw; margin-top: 7.77vw; }
+  .thumbnail { height: 19.42vw; border-radius: 1.94vw; }
+  .thumbnailActive { box-shadow: 0 0.97vw 1.94vw rgba(0, 0, 0, 0.2); border: 0.49vw solid hsl(var(--primary)); }
+  .iconPlaceholder { width: 5.83vw; height: 5.83vw; border-radius: 0.97vw; }
 }
 
 @keyframes fadeIn {

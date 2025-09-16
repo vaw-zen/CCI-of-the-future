@@ -4,7 +4,7 @@
 }
 
 .skeleton-card { 
-  background: rgba(15, 13, 29, 0.5); 
+  background: rgba(203, 251, 66, 0.01); 
   backdrop-filter: blur(0.63vw); 
   border: 0.05vw solid rgba(59, 130, 246, 0.1); 
   border-radius: 0.63vw; 

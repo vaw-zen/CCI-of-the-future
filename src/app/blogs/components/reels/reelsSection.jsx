@@ -2,7 +2,6 @@
 import styles from './reelsSection.module.css';
 import { useEffect, useState, useRef } from 'react';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
-import { parallax } from '@/libs/vz/mouseInteraction/parallax'
 import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText } from '@/utils/components/icons';
 
 const ReelsSection = () => {
@@ -10,7 +9,8 @@ const ReelsSection = () => {
   const [loading, setLoading] = useState(true);
   const [activeReelId, setActiveReelId] = useState(null);
   const videoRefs = useRef({});
-  const fullscreenOpenedRef = useRef(new Set());
+  const [playingIds, setPlayingIds] = useState(() => new Set());
+  const lastToggleAtRef = useRef(0);
 
   useEffect(() => {
     async function loadReels() {
@@ -37,30 +37,38 @@ const ReelsSection = () => {
     // Play only the clicked video
     const video = videoRefs.current[id];
     if (video) {
-      // Request fullscreen on first play for this reel
-      if (!fullscreenOpenedRef.current.has(id)) {
-        try {
-          if (video.requestFullscreen) {
-            await video.requestFullscreen();
-            fullscreenOpenedRef.current.add(id);
-          } else if (video.webkitEnterFullscreen) { // iOS Safari
-            video.webkitEnterFullscreen();
-            fullscreenOpenedRef.current.add(id);
-          } else if (video.webkitRequestFullscreen) { // Safari
-            await video.webkitRequestFullscreen();
-            fullscreenOpenedRef.current.add(id);
-          }
-        } catch (err) {
-          // Silently ignore fullscreen errors; user can still watch inline
-        }
-      }
-
       try {
         await video.play();
       } catch (err) {
         // Ignore play errors (e.g., autoplay restrictions)
       }
       setActiveReelId(id);
+    }
+  };
+
+  const handleTogglePlay = async (id, e, source) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    // Prevent immediate re-toggle when overlay appears right after pausing via video click
+    if (source === 'overlay') {
+      const now = Date.now();
+      if (now - lastToggleAtRef.current < 400) return;
+    }
+
+    lastToggleAtRef.current = Date.now();
+    const video = videoRefs.current[id];
+    if (!video) return;
+    if (video.paused) {
+      await handlePlay(id);
+    } else {
+      try {
+        video.pause();
+      } catch (err) {
+        // Ignore pause errors
+      }
     }
   };
 
@@ -90,14 +98,35 @@ const ReelsSection = () => {
                   controls={activeReelId === reel.id} // controls only for active
                   playsInline
                   muted
+                  onPointerDown={(e) => handleTogglePlay(reel.id, e, 'video')}
+                  onPlay={() => {
+                    setPlayingIds(prev => {
+                      const next = new Set(prev);
+                      next.add(reel.id);
+                      return next;
+                    });
+                  }}
+                  onPause={() => {
+                    setPlayingIds(prev => {
+                      const next = new Set(prev);
+                      next.delete(reel.id);
+                      return next;
+                    });
+                  }}
+                  onEnded={() => {
+                    setPlayingIds(prev => {
+                      const next = new Set(prev);
+                      next.delete(reel.id);
+                      return next;
+                    });
+                  }}
                 />
 
-                {/* Play Overlay */}
-                {activeReelId !== reel.id && (
-                  
-                    <div className={styles.container} >
+                {/* Play Overlay (visible when not playing) */}
+                {!playingIds.has(reel.id) && (
+                    <div className={`${styles.container} ${styles.showOverlay}`} onPointerDown={(e) => handleTogglePlay(reel.id, e, 'overlay')}>
                 <div className={styles.filter} />
-                <button onMouseMove={parallax} onMouseLeave={parallax} onClick={() => handlePlay(reel.id)} className={styles.playButton} aria-label="voir-video">
+                <button className={styles.playButton} aria-label="voir-video">
                     <div className={styles.textContainer}>
                         <CircularText className={styles.circularText} />
                     </div>
@@ -114,19 +143,19 @@ const ReelsSection = () => {
                 <div className={styles['reel-views']}>
                   {reel.views} views
                 </div>
-              </div>
 
-              <div className={styles['reel-content']}>
-                <h3 className={styles['reel-title']}>
-                  {reel.message}
-                </h3>
-
-                <div className={styles['reel-footer']}>
-                  <div className={styles['reel-likes']}>
-                    <MdiHeartOutline className={styles.icon} />
-                    {reel.likes}
+                {/* Text Overlay */}
+                <div className={`${styles['reel-overlay']} ${playingIds.has(reel.id) ? styles['overlayHidden'] : ''}`}>
+                  <h3 className={styles['reel-title']}>
+                    {reel.message}
+                  </h3>
+                  <div className={styles['reel-footer']}>
+                    <div className={styles['reel-likes']}>
+                      <MdiHeartOutline className={styles.icon} />
+                      {reel.likes}
+                    </div>
+                    <MdiShareOutline className={`${styles['reel-share']} ${styles.icon}`} />
                   </div>
-                  <MdiShareOutline className={`${styles['reel-share']} ${styles.icon}`} />
                 </div>
               </div>
             </div>

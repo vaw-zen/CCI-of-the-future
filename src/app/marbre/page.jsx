@@ -47,7 +47,8 @@ export default function Page() {
     "@type": "LocalBusiness",
     name: "CCI",
     url: "https://cciservices.online/",
-    logo: "https://cciservices.online/layout/logo.png",
+    logo: "https://cciservices.online/logo.png"
+,
     telephone: "+216-98-557-766",
     address: {
       "@type": "PostalAddress",

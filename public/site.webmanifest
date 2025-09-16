@@ -3,11 +3,11 @@
   "short_name": "CCI",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#CBFB42",
+  "background_color": "#141416",
   "theme_color": "#CBFB42",
   "icons": [
     {
-      "src": "/layout/logo.png",
+      "src": "/logo.png",
       "sizes": "192x192",
       "type": "image/png"
     }

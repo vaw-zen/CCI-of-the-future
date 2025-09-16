@@ -34,7 +34,7 @@
 
 .reels-grid {
   display: grid;
-  grid-template-columns:repeat(3,1fr) ;
+  grid-template-columns:repeat(4,1fr) ;
   gap: 24px;
 }
 
@@ -43,7 +43,7 @@
 .reel-card {
   background: rgba(15, 13, 29, 0.5);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(203, 251, 66, 0.1);
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -52,7 +52,7 @@
 }
 
 .reel-card:hover {
-  box-shadow: 0 0 40px rgba(192, 132, 252, 0.15);
+  box-shadow: 0 0 40px rgba(203, 251, 66, 0.15);
   transform: translateY(-4px);
 }
 
@@ -62,8 +62,9 @@
 
 .reel-image {
   width: 100%;
-  height: 256px;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
+  background-color: #000;
   transition: transform 0.3s ease;
 }
 
@@ -85,9 +86,11 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease; }
-.playButton { transition: transform .5s ease-out; width: 6vw; height: 6vw; background: var(--ac-primary); border-radius: 50%;  position: relative; display: flex; justify-content: center; align-items: center; }
+.showOverlay { opacity: 1; }
+.playButton { transition: transform .5s ease-out; width: 6vw; height: 6vw; background: var(--ac-primary); border-radius: 50%;  position: relative; display: flex; justify-content: center; align-items: center; margin-top: -40%; }
 .textContainer { width: 85%; height: 85%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
-.circularText { width: 100%; height: 100%; animation: spin linear 10s infinite; }
+.circularText { width: 100%; height: 100%; }
+.reel-card:hover .circularText { animation: spin linear 10s infinite; }
 .innerButton { width: 60%; height: 60%; background: var(--bg-base); border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 .playIcon { color: var(--t-primary); height: 50%; width: 50%; }
 
@@ -115,9 +118,29 @@
   font-size: 0.875rem;
 }
 
-.reel-content {
+.reel-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding: 16px;
+  background: rgba(20, 20, 22, 0.7);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(203, 251, 66, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: opacity .3s ease, transform .3s ease;
+  border-radius: 12px 12px 0 0;
 }
+
+.overlayHidden {
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+}
+
+.reel-content { padding: 16px; }
 
 .reel-title {
   font-weight: 600;
@@ -126,14 +149,13 @@
   color: #f9fafb;
   transition: color 0.3s ease;
   display: -webkit-box;
+  line-clamp: 5;
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.reel-card:hover .reel-title {
-  color: #c084fc;
-}
+
 
 .reel-footer {
   display: flex;
@@ -166,6 +188,9 @@
  .reels-grid {
     grid-template-columns: 1fr !important;
   }
+  .reel-card {
+    min-height: 100.67vw;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -178,4 +203,12 @@
 
 }
 .reels-container{ padding: 0  !important;}
+}
+
+/* Disable hover-only effects on non-hover (touch) devices */
+@media (hover: none) {
+  .reel-card:hover { box-shadow: none; transform: none; }
+  .reel-card:hover .reel-image { transform: none; }
+  .reel-card:hover .container { opacity: 1; }
+  .reel-card:hover .circularText { animation: none; }
 }

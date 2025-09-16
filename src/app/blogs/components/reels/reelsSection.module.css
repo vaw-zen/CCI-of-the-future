@@ -19,7 +19,7 @@
   font-size: 2.rem;
   font-weight: bold;
   margin-bottom: 16px;
-  background: linear-gradient(135deg, #7dd3fc, #60a5fa);
+  background: linear-gradient(135deg, #fc7d7d, #c22c2c);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -41,7 +41,7 @@
 
 
 .reel-card {
-  background: rgba(15, 13, 29, 0.5);
+  background:#8d9ca356;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(59, 130, 246, 0.1);
   border-radius: 12px;
@@ -52,7 +52,7 @@
 }
 
 .reel-card:hover {
-  box-shadow: 0 0 40px rgba(192, 132, 252, 0.15);
+  box-shadow: 0 0 40px #8d9ca379;
   transform: translateY(-4px);
 }
 

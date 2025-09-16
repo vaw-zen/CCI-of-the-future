@@ -8,7 +8,8 @@ export default function Feedback() {
       <div className={styles.content}>
         <img 
           src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d25d112da90204c5cbab7e_feedback-image-1.jpg" 
-          alt="Feedback"
+          alt="Customer feedback preview"
+          title="Customer feedback preview"
           className={styles.feedbackImage}
         />
 
@@ -19,7 +20,8 @@ export default function Feedback() {
 
           <img 
             src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d25e0d7c06818293917976_ratings-image.png"
-            alt="5 stars"
+            alt="5 star rating image"
+            title="5 star rating"
             className={styles.ratingImage}
           />
 
@@ -39,7 +41,8 @@ export default function Feedback() {
 
         <img
           src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d25d11b6d5727548c2d785_feedback-image-2.jpg"
-          alt="Feedback"
+          alt="Customer feedback preview"
+          title="Customer feedback preview"
           className={styles.feedbackImage}
         />
       </div>

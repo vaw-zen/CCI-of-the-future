@@ -22,7 +22,7 @@ export default function Refrences({ className }) {
               <UilArrowRight className={styles.arrow} />
             </Link>
           ) : (
-            <Link href={refrence.link} target='_blank' className={styles.refrenceSiteLink}>
+            <a href={refrence.link} target="_blank" rel="noopener noreferrer" className={styles.refrenceSiteLink}>
               <ResponsiveImage
                 sizes={[10, 30, 56]}
                 src={refrence.img}
@@ -31,7 +31,7 @@ export default function Refrences({ className }) {
                 skeleton
                 contain
               />
-            </Link>
+            </a>
           )}
         </div>
       ))}

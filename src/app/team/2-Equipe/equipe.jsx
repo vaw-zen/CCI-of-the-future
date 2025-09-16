@@ -71,7 +71,7 @@ export default function Equipe() {
           {cards.map((card, index) => (
             <div className={styles.card} key={index}>
               <div className={styles.imageContainer}>
-                <img src={card.image} alt={card.name} />
+                <img src={card.image} alt={card.name} title={card.name} />
               </div>
               <div className={styles.textContainer}>
                 <div className={styles.textContainerContent}>

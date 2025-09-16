@@ -71,6 +71,7 @@ const ChatWidget = React.memo(({ isOpen, onClose }) => {
                             <img 
                                 src="/chatBot/owner.jpeg" 
                                 alt="Fares Chaabane" 
+                                title="Fares Chaabane"
                                 className={styles.avatarImage}
                             />
                         </div>

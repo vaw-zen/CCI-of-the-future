@@ -12,7 +12,8 @@ const teamOrgSchema = {
   "@type": "Organization",
   name: "CCI",
   url: "https://cciservices.online/team",
-  logo: "https://cciservices.online/layout/logo.png"
+  logo: "https://cciservices.online/logo.png"
+
 }
 
 export default function ContactPage() {

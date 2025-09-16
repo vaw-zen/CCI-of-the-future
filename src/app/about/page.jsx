@@ -22,7 +22,8 @@ export default function page  ()  {
       "@type":"Organization",
       name: "CCI",
       url: "https://cciservices.online/about",
-      logo: "https://cciservices.online/layout/logo.png"
+      logo: "https://cciservices.online/logo.png"
+
     })}</script>
     <HeroHeader title={"About us"}/>
     <Presentation/>

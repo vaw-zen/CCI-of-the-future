@@ -47,9 +47,10 @@ export default function Page() {
     "@type": "LocalBusiness",
     name: "CCI",
     url: "https://cciservices.online/",
-    logo: "https://cciservices.online/layout/logo.png",
-    telephone: "+216-XX-XXX-XXX",
-    address: { "@type": "PostalAddress", streetAddress: "", addressLocality: "Tunisie", addressCountry: "TN" },
+    logo: "https://cciservices.online/logo.png"
+,
+    telephone: "+216-98-557-766",
+    address: { "@type": "PostalAddress", streetAddress: "06, rue galant de nuit, l'aouina,tunis", addressLocality: "Tunisie", addressCountry: "TN" },
   };
 
   const serviceJSONLD = {

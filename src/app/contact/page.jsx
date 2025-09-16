@@ -31,7 +31,7 @@ export default function ContactPage() {
           url: "https://cciservices.online",
           contactPoint: [{
             "@type": "ContactPoint",
-            telephone: "+216-XX-XXX-XXX",
+            telephone: "+216-98-557-766",
             contactType: "customer service",
             areaServed: "TN"
           }]

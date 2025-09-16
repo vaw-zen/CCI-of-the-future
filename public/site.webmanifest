@@ -1,0 +1,15 @@
+{
+  "name": "CCI — Restauration & Nettoyage professionnel",
+  "short_name": "CCI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#CBFB42",
+  "theme_color": "#CBFB42",
+  "icons": [
+    {
+      "src": "/layout/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

@@ -51,8 +51,8 @@ export default function RootLayout({ children }) {
     name: SITE_NAME,
     url: SITE_URL,
     logo: SITE_LOGO,
-    telephone: "+216-XX-XXX-XXX",
-    address: { "@type": "PostalAddress", streetAddress: "", addressLocality: "Tunisie", addressCountry: "TN" },
+    telephone: "+216-98-557-766",
+    address: { "@type": "PostalAddress", streetAddress: "06, rue galant de nuit, l'aouina,tunis", addressLocality: "Tunisie", addressCountry: "TN" },
     openingHoursSpecification: [{ "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens":"08:00", "closes":"18:00" }]
   };
 
@@ -61,7 +61,10 @@ export default function RootLayout({ children }) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/services` }
+      { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/services` },
+      { "@type": "ListItem", position: 3, name: "Contact", item: `${SITE_URL}/contact` },
+      { "@type": "ListItem", position: 4, name: "Blog", item: `${SITE_URL}/blogs` }
+
     ]
   };
   const FB_APP_ID = process.env.FB_APP_ID || '';
@@ -70,17 +73,33 @@ export default function RootLayout({ children }) {
     <html lang="fr" className={dmSans.className} suppressHydrationWarning>
       <head>
   <HydrationSuppressor />
-  {/* Global Open Graph + canonical */}
+  {/* Global Open Graph / Twitter / canonical / icons */}
   <link rel="canonical" href={SITE_URL} />
+  <meta name="description" content={metadata.description || 'Services professionnels CCI'} />
+  <meta name="keywords" content="nettoyage, restauration marbre, moquette, tapisserie, nettoyage post-chantier, Tunisie, CCI" />
+  <meta name="author" content="CCI" />
+  <meta name="robots" content="index,follow" />
+  <meta property="og:locale" content="fr_FR" />
   <meta property="og:site_name" content={SITE_NAME} />
   <meta property="og:type" content="website" />
   <meta property="og:url" content={SITE_URL} />
+  <meta property="og:title" content={metadata.title || SITE_NAME} />
+  <meta property="og:description" content={metadata.description || 'Services professionnels CCI'} />
   <meta property="og:image" content={SITE_LOGO} />
-  <meta property="og:description" content={exports?.metadata?.description || 'Services professionnels CCI'} />
-  <meta property="og:title" content={exports?.metadata?.title || SITE_NAME} />
+  <meta property="og:image:alt" content={`${SITE_NAME} logo`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={exports?.metadata?.title || SITE_NAME} />
-  <meta name="twitter:description" content={exports?.metadata?.description || ''} />
+  <meta name="twitter:site" content="@cciservices" />
+  <meta name="twitter:title" content={metadata.title || SITE_NAME} />
+  <meta name="twitter:description" content={metadata.description || ''} />
+  <meta name="twitter:image" content={SITE_LOGO} />
+
+  {/* Icons & manifest */}
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="rgba(203, 251, 66, 1)" />
 
   {/* JSON-LD site-wide */}
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />

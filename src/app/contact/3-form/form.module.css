@@ -4,7 +4,10 @@
 .formGroup:focus { border-bottom: 1px solid #cafb42; }
 .textAreaContainer { grid-column: span 2; height: 6.51vw; }
 .checkboxContainer { display: flex; align-items: center; gap: 0.52vw; font-size: 0.91vw; font-weight: 400; color: rgba(255, 255, 255, 0.7); grid-column: span 2; }
-.checkboxContainer input { width: 0.91vw; height: 0.91vw; accent-color: rgba(103, 101, 101, 0.169); }
+.checkboxContainer:hover { cursor: pointer; }
+.checkboxContainer input { width: 0.91vw; height: 0.91vw; accent-color: var(--ac-primary); cursor: pointer; transition: filter .2s ease, transform .05s ease; }
+.checkboxContainer:hover input { filter: brightness(1.08); }
+.checkboxContainer input:active { transform: scale(0.96); }
 .submitButton { background-color: #fff; color: #000; border: none; padding: 0.98vw 1.95vw; font-size: 1.04vw; font-weight: 700; cursor: pointer; margin-top: 0.98vw; grid-column: span 2; text-align: center; border-radius: 2.08vw; }
 .submitButton:hover { background-color: #cafb42; }
 .greenBandWrapper { margin: 7vw 0 3.8vw 0 !important; 

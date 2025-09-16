@@ -35,7 +35,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   const SITE_NAME = 'CCI' || "Chaabane's Cleaning Intelligence";
-  const SITE_LOGO = `${SITE_URL}/layout/logo.png`;
+  const SITE_LOGO = `${SITE_URL}/logo.png`;
 
   const websiteJSONLD = {
     "@context": "https://schema.org",

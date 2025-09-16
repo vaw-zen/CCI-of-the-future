@@ -10,6 +10,7 @@ const ReelsSection = () => {
   const [loading, setLoading] = useState(true);
   const [activeReelId, setActiveReelId] = useState(null);
   const videoRefs = useRef({});
+  const fullscreenOpenedRef = useRef(new Set());
 
   useEffect(() => {
     async function loadReels() {
@@ -27,7 +28,7 @@ const ReelsSection = () => {
     loadReels();
   }, []);
 
-  const handlePlay = (id) => {
+  const handlePlay = async (id) => {
     // Pause all other videos
     Object.values(videoRefs.current).forEach(video => {
       if (video && !video.paused) video.pause();
@@ -36,7 +37,29 @@ const ReelsSection = () => {
     // Play only the clicked video
     const video = videoRefs.current[id];
     if (video) {
-      video.play();
+      // Request fullscreen on first play for this reel
+      if (!fullscreenOpenedRef.current.has(id)) {
+        try {
+          if (video.requestFullscreen) {
+            await video.requestFullscreen();
+            fullscreenOpenedRef.current.add(id);
+          } else if (video.webkitEnterFullscreen) { // iOS Safari
+            video.webkitEnterFullscreen();
+            fullscreenOpenedRef.current.add(id);
+          } else if (video.webkitRequestFullscreen) { // Safari
+            await video.webkitRequestFullscreen();
+            fullscreenOpenedRef.current.add(id);
+          }
+        } catch (err) {
+          // Silently ignore fullscreen errors; user can still watch inline
+        }
+      }
+
+      try {
+        await video.play();
+      } catch (err) {
+        // Ignore play errors (e.g., autoplay restrictions)
+      }
       setActiveReelId(id);
     }
   };

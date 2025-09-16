@@ -1,6 +1,5 @@
 import styles from './postCard.module.css';
-import { Heart, Share2, MessageCircle, Calendar } from "lucide-react";
-
+import { MdiHeartOutline,MdiShareOutline,MdiCommentOutline,LineMdCalendar } from '@/utils/components/icons';
 const PostCard = ({ title, content, image, date, likes, comments, permalink_url, type }) => {
   return (
     <a
@@ -25,7 +24,7 @@ const PostCard = ({ title, content, image, date, likes, comments, permalink_url,
         
         <div className={styles['post-card-content']}>
           <div className={styles['post-card-date']}>
-            <Calendar className={styles.icon} />
+            <LineMdCalendar className={styles.icon} />
             {date}
           </div>
 
@@ -40,16 +39,16 @@ const PostCard = ({ title, content, image, date, likes, comments, permalink_url,
           <div className={styles['post-card-footer']}>
             <div className={styles['post-card-stats']}>
               <div className={`${styles['post-card-stat']} ${styles.likes}`}>
-                <Heart className={styles.icon} />
+                <MdiHeartOutline className={styles.icon} />
                 {likes}
               </div>
               <div className={`${styles['post-card-stat']} ${styles.comments}`}>
-                <MessageCircle className={styles.icon} />
+                <MdiCommentOutline className={styles.icon} />
                 {comments}
               </div>
             </div>
 
-            <Share2 className={`${styles['post-card-share']} ${styles.icon}`} />
+            <MdiShareOutline className={`${styles['post-card-share']} ${styles.icon}`} />
           </div>
         </div>
       </div>

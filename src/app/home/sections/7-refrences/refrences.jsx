@@ -29,6 +29,7 @@ export default function Refrences({ className }) {
                 className={styles.refrenceImage}
                 alt={`refrence ${index}`}
                 skeleton
+                title={refrence.title}
                 contain
               />
             </a>

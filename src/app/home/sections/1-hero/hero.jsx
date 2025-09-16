@@ -94,16 +94,16 @@ export default function Hero() {
               <a  href="mailto:contact@cciservices.online">
                 <SiMailDuotone className={styles.icon} />
               </a>
-              <a href="/https://www.instagram.com/cci.services/">
+              <a href="https://www.instagram.com/cci.services/" target="_blank" rel="noopener noreferrer" title="CCI on Instagram">
                 <LineMdInstagram className={styles.icon} />
               </a>
-              <a href="/https://www.facebook.com/Chaabanes.Cleaning.Intelligence">
+              <a href="https://www.facebook.com/Chaabanes.Cleaning.Intelligence" target="_blank" rel="noopener noreferrer" title="CCI on Facebook">
                 <LineMdFacebook className={styles.icon} />
               </a>
-              <a href="/">
+              <a href="https://www.linkedin.com/company/chaabanes-cleaning-int" target="_blank" rel="noopener noreferrer" title="CCI on LinkedIn">
                 <LineMdLinkedin className={styles.icon} />
               </a>
-              <a href="/">
+              <a href="/" title="TikTok (placeholder)">
                 <LineMdTiktok className={styles.icon} />
               </a>
             </div>

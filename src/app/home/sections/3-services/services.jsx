@@ -26,7 +26,8 @@ export default function Services({ className = '' }) {
                             sizes={[9, 21, 40]}
                             className={styles.serviceImage}
                             src={service.img}
-                            alt={service.title} />
+                            alt={service.title} 
+                            title={service.title}/>
 
                         <div className={styles.serviceContent}>
                             <Link href={service.link} className={styles.serviceTitle}>

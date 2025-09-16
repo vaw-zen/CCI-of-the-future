@@ -60,7 +60,7 @@ export async function POST(request) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; background:${colors.white};">
           <div style="background:${colors.bgBase}; color:${colors.textPrimary}; padding: 16px 20px;">
-            <h1 style="margin:0; font-size:20px;">Nouvelle demande de contact</h1>
+            <h1 style="margin:0; font-size:20px;"><span style="color:${colors.accent};">Nouvelle</span> demande de contact</h1>
             <p style="margin:4px 0 0; font-size:12px; color:${colors.textSecondary};">Reçue le ${now}</p>
           </div>
           <div style="padding: 20px;">
@@ -93,7 +93,7 @@ export async function POST(request) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; background:${colors.white};">
           <div style="background:${colors.bgBase}; color:${colors.textPrimary}; padding: 16px 20px;">
-            <h1 style="margin:0; font-size:20px;">Merci ${name.split(' ')[0] || name} !</h1>
+            <h1 style="margin:0; font-size:20px;"><span style="color:${colors.accent};">Merci !</span> ${name} </h1>
             <p style="margin:4px 0 0; font-size:12px; color:${colors.textSecondary};">Nous avons bien reçu votre demande de contact.</p>
           </div>
           <div style="padding: 20px;">

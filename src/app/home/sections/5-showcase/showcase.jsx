@@ -19,7 +19,7 @@ export default function Showcase({...props}) {
                                 index === 1 ?
                                     <ResponsiveImage width={0}
                                         height={0}
-                                        sizes={[25, 65, 70]} skeleton className={styles.circleImage} src={circle.img} alt='showcase' /> :
+                                        sizes={[25, 65, 70]} skeleton className={styles.circleImage} src={circle.img} alt='showcase' title="showcase" /> :
                                     <RightCircle circle={circle} />}
                         </div>
                     );

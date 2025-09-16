@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { dimensionsStore } from '@/utils/store/store';
 
 const ResponsiveImage = ({
+    title,
     sizes,
     src,
     alt = '#',
@@ -69,6 +70,7 @@ const ResponsiveImage = ({
             <Image
                 src={src}
                 alt={alt}
+                title={title}
                 fill
                 sizes={typeof effectiveSize === 'number' ? effectiveSize + 'vw' : effectiveSize}
                 style={{

@@ -1,26 +1,32 @@
 [
   {
     "img": "/home/7-refrences/1.webp",
-    "link": "https://4mk.com.tn"
+    "link": "https://4mk.com.tn",
+    "title" : "4MK"
   },
   {
     "img": "/home/7-refrences/2.webp",
-    "link": "https://www.banquedetunisie.com.tn"
+    "link": "https://www.banquedetunisie.com.tn",
+    "title" : "Banque de Tunisie"
   },
   {
     "img": "/home/7-refrences/3.webp",
-    "link": "https://www.ctn.com.tn"
+    "link": "https://www.ctn.com.tn",
+    "title" : "CTN"
   },
   {
     "img": "/home/7-refrences/4.webp",
-    "link": "https://generalmetal.tn"
+    "link": "https://generalmetal.tn",
+    "title" : "General Metal"
   },
   {
     "img": "/home/7-refrences/5.webp",
-    "link": "https://www.kilanigroupe.com/en/activity/ikel"
+    "link": "https://www.kilanigroupe.com/en/activity/ikel",
+    "title" : "KILANI Groupe"
   },
   {
     "img": "/home/7-refrences/6.webp",
-    "link": "https://www.oaca.nat.tn"
+    "link": "https://www.oaca.nat.tn",
+    "title" : "OACA"
   }
 ]

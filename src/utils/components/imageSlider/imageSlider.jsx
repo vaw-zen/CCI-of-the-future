@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRef } from 'react';
- // use local icon components so we can keep SVGs in one place
+// use local icon components so we can keep SVGs in one place
 import { RadixIconsCaretRight } from '../icons';
 import styles from './imageSlider.module.css';
-import Image from "next/image";
+import ResponsiveImage from '@/utils/components/Image/Image';
 
 const defaultImages = [
   {
@@ -130,27 +130,28 @@ export const ImageSlider = ({
             role="region"
             aria-label="Image carousel"
           >
-            <div 
+            <div
               className={styles.imageSlider}
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-            {images.map((image, index) => (
-  <div key={index} className={styles.slide}>
-    <Image
-      src={image.src}
-      alt={image.title}
-      className={styles.slideImage}
-      width={1200} // adjust depending on your design
-      height={600} // adjust depending on your design
-      priority={index === 0} // preload first image
-    />
-    <div className={styles.slideOverlay} />
-    <div className={styles.slideContent}>
-      <h3 className={styles.slideTitle}>{image.title}</h3>
-      <p className={styles.slideDescription}>{image.description}</p>
-    </div>
-  </div>
-))}
+              {images.map((image, index) => (
+                <div key={index} className={styles.slide}>
+                  <ResponsiveImage
+                    src={image.src}
+                    alt={image.title}
+                    className={styles.slideImage}
+                    sizes={[100]}
+                    priority={index === 0}
+                    skeleton
+                    contain
+                  />
+                  <div className={styles.slideOverlay} />
+                  <div className={styles.slideContent}>
+                    <h3 className={styles.slideTitle}>{image.title}</h3>
+                    <p className={styles.slideDescription}>{image.description}</p>
+                  </div>
+                </div>
+              ))}
 
             </div>
 
@@ -184,9 +185,8 @@ export const ImageSlider = ({
               {images.map((_, index) => (
                 <button
                   key={index}
-                  className={`${styles.dot} ${
-                    index === currentIndex ? styles.dotActive : ''
-                  }`}
+                  className={`${styles.dot} ${index === currentIndex ? styles.dotActive : ''
+                    }`}
                   onClick={() => goToSlide(index)}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -200,16 +200,16 @@ export const ImageSlider = ({
               {images.map((image, index) => (
                 <button
                   key={index}
-                  className={`${styles.thumbnail} ${
-                    index === currentIndex ? styles.thumbnailActive : ''
-                  }`}
+                  className={`${styles.thumbnail} ${index === currentIndex ? styles.thumbnailActive : ''
+                    }`}
                   onClick={() => goToSlide(index)}
                   aria-label={`Go to slide ${index + 1}`}
                 >
-                  <img
+                  <ResponsiveImage
                     src={image.src}
                     alt={image.title}
                     className={styles.thumbnailImage}
+                    sizes={[25]}
                   />
                   {index === currentIndex && (
                     <div className={styles.thumbnailOverlay} />

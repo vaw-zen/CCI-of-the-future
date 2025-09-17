@@ -183,6 +183,8 @@
 .reel-share:hover {
   color: var(--ac-primary);
 }
+/* Social icons: heart, share (24px => 1.25vw on desktop) */
+.reel-likes .icon, .reel-share { width: 1.25vw; height: 1.25vw; }
 
 .loadMoreWrap { display: flex; margin-top: 2vw; }
 .loadMoreBtn {
@@ -229,6 +231,8 @@
   .loadMoreBtn { font-size: 2.08vw; }
   .loadMoreBtn:hover { transform: translateY(-0.13vw); }
   .reel-image { min-height: 79.96vw; }
+  /* Social icons: 24px => 3.13vw on tablet */
+  .reel-likes .icon, .reel-share { width: 3.13vw; height: 3.13vw; }
 }
 
 @media (max-width: 480px) {
@@ -265,6 +269,8 @@
 }
 
 .reel-image { min-height: 155.98vw; }
+  /* Social icons: 24px => 5.83vw on mobile */
+  .reel-likes .icon, .reel-share { width: 5.83vw; height: 5.83vw; }
 }
 
 /* Disable hover-only effects on non-hover (touch) devices */

@@ -21,68 +21,72 @@ const Initializer = dynamic(() => import("@/utils/initializer/initalizer"));
 
 export default function Home() {
   return <>
-   <Script id="service-jsonld" type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Service",
-          serviceType: "Professional Cleaning & Upholstery Services",
-          provider: {
-            "@type": "Organization",
-            name: "CCI - Chaaban's Cleaning Intelligence",
-            url: "https://cciservices.online",
-            logo: "https://cciservices.online/logo.png",
-            contactPoint: {
-              "@type": "ContactPoint",
-              telephone: "+216-98-557-766",
-              contactType: "customer service",
-              areaServed: "TN",
-              availableLanguage: ["French", "Arabic", "English"],
+  <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Service",
+      serviceType: "Professional Cleaning & Upholstery Services",
+      provider: {
+        "@type": "Organization",
+        name: "CCI - Chaaban's Cleaning Intelligence",
+        url: "https://cciservices.online",
+        logo: "https://cciservices.online/logo.png",
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+216-98-557-766",
+          contactType: "customer service",
+          areaServed: "TN",
+          availableLanguage: ["French", "Arabic", "English"],
+        },
+      },
+      areaServed: {
+        "@type": "Place",
+        name: "Tunis, Tunisia",
+      },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Cleaning & Upholstery Services",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Marble Polishing",
+              description: "Professional polishing and restoration of marble surfaces.",
             },
           },
-          areaServed: {
-            "@type": "Place",
-            name: "Tunis, Tunisia",
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Carpet Cleaning",
+              description: "Deep cleaning and stain removal for carpets.",
+            },
           },
-          hasOfferCatalog: {
-            "@type": "OfferCatalog",
-            name: "Cleaning & Upholstery Services",
-            itemListElement: [
-              {
-                "@type": "Offer",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Marble Polishing",
-                  description: "Professional polishing and restoration of marble surfaces.",
-                },
-              },
-              {
-                "@type": "Offer",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Carpet Cleaning",
-                  description: "Deep cleaning and stain removal for carpets.",
-                },
-              },
-              {
-                "@type": "Offer",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Upholstery Cleaning",
-                  description: "Sofa, chair, and fabric upholstery cleaning.",
-                },
-              },
-              {
-                "@type": "Offer",
-                itemOffered: {
-                  "@type": "Service",
-                  name: "Post-Construction Cleaning",
-                  description: "Full cleaning service after construction or renovation.",
-                },
-              },
-            ],
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Upholstery Cleaning",
+              description: "Sofa, chair, and fabric upholstery cleaning.",
+            },
           },
-        })}
-      </Script>
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Post-Construction Cleaning",
+              description: "Full cleaning service after construction or renovation.",
+            },
+          },
+        ],
+      },
+    }),
+  }}
+/>
+
     <Head>
       
       <link

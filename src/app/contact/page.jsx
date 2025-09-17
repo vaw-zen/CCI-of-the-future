@@ -40,9 +40,9 @@ export default function ContactPage() {
         }
       ],
       "sameAs": [
-        "https://www.facebook.com/cci",
-        "https://www.instagram.com/cci",
-        "https://www.linkedin.com/company/cci"
+         "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
+      "https://www.instagram.com/cci.services/",
+      "https://www.linkedin.com/company/chaabanes-cleaning-int/"
       ]
     }
   };

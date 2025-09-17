@@ -23,9 +23,8 @@ const roboto = Roboto_Condensed({
 });
 
 export const metadata = {
-  title: "CCI — Restauration & Nettoyage professionnel",
-    "description": "CCI Services, leader du nettoyage professionnel en Tunisie, propose des prestations de haute qualité pour vos tapis, moquettes, salons, canapés et tapisserie, ainsi que pour les bateaux et yachts. Nous offrons également des services post-chantier complets : entretien et polissage de sols (marbre, granite, terrazzo, béton ciré), nettoyage de vitres, dépoussiérage et restauration. Fiabilité, efficacité et savoir-faire sont au cœur de notre engagement pour des résultats impeccables.",
-   alternates: {
+  title: "CCI Tunisie — Leader du Nettoyage Professionnel & Tissus Ignifuges",
+description: "Chez CCI Services, nous transformons l'entretien professionnel en un art ! Leader en Tunisie pour le nettoyage de moquettes, salons et tous types de tapisseries et ameublement, ainsi que pour l'entretien du marbre (polissage, lustrage, ponçage, protection, cristallisation). Nous offrons également des services de tapisserie sur mesure et un nettoyage post-chantier complet. Avec CCI, bénéficiez d'un service fiable, de qualité et personnalisé, qui redonne vie à vos espaces.",   alternates: {
     canonical: "https://cciservices.online/",
   },
 };

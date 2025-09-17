@@ -6,7 +6,8 @@
 
 .reels-section {
   padding: 3.33vw 1.25vw;
-  margin: 0 auto
+  margin: 0 auto;
+  background: var(--bg-elevated);
 }
 
 .reels-container {
@@ -184,9 +185,9 @@
 .loadMoreWrap { display: flex; margin-top: 2vw; }
 .loadMoreBtn {
   border-radius: 0.42vw;
-  color: var(--t-primary);
+  color: var(--t-secondary);
   cursor: pointer;
-  font-size: 0.83vw;
+  font-size: 1vw;
 }
 .loadMoreBtn:hover { transform: translateY(-0.05vw); color: var(--ac-primary); }
 .loadMoreBtn:disabled { opacity: .6; cursor: default; transform: none; }

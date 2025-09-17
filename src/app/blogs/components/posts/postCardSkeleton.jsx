@@ -1,8 +1,8 @@
 import styles from './postCardSkeleton.module.css';
 
-const PostCardSkeleton = () => {
+const PostCardSkeleton = ({ className }) => {
   return (
-    <div className={styles['skeleton-card']}>
+    <div className={`${styles['skeleton-card']} ${className}`}>
       <div className={styles['skeleton-image-container']}>
         <div className={styles['skeleton-image']}></div>
         <div className={styles['skeleton-badge']}></div>

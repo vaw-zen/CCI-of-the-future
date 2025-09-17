@@ -1,4 +1,4 @@
-.posts-section { width: 100%; padding: 3.33vw 1.25vw; background: linear-gradient(135deg, rgba(203, 251, 66, .02), var(--bg-base));}
+.posts-section { width: 100%; padding: 3.33vw 1.25vw; background: var(--bg-base);}
 
 .posts-container { margin: 0 auto; padding: 0 var(--padding-base);}
 

@@ -8,6 +8,7 @@
   padding: 3.33vw 1.25vw;
   margin: 0 auto;
   background: var(--bg-elevated);
+  width: 100%;
 }
 
 .reels-container {

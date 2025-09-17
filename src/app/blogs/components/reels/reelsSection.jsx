@@ -11,34 +11,66 @@ const ReelsSection = () => {
   const videoRefs = useRef({});
   const [playingIds, setPlayingIds] = useState(() => new Set());
   const lastToggleAtRef = useRef(0);
+  const [reelsPaging, setReelsPaging] = useState(null);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
     async function loadReels() {
       try {
-        const res = await fetch('/api/social/facebook');
+        const res = await fetch('/api/social/facebook?reels_limit=4');
         const data = await res.json();
         setReels(data.reels || []);
+        setReelsPaging(data.reels_paging || null);
       } catch (error) {
         console.error("Error loading reels:", error);
         setReels([]);
+        setReelsPaging(null);
       } finally {
-        setLoading(false);
+        setTimeout(() => { 
+          setLoading(false);
+         }, 1000)
       }
     }
     loadReels();
   }, []);
 
+  const loadMore = async () => {
+    if (loadingMore) return;
+    const after = reelsPaging?.cursors?.after || null;
+    if (!after) return;
+    setLoadingMore(true);
+    try {
+      const res = await fetch(`/api/social/facebook?reels_limit=4&reels_after=${encodeURIComponent(after)}`);
+      const data = await res.json();
+      setReels(prev => ([...(prev || []), ...((data.reels) || [])]));
+      setReelsPaging(data.reels_paging || null);
+    } catch (e) {
+      // ignore
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
   const handlePlay = async (id) => {
-    // Pause all other videos
-    Object.values(videoRefs.current).forEach(video => {
-      if (video && !video.paused) video.pause();
+    // Target video element first
+    const targetVideo = videoRefs.current[id];
+
+    // Pause and unload all other videos to stop background downloads
+    Object.values(videoRefs.current).forEach(v => {
+      if (!v || v === targetVideo) return;
+      try { v.pause(); } catch (_) {}
+      try { v.removeAttribute('src'); v.load(); } catch (_) {}
     });
 
     // Play only the clicked video
-    const video = videoRefs.current[id];
-    if (video) {
+    if (targetVideo) {
+      // Lazy-attach src on first play to avoid any pre-download
+      if (!targetVideo.getAttribute('src')) {
+        const dataSrc = targetVideo.getAttribute('data-src');
+        if (dataSrc) targetVideo.setAttribute('src', dataSrc);
+      }
       try {
-        await video.play();
+        await targetVideo.play();
       } catch (err) {
         // Ignore play errors (e.g., autoplay restrictions)
       }
@@ -84,8 +116,8 @@ const ReelsSection = () => {
 
         <div className={styles['reels-grid']}>
           {loading ? (
-            Array.from({ length: 6 }).map((_, index) => (
-              <PostCardSkeleton key={`skeleton-${index}`} />
+            Array.from({ length: 4 }).map((_, index) => (
+              <PostCardSkeleton className={styles['reel-card-skeleton']} key={`skeleton-${index}`} />
             ))
           ) : reels && reels.map((reel) => (
             <div key={reel.id} className={styles['reel-card']}>
@@ -93,9 +125,10 @@ const ReelsSection = () => {
                 <video
                   ref={(el) => (videoRefs.current[reel.id] = el)}
                   className={styles['reel-image']}
-                  src={reel.video_url}
+                  data-src={reel.video_url}
                   poster={reel.thumbnail}
                   controls={activeReelId === reel.id} // controls only for active
+                  preload="none"
                   playsInline
                   muted
                   onPointerDown={(e) => handleTogglePlay(reel.id, e, 'video')}
@@ -161,6 +194,13 @@ const ReelsSection = () => {
             </div>
           ))}
         </div>
+        {reelsPaging?.cursors?.after && (
+          <div className={styles.loadMoreWrap}>
+            <button className={styles.loadMoreBtn} onClick={loadMore} disabled={loadingMore}>
+              {loadingMore ? 'Loading…' : 'Load more'}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

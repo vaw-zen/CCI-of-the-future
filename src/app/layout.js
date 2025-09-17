@@ -24,7 +24,7 @@ const roboto = Roboto_Condensed({
 
 export const metadata = {
   title: "CCI — Restauration & Nettoyage professionnel",
-  description: "CCI offre des services professionnels de restauration de marbre, nettoyage de moquettes, tapisserie et nettoyages post-chantier en Tunisie. Devis gratuit.",
+  description: "CCI offre des services professionnels de restauration de marbre, nettoyage de tapis et moquettes, nettoyage salon, nettoyage Car Ferries et yaghts  et nettoyages post-chantier en Tunisie. CCI est synonyme de qualité et de fiabilité dans le domaine du nettoyage professionnel.",
    alternates: {
     canonical: "https://cciservices.online/",
   },

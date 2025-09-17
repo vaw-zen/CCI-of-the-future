@@ -10,7 +10,7 @@ import Refrences from '../home/sections/7-refrences/refrences';
 import GreenBand from '@/utils/components/GreenBand/GreenBand';
 
 export const metadata = {
-  title: 'À propos — CCI',
+  title: 'À propos de nous — CCI',
   description: 'CCI, experts en restauration de marbre, nettoyage de moquettes et tapisserie en Tunisie. Notre équipe s’engage pour qualité et durabilité.',
 };
 

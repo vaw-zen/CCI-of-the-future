@@ -29,9 +29,9 @@ const tfcTabData = [
 ];
 
 export const metadata = {
-  title: "Nettoyage après chantier (TFC) — CCI",
+  title: "Nettoyage technique après travaux (TFC) — CCI",
   description:
-    "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces et préparation avant livraison. Interventions pro et rapides.",
+    "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur  et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie.",
 };
 
 export default function Page() {

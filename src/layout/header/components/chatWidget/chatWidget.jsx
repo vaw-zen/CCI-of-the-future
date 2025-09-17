@@ -70,8 +70,8 @@ const ChatWidget = React.memo(({ isOpen, onClose }) => {
                         <div className={styles.avatar}>
                             <img 
                                 src="/logo.png" 
-                                alt="Fares Chaabane" 
-                                title="Fares Chaabane"
+                                alt="CCI virtual assistant" 
+                                title="Cleaning virtual assistant"
                                 className={styles.avatarImage}
                             />
                         </div>
@@ -84,6 +84,7 @@ const ChatWidget = React.memo(({ isOpen, onClose }) => {
                         <button
                             className={styles.headerButton}
                             onClick={handleExpandToggle}
+                            aria-label={isExpanded ? 'Reduce chat window' : 'Expand chat window'}
                         >
                             {isExpanded ? '⊖' : '⊞'}
                         </button>

@@ -29,7 +29,7 @@ const tapisserieTabData = [
 ]
 
 export const metadata = {
-  title: "Tapisserie sur mesure & Rénovation — CCI",
+  title: "Tapisserie sur mesure & Rénovation d'ameublement— CCI",
   description:
     "Retapissage, remplacement de mousse et rembourrage sur mesure pour canapés, banquettes et nautisme. Tissus ignifuges et finitions soignées.",
 };

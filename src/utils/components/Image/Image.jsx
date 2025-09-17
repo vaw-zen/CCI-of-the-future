@@ -58,6 +58,9 @@ const ResponsiveImage = ({
         effectiveSize = sizes;
     }
 
+    // Treat empty string src as invalid to avoid browser fetching current page
+    const hasValidSrc = !(typeof src === 'string' && src.trim() === '');
+
     return (
         <div
             className={className}
@@ -67,24 +70,26 @@ const ResponsiveImage = ({
                 ...style
             }}
         >
-            <Image
-                src={src}
-                alt={alt}
-                title={title}
-                fill
-                sizes={typeof effectiveSize === 'number' ? effectiveSize + 'vw' : effectiveSize}
-                style={{
-                    flex: 1,
-                    objectFit: contain ? 'contain' : 'cover',
-                    objectPosition: position || 'center',
-                    opacity: isLoaded ? 1 : 0,
-                    transition: 'none',
-                    borderRadius: 'inherit'
-                }}
-                onLoad={handleLoadingComplete}
-                quality={quality}
-                priority={priority}
-            />
+            {hasValidSrc && (
+                <Image
+                    src={src}
+                    alt={alt}
+                    title={title}
+                    fill
+                    sizes={typeof effectiveSize === 'number' ? effectiveSize + 'vw' : effectiveSize}
+                    style={{
+                        flex: 1,
+                        objectFit: contain ? 'contain' : 'cover',
+                        objectPosition: position || 'center',
+                        opacity: isLoaded ? 1 : 0,
+                        transition: 'none',
+                        borderRadius: 'inherit'
+                    }}
+                    onLoad={handleLoadingComplete}
+                    quality={quality}
+                    priority={priority}
+                />
+            )}
 
             {skeleton && (
                 <div

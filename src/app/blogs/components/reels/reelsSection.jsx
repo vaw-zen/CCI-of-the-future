@@ -1,114 +1,25 @@
 "use client";
 import styles from './reelsSection.module.css';
-import { useEffect, useState, useRef, useMemo } from 'react';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
 import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText } from '@/utils/components/icons';
-import { dimensionsStore } from '@/utils/store/store';
+import { useReelsSection } from './reelsSection.func'
 
 const ReelsSection = () => {
-  const [reels, setReels] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeReelId, setActiveReelId] = useState(null);
-  const videoRefs = useRef({});
-  const [playingIds, setPlayingIds] = useState(() => new Set());
-  const lastToggleAtRef = useRef(0);
-  const [reelsPaging, setReelsPaging] = useState(null);
-  const [loadingMore, setLoadingMore] = useState(false);
-
-  const { isMobile, isTablet } = dimensionsStore()
-  
- const skeletonCount = useMemo(() => 4 - reels.length % (isMobile() ? 1 : isTablet() ? 2 : 4), [reels, isMobile, isTablet])
-
-  useEffect(() => {
-    async function loadReels() {
-      try {
-        const res = await fetch('/api/social/facebook?reels_limit=4');
-        const data = await res.json();
-        setReels(data.reels || []);
-        setReelsPaging(data.reels_paging || null);
-      } catch (error) {
-        console.error("Error loading reels:", error);
-        setReels([]);
-        setReelsPaging(null);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000)
-      }
-    }
-    loadReels();
-  }, []);
-
-  const loadMore = async () => {
-    if (loadingMore) return;
-    if (!reelsPaging?.next) return;
-    const after = reelsPaging?.cursors?.after || null;
-    if (!after) return;
-    setLoadingMore(true);
-    try {
-      const res = await fetch(`/api/social/facebook?reels_limit=4&reels_after=${encodeURIComponent(after)}`);
-      const data = await res.json();
-      setReels(prev => ([...(prev || []), ...((data.reels) || [])]));
-      setReelsPaging(data.reels_paging || null);
-    } catch (e) {
-      // ignore
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
-  const handlePlay = async (id) => {
-    // Target video element first
-    const targetVideo = videoRefs.current[id];
-
-    // Pause and unload all other videos to stop background downloads
-    Object.values(videoRefs.current).forEach(v => {
-      if (!v || v === targetVideo) return;
-      try { v.pause(); } catch (_) { }
-      try { v.removeAttribute('src'); v.load(); } catch (_) { }
-    });
-
-    // Play only the clicked video
-    if (targetVideo) {
-      // Lazy-attach src on first play to avoid any pre-download
-      if (!targetVideo.getAttribute('src')) {
-        const dataSrc = targetVideo.getAttribute('data-src');
-        if (dataSrc) targetVideo.setAttribute('src', dataSrc);
-      }
-      try {
-        await targetVideo.play();
-      } catch (err) {
-        // Ignore play errors (e.g., autoplay restrictions)
-      }
-      setActiveReelId(id);
-    }
-  };
-
-  const handleTogglePlay = async (id, e, source) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    // Prevent immediate re-toggle when overlay appears right after pausing via video click
-    if (source === 'overlay') {
-      const now = Date.now();
-      if (now - lastToggleAtRef.current < 400) return;
-    }
-
-    lastToggleAtRef.current = Date.now();
-    const video = videoRefs.current[id];
-    if (!video) return;
-    if (video.paused) {
-      await handlePlay(id);
-    } else {
-      try {
-        video.pause();
-      } catch (err) {
-        // Ignore pause errors
-      }
-    }
-  };
+  const {
+    reels,
+    loading,
+    activeReelId,
+    videoRefs,
+    playingIds,
+    reelsPaging,
+    loadingMore,
+    initialSkeletonCount,
+    loadingMoreSkeletonCount,
+    loadMore,
+    handlePlay,
+    handleTogglePlay,
+    videoEventHandlers,
+  } = useReelsSection()
 
   return (
     <section className={styles['reels-section']}>
@@ -122,7 +33,7 @@ const ReelsSection = () => {
 
         <div className={styles['reels-grid']}>
           {loading ? (
-            Array.from({ length: skeletonCount }).map((_, index) => (
+            Array.from({ length: initialSkeletonCount }).map((_, index) => (
               <PostCardSkeleton className={styles['reel-card-skeleton']} key={`skeleton-${index}`} />
             ))
           ) : (
@@ -140,27 +51,9 @@ const ReelsSection = () => {
                       playsInline
                       muted
                       onPointerDown={(e) => handleTogglePlay(reel.id, e, 'video')}
-                      onPlay={() => {
-                        setPlayingIds(prev => {
-                          const next = new Set(prev);
-                          next.add(reel.id);
-                          return next;
-                        });
-                      }}
-                      onPause={() => {
-                        setPlayingIds(prev => {
-                          const next = new Set(prev);
-                          next.delete(reel.id);
-                          return next;
-                        });
-                      }}
-                      onEnded={() => {
-                        setPlayingIds(prev => {
-                          const next = new Set(prev);
-                          next.delete(reel.id);
-                          return next;
-                        });
-                      }}
+                      onPlay={() => videoEventHandlers.onPlay(reel.id)}
+                      onPause={() => videoEventHandlers.onPause(reel.id)}
+                      onEnded={() => videoEventHandlers.onEnded(reel.id)}
                     />
 
                     {/* Play Overlay (visible when not playing) */}
@@ -201,7 +94,7 @@ const ReelsSection = () => {
                   </div>
                 </div>
               ))}
-              {loadingMore && Array.from({ length: skeletonCount }).map((_, index) => (
+              {loadingMore && Array.from({ length: loadingMoreSkeletonCount }).map((_, index) => (
                 <PostCardSkeleton className={styles['reel-card-skeleton']} key={`more-skeleton-${index}`} />
               ))}
             </>

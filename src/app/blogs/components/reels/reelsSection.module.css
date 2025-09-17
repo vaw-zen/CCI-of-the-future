@@ -66,6 +66,7 @@
 .reel-image {
   width: 100%;
   height: auto;
+  min-height: 27.08vw;
   object-fit: contain;
   background-color: var(--bg-elevated);
   transition: transform 0.3s ease;
@@ -227,6 +228,7 @@
   .loadMoreBtn { border-radius: 1.04vw; }
   .loadMoreBtn { font-size: 2.08vw; }
   .loadMoreBtn:hover { transform: translateY(-0.13vw); }
+  .reel-image { min-height: 79.96vw; }
 }
 
 @media (max-width: 480px) {
@@ -261,6 +263,8 @@
   .reel-card-skeleton {
   width: 87.86vw !important;
 }
+
+.reel-image { min-height: 155.98vw; }
 }
 
 /* Disable hover-only effects on non-hover (touch) devices */

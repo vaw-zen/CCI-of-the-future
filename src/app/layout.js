@@ -127,11 +127,18 @@ export default function RootLayout({ children }) {
         <meta name="twitter:description" content={metadata.description || ''} />
         <meta name="twitter:image" content={SITE_LOGO} />
 
-        {/* Icons & manifest */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="rgba(203, 251, 66, 1)" />
+{/* Icons & Manifest for PWA */}
+<link rel="icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+{/* Theme & Status Bar */}
+<meta name="theme-color" content="rgba(203, 251, 66, 1)" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="CCI Services" />
+
 
         {/* JSON-LD site-wide */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />

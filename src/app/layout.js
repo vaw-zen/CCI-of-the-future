@@ -24,7 +24,7 @@ const roboto = Roboto_Condensed({
 
 export const metadata = {
   title: "CCI — Restauration & Nettoyage professionnel",
-  description: "CCI offre des services professionnels de restauration de marbre, nettoyage de tapis et moquettes, nettoyage salon, nettoyage Car Ferries et yaghts  et nettoyages post-chantier en Tunisie. CCI est synonyme de qualité et de fiabilité dans le domaine du nettoyage professionnel.",
+    "description": "CCI Services, leader du nettoyage professionnel en Tunisie, propose des prestations de haute qualité pour vos tapis, moquettes, salons, canapés et tapisserie, ainsi que pour les bateaux et yachts. Nous offrons également des services post-chantier complets : entretien et polissage de sols (marbre, granite, terrazzo, béton ciré), nettoyage de vitres, dépoussiérage et restauration. Fiabilité, efficacité et savoir-faire sont au cœur de notre engagement pour des résultats impeccables.",
    alternates: {
     canonical: "https://cciservices.online/",
   },

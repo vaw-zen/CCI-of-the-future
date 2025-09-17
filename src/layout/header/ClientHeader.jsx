@@ -12,7 +12,7 @@ export default function ClientHeader({ roboto }) {
 
   if (!isMounted) {
     // Return a placeholder with the same height to prevent layout shift
-    return <div style={{ height: '5vw' }} />;
+    return 
   }
 
   return <Header roboto={roboto} />;

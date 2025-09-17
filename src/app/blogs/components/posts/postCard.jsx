@@ -1,6 +1,13 @@
 import styles from './postCard.module.css';
 import { MdiHeartOutline,MdiShareOutline,MdiCommentOutline,LineMdCalendar } from '@/utils/components/icons';
+import { formatDate, isWithin } from '@/libs/dateHelper/dateHelper';
 const PostCard = ({ title, content, image, date, likes, comments, permalink_url, type }) => {
+  const displayedDate = date
+    ? (isWithin(date, { value: 1, unit: 'weeks' })
+        ? formatDate(date, false, true)
+        : formatDate(date, true, true, { year: true }))
+    : '';
+
   return (
     <a
       href={permalink_url}
@@ -25,7 +32,7 @@ const PostCard = ({ title, content, image, date, likes, comments, permalink_url,
         <div className={styles['post-card-content']}>
           <div className={styles['post-card-date']}>
             <LineMdCalendar className={styles.icon} />
-            {date}
+            {displayedDate}
           </div>
 
           <h3 className={styles['post-card-title']}>

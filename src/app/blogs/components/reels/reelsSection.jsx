@@ -1,45 +1,25 @@
 "use client";
 import styles from './reelsSection.module.css';
-import { useEffect, useState, useRef } from 'react';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
-import { parallax } from '@/libs/vz/mouseInteraction/parallax'
 import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText } from '@/utils/components/icons';
+import { useReelsSection } from './reelsSection.func'
 
 const ReelsSection = () => {
-  const [reels, setReels] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeReelId, setActiveReelId] = useState(null);
-  const videoRefs = useRef({});
-
-  useEffect(() => {
-    async function loadReels() {
-      try {
-        const res = await fetch('/api/social/facebook');
-        const data = await res.json();
-        setReels(data.reels || []);
-      } catch (error) {
-        console.error("Error loading reels:", error);
-        setReels([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadReels();
-  }, []);
-
-  const handlePlay = (id) => {
-    // Pause all other videos
-    Object.values(videoRefs.current).forEach(video => {
-      if (video && !video.paused) video.pause();
-    });
-
-    // Play only the clicked video
-    const video = videoRefs.current[id];
-    if (video) {
-      video.play();
-      setActiveReelId(id);
-    }
-  };
+  const {
+    reels,
+    loading,
+    activeReelId,
+    videoRefs,
+    playingIds,
+    reelsPaging,
+    loadingMore,
+    initialSkeletonCount,
+    loadingMoreSkeletonCount,
+    loadMore,
+    handlePlay,
+    handleTogglePlay,
+    videoEventHandlers,
+  } = useReelsSection()
 
   return (
     <section className={styles['reels-section']}>
@@ -53,62 +33,80 @@ const ReelsSection = () => {
 
         <div className={styles['reels-grid']}>
           {loading ? (
-            Array.from({ length: 6 }).map((_, index) => (
-              <PostCardSkeleton key={`skeleton-${index}`} />
+            Array.from({ length: initialSkeletonCount }).map((_, index) => (
+              <PostCardSkeleton className={styles['reel-card-skeleton']} key={`skeleton-${index}`} />
             ))
-          ) : reels && reels.map((reel) => (
-            <div key={reel.id} className={styles['reel-card']}>
-              <div className={styles['reel-image-container']}>
-                <video
-                  ref={(el) => (videoRefs.current[reel.id] = el)}
-                  className={styles['reel-image']}
-                  src={reel.video_url}
-                  poster={reel.thumbnail}
-                  controls={activeReelId === reel.id} // controls only for active
-                  playsInline
-                  muted
-                />
+          ) : (
+            <>
+              {reels && reels.map((reel) => (
+                <div key={reel.id} className={styles['reel-card']}>
+                  <div className={styles['reel-image-container']}>
+                    <video
+                      ref={(el) => (videoRefs.current[reel.id] = el)}
+                      className={styles['reel-image']}
+                      data-src={reel.video_url}
+                      poster={reel.thumbnail}
+                      controls={activeReelId === reel.id} // controls only for active
+                      preload="none"
+                      playsInline
+                      muted
+                      onPointerDown={(e) => handleTogglePlay(reel.id, e, 'video')}
+                      onPlay={() => videoEventHandlers.onPlay(reel.id)}
+                      onPause={() => videoEventHandlers.onPause(reel.id)}
+                      onEnded={() => videoEventHandlers.onEnded(reel.id)}
+                    />
 
-                {/* Play Overlay */}
-                {activeReelId !== reel.id && (
-                  
-                    <div className={styles.container} >
-                <div className={styles.filter} />
-                <button onMouseMove={parallax} onMouseLeave={parallax} onClick={() => handlePlay(reel.id)} className={styles.playButton} aria-label="voir-video">
-                    <div className={styles.textContainer}>
-                        <CircularText className={styles.circularText} />
+                    {/* Play Overlay (visible when not playing) */}
+                    {!playingIds.has(reel.id) && (
+                      <div className={`${styles.container} ${styles.showOverlay}`} onPointerDown={(e) => handleTogglePlay(reel.id, e, 'overlay')}>
+                        <div className={styles.filter} />
+                        <button className={styles.playButton} aria-label="voir-video">
+                          <div className={styles.textContainer}>
+                            <CircularText className={styles.circularText} />
+                          </div>
+                          <div className={styles.innerButton}>
+                            <BiPlayFill className={styles.playIcon} />
+                          </div>
+                        </button>
+                      </div>
+
+
+                    )}
+
+                    {/* Views Badge */}
+                    <div className={styles['reel-views']}>
+                      {reel.views} views
                     </div>
-                    <div className={styles.innerButton}>
-                        <BiPlayFill className={styles.playIcon} />
+
+                    {/* Text Overlay */}
+                    <div className={`${styles['reel-overlay']} ${playingIds.has(reel.id) ? styles['overlayHidden'] : ''}`}>
+                      <h3 className={styles['reel-title']}>
+                        {reel.message}
+                      </h3>
+                      <div className={styles['reel-footer']}>
+                        <div className={styles['reel-likes']}>
+                          <MdiHeartOutline className={styles.icon} />
+                          {reel.likes}
+                        </div>
+                        <MdiShareOutline className={`${styles['reel-share']} ${styles.icon}`} />
+                      </div>
                     </div>
-                </button>
-            </div>
-                   
-                
-                )}
-
-                {/* Views Badge */}
-                <div className={styles['reel-views']}>
-                  {reel.views} views
-                </div>
-              </div>
-
-              <div className={styles['reel-content']}>
-                <h3 className={styles['reel-title']}>
-                  {reel.message}
-                </h3>
-
-                <div className={styles['reel-footer']}>
-                  <div className={styles['reel-likes']}>
-                    <MdiHeartOutline className={styles.icon} />
-                    {reel.likes}
                   </div>
-                  <MdiShareOutline className={`${styles['reel-share']} ${styles.icon}`} />
                 </div>
-              </div>
-            </div>
-          ))}
+              ))}
+              {loadingMore && Array.from({ length: loadingMoreSkeletonCount }).map((_, index) => (
+                <PostCardSkeleton className={styles['reel-card-skeleton']} key={`more-skeleton-${index}`} />
+              ))}
+            </>
+          )}
         </div>
+        {reelsPaging?.next && (
+          <div className={styles.loadMoreWrap}>
+            <button className={styles.loadMoreBtn} onClick={loadMore} disabled={loadingMore}>
+              {loadingMore ? 'Loading…' : 'Load more'}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

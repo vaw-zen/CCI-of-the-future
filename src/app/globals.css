@@ -6,7 +6,7 @@
   --t-highlight: #010001;
 
   /* Background */
-  --bg-base: #141416;
+  --bg-base: rgb(20, 20, 22);
   --bg-elevated: rgb(26, 26, 28);
 
   /* Accent */

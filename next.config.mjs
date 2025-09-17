@@ -3,6 +3,13 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],
   },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '**.fbcdn.net' },
+      { protocol: 'https', hostname: 'lookaside.facebook.com' },
+      { protocol: 'https', hostname: '**.cdninstagram.com' },
+    ],
+  },
   webpack: (config, { isServer }) => {
     // Optimize bundle splitting for chat widget
     if (!isServer) {

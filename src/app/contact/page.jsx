@@ -5,7 +5,7 @@ import Welcome from "./2-welcoming/welcome";
 import Form from "./3-form/form";
 
 export const metadata = {
-  title: 'Contact & Devis — CCI',
+  title: 'Contactez-nous — CCI',
   description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.',
 };
 

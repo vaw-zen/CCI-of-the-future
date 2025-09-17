@@ -30,7 +30,7 @@ const marbreTabData = [
 ];
 
 export const metadata = {
-  title: "Restauration & Polissage du Marbre — CCI",
+  title: "Restauration, Ponçage, Lustrage, Polissage, Protection & cristallisation du Marbre — CCI",
   description:
     "Restauration professionnelle du marbre : ponçage, polissage, cristallisation et protections pour sols et plans de travail. Devis gratuit.",
 };

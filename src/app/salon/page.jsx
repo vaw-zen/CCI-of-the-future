@@ -29,7 +29,7 @@ const salonTabData = [
 ];
 
 export const metadata = {
-  title: "Nettoyage salon & Ameublement — CCI",
+  title: "Nettoyage salon & Ameublement à domicile — CCI",
   description:
     "Nettoyage et rénovation de canapés, fauteuils et textiles d’ameublement : détachage, shampooing et désinfection pour un intérieur sain et accueillant.",
 };

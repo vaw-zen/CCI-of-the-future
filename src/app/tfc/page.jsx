@@ -50,15 +50,29 @@ export default function Page() {
     telephone: "+216-98-557-766",
     address: { "@type": "PostalAddress", streetAddress: "06, rue galant de nuit, l'aouina,tunis", addressLocality: "Tunisie", addressCountry: "TN" },
   };
+const serviceJSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://cciservices.online/nettoyage-apres-chantier", // identifiant unique pour cette page
+  "name": "Nettoyage après chantier",
+  "description":
+    "Prestations de fin de chantier : nettoyage technique, enlèvement de gravats et préparation des locaux pour réception.",
+  "url": "https://cciservices.online/nettoyage-apres-chantier", // URL de la page spécifique
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "CCI",
+    "url": "https://cciservices.online/", // URL principale du business
+    "telephone": "+216-98-557-766",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+      "addressLocality": "Tunis",
+      "addressCountry": "TN"
+    },
+    "logo": "https://cciservices.online/logo.png"
+  }
+};
 
-  const serviceJSONLD = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: "Nettoyage après chantier",
-    description:
-      "Prestations de fin de chantier : nettoyage technique, enlèvement gravats et préparation des locaux pour réception.",
-    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
-  };
   return (
     <>
       <style>{`

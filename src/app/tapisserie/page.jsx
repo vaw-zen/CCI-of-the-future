@@ -56,13 +56,28 @@ export default function Page() {
   };
 
   const serviceJSONLD = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: "Services de tapisserie",
-    description:
-      "Retapissage, remplacement de mousse, rembourrage et fourniture de tissus ignifuges pour bateaux et yachts. Solutions sur mesure pour mobiliers et sièges.",
-    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
-  };
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://cciservices.online/tapisserie", // identifiant unique pour cette page
+  "name": "Services de tapisserie",
+  "description":
+    "Retapissage, remplacement de mousse, rembourrage et fourniture de tissus ignifuges pour bateaux et yachts. Solutions sur mesure pour mobiliers et sièges.",
+  "url": "https://cciservices.online/tapisserie", // URL de la page spécifique
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "CCI",
+    "url": "https://cciservices.online/", // URL principale du business
+    "telephone": "+216-98-557-766",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+      "addressLocality": "Tunis",
+      "addressCountry": "TN"
+    },
+    "logo": "https://cciservices.online/logo.png"
+  }
+};
+
   return (
     <>
       <style>{`

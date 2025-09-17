@@ -75,6 +75,7 @@ export default function RootLayout({ children }) {
   <HydrationSuppressor />
   {/* Global Open Graph / Twitter / canonical / icons */}
   <link rel="canonical" href={SITE_URL} />
+   <link rel="canonical" href={`https://cciservices.online${path}`} />
   <meta name="description" content={metadata.description || 'Services de nettoyage professionnels CCI'} />
   <meta name="keywords" content="nettoyage, restauration marbre, moquette, tapisserie, nettoyage post-chantier, Tunisie, CCI" />
   <meta name="author" content="CCI" />

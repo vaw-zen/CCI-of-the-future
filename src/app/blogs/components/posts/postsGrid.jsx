@@ -2,35 +2,79 @@
 import PostCard from "./postCard.jsx";
 import PostCardSkeleton from "./postCardSkeleton.jsx";
 import styles from './postsGrid.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { dimensionsStore } from '@/utils/store/store';
 
 
 
 const PostsGrid = () => {
+  const PAGE_SIZE = 6; // 3 desktop cols x 2 rows
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [postsPaging, setPostsPaging] = useState(null);
+  const sentinelRef = useRef(null);
+
+  const { isMobile, isTablet } = dimensionsStore();
+  const columnCount = useMemo(() => (isMobile() ? 1 : isTablet() ? 2 : 3), [isMobile, isTablet]);
+  const initialSkeletonCount = columnCount; // 3/2/1
+  const loadingMoreSkeletonCount = columnCount; // append 3/2/1 while fetching
 
   useEffect(() => {
-    async function loadPosts() {
+    async function loadInitial() {
       try {
-        const res = await fetch('/api/social/facebook');
+        const res = await fetch(`/api/social/facebook?posts_limit=${PAGE_SIZE}`);
         const data = await res.json();
-        // Here you can directly use normalized posts
-        console.log("Facebook posts data:", data); // Debugging line to check the fetched data
         setPosts(data.posts || []);
+        setPostsPaging(data.posts_paging || null);
       } catch (error) {
         console.error("Error loading posts:", error);
         setPosts([]);
+        setPostsPaging(null);
       } finally {
         setLoading(false);
       }
     }
-    loadPosts();
+    loadInitial();
   }, []);
 
- 
+  const hasMore = !!postsPaging?.next;
 
+  const loadMore = async () => {
+    if (loadingMore || !hasMore) return;
+    const after = postsPaging?.cursors?.after || null;
+    if (!after) return;
+    setLoadingMore(true);
+    try {
+      const res = await fetch(`/api/social/facebook?posts_limit=${PAGE_SIZE}&posts_after=${encodeURIComponent(after)}`);
+      const data = await res.json();
+      setPosts(prev => ([...(prev || []), ...((data.posts) || [])]));
+      setPostsPaging(data.posts_paging || null);
+    } catch (e) {
+      // ignore
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    if (!hasMore) return;
+    const el = sentinelRef.current;
+    const observer = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting) {
+        // Small timeout to avoid jank when quickly scrolling
+        setTimeout(() => loadMore(), 0);
+      }
+    }, {
+      root: null,
+      rootMargin: '200px 0px 400px 0px',
+      threshold: 0.01,
+    });
+    observer.observe(el);
+    return () => observer.unobserve(el);
+  }, [sentinelRef, hasMore, postsPaging, loadingMore]);
 
   return (
     <section className={styles['posts-section']}>
@@ -44,8 +88,7 @@ const PostsGrid = () => {
 
         <div className={styles['posts-grid']}>
           {loading ? (
-            // Show 4 skeleton cards while loading
-            Array.from({ length: 6 }).map((_, index) => (
+            Array.from({ length: initialSkeletonCount }).map((_, index) => (
               <PostCardSkeleton key={`skeleton-${index}`} />
             ))
           ) : (
@@ -70,8 +113,12 @@ const PostsGrid = () => {
               <button className={styles['empty-action']} onClick={() => window.location.reload()}>Rafraîchir</button>
             </div>
           )}
-          
+          {loadingMore && Array.from({ length: loadingMoreSkeletonCount }).map((_, index) => (
+            <PostCardSkeleton key={`more-skeleton-${index}`} />
+          ))}
         </div>
+        {/* Sentinel for infinite scroll */}
+        <div ref={sentinelRef} />
       </div>
     </section>
   );

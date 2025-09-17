@@ -86,18 +86,25 @@ export async function GET(request) {
     const reelsAfter = sp?.get('reels_after') || null;
     const reelsLimit = reelsLimitParam ? Math.max(1, Math.min(50, parseInt(reelsLimitParam, 10) || 0)) : null;
 
+    const postsLimitParam = sp?.get('posts_limit');
+    const postsAfter = sp?.get('posts_after') || null;
+    const postsLimit = postsLimitParam ? Math.max(1, Math.min(50, parseInt(postsLimitParam, 10) || 0)) : null;
+
     const now = Math.floor(Date.now() / 1000);
-    const canUseCache = !reelsLimit && !reelsAfter; // only cache for default (non-paginated) requests
+    const canUseCache = !reelsLimit && !reelsAfter && !postsLimit && !postsAfter; // only cache for default (non-paginated) requests
     if (canUseCache && cache.data && now - cache.ts < CACHE_TTL) {
       return NextResponse.json({ 
         posts: cache.data.posts, 
+        posts_paging: cache.data.posts_paging || null,
         reels: cache.data.reels, 
         reels_paging: cache.data.reels_paging || null,
         cached: true 
       });
     }
 
-    const fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    let fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    if (postsLimit) fbPostsUrl += `&limit=${postsLimit}`;
+    if (postsAfter) fbPostsUrl += `&after=${encodeURIComponent(postsAfter)}`;
     let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,source,description,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
     if (reelsLimit) fbReelsUrl += `&limit=${reelsLimit}`;
     if (reelsAfter) fbReelsUrl += `&after=${encodeURIComponent(reelsAfter)}`;
@@ -110,13 +117,14 @@ export async function GET(request) {
 
     const posts = normalizeFbPosts(facebookPosts);
     const reels = normalizeFbReels(facebookReels);
+    const posts_paging = facebookPosts?.paging || null;
     const reels_paging = facebookReels?.paging || null;
 
     if (canUseCache) {
-      cache = { ts: now, data: { posts, reels, reels_paging } };
+      cache = { ts: now, data: { posts, posts_paging, reels, reels_paging } };
     }
 
-    return NextResponse.json({ posts, reels, reels_paging, cached: false });
+    return NextResponse.json({ posts, posts_paging, reels, reels_paging, cached: false });
 
   } catch (err) {
     console.error('FB fetch error:', err);

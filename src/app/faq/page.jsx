@@ -21,7 +21,8 @@ export default function FAQ() {
             acceptedAnswer: {
                 "@type": "Answer",
                 text: q.answer
-            }
+            },
+            url:"https://cciservices.online/faq"
         }))
     };
 

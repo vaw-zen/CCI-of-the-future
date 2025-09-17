@@ -7,11 +7,16 @@ export const metadata = {
   description: 'Articles et vidéos sur la restauration du marbre, l’entretien des moquettes et les bonnes pratiques de nettoyage professionnel.',
 };
 const blogPageSchema = {
-  "@context":"https://schema.org",
-  "@type":"WebPage",
-  name: "Publications & Conseils - CCI",
-  description: "Articles et vidéos sur la restauration du marbre et l'entretien des moquettes.",
-  url: "https://cciservices.online/blogs"
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Publications & Conseils - CCI",
+  "description": "Articles et vidéos sur la restauration du marbre, l'entretien des moquettes et les bonnes pratiques de nettoyage professionnel.",
+  "url": "https://cciservices.online/blogs",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "CCI",
+    "url": "https://cciservices.online",
+    "logo": "https://cciservices.online/logo.png",}
 }
  
 export default function Page() {

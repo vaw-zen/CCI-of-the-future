@@ -45,8 +45,11 @@ export default function Page() {
   const localBusinessJSONLD = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "CCI",
-    url: "https://cciservices.online/",
+     "provider": {
+    "@type": "LocalBusiness",
+    "name": "CCI",
+    "url": "https://cciservices.online/" // keep your main business URL here
+  },
     logo: "https://cciservices.online/logo.png"
 ,
     telephone: "+216-98-557-766",
@@ -58,14 +61,29 @@ export default function Page() {
     },
   };
 
-  const serviceJSONLD = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: "Restauration du marbre",
-    description:
-      "Ponçage, polissage, cristallisation et protection des surfaces en marbre pour particuliers et professionnels.",
-    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
-  };
+const serviceJSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://cciservices.online/marbre", // identifiant unique pour cette page
+  "name": "Restauration du marbre",
+  "description":
+    "Ponçage, polissage, cristallisation et protection des surfaces en marbre pour particuliers et professionnels.",
+  "url": "https://cciservices.online/marbre", // URL de cette page spécifique
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "CCI",
+    "url": "https://cciservices.online/", // URL principale du business
+    "telephone": "+216-98-557-766",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+      "addressLocality": "Tunis",
+      "addressCountry": "TN"
+    },
+    "logo": "https://cciservices.online/logo.png"
+  }
+};
+
   return (
     <>
       <style>{`

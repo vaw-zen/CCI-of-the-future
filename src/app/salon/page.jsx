@@ -53,14 +53,29 @@ export default function Page() {
     address: { "@type": "PostalAddress", streetAddress: "06, rue galant de nuit, l'aouina,tunis", addressLocality: "Tunisie", addressCountry: "TN" },
   };
 
-  const serviceJSONLD = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: "Nettoyage salon & ameublement",
-    description:
-      "Nettoyage et entretien de canapés, rideaux et textiles d’ameublement. Détachage, désodorisation et protection des fibres.",
-    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
-  };
+ const serviceJSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://cciservices.online/salon", // identifiant unique pour cette page
+  "name": "Nettoyage salon & ameublement",
+  "description":
+    "Nettoyage et entretien de canapés, rideaux et textiles d’ameublement. Détachage, désodorisation et protection des fibres.",
+  "url": "https://cciservices.online/salon", // URL de cette page spécifique
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "CCI",
+    "url": "https://cciservices.online/", // URL principale du business
+    "telephone": "+216-98-557-766",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+      "addressLocality": "Tunis",
+      "addressCountry": "TN"
+    },
+    "logo": "https://cciservices.online/logo.png"
+  }
+};
+
   return (
     <>
       <style>{`

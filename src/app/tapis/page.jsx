@@ -62,13 +62,28 @@ export default function Page() {
   };
 
   const serviceJSONLD = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: "Nettoyage de tapis et moquettes",
-    description:
-      "Shampooing, détachage et désinfection pour tapis et moquettes, avec méthodes adaptées aux fibres et séchage rapide.",
-    provider: { "@type": "LocalBusiness", name: "CCI", url: "https://cciservices.online/" },
-  };
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://cciservices.online/tapis-moquettes", // identifiant unique pour cette page
+  "name": "Nettoyage de tapis et moquettes",
+  "description":
+    "Shampooing, détachage et désinfection pour tapis et moquettes, avec méthodes adaptées aux fibres et séchage rapide.",
+  "url": "https://cciservices.online/tapis-moquettes", // URL de cette page spécifique
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "CCI",
+    "url": "https://cciservices.online/", // URL principale du business
+    "telephone": "+216-98-557-766",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+      "addressLocality": "Tunis",
+      "addressCountry": "TN"
+    },
+    "logo": "https://cciservices.online/logo.png"
+  }
+};
+
   return (
     <>
       <style>{`

@@ -4,43 +4,61 @@ import Actions from "./1-actions/actions";
 import Welcome from "./2-welcoming/welcome";
 import Form from "./3-form/form";
 
-
 export const metadata = {
   title: 'Contact & Devis — CCI',
   description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.',
 };
 
-const contactImages = ['/home/1.webp','/home/3.webp'];
 export default function ContactPage() {
-  const socials = {
-    facebook: "	https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
-    twitter: "https://twitter.com/your-profile",
-    linkedin: "https://www.linkedin.com/company/chaabanes-cleaning-int",
-    instagram: "https://www.instagram.com/cci.services/",
+
+  const contactPageJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "CCI",
+      "url": "https://cciservices.online/contact",
+      "logo": "https://cciservices.online/logo.png",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+        "addressLocality": "Tunis",
+        "addressCountry": "TN"
+      },
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+216-98-557-766",
+          "contactType": "customer service",
+          "areaServed": "TN"
+        },
+        {
+          "@type": "ContactPoint",
+          "email": "contact@cciservices.online",
+          "contactType": "customer service",
+          "areaServed": "TN"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/cci",
+        "https://www.instagram.com/cci",
+        "https://www.linkedin.com/company/cci"
+      ]
+    }
   };
 
   return (
     <>
       <HeroHeader title="Contact Us" />
-      <script type="application/ld+json">{JSON.stringify({
-        "@context":"https://schema.org",
-        "@type":"ContactPage",
-        "mainEntity":{
-          "@type":"Organization",
-          name: "CCI",
-          url: "https://cciservices.online",
-          contactPoint: [{
-            "@type": "ContactPoint",
-            telephone: "+216-98-557-766",
-            contactType: "customer service",
-            areaServed: "TN"
-          }]
-        }
-      })}</script>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageJSONLD) }}
+      />
+
       <Actions />
-      <Welcome/>
-      <Form/>
-   
+      <Welcome />
+      <Form />
     </>
   );
 }

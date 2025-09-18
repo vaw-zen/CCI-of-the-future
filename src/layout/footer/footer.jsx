@@ -39,20 +39,22 @@ export default function Footer() {
 
                 <ul className={styles.navigation}>
                     {content.pages.map((element, index) => (
-                        <Link href={element.link} key={index} className={styles.navLink}>
-                            <div className={styles.index}>
-                                <div className={styles.line} />
-                                <span>0{index + 1}</span>
-                            </div>
-                            <div className={styles.pageName}>{element.name}</div>
-                        </Link>
+                        <li key={index}>
+                            <Link href={element.link} className={styles.navLink}>
+                                <div className={styles.index}>
+                                    <div className={styles.line} />
+                                    <span>0{index + 1}</span>
+                                </div>
+                                <div className={styles.pageName}>{element.name}</div>
+                            </Link>
+                        </li>
                     ))}
                 </ul>
             </div>
 
             <div className={styles.bottom}>
                 <div className={styles.copyright}>
-                    Copyright © <strong className={styles.highlight}>CCI</strong>
+                    Copyright 2021 <strong className={styles.highlight}>CCI</strong>
                     <span className={styles.divider}>|</span>
                     Designed and developed by - <Link href='https://www.vawzen.org/' target='_blank' className={styles.highlight}>Vawzen</Link>
                 </div>

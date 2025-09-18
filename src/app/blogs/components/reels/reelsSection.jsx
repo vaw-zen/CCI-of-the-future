@@ -1,8 +1,8 @@
 "use client";
 import styles from './reelsSection.module.css';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
-import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText } from '@/utils/components/icons';
-import { useReelsSection } from './reelsSection.func'
+import { MdiHeartOutline, MdiShareOutline, BiPlayFill, CircularText } from '@/utils/components/icons';
+import { useReelsSection } from './reelsSection.func';
 
 const ReelsSection = () => {
   const {
@@ -16,10 +16,9 @@ const ReelsSection = () => {
     initialSkeletonCount,
     loadingMoreSkeletonCount,
     loadMore,
-    handlePlay,
     handleTogglePlay,
     videoEventHandlers,
-  } = useReelsSection()
+  } = useReelsSection();
 
   return (
     <section className={styles['reels-section']}>
@@ -46,19 +45,22 @@ const ReelsSection = () => {
                       className={styles['reel-image']}
                       data-src={reel.video_url}
                       poster={reel.thumbnail}
-                      controls={activeReelId === reel.id} // controls only for active
+                      controls={activeReelId === reel.id}
                       preload="none"
                       playsInline
                       muted
-                      onPointerDown={(e) => handleTogglePlay(reel.id, e, 'video')}
+                      onPointerDown={(e) => handleTogglePlay(reel.id, e, 'overlay')}
                       onPlay={() => videoEventHandlers.onPlay(reel.id)}
                       onPause={() => videoEventHandlers.onPause(reel.id)}
                       onEnded={() => videoEventHandlers.onEnded(reel.id)}
                     />
 
-                    {/* Play Overlay (visible when not playing) */}
+                    {/* Play Overlay */}
                     {!playingIds.has(reel.id) && (
-                      <div className={`${styles.container} ${styles.showOverlay}`} onPointerDown={(e) => handleTogglePlay(reel.id, e, 'overlay')}>
+                      <div
+                        className={`${styles.container} ${styles.showOverlay}`}
+                        onPointerDown={(e) => handleTogglePlay(reel.id, e, 'overlay')}
+                      >
                         <div className={styles.filter} />
                         <button className={styles.playButton} aria-label="voir-video">
                           <div className={styles.textContainer}>
@@ -69,8 +71,6 @@ const ReelsSection = () => {
                           </div>
                         </button>
                       </div>
-
-
                     )}
 
                     {/* Views Badge */}
@@ -92,14 +92,37 @@ const ReelsSection = () => {
                       </div>
                     </div>
                   </div>
+
+                  {/* 🔥 JSON-LD Metadata for SEO */}
+                  <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                      __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "VideoObject",
+                        name: reel.message || "Reel vidéo",
+                        description: reel.message?.slice(0, 150) || "Reel publié sur CCI",
+                        thumbnailUrl: reel.thumbnail,
+                        uploadDate: reel.created_time,
+                        contentUrl: reel.video_url,
+                        interactionStatistic: {
+                          "@type": "InteractionCounter",
+                          interactionType: "https://schema.org/WatchAction",
+                          userInteractionCount: reel.views,
+                        },
+                      }),
+                    }}
+                  />
                 </div>
               ))}
-              {loadingMore && Array.from({ length: loadingMoreSkeletonCount }).map((_, index) => (
-                <PostCardSkeleton className={styles['reel-card-skeleton']} key={`more-skeleton-${index}`} />
-              ))}
+              {loadingMore &&
+                Array.from({ length: loadingMoreSkeletonCount }).map((_, index) => (
+                  <PostCardSkeleton className={styles['reel-card-skeleton']} key={`more-skeleton-${index}`} />
+                ))}
             </>
           )}
         </div>
+
         {reelsPaging?.next && (
           <div className={styles.loadMoreWrap}>
             <button className={styles.loadMoreBtn} onClick={loadMore} disabled={loadingMore}>

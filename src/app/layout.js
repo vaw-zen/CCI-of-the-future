@@ -25,7 +25,7 @@ const roboto = Roboto_Condensed({
 export const metadata = {
   title: "CCI Tunisie — Leader du Nettoyage Professionnel & Tissus Ignifuges",
 description: "Chez CCI Services, nous transformons l'entretien professionnel en un art ! Leader en Tunisie pour le nettoyage de moquettes, salons et tous types de tapisseries et ameublement, ainsi que pour l'entretien du marbre (polissage, lustrage, ponçage, protection, cristallisation). Nous offrons également des services de tapisserie sur mesure et un nettoyage post-chantier complet. Avec CCI, bénéficiez d'un service fiable, de qualité et personnalisé, qui redonne vie à vos espaces.",   alternates: {
-    canonical: "https://cciservices.online/",
+ 
   },
 };
 
@@ -127,7 +127,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:image" content={SITE_LOGO} />
 
 {/* Icons & Manifest for PWA */}
-<link rel="icon" href="/favicon.ico" />
+<link rel="icon" href="/logo.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
 <link rel="manifest" href="/site.webmanifest" />
@@ -166,7 +166,7 @@ export default function RootLayout({ children }) {
                 };
               ` }}
             />
-            <Script id="facebook-jssdk" src="https://connect.facebook.net/en_US/sdk.js" strategy="afterInteractive" />
+           
           </>
         )}
       </head>

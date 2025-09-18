@@ -1,0 +1,74 @@
+{
+  "title": "Our Team",
+  "subtitle": "Meet the experienced team behind our success.",
+  "members": [
+   
+    {
+      "name": "John Doe",
+      "position": "CEO & Founder",
+      "image": "/our-team/equippe.jpg",
+      "socials": {
+        "facebook": "#",
+        "twitter": "#",
+        "linkedin": "#",
+        "instagram": "#"
+      }
+    },
+    {
+        "name": "Med D. Bouthouri",
+        "position": "Head of IT & Development",
+        "image": "https://www.bouthouri.co/landing/selfies/0.webp",
+        "socials": {
+          "facebook": "#",
+          "twitter": "#",
+          "linkedin": "https://www.linkedin.com/in/med-dhia-bouthouri/",
+          "instagram": "#"
+        }
+      },
+    {
+      "name": "Jane Smith",
+      "position": "Marketing Director",
+      "image": "/our-team/equippe.jpg",
+      "socials": {
+        "facebook": "#",
+        "twitter": "#",
+        "linkedin": "#",
+        "instagram": "#"
+      }
+    },
+    {
+      "name": "Emily Johnson",
+      "position": "Lead Designer",
+      "image": "/our-team/equippe.jpg",
+      "socials": {
+        "facebook": "#",
+        "twitter": "#",
+        "linkedin": "#",
+        "instagram": "#"
+      }
+    },
+    {
+      "name": "Michael Brown",
+      "position": "Head of Development",
+      "image": "/our-team/equippe.jpg",
+      "socials": {
+        "facebook": "#",
+        "twitter": "#",
+        "linkedin": "#",
+        "instagram": "#"
+      }
+    },
+    {
+      "name": "Michael Brown",
+      "position": "Head of Development",
+      "image": "/our-team/equippe.jpg",
+      "socials": {
+        "facebook": "#",
+        "twitter": "#",
+        "linkedin": "#",
+        "instagram": "#"
+      }
+    }
+  ]
+}
+

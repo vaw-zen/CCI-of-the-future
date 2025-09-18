@@ -4,14 +4,14 @@
   "members": [
    
     {
-      "name": "John Doe",
+      "name": "Chaabane Fares",
       "position": "CEO & Founder",
       "image": "/our-team/equippe.jpg",
       "socials": {
-        "facebook": "#",
-        "twitter": "#",
-        "linkedin": "#",
-        "instagram": "#"
+          "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
+          "twitter": "#",
+          "linkedin": "https://www.instagram.com/cci.services/",
+          "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
       }
     },
     {
@@ -19,21 +19,21 @@
         "position": "Head of IT & Development",
         "image": "https://www.bouthouri.co/landing/selfies/0.webp",
         "socials": {
-          "facebook": "#",
+          "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
           "twitter": "#",
-          "linkedin": "https://www.linkedin.com/in/med-dhia-bouthouri/",
-          "instagram": "#"
+          "linkedin": "https://www.instagram.com/cci.services/",
+          "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
         }
       },
     {
-      "name": "Jane Smith",
+      "name": "Mohamed Amine Bouslama",
       "position": "Marketing Director",
       "image": "/our-team/equippe.jpg",
       "socials": {
-        "facebook": "#",
-        "twitter": "#",
-        "linkedin": "#",
-        "instagram": "#"
+          "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
+          "twitter": "#",
+          "linkedin": "https://www.instagram.com/cci.services/",
+          "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
       }
     },
     {
@@ -41,10 +41,10 @@
       "position": "Lead Designer",
       "image": "/our-team/equippe.jpg",
       "socials": {
-        "facebook": "#",
-        "twitter": "#",
-        "linkedin": "#",
-        "instagram": "#"
+          "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
+          "twitter": "#",
+          "linkedin": "https://www.instagram.com/cci.services/",
+          "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
       }
     },
     {
@@ -52,10 +52,10 @@
       "position": "Head of Development",
       "image": "/our-team/equippe.jpg",
       "socials": {
-        "facebook": "#",
-        "twitter": "#",
-        "linkedin": "#",
-        "instagram": "#"
+          "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
+          "twitter": "#",
+          "linkedin": "https://www.instagram.com/cci.services/",
+          "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
       }
     },
     {
@@ -63,10 +63,10 @@
       "position": "Head of Development",
       "image": "/our-team/equippe.jpg",
       "socials": {
-        "facebook": "#",
-        "twitter": "#",
-        "linkedin": "#",
-        "instagram": "#"
+          "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
+          "twitter": "#",
+          "linkedin": "https://www.instagram.com/cci.services/",
+          "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
       }
     }
   ]

@@ -61,7 +61,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                                 <form className={styles.newsletterForm}>
                                     <label>Restez à jour</label>
                                     <input placeholder='Adresse Email' className={styles.emailInput} />
-                                    <button className={styles.submitButton}>
+                                    <button className={styles.submitButton} aria-label="S'abonner à la newsletter">
                                         <UilArrowRight className={styles.arrowIcon} />
                                     </button>
                                     <div className={styles.checkboxContainer}>
@@ -102,7 +102,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                             <div className={styles.divider} />
                         </div>
                     </div>
-                    <button onClick={handleMenuButton} className={styles.closeButton}>
+                    <button onClick={handleMenuButton} className={styles.closeButton} aria-label="Fermer le menu">
                         <EpCloseBold className={styles.closeIcon} />
                     </button>
                 </div>

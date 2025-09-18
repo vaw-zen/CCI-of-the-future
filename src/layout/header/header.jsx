@@ -141,10 +141,10 @@ function Header({ roboto }) {
             </nav>
 
             <div className={styles.stickyBottom}>
-                <button onClick={() => setIsChatOpen(!isChatOpen)} className={styles.chatButton}>
+                <button onClick={() => setIsChatOpen(!isChatOpen)} className={styles.chatButton} aria-label="Ouvrir le chat d'assistance">
                     <ChatIcon />
                 </button>
-                <button onClick={scrollToTop} className={`${styles.topButton} ${showTopButton ? styles.active : ''}`}>
+                <button onClick={scrollToTop} className={`${styles.topButton} ${showTopButton ? styles.active : ''}`} aria-label="Retourner en haut de la page">
                     <UilArrowRight />
                 </button>
             </div>

@@ -16,11 +16,7 @@ export const metadata = {
     description: 'Découvrez nos prestations professionnelles : polissage du marbre, nettoyage de moquettes, rénovation de tapisserie et nettoyages post-chantier. Devis gratuit.',
 };
 
-const servicesImages = [
-    '/home/1.webp',
-    '/home/3.webp',
-    '/home/4.webp'
-];
+
 
 export default function ServicesPage() {
     const servicesSchema = {

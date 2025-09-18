@@ -55,10 +55,10 @@ export default function Hero() {
         <h1 className={styles.title}>
           Augmenter la qualité de vos services de nettoyage
         </h1>
-        <h2 className={styles.subtitle}>
+        <p className={styles.subtitle}>
           Experts en nettoyage, nous proposons des services variés et de
           qualité.
-        </h2>
+        </p>
         <div className={styles.contactDetails}>
           <div>
             <a href="mailto:contact@cciservices.online">
@@ -88,10 +88,11 @@ export default function Hero() {
                 href="https://wa.me/21698557766"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Contacter via WhatsApp"
               >
                 <LineMdPhoneTwotone className={styles.icon} />
               </a>
-              <a  href="mailto:contact@cciservices.online">
+              <a  href="mailto:contact@cciservices.online" aria-label="Envoyer un email">
                 <SiMailDuotone className={styles.icon} />
               </a>
               <a href="https://www.instagram.com/cci.services/" target="_blank" rel="noopener noreferrer" title="CCI on Instagram">

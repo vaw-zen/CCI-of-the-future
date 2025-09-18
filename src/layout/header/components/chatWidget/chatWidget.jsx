@@ -91,6 +91,7 @@ const ChatWidget = React.memo(({ isOpen, onClose }) => {
                         <button
                             className={styles.headerButton}
                             onClick={handleClose}
+                            aria-label="Fermer le chat"
                         >
                             ✕
                         </button>
@@ -173,6 +174,7 @@ const ChatWidget = React.memo(({ isOpen, onClose }) => {
                         type="submit"
                         className={styles.sendButton}
                         disabled={!inputValue.trim() || isTyping || showLoadingState}
+                        aria-label="Envoyer le message"
                     >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path

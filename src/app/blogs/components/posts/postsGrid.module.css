@@ -17,7 +17,9 @@
 .empty-subtitle { margin: 0; font-size: 0.95rem; color: var(--t-secondary); margin-bottom: 1.25vw; max-width: 33.33vw; }
 .empty-action { background: var(--ac-primary); color: var(--t-highlight); border: none; padding: 0.63vw 1.25vw; border-radius: 999px; cursor: pointer; font-weight: 600; transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .empty-action:hover { transform: translateY(-0.10vw); box-shadow: 0 0.94vw 1.88vw -0.52vw rgba(203, 251, 66, 0.35); }
-
+.post-card-skeleton > div:nth-of-type(1) > div:nth-of-type(1) {
+  height: 22.00vw !important;
+}
 @media screen and (max-width: 1024px) {
   .posts-section { width: 100%; padding: 8.33vw 3.13vw; background: linear-gradient(135deg, var(--bg-base), var(--bg-elevated));
     }
@@ -31,6 +33,10 @@
   .empty-illustration::after { inset: 2.08vw; filter: blur(0.26vw); }
   .empty-subtitle { max-width: 83.33vw; }
   .empty-action { padding: 1.56vw 3.13vw; }
+
+  .post-card-skeleton > div:nth-of-type(1) > div:nth-of-type(1) {
+    height: 42vw !important;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -45,4 +51,7 @@
   .empty-illustration { width: 31.07vw; height: 31.07vw; margin-bottom: 3.88vw; }
   .empty-illustration::after { inset: 3.88vw; filter: blur(0.49vw); }
   .empty-action { padding: 2.91vw 5.83vw; }
+  .post-card-skeleton > div:nth-of-type(1) > div:nth-of-type(1) {
+    height: 88vw !important;
+  }
 }

@@ -24,7 +24,7 @@
 @media screen and (max-width: 1024px) {
   .post-card { backdrop-filter: blur(1.56vw); border: 0.13vw solid rgba(203, 251, 66, 0.1); border-radius: 1.56vw; max-width: 52.08vw; }
   .post-card:hover { box-shadow: 0 0 5.21vw rgba(203, 251, 66, 0.15); transform: translateY(-1.04vw); }
-  .post-card-image { height: 25vw; }
+  .post-card-image { height: 42vw; }
   .post-card-badge { top: 1.56vw; right: 1.56vw; backdrop-filter: blur(1.56vw); padding: 0.52vw 1.04vw; border-radius: 0.78vw; }
   .post-card-content { padding: 3.13vw; }
   .post-card-date { gap: 1.04vw; margin-bottom: 1.56vw; }

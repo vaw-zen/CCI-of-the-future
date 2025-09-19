@@ -1,0 +1,39 @@
+.button { 
+  background-color: #fff; 
+  color: #000; 
+  border: none; 
+  padding: 0.98vw 1.95vw; 
+  font-size: 1.04vw; 
+  font-weight: 700; 
+  cursor: pointer; 
+  text-align: center; 
+  border-radius: 2.08vw; 
+  transition: background-color .2s ease, transform .15s ease, color .2s ease;
+}
+
+.button:hover { background-color: #cafb42; }
+
+.disabled, 
+.button:disabled { 
+  opacity: .6; 
+  cursor: default; 
+  transform: none; 
+}
+
+@media screen and (max-width: 1024px) {
+  .button { 
+    padding: 1.95vw 3.91vw; 
+    font-size: 2.08vw; 
+    border-radius: 4.17vw; 
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .button { 
+    padding: 3.64vw 7.28vw; 
+    font-size: 3.88vw; 
+    border-radius: 7.77vw; 
+  }
+}
+
+

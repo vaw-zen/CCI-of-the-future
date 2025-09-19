@@ -89,7 +89,7 @@ const PostsGrid = () => {
         <div className={styles['posts-grid']}>
           {loading ? (
             Array.from({ length: initialSkeletonCount }).map((_, index) => (
-              <PostCardSkeleton key={`skeleton-${index}`} />
+              <PostCardSkeleton className={styles['post-card-skeleton']} key={`skeleton-${index}`} />
             ))
           ) : (
             posts.length > 0 ? posts.map((post) => (

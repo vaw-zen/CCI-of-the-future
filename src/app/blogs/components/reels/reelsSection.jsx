@@ -3,6 +3,7 @@ import styles from './reelsSection.module.css';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
 import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText } from '@/utils/components/icons';
 import { useReelsSection } from './reelsSection.func'
+import SharedButton from "@/utils/components/SharedButton/SharedButton";
 
 const ReelsSection = () => {
   const {
@@ -102,9 +103,13 @@ const ReelsSection = () => {
         </div>
         {reelsPaging?.next && (
           <div className={styles.loadMoreWrap}>
-            <button className={styles.loadMoreBtn} onClick={loadMore} disabled={loadingMore}>
+            <SharedButton
+              className={styles.loadMoreBtn}
+              onClick={loadMore}
+              disabled={loadingMore}
+            >
               {loadingMore ? 'Loading…' : 'Load more'}
-            </button>
+            </SharedButton>
           </div>
         )}
       </div>

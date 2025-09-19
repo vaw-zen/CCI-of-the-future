@@ -114,7 +114,7 @@ const PostsGrid = () => {
             </div>
           )}
           {loadingMore && Array.from({ length: loadingMoreSkeletonCount }).map((_, index) => (
-            <PostCardSkeleton key={`more-skeleton-${index}`} />
+            <PostCardSkeleton key={`more-skeleton-${index}`} className={styles['post-card-skeleton']} />
           ))}
         </div>
         {/* Sentinel for infinite scroll */}

@@ -3,22 +3,22 @@
     "img": "/home/about.png",
     "testimonials": [
         {
-            "testimonial": "Great theme. High quality. No mistakes. Very fast technical support after contacting received an answer after a couple of hours.",
+            "testimonial": "Service impeccable ! Mon canapé a retrouvé une seconde vie. Équipe ponctuelle, professionnelle et très respectueuse de la maison.",
             "img": "/home/about.png",
-            "name": "Mathew Hunt",
-            "position": "plumber"
+            "name": "Nadia Ben Ali",
+            "position": "Particulier"
         },
         {
-            "testimonial": "Great theme. High quality. No mistakes. Very fast technical support after contacting received an answer after a couple of hours.",
+            "testimonial": "Intervention rapide pour le polissage du marbre de notre hall. Le résultat est brillant, nos clients l'ont immédiatement remarqué.",
             "img": "/home/about.png",
-            "name": "Mathew Hunt",
-            "position": "plumber"
+            "name": "Yassine Trabelsi",
+            "position": "Gérant d'hôtel"
         },
-         {
-            "testimonial": "Great theme. High quality. No mistakes. Very fast technical support after contacting received an answer after a couple of hours.",
+        {
+            "testimonial": "Excellent rapport qualité-prix. Les tapis de notre showroom sont comme neufs, odeurs éliminées et couleurs ravivées.",
             "img": "/home/about.png",
-            "name": "Mathew Hunt",
-            "position": "plumber"
+            "name": "Sami Gharbi",
+            "position": "Responsable magasin"
         }
     ]
 }

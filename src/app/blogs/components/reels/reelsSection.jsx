@@ -4,6 +4,7 @@ import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
 import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText } from '@/utils/components/icons';
 import { useReelsSection } from './reelsSection.func'
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
+import useAutoHeightTransition from '@/libs/useAutoHeightTransition/useAutoHeightTransition';
 
 const ReelsSection = () => {
   const {
@@ -20,6 +21,9 @@ const ReelsSection = () => {
     handleTogglePlay,
     videoEventHandlers,
   } = useReelsSection();
+
+  const showLoadMore = Boolean(reelsPaging?.next);
+  const loadMoreRef = useAutoHeightTransition(showLoadMore, { duration: 250, easing: 'ease' });
 
   return (
     <section className={styles['reels-section']}>
@@ -124,17 +128,18 @@ const ReelsSection = () => {
           )}
         </div>
 
-        {reelsPaging?.next && (
-          <div className={styles.loadMoreWrap}>
-            <SharedButton
-              className={styles.loadMoreBtn}
-              onClick={loadMore}
-              disabled={loadingMore}
-            >
-              {loadingMore ? 'Loading…' : 'Load more'}
-            </SharedButton>
-          </div>
-        )}
+        <div
+          ref={loadMoreRef}
+          className={`${styles.loadMoreWrap} ${!showLoadMore ? styles.loadMoreHidden : ''}`}
+        >
+          <SharedButton
+            className={styles.loadMoreBtn}
+            onClick={loadMore}
+            disabled={loadingMore || !showLoadMore}
+          >
+            {loadingMore ? 'Loading…' : 'Load more'}
+          </SharedButton>
+        </div>
       </div>
     </section>
   );

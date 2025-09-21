@@ -47,8 +47,9 @@
     .title { font-size: 7.5vw; }
     .subtitle { font-size: 2.9vw; width: 40vw; margin-top: -9vw; margin-left: 8vw; }
     .contactDetails > div:nth-of-type(1) { display: none; }
-    .contactDetails > div:nth-of-type(2) > a{ display: none; }
+    .contactDetails > div:nth-of-type(2) > a{ display: none; }      
     .contactDetails > div:nth-of-type(2) { position: absolute; top: -10vw; right: 1vw;}
+    #email { display: none !important; }
     .icon { width: 6vw; height: 6vw; }
     .socialIcons > a:nth-of-type(2) { margin-right: 10vw; display: block; }
     .socialIcons > a:nth-of-type(1) {  display: block; }

@@ -2,6 +2,8 @@ import React from "react";
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import ReelsSection from "./components/reels/reelsSection";
 import PostsGrid from "./components/posts/postsGrid";
+import GreenBand from "@/utils/components/GreenBand/GreenBand";
+import styles from "./blog.module.css";
 
 export const metadata = {
   title: "Publications & Conseils — CCI",
@@ -17,12 +19,12 @@ const blogPageSchema = {
   "description":
     "Articles et vidéos sur la restauration du marbre et de tout typpe de sol et mur, l'entretien des tapis et des moquettes, le nettoyage salon étape par étape.",
   "url": "https://cciservices.online/blogs",
-  
+
 };
 
 export default function Page() {
   return (
-    <>
+    <main className={styles.main}>
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -40,8 +42,12 @@ export default function Page() {
         }}
       >
         <ReelsSection />
+        <GreenBand className={styles.greenBandReels} />
+
         <PostsGrid />
       </div>
-    </>
+
+      <GreenBand className={styles.greenBandWrapper} />
+    </main>
   );
 }

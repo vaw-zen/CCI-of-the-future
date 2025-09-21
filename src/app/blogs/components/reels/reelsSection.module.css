@@ -7,7 +7,7 @@
   height: 15vw !important;
 }
 .reels-section {
-  padding: 3.33vw 1.25vw;
+  padding: 3.33vw 1.25vw 7.5vw;
   margin: 0 auto;
   background: var(--bg-elevated);
   width: 100%;
@@ -213,7 +213,7 @@
 .reel-card-skeleton > div:nth-of-type(1) > div:nth-of-type(1) {
   height: 50vw !important;
 }
-  .reels-section { padding: 8.33vw 3.13vw; }
+  .reels-section { padding: 8.33vw 3.13vw 12.5vw; }
   .reels-header { margin-bottom: 6.25vw; }
   .reels-title { font-size: 4.69vw; }
   .reels-subtitle { font-size: 2.60vw; }
@@ -254,7 +254,7 @@
     border: 0.24vw solid rgba(203, 251, 66, 0.1);
     border-radius: 2.91vw;
   }
-  .reels-section { padding: 15.53vw 5.83vw; }
+  .reels-section { padding: 15.53vw 5.83vw 20.53vw; }
   .reels-header { margin-bottom: 11.65vw; }
   .reels-title { font-size: 8.74vw; }
   .reels-subtitle { font-size: 4.85vw; }

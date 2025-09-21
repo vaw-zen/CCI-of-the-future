@@ -3,6 +3,7 @@ import styles from './equipe.module.css';
 import { LineMdInstagram, LineMdFacebook, LineMdLinkedin } from '@/utils/components/icons';
 import GreenBand from '@/utils/components/GreenBand/GreenBand';
 import data from './equipe.json';
+import ResponsiveImage from '@/utils/components/Image/Image';
 export default function Equipe() {
   return (
     <div className={styles.container}>
@@ -13,7 +14,14 @@ export default function Equipe() {
           {data.members.map((card, index) => (
             <div className={styles.card} key={index}>
               <div className={styles.imageContainer}>
-                <img src={card.image} alt={card.name} title={card.name} />
+                <ResponsiveImage
+                  src={card.image}
+                  alt={card.name}
+                  title={card.name}
+                  className={styles.imageContainer}
+                  sizes={[21, 52, 97]}
+                  skeleton
+                />
               </div>
               <div className={styles.textContainer}>
                 <div className={styles.textContainerContent}>

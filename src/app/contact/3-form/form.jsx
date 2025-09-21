@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./form.module.css";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
+import SharedButton from "@/utils/components/SharedButton/SharedButton";
 
 export default function Form() {
   const formRef = useRef();
@@ -94,13 +95,13 @@ export default function Form() {
           J'accepte les conditions du service et la politique de confidentialité
         </label>
         
-        <button 
-          className={styles.submitButton} 
-          type="submit" 
+        <SharedButton
+          className={styles.submitButton}
+          type="submit"
           disabled={isSubmitting}
         >
-        {isSubmitting ? 'ENVOI…' : 'ENVOYER'}
-        </button>
+          {isSubmitting ? 'ENVOI…' : 'ENVOYER'}
+        </SharedButton>
 
         {result.message && (
           <div style={{ marginTop: 12, color: result.type === 'error' ? '#b91c1c' : 'var(--ac-primary)', fontWeight: 600 }}>

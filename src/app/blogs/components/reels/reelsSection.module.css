@@ -188,7 +188,8 @@
 /* Social icons: heart, share (24px => 1.25vw on desktop) */
 .reel-likes .icon, .reel-share { width: 1.25vw; height: 1.25vw; }
 
-.loadMoreWrap { display: flex; margin-top: 5vw; }
+.loadMoreWrap { display: flex; margin-top: 5vw; overflow: hidden; transition: opacity .25s ease, margin-top .25s ease; opacity: 1; }
+.loadMoreHidden { height: 0 !important; opacity: 0; margin-top: 0; }
 .loadMoreBtn {
 
   width: 12.5vw;

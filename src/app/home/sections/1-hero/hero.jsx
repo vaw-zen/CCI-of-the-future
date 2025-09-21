@@ -69,7 +69,7 @@ export default function Hero() {
               title="Contactez CCI Services par email"
               id="email"
             >
-             📩 contact@cciservices.online
+              contact@cciservices.online
             </a>
             <br />
             <a
@@ -80,7 +80,7 @@ export default function Hero() {
               itemProp="telephone"
               title="Appelez CCI Services - Devis gratuit"
             >
-              📞 +216 98 557 766
+               +216 98 557 766
             </a>
           </div>
           <div className={styles.addressAndSocial}>
@@ -91,7 +91,7 @@ export default function Hero() {
                 rel="noopener noreferrer"
                 title="Localiser CCI Services sur Google Maps - El Aouina, Tunis"
               >
-                📍 <span itemProp="streetAddress">06 Rue Galant de nuit</span>, <span itemProp="addressLocality">El Aouina</span>, <span itemProp="addressRegion">Tunis</span>
+                 <span itemProp="streetAddress">06 Rue Galant de nuit</span>, <span itemProp="addressLocality">El Aouina</span>, <span itemProp="addressRegion">Tunis</span>
               </a>
             </address>
 
@@ -125,12 +125,12 @@ export default function Hero() {
         <div className={styles.buttons}>
           <Link href="/contact" title="Demander un devis gratuit CCI Services">
             <button className={`${styles.button} ${styles.primaryButton}`} type="button">
-              💬 Devis Gratuit
+               Devis Gratuit
             </button>
           </Link>
           <Link href="/services" title="Découvrir tous nos services de nettoyage professionnel">
             <button className={`${styles.button} ${styles.secondaryButton}`} type="button">
-              🔧 Nos Services
+               Nos Services
             </button>
           </Link>
         </div>

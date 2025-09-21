@@ -1,0 +1,12 @@
+.main { width: 100%; contain: paint; }
+.greenBandWrapper { margin: 7vw 0 11vw 0 !important;  }
+.greenBandReels { margin: 0 0 7vw 0 !important;  }
+@media screen and (max-width: 1024px) {
+    .greenBandWrapper { margin: 17.5vw 0 27.5vw 0 !important;  }
+    .greenBandReels { margin: 0 0 10.5vw 0 !important;  }
+}
+
+@media screen and (max-width: 480px) {
+    .greenBandWrapper { margin: 0vw 0 15vw !important;  }
+    .greenBandReels { margin: 0vw 0 15vw !important;  }
+}

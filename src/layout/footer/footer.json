@@ -19,11 +19,11 @@
     ],
     "pages": [
         {
-            "name": "home",
+            "name": "accueil",
             "link": "/"
         },
         {
-            "name": "about",
+            "name": "à propos",
             "link": "/about"
         },
         {

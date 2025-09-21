@@ -37,7 +37,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   const SITE_NAME = "CCI"; // or "Chaabane's Cleaning Intelligence"
-  const SITE_LOGO = `${SITE_URL}/logo.png`;
+  const SITE_LOGO = `${SITE_URL}/favicon.ico`;
 
   // WebSite schema with SearchAction
   const websiteJSONLD = {
@@ -126,7 +126,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:image" content={SITE_LOGO} />
 
 {/* Icons & Manifest for PWA */}
-<link rel="icon" href="/logo.png" />
+<link rel="icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
 <link rel="manifest" href="/site.webmanifest" />

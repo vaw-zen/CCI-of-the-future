@@ -5,8 +5,6 @@ import styles from './postsGrid.module.css';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { dimensionsStore } from '@/utils/store/store';
 
-
-
 const PostsGrid = () => {
   const PAGE_SIZE = 6; // 3 desktop cols x 2 rows
   const [posts, setPosts] = useState([]);
@@ -17,8 +15,8 @@ const PostsGrid = () => {
 
   const { isMobile, isTablet } = dimensionsStore();
   const columnCount = useMemo(() => (isMobile() ? 1 : isTablet() ? 2 : 3), [isMobile, isTablet]);
-  const initialSkeletonCount = columnCount; // 3/2/1
-  const loadingMoreSkeletonCount = columnCount; // append 3/2/1 while fetching
+  const initialSkeletonCount = columnCount; 
+  const loadingMoreSkeletonCount = columnCount; 
 
   useEffect(() => {
     async function loadInitial() {
@@ -64,7 +62,6 @@ const PostsGrid = () => {
     const observer = new IntersectionObserver((entries) => {
       const [entry] = entries;
       if (entry.isIntersecting) {
-        // Small timeout to avoid jank when quickly scrolling
         setTimeout(() => loadMore(), 0);
       }
     }, {
@@ -93,19 +90,42 @@ const PostsGrid = () => {
             ))
           ) : (
             posts.length > 0 ? posts.map((post) => (
-              <PostCard
-                key={post.id}
-                title={post.title}
-                content={post.message}
-                image={post.attachments}
-                date={post.created_time}
-                likes={post.likes}
-                comments={post.comments}
-                type={post.type}
-                permalink_url={post.permalink_url}
-                id={post.id}
-              />
-            )):
+              <div key={post.id}>
+                <PostCard
+                  title={post.title}
+                  content={post.message}
+                  image={post.attachments}
+                  date={post.created_time}
+                  likes={post.likes}
+                  comments={post.comments}
+                  type={post.type}
+                  permalink_url={post.permalink_url}
+                  id={post.id}
+                />
+
+                {/* 🔥 JSON-LD Metadata for SEO */}
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                      "@context": "https://schema.org",
+                      "@type": "Article",
+                      headline: post.title || "Publication CCI",
+                      description: post.message?.slice(0, 150) || "Publication Facebook partagée sur CCI",
+                      image: post.attachments?.[0]?.src || undefined,
+                      datePublished: post.created_time,
+                      interactionStatistic: {
+                        "@type": "InteractionCounter",
+                        interactionType: "https://schema.org/LikeAction",
+                        userInteractionCount: post.likes || 0,
+                      },
+                      commentCount: post.comments || 0,
+                      mainEntityOfPage: post.permalink_url,
+                    }),
+                  }}
+                />
+              </div>
+            )) :
             <div className={styles['posts-grid-empty']}>
               <div className={styles['empty-illustration']}></div>
               <h3 className={styles['empty-title']}>Aucune publication trouvée</h3>

@@ -1,19 +1,18 @@
 {
-    "welcomeCards": [
-      {
-        "imageSrc": "/contact/welcome1.jpg",
-        "title": "Want to join our dream team?",
-        "name": "Jack Carter",
-        "position": "Clients of boldmen",
-        "email": "contact@cciservices.online"
-      },
-      {
-        "imageSrc": "/contact/welcome2.jpg",
-        "title": "Want to join our dream team?",
-        "name": "Jack Carter",
-        "position": "Clients of boldmen",
-        "email": "contact@cciservices.online"
-      }
-    ]
-  }
-  
+  "welcomeCards": [
+    {
+      "imageSrc": "/contact/welcome2.jpg",
+      "title": "Service rapide et devis clair, je recommande !",
+      "name": "Amine Bouslama",
+      "position": "Avis client",
+      "email": "contact@cciservices.online"
+    },
+    {
+      "imageSrc": "/our-team/ceo.jpg",
+      "title": "Nos clients, toujours notre priorité.",
+      "name": "Chaabane Fares",
+      "position": "CEO",
+      "email": "contact@cciservices.online"
+    }
+  ]
+}

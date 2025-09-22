@@ -123,7 +123,7 @@ export default function Hero() {
           </div>
         </div>
         <div className={styles.buttons}>
-          <Link href="/contact" title="Demander un devis gratuit CCI Services">
+          <Link href="/contact#devis" title="Demander un devis gratuit CCI Services">
             <button className={`${styles.button} ${styles.primaryButton}`} type="button">
                Devis Gratuit
             </button>

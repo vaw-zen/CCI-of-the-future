@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./welcome.module.css";
 
-const WelcomeCard = ({ imageSrc, title, name, position, email }) => {
+const WelcomeCard = ({ imageSrc, title, name, position, email, id }) => {
   return (
-    <div className={styles.welcomeCard}>
+    <div id={id} className={styles.welcomeCard}>
       <img className={styles.image} src={imageSrc} alt="welcoming image" />
       <div className={styles.welcomeinfotext}>
         <h3>{title}</h3>

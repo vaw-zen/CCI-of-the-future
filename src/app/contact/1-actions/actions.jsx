@@ -43,13 +43,11 @@ export default function Actions() {
         <div className={styles.infoContainer}>
           {/* WhatsApp Section */}
           <div className={styles.phoneSection}>
-            <div className={styles.phoneInfoTop}>
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+            <a href={whatsappLink} className={styles.phoneInfoTop}>
                 <LineMdPhoneTwotone className={styles.icon} />
-              </a>
               <h3 className={styles.label}>{content.callNow}</h3>
               <h4 className={styles.phoneNumber}>{content.phoneNumber}</h4>
-            </div>
+            </a>
             <div className={styles.phoneInfoBottom}>
               <p className={styles.phoneInfoText}>{content.phoneInfoText}</p>
               <strong className={styles.phoneHours}>{content.phoneHours}</strong>
@@ -57,11 +55,9 @@ export default function Actions() {
           </div>
 
           {/* Email Section */}
-          <div className={styles.emailSection}>
+          <a href={emailLink} className={styles.emailSection}>
             <div className={styles.emailInfoTop}>
-              <a href={emailLink}>
                 <SiMailDuotone className={styles.icon} />
-              </a>
               <h3 className={styles.label}>{content.emailLabel}</h3>
               <h4 className={styles.emailAddress}>{content.emailAddress}</h4>
             </div>
@@ -69,7 +65,7 @@ export default function Actions() {
               <p className={styles.emailInfoText}>{content.emailInfoText}</p>
               <strong className={styles.emailHours}>{content.emailHours}</strong>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>

@@ -228,19 +228,67 @@
     font-size: 1.8rem;
   }
 
+  .servicesGrid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .serviceCard {
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
   .serviceHeader {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: 1rem;
+  }
+
+  .selectButton {
+    align-self: center;
+    margin: 0 auto;
+  }
+
+  .serviceInfo {
+    text-align: center;
+  }
+
+  .serviceInfo h3 {
+    text-align: center;
+  }
+
+  .serviceInfo p {
+    text-align: center;
+  }
+
+  .basePrice {
+    text-align: center;
   }
 
   .serviceOptions {
     grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .optionGroup {
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .select, .input {
+    width: 100%;
+    text-align: center;
   }
 
   .optionsRow {
     grid-template-columns: 1fr;
     gap: 1rem;
+    justify-items: center;
   }
 
   .totalCard {

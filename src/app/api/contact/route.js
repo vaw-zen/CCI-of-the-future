@@ -53,15 +53,21 @@ export async function POST(request) {
       white: '#ffffff',
     };
 
+    // Detect if this is a devis request
+    const isDevisRequest = formData.formType === 'devis' || (projectType && projectType.includes('Demande de devis'));
+    
     const adminMail = {
       from: `"CCI Website" <${process.env.GMAIL_USER}>`,
       to: adminRecipient,
-      subject: `Nouvelle demande de contact — ${name}`,
+      subject: isDevisRequest ? `🏠 Nouvelle demande de DEVIS — ${name}` : `Nouvelle demande de contact — ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; background:${colors.white};">
           <div style="background:${colors.bgBase}; color:${colors.textPrimary}; padding: 16px 20px;">
-            <h1 style="margin:0; font-size:20px;"><span style="color:${colors.accent};">Nouvelle</span> demande de contact</h1>
+            <h1 style="margin:0; font-size:20px;">
+              <span style="color:${colors.accent};">${isDevisRequest ? '🏠 Nouvelle demande de DEVIS' : 'Nouvelle demande de contact'}</span>
+            </h1>
             <p style="margin:4px 0 0; font-size:12px; color:${colors.textSecondary};">Reçue le ${now}</p>
+            ${isDevisRequest ? `<p style="margin:8px 0 0; font-size:14px; color:${colors.accent}; font-weight:600;">⚡ PRIORITÉ: Demande de devis</p>` : ''}
           </div>
           <div style="padding: 20px;">
             <table style="width:100%; border-collapse: collapse;">
@@ -71,9 +77,15 @@ export async function POST(request) {
               <tr><td style="padding:8px; font-weight:600; color:${colors.textDark};">Type de projet</td><td style="padding:8px; color:${colors.textBody};">${projectType || '—'}</td></tr>
             </table>
             ${message ? `
-              <div style="margin-top:16px; padding:12px; background:${colors.white}; border-left:4px solid ${colors.accent};">
-                <div style="font-weight:600; margin-bottom:8px; color:${colors.textDark};">Message</div>
-                <div style="color:${colors.textBody};">${message.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+              <div style="margin-top:16px; padding:12px; background:${isDevisRequest ? '#f8f9fa' : colors.white}; border-left:4px solid ${colors.accent};">
+                <div style="font-weight:600; margin-bottom:8px; color:${colors.textDark};">${isDevisRequest ? 'Détails de la demande de devis' : 'Message'}</div>
+                <div style="color:${colors.textBody}; white-space: pre-line;">${message.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+              </div>
+            ` : ''}
+            ${isDevisRequest ? `
+              <div style="margin-top:16px; padding:12px; background:#fff3cd; border:1px solid #ffeaa7; border-radius:6px;">
+                <div style="font-weight:600; color:#856404; margin-bottom:4px;">📋 Action requise</div>
+                <div style="color:#856404; font-size:13px;">Cette demande de devis nécessite un suivi rapide. Contactez le client dans les 24h.</div>
               </div>
             ` : ''}
           </div>
@@ -89,20 +101,47 @@ export async function POST(request) {
     const userMail = {
       from: `"CCI" <${process.env.GMAIL_USER}>`,
       to: email,
-      subject: 'Nous avons bien reçu votre message',
+      subject: isDevisRequest ? '🏠 Votre demande de devis a été reçue' : 'Nous avons bien reçu votre message',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; background:${colors.white};">
           <div style="background:${colors.bgBase}; color:${colors.textPrimary}; padding: 16px 20px;">
-            <h1 style="margin:0; font-size:20px;"><span style="color:${colors.accent};">Merci !</span> ${name} </h1>
-            <p style="margin:4px 0 0; font-size:12px; color:${colors.textSecondary};">Nous avons bien reçu votre demande de contact.</p>
+            <h1 style="margin:0; font-size:20px;">
+              <span style="color:${colors.accent};">Merci !</span> ${name}
+            </h1>
+            <p style="margin:4px 0 0; font-size:12px; color:${colors.textSecondary};">
+              ${isDevisRequest ? 'Nous avons bien reçu votre demande de devis.' : 'Nous avons bien reçu votre demande de contact.'}
+            </p>
           </div>
           <div style="padding: 20px;">
-            <p style="margin:0 0 12px; color:${colors.textBody};">Notre équipe vous recontactera très prochainement.</p>
+            ${isDevisRequest ? `
+              <div style="margin-bottom:16px; padding:12px; background:#d4edda; border:1px solid #c3e6cb; border-radius:6px;">
+                <div style="font-weight:600; color:#155724; margin-bottom:4px;">✅ Demande de devis enregistrée</div>
+                <div style="color:#155724; font-size:13px;">Votre demande sera traitée dans les plus brefs délais. Un expert vous contactera sous 24h pour programmer un rendez-vous.</div>
+              </div>
+              <p style="margin:0 0 12px; color:${colors.textBody};">Prochaines étapes :</p>
+              <ul style="margin:0 0 16px; padding-left:20px; color:${colors.textBody};">
+                <li>📞 Appel de confirmation sous 24h</li>
+                <li>📅 Prise de rendez-vous pour évaluation</li>
+                <li>📋 Devis détaillé gratuit</li>
+                <li>🤝 Proposition personnalisée</li>
+              </ul>
+            ` : `
+              <p style="margin:0 0 12px; color:${colors.textBody};">Notre équipe vous recontactera très prochainement.</p>
+            `}
             ${message ? `
-              <p style="margin:0 0 8px; color:${colors.textBody};">Récapitulatif de votre message :</p>
-              <blockquote style="margin:0; padding:12px; background:${colors.white}; border-left:4px solid ${colors.accent}; color:${colors.textBody};">${message.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</blockquote>
+              <p style="margin:0 0 8px; color:${colors.textBody};">${isDevisRequest ? 'Récapitulatif de votre demande :' : 'Récapitulatif de votre message :'}</p>
+              <blockquote style="margin:0; padding:12px; background:${colors.white}; border-left:4px solid ${colors.accent}; color:${colors.textBody}; white-space: pre-line;">${message.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</blockquote>
             ` : ''}
             <p style="margin:16px 0 0; color:${colors.textMuted}; font-size:13px;">Envoyé le ${now}</p>
+            ${isDevisRequest ? `
+              <div style="margin-top:16px; padding:12px; background:#f8f9fa; border-radius:6px;">
+                <div style="font-size:13px; color:${colors.textMuted};">
+                  <strong>Besoin d'aide ?</strong><br>
+                  📞 Appelez-nous : +216 XX XXX XXX<br>
+                  📧 Email : contact@cci-tunisie.com
+                </div>
+              </div>
+            ` : ''}
           </div>
           <div style="text-align:center; font-size:12px; color:${colors.textMuted}; padding: 12px 0 20px;">
             <span style="display:inline-block; height:8px; width:8px; background:${colors.accent}; border-radius:50%; margin-right:6px;"></span>

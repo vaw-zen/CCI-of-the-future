@@ -5,18 +5,27 @@ import path from 'path';
 export function loadTuningConfigServer() {
   try {
     const tuningPath = path.join(process.cwd(), 'tuning');
+    console.log('🔍 Tuning path:', tuningPath);
     let systemPromptData, chatMessagesData, aiConfigData, languageAdaptationData;
     
     // Try to load enhanced Fares expert persona first
     try {
       const enhancedPromptPath = path.join(tuningPath, 'ai-system-prompt-enhanced.json');
+      console.log('🔍 Trying enhanced prompt path:', enhancedPromptPath);
       systemPromptData = JSON.parse(fs.readFileSync(enhancedPromptPath, 'utf8'));
       console.log('✅ Loaded enhanced Fares expert persona system');
     } catch (enhancedError) {
       // Fallback to original system prompt
       console.log('⚠️ Enhanced system prompt not found, using original');
-      const systemPromptPath = path.join(tuningPath, 'ai-system-prompt.json');
-      systemPromptData = JSON.parse(fs.readFileSync(systemPromptPath, 'utf8'));
+      try {
+        const systemPromptPath = path.join(tuningPath, 'ai-system-prompt.json');
+        console.log('🔍 Trying original prompt path:', systemPromptPath);
+        systemPromptData = JSON.parse(fs.readFileSync(systemPromptPath, 'utf8'));
+        console.log('✅ Loaded original system prompt');
+      } catch (originalError) {
+        console.error('❌ Failed to load any system prompt:', originalError);
+        throw new Error(`Failed to load system prompt: ${originalError.message}`);
+      }
     }
     
     // Load language adaptation rules
@@ -30,12 +39,26 @@ export function loadTuningConfigServer() {
     }
     
     // Load chat messages
-    const chatMessagesPath = path.join(tuningPath, 'chat-messages.json');
-    chatMessagesData = JSON.parse(fs.readFileSync(chatMessagesPath, 'utf8'));
+    try {
+      const chatMessagesPath = path.join(tuningPath, 'chat-messages.json');
+      console.log('🔍 Trying chat messages path:', chatMessagesPath);
+      chatMessagesData = JSON.parse(fs.readFileSync(chatMessagesPath, 'utf8'));
+      console.log('✅ Loaded chat messages');
+    } catch (chatError) {
+      console.error('❌ Failed to load chat messages:', chatError);
+      throw new Error(`Failed to load chat messages: ${chatError.message}`);
+    }
     
     // Load AI config
-    const aiConfigPath = path.join(tuningPath, 'ai-config.json');
-    aiConfigData = JSON.parse(fs.readFileSync(aiConfigPath, 'utf8'));
+    try {
+      const aiConfigPath = path.join(tuningPath, 'ai-config.json');
+      console.log('🔍 Trying AI config path:', aiConfigPath);
+      aiConfigData = JSON.parse(fs.readFileSync(aiConfigPath, 'utf8'));
+      console.log('✅ Loaded AI config');
+    } catch (configError) {
+      console.error('❌ Failed to load AI config:', configError);
+      throw new Error(`Failed to load AI config: ${configError.message}`);
+    }
     
     return {
       systemPrompt: systemPromptData.systemPrompt,
@@ -46,6 +69,7 @@ export function loadTuningConfigServer() {
     };
   } catch (error) {
     console.error('❌ Error loading tuning config from files:', error);
+    console.error('❌ Error stack:', error.stack);
     
     // Fallback to default configurations
     return {

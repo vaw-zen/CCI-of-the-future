@@ -11,10 +11,27 @@ import MobileServices from '../home/sections/3-services/services'
 import { ImageSlider } from '@/utils/components/imageSlider/imageSlider'
 import servicesData from './sections/2-services/services.json'
 
-export const metadata = {
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
     title: 'Services CCI — Polissage marbre, Nettoyage moquettes, Tapisserie',
     description: 'Découvrez nos prestations professionnelles : polissage du marbre, nettoyage de moquettes, rénovation de tapisserie et nettoyages post-chantier. Devis gratuit.',
-};
+    alternates: {
+      canonical: `${SITE_URL}/services`
+    },
+    openGraph: {
+      title: 'Services CCI — Polissage marbre, Nettoyage moquettes, Tapisserie',
+      description: 'Découvrez nos prestations professionnelles : polissage du marbre, nettoyage de moquettes, rénovation de tapisserie et nettoyages post-chantier. Devis gratuit.',
+      url: `${SITE_URL}/services`,
+      type: 'website'
+    },
+    twitter: {
+      title: 'Services CCI — Polissage marbre, Nettoyage moquettes, Tapisserie',
+      description: 'Découvrez nos prestations professionnelles : polissage du marbre, nettoyage de moquettes, rénovation de tapisserie et nettoyages post-chantier. Devis gratuit.'
+    }
+  };
+}
 
 
 

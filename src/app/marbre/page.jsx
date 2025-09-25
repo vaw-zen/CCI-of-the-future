@@ -29,11 +29,27 @@ const marbreTabData = [
   
 ];
 
-export const metadata = {
-  title: "Restauration, Ponçage, Lustrage, Polissage, Protection & cristallisation du Marbre — CCI",
-  description:
-    "Restauration professionnelle du marbre : ponçage, polissage, cristallisation et protections pour sols et plans de travail. Devis gratuit.",
-};
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
+    title: "Restauration, Ponçage, Lustrage, Polissage, Protection & cristallisation du Marbre — CCI",
+    description: "Restauration professionnelle du marbre : ponçage, polissage, cristallisation et protections pour sols et plans de travail. Devis gratuit.",
+    alternates: {
+      canonical: `${SITE_URL}/marbre`
+    },
+    openGraph: {
+      title: "Restauration, Ponçage, Lustrage, Polissage, Protection & cristallisation du Marbre — CCI",
+      description: "Restauration professionnelle du marbre : ponçage, polissage, cristallisation et protections pour sols et plans de travail. Devis gratuit.",
+      url: `${SITE_URL}/marbre`,
+      type: 'website'
+    },
+    twitter: {
+      title: "Restauration, Ponçage, Lustrage, Polissage, Protection & cristallisation du Marbre — CCI",
+      description: "Restauration professionnelle du marbre : ponçage, polissage, cristallisation et protections pour sols et plans de travail. Devis gratuit."
+    }
+  };
+}
 
 export default function Page() {
   const marbreImages = [

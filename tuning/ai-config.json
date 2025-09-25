@@ -1,17 +1,31 @@
 {
   "model": {
     "name": "gemini-2.0-flash",
-    "maxOutputTokens": 1000,
-    "temperature": 0.65,
-    "systemInstruction": "Always respond in the same language as the user's prompt. Do not translate unless explicitly asked."
+    "maxOutputTokens": 1200,
+    "temperature": 0.7,
+    "systemInstruction": "You are Fares, CCI Services' senior technical expert. Always adapt your language, tone, and cultural expressions to match the user's input. Detect between French, Arabic, English, and Tunisian Arabizi automatically. Maintain your expert persona consistently across all languages."
   },
   "chat": {
     "locale": "auto",
     "detectLanguage": true,
-    "languageDetectionFunction": "tunisian-arabizi", 
+    "supportedLanguages": ["fr", "ar", "en", "ar-TN"],
+    "languageDetectionFunction": "enhanced-multilingual",
+    "arabizi": {
+      "enabled": true,
+      "patterns": ["3", "7", "9", "8", "5", "2"],
+      "autoDetect": true
+    },
+    "culturalAdaptation": {
+      "tunisian": {
+        "expressions": true,
+        "localTerms": true,
+        "dialectSupport": true
+      }
+    },
     "timeFormat": {
       "hour": "2-digit",
-      "minute": "2-digit"
+      "minute": "2-digit",
+      "locale": "auto"
     }
   },
   "api": {

@@ -4,11 +4,27 @@ import ClientFAQ from './components/ClientFAQ'
 import styles from './page.module.css'
 import GreenBand from '@/utils/components/GreenBand/GreenBand';
 
-export const metadata = {
-  title: 'FAQ — CCI',
-  description:
-    'Questions fréquentes sur nos services : nettoyage de tapis, restauration de marbre, tapisserie et nettoyages post-chantier. Astuces pratiques sur le détachage, solutions maison au vinaigre et entretien du marbre.',
-};
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
+    title: 'FAQ — CCI',
+    description: 'Questions fréquentes sur nos services : nettoyage de tapis, restauration de marbre, tapisserie et nettoyages post-chantier. Astuces pratiques sur le détachage, solutions maison au vinaigre et entretien du marbre.',
+    alternates: {
+      canonical: `${SITE_URL}/faq`
+    },
+    openGraph: {
+      title: 'FAQ — CCI',
+      description: 'Questions fréquentes sur nos services : nettoyage de tapis, restauration de marbre, tapisserie et nettoyages post-chantier. Astuces pratiques sur le détachage, solutions maison au vinaigre et entretien du marbre.',
+      url: `${SITE_URL}/faq`,
+      type: 'website'
+    },
+    twitter: {
+      title: 'FAQ — CCI',
+      description: 'Questions fréquentes sur nos services : nettoyage de tapis, restauration de marbre, tapisserie et nettoyages post-chantier. Astuces pratiques sur le détachage, solutions maison au vinaigre et entretien du marbre.'
+    }
+  };
+}
 
 export default function FAQ() {
   const { title, description, faqs } = content;

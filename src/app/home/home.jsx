@@ -3,26 +3,31 @@ import Hero from "./sections/1-hero/hero";
 import styles from './home.module.css';
 import Head from 'next/head';
 
-export const metadata = {
-  title: "CCI Tunisie | Nettoyage Professionnel Moquettes, Salons & Restauration Marbre | Devis Gratuit",
-  description: "🏆 Leader du nettoyage professionnel en Tunisie. Spécialistes moquettes, salons, tapisserie, restauration marbre. Service post-chantier. Devis gratuit ✅ +216 98 557 766",
-  keywords: "nettoyage moquette tunisie, nettoyage salon tunis, restauration marbre, polissage marbre, nettoyage professionnel, tapisserie tunisie, nettoyage post chantier, CCI services",
-  openGraph: {
-    title: "CCI Tunisie - Nettoyage Professionnel & Restauration Marbre",
-    description: "Leader du nettoyage professionnel en Tunisie. Moquettes, salons, marbre. Devis gratuit.",
-    type: "website",
-    locale: "fr_TN",
-    siteName: "CCI Services Tunisie"
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "CCI Tunisie - Nettoyage Professionnel",
-    description: "Leader du nettoyage professionnel en Tunisie. Devis gratuit."
-  },
-  alternates: {
-    canonical: "https://cciservices.online"
-  }
-};
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
+    title: "CCI Tunisie | Nettoyage Professionnel Moquettes, Salons & Restauration Marbre | Devis Gratuit",
+    description: "🏆 Leader du nettoyage professionnel en Tunisie. Spécialistes moquettes, salons, tapisserie, restauration marbre. Service post-chantier. Devis gratuit ✅ +216 98 557 766",
+    keywords: "nettoyage moquette tunisie, nettoyage salon tunis, restauration marbre, polissage marbre, nettoyage professionnel, tapisserie tunisie, nettoyage post chantier, CCI services",
+    alternates: {
+      canonical: SITE_URL
+    },
+    openGraph: {
+      title: "CCI Tunisie - Nettoyage Professionnel & Restauration Marbre",
+      description: "Leader du nettoyage professionnel en Tunisie. Moquettes, salons, marbre. Devis gratuit.",
+      url: SITE_URL,
+      type: "website",
+      locale: "fr_TN",
+      siteName: "CCI Services Tunisie"
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "CCI Tunisie - Nettoyage Professionnel",
+      description: "Leader du nettoyage professionnel en Tunisie. Devis gratuit."
+    }
+  };
+}
 
 const About = dynamic(() => import("./sections/2-about/about"));
 const Services = dynamic(() => import("./sections/3-services/services"));

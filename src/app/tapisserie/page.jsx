@@ -28,11 +28,27 @@ const tapisserieTabData = [
   }
 ]
 
-export const metadata = {
-  title: "Tapisserie sur mesure & Rénovation d'ameublement— CCI",
-  description:
-    "Retapissage, remplacement de mousse et rembourrage sur mesure pour canapés, banquettes et nautisme. Tissus ignifuges et finitions soignées.",
-};
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
+    title: "Tapisserie sur mesure & Rénovation d'ameublement— CCI",
+    description: "Retapissage, remplacement de mousse et rembourrage sur mesure pour canapés, banquettes et nautisme. Tissus ignifuges et finitions soignées.",
+    alternates: {
+      canonical: `${SITE_URL}/tapisserie`
+    },
+    openGraph: {
+      title: "Tapisserie sur mesure & Rénovation d'ameublement— CCI",
+      description: "Retapissage, remplacement de mousse et rembourrage sur mesure pour canapés, banquettes et nautisme. Tissus ignifuges et finitions soignées.",
+      url: `${SITE_URL}/tapisserie`,
+      type: 'website'
+    },
+    twitter: {
+      title: "Tapisserie sur mesure & Rénovation d'ameublement— CCI",
+      description: "Retapissage, remplacement de mousse et rembourrage sur mesure pour canapés, banquettes et nautisme. Tissus ignifuges et finitions soignées."
+    }
+  };
+}
 
 export default function Page() {
    const tapisserieImages = [

@@ -4,10 +4,27 @@ import Actions from "./1-actions/actions";
 import Welcome from "./2-welcoming/welcome";
 import Form from "./3-form/form";
 
-export const metadata = {
-  title: 'Contactez-nous — CCI',
-  description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.',
-};
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
+    title: 'Contactez-nous — CCI',
+    description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.',
+    alternates: {
+      canonical: `${SITE_URL}/contact`
+    },
+    openGraph: {
+      title: 'Contactez-nous — CCI',
+      description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.',
+      url: `${SITE_URL}/contact`,
+      type: 'website'
+    },
+    twitter: {
+      title: 'Contactez-nous — CCI',
+      description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.'
+    }
+  };
+}
 
 export default function ContactPage() {
 

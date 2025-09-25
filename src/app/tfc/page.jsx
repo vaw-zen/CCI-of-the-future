@@ -28,11 +28,27 @@ const tfcTabData = [
   },
 ];
 
-export const metadata = {
-  title: "Nettoyage technique après travaux (TFC) — CCI",
-  description:
-    "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur  et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie.",
-};
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
+    title: "Nettoyage technique après travaux (TFC) — CCI",
+    description: "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie.",
+    alternates: {
+      canonical: `${SITE_URL}/tfc`
+    },
+    openGraph: {
+      title: "Nettoyage technique après travaux (TFC) — CCI",
+      description: "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie.",
+      url: `${SITE_URL}/tfc`,
+      type: 'website'
+    },
+    twitter: {
+      title: "Nettoyage technique après travaux (TFC) — CCI",
+      description: "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie."
+    }
+  };
+}
 
 export default function Page() {
   const tfcImages = [

@@ -1,4 +1,4 @@
-import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
+import HeroHeader from "@/utils/components/reusableH/HeroHeader";
 import ServiceDetails from "@/utils/components/servicesComponents/serviceDetails/serviceDetails";
 import PartnerTab from "@/utils/components/servicesComponents/partnerTab/PartnerTab";
 import React from "react";
@@ -6,6 +6,28 @@ import Feedback from "@/utils/components/servicesComponents/feedbackComponent/fe
 import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUsTab";
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
+
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
+    title: "Nettoyage salon & Ameublement à domicile — CCI",
+    description: "Nettoyage et rénovation de canapés, fauteuils et textiles d'ameublement : détachage, shampooing et désinfection pour un intérieur sain et accueillant.",
+    alternates: {
+      canonical: `${SITE_URL}/salon`
+    },
+    openGraph: {
+      title: "Nettoyage salon & Ameublement à domicile — CCI",
+      description: "Nettoyage et rénovation de canapés, fauteuils et textiles d'ameublement : détachage, shampooing et désinfection pour un intérieur sain et accueillant.",
+      url: `${SITE_URL}/salon`,
+      type: 'website'
+    },
+    twitter: {
+      title: "Nettoyage salon & Ameublement à domicile — CCI",
+      description: "Nettoyage et rénovation de canapés, fauteuils et textiles d'ameublement : détachage, shampooing et désinfection pour un intérieur sain et accueillant."
+    }
+  };
+}
 
 const salonTabData = [
   {

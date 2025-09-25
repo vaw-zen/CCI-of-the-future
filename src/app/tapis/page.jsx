@@ -28,11 +28,27 @@ const tapisTabData = [
   },
 ];
 
-export const metadata = {
-  title: "Nettoyage de Tapis & Moquettes — CCI",
-  description:
-    "Nettoyage professionnel de tapis et moquettes : shampooing, détachage, désinfection et traitement anti-acariens. Intervention rapide en Tunisie.",
-};
+export async function generateMetadata() {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  return {
+    title: "Nettoyage de Tapis & Moquettes — CCI",
+    description: "Nettoyage professionnel de tapis et moquettes : shampooing, détachage, désinfection et traitement anti-acariens. Intervention rapide en Tunisie.",
+    alternates: {
+      canonical: `${SITE_URL}/tapis`
+    },
+    openGraph: {
+      title: "Nettoyage de Tapis & Moquettes — CCI",
+      description: "Nettoyage professionnel de tapis et moquettes : shampoinage, détachage, désinfection et traitement anti-acariens. Intervention rapide en Tunisie.",
+      url: `${SITE_URL}/tapis`,
+      type: 'website'
+    },
+    twitter: {
+      title: "Nettoyage de Tapis & Moquettes — CCI",
+      description: "Nettoyage professionnel de tapis et moquettes : shampoinage, détachage, désinfection et traitement anti-acariens. Intervention rapide en Tunisie."
+    }
+  };
+}
 
 export default function Page() {
  const tapisImages = [

@@ -2,13 +2,13 @@
 
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
+  /* max-width: 1200px; */
+  /* margin: 0 auto; */
   padding: 0 20px;
 }
 
 .calculatorCard {
-  background: white;
+  /* background: white; */
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   padding: 3rem;
@@ -20,6 +20,7 @@
   color: #2c3e50;
   text-align: center;
   margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .subtitle {
@@ -36,21 +37,21 @@
 }
 
 .serviceCard {
-  border: 2px solid #e9ecef;
+  border: 1px solid #e9ecef;
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.3s ease;
-  background: white;
+  /* background: white; */
 }
 
 .serviceCard:hover {
-  border-color: #007bff;
+  border-color: var(--ac-primary);
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
 }
 
 .serviceCard.selected {
-  border-color: #007bff;
-  background: #f8f9ff;
+  border-color: var(--ac-primary);
+  /* background: #f8f9ff; */
 }
 
 .serviceHeader {
@@ -83,7 +84,7 @@
 
 .basePrice {
   font-size: 0.9rem;
-  color: #007bff;
+  color: var(--ac-primary);
   font-weight: 600;
 }
 
@@ -91,9 +92,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid #007bff;
-  background: white;
-  color: #007bff;
+  border: 2px solid var(--ac-primary);
+  background: transparent;
+  color: var(--ac-primary);
   font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
@@ -104,13 +105,13 @@
 }
 
 .selectButton:hover {
-  background: #007bff;
-  color: white;
+  background: var(--ac-primary);
+  color: var(--bg-base);
 }
 
 .serviceCard.selected .selectButton {
-  background: #007bff;
-  color: white;
+  background: var(--ac-primary);
+  color: var(--bg-base);
 }
 
 .serviceOptions {
@@ -150,12 +151,12 @@
 
 .select:focus, .input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: var(--ac-primary);
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .additionalOptions {
-  background: #f8f9fa;
+  /* background: #f8f9fa; */
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -179,7 +180,7 @@
 }
 
 .totalCard {
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: linear-gradient(135deg, var(--ac-primary), #0056b3);
   color: white;
   border-radius: 16px;
   padding: 2.5rem;
@@ -222,31 +223,31 @@
   .calculatorCard {
     padding: 2rem 1.5rem;
   }
-  
+
   .title {
     font-size: 1.8rem;
   }
-  
+
   .serviceHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .serviceOptions {
     grid-template-columns: 1fr;
   }
-  
+
   .optionsRow {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .totalCard {
     min-width: auto;
     width: 100%;
   }
-  
+
   .amount {
     font-size: 2.5rem;
   }

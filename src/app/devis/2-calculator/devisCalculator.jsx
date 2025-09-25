@@ -151,10 +151,12 @@ export default function DevisCalculator() {
     <section className={styles.calculatorSection}>
       <div className={styles.container}>
         <div className={styles.calculatorCard}>
-          <h2 className={styles.title}>Calculateur de Devis</h2>
-          <p className={styles.subtitle}>
-            Sélectionnez vos services et obtenez un devis personnalisé instantané
-          </p>
+          <div className={styles.header}>
+            <h2 className={styles.title}>Calculateur de Devis</h2>
+            <p className={styles.subtitle}>
+              Sélectionnez vos services et obtenez un devis personnalisé instantané
+            </p>
+          </div>
 
           {/* Services Selection */}
           <div className={styles.servicesGrid}>

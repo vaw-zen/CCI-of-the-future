@@ -1,40 +1,20 @@
-// Dynamic import for Google Generative AI - only loaded when API is called
+// Enhanced dynamic import with Fares expert persona support
 let genAI = null;
-let getSystemPromptServer = null;
-let getAIConfigServer = null;
-let getChatMessagesServer = null;
+let tuningModule = null;
 
 import { francAll } from "franc";
 
-// Détection de langue avec support Arabizi tunisien
-function detectTunArabizi(text) {
-  const arabiziPattern = /[2375]/; // chiffres Arabizi courants
-  const commonArabiziWords = /\b(3andi|nheb|mouch|labes|chna|zarbiya|kifech|ya)\b/i;
-
-  if (arabiziPattern.test(text) || commonArabiziWords.test(text)) {
-    return 'tun-arabizi'; // forcer la réponse en Arabizi
-  }
-
-  const francLang = francAll(text || "")?.[0]?.[0] || 'fra';
-  if (francLang === 'ara') return 'ar';
-  if (francLang === 'eng') return 'en';
-  if (francLang === 'fra') return 'fr';
-  return 'fr';
-}
-
-// Initialize AI libraries only when needed
+// Enhanced AI initialization with Fares expert persona
 async function initializeAI() {
   if (!genAI) {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
-    const tuningModule = await import('../../../utils/tuning-loader-server');
+    tuningModule = await import('../../../utils/tuning-loader-server');
 
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-    getSystemPromptServer = tuningModule.getSystemPromptServer;
-    getAIConfigServer = tuningModule.getAIConfigServer;
-    getChatMessagesServer = tuningModule.getChatMessagesServer;
+    
+    console.log('🎭 Initializing enhanced Fares persona system...');
   }
-  return { genAI, getSystemPromptServer, getAIConfigServer, getChatMessagesServer };
+  return { genAI, tuningModule };
 }
 
 // Timeout wrapper
@@ -48,40 +28,44 @@ function withTimeout(promise, timeoutMs = 25000) {
 export async function POST(request) {
   try {
     const startTime = Date.now();
-    const { genAI, getSystemPromptServer, getAIConfigServer, getChatMessagesServer } = await withTimeout(
-      initializeAI(), 30000
-    );
+    const { genAI, tuningModule } = await withTimeout(initializeAI(), 30000);
 
     const body = await request.json();
     const { message, chatHistory } = body;
 
-    const userLang = detectTunArabizi(message);
+    // Enhanced language and context detection using Fares system
+    const userLanguage = tuningModule.detectUserLanguage(message);
+    const isUrgent = tuningModule.detectUrgency(message);
+    const formalityLevel = tuningModule.detectFormalityLevel(message);
+    
+    console.log(`🌍 Language detected: ${userLanguage}`);
+    console.log(`🚨 Urgency detected: ${isUrgent}`);
+    console.log(`👔 Formality level: ${formalityLevel}`);
 
     // Vérification de la clé API
     if (!process.env.GEMINI_API_KEY || !process.env.GEMINI_API_KEY.startsWith('AIza')) {
+      const errorMessage = tuningModule.getAdaptedErrorMessage('apiKeyError', userLanguage);
       return Response.json({
         success: false,
-        error: "Clé API invalide ou non définie. Appelez au 98-557-766 pour assistance.",
+        error: errorMessage,
         details: process.env.GEMINI_API_KEY ? 'Format incorrect' : 'Non défini'
       }, { status: 401 });
     }
 
-    // Charger prompts et config
-    let systemPrompt, aiConfig;
-    try {
-      const fs = await import('fs');
-      const path = await import('path');
-      const tuningPath = path.join(process.cwd(), 'tuning');
+    // Load enhanced Fares persona configuration
+    const config = tuningModule.loadTuningConfigServer();
+    const systemPrompt = tuningModule.getEnhancedSystemPrompt(userLanguage, isUrgent);
+    const aiConfig = config.aiConfig;
+    
+    console.log(`🎭 Fares persona: ${config.isEnhanced ? 'ACTIVE' : 'FALLBACK'}`);
+    console.log(`📝 System prompt length: ${systemPrompt.length} characters`);
 
-      systemPrompt = JSON.parse(fs.readFileSync(path.join(tuningPath, 'ai-system-prompt.json'), 'utf8')).systemPrompt.fullPrompt;
-      aiConfig = JSON.parse(fs.readFileSync(path.join(tuningPath, 'ai-config.json'), 'utf8'));
-    } catch {
-      systemPrompt = getSystemPromptServer();
-      aiConfig = getAIConfigServer();
-    }
-
-    // Créer modèle et session
-    const model = genAI.getGenerativeModel({ model: aiConfig.model.name });
+    // Create enhanced AI model with Fares persona
+    const model = genAI.getGenerativeModel({ 
+      model: aiConfig.model.name,
+      systemInstruction: systemPrompt
+    });
+    
     const chat = model.startChat({
       history: chatHistory || [],
       generationConfig: {
@@ -90,31 +74,58 @@ export async function POST(request) {
       },
     });
 
-    let messageToSend = (!chatHistory || chatHistory.length === 0)
-      ? `${systemPrompt}\n\nUser: ${message}`
-      : message;
-
-    // Instruction spécifique Arabizi
-    if (userLang === 'tun-arabizi') {
-      messageToSend = `Réponds en Arabizi tunisien : ${messageToSend}`;
+    // Enhanced message preparation with cultural context
+    let messageToSend = message;
+    
+    // Add greeting context for first message
+    if (!chatHistory || chatHistory.length === 0) {
+      const greeting = tuningModule.getAdaptedGreeting(userLanguage, formalityLevel);
+      console.log(`👋 Fares greeting: ${greeting.substring(0, 50)}...`);
+    }
+    
+    // Add language-specific instructions
+    const languageInstructions = {
+      french: "Répondez en français professionnel comme Fares, expert CCI.",
+      arabic: "أجب باللغة العربية كفارس، خبير CCI مع 15 سنة خبرة.",
+      english: "Respond in English as Fares, CCI's senior technical expert.",
+      arabizi: "Réponds en Arabizi tunisien comme Fares, expert CCI men 15 ans."
+    };
+    
+    if (languageInstructions[userLanguage]) {
+      messageToSend = `${languageInstructions[userLanguage]}\n\nUser: "${message}"`;
     }
 
     const result = await withTimeout(chat.sendMessage(messageToSend), 120000);
     const text = (await result.response).text();
 
+    console.log(`✅ Response generated (${text.length} chars) for ${userLanguage} user`);
+
     return Response.json({
       success: true,
       message: text,
       chatHistory: chat.getHistory(),
-      language: userLang
+      language: userLanguage,
+      faresPersona: config.isEnhanced,
+      urgency: isUrgent
     });
 
   } catch (error) {
-    console.error('Gemini API Error:', error);
+    console.error('❌ Enhanced Gemini API Error:', error);
+    
+    // Try to detect language from the original message for error response
+    let errorLanguage = 'french';
+    try {
+      const body = await request.json();
+      errorLanguage = tuningModule?.detectUserLanguage(body.message) || 'french';
+    } catch {}
+    
+    // Get culturally appropriate error message
+    const errorMessage = tuningModule?.getAdaptedErrorMessage('apiError', errorLanguage) || 
+      "Fares ici ! Petit souci technique 😅 Appelez-moi au 98-557-766";
 
     return Response.json({
       success: false,
-      error: "Erreur lors de la génération de la réponse. Appelez au 98-557-766 si urgent.",
+      error: errorMessage,
       details: error.message
     }, { status: 500 });
   }

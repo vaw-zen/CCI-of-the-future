@@ -1,0 +1,256 @@
+.formSection { display: flex; flex-direction: column; gap: 1.50vw; padding: 80px var(--padding-base); margin: 3.13vw 0vw 2.60vw }
+
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.formCard {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.formHeader {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 3rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.form {
+  padding: 3rem;
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.sectionIcon {
+  font-size: 1.3rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.required {
+  color: #dc3545;
+}
+
+.input, .select, .textarea {
+  padding: 0.875rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.input::placeholder, .textarea::placeholder {
+  color: #adb5bd;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.checkboxSection {
+  margin: 3rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.checkboxGroup:last-child {
+  margin-bottom: 0;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.checkboxLabel {
+  font-size: 0.9rem;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.checkboxLabel a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.checkboxLabel a:hover {
+  text-decoration: underline;
+}
+
+.statusMessage {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.statusMessage.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.statusMessage.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.submitSection {
+  text-align: center;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 250px;
+  justify-content: center;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submitButton.submitting {
+  background: #6c757d;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.submitNote {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .formSection {
+    padding: 60px 0;
+  }
+  
+  .formHeader {
+    padding: 2rem;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .form {
+    padding: 2rem 1.5rem;
+  }
+  
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.2rem;
+  }
+  
+  .submitButton {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .checkboxSection {
+    padding: 1rem;
+  }
+}

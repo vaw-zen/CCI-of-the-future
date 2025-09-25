@@ -1,0 +1,301 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background: white;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #6c757d;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+.content {
+  padding: 3rem;
+  text-align: center;
+}
+
+.successIcon {
+  margin-bottom: 2rem;
+}
+
+.checkmark {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  position: relative;
+  margin: 0 auto;
+  animation: scaleIn 0.5s ease-out 0.2s both;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.checkmarkStem {
+  position: absolute;
+  width: 3px;
+  height: 20px;
+  background: white;
+  left: 32px;
+  top: 34px;
+  transform: rotate(45deg);
+  animation: checkmarkStem 0.3s ease-out 0.7s both;
+}
+
+.checkmarkKick {
+  position: absolute;
+  width: 12px;
+  height: 3px;
+  background: white;
+  left: 25px;
+  top: 45px;
+  transform: rotate(-45deg);
+  animation: checkmarkKick 0.3s ease-out 0.7s both;
+}
+
+@keyframes checkmarkStem {
+  from {
+    height: 0;
+  }
+  to {
+    height: 20px;
+  }
+}
+
+@keyframes checkmarkKick {
+  from {
+    width: 0;
+  }
+  to {
+    width: 12px;
+  }
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.message {
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.details {
+  text-align: left;
+  margin-bottom: 2.5rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.detailItem:last-child {
+  margin-bottom: 0;
+}
+
+.detailItem .icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.detailItem strong {
+  color: #2c3e50;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.detailItem p {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.nextSteps {
+  text-align: left;
+  background: #e7f3ff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.nextSteps h3 {
+  color: #0056b3;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.nextSteps ol {
+  color: #495057;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  padding-left: 1.5rem;
+}
+
+.nextSteps li {
+  margin-bottom: 0.5rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.primaryButton, .secondaryButton {
+  padding: 0.875rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 0.95rem;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+}
+
+.secondaryButton {
+  background: white;
+  color: #007bff;
+  border: 2px solid #007bff;
+}
+
+.secondaryButton:hover {
+  background: #007bff;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.contact {
+  padding-top: 2rem;
+  border-top: 1px solid #e9ecef;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.contact a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 2rem 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .primaryButton, .secondaryButton {
+    width: 100%;
+  }
+  
+  .detailItem {
+    padding: 1rem;
+  }
+  
+  .nextSteps {
+    padding: 1rem;
+  }
+}

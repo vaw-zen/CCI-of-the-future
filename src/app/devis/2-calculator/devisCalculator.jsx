@@ -170,7 +170,7 @@ export default function DevisCalculator() {
                   <div className={styles.serviceInfo}>
                     <h3>{service.name}</h3>
                     <p>{service.description}</p>
-                    <span className={styles.basePrice}>À partir de {service.basePrice} DT</span>
+                    <span className={styles.basePrice}>À partir de {service.basePrice} DT {service.unity ? `par ${service.unity}` : ''}</span>
                   </div>
                   <button
                     type="button"

@@ -1,5 +1,6 @@
 .formSection { display: flex; flex-direction: column; gap: 1.50vw; padding: 80px var(--padding-base); margin: 3.13vw 0vw 2.60vw }
 
+.formContainer { min-height: 17.84vw; height: 100%; width: 100%; padding: 0 var(--padding-base); line-height: 1.69vw; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; gap: 1.30vw; contain: paint; }
 
 .container {
   max-width: 1200px;
@@ -80,6 +81,10 @@
   color: #dc3545;
 }
 
+.formGroup { color: rgba(255, 255, 255, 0.7); font-size: 0.91vw; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.09); outline: none; width: 100%; background: transparent !important; padding: 0.59vw 0.98vw 0.59vw 0; }
+.formGroup::placeholder { color: rgba(255, 255, 255, 0.3); font-size: 0.78vw; }
+.formGroup:focus { border-bottom: 1px solid #cafb42; }
+
 .input, .select, .textarea {
   padding: 0.875rem;
   border: 2px solid #e9ecef;
@@ -104,12 +109,20 @@
   min-height: 100px;
 }
 
+.textAreaContainer { grid-column: span 2; height: 6.51vw; }
+
 .checkboxSection {
   margin: 3rem 0;
   padding: 1.5rem;
   background: #f8f9fa;
   border-radius: 12px;
 }
+
+.checkboxContainer { display: flex; align-items: center; gap: 0.52vw; font-size: 0.91vw; font-weight: 400; color: rgba(255, 255, 255, 0.7); grid-column: span 2; }
+.checkboxContainer:hover { cursor: pointer; }
+.checkboxContainer input { width: 0.91vw; height: 0.91vw; accent-color: var(--ac-primary); cursor: pointer; transition: filter .2s ease, transform .05s ease; }
+.checkboxContainer:hover input { filter: brightness(1.08); }
+.checkboxContainer input:active { transform: scale(0.96); }
 
 .checkboxGroup {
   display: flex;
@@ -168,14 +181,17 @@
 }
 
 .submitButton {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
+  background-color: #fff;
+  color: #000;
   border: none;
-  padding: 1rem 2.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 50px;
+  padding: 0.98vw 1.95vw;
+  font-size: 1.04vw;
+  font-weight: 700;
   cursor: pointer;
+  margin-top: 0.98vw;
+  grid-column: span 2;
+  text-align: center;
+  border-radius: 2.08vw;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
@@ -185,6 +201,7 @@
 }
 
 .submitButton:hover:not(:disabled) {
+  background-color: #cafb42;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
 }
@@ -217,6 +234,30 @@
   margin-top: 1rem;
   font-size: 0.85rem;
   color: #6c757d;
+}
+
+.greenBandWrapper { margin: 7vw 0 3.8vw 0 !important; }
+
+@media screen and (max-width: 1024px) {
+  .formContainer { min-height: 35.68vw; line-height: 3.39vw; gap: 2.60vw; padding: 1.30vw 2vw !important; width: 100%; }
+  .formGroup { font-size: 1.82vw; padding: 1.17vw 1.95vw 1.17vw 0; }
+  .formGroup::placeholder { font-size: 1.56vw; }
+  .textAreaContainer { height: 13.02vw; }
+  .checkboxContainer { gap: 1.04vw; font-size: 1.82vw; }
+  .checkboxContainer input { width: 1.82vw; height: 1.82vw; }
+  .submitButton { padding: 1.95vw 3.91vw; font-size: 2.08vw; margin-top: 1.95vw; border-radius: 4.17vw; }
+  .greenBandWrapper { margin: 10vw 0 8vw 0 !important; overflow: hidden; }
+}
+
+@media screen and (max-width: 480px) {
+  .formContainer { min-height: 66.50vw; line-height: 6.31vw; gap: 4.85vw; padding: 2.43vw 4vw !important; width: 100%; }
+  .formGroup { font-size: 3.40vw; padding: 2.18vw 3.64vw 2.18vw 0; }
+  .formGroup::placeholder { font-size: 2.91vw; }
+  .textAreaContainer { height: 24.27vw; }
+  .checkboxContainer { display: flex; align-items: center; gap: 3.64vw; font-size: 3.40vw; font-weight: 400; color: rgba(255, 255, 255, 0.7); width: 100%; justify-content: flex-start; }
+  .checkboxContainer input { width: 3.88vw; height: 3.88vw; margin: 0; }
+  .submitButton { padding: 3.64vw 7.28vw; font-size: 3.88vw; margin-top: 3.64vw; border-radius: 7.77vw; }
+  .greenBandWrapper { margin: 10vw 0 15vw 0 !important; overflow: hidden; }
 }
 
 @media (max-width: 768px) {

@@ -7,7 +7,7 @@ export default function Welcome() {
   return (
     <div className={styles.welcome}>
       {content.welcomeCards.map((card, index) => (
-        <WelcomeCard key={index} {...card} />
+        <WelcomeCard id={index ? "devis" : null} key={index} {...card} />
       ))}
     </div>
   );

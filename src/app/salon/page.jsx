@@ -1,4 +1,4 @@
-import HeroHeader from "@/utils/components/reusableH/HeroHeader";
+import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import ServiceDetails from "@/utils/components/servicesComponents/serviceDetails/serviceDetails";
 import PartnerTab from "@/utils/components/servicesComponents/partnerTab/PartnerTab";
 import React from "react";

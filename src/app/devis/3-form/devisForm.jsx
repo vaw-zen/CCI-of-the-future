@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import styles from './devisForm.module.css';
+import { submitDevisRequest } from '@/services/devisService';
 
 export default function DevisForm() {
   const [formData, setFormData] = useState({
@@ -127,41 +128,49 @@ export default function DevisForm() {
     setSubmitStatus(null);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Submit to Supabase
+      const result = await submitDevisRequest(formData);
       
-      setSubmitStatus({
-        type: 'success',
-        message: 'Votre demande de devis a été envoyée avec succès ! Nous vous contacterons dans les plus brefs délais.'
-      });
-      
-      // Reset form
-      setFormData({
-        typePersonne: 'physique',
-        matriculeFiscale: '',
-        nom: '',
-        prenom: '',
-        email: '',
-        telephone: '',
-        adresse: '',
-        ville: '',
-        codePostal: '',
-        typeLogement: 'appartement',
-        surface: '',
-        typeService: '',
-        nombrePlaces: '',
-        surfaceService: '',
-        datePreferee: '',
-        heurePreferee: 'matin',
-        message: '',
-        newsletter: false,
-        conditions: false
-      });
+      if (result.success) {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Votre demande de devis a été envoyée avec succès ! Nous vous contacterons dans les plus brefs délais. Un email de confirmation vous sera envoyé.'
+        });
+        
+        // Reset form
+        setFormData({
+          typePersonne: 'physique',
+          matriculeFiscale: '',
+          nom: '',
+          prenom: '',
+          email: '',
+          telephone: '',
+          adresse: '',
+          ville: '',
+          codePostal: '',
+          typeLogement: 'appartement',
+          surface: '',
+          typeService: '',
+          nombrePlaces: '',
+          surfaceService: '',
+          datePreferee: '',
+          heurePreferee: 'matin',
+          message: '',
+          newsletter: false,
+          conditions: false
+        });
+      } else {
+        setSubmitStatus({
+          type: 'error',
+          message: result.error || 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
+        });
+      }
       
     } catch (error) {
+      console.error('Form submission error:', error);
       setSubmitStatus({
         type: 'error',
-        message: 'Une erreur est survenue. Veuillez réessayer plus tard.'
+        message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'
       });
     } finally {
       setIsSubmitting(false);

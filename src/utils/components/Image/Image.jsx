@@ -16,7 +16,11 @@ const ResponsiveImage = ({
     quality = 80,
     contain,
     position,
-    skeleton = false
+    skeleton = false,
+    onClick,
+    onKeyDown,
+    role,
+    tabIndex
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     // Track whether we're rendering on the client
@@ -69,6 +73,10 @@ const ResponsiveImage = ({
                 display: 'flex',
                 ...style
             }}
+            role={role}
+            tabIndex={tabIndex}
+            onClick={onClick}
+            onKeyDown={onKeyDown}
         >
             {hasValidSrc && (
                 <Image

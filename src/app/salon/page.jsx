@@ -106,14 +106,14 @@ export default function Page() {
       <div className="responsive-padding">
         <ServiceDetails
           title="Nettoyage canapé et tissus d’ameublement"
-          text="Nettoyage en profondeur des canapés, fauteuils et coussins : aspiration, détachage spécialisé, shampooing et séchage contrôlé. Nous restaurons les couleurs et la texture sans abîmer les matériaux."
+         text="Procédé complet et adapté à chaque support : diagnostic de la fibre (microfibre, velours, lin, coton mixte, simili, cuir pigmenté) et test de tenue des couleurs avant toute action, suivi d’une aspiration profonde (buses battantes) puis d’un pré‑détachage ciblé (graisse, tanins, protéines) avec agents à pH contrôlé. Selon le tissu et son niveau d’encrassement, nous privilégions soit l’injection‑extraction à l’eau tiède filtrée (véritable shampooing des fibres) pour extraire la saleté en profondeur, soit une vapeur basse pression contrôlée pour désinfection et désodorisation sur surfaces compatibles, soit une mousse sèche / encapsulation à faible humidité pour les textiles sensibles afin d’accélérer le séchage. Un brossage doux (orbital ou manuel), la neutralisation des odeurs organiques par enzymes et l’égalisation finale des fibres complètent l’intervention. Temps de séchage indicatif : 2 à 6 h selon ventilation et densité du rembourrage."
         />
 
         <Feedback />
 
         <ServiceDetails
           title="Entretien rideaux et textiles"
-          text="Nettoyage et remise en forme des rideaux, stores et textiles d’ameublement, avec des procédés adaptés pour éviter rétrécissement ou décoloration."
+         text="Traitement sur place sans dépose lorsque c’est possible : nous éliminons les poussières fines et allergènes par micro‑aspiration filtrée, appliquons une brume douce de solution adaptée au type de fibre, travaillons les zones tachées par gestes contrôlés puis retirons l’humidité excédentaire pour éviter les auréoles. La finition associe défroissage vapeur vertical, neutralisation des odeurs et, en option, une protection anti‑UV / anti‑dépôt. Résultat : tombé naturel préservé, couleurs stables, aucune tension ni retrait indésirable." 
         />
 
         <AboutUsTab
@@ -126,7 +126,7 @@ export default function Page() {
 
         <ServiceList
           title="Services salon"
-          text="Solutions sur mesure pour tous les textiles d’ameublement."
+          text="Solutions sur mesure pour tous les textiles d’ameublement : aspiration anti‑poussières profondes, pré‑détachage multi‑taches, injection‑extraction, vapeur basse pression désinfectante, mousse sèche / encapsulation pour tissus sensibles, traitement anti‑acariens & anti‑odeurs, protection optionnelle anti‑taches."
           items={[
             {
               id: "1",
@@ -159,7 +159,7 @@ export default function Page() {
 
         <ServiceDetails
           title="Pourquoi nous choisir"
-          text="Équipements professionnels, produits adaptés et techniciens formés : nous intervenons avec soin et rapidité pour rendre vos espaces sains et accueillants."
+          text="Protocoles structurés : diagnostic + fiche d’intervention + test de solidité des couleurs avant traitement. Équipements injection‑extraction bi‑turbine haut débit, contrôle du pH en fin de cycle pour préserver l’élasticité des fibres, produits certifiés (formules biodégradables, faible résidu). Techniciens formés aux méthodes vapeur, encapsulation et traitement sélectif des taches (graisse, boisson, sébum, moisissure superficielle). Séchage optimisé par passes croisées et limitation de la saturation en eau. Transparence, traçabilité et respect des matériaux garantissent un résultat durable et homogène."
         />
 
   <ImageSlider images={salonImages} />

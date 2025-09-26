@@ -1,14 +1,47 @@
 'use client';
-
+import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getDevisRequests } from '@/services/devisService';
 import styles from './admin.module.css';
 
 export default function AdminDevisPage() {
+  const router = useRouter();
+  const { user, isAdmin, loading: authLoading, signOut } = useAdminAuth();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
+
+  // Redirect if not authenticated or not admin
+  useEffect(() => {
+    if (!authLoading && (!user || !isAdmin)) {
+      router.push('/admin/login');
+    }
+  }, [user, isAdmin, authLoading, router]);
+
+  const handleLogout = async () => {
+    const result = await signOut();
+    if (result.success) {
+      router.push('/admin/login');
+    }
+  };
+
+  // Don't render anything if not authenticated or still loading
+  if (authLoading || !user || !isAdmin) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '18px' 
+      }}>
+        Vérification des privilèges administrateur...
+      </div>
+    );
+  }
 
   useEffect(() => {
     loadRequests();
@@ -68,12 +101,19 @@ export default function AdminDevisPage() {
   }
 
   return (
+   <>
+    <HeroHeader title={"Administration - Demandes de Devis"} />
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Administration - Demandes de Devis</h1>
-        <button onClick={loadRequests} className={styles.refreshButton}>
-          🔄 Actualiser
-        </button>
+        <div className={styles.headerActions}>
+          <button onClick={loadRequests} className={styles.refreshButton}>
+            🔄 Actualiser
+          </button>
+          <button onClick={handleLogout} className={styles.logoutButton}>
+            🚪 Déconnexion
+          </button>
+        </div>
       </div>
 
       <div className={styles.stats}>
@@ -88,6 +128,10 @@ export default function AdminDevisPage() {
         <div className={styles.statCard}>
           <h3>{requests.filter(r => r.type_personne === 'morale').length}</h3>
           <p>Entreprises</p>
+        </div>
+        <div className={styles.statCard}>
+          <h3>{requests.filter(r => r.type_personne === 'physique').length}</h3>
+          <p>Particuliers</p>
         </div>
       </div>
 
@@ -214,5 +258,6 @@ export default function AdminDevisPage() {
         </div>
       )}
     </div>
+   </>
   );
 }

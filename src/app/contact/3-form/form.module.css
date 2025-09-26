@@ -2,7 +2,6 @@
 .formGroup { color: rgba(255, 255, 255, 0.7); font-size: 0.91vw; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.09); outline: none; width: 100%; background: transparent !important; padding: 0.59vw 0.98vw 0.59vw 0; }
 .formGroup::placeholder { color: rgba(255, 255, 255, 0.3); font-size: 0.78vw; }
 .formGroup:focus { border-bottom: 1px solid #cafb42; }
-.formWrapper{display: flex; flex-direction: column; gap: 1vw; padding:0 1rem;align-items: center;}
 .heading {
   font-size: 2.2rem;
   font-weight: 700;

@@ -10,7 +10,20 @@ export default function DevisForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState({ type: '', message: '' });
 
+  const getServiceName = (serviceCode) => {
+    const services = {
+      'salon': 'Nettoyage de salon',
+      'tapis': 'Nettoyage de tapis/moquette',
+      'tapisserie': 'Tapisserie',
+      'marbre': 'Polissage de marbre',
+      'tfc': 'Nettoyage TFC (bureaux/commerces)'
+    };
+    return services[serviceCode] || serviceCode;
+  };
+
   const [formData, setFormData] = useState({
+    typePersonne: 'physique',
+    matriculeFiscale: '',
     nom: '',
     prenom: '',
     email: '',
@@ -20,6 +33,9 @@ export default function DevisForm() {
     codePostal: '',
     typeLogement: '',
     surface: '',
+    typeService: '',
+    nombrePlaces: '',
+    surfaceService: '',
     datePreferee: '',
     heurePreferee: '',
     message: '',
@@ -36,13 +52,51 @@ export default function DevisForm() {
   };
 
   const validateForm = () => {
-    const required = ['nom', 'prenom', 'email', 'telephone', 'adresse', 'ville'];
+    const required = ['nom', 'prenom', 'email', 'telephone', 'adresse', 'ville', 'typeService'];
     const missing = required.filter(field => !formData[field].trim());
     
     if (missing.length > 0) {
       setResult({
         type: 'error',
         message: `Veuillez remplir les champs obligatoires: ${missing.join(', ')}`
+      });
+      return false;
+    }
+
+    // Validation matricule fiscale pour personne morale
+    if (formData.typePersonne === 'morale') {
+      if (!formData.matriculeFiscale.trim()) {
+        setResult({
+          type: 'error',
+          message: 'La matricule fiscale est obligatoire pour une personne morale'
+        });
+        return false;
+      }
+      
+      // Validation format matricule fiscale tunisienne (7 chiffres + lettre ou 8 chiffres)
+      const matriculeRegex = /^[0-9]{7}[A-Z]|[0-9]{8}$/;
+      if (!matriculeRegex.test(formData.matriculeFiscale.replace(/\s/g, ''))) {
+        setResult({
+          type: 'error',
+          message: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres)'
+        });
+        return false;
+      }
+    }
+
+    // Validation des quantités selon le type de service
+    if (formData.typeService === 'salon' && !formData.nombrePlaces) {
+      setResult({
+        type: 'error',
+        message: 'Veuillez indiquer le nombre de places pour le nettoyage de salon'
+      });
+      return false;
+    }
+
+    if (['tapis', 'marbre', 'tfc'].includes(formData.typeService) && !formData.surfaceService) {
+      setResult({
+        type: 'error',
+        message: 'Veuillez indiquer la surface à traiter'
       });
       return false;
     }
@@ -93,9 +147,12 @@ export default function DevisForm() {
       const body = encodeURIComponent(`
 DEMANDE DE DEVIS
 
+Type de client: ${formData.typePersonne === 'physique' ? 'Personne physique' : 'Personne morale (Entreprise)'}
+${formData.typePersonne === 'morale' ? `Matricule fiscale: ${formData.matriculeFiscale}` : ''}
+
 Informations personnelles:
-- Nom: ${formData.nom}
-- Prénom: ${formData.prenom}
+- ${formData.typePersonne === 'morale' ? 'Raison sociale' : 'Nom'}: ${formData.nom}
+- ${formData.typePersonne === 'morale' ? 'Contact' : 'Prénom'}: ${formData.prenom}
 - Email: ${formData.email}
 - Téléphone: ${formData.telephone}
 
@@ -107,6 +164,11 @@ Adresse d'intervention:
 Détails du projet:
 - Type de logement: ${formData.typeLogement || 'Non spécifié'}
 - Surface approximative: ${formData.surface ? formData.surface + ' m²' : 'Non spécifiée'}
+
+SERVICE DEMANDÉ:
+- Type de service: ${getServiceName(formData.typeService)}
+${formData.typeService === 'salon' ? `- Nombre de places: ${formData.nombrePlaces}` : ''}
+${['tapis', 'marbre', 'tfc'].includes(formData.typeService) ? `- Surface à traiter: ${formData.surfaceService} m²` : ''}
 
 Préférences de rendez-vous:
 - Date préférée: ${formData.datePreferee || 'Non spécifiée'}
@@ -133,6 +195,8 @@ Envoyé depuis le site web CCI Services
 
       // Reset form
       setFormData({
+        typePersonne: 'physique',
+        matriculeFiscale: '',
         nom: '',
         prenom: '',
         email: '',
@@ -142,6 +206,9 @@ Envoyé depuis le site web CCI Services
         codePostal: '',
         typeLogement: '',
         surface: '',
+        typeService: '',
+        nombrePlaces: '',
+        surfaceService: '',
         datePreferee: '',
         heurePreferee: '',
         message: '',
@@ -156,14 +223,49 @@ Envoyé depuis le site web CCI Services
   };
 
   return (
-    <div>
+    <div className={styles.formWrapper}>
+      <h1 className={styles.heading}>Demande de devis</h1>
+      <p className={styles.description}>
+        Remplissez le formulaire ci-dessous pour obtenir un devis personnalisé.
+      </p>
       <form ref={formRef} className={styles.formContainer} onSubmit={handleSubmit}>
+
+        {/* Type de personne */}
+        <select 
+          className={styles.formGroup} 
+          name="typePersonne" 
+          value={formData.typePersonne}
+          onChange={handleInputChange}
+          required
+        >
+          <option value="physique">Personne physique</option>
+          <option value="morale">Personne morale (Entreprise)</option>
+        </select>
+
+        {/* Matricule fiscale conditionnelle */}
+        {formData.typePersonne === 'morale' && (
+          <div style={{ gridColumn: 'span 2' }}>
+            <input 
+              className={styles.formGroup} 
+              type="text" 
+              name="matriculeFiscale" 
+              placeholder="Matricule fiscale (ex: 1234567A)"
+              value={formData.matriculeFiscale}
+              onChange={handleInputChange}
+              required
+            />
+            <div className={styles.helpText}>
+              Format : 7 chiffres + 1 lettre ou 8 chiffres
+            </div>
+          </div>
+        )}
+
         {/* Personal Information Row 1 */}
         <input 
           className={styles.formGroup} 
           type="text" 
           name="nom" 
-          placeholder="Nom" 
+          placeholder={formData.typePersonne === 'morale' ? 'Raison sociale' : 'Nom'} 
           value={formData.nom}
           onChange={handleInputChange}
           required 
@@ -172,7 +274,7 @@ Envoyé depuis le site web CCI Services
           className={styles.formGroup} 
           type="text" 
           name="prenom" 
-          placeholder="Prénom" 
+          placeholder={formData.typePersonne === 'morale' ? 'Nom du contact' : 'Prénom'} 
           value={formData.prenom}
           onChange={handleInputChange}
           required 
@@ -250,12 +352,69 @@ Envoyé depuis le site web CCI Services
           onChange={handleInputChange}
           min="1"
         />
+
+        {/* Type de service */}
+        <select 
+          className={styles.formGroup} 
+          name="typeService" 
+          value={formData.typeService}
+          onChange={handleInputChange}
+          required
+        >
+          <option value="">Sélectionnez le type de service</option>
+          <option value="salon">Nettoyage de salon</option>
+          <option value="tapis">Nettoyage de tapis/moquette</option>
+          <option value="tapisserie">Tapisserie</option>
+          <option value="marbre">Polissage de marbre</option>
+          <option value="tfc">Nettoyage TFC (bureaux/commerces)</option>
+        </select>
+
+        {/* Champs conditionnels selon le service */}
+        {formData.typeService === 'salon' && (
+          <input 
+            className={styles.formGroup} 
+            type="number" 
+            name="nombrePlaces" 
+            placeholder="Nombre de places (canapés, fauteuils)"
+            value={formData.nombrePlaces}
+            onChange={handleInputChange}
+            min="1"
+            required
+          />
+        )}
+
+        {['tapis', 'marbre', 'tfc'].includes(formData.typeService) && (
+          <input 
+            className={styles.formGroup} 
+            type="number" 
+            name="surfaceService" 
+            placeholder="Surface à traiter (m²)"
+            value={formData.surfaceService}
+            onChange={handleInputChange}
+            min="1"
+            required
+          />
+        )}
+
+        {formData.typeService === 'tapisserie' && (
+          <textarea 
+            className={`${styles.formGroup} ${styles.textAreaContainer}`} 
+            name="message" 
+            placeholder="Décrivez votre projet de tapisserie (type, dimensions, état...)"
+            value={formData.message}
+            onChange={handleInputChange}
+            rows={3}
+            required
+          />
+        )}
         
         {/* Date and Time Row 5 */}
         <input 
           className={styles.formGroup} 
           type="date" 
           name="datePreferee" 
+          placeholder="Sélectionnez la date d'intervention"
+          title="Sélectionnez la date d'intervention"
           value={formData.datePreferee}
           onChange={handleInputChange}
           min={new Date().toISOString().split('T')[0]}
@@ -273,15 +432,17 @@ Envoyé depuis le site web CCI Services
           <option value="flexible">Flexible</option>
         </select>
         
-        {/* Message */}
-        <textarea 
-          className={`${styles.formGroup} ${styles.textAreaContainer}`} 
-          name="message" 
-          placeholder="Détails sur vos besoins (optionnel)"
-          value={formData.message}
-          onChange={handleInputChange}
-          rows={4}
-        />
+        {/* Message (si ce n'est pas tapisserie) */}
+        {formData.typeService !== 'tapisserie' && (
+          <textarea 
+            className={`${styles.formGroup} ${styles.textAreaContainer}`} 
+            name="message" 
+            placeholder="Détails sur vos besoins (optionnel)"
+            value={formData.message}
+            onChange={handleInputChange}
+            rows={4}
+          />
+        )}
         
         {/* Newsletter Checkbox */}
         <label className={styles.checkboxContainer}>

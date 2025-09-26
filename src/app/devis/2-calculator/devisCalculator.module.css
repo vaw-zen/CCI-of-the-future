@@ -1,6 +1,5 @@
 .calculatorSection { display: flex; flex-direction: column; gap: 1.50vw; padding: 0 var(--padding-base); margin: 3.13vw 0vw 2.60vw }
 
-
 .container {
   /* max-width: 1200px; */
   /* margin: 0 auto; */

@@ -296,6 +296,15 @@ export default function DevisForm() {
           <option value="autre">Autre</option>
         </select>
         
+        <input 
+          className={styles.formGroup} 
+          type="text" 
+          name="codePostal" 
+          placeholder="Code postal (optionnel)" 
+          value={formData.codePostal}
+          onChange={handleInputChange}
+        />
+        
         {/* Additional Information Row 4 */}
         <select 
           className={styles.formGroup} 

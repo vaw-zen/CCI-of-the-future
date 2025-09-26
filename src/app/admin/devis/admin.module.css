@@ -19,9 +19,14 @@
   margin: 0;
 }
 
+.headerActions {
+  display: flex;
+  gap: 10px;
+}
+
 .refreshButton {
-  background: #007bff;
-  color: white;
+  background: var(--ac-primary);
+  color: BLACK;
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
@@ -32,7 +37,24 @@
 }
 
 .refreshButton:hover {
-  background: #0056b3;
+  background: var(--bg-secondary);
+  color: #fff;
+}
+
+.logoutButton {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.logoutButton:hover {
+  background: #c82333;
 }
 
 .stats {
@@ -43,18 +65,18 @@
 }
 
 .statCard {
-  background: white;
+  /* background: white; */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   text-align: center;
-  border-left: 4px solid #007bff;
+  border-left: 4px solid var(--ac-primary);
 }
 
 .statCard h3 {
   margin: 0 0 5px 0;
   font-size: 2em;
-  color: #007bff;
+  color: var(--ac-primary);
   font-weight: 700;
 }
 
@@ -71,7 +93,7 @@
 }
 
 .requestCard {
-  background: white;
+  /* background: white; */
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
@@ -100,7 +122,7 @@
 
 .service {
   margin: 0;
-  color: #007bff;
+  color: var(--ac-primary);
   font-weight: 500;
   font-size: 14px;
 }
@@ -192,7 +214,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  /* background: rgba(0,0,0,0.5); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,7 +223,7 @@
 }
 
 .modalContent {
-  background: white;
+  background: var(--bg-base);
   border-radius: 8px;
   max-width: 800px;
   width: 100%;
@@ -216,7 +238,7 @@
   align-items: center;
   padding: 20px 30px;
   border-bottom: 1px solid #e9ecef;
-  background: #f8f9fa;
+  background: var(--bg-base);
   border-radius: 8px 8px 0 0;
 }
 
@@ -283,7 +305,7 @@
 }
 
 .section a {
-  color: #007bff;
+  color: var(--ac-primary);
   text-decoration: none;
 }
 

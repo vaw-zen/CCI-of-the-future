@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS devis_requests (
   adresse TEXT NOT NULL,
   ville TEXT NOT NULL,
   code_postal TEXT,
-  type_logement TEXT DEFAULT 'appartement' CHECK (type_logement IN ('appartement', 'maison', 'villa', 'bureau', 'commerce')),
+  type_logement TEXT DEFAULT 'appartement' CHECK (type_logement IN ('appartement', 'maison', 'villa', 'bureau', 'commerce', 'bateau ou car ferry')),
   surface INTEGER,
   
   -- Service Information

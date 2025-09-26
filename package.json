@@ -12,6 +12,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@studio-freight/lenis": "^1.0.42",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.58.0",
     "franc": "^6.2.0",
     "franc-min": "^6.2.0",

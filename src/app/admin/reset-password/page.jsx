@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from '../login/login.module.css';
 
-export default function ResetPassword() {
+function ResetPasswordForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -129,5 +129,22 @@ export default function ResetPassword() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPassword() {
+  return (
+    <Suspense fallback={
+      <div className={styles.container}>
+        <div className={styles.loginCard}>
+          <div className={styles.header}>
+            <h1>Réinitialiser le mot de passe</h1>
+            <p>Chargement...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

@@ -21,6 +21,13 @@ export default function AdminDevisPage() {
     }
   }, [user, isAdmin, authLoading, router]);
 
+  // Load requests when authenticated
+  useEffect(() => {
+    if (!authLoading && user && isAdmin) {
+      loadRequests();
+    }
+  }, [user, isAdmin, authLoading]);
+
   const handleLogout = async () => {
     const result = await signOut();
     if (result.success) {
@@ -42,10 +49,6 @@ export default function AdminDevisPage() {
       </div>
     );
   }
-
-  useEffect(() => {
-    loadRequests();
-  }, []);
 
   const loadRequests = async () => {
     try {

@@ -158,7 +158,7 @@ const legacyDefaultConfig = {
   },
   aiConfig: {
     model: {
-      name: "gemini-1.5-flash",
+      name: "gemini-1.5-flash-8b",
       maxOutputTokens: 1000,
       temperature: 0.7
     },

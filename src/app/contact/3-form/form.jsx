@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import styles from "./form.module.css";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
+import { submitDevisRequest } from "@/services/devisService";
 
 export default function DevisForm() {
   const formRef = useRef();
@@ -130,7 +131,7 @@ export default function DevisForm() {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
 
@@ -142,81 +143,49 @@ export default function DevisForm() {
     setIsSubmitting(true);
 
     try {
-      // Create mailto link with form data
-      const subject = encodeURIComponent('Demande de devis - CCI Services');
-      const body = encodeURIComponent(`
-DEMANDE DE DEVIS
-
-Type de client: ${formData.typePersonne === 'physique' ? 'Personne physique' : 'Personne morale (Entreprise)'}
-${formData.typePersonne === 'morale' ? `Matricule fiscale: ${formData.matriculeFiscale}` : ''}
-
-Informations personnelles:
-- ${formData.typePersonne === 'morale' ? 'Raison sociale' : 'Nom'}: ${formData.nom}
-- ${formData.typePersonne === 'morale' ? 'Contact' : 'Prénom'}: ${formData.prenom}
-- Email: ${formData.email}
-- Téléphone: ${formData.telephone}
-
-Adresse d'intervention:
-- Adresse: ${formData.adresse}
-- Ville: ${formData.ville}
-- Code postal: ${formData.codePostal || 'Non spécifié'}
-
-Détails du projet:
-- Type de logement: ${formData.typeLogement || 'Non spécifié'}
-- Surface approximative: ${formData.surface ? formData.surface + ' m²' : 'Non spécifiée'}
-
-SERVICE DEMANDÉ:
-- Type de service: ${getServiceName(formData.typeService)}
-${formData.typeService === 'salon' ? `- Nombre de places: ${formData.nombrePlaces}` : ''}
-${['tapis', 'marbre', 'tfc'].includes(formData.typeService) ? `- Surface à traiter: ${formData.surfaceService} m²` : ''}
-
-Préférences de rendez-vous:
-- Date préférée: ${formData.datePreferee || 'Non spécifiée'}
-- Créneau horaire: ${formData.heurePreferee || 'Non spécifié'}
-
-Options:
-- Newsletter: ${formData.newsletter ? 'Oui' : 'Non'}
-
-${formData.message ? `Message complémentaire:\n${formData.message}` : ''}
-
---
-Envoyé depuis le site web CCI Services
-      `.trim());
-
-      const mailtoLink = `mailto:contact@cci-tunisie.com?subject=${subject}&body=${body}`;
-
-      // Open email client
-      window.location.href = mailtoLink;
-
-      setResult({
-        type: 'success',
-        message: 'Votre client email s\'ouvre avec votre demande de devis pré-remplie. Cliquez sur "Envoyer" pour nous la transmettre.'
-      });
-
-      // Reset form
-      setFormData({
-        typePersonne: 'physique',
-        matriculeFiscale: '',
-        nom: '',
-        prenom: '',
-        email: '',
-        telephone: '',
-        adresse: '',
-        ville: '',
-        codePostal: '',
-        typeLogement: '',
-        surface: '',
-        typeService: '',
-        nombrePlaces: '',
-        surfaceService: '',
-        datePreferee: '',
-        heurePreferee: '',
-        message: '',
-        newsletter: false,
-        conditions: false
-      });
+      // Submit to Supabase
+      const result = await submitDevisRequest(formData);
+      
+      if (result.success) {
+        setResult({
+          type: 'success',
+          message: 'Votre demande de devis a été envoyée avec succès ! Nous vous contacterons dans les plus brefs délais.'
+        });
+        
+        // Reset form
+        setFormData({
+          typePersonne: 'physique',
+          matriculeFiscale: '',
+          nom: '',
+          prenom: '',
+          email: '',
+          telephone: '',
+          adresse: '',
+          ville: '',
+          codePostal: '',
+          typeLogement: '',
+          surface: '',
+          typeService: '',
+          nombrePlaces: '',
+          surfaceService: '',
+          datePreferee: '',
+          heurePreferee: '',
+          message: '',
+          newsletter: false,
+          conditions: false
+        });
+      } else {
+        setResult({
+          type: 'error',
+          message: result.error || 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
+        });
+      }
     } catch (err) {
-      setResult({ type: 'error', message: 'Une erreur est survenue. Réessayez plus tard.' });
+      console.error('Form submission error:', err);
+      setResult({ 
+        type: 'error', 
+        message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.' 
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -343,15 +312,7 @@ Envoyé depuis le site web CCI Services
           <option value="commerce">Commerce</option>
           <option value="bateau ou car ferry">Bateau ou car ferry</option>
         </select>
-        <input 
-          className={styles.formGroup} 
-          type="number" 
-          name="surface" 
-          placeholder="Surface approximative (m²)" 
-          value={formData.surface}
-          onChange={handleInputChange}
-          min="1"
-        />
+    
 
         {/* Type de service */}
         <select 

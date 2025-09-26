@@ -6,11 +6,13 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup-supabase": "node setup-supabase.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@studio-freight/lenis": "^1.0.42",
+    "@supabase/supabase-js": "^2.58.0",
     "franc": "^6.2.0",
     "franc-min": "^6.2.0",
     "next": "^15.5.2",

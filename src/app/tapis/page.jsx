@@ -123,12 +123,12 @@ export default function Page() {
       <div className="responsive-padding">
         <ServiceDetails
           title="Nettoyage professionnel de tapis"
-          text="CCI propose un nettoyage profond et une désinfection de tapis et moquettes : aspiration spécialisée, pré-traitement des taches, shampooing professionnel et rinçage à basse humidité. Nous garantissons un résultat propre, sans résidus et un séchage rapide."
+              text={"Diagnostic de la fibre (laine, polyamide B1, polypropylène bouclé, velours coupé) et repérage des zones à trafic (couloirs, plateaux open‑space), suivis d’une pré‑aspiration haute filtration (HEPA) anti‑particulaire puis d’un pré‑détachage sélectif (tanins, graisses, protéines, chewing‑gum avec gel enzymatique). Selon le niveau d’encrassement et les contraintes d’exploitation, nous appliquons l’injection‑extraction (rinçage contrôlé, récupération >90 % d’humidité) pour les salissures profondes, l’encapsulation polymère basse humidité pour les centres d’appel nécessitant une remise en service rapide (< 1 h), le bonnet / pad orbital pour un rafraîchissement intermédiaire sur grandes surfaces, ou ponctuellement la vapeur sèche localisée pour la désodorisation et la réduction de la charge microbienne dans les zones sensibles. Résultat : remontée limitée des salissures, fibres redressées et temps d’indisponibilité réduit."}
         />
         <Feedback />
         <ServiceDetails
           title="Notre expertise"
-          text="Nos techniciens sont formés aux meilleures méthodes de nettoyage : traitement anti-acariens, élimination des odeurs, détachage complexe et protection des fibres. Nous adaptons la méthode au type de tissu pour préserver couleurs et texture."
+            text={"Adaptation par secteur :\n• Bureaux & open‑space : protocole cyclique (entretien préventif + corrective deep clean trimestriel).\n• Centres d’appel : intervention en fenêtres nocturnes avec encapsulation faible humidité pour reprise immédiate des postes.\n• Salles de cinéma : gestion taches grasses + boissons sucrées + neutralisation odeurs (enzymes + oxygène actif stabilisé).\n• Mosquées : traitement des zones de prière (désinfection douce, anti‑acariens, respect des personnes sensibles), orientation des fibres sans trace. Protection optionnelle anti‑taches / anti-salissure re‑déposée et plan de maintenance documenté."}
         />
         <AboutUsTab
           historyText="Depuis notre création, nous nous sommes spécialisés dans l’entretien textile et le nettoyage professionnel de tapis et moquettes, au service des particuliers et des entreprises."
@@ -138,20 +138,20 @@ export default function Page() {
         <PartnerTab tabData={tapisTabData} />
         <ServiceList
           title="Nos services tapis & moquettes"
-          text="Solutions complètes pour l’entretien de vos tapis et moquettes, chez vous ou en livraison atelier."
+            text="Solutions spécialisées pour moquettes en environnements exigeants : réduction du temps d’arrêt, maîtrise des allergènes dans espaces fermés, neutralisation des odeurs persistantes (cinéma / forte occupation), protocoles adaptés lieux de culte (respect sanitaire & discrétion), plans de maintenance prédictifs pour limiter usure en zones de trafic." 
           items={[
-            { id: "1", text: "Shampooing profond", icon: "/icons/polisher.png" },
-            { id: "2", text: "Détachage professionnel", icon: "/icons/polisher1.png" },
-            { id: "3", text: "Désinfection & anti-acariens", icon: "/icons/crystal3.png" },
-            { id: "4", text: "Traitement anti-taches & protection", icon: "/icons/shield.png" },
-              { id: "5", text: "Plusieurs méthodes de nettoyage", icon: "/icons/shield.png" },
-                { id: "6", text: "Une fléxibilité technique", icon: "/icons/shield.png" },
+            { id: "6", text: "Maintenance bureaux & centres d’appel", icon: "/icons/shield.png" },
+            { id: "3", text: "Traitement anti‑acariens & bio‑charge réduite", icon: "/icons/crystal3.png" },
+              { id: "1", text: "Injection‑extraction profonde", icon: "/icons/polisher.png" },
+              { id: "2", text: "Encapsulation basse humidité ", icon: "/icons/polisher1.png" },
+              { id: "4", text: "Neutralisation odeurs cinéma ", icon: "/icons/shield.png" },
+              { id: "5", text: "Entretien mosquées ", icon: "/icons/shield.png" },
           ]}
         />
 
         <ServiceDetails
           title="Pourquoi choisir CCI pour vos tapis"
-          text="Nous utilisons des équipements professionnels, des produits adaptés et des protocoles testés pour prolonger la vie de vos textiles, assurer l’élimination des allergènes et rendre vos espaces plus sains."
+         text={"Chaîne de valeur structurée : audit initial (cartographie trafic / points critiques), mesure humidité résiduelle post‑traitement, contrôle pH pour stabilité colorimétrique, fiches produits disponibles (conformité & sécurité). Matériel : injecteurs bi‑turbine haut débit, machines orbitales basse vitesse, pads microfibre encapsulation, buses chewing‑gum spot. Objectifs : prolonger la durée de vie (retarder écrasement), réduire charges allergènes, optimiser l’image des espaces accueillant public ou collaborateurs. Intervention discrète, traçabilité et conseils préventifs inclus."}
         />
   <ImageSlider images={tapisImages} />
       </div>

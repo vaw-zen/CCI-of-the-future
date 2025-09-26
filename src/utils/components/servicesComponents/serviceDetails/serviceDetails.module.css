@@ -1,18 +1,18 @@
 .container { display: flex; flex-direction: column; gap: 1.50vw; padding: 0 var(--padding-base); margin: 3.13vw 0vw 2.60vw }
-.title { font-size: 3.33vw; line-height: 1; color: var(--t-primary); font-weight: 700 }
+.title { font-size: 3.33vw; line-height: 1.2; color: var(--t-primary); font-weight: 700 }
 .textContainer { display: flex; flex-direction: column; gap: 0 }
 .text { font-size: 0.83vw; color: var(--t-thri); line-height: 1.56vw }
 
 @media screen and (max-width: 1024px) {
     .container { display: flex; flex-direction: column; gap: 3.75vw; padding: 0 var(--padding-base); margin: 7.81vw 0vw 6.51vw }
-    .title { font-size: 8.33vw; line-height: 1; color: var(--t-primary); font-weight: 700 }
+    .title { font-size: 8.33vw; line-height: 1.3; color: var(--t-primary); font-weight: 700 }
     .textContainer { display: flex; flex-direction: column; gap: 0; padding-top: 3.39vw }
     .text { font-size: 2.08vw; color: var(--t-thri); line-height: 3.91vw }
 }
 
 @media screen and (max-width: 480px) {
     .container { display: flex; flex-direction: column; gap: 6.99vw; padding: 0 var(--padding-base); margin: 14.56vw 0vw 7.28vw; min-height: 40.53vw }
-    .title { font-size: 11.53vw; line-height: 1; color: var(--t-primary); font-weight: 700 }
+    .title { font-size: 11.53vw; line-height: 1.3; color: var(--t-primary); font-weight: 700 }
     .textContainer { display: flex; flex-direction: column; gap: 0 }
     .text { font-size: 3.87vw; color: var(--t-thri); line-height: 7.28vw }
 }

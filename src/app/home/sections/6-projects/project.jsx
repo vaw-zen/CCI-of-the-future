@@ -1,12 +1,16 @@
+"use client";
+
 import content from './projects.json'
 import pageStyles from '../../home.module.css'
 import styles from './project.module.css'
 import { MdiArrowTopRightThin } from '@/utils/components/icons'
 import Link from 'next/link'
 import ResponsiveImage from '@/utils/components/Image/Image'
+import { useRouter } from 'next/navigation'
 
 export default function Project() {
     const [firstArticle] = content.articles
+    const router = useRouter()
 
     return (
         <section className={styles.projects}>
@@ -32,7 +36,7 @@ export default function Project() {
                         </div>
                     </div>
                 </div>
-                <button className={styles.showProjects}>
+                <button className={styles.showProjects} onClick={() => router.push('/blogs')}>
                     <div className={styles.spinContainer}>
                         {Array.from({ length: 15 }, (ç, index) => (
                             <div

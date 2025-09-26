@@ -102,7 +102,7 @@ export function loadTuningConfigServer() {
       },
       aiConfig: {
         model: {
-          name: "gemini-1.5-flash",
+          name: "gemini-1.5-flash-8b",
           maxOutputTokens: 1000,
           temperature: 0.7
         },
@@ -137,35 +137,117 @@ export function getAIConfigServer() {
 // Enhanced server-side functions for Fares expert persona system
 
 /**
- * Language detection for user input
- * Detects French, Arabic, English, and Tunisian Arabizi
+ * Enhanced language detection for user input
+ * Detects French, English, and Tunisian (both Arabic script and Arabizi)
+ * Note: All Tunisian language (Arabic script or Arabizi) is treated as 'arabizi' for consistent response formatting
  */
 export function detectUserLanguage(userInput) {
   if (!userInput || typeof userInput !== 'string') return 'french';
   
-  const input = userInput.toLowerCase();
+  const input = userInput.toLowerCase().trim();
   
-  // Arabizi detection (numbers used as letters: 3, 7, 9, 8, 5, 2)
-  const arabiziPattern = /[3789]/g;
-  const arabiziWords = ['3la', 'fi', 'w', 'bech', 'ken', 'elli', 'mte3', '7atta', '9adeh', 'wa9tech', 'kifech'];
+  console.log(`🔍 Detecting language for: "${input}"`);
   
-  if (arabiziPattern.test(input) || arabiziWords.some(word => input.includes(word))) {
+  // Tunisian Arabic script detection - treat as Arabizi for response formatting
+  const arabicPattern = /[\u0600-\u06FF]/g;
+  if (arabicPattern.test(input)) {
+    // Check for specifically Tunisian Arabic words
+    const tunisianArabicWords = [
+      'برشا', 'باهي', 'نورمال', 'هاكا', 'الكل', 'شنوا', 'كيفاش', 
+      'وينو', 'شكون', 'وقتاش', 'عليه', 'متاع', 'خلاص', 'يزي'
+    ];
+    
+    const hasTunisianWords = tunisianArabicWords.some(word => input.includes(word));
+    
+    if (hasTunisianWords) {
+      console.log('✅ Detected Tunisian Arabic script - treating as Arabizi for response');
+      return 'arabizi';
+    } else {
+      console.log('✅ Detected Arabic script (possibly Tunisian) - treating as Arabizi for response');
+      return 'arabizi';
+    }
+  }
+  
+  // Arabizi detection (numbers used as letters + common Tunisian words)
+  const arabiziNumbers = /[3789]/g;
+  const arabiziWords = [
+    // Common Tunisian Arabizi
+    '3la', 'fi', 'w', 'bech', 'ken', 'elli', 'mte3', '7atta', '9adeh', 'wa9tech', 'kifech',
+    'ahla', 'sahla', 'kifek', 'chkoun', 'winou', 'wa9tech', 'chnowa', 'kifach',
+    '3aychek', 'bahi', 'normal', 'yooo', 'chwaya', 'barcha', 'tawa', 'lyoum',
+    '5alini', '9alli', 'wesh', 'inchallah', 'hamdoullah', 'yezzi'
+  ];
+  
+  const hasArabiziNumbers = arabiziNumbers.test(input);
+  const hasArabiziWords = arabiziWords.some(word => input.includes(word));
+  
+  if (hasArabiziNumbers || hasArabiziWords) {
+    console.log(`✅ Detected Arabizi - numbers: ${hasArabiziNumbers}, words: ${hasArabiziWords}`);
     return 'arabizi';
   }
   
-  // Arabic script detection
-  const arabicPattern = /[\u0600-\u06FF]/g;
-  if (arabicPattern.test(input)) {
-    return 'arabic';
-  }
+  // English detection (comprehensive word list)
+  const englishWords = [
+    // Greetings
+    'hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening',
+    // Common words
+    'the', 'and', 'or', 'but', 'with', 'from', 'about', 'how', 'what', 'when', 'where', 'why', 'who',
+    // Service-related
+    'cleaning', 'service', 'help', 'need', 'want', 'can', 'could', 'would', 'please', 'thanks', 'thank you',
+    // Questions
+    'do you', 'can you', 'are you', 'is it', 'how much', 'how long', 'what time',
+    // CCI related
+    'marble', 'carpet', 'yacht', 'construction', 'emergency', 'urgent', 'quote', 'price'
+  ];
   
-  // English detection
-  const englishWords = ['hello', 'hi', 'thanks', 'how', 'why', 'what', 'when', 'where', 'cleaning', 'service'];
-  if (englishWords.some(word => input.includes(word))) {
+  const englishWordCount = englishWords.filter(word => input.includes(word)).length;
+  
+  if (englishWordCount >= 1) {
+    console.log(`✅ Detected English - found ${englishWordCount} English words`);
     return 'english';
   }
   
-  // French is default
+  // French detection (more comprehensive)
+  const frenchWords = [
+    // Common French words
+    'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'et', 'ou', 'avec', 'sans', 'pour', 'dans', 'sur',
+    // Greetings
+    'bonjour', 'bonsoir', 'salut', 'bonne', 'comment', 'ça va', 'merci', 'merci beaucoup',
+    // Questions
+    'quoi', 'quand', 'où', 'comment', 'pourquoi', 'qui', 'quel', 'quelle', 'quels', 'quelles',
+    'est-ce que', 'qu\'est-ce que', 'combien', 'quel prix', 'quelle heure',
+    // Service related
+    'nettoyage', 'service', 'services', 'aide', 'besoin', 'veux', 'voudrais', 'peux', 'pouvez',
+    'prix', 'coût', 'tarif', 'devis', 'rendez-vous',
+    // CCI services
+    'marbre', 'tapis', 'moquette', 'salon', 'yacht', 'chantier', 'urgence', 'urgent'
+  ];
+  
+  const frenchWordCount = frenchWords.filter(word => input.includes(word)).length;
+  
+  if (frenchWordCount >= 1) {
+    console.log(`✅ Detected French - found ${frenchWordCount} French words`);
+    return 'french';
+  }
+  
+  // Character-based analysis for very short inputs
+  if (input.length <= 10) {
+    // Check for French accents
+    const frenchAccents = /[àâäçéèêëïîôöùûüÿ]/g;
+    if (frenchAccents.test(input)) {
+      console.log('✅ Detected French accents in short input');
+      return 'french';
+    }
+    
+    // Check for English patterns
+    if (/^(hi|hey|yo|ok|yes|no)$/i.test(input)) {
+      console.log('✅ Detected English greeting/response pattern');
+      return 'english';
+    }
+  }
+  
+  // Default to French for unidentified text
+  console.log('⚠️ Language detection uncertain, defaulting to French');
   return 'french';
 }
 
@@ -215,6 +297,7 @@ export function detectUrgency(userInput) {
 
 /**
  * Get culturally adapted greeting based on language and formality
+ * Note: All Tunisian (Arabic script or Arabizi) uses Arabizi responses
  */
 export function getAdaptedGreeting(language = 'french', formality = 'medium') {
   const greetings = {
@@ -223,20 +306,15 @@ export function getAdaptedGreeting(language = 'french', formality = 'medium') {
       medium: "Bonjour ! Fares à votre service, expert CCI depuis 15 ans.",
       low: "Salut ! Fares ici, expert technique CCI 😊"
     },
-    arabic: {
-      high: "السلام عليكم ورحمة الله وبركاته، أنا فارس خبير CCI",
-      medium: "أهلاً وسهلاً! أنا فارس، خبير التنظيف في CCI منذ 15 سنة",
-      low: "أهلاً! أنا فارس، خبير CCI 🤝"
-    },
     english: {
       high: "Good day, Fares here, CCI's senior technical expert.",
       medium: "Hello! Fares here, CCI's technical expert with 15+ years experience.",
       low: "Hi there! Fares from CCI, your cleaning expert! 👋"
     },
     arabizi: {
-      high: "Ahla w sahla! Ana Fares, expert technique fi CCI",
-      medium: "Ahla! Ana Fares, expert fel cleaning fi CCI men 15 ans 😊",
-      low: "Yooo! Fares hna, expert CCI 🔥"
+      high: "Ahla w sahla! Ana Fares, expert technique fi CCI men 15 ans. Kifech najjem n3awnek?",
+      medium: "Ahla! Ana Fares, expert fel cleaning fi CCI men 15 ans 😊 Chnowa l mushkila mte3ek?",
+      low: "Yooo! Fares hna, expert CCI 🔥 Kifech? Chnowa na3mllak?"
     }
   };
   
@@ -291,26 +369,23 @@ function getDefaultLanguageAdaptation() {
 }
 
 /**
- * Get enhanced system prompt with language context
+ * Get enhanced system prompt with strong language enforcement
  */
 export function getEnhancedSystemPrompt(userLanguage = 'french', urgency = false) {
   const config = loadTuningConfigServer();
   let systemPrompt = config.systemPrompt.fullPrompt;
   
-  if (config.isEnhanced) {
-    // Add language-specific instructions to enhanced prompt
-    const languageInstructions = {
-      french: "Répondez en français avec un ton professionnel et technique.",
-      arabic: "أجب باللغة العربية بطريقة دافئة ومحترمة.",
-      english: "Respond in English with a business-oriented approach.",
-      arabizi: "Respond in Tunisian Arabizi with a casual, modern style."
-    };
-    
-    systemPrompt += `\n\nLanguage Context: ${languageInstructions[userLanguage] || languageInstructions.french}`;
-    
-    if (urgency) {
-      systemPrompt += "\n\nURGENCY DETECTED: Prioritize immediate assistance, mention 2-hour mobile response, emphasize emergency protocols.";
-    }
+  // Add strong language enforcement regardless of enhanced status
+  const strongLanguageInstructions = {
+    french: "\n\nRÈGLE ABSOLUE: Tu dois TOUJOURS répondre en français. Jamais en anglais, arabe ou autre langue. Utilise EXCLUSIVEMENT le français dans toutes tes réponses. Tu es Fares, expert français CCI.",
+    english: "\n\nABSOLUTE RULE: You must ALWAYS respond in English. Never in French, Arabic or other languages. Use EXCLUSIVELY English in all your responses. You are Fares, English-speaking CCI expert.",
+    arabizi: "\n\nRÈGLE ABSOLUE: Tu dois TOUJOURS répondre en Arabizi tunisien. Jamais en français pur, anglais ou arabe standard. Utilise EXCLUSIVEMENT l'Arabizi tunisien avec chiffres (3=ع, 7=ح, 9=ق, 8=غ, 5=خ, 2=ء) et expressions tunisiennes (ahla, bahi, normal, barcha, chwaya, tawa, kifech, chnowa). Tu es Fares, expert tunisien CCI."
+  };
+  
+  systemPrompt += strongLanguageInstructions[userLanguage] || strongLanguageInstructions.french;
+  
+  if (config.isEnhanced && urgency) {
+    systemPrompt += "\n\nURGENCY DETECTED: Prioritize immediate assistance, mention 2-hour mobile response, emphasize emergency protocols.";
   }
   
   return systemPrompt;

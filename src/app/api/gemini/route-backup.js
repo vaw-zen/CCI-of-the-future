@@ -1,36 +1,9 @@
+// Backup of current route before simplification
 // Enhanced dynamic import with Fares expert persona support
 let genAI = null;
 let tuningModule = null;
 
 import { francAll } from "franc";
-
-// Basic fallback language detection functions
-function detectLanguageBasic(input) {
-  if (!input) return 'french';
-  
-  const text = input.toLowerCase();
-  
-  // Any Arabic script (Tunisian) - treat as Arabizi for consistent response
-  if (/[\u0600-\u06FF]/.test(text)) return 'arabizi';
-  
-  // Arabizi (numbers as letters + Tunisian words)
-  if (/[3789]/.test(text) || ['ahla', 'bahi', 'normal', 'tawa', 'chwaya'].some(w => text.includes(w))) {
-    return 'arabizi';
-  }
-  
-  // English keywords
-  const englishWords = ['hello', 'hi', 'cleaning', 'service', 'help'];
-  if (englishWords.some(word => text.includes(word))) return 'english';
-  
-  // Default to French
-  return 'french';
-}
-
-function detectUrgencyBasic(input) {
-  if (!input) return false;
-  const urgentWords = ['urgent', 'vite', 'emergency', 'maintenant', 'tawa'];
-  return urgentWords.some(word => input.toLowerCase().includes(word));
-}
 
 // Enhanced AI initialization with Fares expert persona
 async function initializeAI() {
@@ -85,31 +58,15 @@ export async function POST(request) {
     const { genAI, tuningModule } = await withTimeout(initializeAI(), 30000);
 
     // Enhanced language and context detection using Fares system
-    let userLanguage = 'french', isUrgent = false, formalityLevel = 'medium';
+    let userLanguage, isUrgent, formalityLevel;
     
     try {
-      // Test if tuning module functions exist before calling them
-      if (tuningModule && typeof tuningModule.detectUserLanguage === 'function') {
-        userLanguage = tuningModule.detectUserLanguage(message);
-      } else {
-        console.warn('⚠️ detectUserLanguage function not available, using basic detection');
-        userLanguage = detectLanguageBasic(message);
-      }
-      
-      if (tuningModule && typeof tuningModule.detectUrgency === 'function') {
-        isUrgent = tuningModule.detectUrgency(message);
-      } else {
-        isUrgent = detectUrgencyBasic(message);
-      }
-      
-      if (tuningModule && typeof tuningModule.detectFormalityLevel === 'function') {
-        formalityLevel = tuningModule.detectFormalityLevel(message);
-      } else {
-        formalityLevel = 'medium';
-      }
+      userLanguage = tuningModule.detectUserLanguage(message);
+      isUrgent = tuningModule.detectUrgency(message);
+      formalityLevel = tuningModule.detectFormalityLevel(message);
     } catch (detectionError) {
       console.error('⚠️ Language detection failed, using defaults:', detectionError);
-      userLanguage = detectLanguageBasic(message);
+      userLanguage = 'french';
       isUrgent = false;
       formalityLevel = 'medium';
     }
@@ -153,9 +110,10 @@ export async function POST(request) {
     console.log(`🎭 Fares persona: ${config.isEnhanced ? 'ACTIVE' : 'FALLBACK'}`);
     console.log(`📝 System prompt length: ${systemPrompt.length} characters`);
 
-    // Create basic model without system instruction (Gemini ignores language instructions in systemInstruction)
+    // Create enhanced AI model with Fares persona
     const model = genAI.getGenerativeModel({ 
-      model: aiConfig.model.name
+      model: aiConfig.model.name,
+      systemInstruction: systemPrompt
     });
     
     const chat = model.startChat({
@@ -166,65 +124,26 @@ export async function POST(request) {
       },
     });
 
-    // Build comprehensive prompt with EVERYTHING in the message (not system instruction)
-    const languageTemplates = {
-      french: `Tu es Fares, expert technique CCI Services avec 15 ans d'expérience en nettoyage professionnel.
-
-SERVICES CCI:
-- Restauration marbre & granit
-- Nettoyage industriel (ferries & yachts)  
-- Nettoyage post-chantier
-- Traitement tapis, moquettes, salons
-- Services d'urgence 24/7
-- Dégraissage industriel
-- Tapisserie & rénovation mobilier
-- Contact: 98-557-766
-
-RÈGLE ABSOLUE DE LANGUE: Tu DOIS répondre UNIQUEMENT en français. PAS D'ANGLAIS DU TOUT. Si tu réponds en anglais, c'est une erreur grave.
-
-Message du client: "${message}"
-
-Réponds en français comme Fares avec ton expertise:`,
-
-      english: `You are Fares, CCI Services' senior technical expert with 15+ years experience in professional cleaning.
-
-CCI SERVICES:
-- Marble & granite restoration
-- Industrial cleaning (ferries & yachts)
-- Post-construction cleaning
-- Carpet, upholstery, salon treatment
-- 24/7 emergency services
-- Industrial degreasing
-- Tapestry & furniture renovation
-- Contact: 98-557-766
-
-ABSOLUTE LANGUAGE RULE: You MUST respond ONLY in English. NO FRENCH AT ALL. If you respond in French, it's a serious error.
-
-Client message: "${message}"
-
-Respond in English as Fares with your expertise:`,
-
-      arabizi: `Inta Fares, expert technique fi CCI Services men 15 ans fi cleaning professionnel.
-
-SERVICES CCI:
-- Restauration marbre w granit
-- Cleaning industriel (ferries w yachts)
-- Cleaning ba3d il chantier
-- Traitement tapis, moquettes, salons
-- Services urgence 24/7
-- Dégraissage industriel
-- Tapisserie w rénovation mobilier
-- Contact: 98-557-766
-
-RÈGLE ABSOLUE: Lazim tjaweb SEULEMENT bi Arabizi tunisien (mélange arabe-français ma3 ar9am: 3=ع, 7=ح, 9=ق, 8=غ, 5=خ). MAYEMKENECH tjaweb bi français klem wala bi anglais. Itha tjaweb bi langue okhra, error kbir.
-
-Message mte3 client: "${message}"
-
-Jaweb bi Arabizi tunisien comme Fares ma3 expertise mte3ek:`
+    // Enhanced message preparation with cultural context
+    let messageToSend = message;
+    
+    // Add greeting context for first message
+    if (!chatHistory || chatHistory.length === 0) {
+      const greeting = tuningModule.getAdaptedGreeting(userLanguage, formalityLevel);
+      console.log(`👋 Fares greeting: ${greeting.substring(0, 50)}...`);
+    }
+    
+    // Add language-specific instructions
+    const languageInstructions = {
+      french: "Répondez en français professionnel comme Fares, expert de nettoyage chez CCI.",
+      arabic: "أجب باللغة العربية كفارس، خبير تنظيف CCI مع 15 سنة خبرة.",
+      english: "Respond in English as Fares, CCI's senior technical expert.",
+      arabizi: "Réponds en Arabizi tunisien comme Fares, expert nettoyage CCI men 15 ans."
     };
-
-    const messageToSend = languageTemplates[userLanguage] || languageTemplates.french;
-    console.log(`🗣️ Using ${userLanguage} template, length: ${messageToSend.length} characters`);
+    
+    if (languageInstructions[userLanguage]) {
+      messageToSend = `${languageInstructions[userLanguage]}\n\nUser: "${message}"`;
+    }
 
     const result = await withTimeout(chat.sendMessage(messageToSend), 120000);
     const text = (await result.response).text();
@@ -244,23 +163,23 @@ Jaweb bi Arabizi tunisien comme Fares ma3 expertise mte3ek:`
     console.error('❌ Enhanced Gemini API Error:', error);
     console.error('Error stack:', error.stack);
     
-    // Try to detect language from the original message for error response
+    // Try to detect language from the already parsed message for error response
     let errorLanguage = 'french';
     let originalMessage = '';
     
     try {
-      // Use already parsed body if available, otherwise try to parse
+      // Use already parsed body if available
       if (body && body.message) {
         originalMessage = body.message;
         errorLanguage = tuningModule?.detectUserLanguage(body.message) || 'french';
-      } else {
-        // Only try to parse if we haven't already
-        const requestBody = await request.json();
-        originalMessage = requestBody.message || '';
-        errorLanguage = tuningModule?.detectUserLanguage(requestBody.message) || 'french';
+      } else if (message) {
+        // Use the message variable that was extracted earlier
+        originalMessage = message;
+        errorLanguage = tuningModule?.detectUserLanguage(message) || 'french';
       }
-    } catch (parseError) {
-      console.error('❌ Failed to parse request body in error handler:', parseError);
+    } catch (detectionError) {
+      console.error('❌ Failed to detect language for error response:', detectionError);
+      // Keep defaults: errorLanguage = 'french', originalMessage = ''
     }
     
     // Get culturally appropriate error message

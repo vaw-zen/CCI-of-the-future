@@ -26,20 +26,9 @@
         }
       },
     {
-      "name": "Mohamed Amine Bouslama",
-      "position": "Marketing Director",
-      "image": "/our-team/equippe.jpg",
-      "socials": {
-          "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
-          "twitter": "#",
-          "linkedin": "https://www.instagram.com/cci.services/",
-          "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
-      }
-    },
-    {
-      "name": "Emily Johnson",
+      "name": "Kais Machghoul",
       "position": "Lead Designer",
-      "image": "/our-team/equippe.jpg",
+      "image": "/our-team/kais.jpg",
       "socials": {
           "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
           "twitter": "#",
@@ -47,21 +36,11 @@
           "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
       }
     },
+
     {
-      "name": "Michael Brown",
-      "position": "Head of Development",
-      "image": "/our-team/equippe.jpg",
-      "socials": {
-          "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
-          "twitter": "#",
-          "linkedin": "https://www.instagram.com/cci.services/",
-          "instagram": "https://www.linkedin.com/company/chaabanes-cleaning-int/"
-      }
-    },
-    {
-      "name": "Michael Brown",
-      "position": "Head of Development",
-      "image": "/our-team/equippe.jpg",
+      "name": "Ahmed Chammakhi",
+      "position": "Marketing Manager",
+      "image": "/our-team/ahmed.jpg",
       "socials": {
           "facebook": "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
           "twitter": "#",

@@ -5,6 +5,8 @@ import styles from './devisForm.module.css';
 
 export default function DevisForm() {
   const [formData, setFormData] = useState({
+    typePersonne: 'physique',
+    matriculeFiscale: '',
     nom: '',
     prenom: '',
     email: '',
@@ -14,6 +16,9 @@ export default function DevisForm() {
     codePostal: '',
     typeLogement: 'appartement',
     surface: '',
+    typeService: '',
+    nombrePlaces: '',
+    surfaceService: '',
     datePreferee: '',
     heurePreferee: 'matin',
     message: '',
@@ -33,13 +38,51 @@ export default function DevisForm() {
   };
 
   const validateForm = () => {
-    const required = ['nom', 'prenom', 'email', 'telephone', 'adresse', 'ville'];
+    const required = ['nom', 'prenom', 'email', 'telephone', 'adresse', 'ville', 'typeService'];
     const missing = required.filter(field => !formData[field].trim());
     
     if (missing.length > 0) {
       setSubmitStatus({
         type: 'error',
         message: `Veuillez remplir les champs obligatoires: ${missing.join(', ')}`
+      });
+      return false;
+    }
+
+    // Validation matricule fiscale pour personne morale
+    if (formData.typePersonne === 'morale') {
+      if (!formData.matriculeFiscale.trim()) {
+        setSubmitStatus({
+          type: 'error',
+          message: 'La matricule fiscale est obligatoire pour une personne morale'
+        });
+        return false;
+      }
+      
+      // Validation format matricule fiscale tunisienne (7 chiffres + lettre ou 8 chiffres)
+      const matriculeRegex = /^[0-9]{7}[A-Z]|[0-9]{8}$/;
+      if (!matriculeRegex.test(formData.matriculeFiscale.replace(/\s/g, ''))) {
+        setSubmitStatus({
+          type: 'error',
+          message: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres)'
+        });
+        return false;
+      }
+    }
+
+    // Validation des quantités selon le type de service
+    if (formData.typeService === 'salon' && !formData.nombrePlaces) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Veuillez indiquer le nombre de places pour le nettoyage de salon'
+      });
+      return false;
+    }
+
+    if (['tapis', 'marbre', 'tfc'].includes(formData.typeService) && !formData.surfaceService) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Veuillez indiquer la surface à traiter'
       });
       return false;
     }
@@ -94,6 +137,8 @@ export default function DevisForm() {
       
       // Reset form
       setFormData({
+        typePersonne: 'physique',
+        matriculeFiscale: '',
         nom: '',
         prenom: '',
         email: '',
@@ -103,6 +148,9 @@ export default function DevisForm() {
         codePostal: '',
         typeLogement: 'appartement',
         surface: '',
+        typeService: '',
+        nombrePlaces: '',
+        surfaceService: '',
         datePreferee: '',
         heurePreferee: 'matin',
         message: '',
@@ -139,10 +187,48 @@ export default function DevisForm() {
                 Informations personnelles
               </h3>
               
+              <div className={styles.formGroup}>
+                <label htmlFor="typePersonne" className={styles.label}>
+                  Type de personne <span className={styles.required}>*</span>
+                </label>
+                <select
+                  id="typePersonne"
+                  name="typePersonne"
+                  value={formData.typePersonne}
+                  onChange={handleInputChange}
+                  className={styles.select}
+                  required
+                >
+                  <option value="physique">Personne physique</option>
+                  <option value="morale">Personne morale (Entreprise)</option>
+                </select>
+              </div>
+
+              {formData.typePersonne === 'morale' && (
+                <div className={styles.formGroup}>
+                  <label htmlFor="matriculeFiscale" className={styles.label}>
+                    Matricule fiscale <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="matriculeFiscale"
+                    name="matriculeFiscale"
+                    value={formData.matriculeFiscale}
+                    onChange={handleInputChange}
+                    className={styles.input}
+                    placeholder="Ex: 1234567A ou 12345678"
+                    required
+                  />
+                  <small className={styles.helpText}>
+                    Format : 7 chiffres + 1 lettre ou 8 chiffres
+                  </small>
+                </div>
+              )}
+              
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                   <label htmlFor="nom" className={styles.label}>
-                    Nom <span className={styles.required}>*</span>
+                    {formData.typePersonne === 'morale' ? 'Raison sociale' : 'Nom'} <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
@@ -151,14 +237,14 @@ export default function DevisForm() {
                     value={formData.nom}
                     onChange={handleInputChange}
                     className={styles.input}
-                    placeholder="Votre nom de famille"
+                    placeholder={formData.typePersonne === 'morale' ? 'Nom de l\'entreprise' : 'Votre nom de famille'}
                     required
                   />
                 </div>
                 
                 <div className={styles.formGroup}>
                   <label htmlFor="prenom" className={styles.label}>
-                    Prénom <span className={styles.required}>*</span>
+                    {formData.typePersonne === 'morale' ? 'Contact' : 'Prénom'} <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
@@ -167,7 +253,7 @@ export default function DevisForm() {
                     value={formData.prenom}
                     onChange={handleInputChange}
                     className={styles.input}
-                    placeholder="Votre prénom"
+                    placeholder={formData.typePersonne === 'morale' ? 'Nom du contact' : 'Votre prénom'}
                     required
                   />
                 </div>
@@ -307,6 +393,101 @@ export default function DevisForm() {
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Services Information */}
+            <div className={styles.section}>
+              <h3 className={styles.sectionTitle}>
+                <span className={styles.sectionIcon}>🧹</span>
+                Type de service souhaité
+              </h3>
+              
+              <div className={styles.formGroup}>
+                <label htmlFor="typeService" className={styles.label}>
+                  Service <span className={styles.required}>*</span>
+                </label>
+                <select
+                  id="typeService"
+                  name="typeService"
+                  value={formData.typeService}
+                  onChange={handleInputChange}
+                  className={styles.select}
+                  required
+                >
+                  <option value="">Sélectionnez le type de service</option>
+                  <option value="salon">Nettoyage de salon (canapés, fauteuils)</option>
+                  <option value="tapis">Nettoyage de tapis/moquettes</option>
+                  <option value="tapisserie">Tapisserie (confection, restauration)</option>
+                  <option value="marbre">Polissage de marbre</option>
+                  <option value="tfc">Nettoyage TFC (bureaux, commerces)</option>
+                </select>
+              </div>
+
+              {/* Conditional fields based on service type */}
+              {formData.typeService === 'salon' && (
+                <div className={styles.formGroup}>
+                  <label htmlFor="nombrePlaces" className={styles.label}>
+                    Nombre de places <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="nombrePlaces"
+                    name="nombrePlaces"
+                    value={formData.nombrePlaces}
+                    onChange={handleInputChange}
+                    className={styles.input}
+                    placeholder="Ex: 6 places (3 places canapé + 2 fauteuils + 1 pouf)"
+                    min="1"
+                    required
+                  />
+                  <small className={styles.helpText}>
+                    Comptez le nombre total de places assises (canapé 3 places = 3, fauteuil = 1, etc.)
+                  </small>
+                </div>
+              )}
+
+              {(['tapis', 'marbre', 'tfc'].includes(formData.typeService)) && (
+                <div className={styles.formGroup}>
+                  <label htmlFor="surfaceService" className={styles.label}>
+                    Surface à traiter (m²) <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="surfaceService"
+                    name="surfaceService"
+                    value={formData.surfaceService}
+                    onChange={handleInputChange}
+                    className={styles.input}
+                    placeholder="Ex: 25"
+                    min="1"
+                    step="0.1"
+                    required
+                  />
+                  <small className={styles.helpText}>
+                    {formData.typeService === 'tapis' && 'Surface totale des tapis/moquettes à nettoyer'}
+                    {formData.typeService === 'marbre' && 'Surface de marbre à polir/cristalliser'}
+                    {formData.typeService === 'tfc' && 'Surface totale des locaux à nettoyer'}
+                  </small>
+                </div>
+              )}
+
+              {formData.typeService === 'tapisserie' && (
+                <div className={styles.formGroup}>
+                  <label htmlFor="message" className={styles.label}>
+                    Détails du projet tapisserie <span className={styles.required}>*</span>
+                  </label>
+                  <textarea
+                    id="detailsTapisserie"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    className={styles.textarea}
+                    placeholder="Décrivez votre projet : confection de rideaux, rénovation de fauteuils anciens, etc."
+                    rows={3}
+                    required
+                  />
+                </div>
+              )}
             </div>
 
             {/* Appointment Preferences */}

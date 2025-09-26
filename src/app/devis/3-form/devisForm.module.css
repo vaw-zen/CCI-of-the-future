@@ -236,6 +236,13 @@
   color: #6c757d;
 }
 
+.helpText {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
 .greenBandWrapper { margin: 7vw 0 3.8vw 0 !important; }
 
 @media screen and (max-width: 1024px) {

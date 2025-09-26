@@ -1,10 +1,10 @@
 {
   "welcomeCards": [
     {
-      "imageSrc": "/contact/welcome2.jpg",
-      "title": "Service rapide et devis clair, je recommande !",
-      "name": "Amine Bouslama",
-      "position": "Avis client",
+      "imageSrc": "/contact/chaabmaher.jpg",
+      "title": "Observez les clients, pas les concurrents.",
+      "name": "Chaabane Maher",
+      "position": "PDG",
       "email": "contact@cciservices.online"
     },
     {

@@ -14,6 +14,11 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
     const [checkboxChecked, setCheckboxChecked] = useState(false);
     // Add client-side flag to prevent hydration mismatch
     const [isClient, setIsClient] = useState(false);
+    // Newsletter form state
+    const [email, setEmail] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState('');
+    const [submitStatus, setSubmitStatus] = useState(''); // 'success', 'error', ''
 
     useEffect(() => {
         setIsClient(true);
@@ -21,6 +26,56 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
 
     const handleCheckboxChange = (e) => {
         setCheckboxChecked(e.target.checked);
+    };
+
+    const handleNewsletterSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!email.trim()) {
+            setSubmitMessage('Veuillez saisir votre adresse email.');
+            setSubmitStatus('error');
+            return;
+        }
+
+        if (!checkboxChecked) {
+            setSubmitMessage('Vous devez accepter la politique de confidentialité.');
+            setSubmitStatus('error');
+            return;
+        }
+
+        setIsSubmitting(true);
+        setSubmitMessage('');
+        setSubmitStatus('');
+
+        try {
+            const response = await fetch('/api/newsletter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email.trim(),
+                    acceptedPrivacy: checkboxChecked,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.status === 'success') {
+                setSubmitMessage('🎉 Inscription réussie ! Vérifiez votre boîte mail.');
+                setSubmitStatus('success');
+                setEmail('');
+                setCheckboxChecked(false);
+            } else {
+                setSubmitMessage(data.message || 'Erreur lors de l\'inscription.');
+                setSubmitStatus('error');
+            }
+        } catch (error) {
+            setSubmitMessage('Erreur de connexion. Veuillez réessayer.');
+            setSubmitStatus('error');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -58,11 +113,24 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                                     <Link href='/contact'>Contact</Link>
                                     <Link href='/blogs'>Nouveauté</Link>
                                 </div>
-                                <form className={styles.newsletterForm}>
+                                <form className={styles.newsletterForm} onSubmit={handleNewsletterSubmit}>
                                     <label>Restez à jour</label>
-                                    <input placeholder='Adresse Email' className={styles.emailInput} />
-                                    <button className={styles.submitButton} aria-label="S'abonner à la newsletter">
-                                        <UilArrowRight className={styles.arrowIcon} />
+                                    <input 
+                                        type="email"
+                                        placeholder='Adresse Email' 
+                                        className={styles.emailInput}
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        disabled={isSubmitting}
+                                        required
+                                    />
+                                    <button 
+                                        type="submit"
+                                        className={styles.submitButton} 
+                                        aria-label="S'abonner à la newsletter"
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting ? '...' : <UilArrowRight className={styles.arrowIcon} />}
                                     </button>
                                     <div className={styles.checkboxContainer}>
                                         <input
@@ -71,6 +139,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                                             className={styles.checkbox}
                                             onChange={handleCheckboxChange}
                                             checked={checkboxChecked}
+                                            disabled={isSubmitting}
                                             style={isClient ? {
                                                 background: checkboxChecked 
                                                     ? `radial-gradient(circle at center, var(--t-primary) 50%, transparent 50%)`
@@ -81,6 +150,11 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                                             J'accepte la politique de confidentialité
                                         </label>
                                     </div>
+                                    {submitMessage && (
+                                        <div className={`${styles.submitMessage} ${styles[submitStatus]}`}>
+                                            {submitMessage}
+                                        </div>
+                                    )}
                                 </form>
                             </div>
                         </div>

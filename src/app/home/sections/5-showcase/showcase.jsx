@@ -4,12 +4,15 @@ import styles from './showcase.module.css'
 import LeftCircle from './clientSide/circles/LeftCircle';
 import RightCircle from './clientSide/circles/RightCircle';
 import ResponsiveImage from '@/utils/components/Image/Image';
+import Link from 'next/link';
+
 
 export default function Showcase({...props}) {
     return (
         <section {...props}>
             <h2 className={pageStyles.slug}>{content.slug}</h2>
             <h3 className={pageStyles.highlight}>{content.highlight}</h3>
+             <button className={styles.button}><Link href={content.button.link}>{content.button.name}</Link></button>
             <div className={styles.circleContainer}>
                 {content.circles.map((circle, index) => {
                     return (

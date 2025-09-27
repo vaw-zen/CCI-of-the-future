@@ -1,23 +1,27 @@
 {
-    "slug": "Pour tous vos besoins",
-    "highlight": "Vous ne savez pas par où commencer ? Trouvez une solution.",
-    "circles": [
-        [
-            {
-                "title": "Un large choix de services",
-                "desc": "Nous nous engageons à satisfaire 100 % de nos clients."
-            },
-            {
-                "title": "Expérience professionnelle",
-                "desc": "Nous visons 100 % de satisfaction client dans toutes nos actions."
-            },
-            {
-                "title": "Clients reconnaissants",
-                "desc": "Nous faisons tout pour atteindre 100 % de satisfaction client."
-            }
-        ],
+    "slug": "Simulateur de devis en ligne",
+     "highlight": "Vous ne savez pas par où commencer ? Estimez votre budget en quelques clics.",
+      "button": {
+        "name": "Calculez votre devis",
+        "link": "/devis"
+    },
+  "circles": [
+    [
+      {
+        "title": "Simulateur de devis en ligne",
+        "desc": "Utilisez notre calculateur dynamique pour obtenir une estimation immédiate du coût de vos services de nettoyage."
+      },
+      {
+        "title": "Rapidité et transparence",
+        "desc": "Indiquez vos besoins et découvrez en temps réel une fourchette de prix approximative."
+      },
+      {
+        "title": "Passez au devis personnalisé",
+        "desc": "Transformez votre estimation en un devis détaillé et gratuit, confirmé par une visite sans engagement."
+      }
+    ],
         {
-            "img": "/home/about.png"
+            "img": "/logo.png"
         },
         [
             {

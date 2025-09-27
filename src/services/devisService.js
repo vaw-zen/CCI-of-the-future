@@ -7,40 +7,8 @@ import { supabase } from '../libs/supabase';
  */
 export async function submitDevisRequest(formData) {
   try {
-    // Transform form data to match database schema
-    const devisData = {
-      // Personal Information
-      type_personne: formData.typePersonne,
-      matricule_fiscale: formData.matriculeFiscale || null,
-      nom: formData.nom,
-      prenom: formData.prenom,
-      email: formData.email,
-      telephone: formData.telephone,
-      
-      // Address Information
-      adresse: formData.adresse,
-      ville: formData.ville,
-      code_postal: formData.codePostal || null,
-      type_logement: formData.typeLogement,
-      surface: formData.surface ? parseInt(formData.surface) : null,
-      
-      // Service Information
-      type_service: formData.typeService,
-      nombre_places: formData.nombrePlaces ? parseInt(formData.nombrePlaces) : null,
-      surface_service: formData.surfaceService ? parseFloat(formData.surfaceService) : null,
-      
-      // Appointment Preferences
-      date_preferee: formData.datePreferee || null,
-      heure_preferee: formData.heurePreferee,
-      
-      // Additional Information
-      message: formData.message || null,
-      newsletter: formData.newsletter,
-      conditions: formData.conditions
-    };
-
-    // Validate required fields based on service type
-    const validation = validateDevisData(devisData);
+    // Validate form data before sending
+    const validation = validateFormData(formData);
     if (!validation.isValid) {
       return {
         success: false,
@@ -48,44 +16,33 @@ export async function submitDevisRequest(formData) {
       };
     }
 
-    // Insert into Supabase
-    const { data, error } = await supabase
-      .from('devis_requests')
-      .insert([devisData])
-      .select()
-      .single();
+    // Submit to our comprehensive API route that handles both DB save and emails
+    const response = await fetch('/api/devis', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ formData }),
+    });
 
-    if (error) {
-      console.error('Supabase error:', error);
+    const result = await response.json();
+
+    if (!response.ok) {
       return {
         success: false,
-        error: 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
+        error: result.message || 'Une erreur est survenue lors de l\'envoi de votre demande.'
       };
     }
 
-    // Trigger email notification (don't fail if this fails)
-    try {
-      const emailResponse = await fetch('/api/send-devis-notification', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ devisId: data.id }),
-      });
-      
-      if (!emailResponse.ok) {
-        console.warn('Email notification failed with status:', emailResponse.status);
-      } else {
-        console.log('Email notification sent successfully');
-      }
-    } catch (emailError) {
-      // Don't fail the submission if email fails
-      console.warn('Email notification failed:', emailError);
+    // Log newsletter subscription status
+    if (result.details?.newsletterSubscribed) {
+      console.log('✅ User automatically subscribed to newsletter');
     }
 
     return {
       success: true,
-      data: data
+      data: result.data,
+      details: result.details
     };
 
   } catch (error) {
@@ -98,16 +55,16 @@ export async function submitDevisRequest(formData) {
 }
 
 /**
- * Validate devis data before submission
- * @param {Object} data - The transformed devis data
+ * Validate form data before submission
+ * @param {Object} formData - The form data from the devis form
  * @returns {Object} - Validation result
  */
-function validateDevisData(data) {
+function validateFormData(formData) {
   // Check required fields
-  const requiredFields = ['type_personne', 'nom', 'prenom', 'email', 'telephone', 'adresse', 'ville', 'type_service'];
+  const requiredFields = ['nom', 'prenom', 'email', 'telephone', 'adresse', 'ville', 'typeService'];
   
   for (const field of requiredFields) {
-    if (!data[field] || (typeof data[field] === 'string' && data[field].trim() === '')) {
+    if (!formData[field] || (typeof formData[field] === 'string' && formData[field].trim() === '')) {
       return {
         isValid: false,
         error: `Le champ ${field} est obligatoire.`
@@ -116,8 +73,8 @@ function validateDevisData(data) {
   }
 
   // Validate matricule fiscale for person morale
-  if (data.type_personne === 'morale') {
-    if (!data.matricule_fiscale || data.matricule_fiscale.trim() === '') {
+  if (formData.typePersonne === 'morale') {
+    if (!formData.matriculeFiscale || formData.matriculeFiscale.trim() === '') {
       return {
         isValid: false,
         error: 'La matricule fiscale est obligatoire pour une personne morale.'
@@ -126,7 +83,7 @@ function validateDevisData(data) {
     
     // Validate matricule format (7 digits + letter or 8 digits)
     const matriculeRegex = /^[0-9]{7}[A-Z]$|^[0-9]{8}$/;
-    if (!matriculeRegex.test(data.matricule_fiscale.replace(/\s/g, ''))) {
+    if (!matriculeRegex.test(formData.matriculeFiscale.replace(/\s/g, ''))) {
       return {
         isValid: false,
         error: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres).'
@@ -135,8 +92,8 @@ function validateDevisData(data) {
   }
 
   // Validate nombre_places for salon service
-  if (data.type_service === 'salon') {
-    if (!data.nombre_places || data.nombre_places <= 0) {
+  if (formData.typeService === 'salon') {
+    if (!formData.nombrePlaces || formData.nombrePlaces <= 0) {
       return {
         isValid: false,
         error: 'Le nombre de places est obligatoire pour le nettoyage de salon.'
@@ -145,18 +102,18 @@ function validateDevisData(data) {
   }
 
   // Validate surface_service for specific services
-  if (['tapis', 'marbre', 'tfc'].includes(data.type_service)) {
-    if (!data.surface_service || data.surface_service <= 0) {
+  if (['tapis', 'marbre', 'tfc'].includes(formData.typeService)) {
+    if (!formData.surfaceService || formData.surfaceService <= 0) {
       return {
         isValid: false,
-        error: `La surface à traiter est obligatoire pour le service ${data.type_service}.`
+        error: `La surface à traiter est obligatoire pour le service ${formData.typeService}.`
       };
     }
   }
 
   // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(data.email)) {
+  if (!emailRegex.test(formData.email)) {
     return {
       isValid: false,
       error: 'Veuillez saisir une adresse email valide.'
@@ -165,7 +122,7 @@ function validateDevisData(data) {
 
   // Validate phone format
   const phoneRegex = /^[0-9\s\-\+\(\)]{8,}$/;
-  if (!phoneRegex.test(data.telephone)) {
+  if (!phoneRegex.test(formData.telephone)) {
     return {
       isValid: false,
       error: 'Veuillez saisir un numéro de téléphone valide.'
@@ -173,7 +130,7 @@ function validateDevisData(data) {
   }
 
   // Validate conditions acceptance
-  if (!data.conditions) {
+  if (!formData.conditions) {
     return {
       isValid: false,
       error: 'Vous devez accepter les conditions générales.'

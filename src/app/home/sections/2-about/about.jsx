@@ -31,7 +31,7 @@ export default function About() {
                         </li>
                     ))}
                 </ul>
-                <Link href='/' className={styles.circleContainer} aria-label="En savoir plus sur nos services">
+                <Link href='/about' className={styles.circleContainer} aria-label="En savoir plus sur nos services">
                     <IconoirArrowUpRight className={styles.arrow} />
                 </Link>
             </div>

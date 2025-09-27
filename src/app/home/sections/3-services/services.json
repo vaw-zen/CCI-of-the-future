@@ -13,6 +13,12 @@
             "img": "/home/tfc.webp"
         },
         {
+          "link": "/tapis",
+          "title": "Nettoyage moquette & tapis",
+          "desc": "Nous offrons un service de nettoyage professionnel pour vos moquettes et tapis, en utilisant des techniques avancées pour éliminer la saleté, les taches et les allergènes.",
+          "img": "/home/5.webp"
+      },
+        {
             "link": "/salon",
             "title": "Nettoyage de tous type de tapisserie",
             "desc": "Notre équipe professionnelle est bien équipée pour redonner à vos tapisseries un aspect neuf et frais.",
@@ -26,7 +32,7 @@
         }
     ],
     "slug": "NOS SERVICES",
-    "highlight": "Ce que vous obtiendrez a la demande.",
+    "highlight": "Services sur-mesure à votre demande.",
     "button": {
         "name": "Découvrez nos services",
         "link": "/services"

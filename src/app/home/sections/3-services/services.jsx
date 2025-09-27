@@ -14,7 +14,7 @@ export default function Services({ className = '' }) {
                 <div className={styles.stickyContent}>
                     <h2 className={pageStyles.slug}>{content.slug}</h2>
                     <h3 className={pageStyles.highlight}>{content.highlight}</h3>
-                    <button className={styles.button}><Link href='/'>{content.button.name}</Link></button>
+                    <button className={styles.button}><Link href={content.button.link}>{content.button.name}</Link></button>
                 </div>
             </div>
 

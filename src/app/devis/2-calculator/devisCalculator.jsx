@@ -319,7 +319,7 @@ export default function DevisCalculator() {
           </div>
 
           {/* Additional Options */}
-          {Object.keys(selectedServices).length > 0 && (
+          {/* {Object.keys(selectedServices).length > 0 && (
             <div className={styles.additionalOptions}>
               <h3>Options supplémentaires</h3>
               
@@ -367,7 +367,7 @@ export default function DevisCalculator() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Total Display */}
           {Object.keys(selectedServices).length > 0 && (

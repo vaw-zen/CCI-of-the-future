@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './devisCalculator.module.css';
 
 const services = {
@@ -92,12 +92,31 @@ export default function DevisCalculator() {
     setSelectedServices(prev => {
       const newSelected = { ...prev };
       if (newSelected[serviceId]) {
+        // remove
+        // compute removed amount based on current selection before deleting
+        const currentOption = newSelected[serviceId] || 'standard';
+        const service = services[serviceId];
+        const quantity = quantities[serviceId] || 1;
+        const optionMultiplier = service.options[currentOption]?.multiplier || 1;
+        const removed = Math.round(service.basePrice * optionMultiplier * quantity);
+
         delete newSelected[serviceId];
         const newQuantities = { ...quantities };
         delete newQuantities[serviceId];
         setQuantities(newQuantities);
+
+        // trigger negative animation (show -amount)
+        triggerAddAnimation(-removed);
       } else {
+        // add
         newSelected[serviceId] = 'standard';
+
+        // compute added amount for animation
+        const service = services[serviceId];
+        const quantity = quantities[serviceId] || 1;
+        const optionMultiplier = service.options['standard']?.multiplier || 1;
+        const added = Math.round(service.basePrice * optionMultiplier * quantity);
+        triggerAddAnimation(added);
       }
       return newSelected;
     });
@@ -111,11 +130,89 @@ export default function DevisCalculator() {
   };
 
   const handleQuantityChange = (serviceId, quantity) => {
-    setQuantities(prev => ({
-      ...prev,
-      [serviceId]: Math.max(1, parseInt(quantity) || 1)
-    }));
+    setQuantities(prev => {
+      // allow empty string so placeholder shows when user clears input
+      if (quantity === '' || quantity === null) {
+        return { ...prev, [serviceId]: '' };
+      }
+
+      const parsed = parseInt(quantity || '0', 10);
+      const newQty = Math.max(1, isNaN(parsed) ? 1 : parsed);
+      const oldQty = prev[serviceId] || 0;
+
+      // trigger positive ticker animation for magnitude of change if service selected
+      if (selectedServices[serviceId] && newQty !== oldQty) {
+        const selectedOption = selectedServices[serviceId] || 'standard';
+        const service = services[serviceId];
+        const optionMultiplier = service.options[selectedOption]?.multiplier || 1;
+        const delta = Math.round(Math.abs(newQty - oldQty) * service.basePrice * optionMultiplier);
+        if (delta > 0) triggerAddAnimation(delta);
+      }
+
+      return { ...prev, [serviceId]: newQty };
+    });
   };
+
+  // Choose contextual label for quantity input depending on the service
+  const getQuantityLabel = (serviceId) => {
+    // services that measure by places
+    if (serviceId === 'salon') return "Nombre de places";
+
+    // services measured by surface
+    if (['tapis', 'marbre', 'tfc'].includes(serviceId)) return 'Surface (m²)';
+
+    // tapisserie and others: count of items
+    if (serviceId === 'tapisserie') return "Nombre d'articles";
+
+    // default fallback
+    return 'Quantité';
+  };
+
+  // Provide contextual placeholders for quantity input
+  const getQuantityPlaceholder = (serviceId) => {
+    if (serviceId === 'salon') return 'Ex: 3 places';
+    if (['tapis', 'marbre', 'tfc'].includes(serviceId)) return 'Ex: 25 m²';
+    if (serviceId === 'tapisserie') return 'Ex: 1 article';
+    return 'Ex: 1';
+  };
+
+  // Slot-like add animation state
+  const [showTicker, setShowTicker] = useState(false);
+  const [tickerValue, setTickerValue] = useState(0);
+  const tickerRef = useRef({ raf: null });
+
+  function triggerAddAnimation(amount) {
+    // cancel any running animation
+    if (tickerRef.current.raf) {
+      cancelAnimationFrame(tickerRef.current.raf);
+      tickerRef.current.raf = null;
+    }
+
+    setShowTicker(true);
+    setTickerValue(0);
+
+    const duration = 900; // ms
+    const start = performance.now();
+
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(1, elapsed / duration);
+      // ease out
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * amount);
+      setTickerValue(current);
+
+      if (progress < 1) {
+        tickerRef.current.raf = requestAnimationFrame(step);
+      } else {
+        tickerRef.current.raf = null;
+        // leave visible briefly then dismiss
+        setTimeout(() => setShowTicker(false), 700);
+      }
+    }
+
+    tickerRef.current.raf = requestAnimationFrame(step);
+  }
 
   useEffect(() => {
     calculateTotal();
@@ -199,14 +296,21 @@ export default function DevisCalculator() {
                     </div>
 
                     <div className={styles.optionGroup}>
-                      <label>Quantité:</label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={quantities[serviceId] || 1}
-                        onChange={(e) => handleQuantityChange(serviceId, e.target.value)}
-                        className={styles.input}
-                      />
+                      <label>{getQuantityLabel(serviceId)}:</label>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder={getQuantityPlaceholder(serviceId)}
+                          value={quantities[serviceId] ?? ''}
+                          onChange={(e) => handleQuantityChange(serviceId, e.target.value)}
+                          className={styles.input}
+                        />
+                        {/* show unit for surface-based services */}
+                        {['tapis', 'marbre', 'tfc'].includes(serviceId) && (
+                          <small style={{ color: '#6c757d' }}>m²</small>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -278,6 +382,14 @@ export default function DevisCalculator() {
                   * Prix indicatif - Devis final après inspection sur site
                 </p>
               </div>
+            </div>
+          )}
+
+          {/* Ticker: slot-like added item animation (fixed) */}
+          {showTicker && (
+            <div className={`${styles.ticker} ${!showTicker ? styles.hide : ''}`} role="status" aria-live="polite">
+              {/* <div className={styles.label}>{tickerValue < 0 ? 'Retiré' : 'Ajouté'}</div> */}
+              <div className={styles.value}>{tickerValue < 0 ? '- DT ' + Math.abs(tickerValue) : 'DT ' + tickerValue}</div>
             </div>
           )}
         </div>

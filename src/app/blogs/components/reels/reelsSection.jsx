@@ -491,6 +491,49 @@ const ReelsSection = () => {
                       </div>
                     )}
 
+                    {/* Pause Overlay - Shows when video is playing and controls are visible */}
+                    {playingIds.has(reel.id) && videoStates[reel.id]?.isLoaded && showControls[reel.id] && (
+                      <div
+                        className={`${styles.container} ${styles.showOverlay}`}
+                        onMouseEnter={() => showVideoControls(reel.id)}
+                        onTouchStart={() => showVideoControls(reel.id)}
+                        onMouseLeave={() => {
+                          // Start hide timer when mouse leaves pause button
+                          if (controlTimeouts.current[reel.id]) {
+                            clearTimeout(controlTimeouts.current[reel.id]);
+                          }
+                          controlTimeouts.current[reel.id] = setTimeout(() => {
+                            setShowControls(prev => ({ ...prev, [reel.id]: false }));
+                          }, 1000); // Shorter delay when leaving pause button
+                        }}
+                        onTouchEnd={() => {
+                          // Start hide timer when touch ends on pause button (mobile)
+                          if (controlTimeouts.current[reel.id]) {
+                            clearTimeout(controlTimeouts.current[reel.id]);
+                          }
+                          controlTimeouts.current[reel.id] = setTimeout(() => {
+                            setShowControls(prev => ({ ...prev, [reel.id]: false }));
+                          }, 2000); // Longer delay for mobile to allow for interaction
+                        }}
+                        onPointerDown={(e) => {
+                          e.stopPropagation();
+                          handleTogglePlay(reel.id, e, 'overlay');
+                          // Hide controls after pause
+                          hideVideoControls(reel.id);
+                        }}
+                      >
+                        <div className={styles.filter} />
+                        <button className={styles.playButton} aria-label="pause-video">
+                          <div className={styles.textContainer}>
+                            <CircularText className={styles.circularText} />
+                          </div>
+                          <div className={styles.innerButton}>
+                            <MdiPause className={styles.playIcon} />
+                          </div>
+                        </button>
+                      </div>
+                    )}
+
                     {/* Views Badge */}
                     <div className={styles['reel-views']}>
                       {reel.views} views

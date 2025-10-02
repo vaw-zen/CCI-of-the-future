@@ -9,14 +9,15 @@
 .calculatorCard {
   /* background: white; */
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15); */
   padding: 3rem;
+  /* border: 0.05vw solid rgba(203, 251, 66, 0.1); */
 }
 
 .title {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--t-primary);
   text-align: center;
   margin-bottom: 0.5rem;
   text-align: center;
@@ -24,7 +25,7 @@
 
 .subtitle {
   text-align: center;
-  color: #6c757d;
+  color: var(--t-secondary);
   font-size: 1.1rem;
   margin-bottom: 3rem;
 }
@@ -36,21 +37,22 @@
 }
 
 .serviceCard {
-  border: 1px solid #e9ecef;
+  
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.3s ease;
-  /* background: white; */
+  border: 0.05vw solid rgba(203, 251, 66, 0.1);
 }
 
 .serviceCard:hover {
   border-color: var(--ac-primary);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+  box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15);
+  transform: translateY(-0.21vw);
 }
 
 .serviceCard.selected {
   border-color: var(--ac-primary);
-  /* background: #f8f9ff; */
+  box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15);
 }
 
 .serviceHeader {
@@ -71,12 +73,12 @@
 .serviceInfo h3 {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--t-primary);
   margin-bottom: 0.5rem;
 }
 
 .serviceInfo p {
-  color: #6c757d;
+  color: var(--t-secondary);
   font-size: 0.95rem;
   margin-bottom: 0.5rem;
 }
@@ -131,12 +133,12 @@
 .optionGroup label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--t-primary);
 }
 
 .optionGroup small {
   font-size: 0.8rem;
-  color: #6c757d;
+  color: var(--t-secondary);
   margin-top: 0.25rem;
 }
 
@@ -179,19 +181,45 @@
 }
 
 .totalCard {
-  background: linear-gradient(135deg, var(--ac-primary), #0056b3);
-  color: white;
+  background: linear-gradient(
+    135deg, 
+    var(--ac-primary) 0%, 
+    var(--ac-primary) 25%, 
+    rgba(203, 251, 66, 0.9) 35%,
+    rgba(150, 200, 50, 0.7) 45%,
+    rgba(100, 150, 40, 0.5) 55%,
+    rgba(80, 120, 35, 0.4) 65%,
+    rgba(60, 90, 30, 0.3) 75%,
+    var(--bg-base) 85%, 
+    var(--bg-base) 100%
+  );
+  color: var(--t-primary);
   border-radius: 16px;
   padding: 2.5rem;
   display: inline-block;
   min-width: 300px;
+  box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15);
 }
 
-.totalCard h3 {
+.totalCard h3  {
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  opacity: 0.9;
+  background: linear-gradient(
+    135deg,
+    #000000 0%,
+    #111111 20%,
+    #222222 35%,
+    #000000 45%,
+    #000000 55%,
+    #333333 65%,
+    #888888 80%,
+    #ffffff 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 1;
 }
 
 .totalAmount {
@@ -205,17 +233,59 @@
 .currency {
   font-size: 1.5rem;
   font-weight: 600;
+  background: linear-gradient(
+    135deg,
+    #000000 0%,
+    #111111 20%,
+    #222222 35%,
+    #000000 45%,
+    #000000 55%,
+    #333333 65%,
+    #888888 80%,
+    #ffffff 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .amount {
   font-size: 3rem;
   font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    #000000 0%,
+    #111111 20%,
+    #222222 35%,
+    #000000 45%,
+    #000000 55%,
+    #333333 65%,
+    #888888 80%,
+    #ffffff 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .totalNote {
   font-size: 0.9rem;
-  opacity: 0.8;
+  opacity: 1;
   margin: 0;
+  background: linear-gradient(
+    135deg,
+    #333333 0%,
+    #444444 20%,
+    #555555 35%,
+    #222222 45%,
+    #222222 55%,
+    #666666 65%,
+    #aaaaaa 80%,
+    #f0f0f0 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 @media (max-width: 768px) {
@@ -308,7 +378,7 @@
 .ticker {
   position: fixed;
   right: 2.5vw;
-  bottom: 8.5vw;
+  top: 6vw;
   background: linear-gradient(135deg, rgba(20,20,22,0.96), rgba(26,26,28,0.98));
   color: white;
   padding: 1rem 1.25rem;
@@ -318,7 +388,7 @@
   align-items: center;
   gap: 0.8rem;
   z-index: 9999;
-  transform-origin: bottom right;
+  transform-origin: top right;
   animation: tickerIn 380ms cubic-bezier(.2,.9,.2,1) forwards;
 }
 
@@ -330,23 +400,23 @@
 .ticker .value { font-weight: 800; font-size: 1.4rem; color: var(--ac-primary); min-width: 60px; text-align: right; }
 
 @keyframes tickerIn {
-  0% { transform: translateY(20px) scale(.96); opacity: 0; }
-  60% { transform: translateY(-6px) scale(1.02); opacity: 1; }
+  0% { transform: translateY(-20px) scale(.96); opacity: 0; }
+  60% { transform: translateY(6px) scale(1.02); opacity: 1; }
   100% { transform: translateY(0) scale(1); }
 }
 
 @keyframes tickerOut {
   0% { transform: translateY(0) scale(1); opacity: 1; }
-  100% { transform: translateY(18px) scale(.98); opacity: 0; }
+  100% { transform: translateY(-18px) scale(.98); opacity: 0; }
 }
 
 /* Mobile positioning */
 @media (max-width: 768px) {
-  .ticker { right: 4vw; bottom: 18vw; }
+  .ticker { right: 4vw; top: 4vw; }
 }
 
 @media (max-width: 480px) {
-  .ticker { right: 6vw; bottom: 22vw; padding: 0.9rem 1rem; }
+  .ticker { right: 6vw; top: 6vw; padding: 0.9rem 1rem; }
   .ticker .value { font-size: 2.6vw; }
   .ticker .label { font-size: 2.2vw; }
 }

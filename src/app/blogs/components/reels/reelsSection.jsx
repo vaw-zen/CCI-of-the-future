@@ -28,6 +28,25 @@ const ReelsSection = () => {
   const [showControls, setShowControls] = useState({});
   const controlTimeouts = useRef({});
 
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+      
+      setIsMobile(isMobileDevice || (isTouchDevice && isSmallScreen));
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const showLoadMore = Boolean(reelsPaging?.next);
   const loadMoreRef = useAutoHeightTransition(showLoadMore, { duration: 250, easing: 'ease' });
 
@@ -252,14 +271,16 @@ const ReelsSection = () => {
                       preload="none"
                       playsInline
                       controlsList="nodownload nofullscreen noremoteplayback"
-                      onPointerDown={(e) => {
-                        const wasPlaying = playingIds.has(reel.id);
-                        handleTogglePlay(reel.id, e, 'overlay');
-                        // Show controls when play is clicked
-                        if (!wasPlaying) {
-                          setTimeout(() => showVideoControls(reel.id), 100);
+                      {...(!isMobile && {
+                        onPointerDown: (e) => {
+                          const wasPlaying = playingIds.has(reel.id);
+                          handleTogglePlay(reel.id, e, 'overlay');
+                          // Show controls when play is clicked
+                          if (!wasPlaying) {
+                            setTimeout(() => showVideoControls(reel.id), 100);
+                          }
                         }
-                      }}
+                      })}
                       onPlay={() => {
                         videoEventHandlers.onPlay(reel.id);
                         // Show controls when video starts playing

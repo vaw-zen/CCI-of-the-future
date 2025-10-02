@@ -46,7 +46,8 @@ const ReelsSection = () => {
           duration: 0,
           volume: 1,
           isFullscreen: false,
-          isLoaded: false
+          isLoaded: false,
+          hasAudio: true // Default to true, will be updated when metadata loads
         };
       });
       setVideoStates(prev => ({ ...prev, ...initialStates }));
@@ -66,14 +67,63 @@ const ReelsSection = () => {
   const handleVideoLoadedMetadata = (reelId) => {
     const video = videoRefs.current[reelId];
     if (video) {
+      // Enhanced audio detection for different video formats
+      const audioDetection = {
+        // Standard HTML5 audio detection
+        hasAudioTracks: video.audioTracks?.length > 0,
+        webkitAudioBytes: video.webkitAudioDecodedByteCount > 0,
+        mozHasAudio: video.mozHasAudio,
+        // Additional checks for DASH/HLS streams
+        mediaSource: video.src?.includes('dash') || video.src?.includes('hls'),
+        // Check if video has multiple tracks (usually indicates audio)
+        videoTracks: video.videoTracks?.length || 0,
+        // Format-specific detection
+        isDashVideo: video.src?.includes('dash'),
+        isSveVideo: video.src?.includes('sve'),
+        // Bitrate analysis from URL
+        urlBitrate: video.src?.match(/bitrate=(\d+)/)?.[1] || '0',
+        hasEffectiveAudio: false
+      };
+      
+      // Determine if audio is effectively available
+      const bitrate = parseInt(audioDetection.urlBitrate);
+      audioDetection.hasEffectiveAudio = 
+        audioDetection.hasAudioTracks || 
+        audioDetection.webkitAudioBytes || 
+        audioDetection.mozHasAudio ||
+        (audioDetection.isDashVideo && video.duration > 0) || // DASH videos usually have audio
+        (bitrate > 0) || // Videos with bitrate > 0 should have audio
+        (!audioDetection.isSveVideo && video.duration > 0); // Non-SVE videos likely have audio
+      
+      // For videos with no audio, set muted and volume to 0
+      const hasAudio = audioDetection.hasEffectiveAudio;
+      if (!hasAudio) {
+        video.muted = true;
+        video.volume = 0;
+      } else {
+        video.muted = false;
+        video.volume = 1;
+      }
+      
       setVideoStates(prev => ({
         ...prev,
         [reelId]: {
           ...prev[reelId],
           duration: video.duration,
+          volume: hasAudio ? 1 : 0,
+          hasAudio: hasAudio,
           isLoaded: true
         }
       }));
+      
+      // Initialize volume bar styling based on audio availability
+      setTimeout(() => {
+        const volumeBar = document.querySelector(`[data-reel-id="${reelId}"] .volume-bar`);
+        if (volumeBar) {
+          const volumePercentage = hasAudio ? 100 : 0;
+          volumeBar.style.setProperty('--volume-percentage', `${volumePercentage}%`);
+        }
+      }, 100);
     }
   };
 
@@ -106,7 +156,9 @@ const ReelsSection = () => {
 
   const handleVolumeChange = (reelId, newVolume) => {
     const video = videoRefs.current[reelId];
-    if (video) {
+    const hasAudio = videoStates[reelId]?.hasAudio;
+    
+    if (video && hasAudio) {
       video.volume = newVolume;
       setVideoStates(prev => ({
         ...prev,
@@ -332,13 +384,20 @@ const ReelsSection = () => {
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   const video = videoRefs.current[reel.id];
-                                  if (video) {
+                                  // Only allow unmuting if video has audio
+                                  if (video && videoStates[reel.id]?.hasAudio) {
                                     video.muted = !video.muted;
                                   }
                                 }}
+                                disabled={!videoStates[reel.id]?.hasAudio}
+                                style={{
+                                  cursor: videoStates[reel.id]?.hasAudio ? 'pointer' : 'not-allowed',
+                                  opacity: videoStates[reel.id]?.hasAudio ? 1 : 0.5
+                                }}
+                                title={videoStates[reel.id]?.hasAudio ? "Toggle mute" : "This video has no audio"}
                                 aria-label="Toggle mute"
                               >
-                                {videoRefs.current[reel.id]?.muted ? 
+                                {(!videoStates[reel.id]?.hasAudio || videoRefs.current[reel.id]?.muted) ? 
                                   <MdiVolumeMute className={styles['control-icon']} /> : 
                                   <LineMdVolumeHighFilled className={styles['control-icon']} />
                                 }
@@ -349,14 +408,22 @@ const ReelsSection = () => {
                                 min="0"
                                 max="1"
                                 step="0.1"
-                                value={videoStates[reel.id]?.volume || 1}
+                                value={videoStates[reel.id]?.hasAudio ? (videoStates[reel.id]?.volume || 1) : 0}
+                                disabled={!videoStates[reel.id]?.hasAudio}
                                 onChange={(e) => {
                                   e.stopPropagation();
-                                  handleVolumeChange(reel.id, parseFloat(e.target.value));
+                                  // Only allow volume changes if video has audio
+                                  if (videoStates[reel.id]?.hasAudio) {
+                                    handleVolumeChange(reel.id, parseFloat(e.target.value));
+                                  }
                                 }}
                                 style={{ 
-                                  '--volume-percentage': `${(videoStates[reel.id]?.volume || 1) * 100}%`
+                                  '--volume-percentage': `${videoStates[reel.id]?.hasAudio ? 
+                                    ((videoStates[reel.id]?.volume || 1) * 100) : 0}%`,
+                                  cursor: videoStates[reel.id]?.hasAudio ? 'pointer' : 'not-allowed',
+                                  opacity: videoStates[reel.id]?.hasAudio ? 1 : 0.5
                                 }}
+                                title={videoStates[reel.id]?.hasAudio ? "Adjust volume" : "This video has no audio"}
                                 aria-label="Volume"
                               />
                             </div>

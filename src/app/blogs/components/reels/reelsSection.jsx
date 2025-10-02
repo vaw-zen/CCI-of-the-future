@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import styles from './reelsSection.module.css';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
-import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText, MdiPause, LineMdVolumeHighFilled, MdiVolumeMute, MdiFullscreen, MdiFullscreenExit } from '@/utils/components/icons';
+import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText, MdiPause, LineMdVolumeHighFilled, MdiVolumeMute, MdiFullscreen } from '@/utils/components/icons';
 import { useReelsSection } from './reelsSection.func'
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
 import useAutoHeightTransition from '@/libs/useAutoHeightTransition/useAutoHeightTransition';
@@ -45,7 +45,6 @@ const ReelsSection = () => {
           currentTime: 0,
           duration: 0,
           volume: 1,
-          isFullscreen: false,
           isLoaded: false,
           hasAudio: true // Default to true, will be updated when metadata loads
         };
@@ -178,32 +177,12 @@ const ReelsSection = () => {
 
   const handleFullscreen = (reelId) => {
     const video = videoRefs.current[reelId];
-    if (video) {
-      if (!document.fullscreenElement) {
-        video.requestFullscreen?.() || 
-        video.webkitRequestFullscreen?.() || 
-        video.mozRequestFullScreen?.() || 
-        video.msRequestFullscreen?.();
-        setVideoStates(prev => ({
-          ...prev,
-          [reelId]: {
-            ...prev[reelId],
-            isFullscreen: true
-          }
-        }));
-      } else {
-        document.exitFullscreen?.() || 
-        document.webkitExitFullscreen?.() || 
-        document.mozCancelFullScreen?.() || 
-        document.msExitFullscreen?.();
-        setVideoStates(prev => ({
-          ...prev,
-          [reelId]: {
-            ...prev[reelId],
-            isFullscreen: false
-          }
-        }));
-      }
+    if (video && !document.fullscreenElement) {
+      // Only enter fullscreen, don't track state
+      video.requestFullscreen?.() || 
+      video.webkitRequestFullscreen?.() || 
+      video.mozRequestFullScreen?.() || 
+      video.msRequestFullscreen?.();
     }
   };
 
@@ -257,13 +236,22 @@ const ReelsSection = () => {
                 <div key={reel.id} className={styles['reel-card']} data-reel-id={reel.id}>
                   <div className={styles['reel-image-container']}>
                     <video
-                      ref={(el) => (videoRefs.current[reel.id] = el)}
+                      ref={(el) => {
+                        if (el) {
+                          videoRefs.current[reel.id] = el;
+                          // Ensure controls are always disabled
+                          el.controls = false;
+                          // Disable context menu to prevent right-click controls
+                          el.oncontextmenu = (e) => e.preventDefault();
+                        }
+                      }}
                       className={styles['reel-image']}
                       data-src={getBestVideoUrl(reel)}
                       poster={reel.thumbnail}
                       controls={false}
                       preload="none"
                       playsInline
+                      controlsList="nodownload nofullscreen noremoteplayback"
                       onPointerDown={(e) => {
                         const wasPlaying = playingIds.has(reel.id);
                         handleTogglePlay(reel.id, e, 'overlay');
@@ -435,12 +423,9 @@ const ReelsSection = () => {
                                 e.stopPropagation();
                                 handleFullscreen(reel.id);
                               }}
-                              aria-label="Toggle fullscreen"
+                              aria-label="Enter fullscreen"
                             >
-                              {videoStates[reel.id]?.isFullscreen ? 
-                                <MdiFullscreenExit className={styles['control-icon']} /> : 
-                                <MdiFullscreen className={styles['control-icon']} />
-                              }
+                              <MdiFullscreen className={styles['control-icon']} />
                             </button>
                           </div>
                         </div>

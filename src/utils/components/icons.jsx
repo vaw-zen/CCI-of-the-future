@@ -135,3 +135,8 @@ export function MdiFullscreenExit(props) {
 	return (<svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M14 14h5v2h-7v-7h2zm-9 0h2v5h5v2H5v-7zm5-9h7v7h-2V9h-5zM5 5h5v2H8v2H6V7H5z"></path></svg>);
 }
 
+
+
+// export function MdiFullscreen(props) {
+// 	return (<svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M5 5h5v2H7v3H5zm9 0h5v5h-2V7h-3zm3 9h2v5h-5v-2h3zm-7 3v2H5v-5h2v3z"></path></svg>);
+// }

@@ -289,6 +289,34 @@
   .reel-card:hover .reel-image { transform: none; }
   .reel-card:hover .container { opacity: 1; }
   .reel-card:hover .circularText { animation: none; }
+  
+  /* On touch devices, controls only show via JavaScript interaction */
+  .custom-controls {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .controls-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Ensure video clicks are blocked */
+.reel-image {
+  pointer-events: auto;
+  user-select: none;
+}
+
+/* Ensure overlay buttons have priority over video */
+.container {
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.playButton {
+  pointer-events: auto;
+  z-index: 3;
 }
 
 /* Custom Video Controls */
@@ -360,8 +388,23 @@
   transform: scale(1);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .control-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+  
+  /* Only show controls on hover for desktop */
+  .reel-card:hover .custom-controls.controls-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Mobile and touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .control-button:active,
+  .control-button:focus {
     background: rgba(255, 255, 255, 0.3);
     transform: scale(1.1);
   }
@@ -669,10 +712,6 @@
   .control-button:active {
     background: rgba(255, 255, 255, 0.3);
     transform: scale(1.1);
-  }
-  
-  .control-button:active {
-    transform: scale(0.95);
   }
 
   .control-icon {

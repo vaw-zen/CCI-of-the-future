@@ -10,6 +10,7 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.cdninstagram.com' },
       { protocol: 'https', hostname: 'www.bouthouri.co' },
     ],
+    qualities: [75, 80, 90, 100],
   },
   async redirects() {
     return [

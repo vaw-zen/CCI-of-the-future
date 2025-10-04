@@ -142,7 +142,7 @@ export async function POST(request) {
       systemPrompt = "Tu es l'assistant virtuel officiel de CCI Services, expert en nettoyage industriel et résidentiel. Tu présentes toujours les services de l'entreprise de manière claire et professionnelle.";
       aiConfig = {
         model: {
-          name: "gemini-1.5-flash-8b",
+          name: "gemini-2.0-flash",
           maxOutputTokens: 1000,
           temperature: 0.7
         }

@@ -40,7 +40,7 @@ export default function ContactPage() {
     linkedin: "https://www.linkedin.com/company/chaabanes-cleaning-int",
     instagram: "https://www.instagram.com/cci.services/",
   };
-  const teamImages = ['/home/1.webp','/home/3.webp'];
+  const teamImages = ['/home/1.webp','/home/polishingkitchenmrblecountre.webp'];
 
   return (
     <>

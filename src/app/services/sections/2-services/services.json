@@ -25,7 +25,7 @@
             ],
             "desc": "Nos services de nettoyage des tapis comprennent l'enlèvement des taches, le dépoussiérage et l'aspiration de tous les coins. Nous utilisons des produits non-toxiques pour préserver la qualité de vos tapis et l'environnement.",
             "link": "/tapis",
-            "img": "/home/5.webp"
+            "img": "/home/nettoyage moquetteaveclaméthodeinjectionextraction.webp"
         },
         {
             "title": [
@@ -34,7 +34,7 @@
             ],
             "desc": "Nous nettoyons vos salons en profondeur : enlèvement des taches, dépoussiérage et aspiration. Nos produits sont non-toxiques pour préserver vos meubles et l'environnement.",
             "link": "/salon",
-            "img": "/home/6.webp"
+            "img": "/home/nettoyagesolonméthodeinjectionextraction.webp"
         },
         {
             "title": [
@@ -43,7 +43,7 @@
             ],
             "desc": "Entretien complet du marbre et carrelage : restauration, lustrage, cristallisation, protection et nettoyage. Nos experts assurent un résultat impeccable.",
             "link": "/marbre",
-            "img": "/home/4.webp"
+            "img": "/home/cristallisationsolenmarbre.webp"
         },
         {
             "title": [
@@ -52,7 +52,7 @@
             ],
             "desc": "Après travaux, notre équipe assure un nettoyage minutieux : sols, murs, vitres, sanitaires, cuisines. Profitez rapidement de votre nouvel espace, propre et sain.",
             "link": "/tfc",
-            "img": "/home/tfc.webp"
+            "img": "/home/nettoyage-professionel-post-chantier.webp"
         }
     ]
 }

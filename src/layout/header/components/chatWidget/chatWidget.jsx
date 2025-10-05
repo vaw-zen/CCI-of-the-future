@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useState, useEffect, useMemo } from 'react';
 import { useChatWidgetLogic } from './chatWidget.func';
 import { getChatMessages } from '../../../../utils/tuning-loader';
+import { dimensionsStore } from '../../../../utils/store/store';
 import styles from './chatWidget.module.css';
 
 // Lazy load the markdown renderer
@@ -9,7 +10,8 @@ const MarkdownRenderer = lazy(() => import('@/utils/components/markdownRenderer/
 const ChatWidget = React.memo(({ isOpen, onClose }) => {
     const chatMessages = useMemo(() => getChatMessages(), []);
     const [markdownLoaded, setMarkdownLoaded] = useState(false);
-    
+    const isMobile = dimensionsStore((state) => state.isMobile());
+
     const {
         isExpanded,
         messages,
@@ -56,9 +58,9 @@ const ChatWidget = React.memo(({ isOpen, onClose }) => {
 
     return (
         <>
-            {/* Overlay for expanded mode */}
+            {/* Overlay for expanded mode and mobile showing state */}
             <div
-                className={`${styles.overlay} ${(isOpen && isExpanded) ? styles.overlayVisible : ''}`}
+                className={`${styles.overlay} ${(isOpen && (isExpanded || isMobile)) ? styles.overlayVisible : ''}`}
                 onClick={handleOverlayClick}
             />
 

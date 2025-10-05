@@ -35,7 +35,7 @@ export async function generateMetadata() {
     title: "Tapisserie sur mesure & Rénovation d'ameublement— CCI",
     description: "Retapissage, remplacement de mousse et rembourrage sur mesure pour canapés, banquettes et nautisme. Tissus ignifuges et finitions soignées.",
     alternates: {
-      canonical: `${SITE_URL}/tapisserie`
+      canonical: `${SITE_URL}/tapisserie/`
     },
     openGraph: {
       title: "Tapisserie sur mesure & Rénovation d'ameublement— CCI",

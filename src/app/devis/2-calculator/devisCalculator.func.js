@@ -86,17 +86,18 @@ export function useDevisCalculatorLogic() {
   const [total, setTotal] = useState(0);
   const [showTicker, setShowTicker] = useState(false);
   const [tickerValue, setTickerValue] = useState(0);
-  const tickerRef = useRef({ raf: null });
+  const tickerRef = useRef({ raf: null, previousTotal: 0 });
 
-  function triggerAddAnimation(amount) {
+  function triggerAddAnimation(newTotal) {
     // cancel any running animation
     if (tickerRef.current.raf) {
       cancelAnimationFrame(tickerRef.current.raf);
       tickerRef.current.raf = null;
     }
 
+    const previousTotal = tickerRef.current.previousTotal;
     setShowTicker(true);
-    setTickerValue(0);
+    setTickerValue(previousTotal);
 
     const duration = 900; // ms
     const start = performance.now();
@@ -106,13 +107,14 @@ export function useDevisCalculatorLogic() {
       const progress = Math.min(1, elapsed / duration);
       // ease out
       const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(eased * amount);
+      const current = Math.round(previousTotal + eased * (newTotal - previousTotal));
       setTickerValue(current);
 
       if (progress < 1) {
         tickerRef.current.raf = requestAnimationFrame(step);
       } else {
         tickerRef.current.raf = null;
+        tickerRef.current.previousTotal = newTotal;
         // leave visible briefly then dismiss
         setTimeout(() => setShowTicker(false), 700);
       }
@@ -126,30 +128,13 @@ export function useDevisCalculatorLogic() {
       const newSelected = { ...prev };
       if (newSelected[serviceId]) {
         // remove
-        // compute removed amount based on current selection before deleting
-        const currentOption = newSelected[serviceId] || 'standard';
-        const service = services[serviceId];
-        const quantity = quantities[serviceId] || 1;
-        const optionMultiplier = service.options[currentOption]?.multiplier || 1;
-        const removed = Math.round(service.basePrice * optionMultiplier * quantity);
-
         delete newSelected[serviceId];
         const newQuantities = { ...quantities };
         delete newQuantities[serviceId];
         setQuantities(newQuantities);
-
-        // trigger negative animation (show -amount)
-        triggerAddAnimation(-removed);
       } else {
         // add
         newSelected[serviceId] = 'standard';
-
-        // compute added amount for animation
-        const service = services[serviceId];
-        const quantity = quantities[serviceId] || 1;
-        const optionMultiplier = service.options['standard']?.multiplier || 1;
-        const added = Math.round(service.basePrice * optionMultiplier * quantity);
-        triggerAddAnimation(added);
       }
       return newSelected;
     });
@@ -171,16 +156,6 @@ export function useDevisCalculatorLogic() {
 
       const parsed = parseInt(quantity || '0', 10);
       const newQty = Math.max(1, isNaN(parsed) ? 1 : parsed);
-      const oldQty = prev[serviceId] || 0;
-
-      // trigger positive ticker animation for magnitude of change if service selected
-      if (selectedServices[serviceId] && newQty !== oldQty) {
-        const selectedOption = selectedServices[serviceId] || 'standard';
-        const service = services[serviceId];
-        const optionMultiplier = service.options[selectedOption]?.multiplier || 1;
-        const delta = Math.round(Math.abs(newQty - oldQty) * service.basePrice * optionMultiplier);
-        if (delta > 0) triggerAddAnimation(delta);
-      }
 
       return { ...prev, [serviceId]: newQty };
     });
@@ -223,7 +198,14 @@ export function useDevisCalculatorLogic() {
     // Apply area multiplier
     subtotal *= areas[area].multiplier;
 
-    setTotal(Math.round(subtotal));
+    const newTotal = Math.round(subtotal);
+
+    // Trigger animation if total changed
+    if (newTotal !== total) {
+      triggerAddAnimation(newTotal);
+    }
+
+    setTotal(newTotal);
   };
 
   useEffect(() => {

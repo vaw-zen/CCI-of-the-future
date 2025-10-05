@@ -171,6 +171,34 @@ EXEMPLE:
 
     console.log("Generated caption:", generatedCaption);
 
+    // Advanced content analysis for precise image matching (moved outside image block for reuse)
+    const analyzeContentForImages = (text) => {
+      const content = text.toLowerCase();
+      const keywords = {
+        salon: ['salon', 'canapé', 'sofa', 'fauteuil', 'meubles', 'furniture', 'injection', 'extraction'],
+        tapis: ['tapis', 'moquette', 'carpet', 'rug', 'sol textile', 'aspirateur'],
+        marbre: ['marbre', 'marble', 'polissage', 'brillance', 'cristallisation', 'pierre', 'granit'],
+        postChantier: ['chantier', 'construction', 'post-construction', 'fin de chantier', 'rénovation'],
+        tapisserie: ['tapisserie', 'rembourrage', 'upholstery', 'tissu', 'recouvrement', 'restauration'],
+        tfc: ['bureau', 'office', 'commercial', 'entreprise', 'tfc', 'professionnel']
+      };
+
+      let matchedServices = [];
+      
+      // Count keyword matches for each service
+      for (const [service, serviceKeywords] of Object.entries(keywords)) {
+        const matches = serviceKeywords.filter(keyword => content.includes(keyword)).length;
+        if (matches > 0) {
+          matchedServices.push({ service, score: matches });
+        }
+      }
+
+      // Sort by highest score
+      matchedServices.sort((a, b) => b.score - a.score);
+      
+      return matchedServices.length > 0 ? matchedServices[0].service : 'general';
+    };
+
     // Enhanced image selection with content analysis
     let selectedImageUrl = null;
     
@@ -247,34 +275,6 @@ EXEMPLE:
           "https://cciservices.online/home/night.webp",
           "https://cciservices.online/home/1.webp"
         ]
-      };
-
-      // Advanced content analysis for precise image matching
-      const analyzeContentForImages = (text) => {
-        const content = text.toLowerCase();
-        const keywords = {
-          salon: ['salon', 'canapé', 'sofa', 'fauteuil', 'meubles', 'furniture', 'injection', 'extraction'],
-          tapis: ['tapis', 'moquette', 'carpet', 'rug', 'sol textile', 'aspirateur'],
-          marbre: ['marbre', 'marble', 'polissage', 'brillance', 'cristallisation', 'pierre', 'granit'],
-          postChantier: ['chantier', 'construction', 'post-construction', 'fin de chantier', 'rénovation'],
-          tapisserie: ['tapisserie', 'rembourrage', 'upholstery', 'tissu', 'recouvrement', 'restauration'],
-          tfc: ['bureau', 'office', 'commercial', 'entreprise', 'tfc', 'professionnel']
-        };
-
-        let matchedServices = [];
-        
-        // Count keyword matches for each service
-        for (const [service, serviceKeywords] of Object.entries(keywords)) {
-          const matches = serviceKeywords.filter(keyword => content.includes(keyword)).length;
-          if (matches > 0) {
-            matchedServices.push({ service, score: matches });
-          }
-        }
-
-        // Sort by highest score
-        matchedServices.sort((a, b) => b.score - a.score);
-        
-        return matchedServices.length > 0 ? matchedServices[0].service : 'general';
       };
 
       // Analyze the full generated content (including custom prompts)

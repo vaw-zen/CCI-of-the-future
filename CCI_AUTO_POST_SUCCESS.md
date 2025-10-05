@@ -22,7 +22,7 @@
 - **AI Model**: Gemini 2.0 Flash (latest)
 - **Platform**: Next.js 13+ App Router
 - **Facebook API**: Meta Graph API with photos endpoint
-- **Images**: 70% local CCI images + 30% Unsplash stock
+- **Images**: 100% local CCI Services images (web images disabled)
 - **Automation**: GitHub Actions (daily 10 AM Tunisia time)
 
 ### 📝 Content Types Available:
@@ -33,10 +33,10 @@
 5. **Custom**: On-demand specific content
 
 ### 🎨 Image Selection Logic:
-- **Local Priority**: 70% chance for CCI-specific images
-- **Service Matching**: Images matched to content type
-- **Stock Fallback**: Unsplash professional cleaning images
-- **Categories**: marble, carpet, sofa, construction, office
+- **100% Local Images**: Exclusively CCI Services images
+- **Smart Categorization**: Images matched by service type
+- **5 Categories**: salon, tapis, marbre, post-chantier, tapisserie
+- **No Web Images**: Unsplash images completely disabled
 
 ### 🤖 AI Prompt Engineering:
 - **Strict Rules**: Single post generation (no multiple options)
@@ -44,6 +44,7 @@
 - **Brand Consistency**: CCI Services positioning
 - **Professional Tone**: Expert yet engaging
 - **Quality Control**: Character count + emoji validation
+- **Updated Contact Info**: Tel: +216 98 55 77 66, Email: contact@cciservices.online
 
 ### 📅 Daily Automation:
 ```yaml
@@ -52,6 +53,16 @@ Workflow: .github/workflows/daily-facebook-post.yml
 API Endpoint: /api/auto-post-daily
 Success Tracking: GitHub Actions logs
 ```
+
+### 📂 GitHub Actions File Location:
+```
+.github/workflows/daily-facebook-post.yml
+```
+**Note**: Ce fichier existe mais peut être caché dans VS Code. Pour le voir:
+1. Ouvrir l'Explorateur de fichiers Windows
+2. Naviguer vers le dossier du projet  
+3. Aller dans `.github/workflows/`
+4. Le fichier `daily-facebook-post.yml` s'y trouve (4.8KB)
 
 ### 🔑 Environment Variables Required:
 ```env

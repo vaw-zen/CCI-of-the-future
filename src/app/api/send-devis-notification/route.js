@@ -12,8 +12,14 @@ export async function POST(request) {
 
     console.log('Fetching devis request with ID:', devisId);
 
-    // Use service client for server-side operations with elevated permissions
-    const supabase = createServiceClient();
+    // Check if Supabase is available before creating service client
+    let supabase;
+    try {
+      supabase = createServiceClient();
+    } catch (error) {
+      console.error('Supabase not configured:', error.message);
+      return Response.json({ error: 'Database service not configured' }, { status: 500 });
+    }
 
     // Get the devis request from Supabase
     const { data: devisRequest, error } = await supabase

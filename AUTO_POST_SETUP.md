@@ -127,10 +127,10 @@ Time-relevant cleaning advice based on current season
 - **Time**: 10:00 AM Tunisia time (9:00 AM UTC)
 - **Frequency**: Daily
 - **Post Type Rotation**: 
-  - Day 1: Tips
-  - Day 2: Motivation  
+  - Day 1: service
+  - Day 2: service  
   - Day 3: Service
-  - Day 4: Seasonal
+  - Day 4: Service
   - (Repeats cycle)
 
 ### Manual Triggering

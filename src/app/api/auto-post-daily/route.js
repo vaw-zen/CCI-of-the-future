@@ -179,44 +179,73 @@ EXEMPLE:
       const cciImagesByService = {
         // 1. Nettoyage salon (sofa/furniture cleaning)
         salon: [
-          "https://cciservices.online/home/salon.webp",
-          "https://cciservices.online/home/salon1.webp",
-          "https://cciservices.online/home/nettoyagesolonméthodeinjectionextraction.webp"
+          // From /home (no subfolders)
+          "https://cciservices.online/home/nettoyagesolonméthodeinjectionextraction.webp",
+          // From /gallery/salon (categorized subfolder)
+          "https://cciservices.online/gallery/salon/salon.jpg",
+          "https://cciservices.online/gallery/salon/salon2.jpg",
+          "https://cciservices.online/gallery/salon/car.jpg",
+          "https://cciservices.online/gallery/salon/car2.jpg",
+        
         ],
         
         // 2. Nettoyage moquettes/tapis (carpet/rug cleaning)
         tapis: [
-          "https://cciservices.online/home/nettoyage%20moquetteaveclaméthodeinjectionextraction.webp"
+          // From /home (no subfolders)
+          "https://cciservices.online/home/nettoyage%20moquetteaveclaméthodeinjectionextraction.webp",
+          // From /gallery/moquette (categorized subfolder)
+          "https://cciservices.online/gallery/moquette/moquette1.jpg",
+          "https://cciservices.online/gallery/moquette/moquette2.jpg",
+          "https://cciservices.online/gallery/moquette/moquette3.jpg",
+          "https://cciservices.online/gallery/moquette/moquette4.jpg",
+          "https://cciservices.online/gallery/moquette/moquette5.jpg",
+          "https://cciservices.online/gallery/moquette/moquette6.jpg"
         ],
         
         // 3. Marbre (marble polishing/crystallization)
         marbre: [
+          // From /home (no subfolders)
           "https://cciservices.online/home/cristallisationsolenmarbre.webp",
-          "https://cciservices.online/home/polishingkitchenmrblecountre.webp"
+          "https://cciservices.online/home/polishingkitchenmrblecountre.webp",
+          // From /gallery/marbre (categorized subfolder)
+          "https://cciservices.online/gallery/marbre/marbre.jpg",
+          "https://cciservices.online/gallery/marbre/marbre1.png"
         ],
         
         // 4. Nettoyage post-chantier (post-construction cleaning)
         postChantier: [
+          // From /home (no subfolders)
           "https://cciservices.online/home/nettoyage-professionel-post-chantier.webp"
         ],
         
         // 5. Tapisserie (upholstery/reupholstering)
         tapisserie: [
+          // From /home (no subfolders)
           "https://cciservices.online/home/tapisserie1.webp",
           "https://cciservices.online/home/retapissage-salon-en-cuir.webp",
-          "https://cciservices.online/home/retapissage-salon-en-cuir-car-ferry-carthage.webp"
+          "https://cciservices.online/home/retapissage-salon-en-cuir-car-ferry-carthage.webp",
+          // From /gallery/tapisserie (categorized subfolder)
+          "https://cciservices.online/gallery/tapisserie/tapisserie1.jpg",
+          "https://cciservices.online/gallery/tapisserie/tapisserie2.jpg",
+          "https://cciservices.online/gallery/tapisserie/tapisserie3.jpg",
+          "https://cciservices.online/gallery/tapisserie/tapisserie4.jpg",
+          "https://cciservices.online/gallery/tapisserie/tapisserie5.jpg",
+          "https://cciservices.online/gallery/tapisserie/tapisserie6.jpg"
         ],
         
         // 6. TFC (bureau cleaning)
         tfc: [
-          "https://cciservices.online/home/tfc.webp"
+          // From /gallery/tfc (categorized subfolder)
+          "https://cciservices.online/gallery/tfc/tfc.webp",
+          "https://cciservices.online/gallery/tfc/marbre.jpg"
         ],
         
-        // General/showcase images
+        // General/showcase images from /home only (no subfolders)
         general: [
-          "https://cciservices.online/home/beforeAfter.webp",
-          "https://cciservices.online/home/about.png",
-          "https://cciservices.online/home/night.webp"
+          "https://cciservices.online/home/marblepolishing.webp",
+          "https://cciservices.online/home/interior-cleaning-detailing.png",
+          "https://cciservices.online/home/night.webp",
+          "https://cciservices.online/home/1.webp"
         ]
       };
 
@@ -273,6 +302,36 @@ EXEMPLE:
 
       // Select random image from relevant collection
       selectedImageUrl = relevantImages[Math.floor(Math.random() * relevantImages.length)];
+      
+      // Validate image accessibility before posting
+      if (selectedImageUrl) {
+        try {
+          console.log("Validating image accessibility:", selectedImageUrl);
+          const imageResponse = await fetch(selectedImageUrl, { method: 'HEAD' });
+          
+          if (!imageResponse.ok) {
+            console.warn(`Image not accessible (${imageResponse.status}):`, selectedImageUrl);
+            // Try another image from the same collection
+            if (relevantImages.length > 1) {
+              const filteredImages = relevantImages.filter(img => img !== selectedImageUrl);
+              selectedImageUrl = filteredImages[Math.floor(Math.random() * filteredImages.length)];
+              console.log("Trying alternative image:", selectedImageUrl);
+            } else {
+              // Fall back to general images
+              const fallbackImages = cciImagesByService.general;
+              selectedImageUrl = fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+              console.log("Using fallback image:", selectedImageUrl);
+            }
+          } else {
+            console.log("Image validation successful:", selectedImageUrl);
+          }
+        } catch (validationError) {
+          console.warn("Image validation failed:", validationError.message);
+          // Use a reliable fallback
+          selectedImageUrl = "https://cciservices.online/home/interior-cleaning-detailing.png";
+          console.log("Using safe fallback image:", selectedImageUrl);
+        }
+      }
       
       console.log("Selected CCI Services image:", {
         service: bestMatchService,

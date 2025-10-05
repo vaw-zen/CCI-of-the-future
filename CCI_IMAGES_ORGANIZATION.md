@@ -21,8 +21,8 @@
 - `tapisserie1.webp` - Travaux de tapisserie généraux
 
 ### **6. 📷 GÉNÉRAL** :
-- `beforeAfter.webp` - Résultats avant/après
-- `about.png` - Présentation/showcase
+- `marblepolishing.webp` - Résultats avant/après
+- `interior-cleaning-detailing.png` - Présentation/showcase
 - `night.webp` - Vue nocturne
 
 ## 🎯 **Logique de Sélection Intelligente** :

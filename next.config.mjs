@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['@supabase/supabase-js'],
   experimental: {
     optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],
+  },
+  // Suppress punycode deprecation warning
+  onDemandEntries: {
+    maxInactiveAge: 60 * 1000,
+    pagesBufferLength: 2,
   },
   images: {
     remotePatterns: [
@@ -28,8 +34,15 @@ const nextConfig = {
   webpack: (config, { isServer }) => {
     // Optimize bundle splitting for chat widget
     if (!isServer) {
+      config.optimization.splitChunks = config.optimization.splitChunks || {};
       config.optimization.splitChunks.cacheGroups = {
         ...config.optimization.splitChunks.cacheGroups,
+        supabase: {
+          name: 'supabase',
+          test: /[\\/]node_modules[\\/]@supabase[\\/]/,
+          chunks: 'all',
+          priority: 25,
+        },
         chatWidget: {
           name: 'chat-widget',
           test: /[\\/]components[\\/]chatWidget[\\/]/,
@@ -50,6 +63,7 @@ const nextConfig = {
         },
       };
     }
+    
     return config;
   },
 };

@@ -15,7 +15,7 @@
 }
 
 .header h1 {
-  color: #333;
+  color:var(--t-base);
   margin: 0;
 }
 
@@ -36,10 +36,10 @@
   transition: background-color 0.2s;
 }
 
-.refreshButton:hover {
+/* .refreshButton:hover {
   background: var(--bg-secondary);
   color: #fff;
-}
+} */
 
 .logoutButton {
   background: #dc3545;
@@ -65,7 +65,7 @@
 }
 
 .statCard {
-  /* background: white; */
+  background: var(--bg-elevated);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -82,7 +82,7 @@
 
 .statCard p {
   margin: 0;
-  color: #666;
+  color: var(--t-secondary);
   font-size: 14px;
 }
 
@@ -93,18 +93,17 @@
 }
 
 .requestCard {
-  /* background: white; */
+  background: var(--bg-elevated);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  border: 1px solid #e9ecef;
+  border: 0.13vw solid rgba(203, 251, 66, 0.1);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.requestCard:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transform: translateY(-1px);
+.requestCard:hover , .statCard:hover {
+border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15); transform: translateY(-0.21vw);
 }
 
 .requestHeader {
@@ -116,7 +115,7 @@
 
 .requestInfo h3 {
   margin: 0 0 5px 0;
-  color: #333;
+  color: var(--t-secondary);
   font-size: 18px;
 }
 
@@ -148,13 +147,14 @@
 }
 
 .type.physique {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: var(--ac-primary);
+  color: var(--bg-base);
 }
 
 .type.morale {
-  background: #f3e5f5;
-  color: #7b1fa2;
+  background: var(--ac-primary);
+
+  color: var(--bg-elevated);
 }
 
 .requestDetails {
@@ -168,7 +168,7 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #555;
+  color: var(--t-secondary);
 }
 
 .detail strong {
@@ -178,7 +178,7 @@
 .loading {
   text-align: center;
   padding: 60px 20px;
-  color: #666;
+  color: var(--t-secondary);
   font-size: 18px;
 }
 
@@ -191,7 +191,7 @@
   margin-bottom: 20px;
 }
 
-.retryButton {
+/* .retryButton {
   display: block;
   margin: 0 auto;
   background: #dc3545;
@@ -201,7 +201,7 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
-}
+} */
 
 .retryButton:hover {
   background: #c82333;
@@ -214,12 +214,14 @@
   left: 0;
   right: 0;
   bottom: 0;
-  /* background: rgba(0,0,0,0.5); */
+  background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
+  overscroll-behavior: contain;
+
 }
 
 .modalContent {
@@ -228,8 +230,9 @@
   max-width: 800px;
   width: 100%;
   max-height: 90vh;
-  overflow-y: auto;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  overflow-y: auto;
+  scrollbar-gutter: stable; 
 }
 
 .modalHeader {
@@ -240,11 +243,15 @@
   border-bottom: 1px solid #e9ecef;
   background: var(--bg-base);
   border-radius: 8px 8px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .modalHeader h2 {
   margin: 0;
-  color: #333;
+  color: var(--t-primary);
+
 }
 
 .closeButton {
@@ -252,7 +259,7 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #666;
+  color: var(--t-primary);
   padding: 0;
   width: 30px;
   height: 30px;
@@ -298,7 +305,7 @@
 }
 
 .section p strong {
-  color: #333;
+  color: var(--t-secondary);
   font-weight: 600;
   display: inline-block;
   min-width: 120px;

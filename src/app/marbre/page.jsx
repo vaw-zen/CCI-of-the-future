@@ -54,8 +54,16 @@ export async function generateMetadata() {
 export default function Page() {
   const marbreImages = [
      // { src: "/gallery/moquette/moquette2.jpg", title: "Moquette 2", description: "Entretien textile" },
-  { src: "/gallery/marbre/marbre.jpg", title: "marbre 1", description: "Service professionnel" },
-  { src: "/gallery/marbre/marbre1.png", title: "marbre 2", description: "Entretien textile" },
+  { 
+    src: "/gallery/marbre/marbre.jpg", 
+    title: "Cristallisation Sol Marbre", 
+    description: "Cristallisation professionnelle sol marbre. Ponçage, polissage et protection pour brillance durable et résistance aux taches." 
+  },
+  { 
+    src: "/gallery/marbre/marbre1.png", 
+    title: "Polissage Plan Travail Marbre", 
+    description: "Restoration plan de travail marbre cuisine. Ponçage fins, lustrage et traitement hydrofuge pour usage alimentaire." 
+  },
   ];
 
   const localBusinessJSONLD = {

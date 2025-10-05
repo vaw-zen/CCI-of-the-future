@@ -58,7 +58,7 @@ async function testFacebookPost() {
       },
       body: JSON.stringify({
         caption: '✨ Before and after: See the magic of professional sofa cleaning! 🛋️ #CCITunisie #BeforeAndAfter #SofaCleaning',
-        imageUrl: 'https://cciservices.online/home/beforeAfter.webp' // Example image from your site
+        imageUrl: 'https://cciservices.online/home/marblepolishing.webp' // Example image from your site
       })
     });
     const imageData = await imageResponse.json();

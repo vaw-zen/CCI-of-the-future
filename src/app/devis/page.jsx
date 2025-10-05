@@ -8,44 +8,89 @@ export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   
   return {
-    title: 'Devis Gratuit — CCI Services',
-    description: 'Obtenez votre devis gratuit et personnalisé pour tous nos services de nettoyage : marbre, moquettes, salons, post-chantier, bateaux et plus.',
+    title: 'Simulateur Devis Nettoyage Tunisie | Prix Transparent & Instantané - CCI Services',
+    description: '🎯 Premier simulateur de devis en ligne en Tunisie ! Obtenez instantanément vos prix de nettoyage : salon, marbre, tapis, moquette. Transparence totale, aucune surprise. Devis gratuit et immédiat.',
+    keywords: 'simulateur devis nettoyage Tunisie, prix nettoyage transparent Tunisie, devis en ligne nettoyage, tarif nettoyage salon Tunisie, prix polissage marbre, devis nettoyage tapis, calculateur prix nettoyage, combien coûte nettoyage salon Tunisie, simuler prix nettoyage Tunis, devis instantané nettoyage, nettoyage salon à domicile, nettoyage moquette professionnel, entretien marbre, restauration marbre, cristallisation marbre Tunisie, nettoyage canapé à domicile, lavage tapis professionnel, nettoyage post-chantier Tunis, détartrage marbre, polissage sol marbre, nettoyage bateau Tunisie, désinfection salon',
     alternates: {
       canonical: `${SITE_URL}/devis`
     },
     openGraph: {
-      title: 'Devis Gratuit — CCI Services',
-      description: 'Obtenez votre devis gratuit et personnalisé pour tous nos services de nettoyage : marbre, moquettes, salons, post-chantier, bateaux et plus.',
+      title: 'Simulateur Devis Nettoyage Tunisie | Prix Transparent & Instantané',
+      description: '🎯 Premier service en Tunisie avec simulation de prix instantanée ! Calculez votre devis nettoyage en ligne : tarifs clairs pour salon, marbre, tapis. Résultats immédiats, sans attente.',
       url: `${SITE_URL}/devis`,
-      type: 'website'
+      type: 'website',
+      images: [
+        {
+          url: `${SITE_URL}/images/devis-simulator-og.jpg`,
+          width: 1200,
+          height: 630,
+          alt: 'Simulateur de devis nettoyage CCI Services Tunisie'
+        }
+      ]
     },
     twitter: {
-      title: 'Devis Gratuit — CCI Services', 
-      description: 'Obtenez votre devis gratuit et personnalisé pour tous nos services de nettoyage : marbre, moquettes, salons, post-chantier, bateaux et plus.'
+      card: 'summary_large_image',
+      title: 'Simulateur Devis Nettoyage Tunisie | Prix Transparent', 
+      description: '🎯 Premier simulateur en ligne en Tunisie ! Prix instantanés et transparents pour tous vos besoins de nettoyage. Devis gratuit en quelques clics.'
     }
   };
 }
 
 export default function DevisPage() {
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+
   const devisPageJSONLD = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Devis Gratuit CCI Services",
-    "description": "Calculateur de devis gratuit pour services de nettoyage professionnel",
-    "url": "https://cciservices.online/devis",
+    "name": "Simulateur de Devis Nettoyage en Ligne - Tunisie",
+    "description": "Premier simulateur de devis instantané en Tunisie pour services de nettoyage professionnel. Prix transparents et détaillés, résultats immédiats sans attente.",
+    "url": `${SITE_URL}/devis`,
+    "inLanguage": "fr-TN",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "CCI Services",
+      "url": SITE_URL
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Accueil",
+          "item": SITE_URL
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Simulateur de Devis",
+          "item": `${SITE_URL}/devis`
+        }
+      ]
+    },
     "mainEntity": {
       "@type": "Service",
-      "name": "Devis Gratuit Services de Nettoyage",
-      "description": "Estimation gratuite et personnalisée pour tous nos services de nettoyage professionnel",
+      "name": "Simulateur de Devis Nettoyage Instantané",
+      "description": "Premier et seul service en Tunisie à afficher les prix de nettoyage de manière transparente avec simulation instantanée. Aucune surprise, prix clairs avant commande.",
+      "serviceType": "Calculateur de Prix Nettoyage Professionnel",
+      "areaServed": {
+        "@type": "City",
+        "name": "Tunis",
+        "containedIn": {
+          "@type": "Country",
+          "name": "Tunisie"
+        }
+      },
       "provider": {
         "@type": "LocalBusiness",
-        "name": "CCI",
-        "url": "https://cciservices.online/",
+        "name": "CCI Services",
+        "url": SITE_URL,
         "telephone": "+216-98-557-766",
+        "priceRange": "$$",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+          "streetAddress": "06 Rue Galant de nuit, El Aouina",
           "addressLocality": "Tunis",
           "addressCountry": "TN"
         }
@@ -54,18 +99,137 @@ export default function DevisPage() {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "TND",
-        "description": "Devis gratuit et sans engagement"
+        "description": "Devis gratuit et instantané - Premier service en Tunisie avec transparence totale des prix",
+        "availability": "https://schema.org/InStock"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Services de Nettoyage avec Prix Transparents",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Nettoyage et Lavage de Salon"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Polissage et Cristallisation de Marbre"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Nettoyage de Tapis et Moquettes"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Nettoyage Post-Chantier"
+            }
+          }
+        ]
       }
     }
   };
 
+  const faqJSONLD = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Combien coûte le nettoyage de salon en Tunisie ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le prix du nettoyage de salon varie selon le nombre de places et le type de tissu. Utilisez notre simulateur pour obtenir un prix instantané et transparent. CCI Services est le premier en Tunisie à afficher ses tarifs de manière claire, sans surprise."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Comment fonctionne le simulateur de devis en ligne ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Notre simulateur est simple : sélectionnez votre service (salon, marbre, tapis), indiquez les dimensions ou quantités, et obtenez instantanément votre devis détaillé. Aucune attente, résultats immédiats avec prix transparent."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quel est le prix du polissage de marbre à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le tarif de polissage et cristallisation de marbre est calculé au m². Utilisez notre calculateur de prix pour une estimation précise et immédiate selon votre surface. Prix transparents garantis, innovation unique en Tunisie."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Proposez-vous le nettoyage de salon à domicile ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nous offrons un service de nettoyage de salon et canapé à domicile dans toute la région de Tunis. Notre simulateur vous permet de calculer instantanément le prix selon le nombre de places et le type de tissu. Service professionnel avec équipement spécialisé."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Faites-vous l'entretien et la restauration de marbre ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolument ! Nous proposons l'entretien régulier, la restauration, le polissage, la cristallisation et le détartrage de marbre. Notre simulateur calcule le prix au m² pour chaque service. Expertise professionnelle garantie pour redonner l'éclat à vos sols en marbre."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Le nettoyage de moquette est-il professionnel ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, notre service de nettoyage de moquette professionnel utilise des équipements industriels et produits écologiques. Le simulateur vous donne un prix instantané selon la surface en m². Nous traitons aussi les tapis avec la même expertise professionnelle."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Le devis en ligne est-il vraiment gratuit et sans engagement ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, notre simulateur de devis est 100% gratuit et sans engagement. Vous connaissez le prix exact avant de commander, aucune surprise. C'est notre engagement de transparence, premier du genre en Tunisie."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quels services puis-je simuler avec le calculateur de prix ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vous pouvez simuler les prix pour : nettoyage de salon (canapé, fauteuils), polissage de marbre, nettoyage de tapis et moquettes, nettoyage post-chantier, nettoyage de bateaux, et plus. Tous avec tarifs transparents et instantanés."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Pourquoi CCI Services affiche ses prix en ligne ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nous sommes pionniers en Tunisie dans la transparence tarifaire. Nous croyons que vous devez connaître le prix avant de commander, sans surprise ni négociation. Notre simulateur révolutionne le secteur du nettoyage avec des prix clairs et honnêtes."
+        }
+      }
+    ]
+  };
+
   return (
     <>
-      <HeroHeader title="Devis Gratuit" />
+      <HeroHeader title="Simulateur de Devis Gratuit" />
 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(devisPageJSONLD) }}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJSONLD) }}
       />
 
       <DevisIntro />

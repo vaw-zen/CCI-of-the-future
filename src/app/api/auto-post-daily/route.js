@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import {GoogleGenerativeAI} from "@google/generative-ai"; 
-//  OBLIGATOIRE: Terminer avec UNE de ces actions:
-  "🔗 Site: https://cciservices.online"
-  "☎️ Tel: +216 98 55 77 66"
-  "📧 Email: contact@cciservices.online"
-  "💬 Devis gratuit maintenant!"
+
 const FB_API_VERSION = process.env.FB_API_VERSION || 'v23.0';
 const FB_PAGE_ID = process.env.FB_PAGE_ID;
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
@@ -35,7 +31,29 @@ export async function POST(req) {
 
     const { customPrompt, postType = "tip", includeHashtags = true, includeImage = true } = requestBody;
 
-    // Create dynamic prompts based on post type with enhanced CCI-specific instructions
+    // Enhanced call-to-action system - ALWAYS include ALL contact options
+    const generateCallToAction = () => {
+      const callToActions = [
+        // Primary CTA - rotates between these options
+        "💬 Simulateur de Devis gratuit: https://cciservices.online/devis",
+        "💬 Demandez votre devis gratuit maintenant!",
+        "💬 Devis personnalisé en 24h - gratuit!",
+        "💬 Consultation gratuite pour votre projet!"
+      ];
+      
+      // Always include ALL contact information
+      const contactInfo = `
+🔗 Site: https://cciservices.online
+☎️ Tel: +216 98 55 77 66
+📧 Email: contact@cciservices.online`;
+
+      // Rotate primary CTA
+      const randomCTA = callToActions[Math.floor(Math.random() * callToActions.length)];
+      
+      return randomCTA + contactInfo;
+    };
+
+    // Create dynamic prompts with MANDATORY call-to-action inclusion
     const prompts = {
       tip: `You are creating ONE SINGLE Facebook post for CCI Services, a professional cleaning company in Tunisia.
 
@@ -49,17 +67,17 @@ TOPIC: ONE professional cleaning tip related to one of these services:
 
 STRICT RULES:
 - Génère UNE SEULE publication (pas d'options multiples)
-- Français naturel Facebook en exactement 200-400 caractères
-- 2-5 emojis intégrés naturellement
+- Français naturel Facebook en exactement 200-350 caractères pour le contenu principal
+- 2-4 emojis intégrés naturellement dans le texte
 - Mentionner "CCI Services" explicitement
-- OBLIGATOIRE: Terminer avecces actions:
-  "🔗 Site: https://cciservices.online"
-  "☎️ Tel: +216 98 55 77 66"
-  "📧 Email: contact@cciservices.online"
-  "💬 Simulateur de Devis gratuit maintenant! : https://cciservices.online/devis"
+- Conseil pratique et professionnel
+- NE PAS inclure de call-to-action dans le texte (sera ajouté automatiquement)
+
+FORMAT REQUIS:
+[Emoji] [Conseil pratique mentionnant CCI Services] [Emoji si pertinent] [Bénéfice/résultat] [Emoji final]
 
 EXEMPLE:
-"💡 Astuce CCI Services : Pour vos tapis, aspirez avant le lavage ! Cela élimine la poussière et facilite le nettoyage en profondeur. Résultat ? Des couleurs éclatantes ! ✨ 💬 Demandez votre devis gratuit !"`,
+"💡 Astuce CCI Services : Pour vos tapis, aspirez avant le lavage ! Cela élimine la poussière et facilite le nettoyage en profondeur. Résultat ? Des couleurs éclatantes ! ✨"`,
 
       motivation: `You are creating a motivational Facebook post for CCI Services, a professional cleaning company in Tunisia.
 
@@ -68,25 +86,21 @@ TOPIC: Inspirational content about the benefits of professional cleaning service
 - Health benefits of clean environments
 - Time-saving advantages
 - Professional quality results
-- Peace of mind
+- Peace of mind and well-being
 
-TEXT GENERATION RULES:
-- Write in natural, engaging French suitable for Facebook audiences
-- Keep text between 200-400 characters
-- Include 2-5 emojis naturally to humanize tone
-- Mention "CCI Services" explicitly at least once
-- OBLIGATOIRE: End with ONE of these call-to-actions:
-  🔗 "Site: https://cciservices.online"
-  ☎️ "Tel: +216 98 55 77 66"
-  � "Email: contact@cciservices.online"
-  💬 "Devis gratuit maintenant!"
+STRICT RULES:
+- Français naturel Facebook en exactement 200-350 caractères pour le contenu principal
+- 2-4 emojis intégrés naturellement
+- Mentionner "CCI Services" explicitement
+- Ton inspirant et motivant
+- Focus sur les bénéfices émotionnels
+- NE PAS inclure de call-to-action dans le texte (sera ajouté automatiquement)
 
-QUALITY REQUIREMENTS:
-✅ Motivational and inspiring content
-✅ CCI Services brand mentioned
-✅ Call-to-action included
-✅ Emojis used naturally (2-5 max)
-✅ Focus on benefits and quality of life`,
+FORMAT REQUIS:
+[Emoji] [Message inspirant mentionnant CCI Services] [Bénéfice émotionnel] [Emoji final]
+
+EXEMPLE:
+"✨ Avec CCI Services, transformez votre maison en véritable havre de paix ! Un environnement propre = bien-être garanti. Offrez-vous le luxe d'un intérieur impeccable 🏡"`,
 
       service: `You are creating ONE SINGLE service highlight Facebook post for CCI Services, a professional cleaning company in Tunisia.
 
@@ -100,18 +114,18 @@ TASK: Highlight ONE specific CCI Services offering:
 
 STRICT RULES:
 - Génère UNE SEULE publication (pas d'options multiples)
-- Français naturel Facebook en exactement 200-400 caractères
-- 2-5 emojis intégrés naturellement
+- Français naturel Facebook en exactement 200-350 caractères pour le contenu principal
+- 2-4 emojis intégrés naturellement
 - Mentionner "CCI Services" explicitement
 - Décrire le service avec expertise professionnelle
-- OBLIGATOIRE: Terminer avec UNE de ces actions:
-  "🔗 Site: https://cciservices.online"
-  "☎️ Tel: +216 98 55 77 66"
-  "� Email: contact@cciservices.online"
-  "💬 Devis gratuit maintenant!"
+- Mettre en avant les résultats et la qualité
+- NE PAS inclure de call-to-action dans le texte (sera ajouté automatiquement)
+
+FORMAT REQUIS:
+[Emoji service] [Service CCI explicite] [Technique/méthode] [Résultat/bénéfice] [Emoji résultat]
 
 EXEMPLE:
-"✨ CCI Services redonne tout son éclat à vos sols en marbre ! Polissage, brillance et finition parfaite. Faites briller vos espaces comme jamais. 💎 🔗 Visitez notre site : https://cciservices.online"`,
+"🧽 CCI Services redonne tout son éclat à vos sols en marbre ! Polissage professionnel et cristallisation pour une brillance durable. Faites briller vos espaces comme jamais 💎"`,
 
       seasonal: `You are creating a seasonal Facebook post for CCI Services, a professional cleaning company in Tunisia.
 
@@ -121,24 +135,19 @@ TOPIC: Seasonal cleaning advice relevant to current time of year in Tunisia:
 - Weather-related cleaning needs
 - Holiday preparation cleaning
 
-TEXT GENERATION RULES:
-- Write in natural, engaging French suitable for Facebook audiences
-- Keep text between 200-400 characters
-- Include 2-5 emojis naturally to humanize tone
-- Mention "CCI Services" explicitly at least once
-- Make content timely and relevant to the season
-- OBLIGATOIRE: End with ONE of these call-to-actions:
-  🔗 "Site: https://cciservices.online"
-  ☎️ "Tel: +216 98 55 77 66"
-  � "Email: contact@cciservices.online"
-  💬 "Devis gratuit maintenant!"
+STRICT RULES:
+- Français naturel Facebook en exactement 200-350 caractères pour le contenu principal
+- 2-4 emojis intégrés naturellement
+- Mentionner "CCI Services" explicitement
+- Content timely and relevant to the season
+- Conseil saisonnier pratique
+- NE PAS inclure de call-to-action dans le texte (sera ajouté automatiquement)
 
-QUALITY REQUIREMENTS:
-✅ Seasonal relevance and timing
-✅ CCI Services brand mentioned
-✅ Call-to-action included
-✅ Emojis used naturally (2-5 max)
-✅ Practical seasonal advice`
+FORMAT REQUIS:
+[Emoji saison] [Conseil saisonnier CCI Services] [Bénéfice] [Emoji final]
+
+EXEMPLE:
+"🍂 Automne avec CCI Services : c'est le moment idéal pour un grand nettoyage ! Tapis, canapés, marbre... Préparez votre intérieur pour les mois d'hiver ❄️"` 
     };
 
     const selectedPrompt = customPrompt || prompts[postType] || prompts.tip;
@@ -150,136 +159,126 @@ QUALITY REQUIREMENTS:
     const response = await result.response;
     let generatedCaption = response.text().trim();
 
+    // ALWAYS add comprehensive call-to-action (this ensures ALL posts have complete contact info)
+    const callToAction = generateCallToAction();
+    generatedCaption += "\n\n" + callToAction;
+
     // Add hashtags if requested
     if (includeHashtags) {
-      const hashtags = "\n\n#CCIServices #NettoyageProfessionnel #Tunisie #Proprete #CleaningTips #Marbre #Salon #Tapis #Tapisserie";
+      const hashtags = "\n\n#CCIServices #NettoyageProfessionnel #Tunisie #CleaningTips #Marbre #Salon #Tapis #Tapisserie #NettoayageTunisie #ServicesNettoyage";
       generatedCaption += hashtags;
     }
 
     console.log("Generated caption:", generatedCaption);
 
-    // Select appropriate image based on post type and content with enhanced specificity
+    // Enhanced image selection with content analysis
     let selectedImageUrl = null;
     
     if (includeImage) {
-      const imageCollections = {
-        tip: [
-          // Carpet cleaning images
-          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80", // Vacuum cleaning carpet
-          "https://images.unsplash.com/photo-1580256508220-e2d5f9777c83?w=800&h=600&fit=crop&q=80", // Clean carpet texture
-          "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop&q=80", // Professional carpet cleaning
-          // Sofa/furniture cleaning
-          "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop&q=80", // Clean modern sofa
-          "https://images.unsplash.com/photo-1586139777045-68e1042bcc42?w=800&h=600&fit=crop&q=80", // Clean living room
-          // Marble/stone care
-          "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop&q=80", // Marble floor cleaning
-          "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&q=80", // Shiny marble surface
-        ],
-        motivation: [
-          "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop&q=80", // Beautiful clean home
-          "https://images.unsplash.com/photo-1586139777045-68e1042bcc42?w=800&h=600&fit=crop&q=80", // Modern clean living space
-          "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&h=600&fit=crop&q=80", // Organized clean space
-          "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800&h=600&fit=crop&q=80", // Clean minimal home
-          "https://images.unsplash.com/photo-1588854337115-1c67de0c9727?w=800&h=600&fit=crop&q=80", // Happy family in clean home
-        ],
-        service: [
-          // Professional cleaning in action
-          "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&h=600&fit=crop&q=80", // Professional cleaning service
-          "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop&q=80", // Clean furniture showcase
-          "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop&q=80", // Marble polishing result
-          "https://images.unsplash.com/photo-1580256508220-e2d5f9777c83?w=800&h=600&fit=crop&q=80", // Professional upholstery
-          // Post-construction cleaning
-          "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=600&fit=crop&q=80", // Construction cleaning
-          "https://images.unsplash.com/photo-1582719471327-0fe3940d31b2?w=800&h=600&fit=crop&q=80", // Clean office space
-        ],
-        seasonal: [
-          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&q=80", // Seasonal home cleaning
-          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80", // Fresh seasonal clean
-          "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800&h=600&fit=crop&q=80", // Seasonal organization
-          "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop&q=80", // Seasonal home refresh
-        ]
-      };
-
       // CCI Services local images organized by specific service types
-      const localImagesByService = {
-        // 1. Nettoyage salon (sofa cleaning)
+      const cciImagesByService = {
+        // 1. Nettoyage salon (sofa/furniture cleaning)
         salon: [
-          "https://cciservices.online/home/nettoyagesolonméthodeinjectionextraction.webp", // Sofa cleaning injection-extraction method
+          "https://cciservices.online/home/salon.webp",
+          "https://cciservices.online/home/salon1.webp",
+          "https://cciservices.online/home/nettoyagesolonméthodeinjectionextraction.webp"
         ],
         
-        // 2. Nettoyage moquettes/tapis (carpet cleaning)
+        // 2. Nettoyage moquettes/tapis (carpet/rug cleaning)
         tapis: [
-          "https://cciservices.online/home/nettoyage%20moquetteaveclaméthodeinjectionextraction.webp", // Carpet cleaning (URL encoded space)
+          "https://cciservices.online/home/nettoyage%20moquetteaveclaméthodeinjectionextraction.webp"
         ],
         
         // 3. Marbre (marble polishing/crystallization)
         marbre: [
-          "https://cciservices.online/home/cristallisationsolenmarbre.webp", // Marble floor crystallization
-          "https://cciservices.online/home/polishingkitchenmrblecountre.webp", // Kitchen marble counter polishing
+          "https://cciservices.online/home/cristallisationsolenmarbre.webp",
+          "https://cciservices.online/home/polishingkitchenmrblecountre.webp"
         ],
         
         // 4. Nettoyage post-chantier (post-construction cleaning)
         postChantier: [
-          "https://cciservices.online/home/nettoyage-professionel-post-chantier.webp", // Professional post-construction cleaning
+          "https://cciservices.online/home/nettoyage-professionel-post-chantier.webp"
         ],
         
         // 5. Tapisserie (upholstery/reupholstering)
         tapisserie: [
-          "https://cciservices.online/home/retapissage-salon-en-cuir.webp", // Leather sofa reupholstering
-          "https://cciservices.online/home/retapissage-salon-en-cuir-car-ferry-carthage.webp", // Professional leather upholstery
-          "https://cciservices.online/home/tapisserie1.webp", // General upholstery work
+          "https://cciservices.online/home/tapisserie1.webp",
+          "https://cciservices.online/home/retapissage-salon-en-cuir.webp",
+          "https://cciservices.online/home/retapissage-salon-en-cuir-car-ferry-carthage.webp"
         ],
         
-        // General/mixed use
+        // 6. TFC (bureau cleaning)
+        tfc: [
+          "https://cciservices.online/home/tfc.webp"
+        ],
+        
+        // General/showcase images
         general: [
-          "https://cciservices.online/home/beforeAfter.webp", // Before/after results
-          "https://cciservices.online/home/about.png", // About/showcase
-          "https://cciservices.online/home/night.webp", // Night scene
+          "https://cciservices.online/home/beforeAfter.webp",
+          "https://cciservices.online/home/about.png",
+          "https://cciservices.online/home/night.webp"
         ]
       };
 
-      // Select appropriate local images based on post content and type
-      let relevantLocalImages = [];
-      const generatedText = (customPrompt || '').toLowerCase();
+      // Advanced content analysis for precise image matching
+      const analyzeContentForImages = (text) => {
+        const content = text.toLowerCase();
+        const keywords = {
+          salon: ['salon', 'canapé', 'sofa', 'fauteuil', 'meubles', 'furniture', 'injection', 'extraction'],
+          tapis: ['tapis', 'moquette', 'carpet', 'rug', 'sol textile', 'aspirateur'],
+          marbre: ['marbre', 'marble', 'polissage', 'brillance', 'cristallisation', 'pierre', 'granit'],
+          postChantier: ['chantier', 'construction', 'post-construction', 'fin de chantier', 'rénovation'],
+          tapisserie: ['tapisserie', 'rembourrage', 'upholstery', 'tissu', 'recouvrement', 'restauration'],
+          tfc: ['bureau', 'office', 'commercial', 'entreprise', 'tfc', 'professionnel']
+        };
+
+        let matchedServices = [];
+        
+        // Count keyword matches for each service
+        for (const [service, serviceKeywords] of Object.entries(keywords)) {
+          const matches = serviceKeywords.filter(keyword => content.includes(keyword)).length;
+          if (matches > 0) {
+            matchedServices.push({ service, score: matches });
+          }
+        }
+
+        // Sort by highest score
+        matchedServices.sort((a, b) => b.score - a.score);
+        
+        return matchedServices.length > 0 ? matchedServices[0].service : 'general';
+      };
+
+      // Analyze the full generated content (including custom prompts)
+      const fullContent = (selectedPrompt + ' ' + generatedCaption).toLowerCase();
+      const bestMatchService = analyzeContentForImages(fullContent);
       
-      // Smart image selection based on content keywords
-      if (generatedText.includes('salon') || generatedText.includes('canapé') || generatedText.includes('sofa')) {
-        relevantLocalImages = localImagesByService.salon;
-      } else if (generatedText.includes('tapis') || generatedText.includes('moquette') || generatedText.includes('carpet')) {
-        relevantLocalImages = localImagesByService.tapis;
-      } else if (generatedText.includes('marbre') || generatedText.includes('marble') || generatedText.includes('polissage')) {
-        relevantLocalImages = localImagesByService.marbre;
-      } else if (generatedText.includes('chantier') || generatedText.includes('construction') || generatedText.includes('fin de chantier')) {
-        relevantLocalImages = localImagesByService.postChantier;
-      } else if (generatedText.includes('tapisserie') || generatedText.includes('rembourrage') || generatedText.includes('upholstery')) {
-        relevantLocalImages = localImagesByService.tapisserie;
-      } else {
-        // Default: mix all service images for general posts
-        relevantLocalImages = [
-          ...localImagesByService.salon,
-          ...localImagesByService.tapis,
-          ...localImagesByService.marbre,
-          ...localImagesByService.postChantier,
-          ...localImagesByService.tapisserie,
-          ...localImagesByService.general
+      console.log("Content analysis result:", { bestMatchService, contentLength: fullContent.length });
+
+      // Select images based on analysis
+      let relevantImages = cciImagesByService[bestMatchService] || [];
+      
+      // If no specific match, use a smart fallback
+      if (relevantImages.length === 0) {
+        // Use all available images for variety
+        relevantImages = [
+          ...cciImagesByService.salon,
+          ...cciImagesByService.tapis,
+          ...cciImagesByService.marbre,
+          ...cciImagesByService.postChantier,
+          ...cciImagesByService.tapisserie,
+          ...cciImagesByService.tfc,
+          ...cciImagesByService.general
         ];
       }
 
-      // Use ONLY CCI Services local images (no web images)
-      const allImages = relevantLocalImages.length > 0 ? relevantLocalImages : [
-        // Fallback to all CCI images if no specific match
-        ...localImagesByService.salon,
-        ...localImagesByService.tapis,
-        ...localImagesByService.marbre,
-        ...localImagesByService.postChantier,
-        ...localImagesByService.tapisserie,
-        ...localImagesByService.general
-      ];
+      // Select random image from relevant collection
+      selectedImageUrl = relevantImages[Math.floor(Math.random() * relevantImages.length)];
       
-      // Select random image from CCI Services collection only
-      selectedImageUrl = allImages[Math.floor(Math.random() * allImages.length)];
-      
-      console.log("Selected CCI Services image:", selectedImageUrl);
+      console.log("Selected CCI Services image:", {
+        service: bestMatchService,
+        imageUrl: selectedImageUrl,
+        availableImages: relevantImages.length
+      });
     }
 
     // Determine Facebook API endpoint based on whether we have an image
@@ -306,7 +305,8 @@ QUALITY REQUIREMENTS:
     console.log("Posting to Facebook...", {
       endpoint: selectedImageUrl ? 'photos' : 'feed',
       hasImage: !!selectedImageUrl,
-      imageUrl: selectedImageUrl
+      imageUrl: selectedImageUrl,
+      captionLength: generatedCaption.length
     });
 
     // Post to Facebook
@@ -358,7 +358,13 @@ QUALITY REQUIREMENTS:
       facebook_response: facebookData,
       post_type: postType,
       timestamp: new Date().toISOString(),
-      posted_with_image: !!selectedImageUrl
+      posted_with_image: !!selectedImageUrl,
+      content_analysis: {
+        detected_service: analyzeContentForImages((selectedPrompt + ' ' + generatedCaption).toLowerCase()),
+        has_all_contact_info: generatedCaption.includes('cciservices.online') && 
+                              generatedCaption.includes('+216 98 55 77 66') && 
+                              generatedCaption.includes('contact@cciservices.online')
+      }
     });
 
   } catch (error) {

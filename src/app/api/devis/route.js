@@ -3,6 +3,14 @@ import { supabase } from '../../../libs/supabase';
 
 export async function POST(request) {
   try {
+    // Check if Supabase is available
+    if (!supabase) {
+      return NextResponse.json({ 
+        status: 'config_error', 
+        message: 'Service de base de données non configuré.' 
+      }, { status: 500 });
+    }
+
     const body = await request.json().catch(() => ({}));
     const formData = body?.formData || body || {};
 

@@ -78,4 +78,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.50</priority>
   </url>
+  <url>
+      <loc>https://cciservices.online/devis</loc>
+    <lastmod>2025-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
 </urlset>
+

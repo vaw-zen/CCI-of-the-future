@@ -52,12 +52,32 @@ export async function generateMetadata() {
 
 export default function Page() {
  const tapisImages = [
-  { src: "/gallery/moquette/moquette1.jpg", title: "Moquette 1", description: "Service professionnel" },
+  { 
+    src: "/gallery/moquette/moquette1.jpg", 
+    title: "Nettoyage Moquette - Injection Extraction", 
+    description: "Méthode professionnelle injection-extraction pour nettoyage en profondeur des moquettes. Récupération >90% d'humidité." 
+  },
   // { src: "/gallery/moquette/moquette2.jpg", title: "Moquette 2", description: "Entretien textile" },
-  { src: "/gallery/moquette/moquette3.jpg", title: "Moquette 3", description: "Anti-acariens" },
-  { src: "/gallery/moquette/moquette4.jpg", title: "Moquette 4", description: "Nettoyage rapide" },
-  { src: "/gallery/moquette/moquette5.jpg", title: "Moquette 5", description: "Résultat impeccable" },
-  { src: "/gallery/moquette/moquette6.jpg", title: "Moquette 6", description: "Confort préservé" },
+  { 
+    src: "/gallery/moquette/moquette3.jpg", 
+    title: "Traitement Anti-Acariens Moquette", 
+    description: "Nettoyage moquette avec injection-extraction et traitement anti-acariens pour un environnement sain." 
+  },
+  { 
+    src: "/gallery/moquette/moquette4.jpg", 
+    title: "Détachage Professionnel Moquette", 
+    description: "Injection-extraction avec pré-détachage sélectif. Élimination des taches tenaces et salissures profondes." 
+  },
+  { 
+    src: "/gallery/moquette/moquette5.jpg", 
+    title: "Séchage Rapide - Méthode Injection", 
+    description: "Technique injection-extraction haute performance. Séchage rapide avec remise en service sous 1h." 
+  },
+  { 
+    src: "/gallery/moquette/moquette6.jpg", 
+    title: "Résultat Injection-Extraction", 
+    description: "Résultat impeccable du nettoyage par injection-extraction. Fibres redressées et couleurs ravivées." 
+  },
 ];
 
 

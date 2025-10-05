@@ -52,8 +52,16 @@ export async function generateMetadata() {
 
 export default function Page() {
   const tfcImages = [
-  { src: "/gallery/tfc/marbre.jpg", title: "tfc 1", description: "Service professionnel" },
-  { src: "/gallery/tfc/nettoyage-professionel-post-chantier.webp", title: "tfc 2", description: "Entretien textile" },
+  { 
+    src: "/gallery/tfc/marbre.jpg", 
+    title: "Nettoyage Technique Post-Chantier", 
+    description: "Nettoyage technique complet après travaux. Dépoussiérage industriel, traitement sols et surfaces pour livraison." 
+  },
+  { 
+    src: "/gallery/tfc/nettoyage-professionel-post-chantier.webp", 
+    title: "Remise en État Professionnelle", 
+    description: "Remise en état professionnelle post-rénovation. Enlèvement gravats, nettoyage finition et préparation livraison." 
+  },
   ];
 
   const localBusinessJSONLD = {

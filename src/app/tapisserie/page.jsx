@@ -52,12 +52,36 @@ export async function generateMetadata() {
 
 export default function Page() {
    const tapisserieImages = [
-  { src: "/gallery/tapisserie/tapisserie1.jpg", title: "tapisserie 1", description: "Service professionnel" },
-  { src: "/gallery/tapisserie/tapisserie2.jpg", title: "tapisserie 2", description: "Entretien textile" },
-  { src: "/gallery/tapisserie/tapisserie3.jpg", title: "tapisserie 3", description: "Anti-acariens" },
-  { src: "/gallery/tapisserie/tapisserie4.jpg", title: "tapisserie 4", description: "Nettoyage rapide" },
-  { src: "/gallery/tapisserie/tapisserie5.jpg", title: "tapisserie 5", description: "Résultat impeccable" },
-  { src: "/gallery/tapisserie/tapisserie6.jpg", title: "tapisserie 6", description: "Confort préservé" },
+  { 
+    src: "/gallery/tapisserie/tapisserie1.jpg", 
+    title: "Retapissage Professionnel Sur Mesure", 
+    description: "Retapissage complet avec tissus ignifuges M1. Remplacement mousse haute résilience et finitions soignées." 
+  },
+  { 
+    src: "/gallery/tapisserie/tapisserie2.jpg", 
+    title: "Rembourrage Banquette Nautique", 
+    description: "Rembourrage spécialisé pour bateaux et yachts. Tissus hydrofuges anti-UV et mousse marine certifiée." 
+  },
+  { 
+    src: "/gallery/tapisserie/tapisserie3.jpg", 
+    title: "Restauration Fauteuil Cuir", 
+    description: "Restauration complète fauteuil cuir. Réparation structure, remplacement mousse et retapissage d'exception." 
+  },
+  { 
+    src: "/gallery/tapisserie/tapisserie4.jpg", 
+    title: "Confection Coussins Sur Mesure", 
+    description: "Confection sur mesure de coussins et galettes. Choix de tissus, densité mousse adaptée à l'usage." 
+  },
+  { 
+    src: "/gallery/tapisserie/tapisserie5.jpg", 
+    title: "Tapisserie Siège Professionnel", 
+    description: "Tapisserie de sièges pour espaces professionnels. Tissus résistants, confort optimal et durabilité." 
+  },
+  { 
+    src: "/gallery/tapisserie/tapisserie6.jpg", 
+    title: "Rénovation Canapé Vintage", 
+    description: "Rénovation complète canapé vintage. Préservation du style, modernisation du confort et des matériaux." 
+  },
 ];
 
   const localBusinessJSONLD = {

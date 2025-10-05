@@ -84,28 +84,32 @@ export function useDevisCalculatorLogic() {
   const [area, setArea] = useState('tunis');
   const [surfaceArea, setSurfaceArea] = useState('');
   const [total, setTotal] = useState(0);
-  const [showTicker, setShowTicker] = useState(false);
+  const [showTicker, setShowTickerState] = useState(false);
   const [tickerValue, setTickerValue] = useState(0);
+
+  const setShowTicker = (value) => {
+    setShowTickerState(value);
+  };
   const tickerRef = useRef({ raf: null, previousTotal: 0 });
+  const cardRef = useRef(null);
+  const isCardVisibleRef = useRef(false); // Start as not visible so ticker shows initially
+  const totalRef = useRef(0);
 
   function triggerAddAnimation(newTotal) {
-    // cancel any running animation
     if (tickerRef.current.raf) {
       cancelAnimationFrame(tickerRef.current.raf);
-      tickerRef.current.raf = null;
     }
 
     const previousTotal = tickerRef.current.previousTotal;
     setShowTicker(true);
     setTickerValue(previousTotal);
 
-    const duration = 900; // ms
+    const duration = 900;
     const start = performance.now();
 
     function step(now) {
       const elapsed = now - start;
       const progress = Math.min(1, elapsed / duration);
-      // ease out
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.round(previousTotal + eased * (newTotal - previousTotal));
       setTickerValue(current);
@@ -115,8 +119,6 @@ export function useDevisCalculatorLogic() {
       } else {
         tickerRef.current.raf = null;
         tickerRef.current.previousTotal = newTotal;
-        // leave visible briefly then dismiss
-        setTimeout(() => setShowTicker(false), 700);
       }
     }
 
@@ -186,31 +188,79 @@ export function useDevisCalculatorLogic() {
       subtotal += service.basePrice * optionMultiplier * quantity;
     });
 
-    // Surface area bonus (for tapis and salon)
     const surface = parseInt(surfaceArea) || 0;
     if (surface > 50) {
-      subtotal *= 1.2; // 20% increase for large surfaces
+      subtotal *= 1.2;
     }
 
-    // Apply urgency multiplier
     subtotal *= urgencyLevels[urgency].multiplier;
-
-    // Apply area multiplier
     subtotal *= areas[area].multiplier;
 
     const newTotal = Math.round(subtotal);
 
-    // Trigger animation if total changed
     if (newTotal !== total) {
-      triggerAddAnimation(newTotal);
+      if (newTotal === 0) {
+        setShowTicker(false);
+        tickerRef.current.previousTotal = 0;
+      } else if (!isCardVisibleRef.current) {
+        triggerAddAnimation(newTotal);
+      } else {
+        tickerRef.current.previousTotal = newTotal;
+      }
     }
 
     setTotal(newTotal);
+    totalRef.current = newTotal;
   };
 
   useEffect(() => {
     calculateTotal();
   }, [selectedServices, quantities, urgency, area, surfaceArea]);
+
+  // Show ticker when total card is fully hidden, hide when fully visible
+  useEffect(() => {
+    if (!cardRef.current) return;
+
+    let isFirstObservation = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isFullyVisible = entry.intersectionRatio === 1;
+        const isFullyHidden = entry.intersectionRatio === 0;
+        const wasVisible = isCardVisibleRef.current;
+
+        if (isFirstObservation) {
+          isFirstObservation = false;
+          isCardVisibleRef.current = isFullyVisible;
+          if (isFullyVisible) {
+            setShowTicker(false);
+          }
+          return;
+        }
+
+        // Show ticker when card becomes fully hidden
+        if (isFullyHidden && wasVisible) {
+          const currentTotal = totalRef.current;
+          isCardVisibleRef.current = false;
+          if (currentTotal > 0) {
+            triggerAddAnimation(currentTotal);
+          }
+        }
+        // Hide ticker when card becomes fully visible
+        else if (isFullyVisible && !wasVisible) {
+          isCardVisibleRef.current = true;
+          setShowTicker(false);
+        }
+      },
+      { threshold: [0, 1] }
+    );
+
+    observer.observe(cardRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [Object.keys(selectedServices).length > 0]);
 
   return {
     services,
@@ -231,6 +281,7 @@ export function useDevisCalculatorLogic() {
     getQuantityPlaceholder,
     setSurfaceArea,
     setUrgency,
-    setArea
+    setArea,
+    cardRef
   };
 }

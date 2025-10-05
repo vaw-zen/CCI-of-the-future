@@ -23,7 +23,8 @@ export default function DevisCalculator() {
     getQuantityPlaceholder,
     setSurfaceArea,
     setUrgency,
-    setArea
+    setArea,
+    cardRef
   } = useDevisCalculatorLogic();
 
   return (
@@ -153,7 +154,7 @@ export default function DevisCalculator() {
           {/* Total Display */}
           {Object.keys(selectedServices).length > 0 && (
             <div className={styles.totalSection}>
-              <div className={styles.totalCard}>
+              <div className={styles.totalCard} ref={cardRef}>
                 <h3>Estimation de votre devis</h3>
                 <div className={styles.totalAmount}>
                   <span className={styles.currency}>DT</span>

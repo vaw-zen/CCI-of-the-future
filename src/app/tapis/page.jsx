@@ -35,12 +35,12 @@ export async function generateMetadata() {
     title: "Nettoyage de Tapis & Moquettes — CCI",
     description: "Nettoyage professionnel de tapis et moquettes : shampooing, détachage, désinfection et traitement anti-acariens. Intervention rapide en Tunisie.",
     alternates: {
-      canonical: `${SITE_URL}/tapis`
+      canonical: `${SITE_URL}/tapis/`
     },
     openGraph: {
       title: "Nettoyage de Tapis & Moquettes — CCI",
       description: "Nettoyage professionnel de tapis et moquettes : shampoinage, détachage, désinfection et traitement anti-acariens. Intervention rapide en Tunisie.",
-      url: `${SITE_URL}/tapis`,
+      url: `${SITE_URL}/tapis/`,
       type: 'website'
     },
     twitter: {

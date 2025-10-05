@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { getChatMessages, getAIConfig } from '../../../../utils/tuning-loader';
+import { dimensionsStore } from '../../../../utils/store/store';
 
 export function useChatWidgetLogic({ isOpen, onClose }) {
     // Memoize these to prevent re-renders
     const chatMessages = React.useMemo(() => getChatMessages(), []);
     const aiConfig = React.useMemo(() => getAIConfig(), []);
+    const isMobile = dimensionsStore((state) => state.isMobile());
     
     const [isExpanded, setIsExpanded] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
@@ -176,7 +178,11 @@ export function useChatWidgetLogic({ isOpen, onClose }) {
 
     const handleOverlayClick = () => {
         if (isExpanded) {
+            // If expanded, just minimize to showing state
             setIsExpanded(false);
+        } else if (isMobile && isOpen) {
+            // On mobile in showing state, close completely
+            onClose();
         }
     };
 

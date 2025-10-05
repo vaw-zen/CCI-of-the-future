@@ -11,8 +11,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
   }
 }
 
+// Create browser client with proper auth configuration
 export const supabase = (supabaseUrl && supabaseAnonKey) 
-  ? createClient(supabaseUrl, supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        storageKey: 'supabase-auth',
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+        flowType: 'pkce'
+      }
+    })
   : null; // Mock client for build time
 
 // For server-side operations that need elevated permissions

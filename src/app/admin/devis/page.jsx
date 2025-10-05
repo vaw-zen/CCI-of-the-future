@@ -8,15 +8,21 @@ import styles from './admin.module.css';
 
 export default function AdminDevisPage() {
   const router = useRouter();
-  const { user, isAdmin, loading: authLoading, signOut } = useAdminAuth();
+  const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
+  // Debug logging
+  useEffect(() => {
+    console.log('Auth state:', { user, isAdmin, authLoading, authError });
+  }, [user, isAdmin, authLoading, authError]);
+
   // Redirect if not authenticated or not admin
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
+      console.log('Redirecting to login - user:', user, 'isAdmin:', isAdmin);
       router.push('/admin/login');
     }
   }, [user, isAdmin, authLoading, router]);
@@ -27,6 +33,20 @@ export default function AdminDevisPage() {
       loadRequests();
     }
   }, [user, isAdmin, authLoading]);
+
+  // Block body scroll when modal is open
+  useEffect(() => {
+    if (selectedRequest) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedRequest]);
 
   const handleLogout = async () => {
     const result = await signOut();
@@ -40,12 +60,30 @@ export default function AdminDevisPage() {
     return (
       <div style={{ 
         display: 'flex', 
+        flexDirection: 'column',
         justifyContent: 'center', 
         alignItems: 'center', 
         height: '100vh',
-        fontSize: '18px' 
+        fontSize: '18px',
+        gap: '20px',
+        padding: '20px'
       }}>
-        Vérification des privilèges administrateur...
+        <div>Vérification des privilèges administrateur...</div>
+        {authError && (
+          <div style={{ color: 'red', fontSize: '14px', textAlign: 'center' }}>
+            Erreur: {authError}
+          </div>
+        )}
+        {!authLoading && !user && (
+          <div style={{ fontSize: '14px', color: '#666' }}>
+            Aucun utilisateur connecté. Redirection...
+          </div>
+        )}
+        {!authLoading && user && !isAdmin && (
+          <div style={{ fontSize: '14px', color: '#666' }}>
+            Privilèges administrateur requis. Redirection...
+          </div>
+        )}
       </div>
     );
   }

@@ -1,5 +1,6 @@
 'use client'
 import { memo, useState } from 'react'
+import dynamic from 'next/dynamic'
 import styles from './header.module.css'
 import content from './header.json'
 import Link from 'next/link'
@@ -7,7 +8,12 @@ import { useHeaderLogic } from './header.func'
 import { ChatIcon, CiCaretDownSm, FaCaretUp, MingcuteMenuFill, UilArrowRight } from '@/utils/components/icons'
 import DesktopMenu from './components/desktopMenu/desktopMenu'
 import ResponsiveImage from '@/utils/components/Image/Image'
-import ChatWidget from './components/chatWidget/chatWidget'
+
+// Lazy load ChatWidget only when needed - saves ~80KB on initial load
+const ChatWidget = dynamic(() => import('./components/chatWidget/chatWidget'), {
+    ssr: false,
+    loading: () => null
+})
 
 // Memoized navigation link component
 const NavLink = memo(({ link, name, isActive }) => (
@@ -89,7 +95,8 @@ const NavItem = memo(({ element, index, handleDropdownBlur, toggleDropdown, isAc
 // Main header component
 function Header({ roboto }) {
     const [isChatOpen, setIsChatOpen] = useState(false);
-    
+    const [chatLoaded, setChatLoaded] = useState(false);
+
     const {
         handleDropdownBlur,
         toggleDropdown,
@@ -103,6 +110,14 @@ function Header({ roboto }) {
         currentPath,
         showTopButton
     } = useHeaderLogic();
+
+    // Load chat widget once when first opened
+    const handleChatOpen = () => {
+        if (!chatLoaded) {
+            setChatLoaded(true);
+        }
+        setIsChatOpen(true);
+    };
 
     return (
         <>
@@ -141,7 +156,7 @@ function Header({ roboto }) {
             </nav>
 
             <div className={styles.stickyBottom}>
-                <button onClick={() => setIsChatOpen(!isChatOpen)} className={styles.chatButton} aria-label="Ouvrir le chat d'assistance">
+                <button onClick={() => isChatOpen ? setIsChatOpen(false) : handleChatOpen()} className={styles.chatButton} aria-label="Ouvrir le chat d'assistance">
                     <ChatIcon />
                 </button>
                 <button onClick={scrollToTop} className={`${styles.topButton} ${showTopButton ? styles.active : ''}`} aria-label="Retourner en haut de la page">
@@ -149,8 +164,8 @@ function Header({ roboto }) {
                 </button>
             </div>
 
-            {/* Chat Widget - Always rendered for smooth animations */}
-            <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+            {/* Chat Widget - Lazy loaded once, then kept mounted for smooth transitions */}
+            {chatLoaded && <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />}
 
             <DesktopMenu desktopMenuStyles={desktopMenuStyles} handleMenuButton={handleMenuButton} />
         </>

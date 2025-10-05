@@ -15,6 +15,10 @@
                 "link": "/services"
             },
             {
+                "name": "calculateur de devis",
+                "link": "/devis"
+            },
+            {
                 "name": "contact",
                 "link": "/contact"
             },

@@ -47,12 +47,8 @@ jobs:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online' }}
       run: |
-        # Start Next.js server in background for API access
-        npm run build
-        npm start &
-        
-        # Wait for server to start
-        sleep 10
+        # No need to build or start server - call live API directly
+        echo "🚀 Calling live API endpoint..."
         
         # Determine post type (from manual input or random for scheduled)
         if [ "${{ github.event.inputs.post_type }}" != "" ]; then
@@ -79,8 +75,8 @@ jobs:
             '{postType: $postType, includeHashtags: true, includeImage: true}')
         fi
         
-        # Call the auto-post API
-        RESPONSE=$(curl -s -X POST http://localhost:3000/api/auto-post-daily \
+        # Call the live auto-post API endpoint
+        RESPONSE=$(curl -s -X POST https://cciservices.online/api/auto-post-daily \
           -H "Content-Type: application/json" \
           -d "$PAYLOAD")
         
@@ -120,10 +116,3 @@ jobs:
           echo "**Response:** \`$RESPONSE\`" >> $GITHUB_STEP_SUMMARY
           exit 1
         fi
-
-    - name: Cleanup
-      if: always()
-      run: |
-        # Kill the Next.js server
-        pkill -f "npm start" || true
-        pkill -f "next start" || true

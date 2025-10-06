@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "title": "Nettoyage Tapis & Moquette Tunis - Injection Extraction Professionnelle | CCI",
+    "description": "Nettoyage professionnel de tapis et moquettes à Tunis. Méthode injection-extraction, anti-acariens, détachage. Intervention rapide. Devis gratuit ☎ 98-557-766",
+    "keywords": "nettoyage tapis tunis, nettoyage moquette tunis, injection extraction tunis, nettoyage tapis professionnel tunisie, détachage tapis tunis, anti-acariens tunis, shampooing moquette ariana, nettoyage bureaux tunis"
+  },
+  "heroTitle": "Nettoyage Tapis & Moquette",
+  "tabData": [
+    {
+      "id": "mission",
+      "title": "Notre mission",
+      "content": "Offrir des prestations professionnelles de nettoyage et désinfection de tapis et moquettes, en combinant méthodes efficaces et produits respectueux des fibres pour restaurer l'apparence et la durée de vie de vos textiles."
+    },
+    {
+      "id": "vision",
+      "title": "Notre vision",
+      "content": "Devenir la référence locale en nettoyage de tapis et moquettes, reconnue pour notre soin du détail, notre respect de l'environnement et la qualité durable de nos interventions."
+    },
+    {
+      "id": "philosophy",
+      "title": "Notre philosophie",
+      "content": "Préserver la santé et le confort de nos clients grâce à des techniques qui éliminent taches, odeurs et acariens, tout en respectant les fibres et couleurs d'origine."
+    }
+  ],
+  "images": [
+    {
+      "src": "/gallery/moquette/moquette1.jpg",
+      "title": "Nettoyage Moquette - Injection Extraction",
+      "description": "Méthode professionnelle injection-extraction pour nettoyage en profondeur des moquettes. Récupération >90% d'humidité."
+    },
+    {
+      "src": "/gallery/moquette/moquette3.jpg",
+      "title": "Traitement Anti-Acariens Moquette",
+      "description": "Nettoyage moquette avec injection-extraction et traitement anti-acariens pour un environnement sain."
+    },
+    {
+      "src": "/gallery/moquette/moquette4.jpg",
+      "title": "Détachage Professionnel Moquette",
+      "description": "Injection-extraction avec pré-détachage sélectif. Élimination des taches tenaces et salissures profondes."
+    },
+    {
+      "src": "/gallery/moquette/moquette5.jpg",
+      "title": "Séchage Rapide - Méthode Injection",
+      "description": "Technique injection-extraction haute performance. Séchage rapide avec remise en service sous 1h."
+    },
+    {
+      "src": "/gallery/moquette/moquette6.jpg",
+      "title": "Résultat Injection-Extraction",
+      "description": "Résultat impeccable du nettoyage par injection-extraction. Fibres redressées et couleurs ravivées."
+    }
+  ],
+  "localBusinessJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "CCI",
+    "url": "https://cciservices.online/",
+    "logo": "https://cciservices.online/logo.png",
+    "telephone": "+216-98-557-766",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "",
+      "addressLocality": "Tunisie",
+      "addressCountry": "TN"
+    }
+  },
+  "serviceJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": "https://cciservices.online/tapis-moquettes",
+    "name": "Nettoyage de tapis et moquettes à Tunis",
+    "description": "Nettoyage professionnel de tapis et moquettes à Tunis par injection-extraction. Shampooing, détachage et désinfection avec méthodes adaptées aux fibres et séchage rapide.",
+    "url": "https://cciservices.online/tapis-moquettes",
+    "areaServed": {
+      "@type": "City",
+      "name": "Tunis"
+    },
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "CCI",
+      "url": "https://cciservices.online/",
+      "telephone": "+216-98-557-766",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+        "addressLocality": "Tunis",
+        "addressCountry": "TN"
+      },
+      "logo": "https://cciservices.online/logo.png"
+    }
+  },
+  "faqJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quelle méthode utilisez-vous pour le nettoyage de tapis à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CCI utilise la méthode injection-extraction professionnelle pour le nettoyage en profondeur des tapis et moquettes à Tunis. Cette technique permet de récupérer plus de 90% de l'humidité injectée, assurant un séchage rapide (moins d'1 heure) et un nettoyage efficace des fibres."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Intervenez-vous à domicile pour le nettoyage de tapis à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, CCI intervient à domicile et dans les entreprises dans tout le Grand Tunis (Tunis, L'Aouina, Ariana, La Marsa, Carthage, Ben Arous). Nous offrons un diagnostic gratuit et un devis sur place avant toute intervention."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien de temps faut-il pour que le tapis sèche après le nettoyage ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Avec notre méthode d'injection-extraction haute performance, le séchage est rapide : moins d'1 heure pour une remise en service. Pour les bureaux et centres d'appel, nous utilisons l'encapsulation basse humidité permettant une utilisation immédiate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Proposez-vous un traitement anti-acariens pour les tapis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, CCI propose un traitement anti-acariens professionnel adapté aux personnes sensibles et allergiques. Ce traitement complète le nettoyage en profondeur pour garantir un environnement sain, particulièrement recommandé pour les chambres, bureaux et lieux de culte."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Nettoyez-vous les moquettes de bureaux et entreprises à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, CCI est spécialisé dans le nettoyage de moquettes professionnelles à Tunis : bureaux, open-spaces, centres d'appel, salles de cinéma, mosquées. Nous intervenons en dehors des heures d'ouverture pour minimiser les perturbations et garantir une remise en service rapide."
+        }
+      }
+    ]
+  },
+  "sections": {
+    "mainService": {
+      "title": "Nettoyage professionnel de tapis",
+      "text": "Diagnostic de la fibre (laine, polyamide B1, polypropylène bouclé, velours coupé) et repérage des zones à trafic (couloirs, plateaux open‑space), suivis d'une pré‑aspiration haute filtration (HEPA) anti‑particulaire puis d'un pré‑détachage sélectif (tanins, graisses, protéines, chewing‑gum avec gel enzymatique). Selon le niveau d'encrassement et les contraintes d'exploitation, nous appliquons l'injection‑extraction (rinçage contrôlé, récupération >90 % d'humidité) pour les salissures profondes, l'encapsulation polymère basse humidité pour les centres d'appel nécessitant une remise en service rapide (< 1 h), le bonnet / pad orbital pour un rafraîchissement intermédiaire sur grandes surfaces, ou ponctuellement la vapeur sèche localisée pour la désodorisation et la réduction de la charge microbienne dans les zones sensibles. Résultat : remontée limitée des salissures, fibres redressées et temps d'indisponibilité réduit."
+    },
+    "secondaryService": {
+      "title": "Notre expertise",
+      "text": "Adaptation par secteur :\n• Bureaux & open‑space : protocole cyclique (entretien préventif + corrective deep clean trimestriel).\n• Centres d'appel : intervention en fenêtres nocturnes avec encapsulation faible humidité pour reprise immédiate des postes.\n• Salles de cinéma : gestion taches grasses + boissons sucrées + neutralisation odeurs (enzymes + oxygène actif stabilisé).\n• Mosquées : traitement des zones de prière (désinfection douce, anti‑acariens, respect des personnes sensibles), orientation des fibres sans trace. Protection optionnelle anti‑taches / anti-salissure re‑déposée et plan de maintenance documenté."
+    },
+    "whyChooseUs": {
+      "title": "Pourquoi choisir CCI pour vos tapis",
+      "text": "Chaîne de valeur structurée : audit initial (cartographie trafic / points critiques), mesure humidité résiduelle post‑traitement, contrôle pH pour stabilité colorimétrique, fiches produits disponibles (conformité & sécurité). Matériel : injecteurs bi‑turbine haut débit, machines orbitales basse vitesse, pads microfibre encapsulation, buses chewing‑gum spot. Objectifs : prolonger la durée de vie (retarder écrasement), réduire charges allergènes, optimiser l'image des espaces accueillant public ou collaborateurs. Intervention discrète, traçabilité et conseils préventifs inclus."
+    }
+  },
+  "aboutUs": {
+    "historyText": "Depuis notre création, nous nous sommes spécialisés dans l'entretien textile et le nettoyage professionnel de tapis et moquettes, au service des particuliers et des entreprises.",
+    "missionText": "Offrir des nettoyages performants, sûrs pour la santé et respectueux des matériaux, tout en garantissant un service rapide et soigné.",
+    "visionText": "Être le partenaire de confiance pour tous les besoins de nettoyage textile, avec des solutions innovantes et durables."
+  },
+  "serviceList": {
+    "title": "Nos services tapis & moquettes",
+    "text": "Solutions spécialisées pour moquettes en environnements exigeants : réduction du temps d'arrêt, maîtrise des allergènes dans espaces fermés, neutralisation des odeurs persistantes (cinéma / forte occupation), protocoles adaptés lieux de culte (respect sanitaire & discrétion), plans de maintenance prédictifs pour limiter usure en zones de trafic.",
+    "items": [
+      {
+        "id": "6",
+        "text": "Maintenance bureaux & centres d'appel",
+        "icon": "/icons/shield.png"
+      },
+      {
+        "id": "3",
+        "text": "Traitement anti‑acariens & bio‑charge réduite",
+        "icon": "/icons/crystal3.png"
+      },
+      {
+        "id": "1",
+        "text": "Injection‑extraction profonde",
+        "icon": "/icons/polisher.png"
+      },
+      {
+        "id": "2",
+        "text": "Encapsulation basse humidité ",
+        "icon": "/icons/polisher1.png"
+      },
+      {
+        "id": "4",
+        "text": "Neutralisation odeurs cinéma ",
+        "icon": "/icons/shield.png"
+      },
+      {
+        "id": "5",
+        "text": "Entretien mosquées ",
+        "icon": "/icons/shield.png"
+      }
+    ]
+  }
+}

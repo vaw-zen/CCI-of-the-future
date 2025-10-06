@@ -81,20 +81,24 @@ export function useHeaderLogic() {
     // Memoize the active link calculations to avoid recalculating on every render
     const activeLinks = useMemo(() => {
         if (!currentPath) return { mainLink: null, parentIndex: null, subLinkIndex: null };
-        
+
         let mainLink = null;
         let parentIndex = null;
         let subLinkIndex = null;
-        
+
         for (let i = 0; i < memoizedContent.length; i++) {
             const element = memoizedContent[i];
             const { subLinks, link } = element;
-            
-            if (link && link === currentPath) {
+
+            // Check for exact match or parent path match
+            if (link && (link === currentPath || currentPath?.startsWith(link + '/'))) {
                 mainLink = i;
                 break;
             } else if (subLinks) {
-                const subIndex = subLinks.findIndex(subLink => subLink.link === currentPath);
+                const subIndex = subLinks.findIndex(subLink => {
+                    // Check for exact match or parent path match
+                    return subLink.link === currentPath || currentPath?.startsWith(subLink.link + '/');
+                });
                 if (subIndex !== -1) {
                     parentIndex = i;
                     subLinkIndex = subIndex;
@@ -102,7 +106,7 @@ export function useHeaderLogic() {
                 }
             }
         }
-        
+
         return { mainLink, parentIndex, subLinkIndex };
     }, [currentPath]);
 
@@ -171,19 +175,26 @@ export function useHeaderLogic() {
     // Modified to ensure consistent behavior between server and client
     const isLinkActive = useCallback((link) => {
         if (!isClientSide) return false;
-        return currentPath === link;
+        // Exact match OR parent path match (e.g., /conseils matches /conseils/some-article)
+        return currentPath === link || currentPath?.startsWith(link + '/');
     }, [currentPath, isClientSide]);
-    
+
     // Modified to ensure consistent behavior between server and client
     const hasActiveSublink = useCallback((subLinks) => {
         if (!isClientSide) return false;
         if (!subLinks) return false;
-        return subLinks.some(subLink => currentPath === subLink.link);
+        return subLinks.some(subLink => {
+            // Exact match OR parent path match
+            return currentPath === subLink.link || currentPath?.startsWith(subLink.link + '/');
+        });
     }, [currentPath, isClientSide]);
 
     const findActiveSublink = useCallback((subLinks) => {
         if (!subLinks) return null;
-        return subLinks.find(subLink => currentPath === subLink.link);
+        return subLinks.find(subLink => {
+            // Exact match OR parent path match
+            return currentPath === subLink.link || currentPath?.startsWith(subLink.link + '/');
+        });
     }, [currentPath]);
 
     return {

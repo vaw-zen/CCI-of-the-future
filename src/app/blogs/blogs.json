@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "title": "Publications & Conseils — CCI",
+    "description": "Articles et vidéos sur la restauration du marbre, l'entretien des moquettes et les bonnes pratiques de nettoyage professionnel."
+  },
+  "heroTitle": "Publications & Reels",
+  "collectionPageJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Publications & Conseils - CCI",
+    "description": "Articles et vidéos sur la restauration du marbre et de tout typpe de sol et mur, l'entretien des tapis et des moquettes, le nettoyage salon étape par étape.",
+    "url": "https://cciservices.online/blogs"
+  }
+}

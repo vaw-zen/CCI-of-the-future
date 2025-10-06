@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "title": "À propos de nous — CCI",
+    "description": "CCI, experts en restauration de marbre, nettoyage de moquettes et tapisserie en Tunisie. Notre équipe s'engage pour qualité et durabilité."
+  },
+  "heroTitle": "About us",
+  "organizationJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "CCI",
+    "url": "https://cciservices.online/about",
+    "logo": "https://cciservices.online/logo.png"
+  }
+}

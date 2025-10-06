@@ -7,25 +7,26 @@ import Showcase from '../home/sections/5-showcase/showcase';
 import styles from './page.module.css'
 import Refrences from '../home/sections/7-refrences/refrences';
 import GreenBand from '@/utils/components/GreenBand/GreenBand';
+import aboutData from './about.json';
 
 export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-  
+
   return {
-    title: 'À propos de nous — CCI',
-    description: 'CCI, experts en restauration de marbre, nettoyage de moquettes et tapisserie en Tunisie. Notre équipe s\'engage pour qualité et durabilité.',
+    title: aboutData.metadata.title,
+    description: aboutData.metadata.description,
     alternates: {
       canonical: `${SITE_URL}/about`
     },
     openGraph: {
-      title: 'À propos de nous — CCI',
-      description: 'CCI, experts en restauration de marbre, nettoyage de moquettes et tapisserie en Tunisie. Notre équipe s\'engage pour qualité et durabilité.',
+      title: aboutData.metadata.title,
+      description: aboutData.metadata.description,
       url: `${SITE_URL}/about`,
       type: 'website'
     },
     twitter: {
-      title: 'À propos de nous — CCI',
-      description: 'CCI, experts en restauration de marbre, nettoyage de moquettes et tapisserie en Tunisie. Notre équipe s\'engage pour qualité et durabilité.'
+      title: aboutData.metadata.title,
+      description: aboutData.metadata.description
     }
   };
 }
@@ -33,14 +34,8 @@ export async function generateMetadata() {
 export default function page() {
   return (
     <main className={styles.page}>
-    <script type="application/ld+json">{JSON.stringify({
-      "@context":"https://schema.org",
-      "@type":"Organization",
-      name: "CCI",
-      url: "https://cciservices.online/about",
-      logo: "https://cciservices.online/logo.png"
-    })}</script>
-    <HeroHeader title={"About us"}/>
+    <script type="application/ld+json">{JSON.stringify(aboutData.organizationJSONLD)}</script>
+    <HeroHeader title={aboutData.heroTitle}/>
     <Presentation/>
     <Vision/>
     <StrokeEffect/>

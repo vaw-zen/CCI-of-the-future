@@ -26,15 +26,24 @@ export default function ConseilsClient() {
 
   useEffect(() => {
     const allArticles = getAllArticles();
-    const featured = getFeaturedArticles();
     
     if (activeFilter === 'all') {
-      setFilteredArticles(allArticles.filter(article => !article.featured));
-      setFeaturedArticles(featured);
+      // Sort articles by date (newest first) and take the first 2 as featured
+      const sortedArticles = [...allArticles].sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+      const latestTwoFeatured = sortedArticles.slice(0, 2);
+      const remainingArticles = sortedArticles.slice(2);
+      
+      setFeaturedArticles(latestTwoFeatured);
+      setFilteredArticles(remainingArticles);
     } else {
       const categoryArticles = getArticlesByCategory(activeFilter);
-      setFilteredArticles(categoryArticles.filter(article => !article.featured));
-      setFeaturedArticles(categoryArticles.filter(article => article.featured));
+      // Sort category articles by date and take the first 2 as featured if available
+      const sortedCategoryArticles = [...categoryArticles].sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+      const featuredFromCategory = sortedCategoryArticles.slice(0, Math.min(2, sortedCategoryArticles.length));
+      const remainingFromCategory = sortedCategoryArticles.slice(featuredFromCategory.length);
+      
+      setFeaturedArticles(featuredFromCategory);
+      setFilteredArticles(remainingFromCategory);
     }
   }, [activeFilter]);
 

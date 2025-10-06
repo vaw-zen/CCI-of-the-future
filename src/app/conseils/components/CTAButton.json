@@ -1,0 +1,23 @@
+[
+  {
+    "id": "phone",
+    "text": "Appelez: 98-557-766",
+    "icon": "📞",
+    "href": "tel:+21698557766",
+    "type": "link"
+  },
+  {
+    "id": "quote",
+    "text": "Devis Gratuit",
+    "icon": "📝",
+    "href": "/devis",
+    "type": "internal"
+  },
+  {
+    "id": "whatsapp",
+    "text": "WhatsApp",
+    "icon": "💬",
+    "href": "https://wa.me/21698557766?text=Bonjour,%20je%20souhaite%20des%20informations",
+    "type": "link"
+  }
+]

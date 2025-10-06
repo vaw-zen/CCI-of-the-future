@@ -9,7 +9,7 @@
 .reels-section {
   padding: 3.33vw 1.25vw 7.5vw;
   margin: 0 auto;
-  background: var(--bg-elevated);
+  background: var(--bg-base);
   width: 100%;
 }
 

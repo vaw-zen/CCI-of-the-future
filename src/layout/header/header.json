@@ -63,6 +63,10 @@
         "name": "blog",
         "link": "/blogs"
     },
+     {
+        "name": "Conseils & astuces",
+        "link": "/conseils"
+    },
     {
         "name": "contact",
         "link": "/contact"

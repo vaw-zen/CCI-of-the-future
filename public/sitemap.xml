@@ -79,10 +79,41 @@
     <priority>0.50</priority>
   </url>
   <url>
-      <loc>https://cciservices.online/devis</loc>
+    <loc>https://cciservices.online/devis</loc>
     <lastmod>2025-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.50</priority>
+  </url>
+  <!-- Articles de conseils -->
+  <url>
+    <loc>https://cciservices.online/conseils</loc>
+    <lastmod>2025-10-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://cciservices.online/conseils/guide-nettoyage-tapis-tunis-2025</loc>
+    <lastmod>2025-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://cciservices.online/conseils/nettoyage-salons-voiture-tapisseries-tunis</loc>
+    <lastmod>2025-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://cciservices.online/conseils/traitement-poncage-polissage-marbre-tunisie</loc>
+    <lastmod>2025-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://cciservices.online/conseils/nettoyage-post-chantier-tunisie-fin-travaux</loc>
+    <lastmod>2025-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
   </url>
 </urlset>
 

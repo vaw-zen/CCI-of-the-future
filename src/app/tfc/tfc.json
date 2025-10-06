@@ -1,0 +1,121 @@
+{
+  "metadata": {
+    "title": "Nettoyage technique après travaux (TFC) — CCI",
+    "description": "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie."
+  },
+  "heroTitle": "Travaux de fin de chantier (TFC)",
+  "tabData": [
+    {
+      "id": "mission",
+      "title": "Notre mission",
+      "content": "Proposer des prestations de nettoyage après travaux (TFC) et réaménagement : élimination des poussières fines, nettoyages des surfaces, vitrification des sols si nécessaire, et remise en état pour livraison."
+    },
+    {
+      "id": "vision",
+      "title": "Notre vision",
+      "content": "Assurer une transition propre et sans stress entre la fin du chantier et la remise des lieux, en garantissant sécurité et propreté irréprochable."
+    },
+    {
+      "id": "philosophy",
+      "title": "Notre philosophie",
+      "content": "Organiser les opérations de fin de chantier avec méthode : tri des déchets, nettoyage technique, traitement des sols et surfaces, et vérification qualité avant livraison."
+    }
+  ],
+  "images": [
+    {
+      "src": "/gallery/tfc/marbre.jpg",
+      "title": "Nettoyage Technique Post-Chantier",
+      "description": "Nettoyage technique complet après travaux. Dépoussiérage industriel, traitement sols et surfaces pour livraison."
+    },
+    {
+      "src": "/gallery/tfc/nettoyage-professionel-post-chantier.webp",
+      "title": "Remise en État Professionnelle",
+      "description": "Remise en état professionnelle post-rénovation. Enlèvement gravats, nettoyage finition et préparation livraison."
+    }
+  ],
+  "localBusinessJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "CCI",
+    "url": "https://cciservices.online/",
+    "logo": "https://cciservices.online/logo.png",
+    "telephone": "+216-98-557-766",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "06, rue galant de nuit, l'aouina,tunis",
+      "addressLocality": "Tunisie",
+      "addressCountry": "TN"
+    }
+  },
+  "serviceJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": "https://cciservices.online/nettoyage-apres-chantier",
+    "name": "Nettoyage après chantier",
+    "description": "Prestations de fin de chantier : nettoyage technique, enlèvement de gravats et préparation des locaux pour réception.",
+    "url": "https://cciservices.online/nettoyage-apres-chantier",
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "CCI",
+      "url": "https://cciservices.online/",
+      "telephone": "+216-98-557-766",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+        "addressLocality": "Tunis",
+        "addressCountry": "TN"
+      },
+      "logo": "https://cciservices.online/logo.png"
+    }
+  },
+  "sections": {
+    "mainService": {
+      "title": "Nettoyage technique après chantier",
+      "text": "Nettoyage complet après travaux : dépoussiérage industriel, nettoyage des menuiseries, élimination des traces de peintures et enduits, lavage des sols et surfaces, et mise en conformité pour réception."
+    },
+    "secondaryService": {
+      "title": "Gestion de réaménagement",
+      "text": "Nous proposons aussi des services de remise en état post-rénovation et aide au réaménagement : enlèvement des gravats, nettoyage ciblé, et préparation des surfaces pour les finitions."
+    },
+    "whyChooseUs": {
+      "title": "Pourquoi choisir nos service TFC",
+      "text": "Méthodologie professionnelle, équipe professionnelle trés bien équipée et respect des normes de sécurité : nous assurons une livraison prête à l'usage."
+    }
+  },
+  "aboutUs": {
+    "historyText": "CCI intervient sur des chantiers de toutes tailles pour garantir une livraison propre et professionnelle.",
+    "missionText": "Offrir un service TFC rigoureux, sécurisé et respectueux des délais convenus.",
+    "visionText": "Être le partenaire fiable pour les entreprises du bâtiment et les particuliers lors de la phase finale des projets."
+  },
+  "serviceList": {
+    "title": "Services TFC",
+    "text": "Prestations complètes pour la remise en état post-chantiers.",
+    "items": [
+      {
+        "id": "1",
+        "text": "Dépoussiérage technique",
+        "icon": "/icons/polisher.png"
+      },
+      {
+        "id": "2",
+        "text": "Nettoyage sols et vitreries",
+        "icon": "/icons/polisher1.png"
+      },
+      {
+        "id": "3",
+        "text": "Enlèvement gravats",
+        "icon": "/icons/crystal3.png"
+      },
+      {
+        "id": "4",
+        "text": "Vérification qualité & livraison",
+        "icon": "/icons/shield.png"
+      },
+      {
+        "id": "5",
+        "text": "Entretien de tout type de sol",
+        "icon": "/icons/shield.png"
+      }
+    ]
+  }
+}

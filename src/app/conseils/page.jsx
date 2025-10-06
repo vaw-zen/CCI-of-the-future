@@ -1,3 +1,5 @@
+
+import { Suspense } from 'react';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import ServiceDetails from '@/utils/components/servicesComponents/serviceDetails/serviceDetails';
 import ConseilsClient from './components/ConseilsClient';
@@ -109,7 +111,27 @@ export default function ConseilsPage() {
       />
       
       {/* Composant client pour les filtres et articles */}
-      <ConseilsClient />
+      <Suspense fallback={
+        <div style={{ 
+          padding: '60px 20px', 
+          textAlign: 'center',
+          color: 'var(--t-secondary)' 
+        }}>
+          <div style={{ 
+            fontSize: '1.2rem', 
+            marginBottom: '10px' 
+          }}>
+            🔄 Chargement des articles...
+          </div>
+          <div style={{ 
+            fontSize: '0.9rem' 
+          }}>
+            Préparation de nos guides d'expert
+          </div>
+        </div>
+      }>
+        <ConseilsClient />
+      </Suspense>
     </main>
   );
 }

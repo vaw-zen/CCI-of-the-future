@@ -27,6 +27,10 @@ export const articles = [
       
       <p><strong>Notre objectif :</strong> nettoyer, assainir et préserver la qualité des fibres tout en garantissant un résultat impeccable et durable.</p>
 
+      <div class="info-box">
+        <p>💡 <strong>Vous cherchez un service complet ?</strong> Découvrez tous nos <a href="/services" style="color: var(--ac-primary); font-weight: 600;">services de nettoyage professionnel</a> ou obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit en ligne</a>.</p>
+      </div>
+
       <h2 id="methode-lavage-eau">💧 Méthode 1 : Lavage à eau abondante et essorage rapide</h2>
       
       <p>Cette méthode est recommandée pour les tapis robustes et les fibres résistantes à l'eau. Elle permet un nettoyage complet et intensif, idéal pour éliminer les taches profondes, les odeurs et les bactéries incrustées.</p>
@@ -209,6 +213,10 @@ export const articles = [
 
       <p>CCI Services vous propose des contrats d'entretien périodique, spécialement conçus pour les bureaux, hôtels, administrations, et particuliers exigeants.</p>
 
+      <div class="info-box">
+        <p>🔗 <strong>Services complémentaires :</strong> Découvrez aussi nos services de <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de salons et canapés</a> et <a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">traitement de sols en marbre</a>.</p>
+      </div>
+
       <h2 id="approche-ecologique">🌍 Une approche écologique et responsable</h2>
       
       <p>Conscients des enjeux environnementaux, nous privilégions :</p>
@@ -351,6 +359,47 @@ export const articles = [
 
       <h2 id="faq">Questions Fréquentes (FAQ)</h2>
 
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Quelle méthode choisir pour mon tapis ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Le choix dépend du type de fibres, du degré de salissure et de l'urgence : Tapis délicats : vapeur ou lavage à sec. Tapis robustes : injection-extraction ou lavage à eau. Nettoyage express : lavage à sec. Désinfection complète : vapeur."
+            }
+          },
+          {
+            "@type": "Question", 
+            "name": "Combien de temps faut-il pour le séchage ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Lavage à sec : aucun temps de séchage. Injection-extraction : 2-3 heures. Vapeur : 4-6 heures. Lavage à eau : 8-12 heures selon l'épaisseur."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Le nettoyage professionnel peut-il endommager mon tapis ?",
+            "acceptedAnswer": {
+              "@type": "Answer", 
+              "text": "Non, nos techniques préservent l'intégrité des fibres grâce à : Test préalable de solidité des couleurs, Choix de la méthode adaptée au tissu, Utilisation de produits neutres et certifiés, Expertise de nos techniciens formés."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "À quelle fréquence nettoyer professionnellement ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Domiciles : 1 à 2 fois par an selon le passage. Bureaux : 2 à 4 fois par an selon l'affluence. Hôtels/restaurants : mensuel à hebdomadaire. Tapis précieux : 1 fois par an minimum."
+            }
+          }
+        ]
+      }
+      </script>
+
       <div class="faq-container">
         <div class="faq-item">
           <h3>Quelle méthode choisir pour mon tapis ?</h3>
@@ -446,6 +495,10 @@ export const articles = [
       </div>
 
       <p>Chez CCI Services Tunisie, nous mettons notre savoir-faire professionnel au service de vos intérieurs. Nous proposons des techniques adaptées à chaque type de tissu — coton, microfibre, velours, cuir ou tissu synthétique — pour un résultat impeccable, sans altération de la matière.</p>
+
+      <div class="info-box">
+        <p>💡 <strong>Besoin d'autres services ?</strong> Consultez notre <a href="/services" style="color: var(--ac-primary); font-weight: 600;">gamme complète de services</a> ou nos spécialités en <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">nettoyage de tapis</a> et <a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">ponçage de marbre</a>.</p>
+      </div>
       
       <p><strong>Notre expertise s'appuie sur trois méthodes principales :</strong></p>
       <ul>
@@ -704,7 +757,7 @@ export const articles = [
     authorImage: '/team/expert-cci.jpg',
     publishedDate: '2025-10-06',
     updatedDate: '2025-10-06',
-    image: '/home/polishingkitchenmrblecountre.webp',
+    image: '/home/marblepolishing.webp',
     imageAlt: 'Cristallisation et polissage professionnel de sol en marbre par CCI Services',
     readTime: '9 min',
     featured: true,
@@ -716,6 +769,10 @@ export const articles = [
       <p>C'est pourquoi le traitement du sol en marbre est indispensable pour restaurer sa brillance naturelle et prolonger sa durée de vie.</p>
       
       <p>Chez CCI Services Tunisie, nous sommes spécialisés dans le ponçage, polissage et la cristallisation du marbre et de la pierre naturelle. Grâce à un matériel professionnel et à une équipe hautement formée, nous garantissons des résultats spectaculaires — sans poussière, sans dégâts, et avec une finition miroir.</p>
+
+      <div class="info-box">
+        <p>💡 <strong>Expertise complète :</strong> Découvrez également nos services de <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">nettoyage de tapis</a>, <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de salons</a> et obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
+      </div>
 
       <h2 id="prestations-marbre">🧰 Nos prestations de traitement de sols en marbre</h2>
       
@@ -931,6 +988,10 @@ export const articles = [
       <p>Les bonnes méthodes protègent les surfaces, garantissent une livraison propre et minimisent les risques sanitaires (poussières fines, silice).</p>
       
       <p>Chez CCI Services Tunisie, notre expertise en nettoyage post-chantier garantit une livraison impeccable de vos projets de construction ou rénovation.</p>
+
+      <div class="info-box">
+        <p>💡 <strong>Services complémentaires :</strong> Après le nettoyage post-chantier, découvrez nos services d'<a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">entretien du marbre</a>, <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">nettoyage de tapis</a> et <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de mobilier</a>.</p>
+      </div>
 
       <h2 id="phases-nettoyage"> 1) Phases claires du nettoyage post-chantier (checklist rapide)</h2>
       
@@ -1190,6 +1251,1159 @@ export const articles = [
           <p>🕒 Lun-Ven: 8h-18h | Sam: 8h-13h</p>
           <p><strong>Méthodes sûres, équipement HEPA, livraison impeccable garantie.</strong></p>
         </div>
+      </div>
+    `
+  },
+  {
+    id: 5,
+    slug: 'prix-nettoyage-tapis-tunis-tarifs-2025',
+    title: 'Prix Nettoyage Tapis Tunis 2025 : Tarifs & Devis Gratuit | CCI Services',
+    metaTitle: 'Prix Nettoyage Tapis Tunis 2025 : Tarifs & Devis Gratuit | CCI Services',
+    metaDescription: 'Découvrez nos tarifs de nettoyage de tapis à Tunis 2025. Prix transparents, devis gratuit, injection-extraction, vapeur. CCI Services : qualité professionnelle au meilleur prix.',
+    excerpt: 'Tarifs transparents pour le nettoyage de tapis à Tunis. Prix compétitifs, devis gratuit, service professionnel avec CCI Services.',
+    category: 'tapis',
+    categoryLabel: 'Nettoyage Tapis',
+    keywords: ['prix nettoyage tapis tunis', 'tarif nettoyage tapis', 'devis nettoyage tapis', 'cout nettoyage tapis tunisie', 'prix injection extraction'],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-06',
+    updatedDate: '2025-10-06',
+    image: '/home/marblepolishing.webp',
+    imageAlt: 'Tarifs nettoyage tapis professionnel Tunis - CCI Services',
+    readTime: '6 min',
+    featured: false,
+    content: `
+      <div class="article-intro">
+        <p class="lead">Vous cherchez les meilleurs prix pour le nettoyage de vos tapis à Tunis ? CCI Services vous propose des tarifs transparents et compétitifs pour tous types de tapis et moquettes. Découvrez nos grilles tarifaires 2025 et obtenez votre devis gratuit.</p>
+      </div>
+
+      <div class="info-box">
+        <p>📞 <strong>Devis Express :</strong> Appelez le <a href="tel:+21698557766" style="color: var(--ac-primary); font-weight: 600;">+216 98-557-766</a> ou demandez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis en ligne gratuit</a>.</p>
+      </div>
+
+      <h2 id="grille-tarifs">💰 Grille de Tarifs Nettoyage Tapis Tunis 2025</h2>
+
+      <div class="pricing-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Type de Service</th>
+              <th>Taille Standard</th>
+              <th>Prix Indicatif</th>
+              <th>Méthode</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tapis salon (3x2m)</td>
+              <td>6 m²</td>
+              <td>45-65 DT</td>
+              <td>Injection-extraction</td>
+            </tr>
+            <tr>
+              <td>Tapis chambre (2x1.5m)</td>
+              <td>3 m²</td>
+              <td>25-35 DT</td>
+              <td>Vapeur ou à sec</td>
+            </tr>
+            <tr>
+              <td>Moquette bureau (par m²)</td>
+              <td>Prix au m²</td>
+              <td>8-12 DT/m²</td>
+              <td>Injection-extraction</td>
+            </tr>
+            <tr>
+              <td>Tapis persan/berbère</td>
+              <td>Variables</td>
+              <td>Sur devis</td>
+              <td>Lavage délicat</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="facteurs-prix">🎯 Facteurs qui Influencent le Prix</h2>
+
+      <h3>1. Taille et Surface</h3>
+      <ul>
+        <li><strong>Petits tapis (0-3 m²) :</strong> 25-35 DT</li>
+        <li><strong>Tapis moyens (4-8 m²) :</strong> 45-75 DT</li>
+        <li><strong>Grandes surfaces (+10 m²) :</strong> 8-12 DT/m²</li>
+      </ul>
+
+      <h3>2. Type de Fibres</h3>
+      <ul>
+        <li><strong>Synthétique :</strong> Tarif standard</li>
+        <li><strong>Laine naturelle :</strong> +20% (traitement délicat)</li>
+        <li><strong>Soie/matières précieuses :</strong> +40% (expertise spécialisée)</li>
+      </ul>
+
+      <h3>3. État et Niveau de Salissure</h3>
+      <ul>
+        <li><strong>Entretien régulier :</strong> Tarif de base</li>
+        <li><strong>Taches importantes :</strong> +15-25 DT (détachage)</li>
+        <li><strong>Très encrassé :</strong> +30-50% (traitement intensif)</li>
+      </ul>
+
+      <h2 id="methodes-prix">🔧 Prix par Méthode de Nettoyage</h2>
+
+      <div class="benefits-grid">
+        <div class="benefit">
+          <h4>💧 Injection-Extraction</h4>
+          <p><strong>Prix :</strong> 8-12 DT/m²</p>
+          <p>Méthode la plus efficace, idéale pour tapis très sales</p>
+        </div>
+        
+        <div class="benefit">
+          <h4>🌫️ Nettoyage Vapeur</h4>
+          <p><strong>Prix :</strong> 10-14 DT/m²</p>
+          <p>Écologique, parfait pour allergiques et enfants</p>
+        </div>
+        
+        <div class="benefit">
+          <h4>🧴 Nettoyage à Sec</h4>
+          <p><strong>Prix :</strong> 12-16 DT/m²</p>
+          <p>Rapide, aucun temps de séchage</p>
+        </div>
+      </div>
+
+      <h2 id="services-inclus">✅ Ce qui est Inclus dans nos Prix</h2>
+
+      <div class="criteria-list">
+        <div class="criterion">
+          <h4>✅ Déplacement Gratuit</h4>
+          <p>Dans tout le Grand Tunis (Tunis, Ariana, La Marsa, Ben Arous)</p>
+        </div>
+        
+        <div class="criterion">
+          <h4>✅ Diagnostic Gratuit</h4>
+          <p>Évaluation du tapis et conseil sur la meilleure méthode</p>
+        </div>
+        
+        <div class="criterion">
+          <h4>✅ Dépoussiérage Complet</h4>
+          <p>Aspiration professionnelle avant nettoyage</p>
+        </div>
+        
+        <div class="criterion">
+          <h4>✅ Produits Professionnels</h4>
+          <p>Détergents écologiques et matériel haute performance</p>
+        </div>
+        
+        <div class="criterion">
+          <h4>✅ Garantie Résultat</h4>
+          <p>Satisfaction garantie ou intervention gratuite</p>
+        </div>
+      </div>
+
+      <h2 id="tarifs-speciaux">🎁 Tarifs Spéciaux et Promotions</h2>
+
+      <h3>Forfaits Économiques</h3>
+      <ul>
+        <li><strong>Pack 3 tapis :</strong> -15% sur le total</li>
+        <li><strong>Contrat annuel :</strong> -20% sur toutes interventions</li>
+        <li><strong>Nettoyage combiné :</strong> Tapis + Salon = -10%</li>
+      </ul>
+
+      <div class="info-box">
+        <p>🔗 <strong>Services Complémentaires :</strong> Profitez aussi de nos tarifs préférentiels pour le <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de salons</a> et <a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">traitement du marbre</a>.</p>
+      </div>
+
+      <h2 id="devis-gratuit">📋 Comment Obtenir votre Devis Gratuit ?</h2>
+
+      <h3>3 Moyens Rapides :</h3>
+      
+      <div class="stain-guide">
+        <div class="stain-type">
+          <h4>📞 Par Téléphone</h4>
+          <ol>
+            <li>Appelez le +216 98-557-766</li>
+            <li>Décrivez vos tapis (taille, matière, état)</li>
+            <li>Recevez votre estimation immédiate</li>
+            <li>Planifiez votre intervention</li>
+          </ol>
+        </div>
+        
+        <div class="stain-type">
+          <h4>💻 En Ligne</h4>
+          <ol>
+            <li>Remplissez le formulaire de devis</li>
+            <li>Ajoutez photos de vos tapis</li>
+            <li>Réponse sous 2h en semaine</li>
+            <li>Confirmation par SMS</li>
+          </ol>
+        </div>
+        
+        <div class="stain-type">
+          <h4>🏠 À Domicile</h4>
+          <ol>
+            <li>Demandez une visite gratuite</li>
+            <li>Diagnostic expert sur place</li>
+            <li>Devis détaillé personnalisé</li>
+            <li>Aucun engagement</li>
+          </ol>
+        </div>
+      </div>
+
+      <h2 id="comparaison-concurrence">📊 Pourquoi Choisir CCI Services ?</h2>
+
+      <div class="benefits-grid">
+        <div class="benefit">
+          <h4>💯 Rapport Qualité-Prix</h4>
+          <p>Tarifs compétitifs avec service professionnel de qualité européenne</p>
+        </div>
+        
+        <div class="benefit">
+          <h4>⚡ Intervention Rapide</h4>
+          <p>Disponibilité 6j/7, interventions programmées selon vos contraintes</p>
+        </div>
+        
+        <div class="benefit">
+          <h4>🔒 Prix Fermes</h4>
+          <p>Aucune surprise, le devis validé est respecté</p>
+        </div>
+        
+        <div class="benefit">
+          <h4>🏆 Expertise Reconnue</h4>
+          <p>Plus de 1000 clients satisfaits, équipe formée aux normes internationales</p>
+        </div>
+      </div>
+
+      <h2 id="faq-prix">❓ Questions Fréquentes sur les Prix</h2>
+
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Quel est le prix moyen pour nettoyer un tapis à Tunis ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Le prix varie entre 25-35 DT pour un petit tapis (3 m²) et 45-75 DT pour un tapis salon standard (6 m²). Pour les grandes surfaces, comptez 8-12 DT par m²."
+            }
+          },
+          {
+            "@type": "Question", 
+            "name": "Le devis est-il vraiment gratuit ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Oui, le devis est 100% gratuit et sans engagement. Nous nous déplaçons gratuitement dans tout le Grand Tunis pour évaluer vos tapis."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Y a-t-il des frais de déplacement ?",
+            "acceptedAnswer": {
+              "@type": "Answer", 
+              "text": "Aucun frais de déplacement dans le Grand Tunis (Tunis, Ariana, La Marsa, Ben Arous, Manouba). Pour les zones éloignées, un supplément peut s'appliquer."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Proposez-vous des réductions pour plusieurs tapis ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Oui ! Pack 3 tapis : -15%, contrat annuel : -20%, nettoyage combiné tapis + salon : -10%."
+            }
+          }
+        ]
+      }
+      </script>
+
+      <div class="faq-container">
+        <div class="faq-item">
+          <h3>Quel est le prix moyen pour nettoyer un tapis à Tunis ?</h3>
+          <p>Le prix varie entre 25-35 DT pour un petit tapis (3 m²) et 45-75 DT pour un tapis salon standard (6 m²). Pour les grandes surfaces, comptez 8-12 DT par m².</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Le devis est-il vraiment gratuit ?</h3>
+          <p>Oui, le devis est 100% gratuit et sans engagement. Nous nous déplaçons gratuitement dans tout le Grand Tunis pour évaluer vos tapis.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Y a-t-il des frais de déplacement ?</h3>
+          <p>Aucun frais de déplacement dans le Grand Tunis (Tunis, Ariana, La Marsa, Ben Arous, Manouba). Pour les zones éloignées, un supplément peut s'appliquer.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Proposez-vous des réductions pour plusieurs tapis ?</h3>
+          <p>Oui ! Pack 3 tapis : -15%, contrat annuel : -20%, nettoyage combiné tapis + salon : -10%.</p>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2 id="contact">📞 Obtenez Votre Devis Maintenant</h2>
+        
+        <p>Prêt à redonner vie à vos tapis ?</p>
+        <p><strong>Contactez CCI Services pour un devis gratuit et personnalisé :</strong></p>
+        
+        <div class="contact-buttons">
+          <a href="tel:+21698557766" class="btn-phone">
+            📱 +216 98-557-766
+          </a>
+          <a href="/devis" class="btn-email">
+            📧 Devis en ligne
+          </a>
+          <a href="/" class="btn-website">
+            🌐 cciservices.online
+          </a>
+        </div>
+        
+        <div class="contact-info">
+          <p><strong>CCI Services - Nettoyage Tapis Prix Tunis</strong></p>
+          <p>📍 06 Rue Galant de nuit, L'Aouina, Tunis 2045</p>
+          <p>🕒 Lun-Ven: 8h-18h | Sam: 8h-13h</p>
+          <p><strong>Devis gratuit • Prix transparents • Qualité garantie</strong></p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 6,
+    slug: 'comment-nettoyer-canape-cuir-tunis-guide-complet',
+    title: 'Comment Nettoyer un Canapé en Cuir à Tunis ? Guide Complet 2025',
+    metaTitle: 'Comment Nettoyer un Canapé en Cuir à Tunis ? Guide Complet 2025',
+    metaDescription: 'Guide complet pour nettoyer un canapé en cuir : produits, techniques, erreurs à éviter. Conseils d\'expert et service professionnel CCI Services Tunis.',
+    excerpt: 'Découvrez les meilleures techniques pour nettoyer et entretenir votre canapé en cuir. Guide pratique avec conseils d\'expert.',
+    category: 'tapisserie',
+    categoryLabel: 'Nettoyage Tapisserie',
+    keywords: ['comment nettoyer canapé cuir', 'entretien canapé cuir tunis', 'nettoyage cuir professionnel', 'produits nettoyage cuir', 'CCI services'],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-06',
+    updatedDate: '2025-10-06',
+    image: '/home/retapissage-salon-en-cuir.webp',
+    imageAlt: 'Nettoyage professionnel canapé en cuir - CCI Services Tunis',
+    readTime: '7 min',
+    featured: false,
+    content: `
+      <div class="article-intro">
+        <p class="lead">Un canapé en cuir est un investissement précieux qui mérite un entretien adapté. Avec les bonnes techniques et produits, vous pouvez prolonger sa durée de vie et conserver son élégance naturelle. Découvrez notre guide complet pour nettoyer votre canapé en cuir comme un professionnel.</p>
+      </div>
+
+      <div class="info-box">
+        <p>🏠 <strong>Service professionnel :</strong> Pour un résultat garanti, découvrez notre service de <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage professionnel de canapés</a> ou obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
+      </div>
+
+      <h2 id="types-cuir">🧳 Types de Cuir : Identifier avant de Nettoyer</h2>
+
+      <h3>1. Cuir Lisse (Aniline)</h3>
+      <ul>
+        <li><strong>Caractéristiques :</strong> Surface douce, pores visibles</li>
+        <li><strong>Entretien :</strong> Délicat, éviter l'excès d'eau</li>
+        <li><strong>Produits :</strong> Lait nourrissant spécifique</li>
+      </ul>
+
+      <h3>2. Cuir Grainé (Semi-Aniline)</h3>
+      <ul>
+        <li><strong>Caractéristiques :</strong> Texture en relief, plus résistant</li>
+        <li><strong>Entretien :</strong> Nettoyage humide possible</li>
+        <li><strong>Produits :</strong> Savon glycériné + protection</li>
+      </ul>
+
+      <h3>3. Cuir Pigmenté</h3>
+      <ul>
+        <li><strong>Caractéristiques :</strong> Surface protégée, facile d'entretien</li>
+        <li><strong>Entretien :</strong> Plus tolérant aux produits</li>
+        <li><strong>Produits :</strong> Nettoyants universels cuir</li>
+      </ul>
+
+      <h2 id="nettoyage-quotidien">🧹 Nettoyage Quotidien : Les Bons Gestes</h2>
+
+      <h3>Matériel Nécessaire :</h3>
+      <ul>
+        <li>Chiffons microfibres (2-3 pièces)</li>
+        <li>Aspirateur avec brosse douce</li>
+        <li>Lait nettoyant cuir de qualité</li>
+        <li>Crème nourrissante spécialisée</li>
+      </ul>
+
+      <div class="process-steps">
+        <div class="step">
+          <h4>Étape 1 : Dépoussiérage</h4>
+          <p>Aspirez délicatement plis, coutures et recoins avec une brosse douce</p>
+        </div>
+
+        <div class="step">
+          <h4>Étape 2 : Nettoyage Humide</h4>
+          <p>Chiffon microfibre légèrement humide, mouvements circulaires doux</p>
+        </div>
+
+        <div class="step">
+          <h4>Étape 3 : Séchage</h4>
+          <p>Laisser sécher naturellement, éviter sources de chaleur directe</p>
+        </div>
+
+        <div class="step">
+          <h4>Étape 4 : Nourrissage</h4>
+          <p>Appliquer crème nourrissante tous les 3-6 mois selon usage</p>
+        </div>
+      </div>
+
+      <h2 id="faq-cuir">❓ Questions Fréquentes - Entretien Cuir</h2>
+
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "À quelle fréquence nettoyer un canapé en cuir ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nettoyage quotidien : dépoussiérage simple. Nettoyage humide : 1 fois par mois. Nourrissage : tous les 3-6 mois selon l'usage. Entretien professionnel : 1-2 fois par an."
+            }
+          },
+          {
+            "@type": "Question", 
+            "name": "Peut-on utiliser des lingettes humides sur du cuir ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Non, les lingettes humides contiennent souvent de l'alcool et des parfums qui peuvent endommager le cuir. Préférez un chiffon microfibre légèrement humide avec un produit spécialisé."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Comment enlever une odeur persistante du cuir ?",
+            "acceptedAnswer": {
+              "@type": "Answer", 
+              "text": "Aérez la pièce, saupoudrez de bicarbonate de soude, laissez agir 24h puis aspirez. Si l'odeur persiste, utilisez un déodorant spécial cuir ou contactez un professionnel."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Le cuir craquelé peut-il être réparé ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Les petites craquelures peuvent être traitées avec une crème réparatrice intensive. Pour des dégâts importants, seul un professionnel peut effectuer une rénovation complète."
+            }
+          }
+        ]
+      }
+      </script>
+
+      <div class="faq-container">
+        <div class="faq-item">
+          <h3>À quelle fréquence nettoyer un canapé en cuir ?</h3>
+          <p>Nettoyage quotidien : dépoussiérage simple. Nettoyage humide : 1 fois par mois. Nourrissage : tous les 3-6 mois selon l'usage. Entretien professionnel : 1-2 fois par an.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Peut-on utiliser des lingettes humides sur du cuir ?</h3>
+          <p>Non, les lingettes humides contiennent souvent de l'alcool et des parfums qui peuvent endommager le cuir. Préférez un chiffon microfibre légèrement humide avec un produit spécialisé.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Comment enlever une odeur persistante du cuir ?</h3>
+          <p>Aérez la pièce, saupoudrez de bicarbonate de soude, laissez agir 24h puis aspirez. Si l'odeur persiste, utilisez un déodorant spécial cuir ou contactez un professionnel.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Le cuir craquelé peut-il être réparé ?</h3>
+          <p>Les petites craquelures peuvent être traitées avec une crème réparatrice intensive. Pour des dégâts importants, seul un professionnel peut effectuer une rénovation complète.</p>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2 id="contact">📞 Service Professionnel CCI Services</h2>
+        
+        <p>Votre canapé en cuir mérite le meilleur entretien !</p>
+        <p><strong>Confiez-le aux experts CCI Services pour un résultat parfait :</strong></p>
+        
+        <div class="contact-buttons">
+          <a href="tel:+21698557766" class="btn-phone">
+            📱 +216 98-557-766
+          </a>
+          <a href="/devis" class="btn-email">
+            📧 Devis gratuit
+          </a>
+          <a href="/salon" class="btn-website">
+            🛋️ Nos services salons
+          </a>
+        </div>
+        
+        <div class="contact-info">
+          <p><strong>CCI Services - Expert Nettoyage Cuir Tunis</strong></p>
+          <p>📍 06 Rue Galant de nuit, L'Aouina, Tunis 2045</p>
+          <p>🕒 Lun-Ven: 8h-18h | Sam: 8h-13h</p>
+          <p><strong>Entretien professionnel • Produits adaptés • Résultats garantis</strong></p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 7,
+    slug: 'detartrage-marbre-cuisine-tunisie-guide-expert',
+    title: 'Détartrage Marbre Cuisine Tunisie : Guide Expert 2025 | CCI Services',
+    metaTitle: 'Détartrage Marbre Cuisine Tunisie : Guide Expert 2025 | CCI Services',
+    metaDescription: 'Guide expert pour détartrer et entretenir le marbre de cuisine. Techniques professionnelles, produits adaptés, erreurs à éviter. Service CCI Services Tunis.',
+    excerpt: 'Apprenez à détartrer et entretenir votre plan de travail en marbre. Conseils d\'expert pour préserver l\'éclat de votre cuisine.',
+    category: 'marbre',
+    categoryLabel: 'Traitement Marbre',
+    keywords: ['détartrage marbre cuisine', 'entretien marbre cuisine tunis', 'nettoyer plan travail marbre', 'marbre cuisine calcaire', 'CCI services'],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-06',
+    updatedDate: '2025-10-06',
+    image: '/home/polishingkitchenmrblecountre.webp',
+    imageAlt: 'Détartrage professionnel plan de travail marbre cuisine - CCI Services',
+    readTime: '8 min',
+    featured: false,
+    content: `
+      <div class="article-intro">
+        <p class="lead">Le marbre en cuisine offre une élégance intemporelle, mais nécessite un entretien spécialisé. Face au calcaire, aux acides alimentaires et à l'usage quotidien, découvrez les techniques professionnelles pour détartrer et préserver la beauté de votre plan de travail en marbre.</p>
+      </div>
+
+      <div class="info-box">
+        <p>🏠 <strong>Service professionnel :</strong> Pour un détartrage expert, découvrez notre service de <a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">traitement professionnel du marbre</a> ou obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
+      </div>
+
+      <h2 id="faq-marbre-cuisine">❓ Questions Fréquentes - Marbre Cuisine</h2>
+
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Comment enlever le calcaire sur du marbre sans l'abîmer ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Utilisez du vinaigre blanc dilué (1:10) pendant maximum 3 minutes, puis rincez immédiatement. Ou préférez le bicarbonate de soude en pâte, plus doux et tout aussi efficace."
+            }
+          },
+          {
+            "@type": "Question", 
+            "name": "À quelle fréquence détartrer un plan de travail en marbre ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Prévention quotidienne : séchage après usage. Détartrage doux : 1 fois par semaine. Détartrage approfondi : 1 fois par mois. Traitement professionnel : 1-2 fois par an."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Le marbre de cuisine peut-il retrouver sa brillance d'origine ?",
+            "acceptedAnswer": {
+              "@type": "Answer", 
+              "text": "Oui, avec un polissage professionnel. Les techniques de ponçage progressif et cristallisation permettent de restaurer l'éclat d'origine même sur un marbre très abîmé."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Comment protéger le marbre contre le calcaire ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Appliquez un traitement hydrofuge/oléofuge professionnel tous les 2 ans. Au quotidien : séchage systématique, nettoyage doux, et éviter les produits acides."
+            }
+          }
+        ]
+      }
+      </script>
+
+      <h2 id="comprendre-problemes-marbre">🔍 Comprendre les Problèmes du Marbre en Cuisine</h2>
+
+      <h3>Pourquoi le Marbre se Dégrade en Cuisine ?</h3>
+      <p>Le marbre est une pierre calcaire naturelle particulièrement sensible aux acides. En cuisine, plusieurs facteurs accélèrent sa dégradation :</p>
+      
+      <ul>
+        <li><strong>Acides alimentaires :</strong> Citron, vinaigre, tomate attaquent la surface</li>
+        <li><strong>Eau calcaire :</strong> Laisse des dépôts blanchâtres permanents</li>
+        <li><strong>Produits ménagers inadaptés :</strong> Détergents chimiques agressifs</li>
+        <li><strong>Usage intensif :</strong> Rayures, taches, perte de brillance</li>
+      </ul>
+
+      <div class="tip-box">
+        <p><strong>💡 Conseil d'expert :</strong> Le marbre poreux absorbe rapidement les taches. Une intervention rapide est essentielle pour éviter la dégradation irréversible.</p>
+      </div>
+
+      <h2 id="techniques-detartrage">🧽 Techniques de Détartrage Adaptées</h2>
+
+      <h3>Méthode 1 : Bicarbonate de Soude (Recommandée)</h3>
+      <div class="method-box">
+        <p><strong>Matériel nécessaire :</strong></p>
+        <ul>
+          <li>Bicarbonate de soude</li>
+          <li>Eau tiède</li>
+          <li>Chiffon microfibre</li>
+          <li>Brosse douce</li>
+        </ul>
+        
+        <p><strong>Process étape par étape :</strong></p>
+        <ol>
+          <li>Mélangez bicarbonate + eau pour former une pâte</li>
+          <li>Appliquez sur les zones entartrées</li>
+          <li>Laissez agir 15-20 minutes</li>
+          <li>Frottez délicatement avec la brosse</li>
+          <li>Rincez abondamment à l'eau claire</li>
+          <li>Séchez immédiatement avec le chiffon</li>
+        </ol>
+      </div>
+
+      <h3>Méthode 2 : Vinaigre Blanc Dilué (Usage Exceptionnel)</h3>
+      <div class="warning-box">
+        <p><strong>⚠️ Attention :</strong> Le vinaigre est acide et peut endommager le marbre. Utilisation exceptionnelle uniquement.</p>
+      </div>
+      
+      <div class="method-box">
+        <p><strong>Dilution sécurisée :</strong> 1 volume de vinaigre pour 10 volumes d'eau</p>
+        <p><strong>Temps d'action maximum :</strong> 3 minutes</p>
+        <p><strong>Rinçage immédiat obligatoire</strong></p>
+      </div>
+
+      <h3>Méthode 3 : Produits Spécialisés Marbre</h3>
+      <p>Pour un détartrage en profondeur, les produits professionnels offrent une sécurité optimale :</p>
+      <ul>
+        <li><strong>Détartrants marbre pH neutre</strong></li>
+        <li><strong>Cristallisants pour restaurer la brillance</strong></li>
+        <li><strong>Traitements hydrofuges préventifs</strong></li>
+      </ul>
+
+      <p>🏆 <strong>Service CCI :</strong> Découvrez notre <a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">traitement professionnel du marbre</a> pour un résultat optimal.</p>
+
+      <h2 id="erreurs-eviter">❌ Erreurs à Éviter Absolument</h2>
+
+      <div class="warning-section">
+        <h3>Produits Interdits sur Marbre</h3>
+        <ul>
+          <li><strong>Javel :</strong> Décolore et fragilise la pierre</li>
+          <li><strong>Produits anticalcaires classiques :</strong> Trop acides</li>
+          <li><strong>Vinaigre pur :</strong> Grave la surface définitivement</li>
+          <li><strong>Citron :</strong> Acide citrique très agressif</li>
+          <li><strong>Ammoniaque :</strong> Réaction chimique dangereuse</li>
+        </ul>
+
+        <h3>Gestes à Proscrire</h3>
+        <ul>
+          <li>Laisser sécher l'eau calcaire</li>
+          <li>Utiliser des éponges abrasives</li>
+          <li>Nettoyer à l'eau très chaude</li>
+          <li>Oublier le séchage immédiat</li>
+        </ul>
+      </div>
+
+      <h2 id="entretien-quotidien">🏠 Entretien Quotidien Préventif</h2>
+
+      <h3>Routine Journalière (2 minutes)</h3>
+      <ol>
+        <li><strong>Nettoyage doux :</strong> Savon de Marseille + eau tiède</li>
+        <li><strong>Rinçage complet :</strong> Éliminer tous résidus</li>
+        <li><strong>Séchage immédiat :</strong> Chiffon microfibre propre</li>
+        <li><strong>Protection :</strong> Éviter contact direct acides alimentaires</li>
+      </ol>
+
+      <h3>Entretien Hebdomadaire</h3>
+      <ul>
+        <li><strong>Détartrage préventif :</strong> Bicarbonate si nécessaire</li>
+        <li><strong>Lustrage :</strong> Chiffon sec pour brillance</li>
+        <li><strong>Inspection :</strong> Détecter taches ou dégradations</li>
+      </ul>
+
+      <h3>Entretien Mensuel</h3>
+      <ul>
+        <li><strong>Nettoyage approfondi :</strong> Produit spécialisé marbre</li>
+        <li><strong>Polissage léger :</strong> Restaurer micro-rayures</li>
+        <li><strong>Contrôle étanchéité :</strong> Vérifier traitement hydrofuge</li>
+      </ul>
+
+      <h2 id="solutions-professionnelles">⚡ Solutions Professionnelles CCI Services</h2>
+
+      <h3>Quand Faire Appel à un Professionnel ?</h3>
+      <ul>
+        <li><strong>Détartrage impossible :</strong> Calcaire incrusté profondément</li>
+        <li><strong>Perte de brillance généralisée :</strong> Surface devenue mate</li>
+        <li><strong>Taches persistantes :</strong> Acides, graisses, colorants</li>
+        <li><strong>Rayures visibles :</strong> Dommages mécaniques</li>
+        <li><strong>Entretien préventif :</strong> Traitement protection annuel</li>
+      </ul>
+
+      <h3>Techniques Professionnelles CCI</h3>
+      <div class="service-box">
+        <h4>🔧 Ponçage Progressif</h4>
+        <p>Élimination des rayures et taches avec disques diamantés graduels (400 à 3000 grains)</p>
+        
+        <h4>💎 Cristallisation</h4>
+        <p>Traitement chimique créant une surface vitreuse ultra-brillante et résistante</p>
+        
+        <h4>🛡️ Protection Hydrofuge</h4>
+        <p>Imprégnation invisible protégeant contre eau, huile et taches</p>
+        
+        <h4>✨ Polissage Haute Brillance</h4>
+        <p>Finition miroir professionnelle redonnant l'éclat d'origine</p>
+      </div>
+
+      <h3>Avantages Service Professionnel</h3>
+      <ul>
+        <li><strong>Diagnostic expert :</strong> Évaluation précise état du marbre</li>
+        <li><strong>Techniques adaptées :</strong> Selon type marbre et dégradations</li>
+        <li><strong>Équipement professionnel :</strong> Machines haute performance</li>
+        <li><strong>Produits spécialisés :</strong> Gamme professionnelle exclusive</li>
+        <li><strong>Résultats durables :</strong> Protection longue durée</li>
+        <li><strong>Garantie qualité :</strong> Assurance résultat optimal</li>
+      </ul>
+
+      <h2 id="conseils-experts">🎯 Conseils d'Expert CCI Services</h2>
+
+      <h3>Choix du Marbre pour Cuisine</h3>
+      <div class="expert-advice">
+        <p><strong>Marbres recommandés :</strong></p>
+        <ul>
+          <li><strong>Carrare :</strong> Classique, blanc veiné, résistant</li>
+          <li><strong>Emperador :</strong> Marron, moins sensible aux acides</li>
+          <li><strong>Noir Marquina :</strong> Élégant, cache mieux les traces</li>
+        </ul>
+        
+        <p><strong>Finitions conseillées :</strong></p>
+        <ul>
+          <li><strong>Poli brillant :</strong> Facilite nettoyage mais montre rayures</li>
+          <li><strong>Adouci mat :</strong> Cache imperfections, aspect naturel</li>
+          <li><strong>Brossé :</strong> Texture antidérapante, très résistant</li>
+        </ul>
+      </div>
+
+      <h3>Alternatives au Marbre Naturel</h3>
+      <p>Pour usage intensif, considérez :</p>
+      <ul>
+        <li><strong>Quartz reconstitué :</strong> Résistance chimique supérieure</li>
+        <li><strong>Granit :</strong> Dureté exceptionnelle, moins poreux</li>
+        <li><strong>Céramique effet marbre :</strong> Entretien facilité</li>
+      </ul>
+
+      <h2 id="urgence-intervention">🚨 Intervention d'Urgence</h2>
+
+      <div class="emergency-box">
+        <h3>Tache Acide Fraîche</h3>
+        <ol>
+          <li><strong>Absorption immédiate :</strong> Papier absorbant, ne pas étaler</li>
+          <li><strong>Rinçage abondant :</strong> Eau claire uniquement</li>
+          <li><strong>Neutralisation :</strong> Bicarbonate de soude en pâte</li>
+          <li><strong>Contact professionnel :</strong> Évaluation dégâts</li>
+        </ol>
+        
+        <p><strong>⏰ Délai critique :</strong> Intervention sous 24h pour limiter gravure</p>
+      </div>
+
+      <h3>Service Urgence CCI Services</h3>
+      <ul>
+        <li><strong>Intervention rapide :</strong> Déplacement sous 48h</li>
+        <li><strong>Diagnostic gratuit :</strong> Évaluation professionnelle</li>
+        <li><strong>Devis transparent :</strong> Tarification claire</li>
+        <li><strong>Garantie résultat :</strong> Satisfaction assurée</li>
+      </ul>
+
+      <div class="cta-section">
+        <h3>🏆 Confiez Votre Marbre aux Experts</h3>
+        <p>15 ans d'expérience • Techniques avancées • Résultats garantis</p>
+        <p><strong>Redonnez vie à votre marbre de cuisine !</strong></p>
+        
+        <div class="cta-buttons">
+          <a href="/devis" class="btn-primary">Devis gratuit marbre</a>
+          <a href="/contact" class="btn-secondary">Contact expert</a>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2 id="contact">📞 Expert Marbre CCI Services</h2>
+        
+        <p>Redonnez tout son éclat à votre marbre de cuisine !</p>
+        <p><strong>Faites confiance aux spécialistes CCI Services pour un résultat professionnel :</strong></p>
+        
+        <div class="contact-buttons">
+          <a href="tel:+21698557766" class="btn-phone">
+            📱 +216 98-557-766
+          </a>
+          <a href="/devis" class="btn-email">
+            📧 Devis gratuit
+          </a>
+          <a href="/marbre" class="btn-website">
+            ⚡ Traitement marbre
+          </a>
+        </div>
+        
+        <div class="contact-info">
+          <p><strong>CCI Services - Expert Marbre Cuisine Tunis</strong></p>
+          <p>📍 06 Rue Galant de nuit, L'Aouina, Tunis 2045</p>
+          <p>🕒 Lun-Ven: 8h-18h | Sam: 8h-13h</p>
+          <p><strong>Diagnostic gratuit • Techniques professionnelles • Résultats durables</strong></p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 8,
+    slug: 'services-nettoyage-ariana-tunisie-2025',
+    title: 'Services Nettoyage Ariana 2025 : Tapis, Marbre, Salon | CCI Services',
+    metaTitle: 'Services Nettoyage Ariana 2025 : Tapis, Marbre, Salon | CCI Services',
+    metaDescription: 'Services de nettoyage professionnel à Ariana : tapis, marbre, salon. Intervention rapide, tarifs transparents. Devis gratuit CCI Services.',
+    excerpt: 'Découvrez nos services de nettoyage professionnel à Ariana. Intervention rapide pour tapis, marbre et salon.',
+    category: 'local',
+    categoryLabel: 'Services Locaux',
+    keywords: ['nettoyage ariana', 'services nettoyage ariana', 'nettoyage tapis ariana', 'marbre ariana', 'CCI services ariana'],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-06',
+    updatedDate: '2025-10-06',
+    image: '/home/night.webp',
+    imageAlt: 'Services nettoyage professionnel Ariana - CCI Services',
+    readTime: '6 min',
+    featured: true,
+    content: `
+      <div class="article-intro">
+        <p class="lead">Vous habitez Ariana et recherchez un service de nettoyage professionnel fiable ? CCI Services intervient dans toute la région d'Ariana avec des techniques de pointe et 15 ans d'expérience. Découvrez nos services spécialisés en nettoyage de tapis, traitement du marbre et retapissage de salon.</p>
+      </div>
+
+      <div class="info-box">
+        <p>🏠 <strong>Zone d'intervention :</strong> Nous couvrons toute la région d'Ariana - <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">Contactez-nous</a> pour un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
+      </div>
+
+      <h2 id="services-ariana">🏡 Nos Services à Ariana</h2>
+
+      <h3>🧽 Nettoyage Tapis et Moquettes Ariana</h3>
+      <p>Spécialistes du nettoyage de tapis à Ariana, nous utilisons la méthode d'injection-extraction pour un résultat professionnel :</p>
+      <ul>
+        <li><strong>Tapis orientaux :</strong> Traitement délicat adapté aux fibres précieuses</li>
+        <li><strong>Moquettes :</strong> Nettoyage en profondeur sans sur-mouillage</li>
+        <li><strong>Tapis berbères :</strong> Techniques spécialisées pour laine naturelle</li>
+        <li><strong>Désodorisation :</strong> Élimination complète des odeurs</li>
+      </ul>
+      <p>💡 <strong>Service :</strong> Découvrez notre guide complet sur le <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">nettoyage de tapis</a> et nos <a href="/conseils/prix-nettoyage-tapis-tunis-tarifs-2025" style="color: var(--ac-primary); font-weight: 600;">tarifs transparents</a>.</p>
+
+      <h3>💎 Traitement Marbre Ariana</h3>
+      <p>Le marbre de votre maison à Ariana mérite un traitement d'expert :</p>
+      <ul>
+        <li><strong>Ponçage professionnel :</strong> Élimination rayures et taches</li>
+        <li><strong>Cristallisation :</strong> Restauration brillance d'origine</li>
+        <li><strong>Protection hydrofuge :</strong> Traitement anti-taches</li>
+        <li><strong>Détartrage :</strong> Spécialement adapté à l'eau calcaire d'Ariana</li>
+      </ul>
+      <p>💡 <strong>Guide expert :</strong> Consultez nos conseils pour le <a href="/conseils/detartrage-marbre-cuisine-tunisie-guide-expert" style="color: var(--ac-primary); font-weight: 600;">détartrage marbre cuisine</a> et le <a href="/conseils/traitement-poncage-polissage-marbre-tunisie" style="color: var(--ac-primary); font-weight: 600;">ponçage professionnel</a>.</p>
+
+      <h3>🛋️ Retapissage Salon Ariana</h3>
+      <p>Redonnez vie à vos meubles avec notre service de retapissage à Ariana :</p>
+      <ul>
+        <li><strong>Diagnostic gratuit :</strong> Évaluation état et faisabilité</li>
+        <li><strong>Choix tissus :</strong> Large gamme de qualité premium</li>
+        <li><strong>Réparation structure :</strong> Remise en état complète</li>
+        <li><strong>Finition professionnelle :</strong> Aspect neuf garanti</li>
+      </ul>
+      <p>💡 <strong>Spécialité :</strong> Expertise reconnue en <a href="/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet" style="color: var(--ac-primary); font-weight: 600;">entretien cuir</a> et <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">nettoyage salons auto</a>.</p>
+
+      <h2 id="zones-intervention-ariana">📍 Zones d'Intervention à Ariana</h2>
+
+      <div class="zones-grid">
+        <div class="zone-card">
+          <h4>🏙️ Centre Ariana</h4>
+          <ul>
+            <li>Ariana Ville</li>
+            <li>Mnihla</li>
+            <li>Raoued</li>
+            <li>Soukra</li>
+          </ul>
+        </div>
+        
+        <div class="zone-card">
+          <h4>🌊 Zone Côtière</h4>
+          <ul>
+            <li>Sidi Thabet</li>
+            <li>Kalâat el-Andalous</li>
+            <li>Ettadhamen</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 id="avantages-cci-ariana">⭐ Pourquoi Choisir CCI Services à Ariana ?</h2>
+
+      <h3>🚀 Proximité et Réactivité</h3>
+      <ul>
+        <li><strong>Intervention rapide :</strong> Déplacement sous 48h</li>
+        <li><strong>Connaissance locale :</strong> Adaptation aux spécificités d'Ariana</li>
+        <li><strong>Disponibilité :</strong> Service 6j/7 pour urgences</li>
+      </ul>
+
+      <h3>🏆 Expertise Reconnue</h3>
+      <ul>
+        <li><strong>15 ans d'expérience :</strong> Maîtrise toutes techniques</li>
+        <li><strong>Équipement professionnel :</strong> Machines dernière génération</li>
+        <li><strong>Formation continue :</strong> Techniques innovantes</li>
+      </ul>
+
+      <h3>💯 Garantie Qualité</h3>
+      <ul>
+        <li><strong>Devis gratuit :</strong> Transparence tarifaire totale</li>
+        <li><strong>Assurance résultat :</strong> Satisfaction garantie</li>
+        <li><strong>Suivi client :</strong> Conseils d'entretien personnalisés</li>
+      </ul>
+
+      <h2 id="tarifs-ariana">💰 Tarifs Services Ariana 2025</h2>
+
+      <div class="pricing-section">
+        <h3>Prix Indicatifs (Déplacement Inclus)</h3>
+        
+        <div class="price-table">
+          <div class="price-item">
+            <strong>🧽 Nettoyage Tapis</strong>
+            <p>À partir de 8 DT/m² • Tarif dégressif selon surface</p>
+          </div>
+          
+          <div class="price-item">
+            <strong>💎 Traitement Marbre</strong>
+            <p>À partir de 15 DT/m² • Selon état et technique</p>
+          </div>
+          
+          <div class="price-item">
+            <strong>🛋️ Retapissage Salon</strong>
+            <p>À partir de 120 DT/place • Devis personnalisé</p>
+          </div>
+        </div>
+        
+        <p><strong>📋 Devis détaillé :</strong> Consultez notre guide complet des <a href="/conseils/prix-nettoyage-tapis-tunis-tarifs-2025" style="color: var(--ac-primary); font-weight: 600;">tarifs nettoyage 2025</a>.</p>
+      </div>
+
+      <h2 id="temoignages-ariana">💬 Témoignages Clients Ariana</h2>
+
+      <div class="testimonials">
+        <blockquote>
+          <p>"Service impeccable pour le nettoyage de nos tapis à Ariana Ville. Équipe professionnelle et résultat parfait !"</p>
+          <cite>- Mme Ben Ali, Ariana</cite>
+        </blockquote>
+        
+        <blockquote>
+          <p>"Cristallisation marbre exceptionelle. Notre salon à Raoued a retrouvé tout son éclat !"</p>
+          <cite>- M. Gharbi, Raoued</cite>
+        </blockquote>
+      </div>
+
+      <h2 id="contact-ariana">📞 Contact CCI Services Ariana</h2>
+
+      <div class="contact-info-ariana">
+        <h3>🏢 Informations Pratiques</h3>
+        <ul>
+          <li><strong>📱 Téléphone :</strong> +216 98-557-766</li>
+          <li><strong>📍 Adresse :</strong> 06 Rue Galant de nuit, L'Aouina, Tunis 2045</li>
+          <li><strong>🕒 Horaires :</strong> Lun-Ven 8h-18h | Sam 8h-13h</li>
+          <li><strong>🚗 Déplacement :</strong> Toute la région d'Ariana</li>
+        </ul>
+        
+        <div class="cta-buttons">
+          <a href="tel:+21698557766" class="btn-phone">📱 Appeler maintenant</a>
+          <a href="/devis" class="btn-devis">📋 Devis gratuit</a>
+          <a href="/contact" class="btn-contact">💬 Contact</a>
+        </div>
+      </div>
+
+      <div class="emergency-section">
+        <h3>🚨 Service Urgence Ariana</h3>
+        <p>Dégât des eaux, taches importantes, intervention urgente ?</p>
+        <p><strong>Appelez-nous : +216 98-557-766</strong></p>
+        <p>Intervention d'urgence possible dans toute la région d'Ariana.</p>
+      </div>
+    `
+  },
+  {
+    id: 9,
+    slug: 'services-nettoyage-la-marsa-carthage-2025',
+    title: 'Services Nettoyage La Marsa & Carthage 2025 | CCI Services Premium',
+    metaTitle: 'Services Nettoyage La Marsa & Carthage 2025 | CCI Services Premium',
+    metaDescription: 'Services nettoyage haut de gamme à La Marsa et Carthage : tapis, marbre, salon. Expertise premium pour résidences de prestige. CCI Services.',
+    excerpt: 'Services de nettoyage premium à La Marsa et Carthage. Expertise haut de gamme pour vos intérieurs de prestige.',
+    category: 'local',
+    categoryLabel: 'Services Locaux',
+    keywords: ['nettoyage la marsa', 'services carthage', 'nettoyage prestige tunis', 'marbre la marsa', 'CCI services premium'],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-06',
+    updatedDate: '2025-10-06',
+    image: '/home/cristallisationsolenmarbre.webp',
+    imageAlt: 'Services nettoyage premium La Marsa Carthage - CCI Services',
+    readTime: '7 min',
+    featured: true,
+    content: `
+      <div class="article-intro">
+        <p class="lead">La Marsa et Carthage, joyaux de la banlieue nord de Tunis, méritent des services de nettoyage à la hauteur de leur prestige. CCI Services propose une expertise premium adaptée aux résidences haut de gamme, avec des techniques de pointe et une attention particulière aux détails.</p>
+      </div>
+
+      <div class="info-box premium">
+        <p>🏆 <strong>Service Premium :</strong> Nous intervenons dans toute la zone La Marsa-Carthage - <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">Contactez-nous</a> pour un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis sur mesure</a>.</p>
+      </div>
+
+      <h2 id="services-premium-la-marsa">🏡 Services Premium La Marsa & Carthage</h2>
+
+      <h3>🧽 Nettoyage Tapis de Prestige</h3>
+      <p>Nos techniques spécialisées pour les tapis de valeur et collections d'exception :</p>
+      <ul>
+        <li><strong>Tapis persans anciens :</strong> Traitement conservation muséale</li>
+        <li><strong>Tapis de soie :</strong> Nettoyage ultra-délicat à sec</li>
+        <li><strong>Kilims et tissages rares :</strong> Préservation authenticité</li>
+        <li><strong>Moquettes haute couture :</strong> Techniques sans déformation</li>
+      </ul>
+      <p>💡 <strong>Expertise :</strong> Notre <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">guide expert tapis</a> et grille <a href="/conseils/prix-nettoyage-tapis-tunis-tarifs-2025" style="color: var(--ac-primary); font-weight: 600;">tarifaire premium</a>.</p>
+
+      <h3>💎 Traitement Marbre Luxe</h3>
+      <p>Maîtrise parfaite des marbres nobles et pierres précieuses :</p>
+      <ul>
+        <li><strong>Carrare Statuario :</strong> Ponçage haute précision</li>
+        <li><strong>Marbres colorés :</strong> Cristallisation spécialisée</li>
+        <li><strong>Travertin et calcaires :</strong> Restauration authentique</li>
+        <li><strong>Surfaces courbes :</strong> Techniques sculpture</li>
+      </ul>
+      <p>💡 <strong>Guides techniques :</strong> <a href="/conseils/detartrage-marbre-cuisine-tunisie-guide-expert" style="color: var(--ac-primary); font-weight: 600;">Détartrage cuisine</a> et <a href="/conseils/traitement-poncage-polissage-marbre-tunisie" style="color: var(--ac-primary); font-weight: 600;">ponçage professionnel</a>.</p>
+
+      <h3>🛋️ Retapissage Salon Luxe</h3>
+      <p>Rénovation mobilier d'exception et pièces de collection :</p>
+      <ul>
+        <li><strong>Meubles design :</strong> Respect des lignes originales</li>
+        <li><strong>Cuirs italiens :</strong> Traitement conservation</li>
+        <li><strong>Tissus d'ameublement :</strong> Collaborations avec décorateurs</li>
+        <li><strong>Antiquités :</strong> Restauration patrimoniale</li>
+      </ul>
+      <p>💡 <strong>Spécialités :</strong> <a href="/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet" style="color: var(--ac-primary); font-weight: 600;">Entretien cuir premium</a> et <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">sellerie automobile</a>.</p>
+
+      <h2 id="zones-prestige">🏖️ Zones de Prestige Couvertes</h2>
+
+      <div class="prestige-zones">
+        <div class="zone-premium">
+          <h4>🏝️ La Marsa</h4>
+          <ul>
+            <li>Centre La Marsa</li>
+            <li>La Marsa Plage</li>
+            <li>La Marsa Cube</li>
+            <li>Les Côtes de Carthage</li>
+          </ul>
+        </div>
+        
+        <div class="zone-premium">
+          <h4>🏺 Carthage</h4>
+          <ul>
+            <li>Carthage Présidence</li>
+            <li>Carthage Hannibal</li>
+            <li>Carthage Byrsa</li>
+            <li>Carthage Salambô</li>
+          </ul>
+        </div>
+        
+        <div class="zone-premium">
+          <h4>🌊 Gammarth</h4>
+          <ul>
+            <li>Gammarth Supérieur</li>
+            <li>Gammarth Plage</li>
+            <li>Les Berges du Lac</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 id="excellence-cci">✨ L'Excellence CCI Services</h2>
+
+      <h3>🏆 Standards Internationaux</h3>
+      <ul>
+        <li><strong>Certification qualité :</strong> Normes européennes</li>
+        <li><strong>Formation spécialisée :</strong> Techniques muséales</li>
+        <li><strong>Équipement haut de gamme :</strong> Machines allemandes</li>
+        <li><strong>Produits premium :</strong> Gamme professionnelle exclusive</li>
+      </ul>
+
+      <h3>🕰️ Service Sur-Mesure</h3>
+      <ul>
+        <li><strong>Rendez-vous personnalisés :</strong> Étude détaillée besoins</li>
+        <li><strong>Planification flexible :</strong> Adaptation à vos contraintes</li>
+        <li><strong>Discrétion absolue :</strong> Respect intimité résidentielle</li>
+        <li><strong>Suivi long terme :</strong> Programme d'entretien personnalisé</li>
+      </ul>
+
+      <h3>🛡️ Garanties Premium</h3>
+      <ul>
+        <li><strong>Assurance totale :</strong> Couverture dommages intégraux</li>
+        <li><strong>Garantie résultat :</strong> Satisfaction 100% ou remboursement</li>
+        <li><strong>Service après-vente :</strong> Suivi gratuit 6 mois</li>
+      </ul>
+
+      <h2 id="tarifs-premium">💰 Tarifs Services Premium 2025</h2>
+
+      <div class="premium-pricing">
+        <h3>Grille Tarifaire Prestige</h3>
+        
+        <div class="premium-price-table">
+          <div class="premium-price-item">
+            <strong>🧽 Nettoyage Tapis Prestige</strong>
+            <p>À partir de 15 DT/m² • Selon rareté et valeur</p>
+          </div>
+          
+          <div class="premium-price-item">
+            <strong>💎 Marbre Luxe</strong>
+            <p>À partir de 25 DT/m² • Techniques spécialisées</p>
+          </div>
+          
+          <div class="premium-price-item">
+            <strong>🛋️ Retapissage Collection</strong>
+            <p>À partir de 200 DT/place • Devis sur mesure</p>
+          </div>
+        </div>
+        
+        <div class="premium-benefits">
+          <h4>✨ Inclus dans nos Services Premium</h4>
+          <ul>
+            <li>✓ Déplacement gratuit La Marsa/Carthage</li>
+            <li>✓ Diagnostic expert détaillé</li>
+            <li>✓ Devis transparent sous 24h</li>
+            <li>✓ Assurance dommages intégrale</li>
+            <li>✓ Conseils entretien personnalisés</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 id="projets-references">🏠 Projets de Référence</h2>
+
+      <div class="reference-projects">
+        <div class="project-card">
+          <h4>🏖️ Villa La Marsa</h4>
+          <p>Restauration complète marbres anciens, cristallisation 400m²</p>
+          <p><em>"Résultat exceptionnel, professionnalisme parfait"</em></p>
+        </div>
+        
+        <div class="project-card">
+          <h4>🏺 Résidence Carthage</h4>
+          <p>Collection tapis persans XVIIIè, nettoyage conservation</p>
+          <p><em>"Expertise remarquable, tapis retrouvent leur éclat"</em></p>
+        </div>
+        
+        <div class="project-card">
+          <h4>🌊 Penthouse Gammarth</h4>
+          <p>Salon cuir italien, retapissage identique à l'original</p>
+          <p><em>"Travail d'orfèvre, impossible de voir la différence"</em></p>
+        </div>
+      </div>
+
+      <h2 id="contact-premium">📞 Contact Service Premium</h2>
+
+      <div class="premium-contact">
+        <h3>🏢 CCI Services - Division Premium</h3>
+        <ul>
+          <li><strong>📱 Ligne directe :</strong> +216 98-557-766</li>
+          <li><strong>📍 Showroom :</strong> 06 Rue Galant de nuit, L'Aouina</li>
+          <li><strong>🕒 Disponibilité :</strong> Lun-Sam 8h-19h</li>
+          <li><strong>🚗 Zone premium :</strong> La Marsa, Carthage, Gammarth</li>
+        </ul>
+        
+        <div class="premium-cta">
+          <a href="tel:+21698557766" class="btn-premium-phone">📱 Appel premium</a>
+          <a href="/devis" class="btn-premium-devis">📋 Devis sur mesure</a>
+          <a href="/contact" class="btn-premium-contact">🏆 Service VIP</a>
+        </div>
+      </div>
+
+      <div class="premium-emergency">
+        <h3>🚨 Service d'Urgence Premium</h3>
+        <p>Incident sur bien de valeur ? Intervention express disponible.</p>
+        <p><strong>Hotline Premium : +216 98-557-766</strong></p>
+        <p>Réponse garantie sous 2h pour La Marsa & Carthage.</p>
+      </div>
+
+      <div class="signature-section">
+        <p><strong>CCI Services - Depuis 15 ans, l'excellence au service du prestige.</strong></p>
+        <p><em>"Parce que l'exception mérite l'expertise"</em></p>
       </div>
     `
   }

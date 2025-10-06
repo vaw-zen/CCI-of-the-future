@@ -191,7 +191,7 @@ export default function Page() {
           }
         }
       `}</style>
-      <HeroHeader title={"Nettoyage Tapis & Moquette Professionnel à Tunis"} />
+      <HeroHeader title={"Nettoyage Tapis & Moquette"} />
       <script type="application/ld+json">{JSON.stringify(localBusinessJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(serviceJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(faqJSONLD)}</script>

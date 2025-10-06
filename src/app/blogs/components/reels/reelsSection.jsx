@@ -34,6 +34,8 @@ const ReelsSection = () => {
       video.currentTime = 0;
       video.removeAttribute('src');
       video.load();
+      // Reset controls attribute to false for normal viewing
+      video.controls = false;
     }
     
     setVideoStates(prev => ({
@@ -206,6 +208,8 @@ const ReelsSection = () => {
       if (document.fullscreenElement) {
         document.exitFullscreen();
       } else {
+        // Hide custom controls before entering fullscreen
+        setShowControls(prev => ({ ...prev, [reelId]: false }));
         video.requestFullscreen?.() || video.webkitRequestFullscreen?.();
       }
     }
@@ -296,6 +300,51 @@ const ReelsSection = () => {
     }
   }, [activeVideoId]);
 
+  // Handle fullscreen change events
+  const handleFullscreenChange = useCallback(() => {
+    // Check different browser APIs for fullscreen element
+    const isFullscreen = Boolean(
+      document.fullscreenElement || 
+      document.webkitFullscreenElement || 
+      document.mozFullScreenElement || 
+      document.msFullscreenElement
+    );
+    
+    const fullscreenElement = 
+      document.fullscreenElement || 
+      document.webkitFullscreenElement || 
+      document.mozFullScreenElement || 
+      document.msFullscreenElement;
+    
+    // Find the video that's currently in fullscreen (if any)
+    Object.keys(videoRefs.current).forEach(videoId => {
+      const video = videoRefs.current[videoId];
+      if (video) {
+        if (isFullscreen && fullscreenElement === video) {
+          // Enable browser controls when entering fullscreen
+          video.controls = true;
+          setVideoStates(prev => ({
+            ...prev,
+            [videoId]: {
+              ...prev[videoId],
+              isFullscreen: true
+            }
+          }));
+        } else if (!isFullscreen) {
+          // Disable browser controls when exiting fullscreen
+          video.controls = false;
+          setVideoStates(prev => ({
+            ...prev,
+            [videoId]: {
+              ...prev[videoId],
+              isFullscreen: false
+            }
+          }));
+        }
+      }
+    });
+  }, []);
+
   // Function to get the best video URL with audio
   const getBestVideoUrl = (reel) => {
     return reel.video_url;
@@ -325,12 +374,28 @@ const ReelsSection = () => {
 
   // Cleanup timeouts on unmount
   useEffect(() => {
+    // Add fullscreen change event listeners for different browsers
+    const fullscreenEvents = [
+      'fullscreenchange',
+      'webkitfullscreenchange',
+      'mozfullscreenchange',
+      'MSFullscreenChange'
+    ];
+    
+    fullscreenEvents.forEach(event => {
+      document.addEventListener(event, handleFullscreenChange);
+    });
+    
     return () => {
       Object.values(controlTimeoutRefs.current).forEach(timeout => {
         clearTimeout(timeout);
       });
+      // Remove fullscreen change event listeners
+      fullscreenEvents.forEach(event => {
+        document.removeEventListener(event, handleFullscreenChange);
+      });
     };
-  }, []);
+  }, [handleFullscreenChange]);
 
   // Format time for display
   const formatTime = (time) => {
@@ -436,8 +501,8 @@ const ReelsSection = () => {
                         </div>
                       )}
 
-                      {/* Custom Controls - Only show for active video on hover/interaction */}
-                      {isActive && isPlaying && (
+                      {/* Custom Controls - Only show for active video on hover/interaction and not in fullscreen */}
+                      {isActive && isPlaying && !videoStates[reel.id]?.isFullscreen && (
                         <div className={`${styles['custom-controls']} ${showControls[reel.id] ? styles['controls-visible'] : ''}`}>
                           {/* Progress Bar */}
                           <div className={styles['progress-container']}>

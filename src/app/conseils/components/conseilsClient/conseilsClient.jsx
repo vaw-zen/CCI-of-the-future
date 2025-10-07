@@ -1,70 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import { getAllArticles, getFeaturedArticles, getArticlesByCategory } from '../data/articles';
-import CTAButtons from './CTAButtons';
-import styles from '../conseils.module.css';
+import { useConseilsLogic } from './conseilsClient.func';
+import CTAButtons from '../CTAButton/CTAButtons';
+import styles from '../../conseils.module.css';
+import localStyles from './conseilsClient.module.css';
 
 export default function ConseilsClient() {
-  const searchParams = useSearchParams();
-  const categoryParam = searchParams.get('category');
-  
-  const [activeFilter, setActiveFilter] = useState(categoryParam || 'all');
-  const [filteredArticles, setFilteredArticles] = useState([]);
-  const [featuredArticles, setFeaturedArticles] = useState([]);
-
-  const filters = [
-    { key: 'all', label: '🔍 Tous les guides', category: null },
-    { key: 'tapis', label: '🧽 Nettoyage Tapis', category: 'tapis' },
-    { key: 'tapisserie', label: '🛋️ Nettoyage Tapisserie', category: 'tapisserie' },
-    { key: 'marbre', label: '💎 Traitement Marbre', category: 'marbre' },
-    { key: 'post-chantier', label: '🔧 Post-Chantier', category: 'post-chantier' }
-  ];
-
-  useEffect(() => {
-    const allArticles = getAllArticles();
-    
-    if (activeFilter === 'all') {
-      // Sort articles by date (newest first) and take the first 2 as featured
-      const sortedArticles = [...allArticles].sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
-      const latestTwoFeatured = sortedArticles.slice(0, 2);
-      const remainingArticles = sortedArticles.slice(2);
-      
-      setFeaturedArticles(latestTwoFeatured);
-      setFilteredArticles(remainingArticles);
-    } else {
-      const categoryArticles = getArticlesByCategory(activeFilter);
-      // Sort category articles by date and take the first 2 as featured if available
-      const sortedCategoryArticles = [...categoryArticles].sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
-      const featuredFromCategory = sortedCategoryArticles.slice(0, Math.min(2, sortedCategoryArticles.length));
-      const remainingFromCategory = sortedCategoryArticles.slice(featuredFromCategory.length);
-      
-      setFeaturedArticles(featuredFromCategory);
-      setFilteredArticles(remainingFromCategory);
-    }
-  }, [activeFilter]);
-
-  useEffect(() => {
-    if (categoryParam) {
-      setActiveFilter(categoryParam);
-    }
-  }, [categoryParam]);
-
-  const handleFilterClick = (filterKey) => {
-    setActiveFilter(filterKey);
-    
-    // Mettre à jour l'URL sans rechargement de page
-    const url = new URL(window.location);
-    if (filterKey === 'all') {
-      url.searchParams.delete('category');
-    } else {
-      url.searchParams.set('category', filterKey);
-    }
-    window.history.pushState({}, '', url);
-  };
+  const { activeFilter, filteredArticles, featuredArticles, filters, handleFilterClick } = useConseilsLogic();
 
   return (
     <div className={styles.container}>
@@ -173,32 +117,15 @@ export default function ConseilsClient() {
       )}
 
       {/* Section CTA */}
-      <div style={{
-        background: 'var(--bg-elevated)',
-        borderRadius: '16px',
-        padding: '40px',
-        textAlign: 'center',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-        marginTop: '60px'
-      }}>
-        <h2 style={{ 
-          fontSize: '2rem', 
-          color: 'var(--t-primary)', 
-          marginBottom: '15px' 
-        }}>
+      <div className={localStyles.ctaSection}>
+        <h2 className={localStyles.ctaTitle}>
           Besoin d'un Service Professionnel ?
         </h2>
-        <p style={{ 
-          fontSize: '1.1rem', 
-          color: 'var(--t-secondary)', 
-          marginBottom: '30px',
-          maxWidth: '600px',
-          margin: '0 auto 30px'
-        }}>
-          Nos experts CCI Services sont à votre disposition pour tous vos besoins 
+        <p className={localStyles.ctaDescription}>
+          Nos experts CCI Services sont à votre disposition pour tous vos besoins
           de nettoyage et rénovation dans le Grand Tunis.
         </p>
-        
+
         <CTAButtons />
       </div>
     </div>

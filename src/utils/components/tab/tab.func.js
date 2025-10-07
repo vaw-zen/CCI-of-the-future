@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-export function usePartnerTabLogic(tabData) {
-  const [activeTab, setActiveTab] = useState(tabData?.[0]?.id || '')
+export function useTabLogic(activeTab) {
   const [selectorStyle, setSelectorStyle] = useState({ left: 0, width: 0 })
   const tabRefs = useRef({})
 
@@ -14,8 +13,6 @@ export function usePartnerTabLogic(tabData) {
   }, [activeTab])
 
   return {
-    activeTab,
-    setActiveTab,
     selectorStyle,
     tabRefs
   }

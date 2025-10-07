@@ -4,38 +4,29 @@ import ReelsSection from "./components/reels/reelsSection";
 import PostsGrid from "./components/posts/postsGrid";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import styles from "./blog.module.css";
+import blogsData from "./blogs.json";
 
 export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-  
+
   return {
-    title: "Publications & Conseils — CCI",
-    description: "Articles et vidéos sur la restauration du marbre, l'entretien des moquettes et les bonnes pratiques de nettoyage professionnel.",
+    title: blogsData.metadata.title,
+    description: blogsData.metadata.description,
     alternates: {
       canonical: `${SITE_URL}/blogs`
     },
     openGraph: {
-      title: "Publications & Conseils — CCI",
-      description: "Articles et vidéos sur la restauration du marbre, l'entretien des moquettes et les bonnes pratiques de nettoyage professionnel.",
+      title: blogsData.metadata.title,
+      description: blogsData.metadata.description,
       url: `${SITE_URL}/blogs`,
       type: 'website'
     },
     twitter: {
-      title: "Publications & Conseils — CCI",
-      description: "Articles et vidéos sur la restauration du marbre, l'entretien des moquettes et les bonnes pratiques de nettoyage professionnel."
+      title: blogsData.metadata.title,
+      description: blogsData.metadata.description
     }
   };
 }
-
-// Example static schema for now (you can generate dynamically inside ReelsSection / PostsGrid)
-const blogPageSchema = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": "Publications & Conseils - CCI",
-  "description":
-    "Articles et vidéos sur la restauration du marbre et de tout typpe de sol et mur, l'entretien des tapis et des moquettes, le nettoyage salon étape par étape.",
-  "url": "https://cciservices.online/blogs",
-};
 
 export default function Page() {
   return (
@@ -43,10 +34,10 @@ export default function Page() {
       {/* Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPageSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogsData.collectionPageJSONLD) }}
       />
 
-      <HeroHeader title={"Publications & Reels"} />
+      <HeroHeader title={blogsData.heroTitle} />
       <div
         style={{
           display: "flex",

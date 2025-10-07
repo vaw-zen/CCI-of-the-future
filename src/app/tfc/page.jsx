@@ -6,97 +6,31 @@ import Feedback from "@/utils/components/servicesComponents/feedbackComponent/fe
 import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUsTab";
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
-
-const tfcTabData = [
-  {
-    id: "mission",
-    title: "Notre mission",
-    content:
-      "Proposer des prestations de nettoyage après travaux (TFC) et réaménagement : élimination des poussières fines, nettoyages des surfaces, vitrification des sols si nécessaire, et remise en état pour livraison.",
-  },
-  {
-    id: "vision",
-    title: "Notre vision",
-    content:
-      "Assurer une transition propre et sans stress entre la fin du chantier et la remise des lieux, en garantissant sécurité et propreté irréprochable.",
-  },
-  {
-    id: "philosophy",
-    title: "Notre philosophie",
-    content:
-      "Organiser les opérations de fin de chantier avec méthode : tri des déchets, nettoyage technique, traitement des sols et surfaces, et vérification qualité avant livraison.",
-  },
-];
+import tfcData from "./tfc.json";
 
 export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-  
+
   return {
-    title: "Nettoyage technique après travaux (TFC) — CCI",
-    description: "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie.",
+    title: tfcData.metadata.title,
+    description: tfcData.metadata.description,
     alternates: {
       canonical: `${SITE_URL}/tfc`
     },
     openGraph: {
-      title: "Nettoyage technique après travaux (TFC) — CCI",
-      description: "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie.",
+      title: tfcData.metadata.title,
+      description: tfcData.metadata.description,
       url: `${SITE_URL}/tfc`,
       type: 'website'
     },
     twitter: {
-      title: "Nettoyage technique après travaux (TFC) — CCI",
-      description: "Nettoyage technique après travaux : dépoussiérage, enlèvement de gravats, lavage des surfaces, traitement de tout types de sol et mur et préparation avant livraison. Interventions pro et rapides. Finitions soignées. Satisfaction garantie."
+      title: tfcData.metadata.title,
+      description: tfcData.metadata.description
     }
   };
 }
 
 export default function Page() {
-  const tfcImages = [
-  { 
-    src: "/gallery/tfc/marbre.jpg", 
-    title: "Nettoyage Technique Post-Chantier", 
-    description: "Nettoyage technique complet après travaux. Dépoussiérage industriel, traitement sols et surfaces pour livraison." 
-  },
-  { 
-    src: "/gallery/tfc/nettoyage-professionel-post-chantier.webp", 
-    title: "Remise en État Professionnelle", 
-    description: "Remise en état professionnelle post-rénovation. Enlèvement gravats, nettoyage finition et préparation livraison." 
-  },
-  ];
-
-  const localBusinessJSONLD = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: "CCI",
-    url: "https://cciservices.online/",
-    logo: "https://cciservices.online/logo.png"
-,
-    telephone: "+216-98-557-766",
-    address: { "@type": "PostalAddress", streetAddress: "06, rue galant de nuit, l'aouina,tunis", addressLocality: "Tunisie", addressCountry: "TN" },
-  };
-const serviceJSONLD = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "@id": "https://cciservices.online/nettoyage-apres-chantier", // identifiant unique pour cette page
-  "name": "Nettoyage après chantier",
-  "description":
-    "Prestations de fin de chantier : nettoyage technique, enlèvement de gravats et préparation des locaux pour réception.",
-  "url": "https://cciservices.online/nettoyage-apres-chantier", // URL de la page spécifique
-  "provider": {
-    "@type": "LocalBusiness",
-    "name": "CCI",
-    "url": "https://cciservices.online/", // URL principale du business
-    "telephone": "+216-98-557-766",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
-      "addressLocality": "Tunis",
-      "addressCountry": "TN"
-    },
-    "logo": "https://cciservices.online/logo.png"
-  }
-};
-
   return (
     <>
       <style>{`
@@ -104,49 +38,42 @@ const serviceJSONLD = {
         @media (max-width: 900px) { .responsive-padding { padding: 60px 0px; } }
         @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
       `}</style>
-      <HeroHeader title={"Travaux de fin de chantier (TFC)"} />
-  <script type="application/ld+json">{JSON.stringify(localBusinessJSONLD)}</script>
-  <script type="application/ld+json">{JSON.stringify(serviceJSONLD)}</script>
+      <HeroHeader title={tfcData.heroTitle} />
+      <script type="application/ld+json">{JSON.stringify(tfcData.localBusinessJSONLD)}</script>
+      <script type="application/ld+json">{JSON.stringify(tfcData.serviceJSONLD)}</script>
       <div className="responsive-padding">
         <ServiceDetails
-          title="Nettoyage technique après chantier"
-          text="Nettoyage complet après travaux : dépoussiérage industriel, nettoyage des menuiseries, élimination des traces de peintures et enduits, lavage des sols et surfaces, et mise en conformité pour réception."
+          title={tfcData.sections.mainService.title}
+          text={tfcData.sections.mainService.text}
         />
 
         <Feedback />
 
         <ServiceDetails
-          title="Gestion de réaménagement"
-          text="Nous proposons aussi des services de remise en état post-rénovation et aide au réaménagement : enlèvement des gravats, nettoyage ciblé, et préparation des surfaces pour les finitions."
+          title={tfcData.sections.secondaryService.title}
+          text={tfcData.sections.secondaryService.text}
         />
 
         <AboutUsTab
-          historyText="CCI intervient sur des chantiers de toutes tailles pour garantir une livraison propre et professionnelle."
-          missionText="Offrir un service TFC rigoureux, sécurisé et respectueux des délais convenus."
-          visionText="Être le partenaire fiable pour les entreprises du bâtiment et les particuliers lors de la phase finale des projets."
+          historyText={tfcData.aboutUs.historyText}
+          missionText={tfcData.aboutUs.missionText}
+          visionText={tfcData.aboutUs.visionText}
         />
 
-        <PartnerTab tabData={tfcTabData} />
+        <PartnerTab tabData={tfcData.tabData} />
 
         <ServiceList
-          title="Services TFC"
-          text="Prestations complètes pour la remise en état post-chantiers."
-          items={[
-            { id: "1", text: "Dépoussiérage technique", icon: "/icons/polisher.png" },
-            { id: "2", text: "Nettoyage sols et vitreries", icon: "/icons/polisher1.png" },
-            { id: "3", text: "Enlèvement gravats", icon: "/icons/crystal3.png" },
-            { id: "4", text: "Vérification qualité & livraison", icon: "/icons/shield.png" },
-              { id: "5", text: "Entretien de tout type de sol", icon: "/icons/shield.png" },
-
-          ]}
+          title={tfcData.serviceList.title}
+          text={tfcData.serviceList.text}
+          items={tfcData.serviceList.items}
         />
 
         <ServiceDetails
-          title="Pourquoi choisir nos service TFC"
-          text="Méthodologie professionnelle, équipe professionnelle trés bien équipée et respect des normes de sécurité : nous assurons une livraison prête à l’usage."
+          title={tfcData.sections.whyChooseUs.title}
+          text={tfcData.sections.whyChooseUs.text}
         />
 
-  <ImageSlider images={tfcImages} />
+        <ImageSlider images={tfcData.images} />
       </div>
     </>
   );

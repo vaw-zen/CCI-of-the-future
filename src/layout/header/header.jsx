@@ -40,14 +40,14 @@ const DropdownButton = memo(({ name, onClick, isActive, hasActiveSublink }) => (
 ));
 
 // Memoized dropdown menu component
-const DropdownMenu = memo(({ isActive, subLinks, currentPath }) => (
+const DropdownMenu = memo(({ isActive, subLinks, isLinkActive }) => (
     <div className={isActive ? `${styles.dropdown} ${styles.dropdownActive}` : styles.dropdown}>
         <FaCaretUp className={styles.dropdownArrow} />
         {subLinks.map((link, subIndex) => (
             <Link
                 key={subIndex}
                 href={link.link}
-                className={currentPath === link.link ? `${styles.subLink} ${styles.activeLink}` : styles.subLink}
+                className={isLinkActive(link.link) ? `${styles.subLink} ${styles.activeLink}` : styles.subLink}
             >
                 {link.name}
             </Link>
@@ -56,7 +56,7 @@ const DropdownMenu = memo(({ isActive, subLinks, currentPath }) => (
 ));
 
 // Memoized navigation item component
-const NavItem = memo(({ element, index, handleDropdownBlur, toggleDropdown, isActive, currentPath, hasActiveSublink }) => (
+const NavItem = memo(({ element, index, handleDropdownBlur, toggleDropdown, isActive, isLinkActive, hasActiveSublink }) => (
     <li
         key={index}
         className={styles.menuItem}
@@ -69,7 +69,7 @@ const NavItem = memo(({ element, index, handleDropdownBlur, toggleDropdown, isAc
             <NavLink
                 link={element.link}
                 name={element.name}
-                isActive={currentPath === element.link}
+                isActive={isLinkActive(element.link)}
             />
         )}
 
@@ -78,7 +78,7 @@ const NavItem = memo(({ element, index, handleDropdownBlur, toggleDropdown, isAc
                 <DropdownMenu
                     isActive={isActive(index)}
                     subLinks={element.subLinks}
-                    currentPath={currentPath}
+                    isLinkActive={isLinkActive}
                 />
 
                 <DropdownButton
@@ -107,6 +107,7 @@ function Header({ roboto }) {
         handleNavBlur,
         scrollToTop,
         hasActiveSublink,
+        isLinkActive,
         currentPath,
         showTopButton
     } = useHeaderLogic();
@@ -148,7 +149,7 @@ function Header({ roboto }) {
                             handleDropdownBlur={handleDropdownBlur}
                             toggleDropdown={toggleDropdown}
                             isActive={isActive}
-                            currentPath={currentPath}
+                            isLinkActive={isLinkActive}
                             hasActiveSublink={hasActiveSublink}
                         />
                     ))}

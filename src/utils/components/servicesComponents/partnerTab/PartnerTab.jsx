@@ -1,7 +1,7 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './partnerTab.module.css'
-import { usePartnerTabLogic } from './partnerTab.func'
+import Tab from '../../tab/tab'
 
 const tabImages = {
   mission: '/mission.jpg',
@@ -10,29 +10,23 @@ const tabImages = {
 }
 
 export default function PartnerTab({ tabData }) {
-  const { activeTab, setActiveTab, selectorStyle, tabRefs } = usePartnerTabLogic(tabData)
+  const [activeTab, setActiveTab] = useState(tabData?.[0]?.id || '')
+
+  const tabs = tabData.map(tab => ({
+    key: tab.id,
+    label: tab.title
+  }))
 
   return (
     <div className={styles.container}>
-      <div className={styles.tabMenu}>
-        {tabData.map((tab) => (
-          <button
-            key={tab.id}
-            ref={(el) => (tabRefs.current[tab.id] = el)}
-            className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.title}
-          </button>
-        ))}
-        <div
-          className={styles.selector}
-          style={{
-            left: `${selectorStyle.left}px`,
-            width: `${selectorStyle.width}px`
-          }}
-        />
-      </div>
+      <Tab
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        className={styles.tabMenu}
+        tabClassName={styles.tabButton}
+        selectorClassName={styles.selector}
+      />
       
       <div className={styles.tabContent}>
         {tabData.map((tab,i) => (

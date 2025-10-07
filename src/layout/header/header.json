@@ -66,6 +66,13 @@
         "name": "blog",
         "link": "/blogs"
     },
+<<<<<<< Updated upstream
+=======
+     {
+        "name": "astuces",
+        "link": "/conseils"
+    },
+>>>>>>> Stashed changes
     {
         "name": "contact",
         "link": "/contact"

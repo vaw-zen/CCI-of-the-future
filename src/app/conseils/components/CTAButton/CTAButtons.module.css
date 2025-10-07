@@ -1,27 +1,115 @@
 .container { display: flex; gap: 0.78vw; justify-content: center; flex-wrap: wrap; }
 
-.ctaButton { background: var(--ac-primary); color: var(--bg-base); padding: 1vw 2vw; border-radius: 50vw; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 0.42vw; transition: transform 0.2s; border: none; cursor: pointer; font-family: inherit; font-size: 0.85vw; text-transform: uppercase; margin-top: 1vw; }
+.ctaButton {
+  background: transparent;
+  color: var(--t-primary);
+  padding: 1vw 2vw;
+  border-radius: 50vw;
+  border: 0.1vw solid var(--ac-primary);
+  text-decoration: none;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42vw;
+  transition: all 0.3s;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85vw;
+  text-transform: uppercase;
+  margin-top: 1vw;
+}
 
-.ctaButton:hover { transform: translateY(-0.10vw); }
+.icon {
+  width: 1.2vw;
+  height: 1.2vw;
+  flex-shrink: 0;
+}
 
-.ctaButton:active { transform: translateY(0); }
+.ctaButton:hover {
+  transform: translateY(-0.10vw);
+  background: var(--ac-primary);
+  color: var(--bg-base);
+}
+
+.ctaButton:active {
+  transform: translateY(0);
+}
 
 @media screen and (max-width: 1024px) {
   .container { display: flex; gap: 1.30vw; justify-content: center; flex-wrap: wrap; }
-  
-  .ctaButton { background: var(--ac-primary); color: var(--bg-base); padding: 1.37vw 2.73vw; border-radius: 50vw; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 1.07vw; transition: transform 0.2s; border: none; cursor: pointer; font-family: inherit; font-size: 1.82vw; text-transform: uppercase; margin-top: 1.37vw; }
-  
-  .ctaButton:hover { transform: translateY(-0.27vw); }
-  
-  .ctaButton:active { transform: translateY(0); }
+
+  .ctaButton {
+    background: transparent;
+    color: var(--t-primary);
+    padding: 1.37vw 2.73vw;
+    border-radius: 50vw;
+    border: 0.15vw solid var(--ac-primary);
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.07vw;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.82vw;
+    text-transform: uppercase;
+    margin-top: 1.37vw;
+  }
+
+  .icon {
+    width: 2vw;
+    height: 2vw;
+  }
+
+  .ctaButton:hover {
+    transform: translateY(-0.27vw);
+    background: var(--ac-primary);
+    color: var(--bg-base);
+  }
+
+  .ctaButton:active {
+    transform: translateY(0);
+  }
 }
 
 @media screen and (max-width: 480px) {
   .container { display: flex; gap: 1.94vw; justify-content: center; flex-wrap: wrap; flex-direction: column; align-items: center; }
-  
-  .ctaButton { background: var(--ac-primary); color: var(--bg-base); padding: 2.43vw 4.85vw; border-radius: 50vw; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 1.94vw; transition: transform 0.2s; border: none; cursor: pointer; font-family: inherit; font-size: 3.40vw; text-transform: uppercase; margin-top: 2.43vw; width: 100%; max-width: 60.68vw; justify-content: center; }
-  
-  .ctaButton:hover { transform: translateY(-0.49vw); }
-  
-  .ctaButton:active { transform: translateY(0); }
+
+  .ctaButton {
+    background: transparent;
+    color: var(--t-primary);
+    padding: 2.43vw 4.85vw;
+    border-radius: 50vw;
+    border: 0.25vw solid var(--ac-primary);
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.94vw;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 3.40vw;
+    text-transform: uppercase;
+    margin-top: 2.43vw;
+    width: 100%;
+    max-width: 60.68vw;
+    justify-content: center;
+  }
+
+  .icon {
+    width: 4vw;
+    height: 4vw;
+  }
+
+  .ctaButton:hover {
+    transform: translateY(-0.49vw);
+    background: var(--ac-primary);
+    color: var(--bg-base);
+  }
+
+  .ctaButton:active {
+    transform: translateY(0);
+  }
 }

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useConseilsLogic } from './conseilsClient.func';
 import CTAButtons from '../CTAButton/CTAButtons';
+import Tab from '@/utils/components/tab/tab';
 import styles from '../../conseils.module.css';
 import localStyles from './conseilsClient.module.css';
 
@@ -14,15 +15,12 @@ export default function ConseilsClient() {
     <div className={styles.container}>
       {/* Filtres par catégorie */}
       <div className={styles.filters}>
-        {filters.map(filter => (
-          <button
-            key={filter.key}
-            onClick={() => handleFilterClick(filter.key)}
-            className={`${styles.filterBtn} ${activeFilter === filter.key ? styles.active : ''}`}
-          >
-            {filter.label}
-          </button>
-        ))}
+        <Tab
+          tabs={filters}
+          activeTab={activeFilter}
+          onTabChange={handleFilterClick}
+          className={styles.tabWrapper}
+        />
       </div>
 
       {/* Compteur d'articles */}

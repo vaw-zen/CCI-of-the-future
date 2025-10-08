@@ -11,10 +11,10 @@ export default function Tab({
   tabClassName = '',
   selectorClassName = ''
 }) {
-  const { selectorStyle, tabRefs } = useTabLogic(activeTab)
+  const { selectorStyle, tabRefs, containerRef } = useTabLogic(activeTab)
 
   return (
-    <div className={`${styles.tabMenu} ${className}`}>
+    <div ref={containerRef} className={`${styles.tabMenu} ${className}`}>
       {tabs.map((tab) => (
         <button
           key={tab.key}
@@ -29,7 +29,8 @@ export default function Tab({
         className={`${styles.selector} ${selectorClassName}`}
         style={{
           left: `${selectorStyle.left}px`,
-          width: `${selectorStyle.width}px`
+          width: `${selectorStyle.width}px`,
+          top: `${selectorStyle.top}px`
         }}
       />
     </div>

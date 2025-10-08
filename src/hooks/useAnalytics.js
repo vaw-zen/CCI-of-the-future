@@ -28,8 +28,21 @@ export function useAnalytics() {
   return {
     // Track custom events
     trackEvent: (eventName, parameters = {}) => {
+      console.log('🔍 useAnalytics.trackEvent called:', {
+        eventName,
+        parameters,
+        gtagExists: typeof window !== 'undefined' && typeof window.gtag !== 'undefined'
+      });
+
       if (typeof window !== 'undefined' && window.gtag) {
+        console.log('✅ Calling window.gtag with:', eventName, parameters);
         window.gtag('event', eventName, parameters);
+        console.log('📈 Event sent to Google Analytics');
+      } else {
+        console.log('❌ window.gtag not available:', {
+          windowExists: typeof window !== 'undefined',
+          gtagExists: typeof window !== 'undefined' ? typeof window.gtag : 'N/A'
+        });
       }
     },
 

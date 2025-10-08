@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getAllArticles, getArticlesByCategory } from '../../data/articles';
+import { dimensionsStore } from '@/utils/store/store';
 
 export function useConseilsLogic() {
   const searchParams = useSearchParams();
@@ -10,13 +11,25 @@ export function useConseilsLogic() {
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [featuredArticles, setFeaturedArticles] = useState([]);
 
-  const filters = [
+  const isMobile = dimensionsStore((state) => state.isMobile());
+
+  const desktopFilters = [
     { key: 'all', label: '🔍 Tous les guides', category: null },
     { key: 'tapis', label: '🧽 Nettoyage Tapis', category: 'tapis' },
     { key: 'tapisserie', label: '🛋️ Nettoyage Tapisserie', category: 'tapisserie' },
     { key: 'marbre', label: '💎 Traitement Marbre', category: 'marbre' },
     { key: 'post-chantier', label: '🔧 Post-Chantier', category: 'post-chantier' }
   ];
+
+  const mobileFilters = [
+    { key: 'all', label: '🔍 Tous les guides', category: null },
+    { key: 'marbre', label: '💎 Traitement Marbre', category: 'marbre' },
+    { key: 'post-chantier', label: '🔧 Post-Chantier', category: 'post-chantier' },
+    { key: 'tapis', label: '🧽 Nettoyage Tapis', category: 'tapis' },
+    { key: 'tapisserie', label: '🛋️ Nettoyage Tapisserie', category: 'tapisserie' }
+  ];
+
+  const filters = isMobile ? mobileFilters : desktopFilters;
 
   useEffect(() => {
     const allArticles = getAllArticles();

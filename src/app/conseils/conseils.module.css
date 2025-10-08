@@ -275,12 +275,12 @@
   }
 
   .tabWrapper button {
-    font-size: 3vw;
+    font-size: 4.5vw;
     padding-bottom: 2vw;
   }
 
   .tabWrapper .selector {
-    height: 0.4vw;
+    height: 0.5vw;
   }
 
   .filterBtn {  font-size: 2.18vw;  }

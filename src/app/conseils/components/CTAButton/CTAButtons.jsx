@@ -3,12 +3,23 @@
 import Link from 'next/link';
 import styles from './CTAButtons.module.css';
 import ctaButtonsData from './CTAButton.json';
+import { LineMdPhoneTwotone, SiMailDuotone, ChatIcon } from '@/utils/components/icons';
+
+// Icon mapping
+const iconMap = {
+  '📞': LineMdPhoneTwotone,
+  '📝': SiMailDuotone,
+  '💬': ChatIcon
+};
 
 // Single reusable button component
 const CTAButton = ({ button }) => {
+  const IconComponent = iconMap[button.icon];
+
   const buttonContent = (
     <>
-      {button.icon} {button.text}
+      {IconComponent && <IconComponent className={styles.icon} />}
+      <span>{button.text}</span>
     </>
   );
 

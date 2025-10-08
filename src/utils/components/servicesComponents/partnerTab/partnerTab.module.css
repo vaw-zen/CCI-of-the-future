@@ -1,7 +1,5 @@
 .container { padding: 0 var(--padding-base); height: 16.87vw; display: flex; flex-direction: column; justify-content: center; margin-top: 2.60vw; margin-bottom: 2.60vw }
-.tabMenu { display: flex; gap: 2vw; height: 3.70vw }
-.tabButton { font-size: 1.35vw; font-weight: 700; color: var(--t-primary); border: none; background: transparent; position: relative; padding-bottom: 0.78vw }
-.tabButton.active { border-bottom: 0.10vw solid var(--ac-primary) }
+.tabMenu { height: 3.70vw }
 .tabContent { border-top: 0.05vw solid #2B2B2C }
 .tabPanel { display: flex; gap: 2vw; padding-top: 2.60vw; align-items: center }
 .tabPanel.evenPanel { flex-direction: row-reverse }
@@ -13,8 +11,6 @@
 @media screen and (max-width: 1024px) {
     .container { padding: var(--padding-base); height: auto; margin-top: 6.51vw; margin-bottom: 6.51vw }
     .tabMenu { height: auto }
-    .tabButton { font-size: 3vw; padding: 1.95vw 0 }
-    .tabButton.active { border-bottom: 0.26vw solid var(--ac-primary) }
     .tabContent { border-top: 0.13vw solid #2B2B2C }
     .tabPanel { display: flex; gap: 2.60vw; padding-top: 6.51vw; align-items: center }
     .tabPanel.evenPanel { flex-direction: row-reverse }
@@ -27,10 +23,7 @@
 
 @media screen and (max-width: 480px) {
     .container { padding: var(--padding-base); height: auto; margin-top: 12.14vw; margin-bottom: 12.14vw; min-height: 40.53vw }
-    .tabMenu { flex-direction: column; text-align: start; padding-top: 6.31vw; align-items: flex-start }
     .tabPanel { padding-top: 6.07vw; flex-direction: column !important }
-    .tabButton { font-size: 6.07vw; text-align: left; width: 100%; padding: 3.64vw 0 }
-    .tabButton.active { border-bottom: 0.49vw solid var(--ac-primary) }
     .tabTitle { font-size: 6.07vw; margin-bottom: 3.64vw }
     .tabText { font-size: 3.88vw; line-height: 6.31vw }
     .tabDesc { width: 100%; gap: 3.64vw }

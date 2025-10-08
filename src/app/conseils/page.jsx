@@ -2,7 +2,7 @@
 import { Suspense } from 'react';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import ServiceDetails from '@/utils/components/servicesComponents/serviceDetails/serviceDetails';
-import ConseilsClient from './components/ConseilsClient';
+import ConseilsClient from './components/conseilsClient/conseilsClient';
 import styles from './conseils.module.css';
 export const metadata = {
   title: 'Conseils Nettoyage & Rénovation Tunis | Blog Expert CCI Services',

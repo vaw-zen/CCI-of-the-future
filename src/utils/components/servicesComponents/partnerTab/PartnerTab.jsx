@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import styles from './partnerTab.module.css'
+import Tab from '../../tab/tab'
 
 const tabImages = {
   mission: '/mission.jpg',
@@ -11,19 +12,21 @@ const tabImages = {
 export default function PartnerTab({ tabData }) {
   const [activeTab, setActiveTab] = useState(tabData?.[0]?.id || '')
 
+  const tabs = tabData.map(tab => ({
+    key: tab.id,
+    label: tab.title
+  }))
+
   return (
     <div className={styles.container}>
-      <div className={styles.tabMenu}>
-        {tabData.map((tab) => (
-          <button 
-            key={tab.id}
-            className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.title}
-          </button>
-        ))}
-      </div>
+      <Tab
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        className={styles.tabMenu}
+        tabClassName={styles.tabButton}
+        selectorClassName={styles.selector}
+      />
       
       <div className={styles.tabContent}>
         {tabData.map((tab,i) => (

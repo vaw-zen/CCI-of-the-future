@@ -1,0 +1,70 @@
+.tabMenu {
+  display: flex;
+  gap: 2vw;
+  position: relative;
+}
+
+.tabButton {
+  font-size: 1.35vw;
+  font-weight: 700;
+  color: var(--t-primary);
+  border: none;
+  background: transparent;
+  position: relative;
+  padding-bottom: 0.78vw;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.tabButton:hover {
+  color: var(--ac-primary);
+}
+
+.tabButton.active {
+  border-bottom: 0.10vw solid transparent;
+  color: var(--ac-primary);
+}
+
+.selector {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0.10vw;
+  background-color: var(--ac-primary);
+  transition: left 0.3s ease, width 0.3s ease, top 0.3s ease;
+}
+
+@media screen and (max-width: 1024px) {
+  .tabButton {
+    font-size: 3vw;
+    padding: 1.95vw 0;
+  }
+
+  .tabButton.active {
+    border-bottom: 0.26vw solid transparent;
+  }
+
+  .selector {
+    height: 0.26vw;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .tabMenu {
+    gap: 4vw;
+  }
+
+  .tabButton {
+    font-size: 4vw;
+    padding: 3.64vw 0;
+  }
+
+  .tabButton.active {
+    border-bottom: 0.49vw solid transparent;
+  }
+
+  .selector {
+    height: 0.49vw;
+  }
+}

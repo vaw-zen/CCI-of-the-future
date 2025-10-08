@@ -5,11 +5,25 @@ import Image from 'next/image';
 import { useConseilsLogic } from './conseilsClient.func';
 import CTAButtons from '../CTAButton/CTAButtons';
 import Tab from '@/utils/components/tab/tab';
+import { LineMdCalendar } from '@/utils/components/icons';
+import { formatDate, isWithin } from '@/libs/dateHelper/dateHelper';
 import styles from '../../conseils.module.css';
 import localStyles from './conseilsClient.module.css';
 
 export default function ConseilsClient() {
   const { activeFilter, filteredArticles, featuredArticles, filters, handleFilterClick } = useConseilsLogic();
+
+  const getDisplayedDate = (date) => {
+    if (!date) return '';
+
+    // For recent dates (within 1 week), show relative format
+    if (isWithin(date, { value: 1, unit: 'weeks' })) {
+      return formatDate(date, false, true);
+    }
+
+    // For older dates, show French month name format
+    return formatDate(date, false, true, { time: true });
+  };
 
   return (
     <div className={styles.container}>
@@ -26,8 +40,8 @@ export default function ConseilsClient() {
       {/* Compteur d'articles */}
       <div className={styles.articleCount}>
         <p>
-          {featuredArticles.length + filteredArticles.length === 0 
-            ? 'Aucun article trouvé' 
+          {featuredArticles.length + filteredArticles.length === 0
+            ? 'Aucun article trouvé'
             : `${featuredArticles.length + filteredArticles.length} article${featuredArticles.length + filteredArticles.length > 1 ? 's' : ''} trouvé${featuredArticles.length + filteredArticles.length > 1 ? 's' : ''}`
           }
           {activeFilter !== 'all' && (
@@ -42,13 +56,13 @@ export default function ConseilsClient() {
       <div className={styles.grid}>
         {/* Articles en vedette */}
         {featuredArticles.map(article => (
-          <Link 
-            key={article.id} 
+          <Link
+            key={article.id}
             href={`/conseils/${article.slug}`}
             className={`${styles.card} ${styles.featured}`}
           >
             <div className={styles.imageWrapper}>
-              <Image 
+              <Image
                 src={article.image}
                 alt={article.imageAlt || article.title}
                 fill
@@ -57,13 +71,16 @@ export default function ConseilsClient() {
               <span className={styles.featuredBadge}>⭐ En Vedette</span>
               <span className={styles.category}>{article.categoryLabel}</span>
             </div>
-            
+
             <div className={styles.content}>
               <h2>{article.title}</h2>
               <p>{article.excerpt}</p>
-              
+
               <div className={styles.meta}>
-                <span>📅 {new Date(article.publishedDate).toLocaleDateString('fr-FR')}</span>
+                <span>
+                  <LineMdCalendar className={styles.icon} />
+                  {getDisplayedDate(article.publishedDate)}
+                </span>
                 <span>⏱️ {article.readTime}</span>
               </div>
             </div>
@@ -72,13 +89,13 @@ export default function ConseilsClient() {
 
         {/* Articles réguliers */}
         {filteredArticles.map(article => (
-          <Link 
-            key={article.id} 
+          <Link
+            key={article.id}
             href={`/conseils/${article.slug}`}
             className={styles.card}
           >
             <div className={styles.imageWrapper}>
-              <Image 
+              <Image
                 src={article.image}
                 alt={article.imageAlt || article.title}
                 fill
@@ -86,13 +103,16 @@ export default function ConseilsClient() {
               />
               <span className={styles.category}>{article.categoryLabel}</span>
             </div>
-            
+
             <div className={styles.content}>
               <h2>{article.title}</h2>
               <p>{article.excerpt}</p>
-              
+
               <div className={styles.meta}>
-                <span>📅 {new Date(article.publishedDate).toLocaleDateString('fr-FR')}</span>
+                <span>
+                  <LineMdCalendar className={styles.icon} />
+                  {getDisplayedDate(article.publishedDate)}
+                </span>
                 <span>⏱️ {article.readTime}</span>
               </div>
             </div>

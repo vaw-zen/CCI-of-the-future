@@ -57,6 +57,12 @@
 
 .meta span { display: flex; align-items: center; gap: 0.26vw; }
 
+.meta .icon {
+  width: 0.9vw;
+  height: 0.9vw;
+  flex-shrink: 0;
+}
+
 /* Filtres par catégorie */
 .filters { display: flex; justify-content: center; gap: 0.78vw; margin-bottom: 2.08vw; flex-wrap: wrap; }
 
@@ -172,8 +178,13 @@
   .content p { margin-bottom: 2.60vw;font-size: 4vw; } 
   
   /* .meta { border-top: 0.13vw solid #e2e8f0; padding-top: 1.95vw; } */
-  
+
   .meta span { gap: 0.65vw; }
+
+  .meta .icon {
+    width: 2vw;
+    height: 2vw;
+  }
   
   .filters { gap: 1.30vw; margin-bottom: 5.21vw; }
 
@@ -264,8 +275,13 @@
   .content p { margin-bottom: 4.85vw;font-size: 4vw !important; }
   
   .meta { border-top: 0.24vw solid #e2e8f0; padding-top: 3.64vw;font-size: 3vw; }
-  
+
   .meta span { gap: 1.21vw; }
+
+  .meta .icon {
+    width: 3.5vw;
+    height: 3.5vw;
+  }
   
   .filters { gap: 2.43vw; margin-bottom: 9.71vw; }
 

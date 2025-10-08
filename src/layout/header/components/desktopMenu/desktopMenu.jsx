@@ -164,15 +164,17 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                             <a href='/' target='_blank' className={styles.locationLink}>
                                 <ResponsiveImage src='/contact/location.png' alt='location' skeleton sizes={12.5} className={styles.locationImage} />
                             </a>
-                            <AnalyticsPhoneLink 
-                                phoneNumber={contact.phone}
-                                location="desktop_menu"
+                            <AnalyticsLink
+                                href={phone}
+                                eventName="phone_click"
+                                eventCategory="conversion"
+                                eventLabel="desktop_menu_phone"
                                 className={styles.contactItem}
                             >
                                 <LineMdPhoneTwotone className={styles.contactIcon} />
                                 <strong>Appelez maintenant</strong>
                                 <abbr>+216 98 55 77 66</abbr>
-                            </AnalyticsPhoneLink>
+                            </AnalyticsLink>
                             <AnalyticsLink 
                                 href={mail}
                                 eventName="email_click"

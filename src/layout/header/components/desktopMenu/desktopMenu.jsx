@@ -5,6 +5,7 @@ import { EpCloseBold, LineMdPhoneTwotone, SiMailDuotone, UilArrowRight } from '@
 import Link from 'next/link';
 import contact from '@/app/contact/data.json';
 import ResponsiveImage from '@/utils/components/Image/Image';
+import { AnalyticsPhoneLink, AnalyticsLink } from '@/utils/components/analytics/AnalyticsComponents';
 
 export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
     const mail = `mailto:${contact.mail.link}?subject=${contact.mail.subject}&body=${contact.mail.body}`;
@@ -163,16 +164,26 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                             <a href='/' target='_blank' className={styles.locationLink}>
                                 <ResponsiveImage src='/contact/location.png' alt='location' skeleton sizes={12.5} className={styles.locationImage} />
                             </a>
-                            <a href={phone} className={styles.contactItem}>
+                            <AnalyticsPhoneLink 
+                                phoneNumber={contact.phone}
+                                location="desktop_menu"
+                                className={styles.contactItem}
+                            >
                                 <LineMdPhoneTwotone className={styles.contactIcon} />
                                 <strong>Appelez maintenant</strong>
                                 <abbr>+216 98 55 77 66</abbr>
-                            </a>
-                            <a href={mail} className={styles.contactItem}>
+                            </AnalyticsPhoneLink>
+                            <AnalyticsLink 
+                                href={mail}
+                                eventName="email_click"
+                                eventCategory="conversion"
+                                eventLabel="desktop_menu_email"
+                                className={styles.contactItem}
+                            >
                                 <SiMailDuotone className={styles.contactIcon} />
                                 <strong>E-mail</strong>
                                 <abbr>contact@cciservices.online</abbr>
-                            </a>
+                            </AnalyticsLink>
                             <div className={styles.divider} />
                         </div>
                     </div>

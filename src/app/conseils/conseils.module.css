@@ -31,7 +31,21 @@
   transform: scale(1.05);
 }
 
-.category { position: absolute; top: 0.78vw; left: 0.78vw; background: var(--ac-primary); color: var(--bg-base); padding: 1vw 2vw; border-radius: 50vw; font-size: .85vw; font-weight: 700; text-transform: uppercase; }
+.category {
+  position: absolute;
+  top: 0.78vw;
+  left: 0.78vw;
+  background: var(--ac-primary);
+  color: var(--bg-base);
+  padding: 0.4vw 0.8vw;
+  border-radius: 0.3vw;
+  font-size: 0.7vw;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03vw;
+  box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
 
 .content { padding: 1.30vw; }
 
@@ -43,8 +57,34 @@
 
 .meta span { display: flex; align-items: center; gap: 0.26vw; }
 
+.meta .icon {
+  width: 0.9vw;
+  height: 0.9vw;
+  flex-shrink: 0;
+}
+
 /* Filtres par catégorie */
 .filters { display: flex; justify-content: center; gap: 0.78vw; margin-bottom: 2.08vw; flex-wrap: wrap; }
+
+.tabWrapper {
+  justify-content: center;
+  gap: 2vw;
+  flex-wrap: wrap;
+  padding-bottom: 0.5vw;
+}
+
+.tabWrapper button {
+  font-size: 0.85vw;
+  padding-bottom: 0.5vw;
+}
+
+.tabWrapper button:hover {
+  color: var(--ac-primary);
+}
+
+.tabWrapper .selector {
+  height: 0.15vw;
+}
 
 .filterBtn { background:var(--bg-elevated);  border-radius: 50vw; padding: 1vw 2vw; color: var(--t-secondary); text-decoration: none; font-weight: 700;font-size: .85vw; transition: all 0.3s ease; cursor: pointer; }
 
@@ -70,7 +110,21 @@
   line-clamp: 4;
 }
 
-.featuredBadge { position: absolute; top: 0.78vw; right: 0.78vw; background: #ef4444; color: white; padding: 1vw 2vw; border-radius: 1.50vw; font-size: 0.85vw; font-weight: 700; text-transform: uppercase;  }
+.featuredBadge {
+  position: absolute;
+  top: 0.78vw;
+  right: 0.78vw;
+  background: #ef4444;
+  color: white;
+  padding: 0.4vw 0.8vw;
+  border-radius: 0.3vw;
+  font-size: 0.7vw;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03vw;
+  box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
 
 /* Section pagination */
 .pagination { display: flex; justify-content: center; gap: 0.52vw; margin-top: 2.60vw; }
@@ -107,7 +161,15 @@
   
   .imageWrapper { height: 28.65vw; }
   
-  .category { top: 1.95vw; left: 1.95vw; padding: 0.78vw 1.56vw; border-radius: 2.60vw; letter-spacing: 0.07vw; }
+  .category {
+    top: 1.95vw;
+    left: 1.95vw;
+    padding: 0.8vw 1.3vw;
+    border-radius: 0.5vw;
+    font-size: 1.5vw;
+    letter-spacing: 0.05vw;
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.2);
+  }
   
   .content { padding: 3.26vw; }
    
@@ -116,11 +178,30 @@
   .content p { margin-bottom: 2.60vw;font-size: 4vw; } 
   
   /* .meta { border-top: 0.13vw solid #e2e8f0; padding-top: 1.95vw; } */
-  
+
   .meta span { gap: 0.65vw; }
+
+  .meta .icon {
+    width: 2vw;
+    height: 2vw;
+  }
   
   .filters { gap: 1.30vw; margin-bottom: 5.21vw; }
-  
+
+  .tabWrapper {
+    gap: 3vw;
+    padding-bottom: 1vw;
+  }
+
+  .tabWrapper button {
+    font-size: 2vw;
+    padding-bottom: 1vw;
+  }
+
+  .tabWrapper .selector {
+    height: 0.3vw;
+  }
+
   .filterBtn {  padding: 1.04vw 1.95vw;font-size: 2vw; }
   
   .featured { grid-template-columns: 1fr; min-height: 39.06vw; }
@@ -131,7 +212,15 @@
   
   .featured .content h2 { font-size: 1.95vw; margin-bottom: 1.95vw; }
   
-  .featuredBadge { top: 1.95vw; right: 1.95vw; padding: 1.04vw 1.95vw; border-radius: 2.60vw; letter-spacing: 0.07vw; }
+  .featuredBadge {
+    top: 1.95vw;
+    right: 1.95vw;
+    padding: 0.8vw 1.3vw;
+    border-radius: 0.5vw;
+    font-size: 1.5vw;
+    letter-spacing: 0.05vw;
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.2);
+  }
   
   .pagination { gap: 1.30vw; margin-top: 6.51vw; }
   
@@ -169,7 +258,15 @@
   
   .imageWrapper { height: 53.40vw; }
   
-  .category { top: 3.64vw; left: 3.64vw; padding: 1.46vw 2.91vw; border-radius: 4.85vw; font-size: 3vw; }
+  .category {
+    top: 3.64vw;
+    left: 3.64vw;
+    padding: 1.2vw 2vw;
+    border-radius: 0.8vw;
+    font-size: 2.5vw;
+    letter-spacing: 0.08vw;
+    box-shadow: 0 0.3vw 0.8vw rgba(0, 0, 0, 0.2);
+  }
   
   .content { padding: 4.85vw; }
   
@@ -178,11 +275,30 @@
   .content p { margin-bottom: 4.85vw;font-size: 4vw !important; }
   
   .meta { border-top: 0.24vw solid #e2e8f0; padding-top: 3.64vw;font-size: 3vw; }
-  
+
   .meta span { gap: 1.21vw; }
+
+  .meta .icon {
+    width: 3.5vw;
+    height: 3.5vw;
+  }
   
   .filters { gap: 2.43vw; margin-bottom: 9.71vw; }
-  
+
+  .tabWrapper {
+    gap: 4vw;
+    padding-bottom: 2vw;
+  }
+
+  .tabWrapper button {
+    font-size: 4.5vw;
+    padding-bottom: 2vw;
+  }
+
+  .tabWrapper .selector {
+    height: 0.5vw;
+  }
+
   .filterBtn {  font-size: 2.18vw;  }
   
   .featured { grid-template-columns: 1fr; min-height: 72.82vw; }
@@ -193,7 +309,15 @@
   
   .featured .content h2 { font-size: 6vw; margin-bottom: 3.64vw; }
   
-  .featuredBadge { top: 3.64vw; right: 3.64vw; padding: 1.94vw 3.64vw;font-size: 3vw; }
+  .featuredBadge {
+    top: 3.64vw;
+    right: 3.64vw;
+    padding: 1.2vw 2vw;
+    border-radius: 0.8vw;
+    font-size: 2.5vw;
+    letter-spacing: 0.08vw;
+    box-shadow: 0 0.3vw 0.8vw rgba(0, 0, 0, 0.2);
+  }
   
   .pagination { gap: 2.43vw; margin-top: 12.14vw; }
   

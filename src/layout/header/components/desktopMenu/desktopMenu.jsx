@@ -5,7 +5,7 @@ import { EpCloseBold, LineMdPhoneTwotone, SiMailDuotone, UilArrowRight } from '@
 import Link from 'next/link';
 import contact from '@/app/contact/data.json';
 import ResponsiveImage from '@/utils/components/Image/Image';
-import { AnalyticsPhoneLink, AnalyticsLink } from '@/utils/components/analytics/AnalyticsComponents';
+import {AnalyticsLink } from '@/utils/components/analytics/AnalyticsComponents';
 
 export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
     const mail = `mailto:${contact.mail.link}?subject=${contact.mail.subject}&body=${contact.mail.body}`;

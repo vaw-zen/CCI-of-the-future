@@ -6,10 +6,18 @@ import Link from 'next/link';
 import contact from '@/app/contact/data.json';
 import ResponsiveImage from '@/utils/components/Image/Image';
 import {AnalyticsLink } from '@/utils/components/analytics/AnalyticsComponents';
+import { useEmailClick } from '@/hooks/useEmailClick';
 
 export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
-    const mail = `mailto:${contact.mail.link}?subject=${contact.mail.subject}&body=${contact.mail.body}`;
+    const mail = `mailto:${contact.mail.link}?subject=${encodeURIComponent(contact.mail.subject)}&body=${encodeURIComponent(contact.mail.body)}`;
     const phone = 'tel:' + contact.phone;
+    
+    // Use the email click hook for enhanced mailto handling
+    const { handleContactEmail } = useEmailClick();
+    const handleEmailClick = handleContactEmail('desktop_menu_email');
+    
+    // Debug: Log the mailto URL to console
+    console.log('Mailto URL:', mail);
     
     // Track checkbox state in React state instead of directly manipulating the DOM
     const [checkboxChecked, setCheckboxChecked] = useState(false);
@@ -175,12 +183,13 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                                 <strong>Appelez maintenant</strong>
                                 <abbr>+216 98 55 77 66</abbr>
                             </AnalyticsLink>
-                            <AnalyticsLink 
+                            <AnalyticsLink
                                 href={mail}
                                 eventName="email_click"
                                 eventCategory="conversion"
                                 eventLabel="desktop_menu_email"
                                 className={styles.contactItem}
+                                onClick={handleEmailClick}
                             >
                                 <SiMailDuotone className={styles.contactIcon} />
                                 <strong>E-mail</strong>

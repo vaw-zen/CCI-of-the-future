@@ -201,7 +201,7 @@ From `/public/gallery/marbre/`:
 - Kitchen countertop restoration
 
 #### G. Work Photos - Tapisserie (5-10 photos)
-From `/public/gallery/tapisserie/`:
+From `/public/galleryserie/`:
 - Before/after upholstery
 - Leather sofa restoration
 - Fabric samples

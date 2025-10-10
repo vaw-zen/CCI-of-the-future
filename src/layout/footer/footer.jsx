@@ -4,7 +4,7 @@ import contact from '../../app/contact/data.json'
 import styles from './footer.module.css'
 
 export default function Footer() {
-    const mail = `mailto:${contact.mail.link}?subject=${contact.mail.subject}&body=${contact.mail.body}`
+    const mail = `mailto:${contact.mail.link}?subject=${encodeURIComponent(contact.mail.subject)}&body=${encodeURIComponent(contact.mail.body)}`
     const phone = 'tel:' + content.phone
 
     return (

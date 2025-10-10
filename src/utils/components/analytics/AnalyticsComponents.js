@@ -59,11 +59,13 @@ export function AnalyticsLink({
   const { trackEvent } = useAnalytics();
 
   const handleClick = (e) => {
-    // Determine if it's an external link
+    // Determine link type
     const isExternal = href && (
       href.startsWith('http') && 
       !href.includes(window.location.hostname)
     );
+    const isMailto = href && href.startsWith('mailto:');
+    const isTel = href && href.startsWith('tel:');
 
     // Track the analytics event
     trackEvent(eventName, {
@@ -71,8 +73,16 @@ export function AnalyticsLink({
       event_label: eventLabel || href,
       link_text: children,
       link_destination: href,
-      is_external: isExternal
+      is_external: isExternal,
+      is_mailto: isMailto,
+      is_tel: isTel
     });
+
+    // For mailto links, ensure they open properly
+    if (isMailto) {
+      // Let the browser handle the mailto link naturally
+      // Don't prevent default behavior for mailto links
+    }
 
     // Call the original onClick handler
     if (onClick) {
@@ -80,13 +90,22 @@ export function AnalyticsLink({
     }
   };
 
+  // Determine additional props based on link type
+  const linkProps = {
+    href,
+    className,
+    onClick: handleClick,
+    ...props
+  };
+
+  // For external links, add target and rel attributes
+  if (href && href.startsWith('http') && !href.includes(window.location.hostname)) {
+    linkProps.target = '_blank';
+    linkProps.rel = 'noopener noreferrer';
+  }
+
   return (
-    <a 
-      href={href}
-      className={className} 
-      onClick={handleClick} 
-      {...props}
-    >
+    <a {...linkProps}>
       {children}
     </a>
   );

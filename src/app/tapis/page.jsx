@@ -16,12 +16,12 @@ export async function generateMetadata() {
     description: tapisData.metadata.description,
     keywords: tapisData.metadata.keywords,
     alternates: {
-      canonical: `${SITE_URL}/tapis/`
+      canonical: `${SITE_URL}/tapis`
     },
     openGraph: {
       title: "Nettoyage Tapis & Moquette Tunis - Injection Extraction | CCI",
       description: tapisData.metadata.description,
-      url: `${SITE_URL}/tapis/`,
+      url: `${SITE_URL}/tapis`,
       type: 'website',
       locale: 'fr_TN',
       siteName: 'CCI Services'

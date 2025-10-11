@@ -113,7 +113,7 @@ export default function RootLayout({ children }) {
       <head>
         <HydrationSuppressor />
         {/* Global Open Graph / Twitter / icons (canonical removed - handled per page) */}
-        <meta name="keywords" content="cci tunisie, cci tunis, nettoyage professionnel tunisie, nettoyage moquette tunis, nettoyage salon tunisie, restauration marbre tunis, services tapisserie tunisie, nettoyage post-chantier, CCI services" />
+        <meta name="keywords" content="cci tunisie, cci tunis, nettoyage professionnel tunisie,ch nettoyage moquette tunis, nettoyage salon tunisie, restauration marbre tunis, services tapisserie tunisie, nettoyage post-chantier, CCI services" />
         <meta name="author" content="CCI Tunisie" />
         <meta name="robots" content="index,follow" />
         <meta property="og:locale" content="fr_FR" />

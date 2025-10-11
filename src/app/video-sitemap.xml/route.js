@@ -52,8 +52,7 @@ export async function GET() {
     <loc>${baseUrl}/blogs</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    ${reels.map(reel => {
+    <priority>0.8</priority>${reels.map(reel => {
       // Construire l'URL complète Facebook pour player_loc
       let playerUrl = reel.permalink_url;
       if (playerUrl && !playerUrl.startsWith('http')) {

@@ -7,7 +7,7 @@ import { useReelsSection } from './reelsSection.func'
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
 import useAutoHeightTransition from '@/libs/useAutoHeightTransition/useAutoHeightTransition';
 
-const ReelsSection = () => {
+const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
   const {
     reels,
     loading,
@@ -16,7 +16,7 @@ const ReelsSection = () => {
     initialSkeletonCount,
     loadingMoreSkeletonCount,
     loadMore,
-  } = useReelsSection();
+  } = useReelsSection(initialReels, initialReelsPaging);
 
   // Enhanced video state management
   const videoRefs = useRef({});

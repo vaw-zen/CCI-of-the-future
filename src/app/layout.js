@@ -23,8 +23,8 @@ const roboto = Roboto_Condensed({
 });
 
 export const metadata = {
-  title: "CCI Tunisie — Leader du Nettoyage Professionnel & Tissus Ignifuges",
-description: "Chez CCI Services, nous transformons l'entretien professionnel en un art ! Leader en Tunisie pour le nettoyage de moquettes, salons et tous types de tapisseries et ameublement, ainsi que pour l'entretien du marbre (polissage, lustrage, ponçage, protection, cristallisation). Nous offrons également des services de tapisserie sur mesure et un nettoyage post-chantier complet. Avec CCI, bénéficiez d'un service fiable, de qualité et personnalisé, qui redonne vie à vos espaces.",   alternates: {
+  title: "CCI Tunisie — Leader du Nettoyage Professionnel à Tunis & Tissus Ignifuges",
+description: "CCI Tunisie : Leader du nettoyage professionnel à Tunis et toute la Tunisie. Nettoyage moquettes, salons, restauration marbre (polissage, cristallisation), tapisserie sur mesure. CCI Tunis - Votre partenaire nettoyage depuis des années. Service fiable et qualité garantie.",   alternates: {
  
   },
 };
@@ -56,7 +56,8 @@ export default function RootLayout({ children }) {
   const localBusinessJSONLD = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": SITE_NAME,
+    "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
+    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
     "url": SITE_URL,
     "logo": SITE_LOGO,
     "telephone": "+216-98-557-766",
@@ -64,7 +65,14 @@ export default function RootLayout({ children }) {
       "@type": "PostalAddress",
       "streetAddress": "06 Rue Galant de nuit, El Aouina",
       "addressLocality": "Tunis",
+      "addressRegion": "Grand Tunis",
+      "postalCode": "2045",
       "addressCountry": "TN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 36.8527438,
+      "longitude": 10.254949
     },
     "openingHoursSpecification": [
       {
@@ -106,8 +114,8 @@ export default function RootLayout({ children }) {
         <HydrationSuppressor />
         {/* Global Open Graph / Twitter / canonical / icons */}
         <link rel="canonical" href={SITE_URL} />
-        <meta name="keywords" content="nettoyage moquette,nettoyage professionnel tunisie, nettoyage salon tunisie restauration marbre, services de tapisserie, nettoyage post-chantier, Tunisie, CCI" />
-        <meta name="author" content="CCI" />
+        <meta name="keywords" content="cci tunisie, cci tunis, nettoyage professionnel tunisie, nettoyage moquette tunis, nettoyage salon tunisie, restauration marbre tunis, services tapisserie tunisie, nettoyage post-chantier, CCI services" />
+        <meta name="author" content="CCI Tunisie" />
         <meta name="robots" content="index,follow" />
         <meta property="og:locale" content="fr_FR" />
         <meta property="og:site_name" content={SITE_NAME} />

@@ -1,16 +1,18 @@
 import Link from "next/link";
 import { UilArrowRight } from "../../icons";
 import styles from './feedback.module.css';
+import ResponsiveImage from '@/utils/components/Image/Image';
 
 export default function Feedback() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <img 
+        <ResponsiveImage 
           src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d25d112da90204c5cbab7e_feedback-image-1.jpg" 
           alt="Customer feedback preview"
           title="Customer feedback preview"
           className={styles.feedbackImage}
+          sizes={[25, 35, 45]}
         />
 
         <div className={styles.infoContainer}>
@@ -18,11 +20,12 @@ export default function Feedback() {
             Excellent
           </h3>
 
-          <img 
+          <ResponsiveImage 
             src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d25e0d7c06818293917976_ratings-image.png"
             alt="5 star rating image"
             title="5 star rating"
             className={styles.ratingImage}
+            sizes={[12, 15, 20]}
           />
 
           <p className={styles.trustScore}>
@@ -39,11 +42,12 @@ export default function Feedback() {
           </div>
         </div>
 
-        <img
+        <ResponsiveImage
           src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d25d11b6d5727548c2d785_feedback-image-2.jpg"
           alt="Customer feedback preview"
           title="Customer feedback preview"
           className={styles.feedbackImage}
+          sizes={[25, 35, 45]}
         />
       </div>
     </div>

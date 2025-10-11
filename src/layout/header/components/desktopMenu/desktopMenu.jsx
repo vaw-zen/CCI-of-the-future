@@ -105,7 +105,6 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                             <div className={styles.socialLinks}>
                                     <a href="https://www.facebook.com/Chaabanes.Cleaning.Intelligence" target="_blank" rel="noopener noreferrer">Facebook</a>
                                     <a href="https://www.instagram.com/cci.services/" target="_blank" rel="noopener noreferrer">Instagram</a>
-                                    <a href="https://twitter.com/your-profile" target="_blank" rel="noopener noreferrer">Twitter</a>
                                     <a href="https://www.linkedin.com/company/chaabanes-cleaning-int" target="_blank" rel="noopener noreferrer">Linkedin</a>
                                 </div>
                         </div>

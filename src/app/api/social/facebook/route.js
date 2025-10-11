@@ -64,7 +64,7 @@ function normalizeFbReels(raw) {
       id: item.id,
       message: item.description || null,
       created_time: item.created_time || null,
-      permalink_url: item.permalink_url || null,
+      permalink_url: item.perma_link || item.permalink_url || null, // Use perma_link first (full URL)
       video_url: item.source || null, // direct video link
       thumbnail: item.picture || item.thumbnails?.data?.[0]?.uri || null, // preview image
       views:item.views?.summary?.total_count || views,
@@ -72,6 +72,7 @@ function normalizeFbReels(raw) {
       likes: item.likes?.summary?.total_count || 0,
       comments: item.comments?.summary?.total_count || 0,
       shares: item.shares?.count || 0,
+      length: item.length || null, // video duration in seconds
     };
   });
 }
@@ -105,7 +106,7 @@ export async function GET(request) {
     let fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
     if (postsLimit) fbPostsUrl += `&limit=${postsLimit}`;
     if (postsAfter) fbPostsUrl += `&after=${encodeURIComponent(postsAfter)}`;
-    let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,source,description,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,perma_link,source,description,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
     if (reelsLimit) fbReelsUrl += `&limit=${reelsLimit}`;
     if (reelsAfter) fbReelsUrl += `&after=${encodeURIComponent(reelsAfter)}`;
 

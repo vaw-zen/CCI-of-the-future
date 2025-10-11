@@ -112,6 +112,8 @@ export default function RootLayout({ children }) {
     <html lang="fr" className={dmSans.className} suppressHydrationWarning>
       <head>
         <HydrationSuppressor />
+        {/* Canonical URL for homepage */}
+        <link rel="canonical" href={SITE_URL} />
         {/* Global Open Graph / Twitter / icons (canonical removed - handled per page) */}
         <meta name="keywords" content="cci tunisie, cci tunis, nettoyage professionnel tunisie, nettoyage moquette tunis, nettoyage salon tunisie, restauration marbre tunis, services tapisserie tunisie, nettoyage post-chantier, CCI services" />
         <meta name="author" content="CCI Tunisie" />

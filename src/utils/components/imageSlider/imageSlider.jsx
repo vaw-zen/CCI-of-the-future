@@ -7,22 +7,22 @@ import ResponsiveImage from '@/utils/components/Image/Image';
 
 const defaultImages = [
   {
-    src: "/home/marblepolishing.webp",
+    src: "/gallery/marbre/Blog-Body-floor-01-1024x640.webp",
     title: 'Modern Workspace',
     description: 'Clean, minimalist design that enhances productivity and creativity'
   },
   {
-    src: "/home/marblepolishing.webp",
+    src: "/gallery/marbre/Blog-Body-floor-01-1024x640.webp",
     title: 'Elegant Architecture',
     description: 'Contemporary spaces that blend form and function seamlessly'
   },
   {
-    src: "/home/marblepolishing.webp",
+    src: "/gallery/marbre/Blog-Body-floor-01-1024x640.webp",
     title: 'Digital Innovation',
     description: 'Abstract concepts brought to life through cutting-edge design'
   },
   {
-    src: "/home/marblepolishing.webp",
+    src: "/gallery/marbre/Blog-Body-floor-01-1024x640.webp",
     title: 'Future Vision',
     description: 'Technology and aesthetics united in perfect harmony'
   }

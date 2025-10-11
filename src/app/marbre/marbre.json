@@ -24,13 +24,33 @@
   "images": [
     {
       "src": "/gallery/marbre/marbre.jpg",
-      "title": "Cristallisation Sol Marbre",
-      "description": "Cristallisation professionnelle sol marbre. Ponçage, polissage et protection pour brillance durable et résistance aux taches."
+      "title": "Restauration Sol Marbre",
+      "description": "Réstauration professionnelle sol marbre. Ponçage, polissage et protection pour brillance durable et résistance aux taches."
     },
     {
       "src": "/gallery/marbre/marbre1.png",
-      "title": "Polissage Plan Travail Marbre",
+      "title": "Réstauration Travertin des éscaliers",
       "description": "Restoration plan de travail marbre cuisine. Ponçage fins, lustrage et traitement hydrofuge pour usage alimentaire."
+    },
+    {
+      "src": "/gallery/marbre/m01.webp",
+      "title": "Ponçage Sol Marbre",
+      "description": "Ponçage professionnel sol marbre. Élimination rayures, taches et imperfections pour une surface lisse et prête à polir."
+    },
+    {
+      "src": "/gallery/marbre/m02.webp",
+      "title": "Cristallisation Sol Marbre",
+      "description": "Protection sol marbre. Application de produits hydrofuges et anti-taches pour préserver l'éclat et la durabilité du marbre."
+    },
+     {
+      "src": "/gallery/marbre/m00.webp",
+      "title": "Cristallisation Sol Marbre méthode Laine d'inox et cristallisant",
+      "description": "Protection sol marbre. Application de produits hydrofuges et anti-taches pour préserver l'éclat et la durabilité du marbre."
+    },
+     {
+      "src": "/gallery/marbre/Blog-Body-floor-01-1024x640.webp",
+      "title": "Cristallisation Sol Marbre méthode Poudreuse",
+      "description": "Protection sol marbre. Application de produits hydrofuges et anti-taches pour préserver l'éclat et la durabilité du marbre."
     }
   ],
   "localBusinessJSONLD": {

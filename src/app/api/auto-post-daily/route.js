@@ -270,8 +270,8 @@ EXEMPLE:
         
         // General/showcase images from /home only (no subfolders)
         general: [
-          "https://cciservices.online/home/marblepolishing.webp",
-          "https://cciservices.online/home/interior-cleaning-detailing.png",
+          "https://cciservices.online/home/ng.webp",
+          "https://cciservices.online/gallery/moquette/moquette-detailing-4.jpeg",
           "https://cciservices.online/home/night.webp",
           "https://cciservices.online/home/1.webp"
         ]
@@ -328,7 +328,7 @@ EXEMPLE:
         } catch (validationError) {
           console.warn("Image validation failed:", validationError.message);
           // Use a reliable fallback
-          selectedImageUrl = "https://cciservices.online/home/interior-cleaning-detailing.png";
+          selectedImageUrl = "https://cciservices.online/gallery/moquette/moquette-detailing-4.jpeg";
           console.log("Using safe fallback image:", selectedImageUrl);
         }
       }

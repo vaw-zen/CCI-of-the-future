@@ -1,5 +1,5 @@
 .detailsSection { padding: 6vw 0 8vw 0; display: flex; gap: 2.75vw }
-.image { width: 31.77vw; height: 22.62vw; object-fit: cover }
+.image { width: 31.77vw; height: 22.62vw; object-fit: contain ;object-position: center bottom;}
 .detailsContent { flex: 1; border-left: 1px solid white; display: flex; flex-direction: column }
 .header { border-bottom: 1px solid white; padding: 1.5vw }
 .slug { font-size: 0.83vw; color: var(--ac-primary); text-transform: uppercase; font-weight: normal }

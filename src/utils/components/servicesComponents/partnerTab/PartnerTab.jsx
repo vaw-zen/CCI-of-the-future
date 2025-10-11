@@ -43,7 +43,14 @@ export default function PartnerTab({ tabData }) {
                 </div>
               </div>
               <div className={styles.tabImage}>
-                <ResponsiveImage src={tabImages[tab.id]} alt={tab.title} title={tab.title} sizes={[35, 50, 90]} />
+                {tabImages[tab.id] && (
+                  <img 
+                    src={tabImages[tab.id]} 
+                    alt={tab.title} 
+                    title={tab.title}
+                    className={styles.tabImage}
+                  />
+                )}
               </div>
             </div>
           )

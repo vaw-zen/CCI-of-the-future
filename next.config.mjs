@@ -15,6 +15,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'lookaside.facebook.com' },
       { protocol: 'https', hostname: '**.cdninstagram.com' },
       { protocol: 'https', hostname: 'www.bouthouri.co' },
+      { protocol: 'https', hostname: 'uploads-ssl.webflow.com' },
     ],
     qualities: [75, 80, 90, 100],
   },

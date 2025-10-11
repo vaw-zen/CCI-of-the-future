@@ -86,6 +86,47 @@ export default async function Page() {
       // Collection Page
       blogsData.collectionPageJSONLD,
       
+      // Separate VideoObject for each reel (plus visible)
+      ...reels.map((reel) => ({
+        "@type": "VideoObject",
+        "@id": reel.permalink_url,
+        "name": reel.message || "Reel CCI Services",
+        "description": reel.message?.slice(0, 200) || "Vidéo reel publiée par CCI Services",
+        "thumbnailUrl": reel.thumbnail,
+        "uploadDate": reel.created_time,
+        "contentUrl": reel.video_url,
+        "embedUrl": reel.permalink_url,
+        "duration": reel.length ? `PT${Math.round(reel.length)}S` : "PT30S",
+        "publisher": {
+          "@type": "Organization",
+          "name": "CCI Services",
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/logo.png`
+          }
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "CCI Services"
+        },
+        "interactionStatistic": [
+          {
+            "@type": "InteractionCounter",
+            "interactionType": "https://schema.org/WatchAction",
+            "userInteractionCount": reel.views || 0
+          },
+          {
+            "@type": "InteractionCounter",
+            "interactionType": "https://schema.org/LikeAction",
+            "userInteractionCount": reel.likes || 0
+          }
+        ],
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/blogs`
+        }
+      })),
+      
       // ItemList for all content
       {
         "@type": "ItemList",
@@ -132,32 +173,12 @@ export default async function Page() {
             }
           })),
           
-          // Map reels
+          // Map reels as VideoObject references
           ...reels.map((reel, index) => ({
             "@type": "ListItem",
             "position": posts.length + index + 1,
             "item": {
-              "@type": "VideoObject",
-              "@id": reel.permalink_url,
-              "name": reel.message || "Reel CCI",
-              "description": reel.message?.slice(0, 200) || "Reel vidéo publié par CCI Services",
-              "thumbnailUrl": reel.thumbnail,
-              "uploadDate": reel.created_time,
-              "contentUrl": reel.video_url,
-              "embedUrl": reel.permalink_url,
-              "duration": reel.length ? `PT${Math.round(reel.length)}S` : undefined,
-              "interactionStatistic": [
-                {
-                  "@type": "InteractionCounter",
-                  "interactionType": "https://schema.org/WatchAction",
-                  "userInteractionCount": reel.views || 0
-                },
-                {
-                  "@type": "InteractionCounter",
-                  "interactionType": "https://schema.org/LikeAction",
-                  "userInteractionCount": reel.likes || 0
-                }
-              ]
+              "@id": reel.permalink_url
             }
           }))
         ]
@@ -173,36 +194,55 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* Hidden content for search engines (rendered server-side) */}
+      {/* Hidden content for search engines (rendered server-side) - AMÉLIORÉ */}
       <div style={{ display: 'none' }} aria-hidden="true">
         <h1>{blogsData.metadata.title}</h1>
         <p>{blogsData.metadata.description}</p>
         
-        {/* Posts content for crawlers */}
-        {posts.map((post) => (
-          <article key={post.id}>
-            <h2>{post.title || post.message?.slice(0, 100)}</h2>
-            <p>{post.message}</p>
-            <time dateTime={post.created_time}>{new Date(post.created_time).toLocaleDateString()}</time>
-            {post.attachments?.[0]?.src && (
-              <img src={post.attachments[0].src} alt={post.title || 'Publication'} />
-            )}
-            <a href={post.permalink_url}>Voir sur Facebook</a>
-          </article>
-        ))}
+        {/* Section dédiée aux vidéos avec titre explicite */}
+        <section>
+          <h2>Vidéos et Reels CCI Services</h2>
+          {reels.map((reel) => (
+            <article key={reel.id} itemScope itemType="https://schema.org/VideoObject">
+              <h3 itemProp="name">{reel.message || 'Reel vidéo CCI Services'}</h3>
+              <p itemProp="description">{reel.message}</p>
+              <time itemProp="uploadDate" dateTime={reel.created_time}>
+                {new Date(reel.created_time).toLocaleDateString()}
+              </time>
+              <video 
+                itemProp="contentUrl"
+                poster={reel.thumbnail}
+                width="320" 
+                height="240"
+                controls
+              >
+                <source src={reel.video_url} type="video/mp4" />
+                Votre navigateur ne supporte pas les vidéos HTML5.
+              </video>
+              <img itemProp="thumbnailUrl" src={reel.thumbnail} alt="Aperçu vidéo" />
+              <span itemProp="duration" content={reel.length ? `PT${Math.round(reel.length)}S` : "PT30S"}>
+                {reel.length ? `${Math.round(reel.length)}s` : "30s"}
+              </span>
+              <a href={reel.permalink_url} itemProp="url">Voir sur Facebook</a>
+            </article>
+          ))}
+        </section>
         
-        {/* Reels content for crawlers */}
-        {reels.map((reel) => (
-          <article key={reel.id}>
-            <h2>{reel.message || 'Reel vidéo'}</h2>
-            <p>{reel.message}</p>
-            <time dateTime={reel.created_time}>{new Date(reel.created_time).toLocaleDateString()}</time>
-            <video poster={reel.thumbnail}>
-              <source src={reel.video_url} type="video/mp4" />
-            </video>
-            <a href={reel.permalink_url}>Voir sur Facebook</a>
-          </article>
-        ))}
+        {/* Section dédiée aux publications */}
+        <section>
+          <h2>Publications CCI Services</h2>
+          {posts.map((post) => (
+            <article key={post.id}>
+              <h3>{post.title || post.message?.slice(0, 100)}</h3>
+              <p>{post.message}</p>
+              <time dateTime={post.created_time}>{new Date(post.created_time).toLocaleDateString()}</time>
+              {post.attachments?.[0]?.src && (
+                <img src={post.attachments[0].src} alt={post.title || 'Publication'} />
+              )}
+              <a href={post.permalink_url}>Voir sur Facebook</a>
+            </article>
+          ))}
+        </section>
       </div>
 
       <HeroHeader title={blogsData.heroTitle} />

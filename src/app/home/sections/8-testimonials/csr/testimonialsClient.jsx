@@ -22,7 +22,7 @@ export default function TestimonialsClient({ className, fallbackTestimonials, ba
                     const mappedReviews = data.reviews.map((review, index) => ({
                         id: review.time || index,
                         name: review.author_name || 'Client anonyme',
-                        role: review.relative_time_description || 'Client vérifié',
+                        role: 'Client Google', // More consistent role for Google reviews
                         img: review.profile_photo_url || '/default-avatar.png',
                         testimonial: review.text || '',
                         rating: review.rating || 5,
@@ -81,7 +81,7 @@ export default function TestimonialsClient({ className, fallbackTestimonials, ba
                                     title={element.name} 
                                 />
                                 <h3 className={styles.name}>{element.name}</h3>
-                                <p className={styles.role}>{element.role}</p>
+                                <p className={styles.role}>{element.role || element.position}</p>
                                 {element.rating && (
                                     <div className={styles.rating}>
                                         {'⭐'.repeat(element.rating)}

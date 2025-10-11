@@ -6,4 +6,6 @@ Disallow: /*search*
 Allow: /
 
 Sitemap: https://cciservices.online/sitemap.xml
+Sitemap: https://cciservices.online/video-sitemap.xml
+Sitemap: https://cciservices.online/sitemap-index.xml
 Host: https://cciservices.online

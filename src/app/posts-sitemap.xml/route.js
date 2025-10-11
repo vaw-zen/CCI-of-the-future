@@ -85,13 +85,13 @@ export async function GET() {
     <priority>1.0</priority>
   </url>
   
-  ${posts.map(post => {
+${posts.map(post => {
     try {
       // Créer une URL interne pour le post basée sur son ID
       const postSlug = `post-${post.id.split('_')[1] || post.id}`;
       const internalUrl = `${SITE_URL}/blogs#${postSlug}`;
       
-      return `  <url>
+      return `<url>
     <loc>${escapeXml(internalUrl)}</loc>
     <lastmod>${formatDate(post.created_time)}</lastmod>
     <changefreq>weekly</changefreq>
@@ -101,7 +101,7 @@ export async function GET() {
       console.error('Error processing post:', post.id, error);
       return '';
     }
-  }).filter(Boolean).join('\n')}
+  }).filter(Boolean).join('\n  ')}
 </urlset>`;
 
     return new NextResponse(sitemapXml, {

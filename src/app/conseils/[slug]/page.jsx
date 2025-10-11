@@ -7,7 +7,8 @@ import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 
 // Générer les métadonnées pour chaque article
 export async function generateMetadata({ params }) {
-  const article = getArticleBySlug(params.slug);
+  const resolvedParams = await params;
+  const article = getArticleBySlug(resolvedParams.slug);
   
   if (!article) {
     return {
@@ -26,12 +27,12 @@ export async function generateMetadata({ params }) {
     publishedTime: article.publishedDate,
     modifiedTime: article.updatedDate,
     alternates: {
-      canonical: `${SITE_URL}/conseils/${article.slug}`
+      canonical: `${SITE_URL}/conseils/${resolvedParams.slug}`
     },
     openGraph: {
       title: article.metaTitle,
       description: article.metaDescription,
-      url: `${SITE_URL}/conseils/${article.slug}`,
+      url: `${SITE_URL}/conseils/${resolvedParams.slug}`,
       siteName: 'CCI Services Tunis',
       images: [
         {
@@ -66,8 +67,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ArticlePage({ params }) {
-  const article = getArticleBySlug(params.slug);
+export default async function ArticlePage({ params }) {
+  const resolvedParams = await params;
+  const article = getArticleBySlug(resolvedParams.slug);
 
   if (!article) {
     notFound();
@@ -106,7 +108,7 @@ export default function ArticlePage({ params }) {
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://cciservices.online/conseils/${article.slug}`
+      "@id": `https://cciservices.online/conseils/${resolvedParams.slug}`
     },
     "keywords": article.keywords.join(', '),
     "wordCount": article.content.replace(/<[^>]*>/g, '').split(' ').length,
@@ -144,7 +146,7 @@ export default function ArticlePage({ params }) {
         "@type": "ListItem",
         "position": 3,
         "name": article.title,
-        "item": `https://cciservices.online/conseils/${article.slug}`
+        "item": `https://cciservices.online/conseils/${resolvedParams.slug}`
       }
     ]
   };
@@ -191,7 +193,7 @@ export default function ArticlePage({ params }) {
 
   // Trouver les articles précédent et suivant
   const allArticles = getAllArticles();
-  const currentIndex = allArticles.findIndex(a => a.slug === article.slug);
+  const currentIndex = allArticles.findIndex(a => a.slug === resolvedParams.slug);
   const prevArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
   const nextArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
 

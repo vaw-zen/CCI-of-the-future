@@ -53,13 +53,19 @@ export async function GET() {
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-    ${reels.map(reel => `
+    ${reels.map(reel => {
+      // Construire l'URL complète pour player_loc
+      const playerUrl = reel.permalink_url?.startsWith('http') 
+        ? reel.permalink_url 
+        : `https://www.facebook.com${reel.permalink_url}`;
+      
+      return `
     <video:video>
       <video:thumbnail_loc>${escapeXml(reel.thumbnail)}</video:thumbnail_loc>
       <video:title>${escapeXml(reel.message || 'Reel CCI Services')}</video:title>
       <video:description>${escapeXml((reel.message || 'Vidéo reel publiée par CCI Services').slice(0, 2048))}</video:description>
       <video:content_loc>${escapeXml(reel.video_url)}</video:content_loc>
-      <video:player_loc>${escapeXml(reel.permalink_url)}</video:player_loc>
+      <video:player_loc>${escapeXml(playerUrl)}</video:player_loc>
       ${reel.length ? `<video:duration>${Math.round(reel.length)}</video:duration>` : '<video:duration>30</video:duration>'}
       <video:publication_date>${formatDate(reel.created_time)}</video:publication_date>
       <video:family_friendly>yes</video:family_friendly>
@@ -72,7 +78,8 @@ export async function GET() {
       <video:tag>services CCI</video:tag>
       <video:tag>entretien</video:tag>
       <video:tag>rénovation</video:tag>
-    </video:video>`).join('')}
+    </video:video>`;
+    }).join('')}
   </url>
 </urlset>`;
 

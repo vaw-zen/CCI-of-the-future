@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!--Page d'accueil-->
   <url>
     <loc>https://cciservices.online/</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.00</priority>
   </url>
+  <!--Page services-->
   <url>
     <loc>https://cciservices.online/services</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
+  <!--Page nettoyage marbre-->
   <url>
     <loc>https://cciservices.online/marbre</loc>
     <lastmod>2025-09-08</lastmod>
@@ -19,78 +22,90 @@
     <priority>0.85</priority>
   </url>
   <url>
+  <!--Page nettoyage tapis-->
     <loc>https://cciservices.online/tapis</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+<!--Page services de tapisserie-->
   <url>
     <loc>https://cciservices.online/tapisserie</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+  <!--Page nettoyage salon-->
   <url>
     <loc>https://cciservices.online/salon</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
+  <!--Page nettoyage post chantier-->
   <url>
     <loc>https://cciservices.online/tfc</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
+  <!--About us-->
   <url>
     <loc>https://cciservices.online/about</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
+  <!--Contact-->
   <url>
     <loc>https://cciservices.online/contact</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
+  <!--Faq-->
   <url>
     <loc>https://cciservices.online/faq</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.60</priority>
   </url>
+  <!--Reels and Posts (Server-Side Rendered, SEO Optimized)-->
   <url>
     <loc>https://cciservices.online/blogs</loc>
-    <lastmod>2025-09-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.90</priority>
+    <lastmod>2025-10-10</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.95</priority>
   </url>
+  <!--Equipe-->
   <url>
     <loc>https://cciservices.online/team</loc>
     <lastmod>2025-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.50</priority>
   </url>
+  <!--Simulateur de devis-->
   <url>
     <loc>https://cciservices.online/devis</loc>
     <lastmod>2025-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.50</priority>
   </url>
-  <!-- Articles de conseils -->
+  <!-- Page d'Articles de conseils et astuces informatives -->
   <url>
     <loc>https://cciservices.online/conseils</loc>
     <lastmod>2025-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
+  <!-- Articles individuels -->
   <url>
     <loc>https://cciservices.online/conseils/guide-nettoyage-tapis-tunis-2025</loc>
     <lastmod>2025-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
+
   <url>
     <loc>https://cciservices.online/conseils/nettoyage-salons-voiture-tapisseries-tunis</loc>
     <lastmod>2025-10-06</lastmod>

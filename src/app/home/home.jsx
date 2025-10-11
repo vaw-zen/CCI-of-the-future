@@ -7,24 +7,24 @@ export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   
   return {
-    title: "CCI Tunisie | Nettoyage Professionnel Moquettes, Salons & Restauration Marbre | Devis Gratuit",
-    description: "🏆 Leader du nettoyage professionnel en Tunisie. Spécialistes moquettes, salons, tapisserie, restauration marbre. Service post-chantier. Devis gratuit ✅ +216 98 557 766",
-    keywords: "nettoyage moquette tunisie, nettoyage salon tunis, restauration marbre, polissage marbre, nettoyage professionnel, tapisserie tunisie, nettoyage post chantier, CCI services",
+    title: "CCI Tunisie | Nettoyage Professionnel à Tunis - Moquettes, Salons & Marbre | Devis Gratuit",
+    description: "🏆 CCI Tunisie - Leader du nettoyage professionnel à Tunis et toute la Tunisie. Spécialistes moquettes, salons, restauration marbre. CCI Tunis : Votre partenaire nettoyage. Devis gratuit ✅ +216 98 557 766",
+    keywords: "cci tunisie, cci tunis, nettoyage professionnel tunisie, nettoyage moquette tunis, nettoyage salon tunis, restauration marbre tunis, polissage marbre tunisie, tapisserie tunisie, nettoyage post chantier tunis, CCI services",
     alternates: {
       canonical: SITE_URL
     },
     openGraph: {
-      title: "CCI Tunisie - Nettoyage Professionnel & Restauration Marbre",
-      description: "Leader du nettoyage professionnel en Tunisie. Moquettes, salons, marbre. Devis gratuit.",
+      title: "CCI Tunisie - Leader Nettoyage Professionnel Tunis & Restauration Marbre",
+      description: "CCI Tunisie : Leader du nettoyage professionnel à Tunis. Moquettes, salons, marbre. Devis gratuit.",
       url: SITE_URL,
       type: "website",
       locale: "fr_TN",
-      siteName: "CCI Services Tunisie"
+      siteName: "CCI Tunisie - Services Nettoyage"
     },
     twitter: {
       card: "summary_large_image",
-      title: "CCI Tunisie - Nettoyage Professionnel",
-      description: "Leader du nettoyage professionnel en Tunisie. Devis gratuit."
+      title: "CCI Tunisie - Nettoyage Professionnel Tunis",
+      description: "CCI Tunis - Leader du nettoyage professionnel en Tunisie. Devis gratuit."
     }
   };
 }
@@ -50,9 +50,9 @@ export default function Home() {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
         "@id": "https://cciservices.online/#organization",
-        name: "CCI - Chaabane's Cleaning Intelligence",
-        alternateName: "CCI Services Tunisie",
-        description: "Leader du nettoyage professionnel en Tunisie. Spécialistes en nettoyage de moquettes, salons, restauration marbre, tapisserie et nettoyage post-chantier.",
+        name: "CCI Tunisie - Chaabane's Cleaning Intelligence",
+        alternateName: ["CCI Tunis", "CCI Services Tunisie", "CCI Services Tunis"],
+        description: "CCI Tunisie - Leader du nettoyage professionnel à Tunis et toute la Tunisie. Spécialistes nettoyage moquettes, salons, restauration marbre, tapisserie et nettoyage post-chantier. CCI Tunis : Votre partenaire nettoyage.",
         url: "https://cciservices.online",
         logo: {
           "@type": "ImageObject",
@@ -68,17 +68,31 @@ export default function Home() {
         paymentAccepted: "Cash, Bank Transfer",
         address: {
           "@type": "PostalAddress",
-          streetAddress: "06 Rue Galant de nuit",
-          addressLocality: "El Aouina",
-          addressRegion: "Tunis",
+          streetAddress: "06 Rue Galant de nuit, El Aouina",
+          addressLocality: "Tunis",
+          addressRegion: "Grand Tunis",
           postalCode: "2045",
-          addressCountry: "TN"
+          addressCountry: "Tunisia"
         },
         geo: {
           "@type": "GeoCoordinates",
           latitude: 36.8527438,
           longitude: 10.254949
         },
+        areaServed: [
+          {
+            "@type": "City",
+            name: "Tunis"
+          },
+          {
+            "@type": "City", 
+            name: "Ariana"
+          },
+          {
+            "@type": "City",
+            name: "Ben Arous"
+          }
+        ],
         openingHoursSpecification: [
           {
             "@type": "OpeningHoursSpecification",
@@ -228,42 +242,42 @@ export default function Home() {
         mainEntity: [
           {
             "@type": "Question",
-            name: "Quels services de nettoyage propose CCI en Tunisie ?",
+            name: "Quels services de nettoyage propose CCI Tunisie ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "CCI Services propose le nettoyage professionnel de moquettes, salons, canapés, restauration et polissage de marbre, nettoyage de tapisserie d'ameublement, et nettoyage post-chantier. Nous intervenons dans tout le Grand Tunis."
+              text: "CCI Tunisie propose le nettoyage professionnel de moquettes, salons, canapés, restauration et polissage de marbre, nettoyage de tapisserie d'ameublement, et nettoyage post-chantier. CCI Tunis intervient dans tout le Grand Tunis et ses environs."
             }
           },
           {
             "@type": "Question",
-            name: "Combien coûte un nettoyage de moquette en Tunisie ?",
+            name: "Combien coûte un nettoyage de moquette avec CCI Tunisie ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Le tarif dépend de la surface, du type de moquette et de l'état de salissure. CCI Services propose un devis gratuit sur place. Contactez-nous au +216 98 557 766 pour une estimation personnalisée."
+              text: "Le tarif dépend de la surface, du type de moquette et de l'état de salissure. CCI Tunisie propose un devis gratuit sur place à Tunis et environs. Contactez CCI Tunis au +216 98 557 766 pour une estimation personnalisée."
             }
           },
           {
             "@type": "Question",
-            name: "CCI Services intervient dans quelles zones de Tunisie ?",
+            name: "Dans quelles zones CCI Tunisie intervient-elle ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Nous intervenons principalement dans le Grand Tunis : Tunis, Ariana, Ben Arous, Manouba et environs. Basés à El Aouina, nous nous déplaçons dans un rayon de 50km."
+              text: "CCI Tunisie intervient principalement dans le Grand Tunis : Tunis, Ariana, Ben Arous, Manouba et environs. Basés à El Aouina (Tunis), CCI Tunis se déplace dans un rayon de 50km pour tous vos besoins de nettoyage professionnel."
             }
           },
           {
             "@type": "Question",
-            name: "Comment prendre rendez-vous avec CCI Services ?",
+            name: "Comment prendre rendez-vous avec CCI Tunisie ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Contactez-nous par téléphone au +216 98 557 766, par WhatsApp, ou par email à contact@cciservices.online. Nous proposons un devis gratuit et nous déplaçons chez vous."
+              text: "Contactez CCI Tunisie par téléphone au +216 98 557 766, par WhatsApp, ou par email à contact@cciservices.online. CCI Tunis propose un devis gratuit et se déplace chez vous dans tout le Grand Tunis."
             }
           },
           {
             "@type": "Question",
-            name: "CCI Services utilise quels produits pour le nettoyage ?",
+            name: "Quels produits CCI Tunisie utilise pour le nettoyage ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Nous utilisons des produits professionnels écologiques et adaptés à chaque type de surface. Nos techniques respectent vos textiles et garantissent un résultat durable sans résidus chimiques."
+              text: "CCI Tunisie utilise des produits professionnels écologiques et adaptés à chaque type de surface. Les techniques CCI Tunis respectent vos textiles et garantissent un résultat durable sans résidus chimiques."
             }
           }
         ]

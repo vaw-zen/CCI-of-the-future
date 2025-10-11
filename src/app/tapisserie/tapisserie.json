@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "title": "Tapisserie sur mesure & Rénovation d'ameublement— CCI",
-    "description": "Retapissage, remplacement de mousse et rembourrage sur mesure pour canapés, banquettes et nautisme. Tissus ignifuges et finitions soignées."
+    "title": "Tapisserie Sur Mesure Tunis - Retapissage & Rénovation | CCI Tunisie",
+    "description": "CCI Tunisie - Tapisserie sur mesure à Tunis : retapissage, remplacement mousse, rembourrage canapés et nautisme. CCI Tunis : Tissus ignifuges. Devis gratuit ☎ 98-557-766"
   },
-  "heroTitle": "Tapisserie",
+  "heroTitle": "Tapisserie Sur Mesure - CCI Tunisie",
   "tabData": [
     {
       "id": "mission",
@@ -56,34 +56,64 @@
   "localBusinessJSONLD": {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "CCI",
+    "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
+    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
     "url": "https://cciservices.online/",
     "logo": "https://cciservices.online/logo.png",
     "telephone": "+216-98-557-766",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "06, rue galant de nuit, l'aouina,tunis",
-      "addressLocality": "Tunisie",
-      "addressCountry": "TN"
+      "streetAddress": "06 Rue Galant de nuit, El Aouina",
+      "addressLocality": "Tunis",
+      "addressRegion": "Grand Tunis",
+      "postalCode": "2045",
+      "addressCountry": "Tunisia"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 36.8527438,
+      "longitude": 10.254949
     }
   },
   "serviceJSONLD": {
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": "https://cciservices.online/tapisserie",
-    "name": "Services de tapisserie",
-    "description": "Retapissage, remplacement de mousse, rembourrage et fourniture de tissus ignifuges pour bateaux et yachts. Solutions sur mesure pour mobiliers et sièges.",
+    "name": "Tapisserie Sur Mesure Tunis - CCI Tunisie",
+    "description": "CCI Tunisie - Retapissage, remplacement mousse, rembourrage et tissus ignifuges à Tunis. Solutions sur mesure mobiliers, bateaux et yachts. CCI Tunis : Expert tapisserie.",
     "url": "https://cciservices.online/tapisserie",
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Tunis"
+      },
+      {
+        "@type": "City",
+        "name": "Ariana"
+      },
+      {
+        "@type": "City",
+        "name": "Ben Arous"
+      }
+    ],
     "provider": {
       "@type": "LocalBusiness",
-      "name": "CCI",
+      "name": "CCI Tunisie",
+      "alternateName": "CCI Tunis",
       "url": "https://cciservices.online/",
       "telephone": "+216-98-557-766",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+        "streetAddress": "06 Rue Galant de nuit, El Aouina",
         "addressLocality": "Tunis",
-        "addressCountry": "TN"
+        "addressRegion": "Grand Tunis",
+        "postalCode": "2045",
+        "addressCountry": "Tunisia"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.8527438,
+        "longitude": 10.254949
       },
       "logo": "https://cciservices.online/logo.png"
     }

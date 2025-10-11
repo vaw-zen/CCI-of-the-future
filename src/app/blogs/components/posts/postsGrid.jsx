@@ -5,12 +5,12 @@ import styles from './postsGrid.module.css';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { dimensionsStore } from '@/utils/store/store';
 
-const PostsGrid = () => {
+const PostsGrid = ({ initialPosts = null, initialPostsPaging = null }) => {
   const PAGE_SIZE = 6; // 3 desktop cols x 2 rows
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState(initialPosts || []);
+  const [loading, setLoading] = useState(!initialPosts);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [postsPaging, setPostsPaging] = useState(null);
+  const [postsPaging, setPostsPaging] = useState(initialPostsPaging);
   const sentinelRef = useRef(null);
 
   const { isMobile, isTablet } = dimensionsStore();
@@ -19,6 +19,12 @@ const PostsGrid = () => {
   const loadingMoreSkeletonCount = columnCount; 
 
   useEffect(() => {
+    // Skip initial fetch if we already have data from server
+    if (initialPosts && initialPosts.length > 0) {
+      // We already have the paging data from initialPostsPaging
+      return;
+    }
+
     async function loadInitial() {
       try {
         const res = await fetch(`/api/social/facebook?posts_limit=${PAGE_SIZE}`);
@@ -34,22 +40,41 @@ const PostsGrid = () => {
       }
     }
     loadInitial();
-  }, []);
+  }, [initialPosts]);
 
   const hasMore = !!postsPaging?.next;
+  
+  // In-memory cache for paginated results
+  const cacheRef = useRef({});
 
   const loadMore = async () => {
     if (loadingMore || !hasMore) return;
     const after = postsPaging?.cursors?.after || null;
     if (!after) return;
+    
+    // Check cache first
+    if (cacheRef.current[after]) {
+      console.log('[Posts] Loading from cache for cursor:', after);
+      setPosts(prev => ([...(prev || []), ...(cacheRef.current[after].posts || [])]));
+      setPostsPaging(cacheRef.current[after].paging || null);
+      return;
+    }
+    
     setLoadingMore(true);
     try {
       const res = await fetch(`/api/social/facebook?posts_limit=${PAGE_SIZE}&posts_after=${encodeURIComponent(after)}`);
       const data = await res.json();
+      
+      // Store in cache
+      cacheRef.current[after] = {
+        posts: data.posts || [],
+        paging: data.posts_paging || null
+      };
+      
       setPosts(prev => ([...(prev || []), ...((data.posts) || [])]));
       setPostsPaging(data.posts_paging || null);
     } catch (e) {
-      // ignore
+      console.error('[Posts] Error loading more:', e);
     } finally {
       setLoadingMore(false);
     }

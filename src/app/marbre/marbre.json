@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "title": "Restauration, Ponçage, Lustrage, Polissage, Protection & cristallisation du Marbre — CCI",
-    "description": "Restauration professionnelle du marbre : ponçage, polissage, cristallisation et protections pour sols et plans de travail. Devis gratuit."
+    "title": "Restauration Marbre Tunis - Ponçage, Polissage & Cristallisation | CCI Tunisie",
+    "description": "CCI Tunisie - Restauration professionnelle marbre à Tunis : ponçage, polissage, cristallisation et protections sols. CCI Tunis : Expert marbre. Devis gratuit ☎ 98-557-766"
   },
-  "heroTitle": "Marbre",
+  "heroTitle": "Restauration Marbre - CCI Tunisie",
   "tabData": [
     {
       "id": "mission",
@@ -36,49 +36,76 @@
   "localBusinessJSONLD": {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "CCI",
-      "url": "https://cciservices.online/"
-    },
+    "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
+    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
+    "url": "https://cciservices.online/",
     "logo": "https://cciservices.online/logo.png",
     "telephone": "+216-98-557-766",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "06 Rue Galant de nuit, El Aouina,Tunis",
-      "addressLocality": "Tunisie",
-      "addressCountry": "TN"
+      "streetAddress": "06 Rue Galant de nuit, El Aouina",
+      "addressLocality": "Tunis",
+      "addressRegion": "Grand Tunis",
+      "postalCode": "2045",
+      "addressCountry": "Tunisia"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 36.8527438,
+      "longitude": 10.254949
     }
   },
   "serviceJSONLD": {
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": "https://cciservices.online/marbre",
-    "name": "Restauration du marbre",
-    "description": "Ponçage, polissage, cristallisation et protection des surfaces en marbre pour particuliers et professionnels.",
+    "name": "Restauration Marbre Tunis - CCI Tunisie",
+    "description": "CCI Tunisie - Ponçage, polissage, cristallisation et protection marbre à Tunis. Services professionnels pour particuliers et entreprises. CCI Tunis : Expert restauration marbre.",
     "url": "https://cciservices.online/marbre",
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Tunis"
+      },
+      {
+        "@type": "City",
+        "name": "Ariana"
+      },
+      {
+        "@type": "City",
+        "name": "Ben Arous"
+      }
+    ],
     "provider": {
       "@type": "LocalBusiness",
-      "name": "CCI",
+      "name": "CCI Tunisie",
+      "alternateName": "CCI Tunis",
       "url": "https://cciservices.online/",
       "telephone": "+216-98-557-766",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+        "streetAddress": "06 Rue Galant de nuit, El Aouina",
         "addressLocality": "Tunis",
-        "addressCountry": "TN"
+        "addressRegion": "Grand Tunis",
+        "postalCode": "2045",
+        "addressCountry": "Tunisia"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.8527438,
+        "longitude": 10.254949
       },
       "logo": "https://cciservices.online/logo.png"
     }
   },
   "sections": {
     "mainService": {
-      "title": "Restauration et entretien de marbre",
-      "text": "CCI vous propose des services spécialisés pour la restauration et l'entretien de vos surfaces en marbre et carrelage : ponçage, lustrage, cristallisation et protection. Notre équipe utilise des techniques professionnelles et des produits adaptés pour redonner éclat, brillance et durabilité à vos sols et surfaces. Confiez-nous vos projets pour un résultat haut de gamme et durable."
+      "title": "Restauration et entretien de marbre - CCI Tunisie",
+      "text": "CCI Tunisie vous propose des services spécialisés pour la restauration et l'entretien de vos surfaces en marbre à Tunis et toute la Tunisie : ponçage, lustrage, cristallisation et protection. L'équipe CCI Tunis utilise des techniques professionnelles et des produits adaptés pour redonner éclat, brillance et durabilité à vos sols et surfaces. Confiez vos projets à CCI Tunisie pour un résultat haut de gamme et durable."
     },
     "secondaryService": {
-      "title": "Notre expertise",
-      "text": "Notre équipe maîtrise toutes les étapes de la restauration et de l'entretien du marbre : du diagnostic précis à la mise en œuvre des techniques les plus adaptées, nous assurons un accompagnement personnalisé pour chaque projet. Nous utilisons des matériaux et équipements de qualité afin de garantir la durabilité, la brillance et la protection optimale de vos surfaces. Faites confiance à CCI pour redonner vie et éclat à vos sols, escaliers ou plans de travail."
+      "title": "L'expertise CCI Tunisie",
+      "text": "L'équipe CCI Tunisie maîtrise toutes les étapes de la restauration et de l'entretien du marbre à Tunis : du diagnostic précis à la mise en œuvre des techniques les plus adaptées, CCI Tunis assure un accompagnement personnalisé pour chaque projet. Nous utilisons des matériaux et équipements de qualité afin de garantir la durabilité, la brillance et la protection optimale de vos surfaces. Faites confiance à CCI Tunisie pour redonner vie et éclat à vos sols, escaliers ou plans de travail."
     }
   },
   "aboutUs": {

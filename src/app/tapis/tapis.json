@@ -1,10 +1,23 @@
 {
   "metadata": {
-    "title": "Nettoyage Tapis & Moquette Tunis - Injection Extraction Professionnelle | CCI",
-    "description": "Nettoyage professionnel de tapis et moquettes à Tunis. Méthode injection-extraction, anti-acariens, détachage. Intervention rapide. Devis gratuit ☎ 98-557-766",
-    "keywords": "nettoyage tapis tunis, nettoyage moquette tunis, injection extraction tunis, nettoyage tapis professionnel tunisie, détachage tapis tunis, anti-acariens tunis, shampooing moquette ariana, nettoyage bureaux tunis"
+    "title": "Nettoyage Tapis & Moquette Tunis Professionnel | CCI Tunisie",
+    "description": "CCI Tunisie - Expert en nettoyage tapis et moquette à Tunis. Service professionnel par injection-extraction. Nettoyage moquette Tunis avec équipement industriel. Devis gratuit Grand Tunis.",
+    "keywords": [
+      "nettoyage tapis Tunis",
+      "nettoyage moquette Tunis",
+      "shampouinage moquette Tunis",
+      "injection extraction Tunis",
+      "détachage moquette Tunis",
+      "nettoyage professionnel tapis Tunis",
+      "entreprise nettoyage moquette Tunis",
+      "société nettoyage tapis Tunis",
+      "nettoyage tapis Tunisie",
+      "devis nettoyage moquette Tunis",
+      "tarif nettoyage tapis Tunis"
+    ]
   },
-  "heroTitle": "Nettoyage Tapis & Moquette",
+  "heroTitle": "Nettoyage Tapis & Moquette Tunis - CCI Tunisie",
+  "heroSubtitle": "Service professionnel de nettoyage tapis et moquette à Tunis par injection-extraction",
   "tabData": [
     {
       "id": "mission",
@@ -52,38 +65,64 @@
   "localBusinessJSONLD": {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "CCI",
+    "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
+    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
     "url": "https://cciservices.online/",
     "logo": "https://cciservices.online/logo.png",
     "telephone": "+216-98-557-766",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "",
-      "addressLocality": "Tunisie",
-      "addressCountry": "TN"
+      "streetAddress": "06 Rue Galant de nuit, El Aouina",
+      "addressLocality": "Tunis",
+      "addressRegion": "Grand Tunis",
+      "postalCode": "2045",
+      "addressCountry": "Tunisia"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 36.8527438,
+      "longitude": 10.254949
     }
   },
   "serviceJSONLD": {
     "@context": "https://schema.org",
     "@type": "Service",
-    "@id": "https://cciservices.online/tapis-moquettes",
-    "name": "Nettoyage de tapis et moquettes à Tunis",
-    "description": "Nettoyage professionnel de tapis et moquettes à Tunis par injection-extraction. Shampooing, détachage et désinfection avec méthodes adaptées aux fibres et séchage rapide.",
-    "url": "https://cciservices.online/tapis-moquettes",
-    "areaServed": {
-      "@type": "City",
-      "name": "Tunis"
-    },
+    "@id": "https://cciservices.online/tapis",
+    "name": "Nettoyage Tapis et Moquettes Tunis - CCI Tunisie",
+    "description": "CCI Tunisie - Nettoyage professionnel de tapis et moquettes à Tunis par injection-extraction. Shampooing, détachage et désinfection avec méthodes adaptées. CCI Tunis : séchage rapide garanti.",
+    "url": "https://cciservices.online/tapis",
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Tunis"
+      },
+      {
+        "@type": "City",
+        "name": "Ariana"
+      },
+      {
+        "@type": "City",
+        "name": "Ben Arous"
+      }
+    ],
     "provider": {
       "@type": "LocalBusiness",
-      "name": "CCI",
+      "name": "CCI Tunisie",
+      "alternateName": "CCI Tunis",
       "url": "https://cciservices.online/",
       "telephone": "+216-98-557-766",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "06 Rue Galant de nuit, El Aouina, Tunis",
+        "streetAddress": "06 Rue Galant de nuit, El Aouina",
         "addressLocality": "Tunis",
-        "addressCountry": "TN"
+        "addressRegion": "Grand Tunis",
+        "postalCode": "2045",
+        "addressCountry": "Tunisia"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.8527438,
+        "longitude": 10.254949
       },
       "logo": "https://cciservices.online/logo.png"
     }
@@ -94,18 +133,18 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Quelle méthode utilisez-vous pour le nettoyage de tapis à Tunis ?",
+        "name": "Quelle méthode CCI Tunisie utilise pour le nettoyage de tapis à Tunis ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "CCI utilise la méthode injection-extraction professionnelle pour le nettoyage en profondeur des tapis et moquettes à Tunis. Cette technique permet de récupérer plus de 90% de l'humidité injectée, assurant un séchage rapide (moins d'1 heure) et un nettoyage efficace des fibres."
+          "text": "CCI Tunisie utilise la méthode injection-extraction professionnelle pour le nettoyage en profondeur des tapis et moquettes à Tunis. Cette technique CCI Tunis permet de récupérer plus de 90% de l'humidité injectée, assurant un séchage rapide (moins d'1 heure) et un nettoyage efficace des fibres."
         }
       },
       {
         "@type": "Question",
-        "name": "Intervenez-vous à domicile pour le nettoyage de tapis à Tunis ?",
+        "name": "CCI Tunisie intervient-elle à domicile pour le nettoyage de tapis ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Oui, CCI intervient à domicile et dans les entreprises dans tout le Grand Tunis (Tunis, L'Aouina, Ariana, La Marsa, Carthage, Ben Arous). Nous offrons un diagnostic gratuit et un devis sur place avant toute intervention."
+          "text": "Oui, CCI Tunisie intervient à domicile et dans les entreprises dans tout le Grand Tunis (Tunis, L'Aouina, Ariana, La Marsa, Carthage, Ben Arous). CCI Tunis offre un diagnostic gratuit et un devis sur place avant toute intervention."
         }
       },
       {
@@ -118,26 +157,50 @@
       },
       {
         "@type": "Question",
-        "name": "Proposez-vous un traitement anti-acariens pour les tapis ?",
+        "name": "CCI Tunisie propose-t-elle un traitement anti-acariens pour les tapis ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Oui, CCI propose un traitement anti-acariens professionnel adapté aux personnes sensibles et allergiques. Ce traitement complète le nettoyage en profondeur pour garantir un environnement sain, particulièrement recommandé pour les chambres, bureaux et lieux de culte."
+          "text": "Oui, CCI Tunisie propose un traitement anti-acariens professionnel adapté aux personnes sensibles et allergiques. Ce traitement CCI Tunis complète le nettoyage en profondeur pour garantir un environnement sain, particulièrement recommandé pour les chambres, bureaux et lieux de culte."
         }
       },
       {
         "@type": "Question",
-        "name": "Nettoyez-vous les moquettes de bureaux et entreprises à Tunis ?",
+        "name": "CCI Tunisie nettoie-t-elle les moquettes de bureaux et entreprises ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Oui, CCI est spécialisé dans le nettoyage de moquettes professionnelles à Tunis : bureaux, open-spaces, centres d'appel, salles de cinéma, mosquées. Nous intervenons en dehors des heures d'ouverture pour minimiser les perturbations et garantir une remise en service rapide."
+          "text": "Oui, CCI Tunisie est spécialisée dans le nettoyage de moquettes professionnelles à Tunis : bureaux, open-spaces, centres d'appel, salles de cinéma, mosquées. CCI Tunis intervient en dehors des heures d'ouverture pour minimiser les perturbations et garantir une remise en service rapide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien coûte le nettoyage tapis à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le tarif nettoyage tapis Tunis varie selon la surface. CCI Tunisie propose des devis gratuits pour tout service de nettoyage moquette Tunis. Contactez-nous au +216 98 557 766."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quelle est la meilleure méthode de nettoyage moquette à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "L'injection extraction Tunis est la méthode la plus efficace pour le nettoyage professionnel moquette. CCI Tunisie utilise cette technique pour tous nos services de nettoyage tapis Tunis."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "CCI Tunisie intervient dans quelles zones pour le nettoyage tapis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Notre société nettoyage tapis intervient dans tout le Grand Tunis : Tunis, Ariana, Ben Arous, Manouba. Service de nettoyage moquette Tunis disponible 7j/7."
         }
       }
     ]
   },
   "sections": {
     "mainService": {
-      "title": "Nettoyage professionnel de tapis",
-      "text": "Diagnostic de la fibre (laine, polyamide B1, polypropylène bouclé, velours coupé) et repérage des zones à trafic (couloirs, plateaux open‑space), suivis d'une pré‑aspiration haute filtration (HEPA) anti‑particulaire puis d'un pré‑détachage sélectif (tanins, graisses, protéines, chewing‑gum avec gel enzymatique). Selon le niveau d'encrassement et les contraintes d'exploitation, nous appliquons l'injection‑extraction (rinçage contrôlé, récupération >90 % d'humidité) pour les salissures profondes, l'encapsulation polymère basse humidité pour les centres d'appel nécessitant une remise en service rapide (< 1 h), le bonnet / pad orbital pour un rafraîchissement intermédiaire sur grandes surfaces, ou ponctuellement la vapeur sèche localisée pour la désodorisation et la réduction de la charge microbienne dans les zones sensibles. Résultat : remontée limitée des salissures, fibres redressées et temps d'indisponibilité réduit."
+      "title": "Nettoyage Professionnel Tapis & Moquette Tunis",
+      "text": "CCI Tunisie est votre spécialiste du nettoyage tapis et moquette à Tunis. Nous intervenons dans tout le Grand Tunis avec notre équipement professionnel d'injection-extraction pour un nettoyage en profondeur de vos tapis et moquettes. Notre service de nettoyage moquette Tunis garantit des résultats impeccables."
     },
     "secondaryService": {
       "title": "Notre expertise",

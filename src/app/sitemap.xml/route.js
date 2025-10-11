@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
+import { getAllArticles } from '../conseils/data/articles';
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   const currentDate = new Date().toISOString().split('T')[0];
+
+  // Récupérer tous les articles dynamiquement
+  const articles = getAllArticles();
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -104,61 +108,14 @@ export async function GET() {
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
-  <!-- Articles individuels -->
+  <!-- Articles individuels - Générés dynamiquement -->
+  ${articles.map(article => `
   <url>
-    <loc>${baseUrl}/conseils/guide-nettoyage-tapis-tunis-2025</loc>
-    <lastmod>${currentDate}</lastmod>
+    <loc>${baseUrl}/conseils/${article.slug}</loc>
+    <lastmod>${article.updatedDate || article.publishedDate || currentDate}</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/conseils/nettoyage-salons-voiture-tapisseries-tunis</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/conseils/traitement-poncage-polissage-marbre-tunisie</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/conseils/nettoyage-post-chantier-tunisie-fin-travaux</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/conseils/prix-nettoyage-tapis-tunis-tarifs-2025</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/conseils/detartrage-marbre-cuisine-tunisie-guide-expert</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/conseils/services-nettoyage-ariana-tunisie-2025</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/conseils/services-nettoyage-la-marsa-carthage-2025</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
+    <priority>${article.featured ? '0.90' : '0.85'}</priority>
+  </url>`).join('')}
 </urlset>`;
 
   return new NextResponse(sitemap, {

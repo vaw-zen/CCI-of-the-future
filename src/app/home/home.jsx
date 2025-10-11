@@ -8,7 +8,7 @@ export async function generateMetadata() {
   
   return {
     title: "CCI Tunisie | Nettoyage Professionnel à Tunis - Moquettes, Salons & Marbre | Devis Gratuit",
-    description: "🏆 CCI Tunisie - Leader du nettoyage professionnel à Tunis et toute la Tunisie. Spécialistes moquettes, salons, restauration marbre. CCI Tunis : Votre partenaire nettoyage. Devis gratuit ✅ +216 98 557 766",
+    description: "🏆 CCI Tunisie - Leader nettoyage professionnel Tunis. Spécialistes moquettes, salons, marbre. Devis gratuit ✅ +216 98 557 766",
     keywords: "cci tunisie, cci tunis, nettoyage professionnel tunisie, nettoyage moquette tunis, nettoyage salon tunis, restauration marbre tunis, polissage marbre tunisie, tapisserie tunisie, nettoyage post chantier tunis, CCI services",
     alternates: {
       canonical: SITE_URL

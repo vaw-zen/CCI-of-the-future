@@ -15,7 +15,7 @@ export async function generateMetadata() {
     title: tapisserieData.metadata.title,
     description: tapisserieData.metadata.description,
     alternates: {
-      canonical: `${SITE_URL}/tapisserie/`
+      canonical: `${SITE_URL}/tapisserie`
     },
     openGraph: {
       title: tapisserieData.metadata.title,

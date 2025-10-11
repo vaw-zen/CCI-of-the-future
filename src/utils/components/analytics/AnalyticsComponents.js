@@ -2,6 +2,7 @@
 
 import { useAnalytics } from '../../../hooks/useAnalytics';
 import { trackServiceInteraction, trackPhoneReveal, trackSocialClick, SERVICE_TYPES } from '../../analytics';
+import ResponsiveImage from '@/utils/components/Image/Image';
 
 /**
  * Enhanced analytics-aware components for common UI elements
@@ -255,7 +256,7 @@ export function AnalyticsGallery({
           onClick={() => handleImageClick(index, image.name || `image_${index}`)}
         >
           {renderImage ? renderImage(image, index) : (
-            <img src={image.src} alt={image.alt} />
+            <ResponsiveImage src={image.src} alt={image.alt} sizes={[25, 30, 35]} />
           )}
         </div>
       ))}

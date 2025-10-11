@@ -3,6 +3,7 @@ import { useChatWidgetLogic } from './chatWidget.func';
 import { getChatMessages } from '../../../../utils/tuning-loader';
 import { dimensionsStore } from '../../../../utils/store/store';
 import styles from './chatWidget.module.css';
+import ResponsiveImage from '@/utils/components/Image/Image';
 
 // Lazy load the markdown renderer
 const MarkdownRenderer = lazy(() => import('@/utils/components/markdownRenderer/markdownRenderer'));
@@ -70,11 +71,12 @@ const ChatWidget = React.memo(({ isOpen, onClose }) => {
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>
                         <div className={styles.avatar}>
-                            <img 
+                            <ResponsiveImage 
                                 src="/logo.png" 
                                 alt="CCI virtual assistant" 
                                 title="Cleaning virtual assistant"
                                 className={styles.avatarImage}
+                                sizes={[5, 6, 8]}
                             />
                         </div>
                         <div className={styles.headerText}>

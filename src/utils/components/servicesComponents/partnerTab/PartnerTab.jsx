@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import styles from './partnerTab.module.css'
 import Tab from '../../tab/tab'
+import ResponsiveImage from '@/utils/components/Image/Image'
 
 const tabImages = {
   mission: '/mission.jpg',
@@ -42,7 +43,7 @@ export default function PartnerTab({ tabData }) {
                 </div>
               </div>
               <div className={styles.tabImage}>
-                <img src={tabImages[tab.id]} alt={tab.title} title={tab.title} />
+                <ResponsiveImage src={tabImages[tab.id]} alt={tab.title} title={tab.title} sizes={[35, 50, 90]} />
               </div>
             </div>
           )

@@ -1,10 +1,11 @@
 import React from "react";
 import styles from "./welcome.module.css";
+import ResponsiveImage from '@/utils/components/Image/Image';
 
 const WelcomeCard = ({ imageSrc, title, name, position, email, id }) => {
   return (
     <div id={id} className={styles.welcomeCard}>
-      <img className={styles.image} src={imageSrc} alt="welcoming image" />
+      <ResponsiveImage className={styles.image} src={imageSrc} alt="welcoming image" sizes={[30, 35, 40]} />
       <div className={styles.welcomeinfotext}>
         <h3>{title}</h3>
         <div className={styles.nameandposition}>

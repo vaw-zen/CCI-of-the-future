@@ -316,10 +316,11 @@ export const ImageSlider = ({
           </button>
 
           <figure className={styles.lightboxFrame}>
-            <img
+            <ResponsiveImage
               src={images[lightboxIndex]?.src}
               alt={images[lightboxIndex]?.title || 'Aperçu en plein écran'}
               className={styles.lightboxImage}
+              sizes={[80, 85, 90]}
             />
             {(images[lightboxIndex]?.title || images[lightboxIndex]?.description) && (
               <figcaption className={styles.lightboxCaption}>

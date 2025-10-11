@@ -5,6 +5,7 @@ import PostsGrid from "./components/posts/postsGrid";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import styles from "./blog.module.css";
 import blogsData from "./blogs.json";
+import ResponsiveImage from '@/utils/components/Image/Image';
 
 // Fetch initial data on the server for SEO
 async function getInitialData() {
@@ -219,7 +220,7 @@ export default async function Page() {
                 <source src={reel.video_url} type="video/mp4" />
                 Votre navigateur ne supporte pas les vidéos HTML5.
               </video>
-              <img itemProp="thumbnailUrl" src={reel.thumbnail} alt="Aperçu vidéo" />
+              <ResponsiveImage itemProp="thumbnailUrl" src={reel.thumbnail} alt="Aperçu vidéo" sizes={[25, 30, 35]} />
               <span itemProp="duration" content={reel.length ? `PT${Math.round(reel.length)}S` : "PT30S"}>
                 {reel.length ? `${Math.round(reel.length)}s` : "30s"}
               </span>
@@ -237,7 +238,7 @@ export default async function Page() {
               <p>{post.message}</p>
               <time dateTime={post.created_time}>{new Date(post.created_time).toLocaleDateString()}</time>
               {post.attachments?.[0]?.src && (
-                <img src={post.attachments[0].src} alt={post.title || 'Publication'} />
+                <ResponsiveImage src={post.attachments[0].src} alt={post.title || 'Publication'} sizes={[40, 50, 60]} />
               )}
               <a href={post.permalink_url}>Voir sur Facebook</a>
             </article>

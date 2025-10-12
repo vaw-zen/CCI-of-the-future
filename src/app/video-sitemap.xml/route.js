@@ -55,9 +55,21 @@ export async function GET() {
     <priority>0.8</priority>${reels.map(reel => {
       // Construire l'URL complète Facebook pour player_loc
       let playerUrl = reel.permalink_url;
-      if (playerUrl && !playerUrl.startsWith('http')) {
-        // Si c'est une URL relative comme /reel/123/, la convertir en URL complète
-        playerUrl = `https://www.facebook.com${playerUrl}`;
+      if (playerUrl) {
+        // Si c'est une URL relative (commence par / ou ne contient pas facebook.com)
+        if (!playerUrl.startsWith('http')) {
+          playerUrl = `https://www.facebook.com${playerUrl}`;
+        } else if (!playerUrl.includes('facebook.com')) {
+          // Si c'est une URL complète mais pas Facebook, forcer Facebook
+          playerUrl = `https://www.facebook.com/reel/${playerUrl.split('/').pop()}`;
+        }
+        // Assurer que c'est bien une URL Facebook complète
+        if (!playerUrl.startsWith('https://www.facebook.com') && !playerUrl.startsWith('https://m.facebook.com')) {
+          playerUrl = `https://www.facebook.com${playerUrl.replace(/^https?:\/\/[^\/]+/, '')}`;
+        }
+      } else {
+        // URL par défaut si permalink_url manque
+        playerUrl = `https://www.facebook.com/Chaabanes.Cleaning.Intelligence/`;
       }
       
       return `

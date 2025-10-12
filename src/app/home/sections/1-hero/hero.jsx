@@ -8,6 +8,7 @@ import {
   LineMdLinkedin,
   LineMdPhoneTwotone,
   SiMailDuotone,
+  LineMdYoutubeFilled,
 } from "@/utils/components/icons";
 import ResponsiveImage from "@/utils/components/Image/Image";
 
@@ -116,8 +117,8 @@ export default function Hero() {
               <a href="https://www.linkedin.com/company/chaabanes-cleaning-int" target="_blank" rel="noopener noreferrer" title="Profil professionnel CCI Services sur LinkedIn" aria-label="LinkedIn CCI Services">
                 <LineMdLinkedin className={styles.icon} />
               </a>
-              <a href="/" title="TikTok (placeholder)">
-                <LineMdTiktok className={styles.icon} />
+              <a href="https://www.youtube.com/@ChaabanesCleaningIntelligence" title="Youtube channel CCI Services" aria-label="YouTube CCI Services">
+                <LineMdYoutubeFilled className={styles.icon} />
               </a>
             </div>
           </div>

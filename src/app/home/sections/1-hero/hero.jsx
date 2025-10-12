@@ -8,7 +8,7 @@ import {
   LineMdLinkedin,
   LineMdPhoneTwotone,
   SiMailDuotone,
-  LineMdYoutubeFilled,
+  LineMdYoutubeTwotone,
 } from "@/utils/components/icons";
 import ResponsiveImage from "@/utils/components/Image/Image";
 
@@ -118,7 +118,7 @@ export default function Hero() {
                 <LineMdLinkedin className={styles.icon} />
               </a>
               <a href="https://www.youtube.com/@ChaabanesCleaningIntelligence" title="Youtube channel CCI Services" aria-label="YouTube CCI Services">
-                <LineMdYoutubeFilled className={styles.icon} />
+                <LineMdYoutubeTwotone className={styles.icon} />
               </a>
             </div>
           </div>

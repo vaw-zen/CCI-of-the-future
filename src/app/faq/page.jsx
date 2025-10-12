@@ -73,7 +73,7 @@ export default function FAQ() {
 
   return (
     <>
-      <HeroHeader title="FAQ" />
+      <HeroHeader title="Questions Fréquemment Posées - CCI Tunisie" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

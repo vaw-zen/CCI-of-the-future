@@ -53,7 +53,7 @@ export default function ServicesPage() {
     };
     return (
         <main>
-            <HeroHeader title={'Services'} />
+            <HeroHeader title={'Nos Services - CCI Tunisie'} />
             <script type="application/ld+json">{JSON.stringify(servicesSchema)}</script>
             <div className={styles.services}>
                 <Details />

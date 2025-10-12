@@ -22,6 +22,11 @@
     }
   ],
   "images": [
+     {
+      "src": "/feedback/tfc.jpeg",
+      "title": "Nettoyage Technique Post-Chantier",
+      "description": "Nettoyage technique complet après travaux. Dépoussiérage industriel, traitement sols et surfaces pour livraison."
+    },
     {
       "src": "/gallery/tfc/marbre.jpg",
       "title": "Nettoyage Technique Post-Chantier",

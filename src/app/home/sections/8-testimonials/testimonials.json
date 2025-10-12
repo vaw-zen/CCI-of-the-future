@@ -1,24 +1,27 @@
 {
-    "highlight": "Projets Réalisés.",
-    "img": "/gallery/moquette/moquette-detailing-4.jpeg",
+    "highlight": "Avis Clients Vérifiés.",
+    "img":  "/gallery/moquette/moquette-detailing-3.jpeg",
     "testimonials": [
         {
-            "testimonial": "Service impeccable ! Mon canapé a retrouvé une seconde vie. Équipe ponctuelle, professionnelle et très respectueuse de la maison.",
-            "img": "/gallery/moquette/moquette-detailing-4.jpeg",
-            "name": "Nadia Ben Ali",
-            "position": "Particulier"
+            "testimonial": "We were very satisfied with the carpet cleaning service provided. The team was professional, efficient, and attentive to detail. Our office carpets now look fresh and well-maintained. We truly appreciate their professionalism and quality of work. Highly recommended!",
+            "img": "/reviews/salma-Lahami.png",
+            "name": "Salma Lahami",
+            "position": "Cliente Google",
+            "rating": 5
         },
         {
             "testimonial": "Intervention rapide pour le polissage du marbre de notre hall. Le résultat est brillant, nos clients l'ont immédiatement remarqué.",
-            "img": "/gallery/moquette/moquette-detailing-4.jpeg",
-            "name": "Yassine Trabelsi",
-            "position": "Gérant d'hôtel"
+            "img": "/reviews/MB.jpeg",
+            "name": "Med Dhia",
+            "position": "Client Google",
+            "rating": 5
         },
         {
-            "testimonial": "Excellent rapport qualité-prix. Les tapis de notre showroom sont comme neufs, odeurs éliminées et couleurs ravivées.",
-            "img": "/gallery/moquette/moquette-detailing-4.jpeg",
-            "name": "Sami Gharbi",
-            "position": "Responsable magasin"
+            "testimonial": "Service exceptionnel et équipe très professionnelle. Je recommande vivement CCI pour tous vos besoins de nettoyage professionnel.",
+            "img": "/reviews/behija-meddeb.png",
+            "name": "Behija Meddeb",
+            "position": "Cliente Google",
+            "rating": 5
         }
     ]
 }

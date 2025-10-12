@@ -8,7 +8,7 @@ export default function Feedback() {
     <div className={styles.container}>
       <div className={styles.content}>
         <ResponsiveImage 
-          src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d25d112da90204c5cbab7e_feedback-image-1.jpg" 
+          src="/feedback/content (2).jpeg" 
           alt="Customer feedback preview"
           title="Customer feedback preview"
           className={styles.feedbackImage}
@@ -29,11 +29,11 @@ export default function Feedback() {
           />
 
           <p className={styles.trustScore}>
-            Trust score 5.0 based on 1500 reviews
+            Score 5.0 basé sur nos avis clients
           </p>
 
           <div className={styles.readMoreContainer}>
-            <Link href="/" className={styles.iconContainer}>
+            <Link href="/contact" className={styles.iconContainer}>
               <UilArrowRight className={styles.icon} />
             </Link>
             <span className={styles.readMoreText}>
@@ -43,7 +43,7 @@ export default function Feedback() {
         </div>
 
         <ResponsiveImage
-          src="https://uploads-ssl.webflow.com/63c6818603ef9ce50c6d563d/63d25d11b6d5727548c2d785_feedback-image-2.jpg"
+          src="/feedback/content (1).jpeg"
           alt="Customer feedback preview"
           title="Customer feedback preview"
           className={styles.feedbackImage}

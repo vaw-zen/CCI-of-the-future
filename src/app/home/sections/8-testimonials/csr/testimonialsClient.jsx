@@ -82,16 +82,16 @@ export default function TestimonialsClient({ className, fallbackTestimonials, ba
                                 />
                                 <h3 className={styles.name}>{element.name}</h3>
                                 <p className={styles.role}>{element.role || element.position}</p>
-                                {element.rating && (
-                                    <div className={styles.rating}>
-                                        {'⭐'.repeat(element.rating)}
-                                    </div>
-                                )}
                             </div>
                             <div className={styles.divider} />
                             <div className={styles.testimonialWrapper}>
                                 <div className={styles.testimonialContent}>
                                     <p className={styles.testimonialText}>{element.testimonial}</p>
+                                    {element.rating && (
+                                        <div className={styles.testimonialRating}>
+                                            {'⭐'.repeat(element.rating)}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

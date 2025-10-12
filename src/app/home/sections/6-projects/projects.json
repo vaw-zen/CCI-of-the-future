@@ -3,47 +3,47 @@
     "highlight": "Projets Réalisés.",
     "articles": [
         {
-            "title": "Retapissage bar night , care ferry Carthage.",
+            "title": "Retapissage Salon Restaurant - Car Ferry",
             "link": "/tapisserie",
-            "img": "/home/night.webp",
+            "img": "/gallery/tapisserie/tapisserie1.jpg",
             "tags": [
                 {
                     "name": "Tapisserie",
                     "link": "/tapisserie"
                 },
                 {
-                    "name": "Upholustry",
+                    "name": "Cuir Professionnel",
                     "link": "/tapisserie"
                 }
             ]
         },
         {
-            "title": "Retapissage salon en cuir réception , care ferry Carthage",
-            "link": "/tapisserie",
-            "img": "/home/retapissage-salon-en-cuir-car-ferry-carthage.webp",
+            "title": "Restauration Grès Cérame - Car Ferry",
+            "link": "/marbre",
+            "img": "/feedback/content (3).jpeg",
             "tags": [
                 {
-                    "name": "Tapisserie",
-                    "link": "/tapisserie"
+                    "name": "Restauration Sol",
+                    "link": "/marbre"
                 },
                 {
-                    "name": "Upholustry",
-                    "link": "/tapisserie"
+                    "name": "Grès Cérame",
+                    "link": "/marbre"
                 }
             ]
         },
         {
-            "title": "Retapissage bar Amilcar, care ferry Carthage",
-            "link": "/tapisserie",
-            "img": "/home/retapissage-salon-en-cuir.webp",
+            "title": "Rénovation Terrazzo - Hôtel Majestic",
+            "link": "/marbre",
+            "img": "/feedback/content (4).jpeg",
             "tags": [
                 {
-                    "name": "Tapisserie",
-                    "link": "/tapisserie"
+                    "name": "Terrazzo",
+                    "link": "/marbre"
                 },
                 {
-                    "name": "Upholustry",
-                    "link": "/tapisserie"
+                    "name": "Hôtellerie",
+                    "link": "/marbre"
                 }
             ]
         }

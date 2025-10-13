@@ -29,44 +29,43 @@ class IndexingVerifier {
       const articlesPath = path.join(__dirname, '..', 'src', 'app', 'conseils', 'data', 'articles.js');
       const articlesContent = fs.readFileSync(articlesPath, 'utf8');
       
-      // Extract articles using regex
-      const articleMatches = [...articlesContent.matchAll(/{\s*id:\s*(\d+),\s*slug:\s*['"`]([^'"`]+)['"`][\s\S]*?title:\s*['"`]([^'"`]+)['"`][\s\S]*?metaTitle:\s*['"`]([^'"`]+)['"`][\s\S]*?metaDescription:\s*['"`]([^'"`]+)['"`][\s\S]*?keywords:\s*\[(.*?)\]/g)];
+      // Import articles directly instead of regex parsing
+      delete require.cache[require.resolve('../src/app/conseils/data/articles.js')];
+      const { articles } = require('../src/app/conseils/data/articles.js');
       
-      if (articleMatches.length === 0) {
+      if (!articles || articles.length === 0) {
         this.results.issues.push('❌ No articles found in articles.js');
         return;
       }
       
-      console.log(`📋 Found ${articleMatches.length} articles to verify`);
+      console.log(`📋 Found ${articles.length} articles to verify`);
       
-      articleMatches.forEach(match => {
-        const [, id, slug, title, metaTitle, metaDescription, keywordsStr] = match;
-        
+      articles.forEach(articleData => {
         const article = {
-          id: parseInt(id),
-          slug,
-          title,
-          metaTitle,
-          metaDescription,
-          keywords: keywordsStr.match(/"([^"]+)"/g)?.map(k => k.replace(/"/g, '')) || [],
-          url: `${this.siteUrl}/conseils/${slug}`,
+          id: articleData.id,
+          slug: articleData.slug,
+          title: articleData.title,
+          metaTitle: articleData.metaTitle,
+          metaDescription: articleData.metaDescription,
+          keywords: articleData.keywords || [],
+          url: `${this.siteUrl}/conseils/${articleData.slug}`,
           issues: []
         };
         
         // Verify SEO requirements
-        if (!metaTitle || metaTitle.length < 30 || metaTitle.length > 60) {
-          article.issues.push(`Meta title length: ${metaTitle?.length || 0} (should be 30-60)`);
+        if (!article.metaTitle || article.metaTitle.length < 30 || article.metaTitle.length > 60) {
+          article.issues.push(`Meta title length: ${article.metaTitle?.length || 0} (should be 30-60)`);
         }
         
-        if (!metaDescription || metaDescription.length < 120 || metaDescription.length > 160) {
-          article.issues.push(`Meta description length: ${metaDescription?.length || 0} (should be 120-160)`);
+        if (!article.metaDescription || article.metaDescription.length < 120 || article.metaDescription.length > 160) {
+          article.issues.push(`Meta description length: ${article.metaDescription?.length || 0} (should be 120-160)`);
         }
         
         if (!article.keywords || article.keywords.length === 0) {
           article.issues.push('No keywords defined');
         }
         
-        if (!slug || slug.length < 3) {
+        if (!article.slug || article.slug.length < 3) {
           article.issues.push('Invalid or too short slug');
         }
         

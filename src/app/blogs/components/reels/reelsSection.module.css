@@ -206,7 +206,9 @@
   align-items: center;
   gap: 0.21vw;
 }
-
+.reel-likes:hover{
+  color: var(--ac-primary);
+}
 .reel-share {
   cursor: pointer;
   transition: color 0.3s ease;
@@ -216,6 +218,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--ac-primary);
 }
 
 .reel-share:hover {

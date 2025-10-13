@@ -18,19 +18,19 @@ padding: 0 var(--padding-base);
   display: flex;
   align-items: center;
   gap: 0.42vw;
-  color: #333;
+  color: var(--ac-primary);
   text-decoration: none;
   font-size: 0.73vw;
   padding: 0.52vw 0.83vw;
   border-radius: 0.42vw;
-  background: #f5f5f5;
-  border: 0.05vw solid #e0e0e0;
+  background: transparent;
+  border: 0.05vw solid var(--ac-primary);
   transition: all 0.2s;
 }
 
 .backButton:hover {
-  background-color: #e0e0e0;
-  color: #000;
+  background-color: var(--ac-primary);
+  color: var(--bg-base);
 }
 
 .backButton svg {
@@ -406,12 +406,17 @@ padding: 0 var(--padding-base);
     gap: 1.46vw;
     font-size: 3.40vw;
     color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
   }
   
   .stat svg {
     font-size: 4.37vw;
   }
   
+  .stat:hover {
+    color: var(--bg-base);
+  }
   .actionButtons {
     display: flex;
     align-items: center;
@@ -425,7 +430,7 @@ padding: 0 var(--padding-base);
     gap: 1.94vw;
     background: transparent;
     border: 0.24vw solid #CBFB1C;
-    color: #333;
+    color: #CBFB1C;
     padding: 2.43vw 4.85vw;
     border-radius: 1.94vw;
     font-size: 3.40vw;
@@ -437,6 +442,7 @@ padding: 0 var(--padding-base);
   .shareButton:hover, .openButton:hover {
     background: #B8E819;
     border-color: var(--bg-base);
+    color: var(--bg-base);
     transform: translateY(-0.24vw);
   }
   
@@ -453,6 +459,12 @@ padding: 0 var(--padding-base);
     line-height: 1.6; 
     color: #666; 
     margin: 0; 
+  }
+  
+  /* Target hashtag spans in description - 1024px */
+  .hashtag {
+    color: var(--ac-primary);
+    font-weight: 600;
   }
 }
 
@@ -676,6 +688,12 @@ padding: 0 var(--padding-base);
   line-height: 1.6;
   color: #666;
   margin: 0;
+}
+
+/* Target hashtag spans in description */
+.hashtag {
+  color: var(--ac-primary);
+  font-weight: 600;
 }
 
 
@@ -978,6 +996,12 @@ padding: 0 var(--padding-base);
   gap: 0.31vw;
   font-size: 0.73vw;
   color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.stat:hover {
+  color: var(--ac-primary);
 }
 
 .stat svg {
@@ -996,7 +1020,7 @@ padding: 0 var(--padding-base);
   gap: 0.42vw;
   background: transparent;
   border: 0.05vw solid #CBFB1C;
-  color: #333;
+  color: #CBFB1C;
   padding: 0.52vw 1.04vw;
   border-radius: 0.42vw;
   font-size: 0.73vw;
@@ -1008,7 +1032,9 @@ padding: 0 var(--padding-base);
 .shareButton:hover {
   background: #B8E819;
   border-color: var(--bg-base);
+  color: var(--bg-base);
   transform: translateY(-0.05vw);
+ 
 }
 
 /* Tablet responsive styles */
@@ -1263,6 +1289,12 @@ padding: 0 var(--padding-base);
     gap: 1.46vw;
     font-size: 3.40vw;
     color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .stat:hover {
+    color: var(--bg-base);
   }
   
   .stat svg {
@@ -1282,7 +1314,7 @@ padding: 0 var(--padding-base);
     gap: 1.94vw;
     background: transparent;
     border: 0.24vw solid #CBFB1C;
-    color: #333;
+    color: #CBFB1C;
     padding: 2.43vw 4.85vw;
     border-radius: 1.94vw;
     font-size: 3.40vw;
@@ -1294,6 +1326,7 @@ padding: 0 var(--padding-base);
   .shareButton:hover {
     background: #B8E819;
     border-color: var(--bg-base);
+    color: var(--bg-base);
     transform: translateY(-0.24vw);
   }
   
@@ -1309,5 +1342,11 @@ padding: 0 var(--padding-base);
     line-height: 1.6; 
     color: #666; 
     margin: 0; 
+  }
+  
+  /* Target hashtag spans in description - Mobile */
+  .hashtag {
+    color: var(--ac-primary);
+    font-weight: 600;
   }
 }

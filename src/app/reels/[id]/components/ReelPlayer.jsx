@@ -219,6 +219,19 @@ const ReelPlayer = ({ reel }) => {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  // Parse hashtags in text
+  const parseHashtags = (text) => {
+    if (!text) return text;
+    
+    const parts = text.split(/(#\w+)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('#')) {
+        return <span key={index} className={styles.hashtag}>{part}</span>;
+      }
+      return part;
+    });
+  };
+
   const progressPercent = videoState.duration > 0 ? 
     (videoState.currentTime / videoState.duration) * 100 : 0;
   const volumePercent = videoState.isMuted ? 0 : videoState.volume * 100;
@@ -227,6 +240,18 @@ const ReelPlayer = ({ reel }) => {
          <>
           <ServiceDetails title={extractTitle(reel.message)} text={""} />
     <div className={styles.reelPlayer}>
+      <div className={styles.header}>
+        <Link href="/blogs" className={styles.backButton}>
+          <MdiArrowLeft />
+          Retour aux reels
+        </Link>
+        <div className={styles.reelInfo}>
+          <h1 className={styles.reelTitle}>{extractTitle(reel.message)}</h1>
+          <div className={styles.reelMeta}>
+            <span>Publié le {new Date(reel.created_time).toLocaleDateString('fr-FR')}</span>
+          </div>
+        </div>
+      </div>
      
 
       <div 
@@ -349,7 +374,7 @@ const ReelPlayer = ({ reel }) => {
         <div className={styles.engagementStats}>
           <div className={styles.stat}>
             <MdiHeartOutline />
-            <span>{reel.likes || 0}</span>
+            {reel.likes || 0}
           </div>
         </div>
         
@@ -362,8 +387,8 @@ const ReelPlayer = ({ reel }) => {
 
       {reel.message && (
         <div className={styles.description}>
-          <h2>Description</h2>
-          <p>{reel.message}</p>
+          <h2>Description :</h2>
+          <p>{parseHashtags(reel.message)}</p>
         </div>
       )}
     </div></>

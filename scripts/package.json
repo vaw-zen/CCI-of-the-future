@@ -1,0 +1,42 @@
+{
+  "name": "seo-automation-scripts",
+  "version": "1.0.0",
+  "description": "Automated SEO keyword analysis and content generation for CCI Services",
+  "type": "module",
+  "scripts": {
+    "seo:analyze": "node scripts/run-seo-automation.js",
+    "seo:generate-content": "ACTION_TYPE=content_generation node scripts/run-seo-automation.js",
+    "seo:track-performance": "ACTION_TYPE=performance_tracking node scripts/run-seo-automation.js",
+    "seo:update-keywords": "ACTION_TYPE=keyword_update node scripts/run-seo-automation.js",
+    "seo:test": "node scripts/test-seo-automation.js",
+    "keywords:cluster": "node scripts/keyword-clustering.js",
+    "content:generate": "node scripts/ai-content-generator.js",
+    "gsc:sync": "node scripts/gsc-tracker.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.2.1",
+    "googleapis": "^126.0.1",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "node-fetch": "^3.3.2",
+    "cheerio": "^1.0.0-rc.12",
+    "natural": "^6.5.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.54.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "seo",
+    "automation",
+    "keyword-analysis",
+    "content-generation",
+    "google-search-console",
+    "ai-content"
+  ],
+  "author": "CCI Services",
+  "license": "MIT"
+}

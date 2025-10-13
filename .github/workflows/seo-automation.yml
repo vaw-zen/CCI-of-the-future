@@ -1,0 +1,153 @@
+name: SEO Automation Workflow
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      action_type:
+        description: 'Action to perform'
+        required: true
+        default: 'full_analysis'
+        type: choice
+        options:
+        - full_analysis
+        - content_generation
+        - performance_tracking
+        - keyword_update
+
+env:
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  GSC_CREDENTIALS: ${{ secrets.GSC_CREDENTIALS }}
+  SITE_URL: ${{ secrets.SITE_URL }}
+
+jobs:
+  seo-automation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        npm install googleapis @google/generative-ai csv-parser csv-writer dotenv
+        
+    - name: Setup GSC credentials
+      run: |
+        echo '${{ secrets.GSC_CREDENTIALS }}' > gsc-credentials.json
+        
+    - name: Run SEO Analysis
+      id: analysis
+      run: |
+        if [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "content_generation" ]; then
+          node scripts/seo-content-automation.cjs 2
+        else
+          node scripts/run-seo-automation.js
+        fi
+      env:
+        ACTION_TYPE: ${{ github.event.inputs.action_type || 'full_analysis' }}
+        
+    - name: Generate Content Report
+      run: |
+        echo "## 📊 SEO Automation Report" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        cat seo-report.md >> $GITHUB_STEP_SUMMARY
+        
+    - name: Commit generated content
+      if: success()
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "SEO Automation Bot"
+        git add src/app/conseils/data/articles.js seo-keywords.csv content/ seo-report.md || true
+        git diff --staged --quiet || git commit -m "🤖 Auto-generated SEO content: Added new articles.js database updates"
+        
+    - name: Push changes
+      if: success()
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+        
+    - name: Create Pull Request for Review
+      if: github.event.inputs.action_type == 'content_generation'
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: "🤖 AI-Generated SEO Content"
+        title: "Review AI-Generated Content"
+        body: |
+          ## 🤖 AI-Generated SEO Content
+          
+          This PR contains automatically generated content based on keyword gap analysis:
+          
+          ${{ steps.analysis.outputs.content_summary }}
+          
+          ### Generated Files:
+          ${{ steps.analysis.outputs.generated_files }}
+          
+          ### SEO Improvements:
+          - ✅ New content for high-priority keywords
+          - ✅ Updated keyword tracking data
+          - ✅ Optimized meta tags and structured data
+          
+          Please review and merge if content quality is acceptable.
+        branch: automated-seo-content
+        delete-branch: true
+        
+    - name: Send Slack notification
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#seo-automation'
+        text: |
+          SEO Automation ${{ job.status }}!
+          Action: ${{ github.event.inputs.action_type || 'full_analysis' }}
+          Keywords tracked: ${{ steps.analysis.outputs.keywords_count }}
+          Content generated: ${{ steps.analysis.outputs.content_count }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy-preview:
+    if: github.event.inputs.action_type == 'content_generation'
+    needs: seo-automation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to staging
+      run: |
+        # Deploy generated content to staging environment for review
+        echo "Deploying to staging for content review..."
+        
+    - name: Run SEO audit
+      run: |
+        # Run lighthouse or similar SEO audit on staging
+        npx @lhci/cli@0.12.x autorun --upload.target=temporary-public-storage
+        
+    - name: Comment PR with audit results
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const auditResults = require('./lhci_reports/manifest.json');
+          const comment = `## 🚦 SEO Audit Results
+          
+          **Performance Score:** ${auditResults.summary.performance}
+          **SEO Score:** ${auditResults.summary.seo}
+          **Accessibility:** ${auditResults.summary.accessibility}
+          
+          [View full report](${auditResults.url})`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });

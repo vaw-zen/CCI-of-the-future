@@ -21,10 +21,10 @@ Tapis & Moquette,shampouinage moquette Tunis,Commercial,Medium,/tapis,Needs Opti
 Tapis & Moquette,détachage moquette Tunis,Commercial,Low,/blog/detachage-moquette,Optimized,Blog Post,High
 Tapis & Moquette,entreprise nettoyage moquette Tunis,Commercial,High,/tapis,Optimized,Service Page,High
 Tapis & Moquette,devis nettoyage moquette Tunis,Transactional,Medium,/devis,Optimized,Landing Page,High
-Tapis & Moquette,tarif nettoyage tapis Tunis,Commercial,Medium,/blog/prix-nettoyage-tapis,Not Optimized,Blog Post,Medium
+Tapis & Moquette,tarif nettoyage tapis Tunis,Commercial,Medium,/blog/prix-nettoyage-tapis,Optimized,Blog Post,Medium
 Salon & Canapé,nettoyage salon tunis,Commercial,Medium,/salon,Optimized,Service Page,High
-Salon & Canapé,nettoyage canapé,Informational,Medium,/blog/guide-nettoyage-canape,Not Optimized,Blog Post,High
-Salon & Canapé,nettoyage voiture intérieur,Commercial,Low,/blog/nettoyage-voiture-interieur,Not Optimized,Blog Post,Medium
+Salon & Canapé,nettoyage canapé,Informational,Medium,/blog/guide-nettoyage-canape,Optimized,Blog Post,High
+Salon & Canapé,nettoyage voiture intérieur,Commercial,Low,/blog/nettoyage-voiture-interieur,Optimized,Blog Post,Medium
 Salon & Canapé,nettoyage salon domicile tunis,Transactional,Medium,/salon,Needs Optimization,Service Page,High
 Salon & Canapé,détachage salon,Informational,Low,/blog/detachage-salon-guide,Not Optimized,Blog Post,Medium
 Salon & Canapé,shampooing canapé,Informational,Low,/blog/shampooing-canape,Not Optimized,Blog Post,Medium
@@ -106,3 +106,13 @@ Materials & Surfaces,microfibre,Informational,Low,/blog/nettoyage-microfibre,Not
 Materials & Surfaces,velours,Informational,Low,/blog/nettoyage-velours,Not Optimized,Blog Post,Low
 Materials & Surfaces,coton,Informational,Low,/blog/nettoyage-coton,Not Optimized,Blog Post,Low
 Materials & Surfaces,lin,Informational,Low,/blog/nettoyage-lin,Not Optimized,Blog Post,Low
+Professional Services Inquiries,services nettoyage professionnel près de moi,Local Commercial,High,/services,Not Optimized,Service Page,High
+Professional Services Inquiries,entreprise nettoyage industriel fiable Tunisie,Commercial,High,/services,Not Optimized,Service Page,High
+Professional Services Inquiries,nettoyage professionnel bureaux options,Commercial,High,/services,Not Optimized,Service Page,High
+Professional Services Inquiries,tarifs moyens nettoyage après travaux,Commercial,High,/blog/tarifs-nettoyage-apres-travaux,Not Optimized,Blog Post,High
+Professional Services Inquiries,entreprise nettoyage écologique commerces,Commercial,High,/services,Not Optimized,Service Page,High
+Professional Services Inquiries,réserver service nettoyage événement professionnel,Transactional,High,/contact,Not Optimized,Service Page,High
+Professional Services Inquiries,contrats nettoyage réguliers immeubles,Commercial,High,/services,Not Optimized,Service Page,High
+Professional Services Inquiries,services nettoyage vitres en hauteur,Commercial,Medium,/services,Not Optimized,Service Page,High
+Professional Services Inquiries,service désinfection professionnelle locaux commerciaux,Commercial,High,/services,Not Optimized,Service Page,High
+Professional Services Inquiries,nettoyage spécialisé cuisines industrielles,Commercial,High,/services,Not Optimized,Service Page,High

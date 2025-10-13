@@ -9,25 +9,43 @@ import fs from 'fs';
 async function testGSCCredentials() {
   console.log('🔍 Testing Google Search Console Credentials...\n');
 
-  // Check if credentials file exists
+  // Check credentials - either file or environment variable
   const credentialsPath = './gsc-credentials.json';
-  if (!fs.existsSync(credentialsPath)) {
-    console.error('❌ Error: gsc-credentials.json not found');
-    console.log('📋 To fix this:');
+  let credentials;
+
+  if (process.env.GSC_CREDENTIALS) {
+    // Running in GitHub Actions or with environment variable
+    console.log('✅ Using GSC_CREDENTIALS from environment');
+    try {
+      credentials = JSON.parse(process.env.GSC_CREDENTIALS);
+    } catch (error) {
+      console.error('❌ Error: GSC_CREDENTIALS environment variable contains invalid JSON');
+      return;
+    }
+  } else if (fs.existsSync(credentialsPath)) {
+    // Running locally with credentials file
+    console.log('✅ Using gsc-credentials.json file');
+    const credentialsContent = fs.readFileSync(credentialsPath, 'utf8');
+    try {
+      credentials = JSON.parse(credentialsContent);
+    } catch (error) {
+      console.error('❌ Error: gsc-credentials.json contains invalid JSON');
+      return;
+    }
+  } else {
+    console.error('❌ Error: No GSC credentials found');
+    console.log('📋 For local development:');
     console.log('1. Follow the GSC setup guide in SEO_AUTOMATION_GUIDE.md');
     console.log('2. Download the JSON credentials file from Google Cloud Console');
-    console.log('3. Rename it to gsc-credentials.json and place in project root\n');
+    console.log('3. Rename it to gsc-credentials.json and place in project root');
+    console.log('📋 For GitHub Actions:');
+    console.log('1. Add GSC_CREDENTIALS secret in GitHub repository settings');
+    console.log('2. Copy the entire JSON content as the secret value\n');
     return;
   }
 
-  console.log('✅ Credentials file found');
-
   try {
-    // Load and validate JSON
-    const credentialsContent = fs.readFileSync(credentialsPath, 'utf8');
-    const credentials = JSON.parse(credentialsContent);
-
-    console.log('✅ Credentials file is valid JSON');
+    console.log('✅ Credentials loaded and validated JSON');
 
     // Check required fields
     const requiredFields = [

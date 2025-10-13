@@ -27,13 +27,10 @@ Value: AIzaSyBiEQFqtxkgn_3S2lNFpLMonnVp45QlhZk
 #### 2. GSC_CREDENTIALS
 ```
 Name: GSC_CREDENTIALS  
-Value: [Copy the ENTIRE content of your gsc-credentials.json file]
+Value: [Copy the ENTIRE content of your Google Search Console credentials JSON]
 ```
 
-To get the value:
-1. Open `gsc-credentials.json` in your project
-2. Copy ALL the JSON content (including { and })
-3. Paste it as the secret value
+✅ **You've already added this secret!** The GitHub Actions workflow will use this instead of a local file for security.
 
 #### 3. SITE_URL
 ```

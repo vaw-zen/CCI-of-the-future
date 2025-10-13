@@ -23,9 +23,9 @@ const roboto = Roboto_Condensed({
 });
 
 export const metadata = {
-  title: "CCI Tunisie — Leader du Nettoyage Professionnel à Tunis & Tissus Ignifuges",
-description: "CCI Tunisie : Leader du nettoyage professionnel à Tunis et toute la Tunisie. Nettoyage moquettes, salons, restauration marbre (polissage, cristallisation), tapisserie sur mesure. CCI Tunis - Votre partenaire nettoyage depuis des années. Service fiable et qualité garantie.",   alternates: {
- 
+  title: "CCI Services — Leader du Nettoyage Professionnel à Tunis | Moquettes, Salons & Marbre",
+description: "CCI Services : Leader du nettoyage professionnel à Tunis et toute la Tunisie. Nettoyage moquettes, salons, restauration marbre (polissage, cristallisation), tapisserie sur mesure. CCI Services - Votre partenaire nettoyage depuis des années. Service fiable et qualité garantie.",   alternates: {
+
   },
 };
 

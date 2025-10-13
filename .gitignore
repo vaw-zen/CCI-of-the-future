@@ -45,3 +45,6 @@ next-env.d.ts
 
 CLAUDE.md
 .claude
+# Development-only SEO tools
+scripts/fix-seo-issues.cjs
+*.backup*

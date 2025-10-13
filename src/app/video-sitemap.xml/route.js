@@ -44,28 +44,10 @@ export async function GET() {
     const reels = await getReelsData();
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
 
-    // Générer le XML du sitemap vidéo avec une URL individuelle pour chaque reel
+    // Générer le XML du sitemap vidéo avec des URLs distinctes
     const videoSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">${reels.map(reel => {
-      // Construire l'URL complète Facebook pour player_loc
-      let playerUrl = reel.permalink_url;
-      if (playerUrl) {
-        // Si c'est une URL relative (commence par / ou ne contient pas facebook.com)
-        if (!playerUrl.startsWith('http')) {
-          playerUrl = `https://www.facebook.com${playerUrl}`;
-        } else if (!playerUrl.includes('facebook.com')) {
-          // Si c'est une URL complète mais pas Facebook, forcer Facebook
-          playerUrl = `https://www.facebook.com/reel/${playerUrl.split('/').pop()}`;
-        }
-        // Assurer que c'est bien une URL Facebook complète
-        if (!playerUrl.startsWith('https://www.facebook.com') && !playerUrl.startsWith('https://m.facebook.com')) {
-          playerUrl = `https://www.facebook.com${playerUrl.replace(/^https?:\/\/[^\/]+/, '')}`;
-        }
-      } else {
-        // URL par défaut si permalink_url manque
-        playerUrl = `https://www.facebook.com/Chaabanes.Cleaning.Intelligence/`;
-      }
       
       return `
   <url>
@@ -77,8 +59,8 @@ export async function GET() {
       <video:thumbnail_loc>${escapeXml(reel.thumbnail)}</video:thumbnail_loc>
       <video:title>${escapeXml(reel.message || 'Reel CCI Services')}</video:title>
       <video:description>${escapeXml((reel.message || 'Vidéo reel publiée par CCI Services').slice(0, 2048))}</video:description>
-      <video:content_loc>${escapeXml(reel.video_url)}</video:content_loc>
-      <video:player_loc>${escapeXml(`${baseUrl}/reels/${reel.id}`)}</video:player_loc>
+      <video:content_loc>${escapeXml(reel.video_url || `${baseUrl}/api/video/${reel.id}`)}</video:content_loc>
+      <video:player_loc>${escapeXml(`${baseUrl}/reels/${reel.id}?player=embed`)}</video:player_loc>
       ${reel.length ? `<video:duration>${Math.round(reel.length)}</video:duration>` : '<video:duration>30</video:duration>'}
       <video:publication_date>${formatDate(reel.created_time)}</video:publication_date>
       <video:family_friendly>yes</video:family_friendly>

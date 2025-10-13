@@ -61,6 +61,11 @@ jobs:
       env:
         ACTION_TYPE: ${{ github.event.inputs.action_type || 'full_analysis' }}
         
+    - name: Submit new articles for indexing
+      run: |
+        echo "📤 Submitting new articles to Google Search Console for faster indexing..."
+        node scripts/submit-urls-indexing.cjs articles 3 || echo "⚠️ URL submission failed, continuing..."
+        
     - name: Generate Content Report
       run: |
         echo "## 📊 SEO Automation Report" >> $GITHUB_STEP_SUMMARY

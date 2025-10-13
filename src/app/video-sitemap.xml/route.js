@@ -44,15 +44,10 @@ export async function GET() {
     const reels = await getReelsData();
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
 
-    // Générer le XML du sitemap vidéo
+    // Générer le XML du sitemap vidéo avec une URL individuelle pour chaque reel
     const videoSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-  <url>
-    <loc>${baseUrl}/blogs</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>${reels.map(reel => {
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">${reels.map(reel => {
       // Construire l'URL complète Facebook pour player_loc
       let playerUrl = reel.permalink_url;
       if (playerUrl) {
@@ -73,12 +68,17 @@ export async function GET() {
       }
       
       return `
+  <url>
+    <loc>${baseUrl}/reels/${reel.id}</loc>
+    <lastmod>${formatDate(reel.created_time)}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
     <video:video>
       <video:thumbnail_loc>${escapeXml(reel.thumbnail)}</video:thumbnail_loc>
       <video:title>${escapeXml(reel.message || 'Reel CCI Services')}</video:title>
       <video:description>${escapeXml((reel.message || 'Vidéo reel publiée par CCI Services').slice(0, 2048))}</video:description>
       <video:content_loc>${escapeXml(reel.video_url)}</video:content_loc>
-      <video:player_loc>${escapeXml(playerUrl)}</video:player_loc>
+      <video:player_loc>${escapeXml(`${baseUrl}/reels/${reel.id}`)}</video:player_loc>
       ${reel.length ? `<video:duration>${Math.round(reel.length)}</video:duration>` : '<video:duration>30</video:duration>'}
       <video:publication_date>${formatDate(reel.created_time)}</video:publication_date>
       <video:family_friendly>yes</video:family_friendly>
@@ -91,9 +91,9 @@ export async function GET() {
       <video:tag>services CCI</video:tag>
       <video:tag>entretien</video:tag>
       <video:tag>rénovation</video:tag>
-    </video:video>`;
+    </video:video>
+  </url>`;
     }).join('')}
-  </url>
 </urlset>`;
 
     return new NextResponse(videoSitemap, {

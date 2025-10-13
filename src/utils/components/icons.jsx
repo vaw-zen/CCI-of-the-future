@@ -15,6 +15,10 @@ export function UilArrowRight(props) {
 	return (<svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M17.92 11.62a1 1 0 0 0-.21-.33l-5-5a1 1 0 0 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l5-5a1 1 0 0 0 .21-.33a1 1 0 0 0 0-.76"></path></svg>);
 }
 
+export function MdiArrowLeft(props) {
+	return (<svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M6.08 11.62a1 1 0 0 0 .21.33l5 5a1 1 0 0 0 1.42-1.42L9.41 12H17a1 1 0 0 0 0-2H9.41l3.3-3.29a1 1 0 0 0 0-1.42a1 1 0 0 0-1.42 0l-5 5a1 1 0 0 0-.21.33a1 1 0 0 0 0 .76"></path></svg>);
+}
+
 export function CircularText(props) {
 	return (<svg viewBox="0 0 200 200"      {...props}    >      <defs>        <path d="M0, 100a100, 100 0 1, 0 200, 0a100, 100 0 1, 0 -200, 0" id="txt-path" />      </defs>      <text fontSize="22" letterSpacing="7" fontFamily="DM Sans, sans-serif" fontWeight="900"      >        <textPath startOffset="0" href="#txt-path"        >        PLAY VIDEO PLAY VIDEO PLAY VIDEO        </textPath>      </text>    </svg>);
 }
@@ -152,4 +156,8 @@ export function MdiFullscreenExit(props) {
 
 export function LineMdYoutubeTwotone(props) {
 	return (<svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" {...props}><path fill="#CBFB42" fillOpacity={0} d="M12 11L12 12L12 13z"><animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M12 11L12 12L12 13z;M10 8.5L16 12L10 15.5z"></animate><set fill="freeze" attributeName="fill-opacity" begin="0.6s" to={1}></set></path><path fill="none" stroke="#CBFB42" strokeDasharray={64} strokeDashoffset={64} strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5c9 0 9 0 9 7c0 7 0 7 -9 7c-9 0 -9 0 -9 -7c0 -7 0 -7 9 -7Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0"></animate></path></svg>);
+}
+
+export function CuidaOpenInNewTabOutline(props) {
+	return (<svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" {...props}><g className="open-in-new-tab-outline"><g fill="#CBFB42" fillRule="evenodd" className="Vector" clipRule="evenodd"><path d="M5 4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5.263a1 1 0 1 1 2 0V19a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h5.017a1 1 0 1 1 0 2z"></path><path d="M21.411 2.572a.963.963 0 0 1 0 1.36l-8.772 8.786a.96.96 0 0 1-1.358 0a.963.963 0 0 1 0-1.36l8.773-8.786a.96.96 0 0 1 1.357 0"></path><path d="M21.04 2c.53 0 .96.43.96.962V8c0 .531-.47 1-1 1s-1-.469-1-1V4h-4c-.53 0-1-.469-1-1s.43-1 .96-1z"></path></g></g></svg>);
 }

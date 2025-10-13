@@ -1,8 +1,9 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import styles from './reelsSection.module.css';
 import PostCardSkeleton from "../posts/postCardSkeleton.jsx";
-import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText, MdiPause, LineMdVolumeHighFilled, MdiVolumeMute, MdiFullscreen } from '@/utils/components/icons';
+import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, BiPlayFill, CircularText, MdiPause, LineMdVolumeHighFilled, MdiVolumeMute, MdiFullscreen, CuidaOpenInNewTabOutline } from '@/utils/components/icons';
 import { useReelsSection } from './reelsSection.func'
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
 import useAutoHeightTransition from '@/libs/useAutoHeightTransition/useAutoHeightTransition';
@@ -110,6 +111,15 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
 
   // Handle overlay play button click
   const handleOverlayClick = useCallback((reelId, event) => {
+    // Check if the click is on a link or inside a link
+    const target = event?.target;
+    const isLinkClick = target?.closest('a') || target?.tagName === 'A';
+    
+    // If clicking on a link, don't interfere - let the navigation happen
+    if (isLinkClick) {
+      return;
+    }
+    
     event?.preventDefault();
     event?.stopPropagation();
     
@@ -125,9 +135,15 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
 
   // Prevent direct video clicks from playing/pausing
   const handleVideoClick = useCallback((event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    // Do nothing - video should only be controlled by overlay/custom controls
+    // Check if the click is on a link or inside a link element
+    const isLinkClick = event.target.closest('a') || event.target.tagName === 'A';
+    
+    if (!isLinkClick) {
+      event.preventDefault();
+      event.stopPropagation();
+      // Do nothing - video should only be controlled by overlay/custom controls
+    }
+    // If it's a link click, allow it to proceed naturally
   }, []);
 
   // Custom control handlers
@@ -350,6 +366,34 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
     return reel.video_url;
   };
 
+  // Handle share functionality
+  const handleShare = useCallback(async (reel, event) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+    
+    const url = `${window.location.origin}/reels/${reel.id}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: reel.message || 'Reel CCI Services',
+          text: 'Découvrez ce reel CCI Services',
+          url: url,
+        });
+      } catch (error) {
+        console.log('Partage annulé ou échoué');
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Lien copié dans le presse-papiers !');
+      } catch (error) {
+        console.error('Erreur lors de la copie:', error);
+      }
+    }
+  }, []);
+
   const showLoadMore = Boolean(reelsPaging?.next);
   const loadMoreRef = useAutoHeightTransition(showLoadMore, { duration: 250, easing: 'ease' });
 
@@ -443,7 +487,10 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                     onMouseLeave={() => handleMouseLeave(reel.id)}
                     onMouseMove={() => handleMouseMove(reel.id)}
                   >
-                    <div className={styles['reel-image-container']}>
+                    <div 
+                      className={styles['reel-image-container']}
+                      onClick={(e) => handleOverlayClick(reel.id, e)}
+                    >
                       <video
                         ref={(el) => {
                           if (el) {
@@ -456,7 +503,6 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         controls={false}
                         preload="none"
                         playsInline
-                        onClick={handleVideoClick}
                         onPlay={() => handleVideoPlay(reel.id)}
                         onPause={() => handleVideoPause(reel.id)}
                         onEnded={() => handleVideoEnded(reel.id)}
@@ -466,12 +512,13 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
 
                       {/* Play Overlay - Only show when not playing */}
                       {!isPlaying && (
-                        <div
-                          className={`${styles.container} ${styles.showOverlay}`}
-                          onClick={(e) => handleOverlayClick(reel.id, e)}
-                        >
+                        <div className={`${styles.container} ${styles.showOverlay}`}>
                           <div className={styles.filter} />
-                          <button className={styles.playButton} aria-label="Play video">
+                          <button 
+                            className={styles.playButton} 
+                            aria-label="Play video"
+                            onClick={(e) => handleOverlayClick(reel.id, e)}
+                          >
                             <div className={styles.textContainer}>
                               <CircularText className={styles.circularText} />
                             </div>
@@ -486,11 +533,14 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                       {isActive && isPlaying && showControls[reel.id] && (
                         <div
                           className={`${styles.container} ${styles.showOverlay}`}
-                          onClick={(e) => handleOverlayClick(reel.id, e)}
                           style={{ background: 'transparent' }}
                         >
                           <div className={styles.filter} />
-                          <button className={styles.playButton} aria-label="Pause video">
+                          <button 
+                            className={styles.playButton} 
+                            aria-label="Pause video"
+                            onClick={(e) => handleOverlayClick(reel.id, e)}
+                          >
                             <div className={styles.textContainer}>
                               <CircularText className={styles.circularText} />
                             </div>
@@ -586,14 +636,33 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                       {/* Text Overlay - Hide when playing */}
                       <div className={`${styles['reel-overlay']} ${isPlaying ? styles['overlayHidden'] : ''}`}>
                         <h3 className={styles['reel-title']}>
-                          {reel.message}
+                          <Link href={`/reels/${reel.id}`} className={styles['reel-title-link']}>
+                            {reel.message}
+                          </Link>
                         </h3>
                         <div className={styles['reel-footer']}>
                           <div className={styles['reel-likes']}>
                             <MdiHeartOutline className={styles.icon} />
                             {reel.likes}
                           </div>
-                          <MdiShareOutline className={`${styles['reel-share']} ${styles.icon}`} />
+                          <div className={styles['reel-actions']}>
+                            <button 
+                              className={`${styles['reel-share']} ${styles.icon}`}
+                              onClick={(e) => handleShare(reel, e)}
+                              aria-label="Share reel"
+                            >
+                              <MdiShareOutline />
+                            </button>
+                            <Link 
+                              href={`/reels/${reel.id}`} 
+                              className={`${styles['reel-open']} ${styles.icon}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label="Open reel in new tab"
+                            >
+                              <CuidaOpenInNewTabOutline />
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>

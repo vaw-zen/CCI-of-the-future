@@ -15,34 +15,94 @@ Company Brand,Chaabane's Cleaning Intelligence,Navigational,Low,/about,Needs Opt
 Tapis & Moquette,nettoyage tapis tunis,Transactional,High,/tapis,Optimized,Service Page,High
 Tapis & Moquette,nettoyage moquettes tunisie,Transactional,High,/tapis,Optimized,Service Page,High
 Tapis & Moquette,injection extraction,Informational,Medium,/blog/injection-extraction-guide,Optimized,Blog Post,High
-Tapis & Moquette,lavage vapeur,Informational,Medium,/blog/nettoyage-vapeur-guide,Not Optimized,Blog Post,High
-Tapis & Moquette,nettoyage à sec,Informational,Low,/blog/nettoyage-sec-guide,Not Optimized,Blog Post,Medium
+Tapis & Moquette,lavage vapeur,Informational,Medium,/blog/nettoyage-vapeur-guide,Optimized,Blog Post,High
+Tapis & Moquette,nettoyage à sec,Informational,Low,/blog/nettoyage-sec-guide,Optimized,Blog Post,Medium
 Tapis & Moquette,shampouinage moquette Tunis,Commercial,Medium,/tapis,Needs Optimization,Service Page,Medium
-Tapis & Moquette,détachage moquette Tunis,Commercial,Low,/blog/detachage-moquette,Not Optimized,Blog Post,High
+Tapis & Moquette,détachage moquette Tunis,Commercial,Low,/blog/detachage-moquette,Optimized,Blog Post,High
 Tapis & Moquette,entreprise nettoyage moquette Tunis,Commercial,High,/tapis,Optimized,Service Page,High
 Tapis & Moquette,devis nettoyage moquette Tunis,Transactional,Medium,/devis,Optimized,Landing Page,High
-Tapis & Moquette,tarif nettoyage tapis Tunis,Commercial,Medium,/blog/prix-nettoyage-tapis,New Content,Blog Article,Medium
-Salon & Canapé,"nettoyage salon tunis, nettoyage canapé, nettoyage voiture intérieur, tapisserie, injection extraction, vapeur, nettoyage salon & canapés à domicile tunis, détachage, shampooing, désinfection"
-Marbre & Pierre,"traitement marbre tunisie, ponçage marbre, polissage marbre, cristallisation marbre, sols marbre, restauration marbre tunis, polissage & cristallisation, entretien marbre, restauration marbre, marbre blanc, granit, travertin, ponçage, lustrage, protection, ébauche"
-Post-Chantier TFC,"nettoyage post-chantier tunisie, fin de travaux, dépoussiérage professionnel, décapage sols, nettoyage vitres chantier, nettoyage après travaux, TFC, dépoussiérage, gravats, nettoyage technique"
-Tapisserie,"tapisserie sur mesure tunis, retapissage, rembourrage canapés, tissus ignifuges, remplacement mousse, tapisserie nautique, banquette, confection sur mesure, rénovation fauteuil"
-Pricing & Services,"prix nettoyage tapis tunis, tarif nettoyage tapis, devis nettoyage tapis, cout nettoyage tapis tunisie, prix injection extraction, devis gratuit, simulateur devis nettoyage tunisie, prix transparent, devis en ligne, tarif nettoyage salon tunisie"
-Specialized Services,"comment nettoyer canapé cuir, entretien canapé cuir tunis, nettoyage cuir professionnel, produits nettoyage cuir, détartrage marbre cuisine, entretien marbre cuisine tunis, nettoyer plan travail marbre, marbre cuisine calcaire"
-Geographic Areas,"nettoyage ariana, services nettoyage ariana, nettoyage tapis ariana, marbre ariana, CCI services ariana, nettoyage la marsa, services carthage, nettoyage prestige tunis, marbre la marsa, CCI services premium, tunis, l'aouina, carthage, ben arous, manouba, grand tunis"
-Technical Methods,"injection-extraction, lavage vapeur, nettoyage à sec, shampooing, cristallisation, polissage, ponçage, lustrage, encapsulation, détachage, désinfection, séchage rapide"
-Materials & Surfaces,"marbre, granit, travertin, moquette, tapis, canapé, salon, rideaux, matelas, tissus d'ameublement, cuir, microfibre, velours, coton, lin"
-Professional Services,"nettoyage professionnel, entreprise nettoyage, société nettoyage, services premium, nettoyage haut de gamme, intervention rapide, devis gratuit, experts nettoyage"
-Home Page Meta,"CCI Tunisie, Leader nettoyage professionnel Tunis, moquettes, salons, marbre, devis gratuit, restauration, polissage marbre tunisie, tapisserie tunisie, nettoyage post chantier tunis"
-About Page,"experts nettoyage professionnel & marbre tunis, restauration de marbre, nettoyage de moquettes, tapisserie en tunisie, qualité et durabilité"
-Services Page,"polissage marbre, nettoyage moquettes, tapisserie, prestations professionnelles, rénovation de tapisserie, nettoyages post-chantier"
-Contact Page,"contact CCI tunisie, devis gratuit nettoyage professionnel tunis, polissage marbre, nettoyage moquettes, tapisserie"
-Blog Keywords,"conseils nettoyage tunis, guide tapis, ponçage marbre, retapissage salon, blog nettoyage professionnel, guides complets, tutoriels, conseils d'expert, astuces professionnelles, tarifs 2025"
-Devis Page,"simulateur devis nettoyage tunisie, prix transparent & instantané, premier simulateur en ligne tunisie, calcul devis en ligne, tarifs clairs, résultats immédiats, nettoyage salon à domicile, nettoyage moquette professionnel, entretien marbre, cristallisation marbre tunisie, nettoyage canapé à domicile, lavage tapis professionnel, nettoyage post-chantier tunis, détartrage marbre, polissage sol marbre, nettoyage bateau tunisie, désinfection salon"
-Team Page,"équipe CCI, experts en restauration & nettoyage, techniciens qualifiés, spécialisés en marbre, moquettes, tapisserie, nettoyages après chantier"
-FAQ Keywords,"questions fréquentes, nettoyage de tapis, restauration de marbre, tapisserie, nettoyages post-chantier, astuces pratiques, détachage, solutions maison au vinaigre, entretien du marbre"
-Urgency & Emergency,"services de nettoyage d'urgence, intervention 24/7, dégâts des eaux, taches accidentelles, imprévus, équipe mobile, intervention rapide"
-Industry Specific,"ferries & yachts, nettoyage industriel, nettoyage maritime, techniques maritimes spécialisées, produits anti-corrosion, nettoyage haut de gamme embarcations"
-Local Business,"06 rue galant de nuit, el aouina, tunis 2045, tunisia, +216 98 557 766, contact@cciservices.online, cciservices.online"
-Service Types,"maintenance bureaux, centres d'appel, traitement anti-acariens, bio-charge réduite, encapsulation basse humidité, neutralisation odeurs cinéma, entretien mosquées"
-Quality Assurance,"protocoles structurés, diagnostic, fiche d'intervention, test de solidité des couleurs, équipements injection-extraction bi-turbine, contrôle du pH, produits certifiés, formules biodégradables, techniciens formés"
-Specialized Equipment,"injecteurs bi-turbine haut débit, machines orbitales basse vitesse, pads microfibre encapsulation, buses chewing-gum spot, aspiro-brosseur professionnel, monobrosse rotative, essoreuse moderne"
+Tapis & Moquette,tarif nettoyage tapis Tunis,Commercial,Medium,/blog/prix-nettoyage-tapis,Not Optimized,Blog Post,Medium
+Salon & Canapé,nettoyage salon tunis,Commercial,Medium,/salon,Optimized,Service Page,High
+Salon & Canapé,nettoyage canapé,Informational,Medium,/blog/guide-nettoyage-canape,Not Optimized,Blog Post,High
+Salon & Canapé,nettoyage voiture intérieur,Commercial,Low,/blog/nettoyage-voiture-interieur,Not Optimized,Blog Post,Medium
+Salon & Canapé,nettoyage salon domicile tunis,Transactional,Medium,/salon,Needs Optimization,Service Page,High
+Salon & Canapé,détachage salon,Informational,Low,/blog/detachage-salon-guide,Not Optimized,Blog Post,Medium
+Salon & Canapé,shampooing canapé,Informational,Low,/blog/shampooing-canape,Not Optimized,Blog Post,Medium
+Salon & Canapé,désinfection salon,Informational,Medium,/blog/desinfection-salon,Not Optimized,Blog Post,High
+Marbre & Pierre,traitement marbre tunisie,Commercial,High,/marbre,Optimized,Service Page,High
+Marbre & Pierre,ponçage marbre,Informational,Medium,/blog/poncage-marbre-guide,Not Optimized,Blog Post,High
+Marbre & Pierre,polissage marbre,Informational,Medium,/blog/polissage-marbre-technique,Not Optimized,Blog Post,High
+Marbre & Pierre,cristallisation marbre,Informational,High,/blog/cristallisation-marbre,Not Optimized,Blog Post,High
+Marbre & Pierre,restauration marbre tunis,Commercial,High,/marbre,Optimized,Service Page,High
+Marbre & Pierre,entretien marbre,Informational,Medium,/blog/entretien-marbre-conseils,Not Optimized,Blog Post,Medium
+Marbre & Pierre,marbre blanc,Informational,Low,/blog/entretien-marbre-blanc,Not Optimized,Blog Post,Medium
+Marbre & Pierre,protection marbre,Informational,Medium,/blog/protection-marbre-guide,Not Optimized,Blog Post,Medium
+Post-Chantier TFC,nettoyage post-chantier tunisie,Commercial,Medium,/tfc,Optimized,Service Page,High
+Post-Chantier TFC,fin de travaux,Commercial,Medium,/tfc,Needs Optimization,Service Page,High
+Post-Chantier TFC,dépoussiérage professionnel,Informational,Low,/blog/depoussierage-professionnel,Not Optimized,Blog Post,Medium
+Post-Chantier TFC,décapage sols,Informational,Low,/blog/decapage-sols-guide,Not Optimized,Blog Post,Medium
+Post-Chantier TFC,nettoyage vitres chantier,Commercial,Low,/blog/nettoyage-vitres-chantier,Not Optimized,Blog Post,Low
+Post-Chantier TFC,nettoyage après travaux,Commercial,Medium,/tfc,Needs Optimization,Service Page,Medium
+Tapisserie,tapisserie sur mesure tunis,Commercial,Medium,/tapisserie,Optimized,Service Page,Medium
+Tapisserie,retapissage,Informational,Low,/blog/retapissage-guide,Not Optimized,Blog Post,Medium
+Tapisserie,rembourrage canapés,Informational,Low,/blog/rembourrage-canapes,Not Optimized,Blog Post,Medium
+Tapisserie,tissus ignifuges,Informational,Low,/blog/tissus-ignifuges-guide,Not Optimized,Blog Post,Low
+Tapisserie,remplacement mousse,Informational,Low,/blog/remplacement-mousse-canape,Not Optimized,Blog Post,Low
+Tapisserie,tapisserie nautique,Commercial,Low,/tapisserie,Needs Optimization,Service Page,Low
+Tapisserie,confection sur mesure,Commercial,Low,/tapisserie,Needs Optimization,Service Page,Low
+Tapisserie,rénovation fauteuil,Informational,Medium,/blog/renovation-fauteuil-guide,Not Optimized,Blog Post,Medium
+Pricing & Services,prix nettoyage tapis tunis,Commercial,Medium,/blog/prix-nettoyage-tapis,Not Optimized,Blog Post,High
+Pricing & Services,tarif nettoyage tapis,Commercial,Medium,/blog/tarifs-nettoyage-tapis,Not Optimized,Blog Post,High
+Pricing & Services,devis nettoyage tapis,Transactional,High,/devis,Optimized,Landing Page,High
+Pricing & Services,cout nettoyage tapis tunisie,Commercial,Medium,/blog/cout-nettoyage-tapis,Not Optimized,Blog Post,Medium
+Pricing & Services,prix injection extraction,Commercial,Low,/blog/prix-injection-extraction,Not Optimized,Blog Post,Medium
+Pricing & Services,devis gratuit,Transactional,High,/devis,Optimized,Landing Page,High
+Pricing & Services,simulateur devis nettoyage tunisie,Transactional,Low,/devis,Optimized,Landing Page,Medium
+Pricing & Services,prix transparent,Commercial,Low,/blog/prix-transparent-nettoyage,Not Optimized,Blog Post,Low
+Pricing & Services,devis en ligne,Transactional,Medium,/devis,Optimized,Landing Page,Medium
+Pricing & Services,tarif nettoyage salon tunisie,Commercial,Medium,/blog/tarif-nettoyage-salon,Not Optimized,Blog Post,Medium
+Specialized Services,comment nettoyer canapé cuir,Informational,Medium,/blog/nettoyer-canape-cuir,Not Optimized,Blog Post,High
+Specialized Services,entretien canapé cuir tunis,Commercial,Low,/blog/entretien-canape-cuir,Not Optimized,Blog Post,Medium
+Specialized Services,nettoyage cuir professionnel,Commercial,Low,/blog/nettoyage-cuir-professionnel,Not Optimized,Blog Post,Medium
+Specialized Services,produits nettoyage cuir,Informational,Low,/blog/produits-nettoyage-cuir,Not Optimized,Blog Post,Low
+Specialized Services,détartrage marbre cuisine,Informational,Medium,/blog/detartrage-marbre-cuisine,Not Optimized,Blog Post,Medium
+Specialized Services,entretien marbre cuisine tunis,Commercial,Low,/blog/entretien-marbre-cuisine,Not Optimized,Blog Post,Low
+Specialized Services,nettoyer plan travail marbre,Informational,Medium,/blog/nettoyer-plan-travail-marbre,Not Optimized,Blog Post,Medium
+Specialized Services,marbre cuisine calcaire,Informational,Low,/blog/marbre-cuisine-calcaire,Not Optimized,Blog Post,Low
+Geographic Areas,nettoyage ariana,Commercial,Medium,/services,Needs Optimization,Service Page,Medium
+Geographic Areas,services nettoyage ariana,Commercial,Medium,/services,Needs Optimization,Service Page,Medium
+Geographic Areas,nettoyage tapis ariana,Commercial,Medium,/tapis,Needs Optimization,Service Page,Medium
+Geographic Areas,marbre ariana,Commercial,Low,/marbre,Needs Optimization,Service Page,Low
+Geographic Areas,CCI services ariana,Commercial,Low,/services,Needs Optimization,Service Page,Low
+Geographic Areas,nettoyage la marsa,Commercial,Medium,/services,Needs Optimization,Service Page,Medium
+Geographic Areas,services carthage,Commercial,Low,/services,Needs Optimization,Service Page,Low
+Geographic Areas,nettoyage prestige tunis,Commercial,Medium,/services,Needs Optimization,Service Page,Medium
+Geographic Areas,marbre la marsa,Commercial,Low,/marbre,Needs Optimization,Service Page,Low
+Geographic Areas,CCI services premium,Commercial,Low,/services,Needs Optimization,Service Page,Low
+Technical Methods,injection-extraction,Informational,Medium,/blog/injection-extraction-guide,Optimized,Blog Post,High
+Technical Methods,lavage vapeur,Informational,Medium,/blog/lavage-vapeur-technique,Not Optimized,Blog Post,High
+Technical Methods,nettoyage à sec,Informational,Medium,/blog/nettoyage-sec-technique,Not Optimized,Blog Post,Medium
+Technical Methods,shampooing,Informational,Low,/blog/shampooing-technique,Not Optimized,Blog Post,Low
+Technical Methods,cristallisation,Informational,High,/blog/cristallisation-technique,Not Optimized,Blog Post,High
+Technical Methods,polissage,Informational,Medium,/blog/polissage-technique,Not Optimized,Blog Post,Medium
+Technical Methods,ponçage,Informational,Medium,/blog/poncage-technique,Not Optimized,Blog Post,Medium
+Technical Methods,lustrage,Informational,Low,/blog/lustrage-technique,Not Optimized,Blog Post,Low
+Technical Methods,encapsulation,Informational,Low,/blog/encapsulation-technique,Not Optimized,Blog Post,Low
+Technical Methods,détachage,Informational,Medium,/blog/detachage-technique,Not Optimized,Blog Post,Medium
+Technical Methods,désinfection,Informational,Medium,/blog/desinfection-technique,Not Optimized,Blog Post,Medium
+Technical Methods,séchage rapide,Informational,Low,/blog/sechage-rapide-technique,Not Optimized,Blog Post,Low
+Materials & Surfaces,marbre,Informational,High,/marbre,Optimized,Service Page,High
+Materials & Surfaces,granit,Informational,Medium,/blog/entretien-granit,Not Optimized,Blog Post,Medium
+Materials & Surfaces,travertin,Informational,Low,/blog/entretien-travertin,Not Optimized,Blog Post,Low
+Materials & Surfaces,moquette,Informational,High,/tapis,Optimized,Service Page,High
+Materials & Surfaces,tapis,Informational,High,/tapis,Optimized,Service Page,High
+Materials & Surfaces,canapé,Informational,High,/salon,Optimized,Service Page,High
+Materials & Surfaces,salon,Informational,High,/salon,Optimized,Service Page,High
+Materials & Surfaces,rideaux,Informational,Low,/blog/nettoyage-rideaux,Not Optimized,Blog Post,Low
+Materials & Surfaces,matelas,Informational,Medium,/blog/nettoyage-matelas,Not Optimized,Blog Post,Medium
+Materials & Surfaces,tissus d'ameublement,Informational,Low,/blog/nettoyage-tissus-ameublement,Not Optimized,Blog Post,Low
+Materials & Surfaces,cuir,Informational,Medium,/blog/nettoyage-cuir-guide,Not Optimized,Blog Post,Medium
+Materials & Surfaces,microfibre,Informational,Low,/blog/nettoyage-microfibre,Not Optimized,Blog Post,Low
+Materials & Surfaces,velours,Informational,Low,/blog/nettoyage-velours,Not Optimized,Blog Post,Low
+Materials & Surfaces,coton,Informational,Low,/blog/nettoyage-coton,Not Optimized,Blog Post,Low
+Materials & Surfaces,lin,Informational,Low,/blog/nettoyage-lin,Not Optimized,Blog Post,Low

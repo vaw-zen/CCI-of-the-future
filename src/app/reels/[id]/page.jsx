@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
 // Component imports
-import ReelPlayer from './components/ReelPlayer';
-import LoadingSkeleton from './components/LoadingSkeleton';
+import ReelPlayer from './components/ReelPlayer/ReelPlayer';
+import LoadingSkeleton from './components/LoadingSkeleton/LoadingSkeleton';
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import styles from "../../blogs/blog.module.css";

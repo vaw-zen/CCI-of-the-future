@@ -115,4 +115,4 @@ node scripts/backlink-manager.cjs record crunchbase.com directory
 
 **Priority: Volume of successful submissions > Perfect execution of broken platforms**
 
-Generated: 2025-10-14T03:04:25.256Z
+Generated: 2025-10-14T04:14:39.908Z

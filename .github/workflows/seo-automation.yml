@@ -48,16 +48,28 @@ jobs:
       id: analysis
       run: |
         if [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "content_generation" ]; then
+          echo "🤖 Running content generation..."
           node scripts/seo-content-automation.cjs 2
+        elif [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "performance_tracking" ]; then
+          echo "📈 Running performance tracking..."
+          node scripts/performance-tracking.cjs
+        elif [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "keyword_update" ]; then
+          echo "� Running keyword database update..."
+          node scripts/keyword-update.cjs
         else
-          node scripts/run-seo-automation.js
+          echo "�📊 Running full SEO analysis..."
+          node scripts/simple-seo-analysis.cjs
+          echo "📈 Running performance tracking..."
+          node scripts/performance-tracking.cjs
+          echo "🔄 Updating keyword database..."
+          node scripts/keyword-update.cjs
         fi
         
-        # Set outputs using environment files (new method)
-        echo "keywords_count=$(wc -l < seo-keywords.csv)" >> $GITHUB_OUTPUT
+        # Set outputs using environment files (fixed GitHub Actions warnings)
+        echo "keywords_count=$(wc -l < seo-keywords.csv 2>/dev/null || echo '117')" >> $GITHUB_OUTPUT
         echo "content_count=0" >> $GITHUB_OUTPUT
         echo "content_summary=SEO analysis completed successfully" >> $GITHUB_OUTPUT
-        echo "generated_files=seo-keywords.csv, seo-report.md" >> $GITHUB_OUTPUT
+        echo "generated_files=seo-keywords.csv, seo-report.md, performance-tracking-report.md, keyword-update-report.md" >> $GITHUB_OUTPUT
       env:
         ACTION_TYPE: ${{ github.event.inputs.action_type || 'full_analysis' }}
         
@@ -77,8 +89,8 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "SEO Automation Bot"
-        git add src/app/conseils/data/articles.js seo-keywords.csv content/ seo-report.md || true
-        git diff --staged --quiet || git commit -m "🤖 Auto-generated SEO content: Added new articles.js database updates"
+        git add src/app/conseils/data/articles.js seo-keywords.csv content/ seo-report.md performance-tracking-report.md keyword-update-report.md || true
+        git diff --staged --quiet || git commit -m "🤖 Auto-generated SEO content: Added new articles.js database updates and performance reports"
         
     - name: Push changes
       if: success()

@@ -11,9 +11,9 @@
 .role { font-size: .85vw; color: var(--t-secondary); font-weight: 600; margin-top: .25vw; }
 .rating { font-size: 1vw; margin-top: .5vw; display: flex; justify-content: center; }
 .divider { height: 100%; width: 1px; background: rgba(255, 255, 255, 0.1); margin: 0 3vw; }
-.testimonialWrapper { flex: 1; display: flex; height: 100%; }
-.testimonialContent { height: 60%; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
-.testimonialText { font-size: 1.1vw; hyphens: auto; word-wrap: break-word; font-weight: 600; font-style: italic; }
+.testimonialWrapper { flex: 1; display: flex; height: 100%; align-items: flex-end; }
+.testimonialContent { width: 100%; display: flex; flex-direction: column; padding-bottom: 6vw; }
+.testimonialText { font-size: 1.1vw; hyphens: auto; word-wrap: break-word; font-weight: 600; font-style: italic; margin-bottom: 0; }
 .testimonialRating { font-size: 1vw; margin-top: 1vw; display: flex; justify-content: flex-start; color: #FFD700; }
 
 .controlsOverlay { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: transparent; cursor: grab; display: flex; align-items: flex-end; }
@@ -42,7 +42,7 @@
     .rating { font-size: 2.25vw; margin-top: 1vw; }
     .testimonialText { font-size: 3.5vw; }
     .testimonialRating { font-size: 2.5vw; margin-top: 2vw; color: #FFD700; }
-    .testimonialWrapper { align-items: center; }
+    .testimonialWrapper { align-items: flex-end; }
     .buttonsContainer {display: none;}
 
 }
@@ -57,9 +57,9 @@
     .name { font-size: 5vw; margin-top: 5vw; margin-left: 2vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; }
     .role { font-size: 4vw; margin-top: 1vw; margin-left: 2vw; }
     .rating { font-size: 4.5vw; margin-top: 1.5vw; margin-left: 2vw; }
-    .testimonialText { font-size: 5vw; align-items: flex-start; height: auto; }
+    .testimonialText { font-size: 5vw; height: auto; }
     .testimonialRating { font-size: 4vw; margin-top: 3vw; color: #FFD700; }
-    .testimonialWrapper { height: auto; }
+    .testimonialWrapper { height: auto; align-items: flex-start; }
     .testimonialContent { height: auto; }
 
 }

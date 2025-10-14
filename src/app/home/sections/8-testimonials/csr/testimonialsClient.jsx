@@ -1,49 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import styles from '../testimonials.module.css';
 import SliderContainer from './sliderContainer';
 import { UilArrowRight } from '@/utils/components/icons';
 import ButtonContainer from './buttonContainer';
 import ResponsiveImage from '@/utils/components/Image/Image';
+import testimonialsData from '../testimonials.json';
 
 export default function TestimonialsClient({ className, fallbackTestimonials, backgroundImage }) {
-    const [testimonials, setTestimonials] = useState(fallbackTestimonials);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        async function fetchGoogleReviews() {
-            try {
-                const response = await fetch('/api/google-reviews');
-                const data = await response.json();
-
-                if (data.reviews && data.reviews.length > 0) {
-                    // Map Google Reviews to testimonial format
-                    const mappedReviews = data.reviews.map((review, index) => ({
-                        id: review.time || index,
-                        name: review.author_name || 'Client anonyme',
-                        role: 'Client Google', // More consistent role for Google reviews
-                        img: review.profile_photo_url || '/default-avatar.png',
-                        testimonial: review.text || '',
-                        rating: review.rating || 5,
-                        date: new Date(review.time * 1000).toLocaleDateString('fr-FR')
-                    }));
-
-                    console.log('✅ Google Reviews loaded:', mappedReviews.length);
-                    setTestimonials(mappedReviews);
-                } else {
-                    console.log('⚠️ No Google Reviews found, using fallback');
-                }
-            } catch (error) {
-                console.error('❌ Error fetching Google reviews:', error);
-                // Keep fallback testimonials on error
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        fetchGoogleReviews();
-    }, []);
+    // Use static JSON data instead of API call
+    const testimonials = testimonialsData.testimonials;
 
     const slideAnchor = Math.floor((testimonials.length * 3) / 2);
 

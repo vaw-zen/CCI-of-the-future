@@ -1,0 +1,167 @@
+{
+  "overview": {
+    "startDate": "2025-10-14T02:58:21.198Z",
+    "currentBacklinks": 103,
+    "targetBacklinks": 200,
+    "gapToFill": 97,
+    "lastUpdated": "2025-10-14T03:04:14.432Z"
+  },
+  "progress": {
+    "phase1_directories": {
+      "target": 30,
+      "acquired": 0,
+      "pending": 0
+    },
+    "phase2_content": {
+      "target": 40,
+      "acquired": 0,
+      "pending": 0
+    },
+    "phase3_partnerships": {
+      "target": 25,
+      "acquired": 0,
+      "pending": 0
+    },
+    "phase4_advanced": {
+      "target": 20,
+      "acquired": 0,
+      "pending": 0
+    }
+  },
+  "prospects": {
+    "directories": [
+      {
+        "name": "Pages Jaunes Tunisie",
+        "url": "https://www.pagesjaunes.tn/",
+        "category": "General Directory",
+        "priority": "High",
+        "status": "Not Started",
+        "estimatedDA": 45,
+        "notes": "Primary Tunisian business directory"
+      },
+      {
+        "name": "Tunisie-annuaire.com",
+        "url": "https://www.tunisie-annuaire.com/",
+        "category": "Business Directory",
+        "priority": "High",
+        "status": "Not Started",
+        "estimatedDA": 35,
+        "notes": "Professional services category available"
+      },
+      {
+        "name": "Kompass Tunisie",
+        "url": "https://tn.kompass.com/",
+        "category": "B2B Directory",
+        "priority": "Medium",
+        "status": "Not Started",
+        "estimatedDA": 50,
+        "notes": "Industrial and commercial services"
+      },
+      {
+        "name": "Google My Business",
+        "url": "https://business.google.com/",
+        "category": "Maps/Local",
+        "priority": "Critical",
+        "status": "Active",
+        "estimatedDA": 100,
+        "notes": "Optimize existing listing"
+      },
+      {
+        "name": "Bing Places",
+        "url": "https://www.bingplaces.com/",
+        "category": "Maps/Local",
+        "priority": "High",
+        "status": "Not Started",
+        "estimatedDA": 90,
+        "notes": "Microsoft local business directory"
+      }
+    ],
+    "contentPartners": [
+      {
+        "name": "Tunisian Real Estate Blogs",
+        "category": "Real Estate",
+        "opportunity": "Guest posts on property maintenance",
+        "priority": "High",
+        "status": "Research Phase",
+        "contentAssets": [
+          "Carpet cleaning guides",
+          "Office maintenance tips"
+        ],
+        "notes": "Target property management companies"
+      },
+      {
+        "name": "Hospitality Industry Publications",
+        "category": "Tourism/Hotels",
+        "opportunity": "Expert quotes on hotel cleaning standards",
+        "priority": "Medium",
+        "status": "Not Started",
+        "contentAssets": [
+          "Post-COVID sanitation",
+          "Hotel carpet cleaning"
+        ],
+        "notes": "Focus on Tunisian tourism recovery"
+      },
+      {
+        "name": "Facility Management Platforms",
+        "category": "B2B Services",
+        "opportunity": "Resource page listings",
+        "priority": "High",
+        "status": "Not Started",
+        "contentAssets": [
+          "Commercial cleaning checklists",
+          "Maintenance guides"
+        ],
+        "notes": "Target corporate facility managers"
+      }
+    ],
+    "businessPartners": [
+      {
+        "name": "Real Estate Agencies",
+        "category": "Property Services",
+        "partnership": "Cross-referral program",
+        "priority": "High",
+        "status": "Not Started",
+        "value": "Move-in/move-out cleaning services",
+        "notes": "Target top agencies in Tunis"
+      },
+      {
+        "name": "Office Supply Companies",
+        "category": "B2B Services",
+        "partnership": "Supplier network inclusion",
+        "priority": "Medium",
+        "status": "Not Started",
+        "value": "Cleaning equipment expertise",
+        "notes": "Complementary services"
+      },
+      {
+        "name": "Construction Companies",
+        "category": "Construction/Renovation",
+        "partnership": "Post-construction cleaning partnership",
+        "priority": "High",
+        "status": "Not Started",
+        "value": "Specialized post-build cleaning",
+        "notes": "High-value commercial projects"
+      }
+    ],
+    "mediaOutlets": [],
+    "social_media": [
+      {
+        "name": "Facebook Optimized",
+        "url": "facebook.com/Chaabanes.Cleaning.Intelligence",
+        "priority": "Medium",
+        "addedDate": "2025-10-14T03:00:24.159Z",
+        "status": "New"
+      }
+    ]
+  },
+  "outreach": [],
+  "acquired": [
+    {
+      "domain": "linkedin.com",
+      "category": "social_media",
+      "dateAcquired": "2025-10-14T03:04:14.431Z",
+      "source": "Manual"
+    }
+  ],
+  "pipeline": []
+}

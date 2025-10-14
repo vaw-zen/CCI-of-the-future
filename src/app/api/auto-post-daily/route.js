@@ -55,109 +55,149 @@ export async function POST(req) {
 
     // Create dynamic prompts with MANDATORY call-to-action inclusion
     const prompts = {
-      tip: `You are creating ONE SINGLE Facebook post for CCI Services, a professional cleaning company in Tunisia.
+      tip: `Tu créés UN SEUL post Facebook pour CCI Services, entreprise de nettoyage professionnel en Tunisie.
 
-TOPIC: ONE professional cleaning tip related to one of these services:
-- Nettoyage de tapis et moquettes (carpet/rug cleaning)
-- Nettoyage de salons/canapés (sofa/furniture cleaning) 
-- Ponçage et polissage de marbre (marble polishing/grinding)
-- Tapisserie et rembourrage (upholstery and reupholstering)
-- Nettoyage fin de chantier (post-construction cleaning)
-- Entretien des bureaux (office cleaning)
+CONSIGNE: Génère EXACTEMENT UN POST unique et spécifique.
 
-STRICT RULES:
-- Génère UNE SEULE publication (pas d'options multiples)
-- Français naturel Facebook en exactement 200-350 caractères pour le contenu principal
-- 2-4 emojis intégrés naturellement dans le texte
-- Mentionner "CCI Services" explicitement
-- Conseil pratique et professionnel
-- NE PAS inclure de call-to-action dans le texte (sera ajouté automatiquement)
+SUJET: UN conseil professionnel précis sur l'un de ces services:
+- Nettoyage de tapis et moquettes (techniques, détachage)
+- Nettoyage de salons/canapés (injection-extraction, produits)
+- Ponçage et polissage de marbre (cristallisation, entretien)
+- Tapisserie et rembourrage (restauration, tissus)
+- Nettoyage fin de chantier (post-construction)
+- Entretien des bureaux (maintenance professionnelle)
 
-FORMAT REQUIS:
-[Emoji] [Conseil pratique mentionnant CCI Services] [Emoji si pertinent] [Bénéfice/résultat] [Emoji final]
+RÈGLES STRICTES:
+- EXACTEMENT 180-280 caractères pour le contenu principal
+- Français naturel et professionnel
+- 2-3 emojis max, bien intégrés
+- Mentionner "CCI Services" UNE FOIS
+- Conseil technique et pratique
+- Pas de call-to-action (ajouté automatiquement)
+- FOCUS sur un seul service à la fois
 
-EXEMPLE:
-"💡 Astuce CCI Services : Pour vos tapis, aspirez avant le lavage ! Cela élimine la poussière et facilite le nettoyage en profondeur. Résultat ? Des couleurs éclatantes ! ✨"`,
+FORMAT:
+[Emoji] [Conseil CCI Services spécifique] [Technique/astuce] [Bénéfice concret] [Emoji final]
 
-      motivation: `You are creating a motivational Facebook post for CCI Services, a professional cleaning company in Tunisia.
+EXEMPLE SALON:
+"� Conseil CCI Services : Testez toujours nos produits sur une zone cachée avant nettoyage ! Notre méthode injection-extraction préserve vos tissus délicats ✨"
 
-TOPIC: Inspirational content about the benefits of professional cleaning services:
-- Home comfort and elegance
-- Health benefits of clean environments
-- Time-saving advantages
-- Professional quality results
-- Peace of mind and well-being
+EXEMPLE MARBRE:
+"💎 CCI Services vous conseille : évitez les produits acides sur le marbre ! Notre polissage professionnel redonne l'éclat d'origine sans risque ⭐"`,
 
-STRICT RULES:
-- Français naturel Facebook en exactement 200-350 caractères pour le contenu principal
-- 2-4 emojis intégrés naturellement
-- Mentionner "CCI Services" explicitement
-- Ton inspirant et motivant
-- Focus sur les bénéfices émotionnels
-- NE PAS inclure de call-to-action dans le texte (sera ajouté automatiquement)
+      motivation: `Tu créés UN SEUL post motivationnel Facebook pour CCI Services, entreprise de nettoyage professionnel en Tunisie.
 
-FORMAT REQUIS:
-[Emoji] [Message inspirant mentionnant CCI Services] [Bénéfice émotionnel] [Emoji final]
+CONSIGNE: Génère EXACTEMENT UN POST inspirant et unique.
 
-EXEMPLE:
-"✨ Avec CCI Services, transformez votre maison en véritable havre de paix ! Un environnement propre = bien-être garanti. Offrez-vous le luxe d'un intérieur impeccable 🏡"`,
+THÈME: Bénéfices émotionnels du nettoyage professionnel:
+- Confort et élégance du foyer
+- Santé et bien-être de la famille
+- Gain de temps précieux
+- Qualité professionnelle garantie
+- Tranquillité d'esprit
 
-      service: `You are creating ONE SINGLE service highlight Facebook post for CCI Services, a professional cleaning company in Tunisia.
+RÈGLES STRICTES:
+- EXACTEMENT 180-280 caractères pour le contenu principal
+- Ton inspirant et chaleureux
+- 2-3 emojis max, bien intégrés
+- Mentionner "CCI Services" UNE FOIS
+- Focus sur l'émotion et le bien-être
+- Pas de call-to-action (ajouté automatiquement)
 
-TASK: Highlight ONE specific CCI Services offering:
-- Nettoyage de tapis (deep carpet cleaning with stain removal)
-- Nettoyage de salons (sofa cleaning with non-toxic products)
-- Ponçage et polissage de marbre (marble restoration, polishing, crystallization)
-- Tapisserie (furniture reupholstering, cushion replacement, fabric care)
-- Nettoyage fin de chantier (post-construction: floors, walls, windows, bathrooms)
-- Entretien des bureaux (office cleaning and maintenance)
-
-STRICT RULES:
-- Génère UNE SEULE publication (pas d'options multiples)
-- Français naturel Facebook en exactement 200-350 caractères pour le contenu principal
-- 2-4 emojis intégrés naturellement
-- Mentionner "CCI Services" explicitement
-- Décrire le service avec expertise professionnelle
-- Mettre en avant les résultats et la qualité
-- NE PAS inclure de call-to-action dans le texte (sera ajouté automatiquement)
-
-FORMAT REQUIS:
-[Emoji service] [Service CCI explicite] [Technique/méthode] [Résultat/bénéfice] [Emoji résultat]
+FORMAT:
+[Emoji] [Message inspirant CCI Services] [Bénéfice émotionnel] [Impact positif] [Emoji final]
 
 EXEMPLE:
-"🧽 CCI Services redonne tout son éclat à vos sols en marbre ! Polissage professionnel et cristallisation pour une brillance durable. Faites briller vos espaces comme jamais 💎"`,
+"🏡 Avec CCI Services, redécouvrez le plaisir de rentrer chez vous ! Un intérieur impeccable, c'est plus de temps pour votre famille et votre bonheur 💫"`,
 
-      seasonal: `You are creating a seasonal Facebook post for CCI Services, a professional cleaning company in Tunisia.
+      service: `Tu créés UN SEUL post de présentation service pour CCI Services, entreprise de nettoyage professionnel en Tunisie.
 
-TOPIC: Seasonal cleaning advice relevant to current time of year in Tunisia:
-- Preparation for seasonal changes
-- Seasonal maintenance tips
-- Weather-related cleaning needs
-- Holiday preparation cleaning
+CONSIGNE: Génère EXACTEMENT UN POST mettant en valeur UN service spécifique.
 
-STRICT RULES:
-- Français naturel Facebook en exactement 200-350 caractères pour le contenu principal
-- 2-4 emojis intégrés naturellement
-- Mentionner "CCI Services" explicitement
-- Content timely and relevant to the season
-- Conseil saisonnier pratique
-- NE PAS inclure de call-to-action dans le texte (sera ajouté automatiquement)
+SERVICE À CHOISIR (un seul par post):
+- Nettoyage de tapis : injection-extraction, détachage spécialisé
+- Nettoyage de salons : tissus délicats, cuir, microfibre
+- Ponçage et polissage de marbre : cristallisation, restauration
+- Tapisserie : rembourrage, recouvrement, restauration mobilier
+- Nettoyage fin de chantier : sols, murs, vitres, finitions
+- Entretien des bureaux : maintenance régulière, espaces professionnels
 
-FORMAT REQUIS:
-[Emoji saison] [Conseil saisonnier CCI Services] [Bénéfice] [Emoji final]
+RÈGLES STRICTES:
+- EXACTEMENT 180-280 caractères pour le contenu principal
+- Français professionnel et précis
+- 2-3 emojis max, cohérents avec le service
+- Mentionner "CCI Services" UNE FOIS
+- Décrire technique et résultats
+- Pas de call-to-action (ajouté automatiquement)
+- UN SEUL service par post
+
+FORMAT:
+[Emoji service] [Service CCI précis] [Technique/méthode] [Résultat professionnel] [Emoji résultat]
+
+EXEMPLE TAPIS:
+"🧽 CCI Services maîtrise l'injection-extraction pour vos tapis ! Notre technique élimine taches tenaces et allergènes en profondeur. Résultats garantis 🌟"
+
+EXEMPLE SALON:
+"🛋️ CCI Services redonne vie à vos canapés ! Nettoyage adapté à chaque tissu avec produits professionnels non-toxiques. Comme neufs ! ✨"`,
+
+      seasonal: `Tu créés UN SEUL post saisonnier Facebook pour CCI Services, entreprise de nettoyage professionnel en Tunisie.
+
+CONSIGNE: Génère EXACTEMENT UN POST adapté à la saison actuelle (octobre/automne).
+
+THÈME AUTOMNAL:
+- Préparation pour l'hiver
+- Nettoyage de rentrée/changement de saison
+- Maintenance avant les mois froids
+- Préparation des fêtes de fin d'année
+
+RÈGLES STRICTES:
+- EXACTEMENT 180-280 caractères pour le contenu principal
+- Contexte saisonnier automne/hiver
+- 2-3 emojis max, liés à la saison
+- Mentionner "CCI Services" UNE FOIS
+- Conseil pertinent pour octobre
+- Pas de call-to-action (ajouté automatiquement)
+
+FORMAT:
+[Emoji saison] [Conseil CCI Services saisonnier] [Bénéfice préparation] [Emoji cocooning]
 
 EXEMPLE:
-"🍂 Automne avec CCI Services : c'est le moment idéal pour un grand nettoyage ! Tapis, canapés, marbre... Préparez votre intérieur pour les mois d'hiver ❄️"` 
+"🍂 Octobre avec CCI Services : préparez votre cocon pour l'hiver ! Tapis, canapés et marbre retrouvent leur éclat avant les soirées douillettes 🏠"` 
     };
 
     const selectedPrompt = customPrompt || prompts[postType] || prompts.tip;
 
     console.log("Generating content with Gemini AI...");
     
-    // Generate content with Gemini
-    const result = await model.generateContent(selectedPrompt);
+    // Generate content with Gemini - with strict instructions for single post
+    const strictPrompt = selectedPrompt + "\n\nIMPORTANT: Génère EXACTEMENT UN SEUL post. Pas de choix multiples, pas d'alternatives. Juste UN contenu unique et précis.";
+    
+    const result = await model.generateContent(strictPrompt);
     const response = await result.response;
     let generatedCaption = response.text().trim();
+
+    // Clean up any multiple post attempts or formatting issues
+    generatedCaption = generatedCaption
+      .split('\n\n')[0] // Take only the first paragraph if multiple
+      .split('Option')[0] // Remove any "Option 1", "Option 2" text
+      .split('Alternative')[0] // Remove alternatives
+      .split('Ou bien')[0] // Remove French alternatives
+      .replace(/^\d+\.\s*/, '') // Remove numbering at start
+      .replace(/^Post\s*\d*\s*:?\s*/i, '') // Remove "Post 1:", "Post:" etc
+      .trim();
+
+    // Validate content quality
+    if (generatedCaption.length < 100) {
+      console.warn("Generated content too short, regenerating...");
+      const fallbackResult = await model.generateContent(strictPrompt);
+      const fallbackResponse = await fallbackResult.response;
+      generatedCaption = fallbackResponse.text().trim();
+    }
+
+    // Ensure content mentions CCI Services
+    if (!generatedCaption.toLowerCase().includes('cci services')) {
+      generatedCaption = generatedCaption.replace(/CCI/i, 'CCI Services');
+    }
 
     // ALWAYS add comprehensive call-to-action (this ensures ALL posts have complete contact info)
     const callToAction = generateCallToAction();
@@ -171,32 +211,69 @@ EXEMPLE:
 
     console.log("Generated caption:", generatedCaption);
 
-    // Advanced content analysis for precise image matching (moved outside image block for reuse)
+    // Advanced content analysis for precise image matching
     const analyzeContentForImages = (text) => {
       const content = text.toLowerCase();
-      const keywords = {
-        salon: ['salon', 'canapé', 'sofa', 'fauteuil', 'meubles', 'furniture', 'injection', 'extraction'],
-        tapis: ['tapis', 'moquette', 'carpet', 'rug', 'sol textile', 'aspirateur'],
-        marbre: ['marbre', 'marble', 'polissage', 'brillance', 'cristallisation', 'pierre', 'granit'],
-        postChantier: ['chantier', 'construction', 'post-construction', 'fin de chantier', 'rénovation'],
-        tapisserie: ['tapisserie', 'rembourrage', 'upholstery', 'tissu', 'recouvrement', 'restauration'],
-        tfc: ['bureau', 'office', 'commercial', 'entreprise', 'tfc', 'professionnel']
+      
+      // Enhanced keyword detection with more specific terms and weights
+      const servicePatterns = {
+        salon: {
+          keywords: ['salon', 'canapé', 'sofa', 'fauteuil', 'meubles', 'furniture', 'injection', 'extraction', 'cuir', 'tissu d\'ameublement'],
+          weight: 1
+        },
+        tapis: {
+          keywords: ['tapis', 'moquette', 'carpet', 'rug', 'sol textile', 'aspirateur', 'détachage tapis'],
+          weight: 1
+        },
+        marbre: {
+          keywords: ['marbre', 'marble', 'polissage', 'brillance', 'cristallisation', 'pierre', 'granit', 'sol en marbre', 'plan de travail'],
+          weight: 1
+        },
+        postChantier: {
+          keywords: ['chantier', 'construction', 'post-construction', 'fin de chantier', 'rénovation', 'après travaux'],
+          weight: 1
+        },
+        tapisserie: {
+          keywords: ['tapisserie', 'rembourrage', 'upholstery', 'tissu', 'recouvrement', 'restauration', 'retapissage'],
+          weight: 1
+        },
+        tfc: {
+          keywords: ['bureau', 'office', 'commercial', 'entreprise', 'tfc', 'professionnel', 'espace de travail'],
+          weight: 1
+        }
       };
 
-      let matchedServices = [];
+      let bestMatch = { service: 'general', score: 0 };
       
-      // Count keyword matches for each service
-      for (const [service, serviceKeywords] of Object.entries(keywords)) {
-        const matches = serviceKeywords.filter(keyword => content.includes(keyword)).length;
-        if (matches > 0) {
-          matchedServices.push({ service, score: matches });
+      // Analyze each service with weighted scoring
+      for (const [service, config] of Object.entries(servicePatterns)) {
+        let score = 0;
+        
+        config.keywords.forEach(keyword => {
+          if (content.includes(keyword)) {
+            // Higher score for exact matches
+            score += keyword.length > 5 ? 2 : 1;
+          }
+        });
+        
+        // Apply service weight
+        score *= config.weight;
+        
+        if (score > bestMatch.score) {
+          bestMatch = { service, score };
         }
       }
 
-      // Sort by highest score
-      matchedServices.sort((a, b) => b.score - a.score);
+      console.log("Content analysis result:", { 
+        content: content.substring(0, 100) + "...", 
+        bestMatch, 
+        allScores: Object.keys(servicePatterns).map(s => ({
+          service: s,
+          score: servicePatterns[s].keywords.filter(k => content.includes(k)).length
+        }))
+      });
       
-      return matchedServices.length > 0 ? matchedServices[0].service : 'general';
+      return bestMatch.service;
     };
 
     // Enhanced image selection with content analysis
@@ -242,8 +319,8 @@ EXEMPLE:
         
         // 4. Nettoyage post-chantier (post-construction cleaning)
         postChantier: [
-          // From /home (no subfolders)
-          "https://cciservices.online/home/nettoyage-professionel-post-chantier.webp"
+          // From /home (no subfolders) - Fixed filename
+          "https://cciservices.online/home/nettoyage-professionnel-post-chantier.webp"
         ],
         
         // 5. Tapisserie (upholstery/reupholstering)
@@ -277,27 +354,54 @@ EXEMPLE:
         ]
       };
 
-      // Analyze the full generated content (including custom prompts)
-      const fullContent = (selectedPrompt + ' ' + generatedCaption).toLowerCase();
-      const bestMatchService = analyzeContentForImages(fullContent);
+      // Analyze the generated content ONLY (not the prompt) for better matching
+      const generatedContentOnly = generatedCaption.toLowerCase();
+      const bestMatchService = analyzeContentForImages(generatedContentOnly);
       
-      console.log("Content analysis result:", { bestMatchService, contentLength: fullContent.length });
+      console.log("Content analysis result:", { 
+        bestMatchService, 
+        contentPreview: generatedContentOnly.substring(0, 100),
+        contentLength: generatedContentOnly.length 
+      });
 
-      // Select images based on analysis
+      // Select images based on analysis with strict service matching
       let relevantImages = cciImagesByService[bestMatchService] || [];
       
-      // If no specific match, use a smart fallback
+      // If no specific service detected, try to match by post type
+      if (relevantImages.length === 0 || bestMatchService === 'general') {
+        switch (postType) {
+          case 'tip':
+            // For tips, prefer the most common services
+            relevantImages = [...cciImagesByService.salon, ...cciImagesByService.tapis];
+            break;
+          case 'service':
+            // For service posts, use a mix of main services
+            relevantImages = [
+              ...cciImagesByService.salon,
+              ...cciImagesByService.marbre,
+              ...cciImagesByService.tapis
+            ];
+            break;
+          case 'motivation':
+            // For motivation, use general showcase images
+            relevantImages = [...cciImagesByService.general, ...cciImagesByService.salon];
+            break;
+          case 'seasonal':
+            // For seasonal, use general and main services
+            relevantImages = [
+              ...cciImagesByService.general,
+              ...cciImagesByService.salon,
+              ...cciImagesByService.tapis
+            ];
+            break;
+          default:
+            relevantImages = cciImagesByService.general;
+        }
+      }
+
+      // Final fallback to ensure we always have images
       if (relevantImages.length === 0) {
-        // Use all available images for variety
-        relevantImages = [
-          ...cciImagesByService.salon,
-          ...cciImagesByService.tapis,
-          ...cciImagesByService.marbre,
-          ...cciImagesByService.postChantier,
-          ...cciImagesByService.tapisserie,
-          ...cciImagesByService.tfc,
-          ...cciImagesByService.general
-        ];
+        relevantImages = cciImagesByService.general;
       }
 
       // Select random image from relevant collection

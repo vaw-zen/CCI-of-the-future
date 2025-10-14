@@ -142,142 +142,41 @@ export default function RootLayout({ children }) {
 <meta name="theme-color" content="rgba(203, 251, 66, 1)" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="CCI Services" />
+        <meta name="apple-mobile-web-app-title" content="CCI Services" />
 
-        {/* Google Analytics - Enhanced */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-0RDH6DH7TS"
-          strategy="afterInteractive"
+        {/* Google Site Verification - Method 1 for Search Console */}
+        <meta name="google-site-verification" content="sJRXBYO6D1wSw4INn0E56VlSp8hSgSQHYc4p6Czr78U" />
+
+        {/* Google Tag Manager - Method 2 for Search Console validation */}
+        <script 
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-NXKZRQHZ');
+            `
+          }}
         />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            if (typeof window !== 'undefined') {
+        
+        {/* Google Analytics - Method 3 for Search Console validation */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RDH6DH7TS"></script>
+        <script 
+          dangerouslySetInnerHTML={{
+            __html: `
               window.dataLayer = window.dataLayer || [];
-              function gtag(){window.dataLayer.push(arguments);}
+              function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              
-              // Enhanced configuration with better tracking
               gtag('config', 'G-0RDH6DH7TS', {
                 page_title: document.title,
                 page_location: window.location.href,
-                send_page_view: true,
-                // Enhanced ecommerce and user engagement
-                custom_map: {
-                  'custom_parameter_1': 'page_type',
-                  'custom_parameter_2': 'user_engagement'
-                },
-                // Cookie settings for better privacy compliance
-                cookie_flags: 'SameSite=None;Secure',
-                // Allow linker for cross-domain tracking if needed
-              linker: {
-                domains: ['cciservices.online']
-              }
-            });
-            
-            // Enhanced tracking for Single Page Application navigation
-            if (typeof window !== 'undefined') {
-              const originalPushState = history.pushState;
-              const originalReplaceState = history.replaceState;
-              
-              // Track programmatic navigation (Next.js router.push)
-              history.pushState = function() {
-                originalPushState.apply(history, arguments);
-                setTimeout(() => {
-                  gtag('config', 'G-0RDH6DH7TS', {
-                    page_title: document.title,
-                    page_location: window.location.href,
-                    page_path: window.location.pathname + window.location.search
-                  });
-                }, 100);
-              };
-              
-              history.replaceState = function() {
-                originalReplaceState.apply(history, arguments);
-                setTimeout(() => {
-                  gtag('config', 'G-0RDH6DH7TS', {
-                    page_title: document.title,
-                    page_location: window.location.href,
-                    page_path: window.location.pathname + window.location.search
-                  });
-                }, 100);
-              };
-              
-              // Track browser back/forward navigation
-              window.addEventListener('popstate', function() {
-                setTimeout(() => {
-                  gtag('config', 'G-0RDH6DH7TS', {
-                    page_title: document.title,
-                    page_location: window.location.href,
-                    page_path: window.location.pathname + window.location.search
-                  });
-                }, 100);
+                send_page_view: true
               });
-              
-              // Enhanced user engagement tracking
-              let scrollDepth = 0;
-              let timeOnPage = Date.now();
-              
-              // Track scroll depth
-              window.addEventListener('scroll', function() {
-                const currentScroll = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-                if (currentScroll > scrollDepth && currentScroll % 25 === 0) {
-                  scrollDepth = currentScroll;
-                  gtag('event', 'scroll', {
-                    event_category: 'engagement',
-                    event_label: scrollDepth + '%',
-                    value: scrollDepth
-                  });
-                }
-              });
-              
-              // Track time on page when user leaves
-              window.addEventListener('beforeunload', function() {
-                const timeSpent = Math.round((Date.now() - timeOnPage) / 1000);
-                gtag('event', 'time_on_page', {
-                  event_category: 'engagement',
-                  event_label: window.location.pathname,
-                  value: timeSpent
-                });
-              });
-              
-              // Track clicks on external links
-              document.addEventListener('click', function(e) {
-                const link = e.target.closest('a');
-                if (link && link.href && !link.href.includes(window.location.hostname)) {
-                  gtag('event', 'click', {
-                    event_category: 'outbound',
-                    event_label: link.href,
-                    transport_type: 'beacon'
-                  });
-                }
-              });
-              
-              // Initialize session tracking
-              window.sessionStartTime = Date.now();
-              
-              // Track initial page load performance
-              window.addEventListener('load', function() {
-                if (window.performance && window.performance.timing) {
-                  const loadTime = window.performance.timing.loadEventEnd - window.performance.timing.navigationStart;
-                  gtag('event', 'timing_complete', {
-                    name: 'page_load_time',
-                    value: loadTime,
-                    event_category: 'performance'
-                  });
-                }
-                
-                // Track device and browser info for better insights
-                gtag('event', 'session_start', {
-                  event_category: 'engagement',
-                  screen_resolution: screen.width + 'x' + screen.height,
-                  viewport_size: window.innerWidth + 'x' + window.innerHeight,
-                  connection_type: navigator.connection ? navigator.connection.effectiveType : 'unknown'
-                });
-              });
-            }
-            }
-          `}
-        </Script>
+            `
+          }}
+        />
+
 
         {/* JSON-LD site-wide */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />
@@ -312,6 +211,16 @@ export default function RootLayout({ children }) {
       </head>
       <Initializer />
       <body suppressHydrationWarning>
+        {/* Google Tag Manager (noscript) - Required immediately after <body> */}
+        <noscript>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-NXKZRQHZ"
+            height="0" 
+            width="0" 
+            style={{display: 'none', visibility: 'hidden'}}
+          ></iframe>
+        </noscript>
+        
         <ClientHeader roboto={roboto} />
         {children}
         <Footer />

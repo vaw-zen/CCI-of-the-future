@@ -83,8 +83,12 @@ padding: 5vw var(--padding-base);
   border-radius: 0.83vw;
   overflow: hidden;
   cursor: pointer;
-  /* box-shadow: 0 0.52vw 2.08vw rgba(0, 0, 0, 0.2); */
-    box-shadow: 0 0 4.71vw rgba(202, 251, 66, 0.185);
+box-shadow: 0 0 0.83vw rgba(203, 251, 66, 0.15);
+ 
+}
+.videoContainer:hover {
+     box-shadow: 0 0 4.71vw rgba(202, 251, 66, 0.185);
+  transform: translateY(-0.21vw);
 }
 
 /* CONSOLIDATED 1024px MEDIA QUERY - All tablet/mobile styles */

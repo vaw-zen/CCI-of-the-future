@@ -47,7 +47,6 @@ export function useReelsSection(initialReels = null, initialReelsPaging = null) 
     
     // Check cache first
     if (cacheRef.current[after]) {
-      console.log('[Reels] Loading from cache for cursor:', after)
       setReels(prev => ([...(prev || []), ...(cacheRef.current[after].reels || [])]))
       setReelsPaging(cacheRef.current[after].paging || null)
       return

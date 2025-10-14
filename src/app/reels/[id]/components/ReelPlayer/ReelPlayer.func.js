@@ -154,7 +154,7 @@ export function useReelPlayerLogic(reel) {
           url: url,
         });
       } catch (error) {
-        console.log('Partage annulé ou échoué');
+        // Share cancelled or failed silently
       }
     } else {
       // Fallback: copy to clipboard
@@ -162,7 +162,7 @@ export function useReelPlayerLogic(reel) {
         await navigator.clipboard.writeText(url);
         alert('Lien copié dans le presse-papiers !');
       } catch (error) {
-        console.error('Erreur lors de la copie:', error);
+        // Copy failed silently
       }
     }
   };
@@ -218,13 +218,9 @@ export function useReelPlayerLogic(reel) {
   const parseHashtags = (text) => {
     if (!text) return text;
     
-    console.log('Parsing text:', text);
     const parts = text.split(/(#[\w\u00C0-\u017F\u0100-\u024F]+)/g);
-    console.log('Split parts:', parts);
-    
     return parts.map((part, index) => {
       if (part.startsWith('#')) {
-        console.log('Found hashtag:', part);
         return <span key={index} className={styles.hashtag}>{part}</span>;
       }
       return part;

@@ -381,15 +381,15 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
           url: url,
         });
       } catch (error) {
-        console.log('Partage annulé ou échoué');
+        // Share cancelled or failed silently
       }
     } else {
       // Fallback: copy to clipboard
       try {
-        await navigator.clipboard.writeText(url);
+        await navigator.clipboard.writeText(shareUrl);
         alert('Lien copié dans le presse-papiers !');
       } catch (error) {
-        console.error('Erreur lors de la copie:', error);
+        // Copy failed silently
       }
     }
   }, []);

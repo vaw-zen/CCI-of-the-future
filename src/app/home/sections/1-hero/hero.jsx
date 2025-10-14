@@ -11,6 +11,7 @@ import {
   LineMdYoutubeTwotone,
 } from "@/utils/components/icons";
 import ResponsiveImage from "@/utils/components/Image/Image";
+import GoogleAnalytics from "@/utils/components/GoogleAnalytics";
 
 export default function Hero() {
   return (

@@ -151,23 +151,24 @@ export default function RootLayout({ children }) {
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            
-            // Enhanced configuration with better tracking
-            gtag('config', 'G-0RDH6DH7TS', {
-              page_title: document.title,
-              page_location: window.location.href,
-              send_page_view: true,
-              // Enhanced ecommerce and user engagement
-              custom_map: {
-                'custom_parameter_1': 'page_type',
-                'custom_parameter_2': 'user_engagement'
-              },
-              // Cookie settings for better privacy compliance
-              cookie_flags: 'SameSite=None;Secure',
-              // Allow linker for cross-domain tracking if needed
+            if (typeof window !== 'undefined') {
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              gtag('js', new Date());
+              
+              // Enhanced configuration with better tracking
+              gtag('config', 'G-0RDH6DH7TS', {
+                page_title: document.title,
+                page_location: window.location.href,
+                send_page_view: true,
+                // Enhanced ecommerce and user engagement
+                custom_map: {
+                  'custom_parameter_1': 'page_type',
+                  'custom_parameter_2': 'user_engagement'
+                },
+                // Cookie settings for better privacy compliance
+                cookie_flags: 'SameSite=None;Secure',
+                // Allow linker for cross-domain tracking if needed
               linker: {
                 domains: ['cciservices.online']
               }
@@ -273,6 +274,7 @@ export default function RootLayout({ children }) {
                   connection_type: navigator.connection ? navigator.connection.effectiveType : 'unknown'
                 });
               });
+            }
             }
           `}
         </Script>

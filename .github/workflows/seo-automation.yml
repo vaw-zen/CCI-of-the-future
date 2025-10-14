@@ -17,6 +17,11 @@ on:
         - performance_tracking
         - keyword_update
 
+# Add permissions for GitHub Actions to write to repository
+permissions:
+  contents: write
+  actions: read
+
 env:
   GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
   GSC_CREDENTIALS: ${{ secrets.GSC_CREDENTIALS }}
@@ -94,10 +99,8 @@ jobs:
         
     - name: Push changes
       if: success()
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: main
+      run: |
+        git push origin main
         
     - name: Create Pull Request for Review
       if: github.event.inputs.action_type == 'content_generation'

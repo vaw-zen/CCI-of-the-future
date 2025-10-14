@@ -33,6 +33,11 @@ on:
       - 'src/app/**'
       - '.github/workflows/**'
 
+# Add permissions for GitHub Actions to write to repository
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   # Weekly automated backlink campaign
   weekly-backlinks:

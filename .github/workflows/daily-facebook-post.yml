@@ -22,6 +22,11 @@ on:
         required: false
         type: string
 
+# Add permissions for GitHub Actions to write to repository
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   auto-post:
     runs-on: ubuntu-latest

@@ -4,12 +4,12 @@
     "currentBacklinks": 103,
     "targetBacklinks": 200,
     "gapToFill": 97,
-    "lastUpdated": "2025-10-14T03:04:14.432Z"
+    "lastUpdated": "2025-10-14T03:26:42.018Z"
   },
   "progress": {
     "phase1_directories": {
       "target": 30,
-      "acquired": 0,
+      "acquired": 1,
       "pending": 0
     },
     "phase2_content": {
@@ -160,6 +160,12 @@
       "domain": "linkedin.com",
       "category": "social_media",
       "dateAcquired": "2025-10-14T03:04:14.431Z",
+      "source": "Manual"
+    },
+    {
+      "domain": "crunchbase.com",
+      "category": "directory",
+      "dateAcquired": "2025-10-14T03:26:42.017Z",
       "source": "Manual"
     }
   ],

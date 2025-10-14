@@ -43,6 +43,14 @@ const Initializer = dynamic(() => import("@/utils/initializer/initalizer"));
 export default function Home() {
   return <>
   {/* Enhanced JSON-LD Schema for Better SEO */}
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RDH6DH7TS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0RDH6DH7TS');
+</script>
   <script
     type="application/ld+json"
     dangerouslySetInnerHTML={{
@@ -287,6 +295,7 @@ export default function Home() {
 
     <Head>
       {/* Preload critical resources */}
+      <meta name="google-site-verification" content="sJRXBYO6D1wSw4INn0E56VlSp8hSgSQHYc4p6Czr78U" />
       <link
         rel="preload"
         as="image"

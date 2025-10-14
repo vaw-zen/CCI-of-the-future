@@ -1,10 +1,10 @@
 # 📈 SEO Performance Tracking Report
 
-Generated: 10/14/2025, 8:20:28 PM
+Generated: 10/14/2025, 9:15:14 PM
 
 ## Summary
 
-- **Total Keywords Tracked:** 117
+- **Total Keywords Tracked:** 137
 - **Top Performers:** 10 keywords with 20+ clicks
 - **Improvement Opportunities:** 10 keywords in positions 10+
 - **Content Gaps:** 10 high-priority unoptimized keywords
@@ -12,58 +12,58 @@ Generated: 10/14/2025, 8:20:28 PM
 
 ## 🏆 Top Performing Keywords
 
-- **traitement marbre tunisie:** 132 clicks, position 1, 7.31% CTR
-- **salon:** 132 clicks, position 1, 7.17% CTR
-- **injection extraction:** 129 clicks, position 1, 6.59% CTR
-- **entreprise nettoyage moquette Tunis:** 126 clicks, position 1, 6.43% CTR
-- **restauration marbre tunis:** 120 clicks, position 1, 6.73% CTR
-- **tapis:** 120 clicks, position 1, 25.05% CTR
-- **cci tunis:** 117 clicks, position 17, 18.03% CTR
-- **CCI Tunisie:** 111 clicks, position 15, 13.75% CTR
-- **CCI Tunis:** 111 clicks, position 1, 5.74% CTR
-- **nettoyage canapé:** 111 clicks, position 1, 16.28% CTR
+- **nettoyage moquette tunis:** 176 clicks, position 1, 16.97% CTR
+- **injection extraction:** 147 clicks, position 1, 26.92% CTR
+- **moquette:** 144 clicks, position 1, 8.87% CTR
+- **canapé:** 141 clicks, position 1, 23.42% CTR
+- **cci tunis:** 138 clicks, position 1, 10.98% CTR
+- **traitement marbre tunisie:** 138 clicks, position 1, 42.72% CTR
+- **nettoyage moquettes tunisie:** 136 clicks, position 1, 11.27% CTR
+- **CCI Tunisie:** 135 clicks, position 1, 43.13% CTR
+- **salon:** 126 clicks, position 1, 35.00% CTR
+- **nettoyage voiture intérieur:** 123 clicks, position 1, 10.88% CTR
 
 ## 🚀 Improvement Opportunities
 
-- **cci tunis:** Position 17, 1286 monthly searches
-- **CCI Tunisie:** Position 15, 1284 monthly searches
-- **nettoyage spécialisé cuisines industrielles:** Position 13, 473 monthly searches
-- **nettoyage professionnel bureaux options:** Position 31, 469 monthly searches
-- **CCI Services:** Position 12, 462 monthly searches
-- **tarif nettoyage salon tunisie:** Position 40, 406 monthly searches
-- **entreprise nettoyage écologique commerces:** Position 29, 405 monthly searches
-- **nettoyage prestige tunis:** Position 14, 400 monthly searches
-- **nettoyage professionnel tunisie:** Position 12, 378 monthly searches
-- **contrats nettoyage réguliers immeubles:** Position 39, 368 monthly searches
+- **nettoyage tapis tunis:** Position 19, 712 monthly searches
+- **entreprise nettoyage moquette Tunis:** Position 17, 664 monthly searches
+- **nettoyage post-chantier tunisie:** Position 20, 492 monthly searches
+- **tarifs moyens nettoyage après travaux:** Position 12, 489 monthly searches
+- **entreprise nettoyage écologique commerces:** Position 17, 483 monthly searches
+- **prix nettoyage tapis tunis:** Position 15, 416 monthly searches
+- **nettoyage professionnel tunisie:** Position 39, 411 monthly searches
+- **lavage salon tunis:** Position 37, 385 monthly searches
+- **entretien rideaux tunis:** Position 36, 384 monthly searches
+- **nettoyage matelas tunis:** Position 27, 384 monthly searches
 
 ## 📝 Content Gaps (High Priority)
 
-- **service désinfection professionnelle locaux commerciaux** (Commercial) - High priority, 300 searches
-- **tarif nettoyage tapis** (Commercial) - High priority, 224 searches
-- **services nettoyage vitres en hauteur** (Commercial) - High priority, 303 searches
-- **contrats nettoyage réguliers immeubles** (Commercial) - High priority, 368 searches
-- **désinfection salon** (Informational) - High priority, 251 searches
-- **prix nettoyage tapis tunis** (Commercial) - High priority, 588 searches
-- **services nettoyage professionnel près de moi** (Local Commercial) - High priority, 303 searches
-- **lavage vapeur** (Informational) - High priority, 192 searches
-- **nettoyage professionnel bureaux options** (Commercial) - High priority, 469 searches
-- **polissage marbre** (Informational) - High priority, 133 searches
+- **tissus d'ameublement** (Informational) - High priority, 170 searches
+- **service désinfection professionnelle locaux commerciaux** (Commercial) - High priority, 368 searches
+- **entretien marbre cuisine tunis** (Commercial) - High priority, 266 searches
+- **ponçage marbre** (Informational) - High priority, 211 searches
+- **détachage marbre tunis** (Commercial) - High priority, 339 searches
+- **entretien marbre tunis** (Commercial) - High priority, 300 searches
+- **cristallisation marbre** (Informational) - High priority, 270 searches
+- **entretien canapé cuir tunis** (Commercial) - High priority, 153 searches
+- **détachage rideaux tunis** (Commercial) - High priority, 316 searches
+- **encapsulation** (Informational) - High priority, 84 searches
 
 ## 📊 Trending Keywords
 
 ### 📈 Improving Performance
-- **traitement marbre tunisie:** 132 clicks, position 1
-- **salon:** 132 clicks, position 1
-- **injection extraction:** 129 clicks, position 1
-- **entreprise nettoyage moquette Tunis:** 126 clicks, position 1
-- **restauration marbre tunis:** 120 clicks, position 1
+- **nettoyage moquette tunis:** 176 clicks, position 1
+- **injection extraction:** 147 clicks, position 1
+- **moquette:** 144 clicks, position 1
+- **canapé:** 141 clicks, position 1
+- **cci tunis:** 138 clicks, position 1
 
 ### ⚠️ Needs Attention
-- **tarif nettoyage tapis:** Position 35, trend: Declining
-- **services nettoyage vitres en hauteur:** Position 38, trend: Declining
-- **contrats nettoyage réguliers immeubles:** Position 39, trend: Declining
-- **services nettoyage professionnel près de moi:** Position 40, trend: Declining
-- **nettoyage professionnel bureaux options:** Position 31, trend: Declining
+- **entretien canapé cuir tunis:** Position 40, trend: Declining
+- **détachage rideaux tunis:** Position 31, trend: Declining
+- **entretien rideaux tunis:** Position 36, trend: Declining
+- **tapisserie nautique:** Position 33, trend: Declining
+- **lavage tapis tunis:** Position 38, trend: Declining
 
 ## 🎯 Recommendations
 
@@ -84,4 +84,4 @@ Generated: 10/14/2025, 8:20:28 PM
 - Build internal links between related keyword pages
 
 ---
-*Performance tracking completed at 2025-10-14T19:20:28.320Z*
+*Performance tracking completed at 2025-10-14T20:15:14.680Z*

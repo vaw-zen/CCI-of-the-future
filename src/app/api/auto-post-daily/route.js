@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import {GoogleGenerativeAI} from "@google/generative-ai"; 
+import PostRotationManager from "../../../utils/post-rotation-manager.js";
 
 const FB_API_VERSION = process.env.FB_API_VERSION || 'v23.0';
 const FB_PAGE_ID = process.env.FB_PAGE_ID;
@@ -8,6 +9,9 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 export async function POST(req) {
   try {
+    // Initialize rotation manager
+    const rotationManager = new PostRotationManager();
+    
     // Check environment variables
     if (!FB_PAGE_ID || !FB_PAGE_ACCESS_TOKEN || !GEMINI_API_KEY) {
       console.error("Missing required environment variables");
@@ -29,31 +33,67 @@ export async function POST(req) {
       // Use defaults if no body provided
     }
 
-    const { customPrompt, postType = "tip", includeHashtags = true, includeImage = true } = requestBody;
+    const { customPrompt, postType = "tip", includeHashtags = true, includeImage = true, forceService = null } = requestBody;
 
-    // Enhanced call-to-action system - ALWAYS include ALL contact options
-    const generateCallToAction = () => {
-      const callToActions = [
-        // Primary CTA - rotates between these options
+    // Get recommended service based on rotation
+    const recommendedService = forceService || rotationManager.getNextRecommendedService(postType);
+    
+    console.log('📊 Rotation Status:', {
+      recommendedService,
+      rotationStatus: rotationManager.getRotationStatus()
+    });
+
+    // Enhanced call-to-action system with service-specific URLs
+    const generateCallToAction = (targetService) => {
+      // Use service-specific CTA if we have a target service
+      if (targetService && rotationManager.serviceConfig[targetService]) {
+        const serviceCTA = rotationManager.generateServiceCallToAction(targetService);
+        
+        // Always include full contact information
+        const contactInfo = `
+🔗 Site: https://cciservices.online
+☎️ Tel: +216 98 55 77 66
+📧 Email: contact@cciservices.online`;
+
+        return serviceCTA + contactInfo;
+      }
+      
+      // Fallback to general CTAs
+      const generalCallToActions = [
         "💬 Simulateur de Devis gratuit: https://cciservices.online/devis",
         "💬 Demandez votre devis gratuit maintenant!",
         "💬 Devis personnalisé en 24h - gratuit!",
         "💬 Consultation gratuite pour votre projet!"
       ];
       
-      // Always include ALL contact information
       const contactInfo = `
 🔗 Site: https://cciservices.online
 ☎️ Tel: +216 98 55 77 66
 📧 Email: contact@cciservices.online`;
 
-      // Rotate primary CTA
-      const randomCTA = callToActions[Math.floor(Math.random() * callToActions.length)];
-      
+      const randomCTA = generalCallToActions[Math.floor(Math.random() * generalCallToActions.length)];
       return randomCTA + contactInfo;
     };
 
-    // Create dynamic prompts with MANDATORY call-to-action inclusion
+    // Create dynamic prompts with target service focus
+    const createServiceSpecificPrompt = (basePrompt, targetService) => {
+      if (!targetService || !rotationManager.serviceConfig[targetService]) {
+        return basePrompt;
+      }
+      
+      const serviceInfo = rotationManager.serviceConfig[targetService];
+      const serviceName = serviceInfo.displayName;
+      const keywords = serviceInfo.keywords.slice(0, 3).join(', '); // Use first 3 keywords
+      
+      return basePrompt.replace(
+        'SUJET: UN conseil professionnel précis sur l\'un de ces services:',
+        `SUJET OBLIGATOIRE: ${serviceName} (${keywords}). FOCUS uniquement sur ce service:`
+      ).replace(
+        'SERVICE À CHOISIR (un seul par post):',
+        `SERVICE OBLIGATOIRE: ${serviceName}. Ne pas mentionner d'autres services:`
+      );
+    };
+
     const prompts = {
       tip: `Tu créés UN SEUL post Facebook pour CCI Services, entreprise de nettoyage professionnel en Tunisie.
 
@@ -166,11 +206,18 @@ EXEMPLE:
     };
 
     const selectedPrompt = customPrompt || prompts[postType] || prompts.tip;
+    
+    // Apply service-specific targeting to the prompt
+    const targetedPrompt = createServiceSpecificPrompt(selectedPrompt, recommendedService);
 
-    console.log("Generating content with Gemini AI...");
+    console.log("Generating content with Gemini AI...", {
+      postType,
+      targetService: recommendedService,
+      promptType: customPrompt ? 'custom' : 'template'
+    });
     
     // Generate content with Gemini - with strict instructions for single post
-    const strictPrompt = selectedPrompt + "\n\nIMPORTANT: Génère EXACTEMENT UN SEUL post. Pas de choix multiples, pas d'alternatives. Juste UN contenu unique et précis.";
+    const strictPrompt = targetedPrompt + "\n\nIMPORTANT: Génère EXACTEMENT UN SEUL post. Pas de choix multiples, pas d'alternatives. Juste UN contenu unique et précis.";
     
     const result = await model.generateContent(strictPrompt);
     const response = await result.response;
@@ -199,8 +246,26 @@ EXEMPLE:
       generatedCaption = generatedCaption.replace(/CCI/i, 'CCI Services');
     }
 
-    // ALWAYS add comprehensive call-to-action (this ensures ALL posts have complete contact info)
-    const callToAction = generateCallToAction();
+    // Detect actual service from generated content
+    const detectedService = rotationManager.detectServiceFromContent(generatedCaption) || recommendedService;
+    
+    // Verify rotation rules
+    if (!rotationManager.canPostService(detectedService)) {
+      console.warn(`⚠️ Rotation rule violation: ${detectedService} used too recently`);
+      // Force regeneration with different service or use fallback
+      const alternativeService = rotationManager.getNextRecommendedService();
+      if (alternativeService !== detectedService) {
+        console.log(`🔄 Regenerating with alternative service: ${alternativeService}`);
+        const alternativePrompt = createServiceSpecificPrompt(selectedPrompt, alternativeService);
+        const alternativeResult = await model.generateContent(alternativePrompt + "\n\nIMPORTANT: Génère EXACTEMENT UN SEUL post unique.");
+        const alternativeResponse = await alternativeResult.response;
+        generatedCaption = alternativeResponse.text().trim();
+      }
+    }
+
+    // ALWAYS add service-specific call-to-action
+    const finalService = rotationManager.detectServiceFromContent(generatedCaption) || recommendedService;
+    const callToAction = generateCallToAction(finalService);
     generatedCaption += "\n\n" + callToAction;
 
     // Add hashtags if requested
@@ -514,6 +579,10 @@ EXEMPLE:
     
     console.log("Successfully posted to Facebook:", facebookData);
 
+    // Record the post in rotation history
+    const finalDetectedService = rotationManager.detectServiceFromContent(generatedCaption) || recommendedService;
+    rotationManager.recordPost(generatedCaption, finalDetectedService, postType, selectedImageUrl);
+
     return NextResponse.json({
       success: true,
       generated_content: generatedCaption,
@@ -523,10 +592,18 @@ EXEMPLE:
       timestamp: new Date().toISOString(),
       posted_with_image: !!selectedImageUrl,
       content_analysis: {
-        detected_service: analyzeContentForImages((selectedPrompt + ' ' + generatedCaption).toLowerCase()),
+        recommended_service: recommendedService,
+        detected_service: finalDetectedService,
+        service_url: rotationManager.getServiceUrl(finalDetectedService),
         has_all_contact_info: generatedCaption.includes('cciservices.online') && 
                               generatedCaption.includes('+216 98 55 77 66') && 
                               generatedCaption.includes('contact@cciservices.online')
+      },
+      rotation_info: {
+        service_used: finalDetectedService,
+        can_post_again: false, // This service can't be posted immediately again
+        next_recommended: rotationManager.getNextRecommendedService(),
+        post_recorded: true
       }
     });
 
@@ -543,10 +620,13 @@ EXEMPLE:
   }
 }
 
-// GET method for health check and manual testing
+// GET method for health check and rotation status
 export async function GET() {
+  const rotationManager = new PostRotationManager();
+  const rotationStatus = rotationManager.getRotationStatus();
+  
   return NextResponse.json({
-    message: "Gemini AI + Facebook auto-posting API is ready",
+    message: "Gemini AI + Facebook auto-posting API with intelligent rotation",
     required_env_vars: ["FB_PAGE_ID", "FB_PAGE_ACCESS_TOKEN", "GEMINI_API_KEY"],
     env_vars_present: {
       FB_PAGE_ID: !!FB_PAGE_ID,
@@ -556,9 +636,19 @@ export async function GET() {
     available_post_types: ["tip", "motivation", "service", "seasonal"],
     features: {
       ai_content_generation: true,
+      intelligent_service_rotation: true,
+      service_specific_urls: true,
       automatic_image_selection: true,
-      local_and_stock_images: true,
-      hashtag_integration: true
+      hashtag_integration: true,
+      post_history_tracking: true
+    },
+    rotation_status: rotationStatus,
+    service_urls: {
+      salon: "https://cciservices.online/salon",
+      tapis: "https://cciservices.online/tapis", 
+      marbre: "https://cciservices.online/marbre",
+      tapisserie: "https://cciservices.online/tapisserie",
+      tfc: "https://cciservices.online/tfc"
     },
     api_version: FB_API_VERSION
   });

@@ -87,7 +87,7 @@ box-shadow: 0 0 0.83vw rgba(203, 251, 66, 0.15);
  
 }
 .videoContainer:hover {
-     box-shadow: 0 0 4.71vw rgba(202, 251, 66, 0.185);
+     box-shadow: 0 0 3.71vw rgba(202, 251, 66, 0.185);
   transform: translateY(-0.21vw);
 }
 

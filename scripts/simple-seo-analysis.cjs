@@ -9,7 +9,7 @@ const path = require('path');
 
 class SimpleSeOAnalyzer {
   constructor() {
-    this.csvPath = './seo-keywords.csv';
+    this.csvPath = 'seo-keywords.csv';
     this.results = {
       keywords_analyzed: 0,
       content_generated: 0,
@@ -128,7 +128,9 @@ ${this.results.errors.length > 0 ? `## ⚠️ Errors\n\n${this.results.errors.ma
       outputs.forEach(output => {
         console.log(`Setting GitHub output: ${output}`);
         // Use the new method for GitHub Actions
-        fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/null', `${output}\n`);
+        if (process.env.GITHUB_OUTPUT) {
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `${output}\n`);
+        }
       });
     }
   }

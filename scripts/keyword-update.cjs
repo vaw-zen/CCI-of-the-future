@@ -10,7 +10,9 @@ const { createObjectCsvWriter } = require('csv-writer');
 
 class KeywordUpdater {
   constructor() {
-    this.csvPath = '../seo-keywords.csv';
+    // Check if running in GitHub Actions or locally
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    this.csvPath = isGitHubActions ? 'seo-keywords.csv' : '../seo-keywords.csv';
     this.keywords = [];
     this.newKeywords = [];
     this.marketTrends = {
@@ -467,7 +469,10 @@ Current trend multipliers:
 *Keyword database updated at ${new Date().toISOString()}*
 `;
 
-    fs.writeFileSync('../keyword-update-report.md', report);
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    const reportPath = isGitHubActions ? 'keyword-update-report.md' : '../keyword-update-report.md';
+    
+    fs.writeFileSync(reportPath, report);
     console.log('📋 Update report saved: keyword-update-report.md');
     
     return gaps;

@@ -10,7 +10,9 @@ const { createObjectCsvWriter } = require('csv-writer');
 
 class PerformanceTracker {
   constructor() {
-    this.csvPath = '../seo-keywords.csv';
+    // Check if running in GitHub Actions or locally
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    this.csvPath = isGitHubActions ? 'seo-keywords.csv' : '../seo-keywords.csv';
     this.keywords = [];
     this.performanceData = [];
   }
@@ -288,7 +290,10 @@ ${insights.needsAttention.map(k =>
 *Performance tracking completed at ${new Date().toISOString()}*
 `;
 
-    fs.writeFileSync('../performance-tracking-report.md', report);
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    const reportPath = isGitHubActions ? 'performance-tracking-report.md' : '../performance-tracking-report.md';
+    
+    fs.writeFileSync(reportPath, report);
     console.log('📋 Performance report saved: performance-tracking-report.md');
     
     return insights;

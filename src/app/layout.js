@@ -111,6 +111,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr" className={dmSans.className} suppressHydrationWarning>
       <head>
+        {/* Google Tag Manager - Must be FIRST in <head> for Search Console validation */}
+        <script 
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-MT495L62');
+            `
+          }}
+        />
+        
         <HydrationSuppressor />
         {/* Global Open Graph / Twitter / icons (canonical removed - handled per page) */}
         <meta name="keywords" content="cci tunisie, cci tunis, nettoyage professionnel tunisie,ch nettoyage moquette tunis, nettoyage salon tunisie, restauration marbre tunis, services tapisserie tunisie, nettoyage post-chantier, CCI services" />
@@ -147,19 +160,7 @@ export default function RootLayout({ children }) {
         {/* Google Site Verification - Method 1 for Search Console */}
         <meta name="google-site-verification" content="sJRXBYO6D1wSw4INn0E56VlSp8hSgSQHYc4p6Czr78U" />
 
-        {/* Google Tag Manager - Method 2 for Search Console validation */}
-        <script 
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','GTM-NXKZRQHZ');
-            `
-          }}
-        />
-        
+
         {/* Google Analytics - Method 3 for Search Console validation */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RDH6DH7TS"></script>
         <script 
@@ -214,7 +215,7 @@ export default function RootLayout({ children }) {
         {/* Google Tag Manager (noscript) - Required immediately after <body> */}
         <noscript>
           <iframe 
-            src="https://www.googletagmanager.com/ns.html?id=GTM-NXKZRQHZ"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-MT495L62"
             height="0" 
             width="0" 
             style={{display: 'none', visibility: 'hidden'}}

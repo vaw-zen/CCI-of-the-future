@@ -1,34 +1,7 @@
 {
   "checks": [
     {
-      "timestamp": "2025-10-15T01:25:01.224Z",
-      "totalArticles": 28,
-      "indexedCount": 28,
-      "indexingRate": "100.0",
-      "healthScore": 100,
-      "newArticles": 0,
-      "alerts": []
-    },
-    {
-      "timestamp": "2025-10-15T02:11:38.771Z",
-      "totalArticles": 28,
-      "indexedCount": 28,
-      "indexingRate": "100.0",
-      "healthScore": 100,
-      "newArticles": 0,
-      "alerts": []
-    },
-    {
-      "timestamp": "2025-10-15T02:13:08.231Z",
-      "totalArticles": 28,
-      "indexedCount": 28,
-      "indexingRate": "100.0",
-      "healthScore": 100,
-      "newArticles": 0,
-      "alerts": []
-    },
-    {
-      "timestamp": "2025-10-15T02:13:25.749Z",
+      "timestamp": "2025-10-15T03:19:38.408Z",
       "totalArticles": 28,
       "indexedCount": 28,
       "indexingRate": "100.0",

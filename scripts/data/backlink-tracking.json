@@ -1,15 +1,15 @@
 {
   "overview": {
-    "startDate": "2025-10-14T02:58:21.198Z",
+    "startDate": "2025-10-15T02:47:21.243Z",
     "currentBacklinks": 103,
     "targetBacklinks": 200,
     "gapToFill": 97,
-    "lastUpdated": "2025-10-14T03:26:42.018Z"
+    "lastUpdated": "2025-10-15T02:48:28.903Z"
   },
   "progress": {
     "phase1_directories": {
       "target": 30,
-      "acquired": 1,
+      "acquired": 0,
       "pending": 0
     },
     "phase2_content": {
@@ -74,6 +74,13 @@
         "status": "Not Started",
         "estimatedDA": 90,
         "notes": "Microsoft local business directory"
+      },
+      {
+        "name": "Tunis Business Directory",
+        "url": "https://example-tunis-business.tn",
+        "priority": "Medium",
+        "addedDate": "2025-10-15T02:48:24.440Z",
+        "status": "New"
       }
     ],
     "contentPartners": [
@@ -143,29 +150,14 @@
         "notes": "High-value commercial projects"
       }
     ],
-    "mediaOutlets": [],
-    "social_media": [
-      {
-        "name": "Facebook Optimized",
-        "url": "facebook.com/Chaabanes.Cleaning.Intelligence",
-        "priority": "Medium",
-        "addedDate": "2025-10-14T03:00:24.159Z",
-        "status": "New"
-      }
-    ]
+    "mediaOutlets": []
   },
   "outreach": [],
   "acquired": [
     {
-      "domain": "linkedin.com",
-      "category": "social_media",
-      "dateAcquired": "2025-10-14T03:04:14.431Z",
-      "source": "Manual"
-    },
-    {
-      "domain": "crunchbase.com",
-      "category": "directory",
-      "dateAcquired": "2025-10-14T03:26:42.017Z",
+      "domain": "example-tunis-business.tn",
+      "category": "directories",
+      "dateAcquired": "2025-10-15T02:48:28.902Z",
       "source": "Manual"
     }
   ],

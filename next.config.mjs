@@ -4,6 +4,10 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],
   },
+  // Remove console logs in production builds
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   // Suppress punycode deprecation warning
   onDemandEntries: {
     maxInactiveAge: 60 * 1000,

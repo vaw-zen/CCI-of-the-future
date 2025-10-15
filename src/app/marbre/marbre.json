@@ -1,7 +1,39 @@
 {
   "metadata": {
     "title": "Restauration Marbre Tunis | Ponçage Polissage Cristallisation | CCI",
-    "description": "Restauration marbre Tunis ✓ Ponçage, polissage, cristallisation ✓ Experts certifiés ✓ Avant/après garantis ✓ Devis gratuit"
+    "description": "Restauration marbre Tunis ✓ Ponçage, polissage, cristallisation ✓ Experts certifiés ✓ Avant/après garantis ✓ Devis gratuit",
+    "keywords": [
+      "restauration marbre tunis",
+      "traitement marbre tunisie",
+      "ponçage marbre",
+      "polissage marbre",
+      "cristallisation marbre",
+      "entretien marbre",
+      "marbre blanc",
+      "protection marbre",
+      "polissage marbre tunisie",
+      "ponçage marbre tunisie",
+      "lustrage marbre tunisie",
+      "protection marbre tunisie",
+      "cristallisation marbre tunisie",
+      "nettoyage marbre tunis",
+      "détachage marbre tunis",
+      "lavage marbre tunis",
+      "entretien marbre tunis",
+      "détartrage marbre cuisine",
+      "entretien marbre cuisine tunis",
+      "nettoyer plan travail marbre",
+      "marbre cuisine calcaire",
+      "marbre ariana",
+      "marbre la marsa",
+      "lustrage",
+      "ponçage",
+      "polissage",
+      "cristallisation",
+      "marbre",
+      "granit",
+      "travertin"
+    ]
   },
   "heroTitle": "Restauration et Entretien de Marbre à Tunis - CCI",
   "tabData": [
@@ -93,6 +125,10 @@
       },
       {
         "@type": "City",
+        "name": "El Aouina"
+      },
+      {
+        "@type": "City",
         "name": "Ben Arous"
       }
     ],
@@ -121,11 +157,19 @@
   "sections": {
     "mainService": {
       "title": "Restauration et entretien de marbre - CCI Tunisie",
-      "text": "CCI Tunisie vous propose des services spécialisés pour la restauration et l'entretien de vos surfaces en marbre à Tunis et toute la Tunisie : ponçage, lustrage, cristallisation et protection. L'équipe CCI Tunis utilise des techniques professionnelles et des produits adaptés pour redonner éclat, brillance et durabilité à vos sols et surfaces. Confiez vos projets à CCI Tunisie pour un résultat haut de gamme et durable."
+      "text": "CCI Tunisie vous propose des services spécialisés pour la restauration et l'entretien de vos surfaces en marbre à Tunis et toute la Tunisie : ponçage marbre tunisie, polissage marbre tunisie, cristallisation marbre tunisie, lustrage marbre tunisie et protection marbre tunisie. L'équipe CCI Tunis utilise des techniques professionnelles et des produits adaptés pour redonner éclat, brillance et durabilité à vos sols et surfaces. Confiez vos projets à CCI Tunisie pour un résultat haut de gamme et durable."
     },
     "secondaryService": {
-      "title": "L'expertise CCI Tunisie",
+      "title": "L'expertise CCI Tunisie - Polissage et Cristallisation",
       "text": "L'équipe CCI Tunisie maîtrise toutes les étapes de la restauration et de l'entretien du marbre à Tunis : du diagnostic précis à la mise en œuvre des techniques les plus adaptées, CCI Tunis assure un accompagnement personnalisé pour chaque projet. Nous utilisons des matériaux et équipements de qualité afin de garantir la durabilité, la brillance et la protection optimale de vos surfaces. Faites confiance à CCI Tunisie pour redonner vie et éclat à vos sols, escaliers ou plans de travail."
+    },
+    "techniques": {
+      "title": "Techniques Professionnelles de Restauration Marbre",
+      "text": "CCI Tunisie maîtrise l'ensemble des techniques de restauration marbre : ponçage marbre tunisie pour éliminer rayures et taches, polissage marbre tunisie pour retrouver la brillance d'origine, lustrage marbre tunisie pour une finition parfaite, cristallisation marbre tunisie pour une protection durable, et protection marbre tunisie contre les agressions quotidiennes. Chaque intervention est adaptée au type de marbre et à son état."
+    },
+    "localService": {
+      "title": "Services Marbre El Aouina et Grand Tunis",
+      "text": "Basée à El Aouina, CCI Tunisie intervient dans tout le Grand Tunis pour vos projets de restauration marbre. Nos équipes se déplacent chez vous avec tout l'équipement nécessaire pour réaliser ponçage, polissage, cristallisation et protection de vos surfaces en marbre. Service professionnel et devis gratuit sur El Aouina et environs."
     }
   },
   "aboutUs": {

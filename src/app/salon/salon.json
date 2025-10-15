@@ -1,7 +1,40 @@
 {
   "metadata": {
-    "title": "Nettoyage Salon Tunis | Canapés Fauteuils | CCI Services",
-    "description": "Nettoyage salon à domicile Tunis ✓ Canapés, fauteuils ✓ Toutes matières ✓ Résultats professionnels ✓ Devis gratuit"
+    "title": "Nettoyage Salon Tunis & El Aouina | Canapés Fauteuils | CCI Services",
+    "description": "Nettoyage salon professionnel Tunis & El Aouina ✓ Canapés, fauteuils ✓ À domicile ✓ Toutes matières ✓ Devis gratuit CCI",
+    "keywords": [
+      "nettoyage salon tunis",
+      "nettoyage canapé",
+      "nettoyage voiture intérieur",
+      "nettoyage salon domicile tunis",
+      "détachage salon",
+      "shampooing canapé",
+      "désinfection salon",
+      "détachage salon tunis",
+      "lavage salon tunis",
+      "entretien salon tunis",
+      "comment nettoyer canapé cuir",
+      "entretien canapé cuir tunis",
+      "nettoyage cuir professionnel",
+      "produits nettoyage cuir",
+      "canapé",
+      "salon",
+      "rideaux",
+      "matelas",
+      "tissus d'ameublement",
+      "cuir",
+      "microfibre",
+      "velours",
+      "coton",
+      "lin",
+      "nettoyage rideaux tunis",
+      "détachage rideaux tunis",
+      "lavage rideaux tunis",
+      "entretien rideaux tunis",
+      "nettoyage matelas tunis",
+      "détachage matelas tunis",
+      "tarif nettoyage salon tunisie"
+    ]
   },
   "heroTitle": "Nettoyage Salon et Canapés à Domicile - Tunis",
   "tabData": [
@@ -85,6 +118,10 @@
       {
         "@type": "City",
         "name": "Ariana"
+      },
+      {
+        "@type": "City",
+        "name": "El Aouina"
       },
       {
         "@type": "City",

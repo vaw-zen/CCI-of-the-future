@@ -5064,6 +5064,664 @@ export const articles = [
           </div>
         </section>
       </article>`
+  },
+  {
+    id: 22,
+    title: "Cristallisation Marbre Tunisie : Guide Complet 2025",
+    slug: "cristallisation-marbre-tunisie-guide-complet",
+    excerpt: "Découvrez tout sur la cristallisation marbre tunisie : processus, avantages, tarifs et conseils d'experts CCI pour une protection durable.",
+    category: "Marbre",
+    author: "CCI Tunisie",
+    publishedDate: "2025-01-15",
+    readTime: "7 min",
+    featured: true,
+    tags: ["cristallisation marbre", "protection marbre", "entretien marbre", "marbre tunisie"],
+    seoKeywords: [
+      "cristallisation marbre tunisie",
+      "protection marbre tunisie", 
+      "polissage marbre tunisie",
+      "lustrage marbre tunisie",
+      "ponçage marbre tunisie"
+    ],
+    content: `<article class="article-content">
+        <header class="article-header">
+          <h1>Cristallisation Marbre Tunisie : Guide Complet pour une Protection Durable</h1>
+          <div class="meta-info">
+            <span class="category">Marbre & Pierre</span>
+            <span class="read-time">7 min de lecture</span>
+            <span class="date">15 janvier 2025</span>
+          </div>
+        </header>
+
+        <section class="intro-section">
+          <p class="lead">La <strong>cristallisation marbre tunisie</strong> est la technique de référence pour protéger et embellir durablement vos surfaces en marbre. CCI Tunisie vous explique tout sur ce procédé révolutionnaire qui transforme et préserve l'éclat de votre marbre.</p>
+          
+          <div class="key-points">
+            <h3>Points clés de la cristallisation :</h3>
+            <ul>
+              <li>✓ Protection durable contre les taches et rayures</li>
+              <li>✓ Brillance exceptionnelle et effet miroir</li>
+              <li>✓ Durcissement de la surface du marbre</li>
+              <li>✓ Facilite l'entretien quotidien</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="process-section">
+          <h2>Le Processus de Cristallisation Marbre Tunisie</h2>
+          
+          <div class="step-process">
+            <div class="step">
+              <h3>1. Ponçage Marbre Tunisie</h3>
+              <p>Préparation de la surface par <strong>ponçage marbre tunisie</strong> pour éliminer rayures, taches et imperfections. Cette étape garantit une base parfaite pour la cristallisation.</p>
+            </div>
+            
+            <div class="step">
+              <h3>2. Polissage Marbre Tunisie</h3>
+              <p>Le <strong>polissage marbre tunisie</strong> affine la surface et prépare le marbre à recevoir le traitement de cristallisation. Grains progressifs jusqu'à 3000.</p>
+            </div>
+            
+            <div class="step">
+              <h3>3. Lustrage Marbre Tunisie</h3>
+              <p>Le <strong>lustrage marbre tunisie</strong> apporte une première brillance et uniformise la surface avant l'application du cristallisant.</p>
+            </div>
+            
+            <div class="step">
+              <h3>4. Cristallisation Proprement Dite</h3>
+              <p>Application du cristallisant qui réagit chimiquement avec le marbre, créant une couche protectrice ultra-résistante et brillante.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="advantages-section">
+          <h2>Avantages de la Cristallisation Marbre</h2>
+          
+          <div class="advantages-grid">
+            <div class="advantage">
+              <h3>Protection Maximale</h3>
+              <p>La cristallisation crée une barrière protectrice qui résiste aux taches, acides et rayures du quotidien.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>Brillance Exceptionnelle</h3>
+              <p>Effet miroir garanti et durée de vie prolongée comparé aux cires traditionnelles.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>Facilité d'Entretien</h3>
+              <p>Surface lisse qui se nettoie facilement et résiste mieux aux salissures.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>Durabilité</h3>
+              <p>Protection qui dure plusieurs années selon l'usage et l'entretien.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="local-service">
+          <h2>Service Cristallisation à El Aouina et Grand Tunis</h2>
+          <p>Basée à <strong>El Aouina</strong>, CCI Tunisie intervient dans tout le Grand Tunis pour vos projets de cristallisation marbre. Nos équipes se déplacent avec tout l'équipement professionnel nécessaire.</p>
+          
+          <div class="service-areas">
+            <h3>Zones d'intervention :</h3>
+            <ul>
+              <li>El Aouina et environs</li>
+              <li>Tunis centre</li>
+              <li>Ariana</li>
+              <li>Ben Arous</li>
+              <li>Manouba</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="pricing-section">
+          <h2>Tarifs Cristallisation Marbre Tunisie</h2>
+          
+          <div class="pricing-table">
+            <div class="price-item">
+              <h3>Cristallisation Standard</h3>
+              <p class="price">À partir de 25 DT/m²</p>
+              <ul>
+                <li>Ponçage léger</li>
+                <li>Polissage</li>
+                <li>Cristallisation</li>
+              </ul>
+            </div>
+            
+            <div class="price-item premium">
+              <h3>Cristallisation Premium</h3>
+              <p class="price">À partir de 35 DT/m²</p>
+              <ul>
+                <li>Ponçage complet</li>
+                <li>Polissage multi-grains</li>
+                <li>Lustrage</li>
+                <li>Double cristallisation</li>
+                <li>Protection longue durée</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="maintenance-section">
+          <h2>Entretien Après Cristallisation</h2>
+          
+          <div class="maintenance-tips">
+            <h3>Conseils d'entretien :</h3>
+            <ul>
+              <li>Nettoyage quotidien à l'eau et savon pH neutre</li>
+              <li>Éviter les produits acides (citron, vinaigre)</li>
+              <li>Essuyer immédiatement les liquides renversés</li>
+              <li>Re-cristallisation tous les 2-3 ans selon l'usage</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="cta-section">
+          <div class="cta-content">
+            <h2>Besoin d'une Cristallisation Marbre ?</h2>
+            <p>Confiez votre marbre aux experts CCI Tunisie. Devis gratuit et conseils personnalisés.</p>
+            <div class="cta-buttons">
+              <a href="tel:+21698557766" class="button primary">Appeler Maintenant</a>
+              <a href="/devis" class="button">Devis Gratuit</a>
+            </div>
+          </div>
+          
+          <div class="info-box">
+            <p><strong>Siège :</strong> El Aouina, Tunis • <strong>Intervention :</strong> Grand Tunis • <strong>Urgences :</strong> 7j/7</p>
+          </div>
+        </section>
+      </article>`
+  },
+  {
+    id: 23,
+    title: "Polissage Marbre Tunisie : Techniques et Tarifs 2025",
+    slug: "polissage-marbre-tunisie-techniques-tarifs",
+    excerpt: "Guide expert du polissage marbre tunisie : techniques professionnelles, équipements, tarifs et conseils CCI pour retrouver l'éclat d'origine.",
+    category: "Marbre",
+    author: "CCI Tunisie",
+    publishedDate: "2025-01-15",
+    readTime: "6 min",
+    featured: true,
+    tags: ["polissage marbre", "restoration marbre", "marbre tunisie", "brillance marbre"],
+    seoKeywords: [
+      "polissage marbre tunisie",
+      "lustrage marbre tunisie",
+      "ponçage marbre tunisie",
+      "cristallisation marbre tunisie",
+      "protection marbre tunisie"
+    ],
+    content: `<article class="article-content">
+        <header class="article-header">
+          <h1>Polissage Marbre Tunisie : Retrouvez l'Éclat d'Origine de Vos Surfaces</h1>
+          <div class="meta-info">
+            <span class="category">Marbre & Pierre</span>
+            <span class="read-time">6 min de lecture</span>
+            <span class="date">15 janvier 2025</span>
+          </div>
+        </header>
+
+        <section class="intro-section">
+          <p class="lead">Le <strong>polissage marbre tunisie</strong> est l'art de redonner brillance et beauté à vos surfaces en marbre. CCI Tunisie maîtrise toutes les techniques de polissage pour transformer vos sols, escaliers et plans de travail ternis.</p>
+          
+          <div class="process-overview">
+            <h3>Le polissage en 3 étapes :</h3>
+            <ul>
+              <li>🔧 <strong>Ponçage marbre tunisie</strong> - Préparation de surface</li>
+              <li>✨ <strong>Polissage marbre tunisie</strong> - Restauration brillance</li>
+              <li>🛡️ <strong>Protection marbre tunisie</strong> - Préservation durable</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="techniques-section">
+          <h2>Techniques de Polissage Marbre Professionnel</h2>
+          
+          <div class="technique-grid">
+            <div class="technique">
+              <h3>Polissage Mécanique</h3>
+              <p>Utilisation de disques abrasifs progressifs (grain 50 à 3000) pour éliminer rayures et redonner brillance. Technique CCI pour <strong>polissage marbre tunisie</strong> optimal.</p>
+            </div>
+            
+            <div class="technique">
+              <h3>Polissage Chimique</h3>
+              <p>Application de produits spécialisés qui réagissent avec le carbonate de calcium du marbre pour créer une surface brillante et lisse.</p>
+            </div>
+            
+            <div class="technique">
+              <h3>Polissage Combiné</h3>
+              <p>Association des techniques mécaniques et chimiques pour un résultat optimal. Méthode privilégiée par CCI Tunisie.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="process-detail">
+          <h2>Étapes Détaillées du Polissage</h2>
+          
+          <div class="step-detail">
+            <h3>1. Diagnostic et Préparation</h3>
+            <ul>
+              <li>Évaluation de l'état du marbre</li>
+              <li>Test de dureté et porosité</li>
+              <li>Choix de la technique adaptée</li>
+              <li>Protection des zones adjacentes</li>
+            </ul>
+          </div>
+          
+          <div class="step-detail">
+            <h3>2. Ponçage Préparatoire</h3>
+            <ul>
+              <li><strong>Ponçage marbre tunisie</strong> avec grains grossiers (50-100)</li>
+              <li>Élimination des rayures profondes</li>
+              <li>Nivellement des irrégularités</li>
+              <li>Nettoyage entre chaque passage</li>
+            </ul>
+          </div>
+          
+          <div class="step-detail">
+            <h3>3. Polissage Progressif</h3>
+            <ul>
+              <li>Grains moyens (200-400) - Affinement</li>
+              <li>Grains fins (800-1500) - Pré-polissage</li>
+              <li>Grains très fins (3000) - Polissage final</li>
+              <li>Contrôle qualité à chaque étape</li>
+            </ul>
+          </div>
+          
+          <div class="step-detail">
+            <h3>4. Lustrage et Finition</h3>
+            <ul>
+              <li><strong>Lustrage marbre tunisie</strong> avec pâtes spécialisées</li>
+              <li>Application de produits de brillance</li>
+              <li>Polissage final au feutre</li>
+              <li>Vérification de l'uniformité</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="equipment-section">
+          <h2>Équipements Professionnels CCI</h2>
+          
+          <div class="equipment-list">
+            <h3>Notre parc machine :</h3>
+            <ul>
+              <li>Ponceuses professionnelles variables (1500-3000 tr/min)</li>
+              <li>Disques diamantés haute qualité</li>
+              <li>Systèmes d'aspiration intégrés</li>
+              <li>Lubrifiants et produits chimiques certifiés</li>
+              <li>Outils de mesure de brillance</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="local-expertise">
+          <h2>Expertise Locale El Aouina</h2>
+          <p>Située à <strong>El Aouina</strong>, CCI Tunisie connaît parfaitement les spécificités du marbre local et les conditions climatiques tunisiennes qui influencent les techniques de polissage.</p>
+          
+          <div class="local-advantages">
+            <h3>Avantages de notre proximité :</h3>
+            <ul>
+              <li>Intervention rapide sur El Aouina et environs</li>
+              <li>Connaissance des marbres locaux (Thala, Chemtou...)</li>
+              <li>Adaptation aux conditions climatiques</li>
+              <li>Service après-vente de proximité</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="pricing-guide">
+          <h2>Guide des Tarifs Polissage Marbre</h2>
+          
+          <div class="pricing-categories">
+            <div class="price-category">
+              <h3>Polissage Standard</h3>
+              <p class="price">15-25 DT/m²</p>
+              <ul>
+                <li>Polissage grain 400-1500</li>
+                <li>Lustrage simple</li>
+                <li>Nettoyage final</li>
+              </ul>
+            </div>
+            
+            <div class="price-category">
+              <h3>Polissage Intensif</h3>
+              <p class="price">25-35 DT/m²</p>
+              <ul>
+                <li>Ponçage préparatoire</li>
+                <li>Polissage complet (50-3000)</li>
+                <li>Lustrage professionnel</li>
+                <li>Traitement de brillance</li>
+              </ul>
+            </div>
+            
+            <div class="price-category premium">
+              <h3>Restauration Complète</h3>
+              <p class="price">35-50 DT/m²</p>
+              <ul>
+                <li>Ponçage marbre tunisie complet</li>
+                <li>Polissage marbre tunisie premium</li>
+                <li>Lustrage marbre tunisie</li>
+                <li>Cristallisation marbre tunisie</li>
+                <li>Protection marbre tunisie</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="maintenance-advice">
+          <h2>Maintenir la Brillance Après Polissage</h2>
+          
+          <div class="maintenance-grid">
+            <div class="maintenance-tip">
+              <h3>Entretien Quotidien</h3>
+              <ul>
+                <li>Nettoyage à l'eau tiède et savon neutre</li>
+                <li>Séchage immédiat avec chiffon doux</li>
+                <li>Éviter les produits abrasifs</li>
+              </ul>
+            </div>
+            
+            <div class="maintenance-tip">
+              <h3>Protection Préventive</h3>
+              <ul>
+                <li>Utiliser des sets de table et dessous de verre</li>
+                <li>Éviter le contact avec acides</li>
+                <li>Nettoyer immédiatement les liquides renversés</li>
+              </ul>
+            </div>
+            
+            <div class="maintenance-tip">
+              <h3>Entretien Périodique</h3>
+              <ul>
+                <li>Polissage d'entretien annuel</li>
+                <li>Cristallisation tous les 2-3 ans</li>
+                <li>Contrôle professionnel régulier</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="cta-section">
+          <div class="cta-content">
+            <h2>Redonnez Vie à Votre Marbre</h2>
+            <p>Confiez le polissage de votre marbre aux experts CCI Tunisie. Résultat garanti et devis gratuit.</p>
+            <div class="cta-buttons">
+              <a href="tel:+21698557766" class="button primary">Devis Immédiat</a>
+              <a href="/marbre" class="button">Nos Services Marbre</a>
+            </div>
+          </div>
+          
+          <div class="info-box">
+            <p><strong>Basé à :</strong> El Aouina • <strong>Intervention :</strong> Grand Tunis • <strong>Garantie :</strong> Satisfaction client</p>
+          </div>
+        </section>
+      </article>`
+  },
+  {
+    id: 24,
+    title: "Services Nettoyage El Aouina : Guide Complet CCI",
+    slug: "services-nettoyage-el-aouina-guide-complet",
+    excerpt: "Découvrez tous les services de nettoyage professionnel à El Aouina avec CCI Services : tapis, canapés, marbre, tapisserie. Devis gratuit.",
+    category: "Services Locaux",
+    author: "CCI Services",
+    publishedDate: "2025-01-15",
+    readTime: "8 min",
+    featured: true,
+    tags: ["nettoyage el aouina", "services el aouina", "CCI el aouina", "nettoyage professionnel"],
+    seoKeywords: [
+      "nettoyage el aouina",
+      "services nettoyage el aouina", 
+      "CCI services el aouina",
+      "nettoyage professionnel el aouina",
+      "entreprise nettoyage el aouina"
+    ],
+    content: `<article class="article-content">
+        <header class="article-header">
+          <h1>Services Nettoyage El Aouina : Votre Expert Local CCI</h1>
+          <div class="meta-info">
+            <span class="category">Services Locaux</span>
+            <span class="read-time">8 min de lecture</span>
+            <span class="date">15 janvier 2025</span>
+          </div>
+        </header>
+
+        <section class="intro-section">
+          <p class="lead">Vous cherchez des <strong>services nettoyage El Aouina</strong> de qualité ? CCI Services, basée au cœur d'El Aouina, est votre partenaire local de confiance pour tous vos besoins de nettoyage professionnel.</p>
+          
+          <div class="location-info">
+            <h3>🏢 CCI Services El Aouina</h3>
+            <p><strong>Adresse :</strong> 06 Rue Galant de nuit, El Aouina 2045</p>
+            <p><strong>Zone d'intervention :</strong> El Aouina et tout le Grand Tunis</p>
+            <p><strong>Contact :</strong> 98 557 766</p>
+          </div>
+        </section>
+
+        <section class="services-overview">
+          <h2>Nos Services de Nettoyage à El Aouina</h2>
+          
+          <div class="service-grid">
+            <div class="service-card">
+              <h3>🏠 Nettoyage Tapis El Aouina</h3>
+              <ul>
+                <li>Nettoyage à domicile ou enlèvement</li>
+                <li>Toutes fibres : laine, soie, synthétique</li>
+                <li>Techniques adaptées : vapeur, injection-extraction</li>
+                <li>Séchage rapide et protection</li>
+              </ul>
+              <p class="price">À partir de 8 DT/m²</p>
+            </div>
+            
+            <div class="service-card">
+              <h3>🛋️ Nettoyage Salon El Aouina</h3>
+              <ul>
+                <li>Canapés, fauteuils, coussins</li>
+                <li>Tissus d'ameublement</li>
+                <li>Rideaux et tentures</li>
+                <li>Traitement anti-acariens</li>
+              </ul>
+              <p class="price">À partir de 15 DT/siège</p>
+            </div>
+            
+            <div class="service-card">
+              <h3>✨ Nettoyage Marbre El Aouina</h3>
+              <ul>
+                <li>Ponçage et polissage</li>
+                <li>Cristallisation</li>
+                <li>Lustrage professionnel</li>
+                <li>Protection durable</li>
+              </ul>
+              <p class="price">À partir de 25 DT/m²</p>
+            </div>
+            
+            <div class="service-card">
+              <h3>🪑 Tapisserie El Aouina</h3>
+              <ul>
+                <li>Retapissage sur mesure</li>
+                <li>Rembourrage professionnel</li>
+                <li>Tissus ignifuges</li>
+                <li>Rénovation complète</li>
+              </ul>
+              <p class="price">Devis sur mesure</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="local-advantages">
+          <h2>Pourquoi Choisir CCI Services El Aouina ?</h2>
+          
+          <div class="advantage-list">
+            <div class="advantage">
+              <h3>🚚 Proximité et Réactivité</h3>
+              <p>Basés à El Aouina, nous intervenons rapidement chez vous. Délai d'intervention : moins de 2h pour les urgences.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>🏆 Expertise Locale</h3>
+              <p>Plus de 5 ans d'expérience dans le nettoyage professionnel. Connaissance parfaite des besoins locaux.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>🔧 Équipement Professionnel</h3>
+              <p>Matériel de pointe et produits certifiés. Techniques adaptées au climat tunisien.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>💯 Satisfaction Garantie</h3>
+              <p>Résultats garantis ou nouvelle intervention gratuite. Transparence et qualité.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="process-section">
+          <h2>Notre Processus d'Intervention El Aouina</h2>
+          
+          <div class="process-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <h3>Prise de Rendez-vous</h3>
+              <p>Contactez-nous au 98 557 766. Devis gratuit par téléphone ou à domicile.</p>
+            </div>
+            
+            <div class="step">
+              <div class="step-number">2</div>
+              <h3>Diagnostic Professionnel</h3>
+              <p>Évaluation sur place. Choix de la technique adaptée. Explication détaillée.</p>
+            </div>
+            
+            <div class="step">
+              <div class="step-number">3</div>
+              <h3>Intervention Expert</h3>
+              <p>Nettoyage professionnel avec matériel spécialisé. Respect des délais convenus.</p>
+            </div>
+            
+            <div class="step">
+              <div class="step-number">4</div>
+              <h3>Contrôle Qualité</h3>
+              <p>Vérification des résultats. Conseils d'entretien. Garantie satisfaction.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="testimonials-section">
+          <h2>Témoignages Clients El Aouina</h2>
+          
+          <div class="testimonials">
+            <div class="testimonial">
+              <p>"Excellent service ! Mon tapis persan a retrouvé ses couleurs d'origine. Je recommande CCI Services."</p>
+              <cite>- Mme Belkaid, Villa El Aouina</cite>
+            </div>
+            
+            <div class="testimonial">
+              <p>"Intervention rapide pour mon salon. Résultat parfait et équipe très professionnelle."</p>
+              <cite>- M. Chakroun, Résidence El Aouina</cite>
+            </div>
+            
+            <div class="testimonial">
+              <p>"Cristallisation de mon marbre impeccable. Service après-vente excellent."</p>
+              <cite>- Mme Trabelsi, Villa El Aouina</cite>
+            </div>
+          </div>
+        </section>
+
+        <section class="coverage-area">
+          <h2>Zone de Couverture depuis El Aouina</h2>
+          
+          <div class="coverage-map">
+            <h3>Secteurs d'intervention :</h3>
+            <div class="areas-grid">
+              <div class="area-group">
+                <h4>Nord Tunis</h4>
+                <ul>
+                  <li>El Aouina (siège)</li>
+                  <li>Sidi Daoud</li>
+                  <li>Carthage</li>
+                  <li>La Marsa</li>
+                </ul>
+              </div>
+              
+              <div class="area-group">
+                <h4>Grand Tunis</h4>
+                <ul>
+                  <li>Ariana</li>
+                  <li>Tunis Centre</li>
+                  <li>Ben Arous</li>
+                  <li>Manouba</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pricing-transparency">
+          <h2>Tarifs Transparents El Aouina</h2>
+          
+          <div class="pricing-info">
+            <h3>Politique tarifaire :</h3>
+            <ul>
+              <li>🆓 <strong>Devis gratuit</strong> à domicile ou par téléphone</li>
+              <li>🚚 <strong>Déplacement gratuit</strong> dans un rayon de 15km d'El Aouina</li>
+              <li>💳 <strong>Paiement flexible</strong> : espèces, chèque, virement</li>
+              <li>📄 <strong>Facture détaillée</strong> pour chaque intervention</li>
+              <li>🎯 <strong>Tarifs préférentiels</strong> pour clients réguliers</li>
+            </ul>
+          </div>
+          
+          <div class="price-examples">
+            <h3>Exemples de tarifs :</h3>
+            <div class="price-grid">
+              <div class="price-item">
+                <span class="service">Tapis 2x3m</span>
+                <span class="price">48-60 DT</span>
+              </div>
+              <div class="price-item">
+                <span class="service">Canapé 3 places</span>
+                <span class="price">45-60 DT</span>
+              </div>
+              <div class="price-item">
+                <span class="service">Salon marbre 20m²</span>
+                <span class="price">500-700 DT</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="contact-section">
+          <h2>Contactez CCI Services El Aouina</h2>
+          
+          <div class="contact-grid">
+            <div class="contact-method">
+              <h3>📞 Par Téléphone</h3>
+              <p><strong>98 557 766</strong></p>
+              <p>Lundi-Samedi : 8h-18h<br>Dimanche : 9h-17h</p>
+            </div>
+            
+            <div class="contact-method">
+              <h3>📍 À Notre Siège</h3>
+              <p>06 Rue Galant de nuit<br>El Aouina 2045<br>Tunis, Tunisie</p>
+            </div>
+            
+            <div class="contact-method">
+              <h3>🌐 En Ligne</h3>
+              <p>Site web : cciservices.online<br>Devis en ligne disponible<br>Réponse sous 2h</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="cta-section">
+          <div class="cta-content">
+            <h2>Besoin d'un Nettoyage à El Aouina ?</h2>
+            <p>CCI Services intervient rapidement dans votre quartier. Devis gratuit et conseils d'experts.</p>
+            <div class="cta-buttons">
+              <a href="tel:+21698557766" class="button primary">Appeler Maintenant</a>
+              <a href="/devis" class="button">Devis en Ligne</a>
+            </div>
+          </div>
+          
+          <div class="info-box">
+            <p><strong>🏠 Basé à El Aouina</strong> • <strong>🚚 Intervention Rapide</strong> • <strong>✅ Satisfaction Garantie</strong></p>
+          </div>
+        </section>
+      </article>`
   }
 ];
 

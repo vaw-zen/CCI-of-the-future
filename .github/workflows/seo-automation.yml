@@ -26,6 +26,9 @@ env:
   GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
   GSC_CREDENTIALS: ${{ secrets.GSC_CREDENTIALS }}
   SITE_URL: ${{ secrets.SITE_URL }}
+  GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+  GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
+  GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
 
 jobs:
   seo-automation:
@@ -45,56 +48,108 @@ jobs:
       run: |
         npm install googleapis @google/generative-ai csv-parser csv-writer dotenv
         
-    - name: Setup GSC credentials
+    - name: Setup GSC credentials and environment
       run: |
-        echo '${{ secrets.GSC_CREDENTIALS }}' > gsc-credentials.json
+        # Create credentials directory if it doesn't exist
+        mkdir -p scripts/credentials
+        
+        # Setup GSC credentials from GitHub secrets
+        echo '${{ secrets.GSC_CREDENTIALS }}' > scripts/credentials/gsc-credentials.json
+        
+        # Verify credentials file was created
+        if [ -f scripts/credentials/gsc-credentials.json ]; then
+          echo "✅ GSC credentials file created successfully"
+          echo "📁 Credentials file size: $(wc -c < scripts/credentials/gsc-credentials.json) bytes"
+        else
+          echo "❌ Failed to create GSC credentials file"
+          exit 1
+        fi
+        
+        # Verify SEO keywords file exists
+        if [ -f scripts/data/seo-keywords.csv ]; then
+          echo "✅ SEO keywords file found"
+          echo "📊 Keywords file size: $(wc -c < scripts/data/seo-keywords.csv) bytes"
+          echo "📋 Number of keywords: $(wc -l < scripts/data/seo-keywords.csv)"
+        else
+          echo "⚠️ SEO keywords file not found, checking root directory"
+          if [ -f seo-keywords.csv ]; then
+            echo "✅ Found keywords file in root, copying to scripts/data/"
+            cp seo-keywords.csv scripts/data/
+          else
+            echo "❌ No SEO keywords file found"
+            exit 1
+          fi
+        fi
+        
+        # Setup environment variables for scripts
+        echo "GOOGLE_SERVICE_ACCOUNT_EMAIL=${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}" >> .env
+        echo "GOOGLE_PROJECT_ID=${{ secrets.GOOGLE_PROJECT_ID }}" >> .env
+        echo "GSC_SITE_URL=${{ secrets.GSC_SITE_URL }}" >> .env
+        echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
+        
+    - name: Debug file structure
+      run: |
+        echo "🔍 Debugging file structure..."
+        echo "Current working directory: $(pwd)"
+        echo "Contents of scripts/:"
+        ls -la scripts/ || echo "scripts/ not found"
+        echo "Contents of scripts/workflows/:"
+        ls -la scripts/workflows/ || echo "scripts/workflows/ not found"
+        echo "Contents of scripts/workflows/seo-automation/:"
+        ls -la scripts/workflows/seo-automation/ || echo "scripts/workflows/seo-automation/ not found"
+        echo "Checking target script:"
+        if [ -f "scripts/workflows/seo-automation/simple-seo-analysis.cjs" ]; then
+          echo "✅ scripts/workflows/seo-automation/simple-seo-analysis.cjs exists"
+        else
+          echo "❌ scripts/workflows/seo-automation/simple-seo-analysis.cjs NOT found"
+        fi
         
     - name: Run SEO Analysis
       id: analysis
       run: |
         if [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "content_generation" ]; then
           echo "🤖 Running content generation..."
-          node scripts/seo-content-automation.cjs 2
+          node scripts/workflows/seo-automation/seo-content-automation.cjs 2
         elif [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "performance_tracking" ]; then
           echo "📈 Running performance tracking..."
-          node scripts/performance-tracking.cjs
+          node scripts/workflows/seo-automation/performance-tracking.cjs
         elif [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "keyword_update" ]; then
-          echo "� Running keyword database update..."
-          node scripts/keyword-update.cjs
+          echo "🔄 Running keyword database update..."
+          node scripts/workflows/seo-automation/keyword-update.cjs
         else
-          echo "�📊 Running full SEO analysis..."
-          node scripts/simple-seo-analysis.cjs
+          echo "📊 Running full SEO analysis..."
+          node scripts/workflows/seo-automation/simple-seo-analysis.cjs
           echo "📈 Running performance tracking..."
-          node scripts/performance-tracking.cjs
+          node scripts/workflows/seo-automation/performance-tracking.cjs
           echo "🔄 Updating keyword database..."
-          node scripts/keyword-update.cjs
+          node scripts/workflows/seo-automation/keyword-update.cjs
         fi
         
         # Set outputs using environment files (fixed GitHub Actions warnings)
-        echo "keywords_count=$(wc -l < seo-keywords.csv 2>/dev/null || echo '117')" >> $GITHUB_OUTPUT
+        echo "keywords_count=$(wc -l < scripts/data/seo-keywords.csv 2>/dev/null || echo '117')" >> $GITHUB_OUTPUT
         echo "content_count=0" >> $GITHUB_OUTPUT
         echo "content_summary=SEO analysis completed successfully" >> $GITHUB_OUTPUT
-        echo "generated_files=seo-keywords.csv, seo-report.md, performance-tracking-report.md, keyword-update-report.md" >> $GITHUB_OUTPUT
+        echo "generated_files=scripts/data/seo-keywords.csv, scripts/reports/seo-report.md, scripts/reports/performance-tracking-report.md, scripts/reports/keyword-update-report.md" >> $GITHUB_OUTPUT
       env:
         ACTION_TYPE: ${{ github.event.inputs.action_type || 'full_analysis' }}
         
     - name: Submit new articles for indexing
       run: |
         echo "📤 Submitting new articles to Google Search Console for faster indexing..."
-        node scripts/submit-urls-indexing.cjs articles 3 || echo "⚠️ URL submission failed, continuing..."
+        node scripts/workflows/seo-automation/submit-urls-indexing.cjs articles 3 || echo "⚠️ URL submission failed, continuing..."
         
     - name: Generate Content Report
       run: |
         echo "## 📊 SEO Automation Report" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        cat seo-report.md >> $GITHUB_STEP_SUMMARY
+        cat scripts/reports/seo-report.md >> $GITHUB_STEP_SUMMARY
         
     - name: Commit generated content
       if: success()
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "SEO Automation Bot"
-        git add src/app/conseils/data/articles.js seo-keywords.csv content/ seo-report.md performance-tracking-report.md keyword-update-report.md || true
+        git add src/app/conseils/data/articles.js scripts/data/seo-keywords.csv content/ scripts/reports/seo-report.md scripts/reports/performance-tracking-report.md scripts/reports/keyword-update-report.md || true
         git diff --staged --quiet || git commit -m "🤖 Auto-generated SEO content: Added new articles.js database updates and performance reports"
         
     - name: Push changes

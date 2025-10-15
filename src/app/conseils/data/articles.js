@@ -31,6 +31,10 @@ export const articles = [
         <p>💡 <strong>Vous cherchez un service complet ?</strong> Découvrez tous nos <a href="/services" style="color: var(--ac-primary); font-weight: 600;">services de nettoyage professionnel</a> ou obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit en ligne</a>.</p>
       </div>
 
+      <div class="related-services">
+        <p>🔗 <strong>Services complémentaires :</strong> Consultez nos guides sur le <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">nettoyage salon tunis</a>, la <a href="/conseils/traitement-poncage-polissage-marbre-tunisie" style="color: var(--ac-primary); font-weight: 600;">restauration marbre tunis</a> et le <a href="/conseils/nettoyage-post-chantier-tunisie-fin-travaux" style="color: var(--ac-primary); font-weight: 600;">nettoyage post-chantier tunisie</a>. Découvrez nos <a href="/conseils/prix-nettoyage-tapis-tunis-tarifs-2025" style="color: var(--ac-primary); font-weight: 600;">prix nettoyage tapis tunis</a>.</p>
+      </div>
+
       <h2 id="methode-lavage-eau">💧 Méthode 1 : Lavage à eau abondante et essorage rapide</h2>
       
       <p>Cette méthode est recommandée pour les tapis robustes et les fibres résistantes à l'eau. Elle permet un nettoyage complet et intensif, idéal pour éliminer les taches profondes, les odeurs et les bactéries incrustées.</p>
@@ -499,6 +503,10 @@ export const articles = [
       <div class="info-box">
         <p>💡 <strong>Besoin d'autres services ?</strong> Consultez notre <a href="/services" style="color: var(--ac-primary); font-weight: 600;">gamme complète de services</a> ou nos spécialités en <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">nettoyage de tapis</a> et <a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">ponçage de marbre</a>.</p>
       </div>
+
+      <div class="related-services">
+        <p>🔗 <strong>Guides complémentaires :</strong> Apprenez les techniques de <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">nettoyage tapis tunis</a>, découvrez le <a href="/conseils/traitement-poncage-polissage-marbre-tunisie" style="color: var(--ac-primary); font-weight: 600;">traitement marbre tunisie</a> et consultez notre guide spécialisé <a href="/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet" style="color: var(--ac-primary); font-weight: 600;">comment nettoyer canapé cuir</a>.</p>
+      </div>
       
       <p><strong>Notre expertise s'appuie sur trois méthodes principales :</strong></p>
       <ul>
@@ -774,6 +782,10 @@ export const articles = [
         <p>💡 <strong>Expertise complète :</strong> Découvrez également nos services de <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">nettoyage de tapis</a>, <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de salons</a> et obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
       </div>
 
+      <div class="related-services">
+        <p>🔗 <strong>Services associés :</strong> Complétez avec nos solutions <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">nettoyage moquette tunis</a>, notre expertise <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">nettoyage salon tunis</a> et notre guide spécialisé <a href="/conseils/detartrage-marbre-cuisine-tunisie-guide-expert" style="color: var(--ac-primary); font-weight: 600;">détartrage marbre cuisine</a>.</p>
+      </div>
+
       <h2 id="prestations-marbre">🧰 Nos prestations de traitement de sols en marbre</h2>
       
       <p>Chaque type de pierre nécessite une approche spécifique. C'est pourquoi nos experts adaptent la méthode en fonction de la nature du sol, de son état et du résultat souhaité.</p>
@@ -991,6 +1003,10 @@ export const articles = [
 
       <div class="info-box">
         <p>💡 <strong>Services complémentaires :</strong> Après le nettoyage post-chantier, découvrez nos services d'<a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">entretien du marbre</a>, <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">nettoyage de tapis</a> et <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de mobilier</a>.</p>
+      </div>
+
+      <div class="related-services">
+        <p>🔗 <strong>Guides techniques :</strong> Maîtrisez les techniques d'<a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">entreprise nettoyage moquette tunis</a>, découvrez la <a href="/conseils/traitement-poncage-polissage-marbre-tunisie" style="color: var(--ac-primary); font-weight: 600;">restauration marbre tunis</a> et consultez nos tarifs pour le <a href="/conseils/prix-nettoyage-tapis-tunis-tarifs-2025" style="color: var(--ac-primary); font-weight: 600;">devis nettoyage tapis</a>.</p>
       </div>
 
       <h2 id="phases-nettoyage"> 1) Phases claires du nettoyage post-chantier (checklist rapide)</h2>
@@ -1279,6 +1295,10 @@ export const articles = [
 
       <div class="info-box">
         <p>📞 <strong>Devis Express :</strong> Appelez le <a href="tel:+21698557766" style="color: var(--ac-primary); font-weight: 600;">+216 98-557-766</a> ou demandez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis en ligne gratuit</a>.</p>
+      </div>
+
+      <div class="related-services">
+        <p>🔗 <strong>Guides détaillés :</strong> Consultez notre guide complet <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">nettoyage tapis tunis</a>, découvrez nos techniques de <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">shampouinage moquette tunis</a> et nos services <a href="/conseils/nettoyage-post-chantier-tunisie-fin-travaux" style="color: var(--ac-primary); font-weight: 600;">nettoyage post-chantier tunisie</a>.</p>
       </div>
 
       <h2 id="grille-tarifs">💰 Grille de Tarifs Nettoyage Tapis Tunis 2025</h2>
@@ -1588,6 +1608,10 @@ export const articles = [
         <p>🏠 <strong>Service professionnel :</strong> Pour un résultat garanti, découvrez notre service de <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage professionnel de canapés</a> ou obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
       </div>
 
+      <div class="related-services">
+        <p>🔗 <strong>Expertise complémentaire :</strong> Maîtrisez aussi les techniques de <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">nettoyage salon tunis</a>, découvrez notre <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">guide nettoyage tapis tunis</a> et consultez nos <a href="/conseils/prix-nettoyage-tapis-tunis-tarifs-2025" style="color: var(--ac-primary); font-weight: 600;">tarifs transparents</a>.</p>
+      </div>
+
       <h2 id="types-cuir">🧳 Types de Cuir : Identifier avant de Nettoyer</h2>
 
       <h3>1. Cuir Lisse (Aniline)</h3>
@@ -1760,6 +1784,10 @@ export const articles = [
 
       <div class="info-box">
         <p>🏠 <strong>Service professionnel :</strong> Pour un détartrage expert, découvrez notre service de <a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">traitement professionnel du marbre</a> ou obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
+      </div>
+
+      <div class="related-services">
+        <p>🔗 <strong>Solutions associées :</strong> Complétez avec notre expertise en <a href="/conseils/traitement-poncage-polissage-marbre-tunisie" style="color: var(--ac-primary); font-weight: 600;">polissage marbre tunisie</a>, découvrez nos services <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">nettoyage professionnel tunisie</a> et consultez notre guide <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">injection extraction</a>.</p>
       </div>
 
       <h2 id="faq-marbre-cuisine">❓ Questions Fréquentes - Marbre Cuisine</h2>

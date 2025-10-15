@@ -291,7 +291,7 @@ ${insights.needsAttention.map(k =>
 `;
 
     const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-    const reportPath = isGitHubActions ? 'reports/performance-tracking-report.md' : './reports/performance-tracking-report.md';
+    const reportPath = isGitHubActions ? 'scripts/reports/performance-tracking-report.md' : './reports/performance-tracking-report.md';
     
     fs.writeFileSync(reportPath, report);
     console.log('📋 Performance report saved: performance-tracking-report.md');

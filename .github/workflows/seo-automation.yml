@@ -53,6 +53,9 @@ jobs:
         # Create credentials directory if it doesn't exist
         mkdir -p scripts/credentials
         
+        # Create reports directory if it doesn't exist
+        mkdir -p scripts/reports
+        
         # Setup GSC credentials from GitHub secrets
         echo '${{ secrets.GSC_CREDENTIALS }}' > scripts/credentials/gsc-credentials.json
         

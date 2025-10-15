@@ -102,7 +102,10 @@ ${this.results.errors.length > 0 ? `## ⚠️ Errors\n\n${this.results.errors.ma
 `;
 
     // Write report
-    fs.writeFileSync('./seo-report.md', report);
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    const reportPath = isGitHubActions ? 'scripts/reports/seo-report.md' : './seo-report.md';
+    
+    fs.writeFileSync(reportPath, report);
     console.log('📋 Generated SEO report: seo-report.md');
   }
 

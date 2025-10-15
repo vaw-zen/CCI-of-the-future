@@ -470,7 +470,7 @@ Current trend multipliers:
 `;
 
     const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-    const reportPath = isGitHubActions ? 'keyword-update-report.md' : '../keyword-update-report.md';
+    const reportPath = isGitHubActions ? 'scripts/reports/keyword-update-report.md' : '../keyword-update-report.md';
     
     fs.writeFileSync(reportPath, report);
     console.log('📋 Update report saved: keyword-update-report.md');

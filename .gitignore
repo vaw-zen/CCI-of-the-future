@@ -41,6 +41,10 @@ credentials.json
 *-service-account.json
 service-account-*.json
 
+# Scripts directory - only track workflows folder
+scripts/*
+!scripts/workflows/
+
 # vercel
 .vercel
 
@@ -50,64 +54,6 @@ next-env.d.ts
 
 CLAUDE.md
 .claude
-
-# Development-only SEO tools and test files
+# Development-only SEO tools
 scripts/fix-seo-issues.cjs
-scripts/test-*.js
-scripts/test-*.cjs
-scripts/verify-*.cjs
-scripts/setup-serpapi.cjs
-scripts/setup-*.cjs
-!scripts/service-account-setup.cjs
-scripts/check-gsc-indexing.cjs
-scripts/keyword-update.cjs
-scripts/automation-launcher.cjs
-scripts/working-platforms.cjs
-scripts/quick-ranking-check.cjs
-scripts/simple-seo-analysis.cjs
-scripts/updated-email-automation.cjs
-scripts/email-automation-fixed.cjs
-scripts/facebook-backlink-checker.cjs
-scripts/mass-outreach.cjs
-scripts/mega-backlink-system.cjs
-scripts/rapid-submission.cjs
-scripts/submit-reel-urls.cjs
-scripts/submit-urls-indexing.cjs
-
-# Development documentation (move to docs/ instead)
-scripts/*.md
-scripts/documentation/
-scripts/GITHUB_ACTIONS_GUIDE.md
-scripts/FACEBOOK_SETUP_GUIDE.md
-scripts/ORGANIZATION_SUMMARY.md
-scripts/ADVANCED_EMAIL_STRATEGY.md
-scripts/updated-email-targets.md
-
-# Generated reports and logs (keep structure but ignore content)
-scripts/reports/*.md
-scripts/reports/*.json
-scripts/data/
-!scripts/reports/.gitkeep
-!scripts/data/.gitkeep
-
-# Backup files
 *.backup*
-*-backup-*
-scripts-backup-*
-
-# Temporary and cache files
-scripts/node_modules/
-scripts/.npm/
-scripts/.cache/
-scripts/temp/
-scripts/tmp/
-
-# Production scripts to keep (explicitly comment what we keep)
-# scripts/ai-content-generator.js         ✅ Keep
-# scripts/gsc-monitoring.cjs              ✅ Keep  
-# scripts/deployment-final.cjs            ✅ Keep
-# scripts/service-account-setup.cjs       ✅ Keep
-# scripts/complete-gsc-analysis.cjs       ✅ Keep
-# scripts/real-gsc-check.cjs             ✅ Keep
-# scripts/package.json                    ✅ Keep
-# scripts/automation/run-gsc-monitoring.bat ✅ Keep

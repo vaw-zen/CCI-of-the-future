@@ -15,7 +15,7 @@ export const seoConfig = {
 
   // Keyword analysis settings
   keywords: {
-    csvPath: './seo-keywords.csv',
+    csvPath: './scripts/data/seo-keywords.csv',
     maxKeywordsPerBatch: 20,
     analysisDepth: 30, // days
     priorityThreshold: {
@@ -38,7 +38,7 @@ export const seoConfig = {
 
   // Google Search Console settings
   gsc: {
-    credentialsPath: './gsc-credentials.json',
+    credentialsPath: './scripts/credentials/gsc-credentials.json',
     maxQueries: 50,
     dateRange: 30, // days
     minImpressions: 10,
@@ -204,8 +204,8 @@ export const seoConfig = {
 
   // File paths and directories
   paths: {
-    keywords: './seo-keywords.csv',
-    credentials: './gsc-credentials.json',
+    keywords: './scripts/data/seo-keywords.csv',
+    credentials: './scripts/credentials/gsc-credentials.json',
     output: './seo-results',
     generatedContent: './generated-content',
     reports: './seo-reports',

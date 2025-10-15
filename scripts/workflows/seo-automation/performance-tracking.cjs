@@ -12,7 +12,7 @@ class PerformanceTracker {
   constructor() {
     // Check if running in GitHub Actions or locally
     const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-    this.csvPath = isGitHubActions ? 'seo-keywords.csv' : '../seo-keywords.csv';
+    this.csvPath = isGitHubActions ? 'scripts/data/seo-keywords.csv' : './scripts/data/seo-keywords.csv';
     this.keywords = [];
     this.performanceData = [];
   }
@@ -291,7 +291,7 @@ ${insights.needsAttention.map(k =>
 `;
 
     const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-    const reportPath = isGitHubActions ? 'performance-tracking-report.md' : '../performance-tracking-report.md';
+    const reportPath = isGitHubActions ? 'reports/performance-tracking-report.md' : './reports/performance-tracking-report.md';
     
     fs.writeFileSync(reportPath, report);
     console.log('📋 Performance report saved: performance-tracking-report.md');

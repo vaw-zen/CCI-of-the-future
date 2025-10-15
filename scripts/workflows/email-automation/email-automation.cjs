@@ -7,12 +7,17 @@ const nodemailer = require('nodemailer');
 
 class EmailBacklinkAutomation {
   constructor() {
+    // Validate required environment variables
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
+      throw new Error('GMAIL_USER and GMAIL_PASS environment variables are required');
+    }
+
     // Setup Gmail SMTP using environment variables
-    this.transporter = nodemailer.createTransport({
+    this.transporter = nodemailer.createTransporter({
       service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER || 'cci.services.tn@gmail.com',
-        pass: process.env.GMAIL_PASS || 'ztofhlikbiqntotd'
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
       }
     });
 
@@ -155,7 +160,7 @@ CCI Services - Nettoyage Professionnel Hotellerie`
     for (const email of targets) {
       try {
         await this.transporter.sendMail({
-          from: process.env.GMAIL_USER || 'cci.services.tn@gmail.com',
+          from: process.env.GMAIL_USER,
           to: email,
           subject: template.subject,
           text: template.body

@@ -331,19 +331,19 @@ ${this.companyInfo.name}`
 
     // Save all templates and lists
     await fs.writeFile(
-      './outreach-guest-posts.json', 
+      './scripts/data/outreach-guest-posts.json', 
       JSON.stringify(guestPostEmails, null, 2), 
       'utf8'
     );
 
     await fs.writeFile(
-      './outreach-partnerships.json',
+      './scripts/data/outreach-partnerships.json',
       JSON.stringify(partnershipEmails, null, 2),
       'utf8'
     );
 
     await fs.writeFile(
-      './contact-lists.json',
+      './scripts/data/contact-lists.json',
       JSON.stringify(contactLists, null, 2),
       'utf8'
     );

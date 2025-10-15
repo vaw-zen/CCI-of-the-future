@@ -15,7 +15,9 @@ class SEOContentAutomation {
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     this.model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
-    this.csvPath = 'seo-keywords.csv';
+    // Check if running in GitHub Actions or locally
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    this.csvPath = isGitHubActions ? 'scripts/data/seo-keywords.csv' : '../../data/seo-keywords.csv';
     this.articlesPath = 'src/app/conseils/data/articles.js';
   }
 

@@ -12,7 +12,7 @@ class PerformanceTracker {
   constructor() {
     // Check if running in GitHub Actions or locally
     const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-    this.csvPath = isGitHubActions ? 'scripts/data/seo-keywords.csv' : './scripts/data/seo-keywords.csv';
+    this.csvPath = isGitHubActions ? 'scripts/data/seo-keywords.csv' : '../../data/seo-keywords.csv';
     this.keywords = [];
     this.performanceData = [];
   }

@@ -12,7 +12,7 @@ class KeywordUpdater {
   constructor() {
     // Check if running in GitHub Actions or locally
     const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-    this.csvPath = isGitHubActions ? 'seo-keywords.csv' : '../seo-keywords.csv';
+    this.csvPath = isGitHubActions ? 'scripts/data/seo-keywords.csv' : '../../data/seo-keywords.csv';
     this.keywords = [];
     this.newKeywords = [];
     this.marketTrends = {

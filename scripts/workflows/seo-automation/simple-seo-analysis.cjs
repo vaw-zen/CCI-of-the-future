@@ -9,7 +9,9 @@ const path = require('path');
 
 class SimpleSeOAnalyzer {
   constructor() {
-    this.csvPath = 'seo-keywords.csv';
+    // Check if running in GitHub Actions or locally
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    this.csvPath = isGitHubActions ? 'scripts/data/seo-keywords.csv' : '../../data/seo-keywords.csv';
     this.results = {
       keywords_analyzed: 0,
       content_generated: 0,

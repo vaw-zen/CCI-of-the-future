@@ -18,11 +18,15 @@ export async function generateMetadata({ params }) {
   }
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  
+  // Handle different keyword property names and ensure it's always an array
+  const keywords = article.keywords || article.seoKeywords || [];
+  const keywordsArray = Array.isArray(keywords) ? keywords : [];
 
   return {
     title: article.metaTitle,
     description: article.metaDescription,
-    keywords: article.keywords.join(', '),
+    keywords: keywordsArray.join(', '),
     authors: [{ name: article.author }],
     publishedTime: article.publishedDate,
     modifiedTime: article.updatedDate,
@@ -48,7 +52,7 @@ export async function generateMetadata({ params }) {
       modifiedTime: article.updatedDate,
       authors: ['CCI Services'],
       section: 'Conseils Nettoyage',
-      tags: article.keywords,
+      tags: keywordsArray,
     },
     twitter: {
       card: 'summary_large_image',
@@ -74,6 +78,10 @@ export default async function ArticlePage({ params }) {
   if (!article) {
     notFound();
   }
+
+  // Handle different keyword property names and ensure it's always an array
+  const keywords = article.keywords || article.seoKeywords || [];
+  const keywordsArray = Array.isArray(keywords) ? keywords : [];
 
   // Générer le schema Article pour SEO
   const articleSchema = {
@@ -110,7 +118,7 @@ export default async function ArticlePage({ params }) {
       "@type": "WebPage",
       "@id": `https://cciservices.online/conseils/${resolvedParams.slug}`
     },
-    "keywords": article.keywords.join(', '),
+    "keywords": keywordsArray.join(', '),
     "wordCount": article.content.replace(/<[^>]*>/g, '').split(' ').length,
     "inLanguage": "fr-TN",
     "about": [
@@ -240,7 +248,7 @@ export default async function ArticlePage({ params }) {
               day: 'numeric'
             })}</span>
             <span>⏱️ {article.readTime}</span>
-            <span>🏷️ {article.keywords.slice(0, 2).join(', ')}</span>
+            <span>🏷️ {keywordsArray.slice(0, 2).join(', ')}</span>
           </div>
         </header>
 

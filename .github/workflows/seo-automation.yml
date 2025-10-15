@@ -107,13 +107,15 @@ jobs:
     - name: Run SEO Analysis
       id: analysis
       run: |
-        if [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "content_generation" ]; then
+        ACTION_TYPE="${{ github.event.inputs.action_type || 'full_analysis' }}"
+        
+        if [ "$ACTION_TYPE" = "content_generation" ]; then
           echo "🤖 Running content generation..."
           node scripts/workflows/seo-automation/seo-content-automation.cjs 2
-        elif [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "performance_tracking" ]; then
+        elif [ "$ACTION_TYPE" = "performance_tracking" ]; then
           echo "📈 Running performance tracking..."
           node scripts/workflows/seo-automation/performance-tracking.cjs
-        elif [ "${{ github.event.inputs.action_type || 'full_analysis' }}" = "keyword_update" ]; then
+        elif [ "$ACTION_TYPE" = "keyword_update" ]; then
           echo "🔄 Running keyword database update..."
           node scripts/workflows/seo-automation/keyword-update.cjs
         else
@@ -130,8 +132,6 @@ jobs:
         echo "content_count=0" >> $GITHUB_OUTPUT
         echo "content_summary=SEO analysis completed successfully" >> $GITHUB_OUTPUT
         echo "generated_files=scripts/data/seo-keywords.csv, scripts/reports/seo-report.md, scripts/reports/performance-tracking-report.md, scripts/reports/keyword-update-report.md" >> $GITHUB_OUTPUT
-      env:
-        ACTION_TYPE: ${{ github.event.inputs.action_type || 'full_analysis' }}
         
     - name: Submit new articles for indexing
       run: |

@@ -33,8 +33,13 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# Google Search Console credentials
+# Google Search Console credentials and Service Account keys
 gsc-credentials.json
+google-service-account-key.json
+google-service-account-key.json.template
+credentials.json
+*-service-account.json
+service-account-*.json
 
 # vercel
 .vercel

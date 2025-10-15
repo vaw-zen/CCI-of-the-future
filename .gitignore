@@ -41,9 +41,11 @@ credentials.json
 *-service-account.json
 service-account-*.json
 
-# Scripts directory - only track workflows folder
+# Scripts directory - only track workflows, data, and reports
 scripts/*
 !scripts/workflows/
+!scripts/data/
+!scripts/reports/
 
 # vercel
 .vercel

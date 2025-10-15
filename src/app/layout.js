@@ -219,16 +219,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </head>
       <Initializer />
       <body suppressHydrationWarning>
-        {/* Google Tag Manager (noscript) - Required immediately after <body> */}
-        <noscript>
-          <iframe 
-            src="https://www.googletagmanager.com/ns.html?id=GTM-MT495L62"
-            height="0" 
-            width="0" 
-            style={{display: 'none', visibility: 'hidden'}}
-          ></iframe>
-        </noscript>
-        
         <ClientHeader roboto={roboto} />
         {children}
         <Footer />

@@ -34,6 +34,9 @@ const nextConfig = {
       { source: '/:path*/index', destination: '/:path*', permanent: true },
       { source: '/:path*/index.html', destination: '/:path*', permanent: true },
       { source: '/:path*/index.php', destination: '/:path*', permanent: true },
+
+      // Reel URL redirects - fix singular to plural routing
+      { source: '/reel/:id', destination: '/reels/:id', permanent: true },
     ];
   },
   webpack: (config, { isServer }) => {

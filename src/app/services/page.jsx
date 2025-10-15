@@ -15,8 +15,9 @@ export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   
   return {
-    title: 'Services CCI — Polissage marbre, Nettoyage moquettes, Tapisserie',
-    description: 'Découvrez nos prestations professionnelles : polissage du marbre, nettoyage de moquettes, rénovation de tapisserie et nettoyages post-chantier. Devis gratuit.',
+    title: 'Services CCI — Polissage marbre, Nettoyage moquettes, Tapisserie | Ariana Tunis',
+    description: 'Services nettoyage Ariana, Tunis ✓ Polissage marbre ✓ Nettoyage moquettes ✓ Tapisserie ✓ Devis gratuit ✓ +216 98 557 766',
+    keywords: ['services nettoyage ariana', 'nettoyage ariana', 'CCI services ariana', 'marbre ariana', 'services carthage', 'nettoyage la marsa', 'nettoyage prestige tunis'],
     alternates: {
       canonical: `${SITE_URL}/services`
     },

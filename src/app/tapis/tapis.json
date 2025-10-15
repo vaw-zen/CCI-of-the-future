@@ -13,7 +13,15 @@
       "société nettoyage tapis Tunis",
       "nettoyage tapis Tunisie",
       "devis nettoyage moquette Tunis",
-      "tarif nettoyage tapis Tunis"
+      "tarif nettoyage tapis Tunis",
+      "prix nettoyage tapis tunis",
+      "tarif nettoyage tapis",
+      "cout nettoyage tapis tunisie",
+      "prix injection extraction",
+      "nettoyage tapis ariana",
+      "détachage tapis tunis",
+      "lavage tapis tunis",
+      "entretien tapis tunis"
     ]
   },
   "heroTitle": "Nettoyage Professionnel de Moquettes en Tunisie - CCI",
@@ -209,6 +217,14 @@
     "whyChooseUs": {
       "title": "Pourquoi choisir CCI pour vos tapis",
       "text": "Chaîne de valeur structurée : audit initial (cartographie trafic / points critiques), mesure humidité résiduelle post‑traitement, contrôle pH pour stabilité colorimétrique, fiches produits disponibles (conformité & sécurité). Matériel : injecteurs bi‑turbine haut débit, machines orbitales basse vitesse, pads microfibre encapsulation, buses chewing‑gum spot. Objectifs : prolonger la durée de vie (retarder écrasement), réduire charges allergènes, optimiser l'image des espaces accueillant public ou collaborateurs. Intervention discrète, traçabilité et conseils préventifs inclus."
+    },
+    "stainRemoval": {
+      "title": "Détachage Tapis Tunis - Expertise CCI",
+      "text": "Spécialistes du détachage tapis Tunis, nous traitons tous types de taches : alimentaires, boissons, encre, sang, urine d'animaux. Notre service de détachage tapis tunis utilise des techniques professionnelles et des produits spécialisés selon la nature de la tache et du textile. Intervention rapide garantie dans tout le Grand Tunis pour un détachage efficace et respectueux des fibres."
+    },
+    "pricing": {
+      "title": "Tarifs Nettoyage Tapis - Prix Transparents",
+      "text": "Nos tarifs nettoyage tapis sont transparents et compétitifs : à partir de 15 DT/m² pour un nettoyage standard, 25 DT/m² pour un service premium avec traitement anti-acariens. Prix nettoyage tapis tunis tout compris avec déplacement gratuit dans le Grand Tunis. Devis gratuit et sans engagement pour tous vos besoins."
     }
   },
   "aboutUs": {
@@ -249,6 +265,16 @@
         "id": "5",
         "text": "Entretien mosquées ",
         "icon": "/icons/shield.png"
+      },
+      {
+        "id": "7",
+        "text": "Détachage spécialisé tapis Tunis",
+        "icon": "/icons/crystal3.png"
+      },
+      {
+        "id": "8",
+        "text": "Tarifs transparents dès 15 DT/m²",
+        "icon": "/icons/polisher1.png"
       }
     ]
   }

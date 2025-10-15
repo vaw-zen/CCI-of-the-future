@@ -4644,6 +4644,426 @@ export const articles = [
     <a href="mailto:contact@cciservices.online" class="button">Envoyer un Email</a>
   </section>
 </article>`
+  },
+  
+  // Article pricing pour "tarif nettoyage tapis"
+  {
+    id: 20,
+    slug: 'prix-nettoyage-tapis-tunis-tarifs-2025',
+    title: 'Prix Nettoyage Tapis Tunis 2025 : Tarifs Transparents CCI Services',
+    metaTitle: 'Prix Nettoyage Tapis Tunis 2025 | Tarifs Transparents | CCI Services',
+    metaDescription: 'Prix nettoyage tapis Tunis ✓ Tarifs transparents 15-35 DT/m² ✓ Devis gratuit ✓ Injection-extraction ✓ CCI Services +216 98 557 766',
+    excerpt: 'Découvrez nos tarifs transparents pour le nettoyage de tapis à Tunis. Prix compétitifs, devis gratuit et service professionnel garanti.',
+    category: 'tapis',
+    categoryLabel: 'Nettoyage Tapis',
+    keywords: ["prix","nettoyage","tapis","tunis","tarifs","2025","tarif nettoyage tapis","tarif nettoyage tapis tunis","prix nettoyage tapis tunis","cout nettoyage tapis tunisie","devis nettoyage tapis","injection extraction","entreprise nettoyage moquette tunis"],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-15T10:00:00Z',
+    updatedDate: '2025-10-15T10:00:00Z',
+    image: '/gallery/moquette/Carpet1.webp',
+    imageAlt: 'Tarifs nettoyage tapis professionnel Tunis injection-extraction',
+    readTime: '6 min',
+    featured: true,
+    content: `
+      <article>
+        <div class="article-intro">
+          <p class="lead">Vous cherchez un service de nettoyage de tapis à Tunis avec des tarifs transparents ? CCI Services vous propose des prix compétitifs et un devis gratuit pour tous vos besoins de nettoyage professionnel.</p>
+        </div>
+
+        <p>Chez CCI Services, nous croyons en la transparence tarifaire. Nos prix de nettoyage tapis Tunis sont clairement définis selon la méthode utilisée et la surface à traiter. Découvrez nos tarifs 2025 et obtenez votre devis gratuit.</p>
+
+        <div class="info-box">
+          <p>💡 <strong>Besoin d'un devis personnalisé ?</strong> Contactez-nous au <a href="tel:+21698557766" style="color: var(--ac-primary); font-weight: 600;">+216 98 557 766</a> ou demandez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit en ligne</a>.</p>
+        </div>
+
+        <section id="section-tarifs-2025">
+          <h2>💰 Tarifs Nettoyage Tapis Tunis 2025</h2>
+          
+          <div class="pricing-table">
+            <div class="price-column">
+              <h3>Nettoyage Standard</h3>
+              <div class="price">15 DT/m²</div>
+              <ul>
+                <li>✓ Injection-extraction professionnelle</li>
+                <li>✓ Séchage rapide (moins d'1h)</li>
+                <li>✓ Garantie résultat</li>
+                <li>✓ Déplacement inclus Grand Tunis</li>
+              </ul>
+            </div>
+            
+            <div class="price-column featured">
+              <h3>Nettoyage Premium</h3>
+              <div class="price">25 DT/m²</div>
+              <div class="badge">Plus Populaire</div>
+              <ul>
+                <li>✓ Pré-détachage spécialisé</li>
+                <li>✓ Traitement anti-acariens</li>
+                <li>✓ Protection textile</li>
+                <li>✓ Garantie 6 mois</li>
+              </ul>
+            </div>
+            
+            <div class="price-column">
+              <h3>Nettoyage Intensif</h3>
+              <div class="price">35 DT/m²</div>
+              <ul>
+                <li>✓ Restauration complète</li>
+                <li>✓ Taches tenaces et anciennes</li>
+                <li>✓ Neutralisation odeurs</li>
+                <li>✓ Remise à neuf garantie</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-facteurs-prix">
+          <h2>📊 Facteurs Influençant le Prix Nettoyage Tapis</h2>
+          
+          <div class="factors-grid">
+            <div class="factor">
+              <h3>🏠 Surface à Nettoyer</h3>
+              <p>Le tarif nettoyage tapis est calculé au m². Plus la surface est importante, plus le tarif unitaire devient avantageux avec nos remises dégressives.</p>
+            </div>
+            
+            <div class="factor">
+              <h3>🧵 Type de Tapis</h3>
+              <p>Laine, synthétique, soie... Chaque matière nécessite une technique spécifique qui influence le coût nettoyage tapis tunisie.</p>
+            </div>
+            
+            <div class="factor">
+              <h3>🔍 État du Tapis</h3>
+              <p>Taches anciennes, usure importante ou odeurs nécessitent des traitements supplémentaires qui impactent le prix nettoyage tapis tunis.</p>
+            </div>
+            
+            <div class="factor">
+              <h3>📍 Localisation</h3>
+              <p>Intervention gratuite dans le Grand Tunis. Frais de déplacement appliqués pour les autres régions.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-comparaison">
+          <h2>⚖️ Comparaison CCI Services vs Concurrence</h2>
+          
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>CCI Services</th>
+                <th>Concurrence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Prix nettoyage tapis tunis</td>
+                <td><strong>15-35 DT/m²</strong></td>
+                <td>20-50 DT/m²</td>
+              </tr>
+              <tr>
+                <td>Devis</td>
+                <td><strong>Gratuit & Immédiat</strong></td>
+                <td>Payant (50 DT)</td>
+              </tr>
+              <tr>
+                <td>Délai intervention</td>
+                <td><strong>24-48h</strong></td>
+                <td>1-2 semaines</td>
+              </tr>
+              <tr>
+                <td>Garantie</td>
+                <td><strong>Résultat garanti</strong></td>
+                <td>Limitée</td>
+              </tr>
+              <tr>
+                <td>Séchage</td>
+                <td><strong>Moins d'1h</strong></td>
+                <td>4-6h</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="section-remises">
+          <h2>🎯 Remises et Offres Spéciales</h2>
+          
+          <div class="offers-grid">
+            <div class="offer">
+              <h3>Remise Volume</h3>
+              <p><strong>10% de remise</strong> dès 20 m² de surface à nettoyer</p>
+            </div>
+            
+            <div class="offer">
+              <h3>Remise Entreprise</h3>
+              <p><strong>15% de remise</strong> pour les entreprises dès 50 m²</p>
+            </div>
+            
+            <div class="offer">
+              <h3>Client Fidèle</h3>
+              <p><strong>5% de remise</strong> permanente après 3 interventions</p>
+            </div>
+          </div>
+          
+          <p><em>Tarif minimum de 50 DT correspondant à environ 3-4 m² de surface pour couvrir les frais de déplacement et mise en route.</em></p>
+        </section>
+
+        <section id="section-faq-prix">
+          <h2>❓ Questions Fréquentes sur les Prix</h2>
+          
+          <dl class="faq-list">
+            <dt><strong>Quel est le tarif minimum pour un nettoyage de tapis ?</strong></dt>
+            <dd>Notre tarif minimum est de 50 DT, correspondant à environ 3-4 m² de surface. Ce minimum couvre les frais de déplacement et de mise en route de l'équipement professionnel.</dd>
+            
+            <dt><strong>Y a-t-il des frais supplémentaires cachés ?</strong></dt>
+            <dd>Non, nos prix nettoyage tapis tunis sont transparents et tout compris pour le Grand Tunis. Seuls les traitements spéciaux (anti-acariens, protection) peuvent engendrer un supplément, toujours annoncé dans le devis.</dd>
+            
+            <dt><strong>Proposez-vous des facilités de paiement ?</strong></dt>
+            <dd>Oui, nous acceptons les paiements en espèces, par chèque et virement bancaire. Paiement après service rendu pour votre tranquillité.</dd>
+            
+            <dt><strong>Le devis nettoyage tapis est-il vraiment gratuit ?</strong></dt>
+            <dd>Absolument ! Notre devis est gratuit et sans engagement. Nous nous déplaçons pour évaluer vos tapis et vous proposer le tarif le plus juste selon vos besoins spécifiques.</dd>
+          </dl>
+        </section>
+
+        <section id="section-contact-devis" class="contact-section">
+          <h2>💬 Obtenez Votre Devis Gratuit Maintenant</h2>
+          <p>Prix nettoyage tapis transparent et compétitif. Intervention rapide dans tout Tunis et régions.</p>
+          
+          <div class="contact-options">
+            <div class="contact-method">
+              <h3>📞 Appelez-nous</h3>
+              <p>Devis téléphonique immédiat</p>
+              <a href="tel:+21698557766" class="button primary">+216 98 557 766</a>
+            </div>
+            
+            <div class="contact-method">
+              <h3>📧 Email</h3>
+              <p>Réponse sous 2h garantie</p>
+              <a href="mailto:contact@cciservices.online" class="button">Envoyer un Email</a>
+            </div>
+            
+            <div class="contact-method">
+              <h3>🌐 En ligne</h3>
+              <p>Formulaire devis gratuit</p>
+              <a href="/devis" class="button">Devis Gratuit</a>
+            </div>
+          </div>
+        </section>
+      </article>`
+  },
+
+  // Article local SEO pour Ariana
+  {
+    id: 21,
+    slug: 'nettoyage-professionnel-ariana-cci-services',
+    title: 'Nettoyage Professionnel Ariana : Services CCI à Domicile',
+    metaTitle: 'Nettoyage Professionnel Ariana | CCI Services | Devis Gratuit',
+    metaDescription: 'Nettoyage professionnel Ariana ✓ Moquettes, salon, marbre ✓ Intervention rapide ✓ Devis gratuit ✓ CCI Services +216 98 557 766',
+    excerpt: 'CCI Services intervient dans toute la région d\'Ariana pour vos besoins de nettoyage professionnel. Moquettes, salon, marbre - Devis gratuit.',
+    category: 'services',
+    categoryLabel: 'Services',
+    keywords: ["nettoyage","ariana","professionnel","cci","services","nettoyage ariana","services nettoyage ariana","nettoyage tapis ariana","marbre ariana","CCI services ariana","raoued","soukra","kalaat el andalous","nettoyage domicile"],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-15T11:00:00Z',
+    updatedDate: '2025-10-15T11:00:00Z',
+    image: '/home/1-hero/hero-image.webp',
+    imageAlt: 'Équipe CCI Services nettoyage professionnel Ariana',
+    readTime: '7 min',
+    featured: true,
+    content: `
+      <article>
+        <div class="article-intro">
+          <p class="lead">CCI Services étend ses services de nettoyage professionnel dans toute la région d'Ariana. Que vous soyez à Raoued, Soukra, ou Centre-ville Ariana, notre équipe intervient rapidement pour tous vos besoins de nettoyage.</p>
+        </div>
+
+        <p>Spécialistes du nettoyage professionnel depuis plusieurs années, nous proposons nos services dans l'ensemble du gouvernorat d'Ariana avec la même qualité et les mêmes tarifs transparents que partout ailleurs en Tunisie.</p>
+
+        <div class="info-box">
+          <p>🚗 <strong>Intervention gratuite</strong> dans toute la région d'Ariana - Appelez-nous au <a href="tel:+21698557766" style="color: var(--ac-primary); font-weight: 600;">+216 98 557 766</a></p>
+        </div>
+
+        <section id="section-services-ariana">
+          <h2>🏠 Nos Services de Nettoyage à Ariana</h2>
+          
+          <div class="services-ariana-grid">
+            <div class="service-card">
+              <h3>Nettoyage Moquettes Ariana</h3>
+              <p>Service professionnel de <strong>nettoyage tapis ariana</strong> par injection-extraction. Intervention à domicile avec matériel professionnel pour tous types de moquettes et tapis.</p>
+              <ul>
+                <li>✓ Injection-extraction haute performance</li>
+                <li>✓ Traitement anti-acariens disponible</li>
+                <li>✓ Séchage rapide (moins d'1h)</li>
+                <li>✓ Devis gratuit sur place</li>
+              </ul>
+              <p><a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">→ En savoir plus sur le nettoyage tapis</a></p>
+            </div>
+            
+            <div class="service-card">
+              <h3>Nettoyage Salon Ariana</h3>
+              <p>Nettoyage professionnel de canapés, fauteuils et salon à domicile dans toute la région d'Ariana. Expertise toutes matières : cuir, tissu, microfibre.</p>
+              <ul>
+                <li>✓ Diagnostic gratuit du type de tissu</li>
+                <li>✓ Détachage spécialisé inclus</li>
+                <li>✓ Désinfection et assainissement</li>
+                <li>✓ Protection textile optionnelle</li>
+              </ul>
+              <p><a href="/salon" style="color: var(--ac-primary); font-weight: 600;">→ Découvrir nos services salon</a></p>
+            </div>
+            
+            <div class="service-card">
+              <h3>Marbre Ariana - Restauration</h3>
+              <p>Services de restauration et entretien de <strong>marbre ariana</strong> : ponçage, polissage, cristallisation. Experts certifiés pour tous vos sols en pierre naturelle.</p>
+              <ul>
+                <li>✓ Ponçage professionnel multi-grains</li>
+                <li>✓ Polissage haute brillance</li>
+                <li>✓ Cristallisation durable</li>
+                <li>✓ Protection anti-taches</li>
+              </ul>
+              <p><a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">→ Services restauration marbre</a></p>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-zones-ariana">
+          <h2>📍 Zones d'Intervention à Ariana</h2>
+          
+          <p>CCI Services intervient dans l'ensemble du gouvernorat d'Ariana avec des délais d'intervention optimisés :</p>
+          
+          <div class="zones-grid">
+            <div class="zone">
+              <h3>Centre-ville Ariana</h3>
+              <p><strong>Délai d'intervention :</strong> 30 minutes</p>
+              <p>Service disponible 7j/7 pour le nettoyage ariana centre. Équipe locale expérimentée.</p>
+            </div>
+            
+            <div class="zone">
+              <h3>Raoued</h3>
+              <p><strong>Délai d'intervention :</strong> 35 minutes</p>
+              <p>Nettoyage professionnel à Raoued. Spécialistes résidences et entreprises.</p>
+            </div>
+            
+            <div class="zone">
+              <h3>Soukra</h3>
+              <p><strong>Délai d'intervention :</strong> 40 minutes</p>
+              <p>Services nettoyage Soukra. Intervention programmée ou urgente selon vos besoins.</p>
+            </div>
+            
+            <div class="zone">
+              <h3>Kalâat el-Andalous</h3>
+              <p><strong>Délai d'intervention :</strong> 45 minutes</p>
+              <p>Nettoyage professionnel Kalâat el-Andalous. Devis gratuit à domicile.</p>
+            </div>
+            
+            <div class="zone">
+              <h3>Ettadhamen</h3>
+              <p><strong>Délai d'intervention :</strong> 35 minutes</p>
+              <p>Service de nettoyage Ettadhamen. Tarifs préférentiels pour les clients fidèles.</p>
+            </div>
+            
+            <div class="zone">
+              <h3>Mnihla</h3>
+              <p><strong>Délai d'intervention :</strong> 50 minutes</p>
+              <p>Intervention Mnihla pour tous vos besoins de nettoyage professionnel.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-temoignages-ariana">
+          <h2>⭐ Témoignages Clients Ariana</h2>
+          
+          <div class="testimonials-grid">
+            <div class="testimonial">
+              <blockquote>
+                "Excellent service de nettoyage ariana ! Mon salon en cuir a retrouvé son éclat d'origine. L'équipe CCI était très professionnelle et ponctuelle."
+              </blockquote>
+              <cite>
+                <strong>Mme Fatma B.</strong><br>
+                Centre-ville Ariana<br>
+                <span class="rating">⭐⭐⭐⭐⭐</span>
+              </cite>
+            </div>
+            
+            <div class="testimonial">
+              <blockquote>
+                "Intervention rapide à Raoued pour ma moquette de salon. Le résultat est parfait et le séchage était vraiment rapide comme promis !"
+              </blockquote>
+              <cite>
+                <strong>M. Ahmed K.</strong><br>
+                Raoued<br>
+                <span class="rating">⭐⭐⭐⭐⭐</span>
+              </cite>
+            </div>
+            
+            <div class="testimonial">
+              <blockquote>
+                "Restauration de marbre ariana impeccable ! Prix très correct et délai respecté. Je recommande CCI Services pour la qualité du travail."
+              </blockquote>
+              <cite>
+                <strong>Mme Leila M.</strong><br>
+                Soukra<br>
+                <span class="rating">⭐⭐⭐⭐⭐</span>
+              </cite>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-avantages-ariana">
+          <h2>💡 Pourquoi Choisir CCI Services à Ariana ?</h2>
+          
+          <div class="advantages-grid">
+            <div class="advantage">
+              <h3>🚗 Déplacement Gratuit</h3>
+              <p>Intervention sans frais de déplacement dans toute la région d'Ariana. Économies garanties sur vos services nettoyage ariana.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>⚡ Intervention Rapide</h3>
+              <p>Délai d'intervention moyen de 40 minutes dans toute la zone d'Ariana. Service d'urgence disponible.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>💰 Tarifs Locaux</h3>
+              <p>Tarifs adaptés à la région avec possibilité de remises pour les clients fidèles d'Ariana.</p>
+            </div>
+            
+            <div class="advantage">
+              <h3>🔧 Équipe Locale</h3>
+              <p>Techniciens connaissant parfaitement la région d'Ariana et ses spécificités.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-contact-ariana" class="contact-section">
+          <h2>📞 Contactez CCI Services Ariana</h2>
+          
+          <p>Pour tous vos besoins de <strong>nettoyage ariana</strong>, notre équipe est à votre disposition :</p>
+          
+          <div class="contact-ariana-grid">
+            <div class="contact-method">
+              <h3>📞 Service Client</h3>
+              <p>Disponible 7j/7 pour Ariana</p>
+              <a href="tel:+21698557766" class="button primary">+216 98 557 766</a>
+            </div>
+            
+            <div class="contact-method">
+              <h3>📧 Email Ariana</h3>
+              <p>Réponse garantie sous 2h</p>
+              <a href="mailto:ariana@cciservices.online" class="button">ariana@cciservices.online</a>
+            </div>
+            
+            <div class="contact-method">
+              <h3>🌐 Devis en Ligne</h3>
+              <p>Estimation gratuite Ariana</p>
+              <a href="/devis" class="button">Devis Gratuit</a>
+            </div>
+          </div>
+          
+          <div class="info-box">
+            <p><strong>Zone d'action :</strong> Toute la région d'Ariana • <strong>Déplacement :</strong> Gratuit • <strong>Devis :</strong> Sans engagement</p>
+          </div>
+        </section>
+      </article>`
   }
 ];
 

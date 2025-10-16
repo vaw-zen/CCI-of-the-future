@@ -1,9 +1,30 @@
 User-agent: *
+Allow: /
 Disallow: /wp-admin/
 Disallow: /private/
+Disallow: /admin/
+Disallow: /api/
 Disallow: /*?s=*
 Disallow: /*search*
-Allow: /
+Disallow: /_next/
+Disallow: /404
+Disallow: /500
+
+# Allow important resources
+Allow: /sitemap.xml
+Allow: /sitemap-index.xml
+Allow: /articles-sitemap.xml
+Allow: /posts-sitemap.xml
+Allow: /video-sitemap.xml
+Allow: /robots.txt
+Allow: /favicon.ico
+Allow: /logo.png
+Allow: /icons/
+Allow: /gallery/
+Allow: /home/
+
+# Crawl delay for better server performance
+Crawl-delay: 1
 
 Sitemap: https://cciservices.online/sitemap.xml
 Sitemap: https://cciservices.online/articles-sitemap.xml

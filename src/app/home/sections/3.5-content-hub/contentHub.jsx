@@ -47,7 +47,7 @@ export default function ContentHub({ className = '' }) {
                 </div>
 
                 {/* Featured Articles Preview */}
-                <div className={styles.featuredSection}>
+                {/* <div className={styles.featuredSection}>
                     <h4 className={styles.featuredTitle}>Articles Populaires</h4>
                     <div className={styles.featuredGrid}>
                         {content.featuredArticles.map((article, index) => (
@@ -60,7 +60,7 @@ export default function ContentHub({ className = '' }) {
                             </Link>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </div>
         </section>
     )

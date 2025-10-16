@@ -212,5 +212,28 @@
         "icon": "/icons/shield.png"
       }
     ]
-  }
+  },
+  "relatedArticles": [
+    {
+      "link": "/conseils/traitement-poncage-polissage-marbre-tunisie",
+      "title": "Traitement Ponçage Polissage Marbre Tunisie",
+      "category": "Marbre",
+      "excerpt": "Les secrets du lustrage professionnel pour un marbre éclatant. Techniques, produits et conseils d'experts pour un résultat durable.",
+      "tags": ["lustrage", "techniques", "professionnel"]
+    },
+    {
+      "link": "/conseils/detartrage-marbre-cuisine-tunisie-guide-expert",
+      "title": "Détartrage Marbre Cuisine Tunisie",
+      "category": "Marbre",
+      "excerpt": "Guide expert pour le détartrage du marbre en cuisine. Processus, avantages et maintenance pour préserver l'éclat de vos plans de travail.",
+      "tags": ["détartrage", "cuisine", "entretien"]
+    },
+    {
+      "link": "/conseils/poncage-marbre-tunis-2025",
+      "title": "Ponçage Marbre Tunis 2025",
+      "category": "Marbre",
+      "excerpt": "Techniques de ponçage professionnel pour marbre abîmé ou terni. Solutions expertes pour restaurer l'intégrité de vos surfaces.",
+      "tags": ["ponçage", "restauration", "marbre"]
+    }
+  ]
 }

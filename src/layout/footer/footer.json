@@ -31,6 +31,14 @@
             "link": "/services"
         },
         {
+            "name": "conseils",
+            "link": "/conseils"
+        },
+        {
+            "name": "vidéos",
+            "link": "/blogs"
+        },
+        {
             "name": "contact",
             "link": "/contact"
         }

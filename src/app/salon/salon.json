@@ -204,5 +204,28 @@
         "icon": "/icons/shield.png"
       }
     ]
-  }
+  },
+  "relatedArticles": [
+    {
+      "link": "/conseils/nettoyage-salons-voiture-tapisseries-tunis",
+      "title": "Nettoyage Salons Voiture Tapisseries Tunis",
+      "category": "Salon",
+      "excerpt": "Tout savoir sur l'entretien et le nettoyage de vos salons. Techniques professionnelles, produits adaptés et conseils d'entretien.",
+      "tags": ["salon", "entretien", "guide"]
+    },
+    {
+      "link": "/conseils/detachage-salon-tunis-2025",
+      "title": "Détachage Salon Tunis 2025",
+      "category": "Salon",
+      "excerpt": "Méthodes professionnelles pour éliminer les taches sur canapés et tapis. Solutions adaptées par type de textile et de salissure.",
+      "tags": ["détachage", "canapé", "techniques"]
+    },
+    {
+      "link": "/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet",
+      "title": "Comment Nettoyer Canapé Cuir Tunis",
+      "category": "Salon",
+      "excerpt": "Guide complet pour le nettoyage et l'entretien des canapés en cuir. Techniques professionnelles et produits adaptés.",
+      "tags": ["cuir", "canapé", "salon"]
+    }
+  ]
 }

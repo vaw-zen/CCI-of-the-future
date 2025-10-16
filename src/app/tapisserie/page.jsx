@@ -6,6 +6,7 @@ import Feedback from '@/utils/components/servicesComponents/feedbackComponent/fe
 import AboutUsTab from '@/utils/components/servicesComponents/aboutUsTab/AboutUsTab'
 import ServiceList from '@/utils/components/servicesComponents/serviceList/serviceList'
 import { ImageSlider } from '@/utils/components/imageSlider/imageSlider'
+import RelatedArticles from '@/utils/components/servicesComponents/relatedArticles/relatedArticles'
 import tapisserieData from './tapisserie.json'
 
 export async function generateMetadata() {
@@ -77,6 +78,10 @@ export default function Page() {
           items={tapisserieData.serviceList.items}
         />
         <ImageSlider images={tapisserieData.images} />
+        <RelatedArticles 
+          articles={tapisserieData.relatedArticles} 
+          sectionTitle="Guides Tapisserie & Retapissage"
+        />
       </div>
     </>
   )

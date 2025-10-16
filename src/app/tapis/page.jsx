@@ -6,6 +6,7 @@ import Feedback from "@/utils/components/servicesComponents/feedbackComponent/fe
 import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUsTab";
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
+import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 import tapisData from "./tapis.json";
 
 export async function generateMetadata() {
@@ -83,6 +84,10 @@ export default function Page() {
           text={tapisData.sections.whyChooseUs.text}
         />
         <ImageSlider images={tapisData.images} />
+        <RelatedArticles 
+          articles={tapisData.relatedArticles} 
+          sectionTitle="Guides Nettoyage Tapis & Moquettes"
+        />
       </div>
     </>
   );

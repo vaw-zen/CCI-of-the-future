@@ -171,5 +171,28 @@
         "icon": "/icons/shield.png"
       }
     ]
-  }
+  },
+  "relatedArticles": [
+    {
+      "link": "/conseils/nettoyage-post-chantier-tunisie-fin-travaux",
+      "title": "Nettoyage Post-Chantier Tunisie Fin Travaux",
+      "category": "Post-chantier",
+      "excerpt": "Guide professionnel pour le nettoyage après travaux. Techniques, équipements et protocoles pour une remise en état parfaite.",
+      "tags": ["post-chantier", "protocoles", "professionnel"]
+    },
+    {
+      "link": "/conseils/services-nettoyage-ariana-tunisie-2025",
+      "title": "Services Nettoyage Ariana Tunisie 2025",
+      "category": "Local",
+      "excerpt": "Services de nettoyage professionnel à Ariana. Nettoyage post-chantier et remise en état de locaux commerciaux.",
+      "tags": ["ariana", "services", "commercial"]
+    },
+    {
+      "link": "/conseils/services-nettoyage-la-marsa-carthage-2025",
+      "title": "Services Nettoyage La Marsa Carthage 2025",
+      "category": "Local",
+      "excerpt": "Protocole de remise en état des locaux dans la région de La Marsa et Carthage. Standards qualité et délais respectés.",
+      "tags": ["la marsa", "carthage", "qualité"]
+    }
+  ]
 }

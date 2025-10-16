@@ -179,5 +179,28 @@
         "icon": "/icons/repair-tools.png"
       }
     ]
-  }
+  },
+  "relatedArticles": [
+    {
+      "link": "/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet",
+      "title": "Comment Nettoyer Canapé Cuir Tunis",
+      "category": "Salon",
+      "excerpt": "Guide complet pour le nettoyage et l'entretien des canapés en cuir. Techniques de retapissage et rénovation professionnelles.",
+      "tags": ["retapissage", "cuir", "salon"]
+    },
+    {
+      "link": "/conseils/nettoyage-canape-tunis-2025",
+      "title": "Nettoyage Canapé Tunis 2025",
+      "category": "Salon",
+      "excerpt": "Guide spécialisé pour le nettoyage et l'entretien des canapés. Techniques adaptées aux différents types de tissus d'ameublement.",
+      "tags": ["canapé", "nettoyage", "tissus"]
+    },
+    {
+      "link": "/conseils/nettoyage-voiture-interieur-tunis-2025",
+      "title": "Nettoyage Voiture Intérieur Tunis 2025",
+      "category": "Tapis",
+      "excerpt": "Techniques de nettoyage pour intérieurs de véhicules. Retapissage de sièges auto et entretien des tissus automobiles.",
+      "tags": ["véhicule", "intérieur", "sièges"]
+    }
+  ]
 }

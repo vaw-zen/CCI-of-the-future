@@ -6,6 +6,7 @@ import Feedback from "@/utils/components/servicesComponents/feedbackComponent/fe
 import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUsTab";
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
+import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 import salonData from "./salon.json";
 
 export async function generateMetadata() {
@@ -74,6 +75,11 @@ export default function Page() {
         />
 
         <ImageSlider images={salonData.images} />
+        
+        <RelatedArticles 
+          articles={salonData.relatedArticles} 
+          sectionTitle="Guides Nettoyage & Entretien Salon"
+        />
       </div>
     </>
   );

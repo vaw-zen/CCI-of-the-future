@@ -298,5 +298,35 @@
         "icon": "/icons/polisher1.png"
       }
     ]
-  }
+  },
+  "relatedArticles": [
+    {
+      "link": "/conseils/prix-nettoyage-tapis-tunis-tarifs-2025",
+      "title": "Prix Nettoyage Tapis Tunis : Tarifs 2025",
+      "category": "Tapis",
+      "excerpt": "Guide complet des tarifs et techniques de nettoyage de moquettes à Tunis. Injection-extraction, shampooing professionnel et conseils d'entretien.",
+      "tags": ["tarifs", "injection-extraction", "tunis"]
+    },
+    {
+      "link": "/conseils/injection-extraction-tapis-tunis-2025",
+      "title": "Injection-Extraction Tapis Tunis 2025",
+      "category": "Tapis",
+      "excerpt": "Découvrez la technique d'injection-extraction pour un nettoyage en profondeur de vos tapis et moquettes. Avantages et processus détaillé.",
+      "tags": ["méthode", "professionnel", "technique"]
+    },
+    {
+      "link": "/conseils/detachage-moquette-tunis-2025",
+      "title": "Détachage Moquette Tunis 2025",
+      "category": "Tapis",
+      "excerpt": "Techniques professionnelles pour éliminer tous types de taches sur tapis : alimentaires, boissons, encre, sang. Solutions adaptées par type de fibre.",
+      "tags": ["détachage", "taches", "fibres"]
+    },
+    {
+      "link": "/conseils/guide-nettoyage-tapis-tunis-2025",
+      "title": "Guide Nettoyage Tapis Tunis 2025",
+      "category": "Tapis",
+      "excerpt": "Guide complet pour le nettoyage professionnel de tapis et moquettes. Méthodes, équipements et conseils d'experts à Tunis.",
+      "tags": ["guide", "nettoyage", "maintenance"]
+    }
+  ]
 }

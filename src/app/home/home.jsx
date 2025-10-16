@@ -31,6 +31,7 @@ export async function generateMetadata() {
 
 const About = dynamic(() => import("./sections/2-about/about"));
 const Services = dynamic(() => import("./sections/3-services/services"));
+const ContentHub = dynamic(() => import("./sections/3.5-content-hub/contentHub"));
 const Band = dynamic(() => import("./sections/4-band/band"));
 const Showcase = dynamic(() => import("./sections/5-showcase/showcase"));
 const Project = dynamic(() => import("./sections/6-projects/project"));
@@ -339,6 +340,7 @@ export default function Home() {
       <div className={styles.wrapper}>
         <About />
         <Services />
+        <ContentHub />
         <Band />
         <Showcase />
         <Project />

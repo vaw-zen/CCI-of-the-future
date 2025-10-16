@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getArticleBySlug, getAllArticles } from '../data/articles';
 import styles from './article.module.css';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
+import RelatedServices from '@/utils/components/relatedServices/relatedServices';
 
 // Générer les métadonnées pour chaque article
 export async function generateMetadata({ params }) {
@@ -78,6 +79,69 @@ export default async function ArticlePage({ params }) {
   if (!article) {
     notFound();
   }
+
+  // Get related services based on article category
+  const getRelatedServices = (category) => {
+    const serviceMap = {
+      'tapis': [
+        {
+          title: "Nettoyage Tapis & Moquettes",
+          description: "Service professionnel de nettoyage par injection-extraction pour tous types de tapis et moquettes.",
+          link: "/tapis",
+          icon: "/icons/polisher.png",
+          ctaText: "Obtenir un devis"
+        }
+      ],
+      'marbre': [
+        {
+          title: "Restauration & Polissage Marbre",
+          description: "Ponçage, lustrage, cristallisation et protection professionnelle de vos sols en marbre.",
+          link: "/marbre", 
+          icon: "/icons/crystal3.png",
+          ctaText: "Voir nos réalisations"
+        }
+      ],
+      'salon': [
+        {
+          title: "Nettoyage Salons & Canapés",
+          description: "Nettoyage professionnel de tous types de tapisserie d'ameublement et salons.",
+          link: "/salon",
+          icon: "/icons/shield.png", 
+          ctaText: "Demander un devis"
+        }
+      ],
+      'tapisserie': [
+        {
+          title: "Retapissage & Tapisserie", 
+          description: "Création de tapisseries sur mesure et retapissage professionnel de meubles.",
+          link: "/tapisserie",
+          icon: "/icons/polisher1.png",
+          ctaText: "Voir nos créations"
+        }
+      ],
+      'post-chantier': [
+        {
+          title: "Nettoyage Post-Chantier",
+          description: "Nettoyage complet après travaux de construction ou rénovation.",
+          link: "/tfc",
+          icon: "/icons/shield.png",
+          ctaText: "Planifier intervention"
+        }
+      ]
+    };
+
+    return serviceMap[category] || [
+      {
+        title: "Tous Nos Services",
+        description: "Découvrez l'ensemble de nos services de nettoyage et restauration professionnels.",
+        link: "/services",
+        icon: "/icons/polisher.png",
+        ctaText: "Voir tous les services"
+      }
+    ];
+  };
+
+  const relatedServices = getRelatedServices(article.category);
 
   // Handle different keyword property names and ensure it's always an array
   const keywords = article.keywords || article.seoKeywords || [];
@@ -302,6 +366,12 @@ export default async function ArticlePage({ params }) {
             </Link>
           )}
         </nav>
+
+        {/* Related Services */}
+        <RelatedServices 
+          services={relatedServices}
+          sectionTitle="Nos Services Professionnels"
+        />
 
         {/* CTA retour à la liste */}
         <div style={{

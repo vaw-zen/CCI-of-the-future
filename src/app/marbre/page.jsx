@@ -6,6 +6,7 @@ import Feedback from "@/utils/components/servicesComponents/feedbackComponent/fe
 import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUsTab";
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
+import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 import marbreData from "./marbre.json";
 
 export async function generateMetadata() {
@@ -73,6 +74,10 @@ export default function Page() {
           items={marbreData.serviceList.items}
         />
         <ImageSlider images={marbreData.images} />
+        <RelatedArticles 
+          articles={marbreData.relatedArticles} 
+          sectionTitle="Guides Restauration & Entretien Marbre"
+        />
       </div>
     </>
   );

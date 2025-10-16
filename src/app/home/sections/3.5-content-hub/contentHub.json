@@ -1,0 +1,41 @@
+{
+    "slug": "CONSEILS & GUIDES",
+    "highlight": "Expertise & conseils professionnels à votre service",
+    "description": "Découvrez nos guides d'expert, tutoriels pratiques et vidéos exclusives pour l'entretien et la rénovation de vos espaces.",
+    "contentTypes": [
+        {
+            "link": "/conseils",
+            "title": "Guides & Conseils",
+            "description": "Tutoriels détaillés, astuces d'entretien et conseils d'experts pour le nettoyage et la rénovation.",
+            "img": "/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp",
+            "count": "25+ Articles"
+        },
+        {
+            "link": "/blogs",
+            "title": "Vidéos & Reels",
+            "description": "Découvrez nos techniques en action à travers nos vidéos et reels avant/après.",
+            "img": "/home/marblepolishing.webp",
+            "count": "50+ Vidéos"
+        }
+    ],
+    "featuredArticles": [
+        {
+            "link": "/conseils/prix-nettoyage-tapis-tunis-tarifs-2025",
+            "title": "Prix Nettoyage Tapis Tunis : Tarifs 2025",
+            "category": "Tapis",
+            "excerpt": "Guide complet des tarifs et techniques de nettoyage de moquettes à Tunis."
+        },
+        {
+            "link": "/conseils/traitement-poncage-polissage-marbre-tunisie",
+            "title": "Traitement Ponçage Polissage Marbre Tunisie",
+            "category": "Marbre", 
+            "excerpt": "Les secrets du lustrage professionnel pour un marbre éclatant."
+        },
+        {
+            "link": "/conseils/nettoyage-salons-voiture-tapisseries-tunis",
+            "title": "Nettoyage Salons Voiture Tapisseries Tunis",
+            "category": "Salon",
+            "excerpt": "Tout savoir sur l'entretien et le nettoyage de vos salons."
+        }
+    ]
+}

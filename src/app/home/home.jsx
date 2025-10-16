@@ -340,11 +340,11 @@ export default function Home() {
       <div className={styles.wrapper}>
         <About />
         <Services />
-        <ContentHub />
         <Band />
         <Showcase />
         <Project />
         <Refrences />
+        <ContentHub />
         <GreenBand />
         <Testimonials />
       </div>

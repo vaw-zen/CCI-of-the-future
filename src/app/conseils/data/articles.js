@@ -1,7 +1,7 @@
 // Base de données des articles de blog SEO
 export const articles = [
   {
-    id: 1,
+    id: 38,
     slug: 'guide-nettoyage-tapis-tunis-2025',
     title: 'Nettoyage de Tapis et Moquettes : Solutions Professionnelles CCI Services Tunisie',
     metaTitle: 'Nettoyage de Tapis et Moquettes Tunis - Entreprise Professionnelle | CCI Services',
@@ -11,7 +11,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["guide","nettoyage","tapis","tunis","2025","nettoyage moquette tunis","nettoyage tapis tunis","shampouinage moquette tunis","entreprise nettoyage moquette tunis","devis nettoyage moquette tunis","injection extraction","détachage tapis tunis","lavage tapis tunis","entretien tapis tunis","nettoyage professionnel tunisie","nettoyage tapis ariana","nettoyage ariana","services nettoyage ariana","nettoyage la marsa","moquettes tunisie","tarif nettoyage tapis tunis"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-08T10:00:00Z',
     updatedDate: '2025-10-08T10:00:00Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -486,7 +486,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapisserie',
     keywords: ["nettoyage","salons","voiture","tapisseries","tunis","nettoyage salon tunis","détachage salon tunis","entretien salon tunis","lavage salon tunis","nettoyage canapé","nettoyage voiture intérieur","shampooing canapé","nettoyage ariana","nettoyage la marsa","services tapisserie tunisie","désinfection salon"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-07T14:30:00Z',
     updatedDate: '2025-10-07T14:30:00Z',
     image: '/home/retapissage-salon-en-cuir.webp',
@@ -762,7 +762,7 @@ export const articles = [
     categoryLabel: 'Traitement Marbre',
     keywords: ["traitement","poncage","polissage","marbre","tunisie","restauration marbre tunis","traitement marbre tunisie","ponçage marbre tunisie","polissage marbre tunisie","cristallisation marbre tunisie","lustrage marbre tunisie","protection marbre tunisie","marbre ariana","marbre la marsa","nettoyage marbre tunis","détachage marbre tunis","lavage marbre tunis","entretien marbre tunis","entretien marbre","marbre blanc"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-05T09:00:00Z',
     updatedDate: '2025-10-05T09:00:00Z',
     image: '/gallery/marbre/Blog-Body-floor-01-1024x640.webp',
@@ -985,7 +985,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Post-Chantier',
     keywords: ["nettoyage","post","chantier","tunisie","travaux","nettoyage post-chantier tunisie","fin de travaux","dépoussiérage professionnel","décapage sols","nettoyage après travaux","nettoyage vitres chantier","nettoyage post-chantier","services carthage","nettoyage professionnel tunisie"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-09-24T11:00:00Z',
     updatedDate: '2025-09-24T11:00:00Z',
     image: '/home/nettoyage-professionel-post-chantier.webp',
@@ -1281,7 +1281,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["prix","nettoyage","tapis","tunis","tarifs","prix nettoyage tapis tunis","devis nettoyage tapis","tarif nettoyage tapis tunis","cout nettoyage tapis tunisie","prix injection extraction","devis gratuit","simulateur devis nettoyage tunisie","tarif nettoyage tapis","prix transparent","devis en ligne"],
     author: 'CCI Services',
-    authorImage: '/logo.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-08-08T15:00:00Z',
     updatedDate: '2025-08-08T15:00:00Z',
     image: '/gallery/moquette/moquette-detailing-4.jpeg',
@@ -1592,7 +1592,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapisserie',
     keywords: ["comment","nettoyer","canape","cuir","tunis","comment nettoyer canapé cuir","entretien canapé cuir tunis","nettoyage cuir professionnel","produits nettoyage cuir","tissus d'ameublement","rénovation fauteuil","rembourrage canapés"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-07-15T08:30:00Z',
     updatedDate: '2025-07-15T08:30:00Z',
     image: '/home/retapissage-salon-en-cuir.webp',
@@ -1770,7 +1770,7 @@ export const articles = [
     categoryLabel: 'Traitement Marbre',
     keywords: ["detartrage","marbre","cuisine","tunisie","guide","détartrage marbre cuisine","entretien marbre cuisine tunis","nettoyer plan travail marbre","marbre cuisine calcaire","protection marbre","séchage rapide"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-06-20T16:00:00Z',
     updatedDate: '2025-06-20T16:00:00Z',
     image: '/home/polishingkitchenmrblecountre.webp',
@@ -2072,7 +2072,7 @@ export const articles = [
     categoryLabel: 'Services Locaux',
     keywords: ["services","nettoyage","ariana","tunisie","2025"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-05-10T12:00:00Z',
     updatedDate: '2025-05-10T12:00:00Z',
     image: '/home/nettoyagesolonméthodeinjectionextraction.webp',
@@ -2242,7 +2242,7 @@ export const articles = [
     categoryLabel: 'Services Locaux',
     keywords: ["services","nettoyage","marsa","carthage","2025"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-04-01T10:00:00Z',
     updatedDate: '2025-04-01T10:00:00Z',
     image: '/home/cristallisationsolenmarbre.webp',
@@ -2447,7 +2447,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["nettoyage urgent tapis tunis","service express","CCI services","intervention rapide"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-13T13:06:57.077Z',
     updatedDate: '2025-10-13T13:06:57.078Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -2557,7 +2557,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["injection extraction","nettoyage tapis tunis","prix injection extraction","nettoyage moquette tunis","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-13T13:10:51.640Z',
     updatedDate: '2025-10-13T13:10:51.641Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -2660,7 +2660,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["lavage vapeur","nettoyage tapis tunis","nettoyage vapeur tunis","prix nettoyage tapis tunis","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-13T13:40:16.288Z',
     updatedDate: '2025-10-13T13:40:16.289Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -2759,7 +2759,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["nettoyage à sec","nettoyage tapis Tunis","entretien textiles","nettoyage professionnel","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-13T13:40:36.365Z',
     updatedDate: '2025-10-13T13:40:36.365Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -2862,7 +2862,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["détachage moquette Tunis","nettoyage moquette Tunis","entretien moquette Tunis","taches moquette Tunis","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-13T13:40:55.639Z',
     updatedDate: '2025-10-13T13:40:55.639Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -2962,7 +2962,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["tarif nettoyage tapis Tunis","nettoyage tapis prix Tunis","société nettoyage tapis Tunis","lavage tapis à domicile Tunis","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-13T15:22:49.123Z',
     updatedDate: '2025-10-13T15:22:49.124Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -3056,7 +3056,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Canapé',
     keywords: ["nettoyage canapé","nettoyage fauteuil","nettoyage tissu","nettoyage à domicile","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-13T15:23:11.002Z',
     updatedDate: '2025-10-13T15:23:11.002Z',
     image: '/home/retapissage-salon-en-cuir.webp',
@@ -3169,7 +3169,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["nettoyage voiture intérieur","nettoyage auto tunis","entretien voiture tunis","lavage intérieur voiture","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-13T15:23:29.878Z',
     updatedDate: '2025-10-13T15:23:29.878Z',
     image: '/home/interior-cleaning-detailing.png',
@@ -3250,7 +3250,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["détachage salon","nettoyage tapis tunis","entretien salon","nettoyage à domicile tunis","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-14T19:11:49.774Z',
     updatedDate: '2025-10-14T19:11:49.775Z',
     image: '/home/retapissage-salon-en-cuir.webp',
@@ -3383,7 +3383,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["shampooing canapé","nettoyage canapé tunis","prix nettoyage canapé","CCI services","nettoyage tissu tunis"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:05:45.079Z',
     updatedDate: '2025-10-15T01:05:45.080Z',
     image: '/home/retapissage-salon-en-cuir.webp',
@@ -3483,7 +3483,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Salon',
     keywords: ["désinfection salon","nettoyage salon tunis","désinfection covid tunis","nettoyage professionnel tunis","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:06:02.529Z',
     updatedDate: '2025-10-15T01:06:02.529Z',
     image: '/home/retapissage-salon-en-cuir.webp',
@@ -3570,7 +3570,7 @@ export const articles = [
     categoryLabel: 'Traitement Marbre',
     keywords: ["ponçage marbre","rénovation marbre","cristallisation marbre","entretien marbre","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:06:21.005Z',
     updatedDate: '2025-10-15T01:06:21.005Z',
     image: '/gallery/marbre/Blog-Body-floor-01-1024x640.webp',
@@ -3684,7 +3684,7 @@ export const articles = [
     categoryLabel: 'Traitement Marbre',
     keywords: ["polissage marbre","cristallisation marbre","rénovation marbre","entretien marbre","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:06:38.877Z',
     updatedDate: '2025-10-15T01:06:38.877Z',
     image: '/gallery/marbre/Blog-Body-floor-01-1024x640.webp',
@@ -3775,7 +3775,7 @@ export const articles = [
     categoryLabel: 'Traitement Marbre',
     keywords: ["cristallisation marbre","polissage marbre tunis","entretien marbre","nettoyage marbre tunisie","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:06:57.589Z',
     updatedDate: '2025-10-15T01:06:57.589Z',
     image: '/gallery/marbre/Blog-Body-floor-01-1024x640.webp',
@@ -3880,7 +3880,7 @@ export const articles = [
     categoryLabel: 'Traitement Marbre',
     keywords: ["entretien marbre","nettoyage marbre tunis","rénovation marbre","cristallisation marbre","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:07:54.278Z',
     updatedDate: '2025-10-15T01:07:54.279Z',
     image: '/gallery/marbre/Blog-Body-floor-01-1024x640.webp',
@@ -3991,7 +3991,7 @@ export const articles = [
     categoryLabel: 'Traitement Marbre',
     keywords: ["marbre blanc","entretien marbre","rénovation marbre","nettoyage marbre","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:08:12.264Z',
     updatedDate: '2025-10-15T01:08:12.264Z',
     image: '/gallery/marbre/Blog-Body-floor-01-1024x640.webp',
@@ -4081,7 +4081,7 @@ export const articles = [
     categoryLabel: 'Traitement Marbre',
     keywords: ["protection marbre","entretien marbre tunis","cristallisation marbre","polissage marbre","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:08:30.099Z',
     updatedDate: '2025-10-15T01:08:30.099Z',
     image: '/gallery/marbre/Blog-Body-floor-01-1024x640.webp',
@@ -4202,7 +4202,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["dépoussiérage professionnel","nettoyage tapis tunis","entretien moquette","CCI services","nettoyage à domicile Tunis"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:08:47.885Z',
     updatedDate: '2025-10-15T01:08:47.885Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -4338,7 +4338,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Sols',
     keywords: ["décapage sols","nettoyage sols tunis","entretien sols","rénovation sols","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T01:09:06.422Z',
     updatedDate: '2025-10-15T01:09:06.422Z',
     image: '/home/nettoyage-professionel-post-chantier.webp',
@@ -4434,7 +4434,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["lavage vapeur","nettoyage tapis tunis","nettoyage moquette tunis","nettoyage vapeur prix tunis","CCI services"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T18:58:22.200Z',
     updatedDate: '2025-10-15T18:58:22.200Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -4545,7 +4545,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["nettoyage à sec","nettoyage tapis Tunis","entretien textiles","CCI services","nettoyage professionnel Tunis"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T18:58:41.247Z',
     updatedDate: '2025-10-15T18:58:41.247Z',
     image: '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
@@ -4648,7 +4648,7 @@ export const articles = [
   
   // Article pricing pour "tarif nettoyage tapis"
   {
-    id: 20,
+    id: 59,
     slug: 'prix-nettoyage-tapis-tunis-tarifs-2025',
     title: 'Prix Nettoyage Tapis Tunis 2025 : Tarifs Transparents CCI Services',
     metaTitle: 'Prix Nettoyage Tapis Tunis 2025 | Tarifs Transparents | CCI Services',
@@ -4658,7 +4658,7 @@ export const articles = [
     categoryLabel: 'Nettoyage Tapis',
     keywords: ["prix","nettoyage","tapis","tunis","tarifs","2025","tarif nettoyage tapis","tarif nettoyage tapis tunis","prix nettoyage tapis tunis","cout nettoyage tapis tunisie","devis nettoyage tapis","injection extraction","entreprise nettoyage moquette tunis"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T10:00:00Z',
     updatedDate: '2025-10-15T10:00:00Z',
     image: '/gallery/moquette/Carpet1.webp',
@@ -4854,42 +4854,42 @@ export const articles = [
 
   // Article local SEO pour Ariana
   {
-    id: 21,
-    slug: 'nettoyage-professionnel-ariana-cci-services',
-    title: 'Nettoyage Professionnel Ariana : Services CCI à Domicile',
-    metaTitle: 'Nettoyage Professionnel Ariana | CCI Services | Devis Gratuit',
-    metaDescription: 'Nettoyage professionnel Ariana ✓ Moquettes, salon, marbre ✓ Intervention rapide ✓ Devis gratuit ✓ CCI Services +216 98 557 766',
-    excerpt: 'CCI Services intervient dans toute la région d\'Ariana pour vos besoins de nettoyage professionnel. Moquettes, salon, marbre - Devis gratuit.',
+    id: 58,
+    slug: 'nettoyage-professionnel-El Aouina-cci-services',
+    title: 'Nettoyage Professionnel El Aouina : Services CCI à Domicile',
+    metaTitle: 'Nettoyage Professionnel El Aouina | CCI Services | Devis Gratuit',
+    metaDescription: 'Nettoyage professionnel El Aouina ✓ Moquettes, salon, marbre ✓ Intervention rapide ✓ Devis gratuit ✓ CCI Services +216 98 557 766',
+    excerpt: 'CCI Services intervient dans toute la région d\'El Aouina pour vos besoins de nettoyage professionnel. Moquettes, salon, marbre - Devis gratuit.',
     category: 'services',
     categoryLabel: 'Services',
-    keywords: ["nettoyage","ariana","professionnel","cci","services","nettoyage ariana","services nettoyage ariana","nettoyage tapis ariana","marbre ariana","CCI services ariana","raoued","soukra","kalaat el andalous","nettoyage domicile"],
+    keywords: ["nettoyage","El Aouina","professionnel","cci","services","nettoyage El Aouina","services nettoyage El Aouina","nettoyage tapis El Aouina","marbre El Aouina","CCI services El Aouina","raoued","soukra","kalaat el andalous","nettoyage domicile"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-15T11:00:00Z',
     updatedDate: '2025-10-15T11:00:00Z',
-    image: '/home/1-hero/hero-image.webp',
-    imageAlt: 'Équipe CCI Services nettoyage professionnel Ariana',
+    image: '/gallery/moquette/moquette-detailing-4.jpeg',
+    imageAlt: 'Équipe CCI Services nettoyage professionnel El Aouina',
     readTime: '7 min',
     featured: true,
     content: `
       <article>
         <div class="article-intro">
-          <p class="lead">CCI Services étend ses services de nettoyage professionnel dans toute la région d'Ariana. Que vous soyez à Raoued, Soukra, ou Centre-ville Ariana, notre équipe intervient rapidement pour tous vos besoins de nettoyage.</p>
+          <p class="lead">CCI Services étend ses services de nettoyage professionnel dans toute la région d'El Aouina. Que vous soyez à Raoued, Soukra, ou Centre-ville El Aouina, notre équipe intervient rapidement pour tous vos besoins de nettoyage.</p>
         </div>
 
-        <p>Spécialistes du nettoyage professionnel depuis plusieurs années, nous proposons nos services dans l'ensemble du gouvernorat d'Ariana avec la même qualité et les mêmes tarifs transparents que partout ailleurs en Tunisie.</p>
+        <p>Spécialistes du nettoyage professionnel depuis plusieurs années, nous proposons nos services dans l'ensemble du gouvernorat d'El Aouina avec la même qualité et les mêmes tarifs transparents que partout ailleurs en Tunisie.</p>
 
         <div class="info-box">
-          <p>🚗 <strong>Intervention gratuite</strong> dans toute la région d'Ariana - Appelez-nous au <a href="tel:+21698557766" style="color: var(--ac-primary); font-weight: 600;">+216 98 557 766</a></p>
+          <p>🚗 <strong>Intervention gratuite</strong> dans toute la région d'El Aouina - Appelez-nous au <a href="tel:+21698557766" style="color: var(--ac-primary); font-weight: 600;">+216 98 557 766</a></p>
         </div>
 
-        <section id="section-services-ariana">
-          <h2>🏠 Nos Services de Nettoyage à Ariana</h2>
+        <section id="section-services-El Aouina">
+          <h2>🏠 Nos Services de Nettoyage à El Aouina</h2>
           
-          <div class="services-ariana-grid">
+          <div class="services-El Aouina-grid">
             <div class="service-card">
-              <h3>Nettoyage Moquettes Ariana</h3>
-              <p>Service professionnel de <strong>nettoyage tapis ariana</strong> par injection-extraction. Intervention à domicile avec matériel professionnel pour tous types de moquettes et tapis.</p>
+              <h3>Nettoyage Moquettes El Aouina</h3>
+              <p>Service professionnel de <strong>nettoyage tapis El Aouina</strong> par injection-extraction. Intervention à domicile avec matériel professionnel pour tous types de moquettes et tapis.</p>
               <ul>
                 <li>✓ Injection-extraction haute performance</li>
                 <li>✓ Traitement anti-acariens disponible</li>
@@ -4900,8 +4900,8 @@ export const articles = [
             </div>
             
             <div class="service-card">
-              <h3>Nettoyage Salon Ariana</h3>
-              <p>Nettoyage professionnel de canapés, fauteuils et salon à domicile dans toute la région d'Ariana. Expertise toutes matières : cuir, tissu, microfibre.</p>
+              <h3>Nettoyage Salon El Aouina</h3>
+              <p>Nettoyage professionnel de canapés, fauteuils et salon à domicile dans toute la région d'El Aouina. Expertise toutes matières : cuir, tissu, microfibre.</p>
               <ul>
                 <li>✓ Diagnostic gratuit du type de tissu</li>
                 <li>✓ Détachage spécialisé inclus</li>
@@ -4912,8 +4912,8 @@ export const articles = [
             </div>
             
             <div class="service-card">
-              <h3>Marbre Ariana - Restauration</h3>
-              <p>Services de restauration et entretien de <strong>marbre ariana</strong> : ponçage, polissage, cristallisation. Experts certifiés pour tous vos sols en pierre naturelle.</p>
+              <h3>Marbre El Aouina - Restauration</h3>
+              <p>Services de restauration et entretien de <strong>marbre El Aouina</strong> : ponçage, polissage, cristallisation. Experts certifiés pour tous vos sols en pierre naturelle.</p>
               <ul>
                 <li>✓ Ponçage professionnel multi-grains</li>
                 <li>✓ Polissage haute brillance</li>
@@ -4925,16 +4925,16 @@ export const articles = [
           </div>
         </section>
 
-        <section id="section-zones-ariana">
-          <h2>📍 Zones d'Intervention à Ariana</h2>
+        <section id="section-zones-El Aouina">
+          <h2>📍 Zones d'Intervention à El Aouina</h2>
           
-          <p>CCI Services intervient dans l'ensemble du gouvernorat d'Ariana avec des délais d'intervention optimisés :</p>
+          <p>CCI Services intervient dans l'ensemble du gouvernorat d'El Aouina avec des délais d'intervention optimisés :</p>
           
           <div class="zones-grid">
             <div class="zone">
-              <h3>Centre-ville Ariana</h3>
+              <h3>Centre-ville El Aouina</h3>
               <p><strong>Délai d'intervention :</strong> 30 minutes</p>
-              <p>Service disponible 7j/7 pour le nettoyage ariana centre. Équipe locale expérimentée.</p>
+              <p>Service disponible 7j/7 pour le nettoyage El Aouina centre. Équipe locale expérimentée.</p>
             </div>
             
             <div class="zone">
@@ -4969,17 +4969,17 @@ export const articles = [
           </div>
         </section>
 
-        <section id="section-temoignages-ariana">
-          <h2>⭐ Témoignages Clients Ariana</h2>
+        <section id="section-temoignages-El Aouina">
+          <h2>⭐ Témoignages Clients El Aouina</h2>
           
           <div class="testimonials-grid">
             <div class="testimonial">
               <blockquote>
-                "Excellent service de nettoyage ariana ! Mon salon en cuir a retrouvé son éclat d'origine. L'équipe CCI était très professionnelle et ponctuelle."
+                "Excellent service de nettoyage El Aouina ! Mon salon en cuir a retrouvé son éclat d'origine. L'équipe CCI était très professionnelle et ponctuelle."
               </blockquote>
               <cite>
                 <strong>Mme Fatma B.</strong><br>
-                Centre-ville Ariana<br>
+                Centre-ville El Aouina<br>
                 <span class="rating">⭐⭐⭐⭐⭐</span>
               </cite>
             </div>
@@ -4997,7 +4997,7 @@ export const articles = [
             
             <div class="testimonial">
               <blockquote>
-                "Restauration de marbre ariana impeccable ! Prix très correct et délai respecté. Je recommande CCI Services pour la qualité du travail."
+                "Restauration de marbre El Aouina impeccable ! Prix très correct et délai respecté. Je recommande CCI Services pour la qualité du travail."
               </blockquote>
               <cite>
                 <strong>Mme Leila M.</strong><br>
@@ -5008,81 +5008,81 @@ export const articles = [
           </div>
         </section>
 
-        <section id="section-avantages-ariana">
-          <h2>💡 Pourquoi Choisir CCI Services à Ariana ?</h2>
+        <section id="section-avantages-El Aouina">
+          <h2>💡 Pourquoi Choisir CCI Services à El Aouina ?</h2>
           
           <div class="advantages-grid">
             <div class="advantage">
               <h3>🚗 Déplacement Gratuit</h3>
-              <p>Intervention sans frais de déplacement dans toute la région d'Ariana. Économies garanties sur vos services nettoyage ariana.</p>
+              <p>Intervention sans frais de déplacement dans toute la région d'El Aouina. Économies garanties sur vos services nettoyage El Aouina.</p>
             </div>
             
             <div class="advantage">
               <h3>⚡ Intervention Rapide</h3>
-              <p>Délai d'intervention moyen de 40 minutes dans toute la zone d'Ariana. Service d'urgence disponible.</p>
+              <p>Délai d'intervention moyen de 40 minutes dans toute la zone d'El Aouina. Service d'urgence disponible.</p>
             </div>
             
             <div class="advantage">
               <h3>💰 Tarifs Locaux</h3>
-              <p>Tarifs adaptés à la région avec possibilité de remises pour les clients fidèles d'Ariana.</p>
+              <p>Tarifs adaptés à la région avec possibilité de remises pour les clients fidèles d'El Aouina.</p>
             </div>
             
             <div class="advantage">
               <h3>🔧 Équipe Locale</h3>
-              <p>Techniciens connaissant parfaitement la région d'Ariana et ses spécificités.</p>
+              <p>Techniciens connaissant parfaitement la région d'El Aouina et ses spécificités.</p>
             </div>
           </div>
         </section>
 
-        <section id="section-contact-ariana" class="contact-section">
-          <h2>📞 Contactez CCI Services Ariana</h2>
+        <section id="section-contact-El Aouina" class="contact-section">
+          <h2>📞 Contactez CCI Services El Aouina</h2>
           
-          <p>Pour tous vos besoins de <strong>nettoyage ariana</strong>, notre équipe est à votre disposition :</p>
+          <p>Pour tous vos besoins de <strong>nettoyage El Aouina</strong>, notre équipe est à votre disposition :</p>
           
-          <div class="contact-ariana-grid">
+          <div class="contact-El Aouina-grid">
             <div class="contact-method">
               <h3>📞 Service Client</h3>
-              <p>Disponible 7j/7 pour Ariana</p>
+              <p>Disponible 7j/7 pour El Aouina</p>
               <a href="tel:+21698557766" class="button primary">+216 98 557 766</a>
             </div>
             
             <div class="contact-method">
-              <h3>📧 Email Ariana</h3>
+              <h3>📧 Email El Aouina</h3>
               <p>Réponse garantie sous 2h</p>
-              <a href="mailto:ariana@cciservices.online" class="button">ariana@cciservices.online</a>
+              <a href="mailto:El Aouina@cciservices.online" class="button">El Aouina@cciservices.online</a>
             </div>
             
             <div class="contact-method">
               <h3>🌐 Devis en Ligne</h3>
-              <p>Estimation gratuite Ariana</p>
+              <p>Estimation gratuite El Aouina</p>
               <a href="/devis" class="button">Devis Gratuit</a>
             </div>
           </div>
           
           <div class="info-box">
-            <p><strong>Zone d'action :</strong> Toute la région d'Ariana • <strong>Déplacement :</strong> Gratuit • <strong>Devis :</strong> Sans engagement</p>
+            <p><strong>Zone d'action :</strong> Toute la région d'El Aouina • <strong>Déplacement :</strong> Gratuit • <strong>Devis :</strong> Sans engagement</p>
           </div>
         </section>
       </article>`
   },
   {
-    id: 22,
-    title: "Cristallisation Marbre Tunisie : Guide Complet 2025",
+    id: 60,
     slug: "cristallisation-marbre-tunisie-guide-complet",
+    title: "Cristallisation Marbre Tunisie : Guide Complet 2025",
+    metaTitle: "Cristallisation Marbre Tunisie - Guide Expert 2025 | CCI Services",
+    metaDescription: "Cristallisation marbre tunisie professionnel ⭐ Protection durable, brillance garantie. Guide expert CCI Services - Devis gratuit cristallisation.",
     excerpt: "Découvrez tout sur la cristallisation marbre tunisie : processus, avantages, tarifs et conseils d'experts CCI pour une protection durable.",
-    category: "Marbre",
-    author: "CCI Tunisie",
-    publishedDate: "2025-01-15",
+    category: "marbre",
+    categoryLabel: "Traitement Marbre",
+    keywords: ["cristallisation","marbre","tunisie","guide","cristallisation marbre tunisie","protection marbre tunisie","polissage marbre tunisie","lustrage marbre tunisie","ponçage marbre tunisie","traitement marbre","brillance marbre"],
+    author: "CCI Services",
+    authorImage: "/logo.png",
+    publishedDate: "2025-01-15T10:00:00Z",
+    updatedDate: "2025-01-15T10:00:00Z",
+    image: "/home/cristallisationsolenmarbre.webp",
+    imageAlt: "Cristallisation professionnelle de marbre par CCI Services Tunisie",
     readTime: "7 min",
     featured: true,
-    tags: ["cristallisation marbre", "protection marbre", "entretien marbre", "marbre tunisie"],
-    seoKeywords: [
-      "cristallisation marbre tunisie",
-      "protection marbre tunisie", 
-      "polissage marbre tunisie",
-      "lustrage marbre tunisie",
-      "ponçage marbre tunisie"
-    ],
     content: `<article class="article-content">
         <header class="article-header">
           <h1>Cristallisation Marbre Tunisie : Guide Complet pour une Protection Durable</h1>
@@ -5234,23 +5234,23 @@ export const articles = [
       </article>`
   },
   {
-    id: 23,
-    title: "Polissage Marbre Tunisie : Techniques et Tarifs 2025",
+    id: 61,
     slug: "polissage-marbre-tunisie-techniques-tarifs",
+    title: "Polissage Marbre Tunisie : Techniques et Tarifs 2025",
+    metaTitle: "Polissage Marbre Tunisie - Techniques Pro 2025 | CCI Services",
+    metaDescription: "Polissage marbre tunisie expert ⭐ Techniques professionnelles, tarifs transparents. Restauration brillance - CCI Services Tunis.",
     excerpt: "Guide expert du polissage marbre tunisie : techniques professionnelles, équipements, tarifs et conseils CCI pour retrouver l'éclat d'origine.",
-    category: "Marbre",
-    author: "CCI Tunisie",
-    publishedDate: "2025-01-15",
+    category: "marbre",
+    categoryLabel: "Traitement Marbre",
+    keywords: ["polissage","marbre","tunisie","techniques","polissage marbre tunisie","lustrage marbre tunisie","ponçage marbre tunisie","cristallisation marbre tunisie","protection marbre tunisie","restoration marbre","brillance marbre"],
+    author: "CCI Services",
+    authorImage: "/logo.png",
+    publishedDate: "2025-01-15T11:00:00Z",
+    updatedDate: "2025-01-15T11:00:00Z",
+    image: "/gallery/marbre/Blog-Body-floor-01-1024x640.webp",
+    imageAlt: "Polissage professionnel de marbre avec équipement CCI Services",
     readTime: "6 min",
     featured: true,
-    tags: ["polissage marbre", "restoration marbre", "marbre tunisie", "brillance marbre"],
-    seoKeywords: [
-      "polissage marbre tunisie",
-      "lustrage marbre tunisie",
-      "ponçage marbre tunisie",
-      "cristallisation marbre tunisie",
-      "protection marbre tunisie"
-    ],
     content: `<article class="article-content">
         <header class="article-header">
           <h1>Polissage Marbre Tunisie : Retrouvez l'Éclat d'Origine de Vos Surfaces</h1>
@@ -5458,23 +5458,23 @@ export const articles = [
       </article>`
   },
   {
-    id: 24,
-    title: "Services Nettoyage El Aouina : Guide Complet CCI",
+    id: 62,
     slug: "services-nettoyage-el-aouina-guide-complet",
+    title: "Services Nettoyage El Aouina : Guide Complet CCI",
+    metaTitle: "Services Nettoyage El Aouina - Expert Local | CCI Services",
+    metaDescription: "Services nettoyage El Aouina professionnel ⭐ CCI Services local - Tapis, salon, marbre, tapisserie. Devis gratuit El Aouina.",
     excerpt: "Découvrez tous les services de nettoyage professionnel à El Aouina avec CCI Services : tapis, canapés, marbre, tapisserie. Devis gratuit.",
-    category: "Services Locaux",
+    category: "services-locaux",
+    categoryLabel: "Services Locaux",
+    keywords: ["services","nettoyage","el","aouina","guide","nettoyage el aouina","services nettoyage el aouina","CCI services el aouina","nettoyage professionnel el aouina","entreprise nettoyage el aouina"],
     author: "CCI Services",
-    publishedDate: "2025-01-15",
+    authorImage: "/logo.png",
+    publishedDate: "2025-01-15T12:00:00Z",
+    updatedDate: "2025-01-15T12:00:00Z",
+    image: "/home/nettoyage-professionel-post-chantier.webp",
+    imageAlt: "Services de nettoyage professionnel CCI à El Aouina",
     readTime: "8 min",
     featured: true,
-    tags: ["nettoyage el aouina", "services el aouina", "CCI el aouina", "nettoyage professionnel"],
-    seoKeywords: [
-      "nettoyage el aouina",
-      "services nettoyage el aouina", 
-      "CCI services el aouina",
-      "nettoyage professionnel el aouina",
-      "entreprise nettoyage el aouina"
-    ],
     content: `<article class="article-content">
         <header class="article-header">
           <h1>Services Nettoyage El Aouina : Votre Expert Local CCI</h1>
@@ -5734,10 +5734,10 @@ export const articles = [
     categoryLabel: 'Tapisserie Nautique',
     keywords: ["tapisserie","nautique","ignifuge","carthage","tanit","ferry","tissus anti-feu","retapissage ferry","rembourrage nautique","tapisserie maritime","tissus M1","sécurité nautique","tapisserie bateau","confection marine"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-16T10:00:00Z',
     updatedDate: '2025-10-16T10:00:00Z',
-    image: '/gallery/tapisserie/tapisserie-nautique-ferry.jpg',
+    image: '/gallery/tapisserie/tapisserie1.jpg',
     imageAlt: 'Tapisserie nautique ignifuge pour ferry Carthage par CCI Services',
     readTime: '8 min',
     featured: true,
@@ -6004,10 +6004,10 @@ export const articles = [
     categoryLabel: 'Tapisserie Professionnelle',
     keywords: ["retapissage","rembourrage","professionnel","tunis","confection sur mesure","changement mousse","rénovation fauteuil","tapisserie tunis","rembourrage canapé","restauration meuble"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-16T11:30:00Z',
     updatedDate: '2025-10-16T11:30:00Z',
-    image: '/gallery/tapisserie/retapissage-professionnel.jpg',
+    image: '/gallery/tapisserie/tapisserie.png',
     imageAlt: 'Retapissage professionnel et rembourrage sur mesure par CCI Services Tunis',
     readTime: '9 min',
     featured: true,
@@ -6318,10 +6318,10 @@ export const articles = [
     categoryLabel: 'Rénovation Mobilier',
     keywords: ["changement mousse","siege","professionnel","tunis","renovation","remplacement mousse","mousse haute resilience","fauteuil bureau","renovation mobilier","mousse ergonomique"],
     author: 'CCI Services',
-    authorImage: '/team/expert-cci.jpg',
+    authorImage: '/logo.png',
     publishedDate: '2025-10-16T13:00:00Z',
     updatedDate: '2025-10-16T13:00:00Z',
-    image: '/gallery/tapisserie/changement-mousse-professionnel.jpg',
+    image: '/gallery/tapisserie/tapisserie6.jpg',
     imageAlt: 'Changement de mousse professionnel pour sièges par CCI Services Tunis',
     readTime: '7 min',
     featured: true,

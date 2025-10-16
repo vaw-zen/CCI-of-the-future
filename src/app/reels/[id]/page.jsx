@@ -56,6 +56,7 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
+    metadataBase: new URL('https://cciservices.online'),
     openGraph: {
       title,
       description,

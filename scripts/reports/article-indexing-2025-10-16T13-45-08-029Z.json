@@ -1,0 +1,444 @@
+{
+  "timestamp": "2025-10-16T13:45:08.030Z",
+  "summary": {
+    "total": 39,
+    "successful": 39,
+    "failed": 0,
+    "successRate": "100.0%"
+  },
+  "results": [
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils"
+        }
+      },
+      "title": "Page principale Conseils",
+      "slug": "conseils"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/changement-mousse-siege-professionnel-tunis-renovation",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/changement-mousse-siege-professionnel-tunis-renovation"
+        }
+      },
+      "title": "Changement Mousse Siege Professionnel Tunis Renova...",
+      "slug": "changement-mousse-siege-professionnel-tunis-renovation"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure"
+        }
+      },
+      "title": "Retapissage Rembourrage Professionnel Tunis Sur Me...",
+      "slug": "retapissage-rembourrage-professionnel-tunis-sur-mesure"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/tapisserie-nautique-ignifuge-carthage-tanit-ferry",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/tapisserie-nautique-ignifuge-carthage-tanit-ferry"
+        }
+      },
+      "title": "Tapisserie Nautique Ignifuge Carthage Tanit Ferry",
+      "slug": "tapisserie-nautique-ignifuge-carthage-tanit-ferry"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/nettoyage-a-sec-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/nettoyage-a-sec-tunis-2025"
+        }
+      },
+      "title": "Nettoyage A Sec Tunis 2025",
+      "slug": "nettoyage-a-sec-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/lavage-vapeur-tapis-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/lavage-vapeur-tapis-tunis-2025"
+        }
+      },
+      "title": "Lavage Vapeur Tapis Tunis 2025",
+      "slug": "lavage-vapeur-tapis-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/nettoyage-professionnel-El Aouina-cci-services",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/nettoyage-professionnel-El Aouina-cci-services"
+        }
+      },
+      "title": "Nettoyage Professionnel El Aouina Cci Services",
+      "slug": "nettoyage-professionnel-El Aouina-cci-services"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/prix-nettoyage-tapis-tunis-tarifs-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/prix-nettoyage-tapis-tunis-tarifs-2025"
+        }
+      },
+      "title": "Prix Nettoyage Tapis Tunis Tarifs 2025",
+      "slug": "prix-nettoyage-tapis-tunis-tarifs-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/decapage-sols-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/decapage-sols-tunis-2025"
+        }
+      },
+      "title": "Decapage Sols Tunis 2025",
+      "slug": "decapage-sols-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/depoussierage-professionnel-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/depoussierage-professionnel-tunis-2025"
+        }
+      },
+      "title": "Depoussierage Professionnel Tunis 2025",
+      "slug": "depoussierage-professionnel-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/protection-marbre-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/protection-marbre-tunis-2025"
+        }
+      },
+      "title": "Protection Marbre Tunis 2025",
+      "slug": "protection-marbre-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/marbre-blanc-entretien-renovation-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/marbre-blanc-entretien-renovation-tunis-2025"
+        }
+      },
+      "title": "Marbre Blanc Entretien Renovation Tunis 2025",
+      "slug": "marbre-blanc-entretien-renovation-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/entretien-marbre-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/entretien-marbre-tunis-2025"
+        }
+      },
+      "title": "Entretien Marbre Tunis 2025",
+      "slug": "entretien-marbre-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/cristallisation-marbre-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/cristallisation-marbre-tunis-2025"
+        }
+      },
+      "title": "Cristallisation Marbre Tunis 2025",
+      "slug": "cristallisation-marbre-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/polissage-marbre-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/polissage-marbre-tunis-2025"
+        }
+      },
+      "title": "Polissage Marbre Tunis 2025",
+      "slug": "polissage-marbre-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/poncage-marbre-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/poncage-marbre-tunis-2025"
+        }
+      },
+      "title": "Poncage Marbre Tunis 2025",
+      "slug": "poncage-marbre-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/desinfection-salon-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/desinfection-salon-tunis-2025"
+        }
+      },
+      "title": "Desinfection Salon Tunis 2025",
+      "slug": "desinfection-salon-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/shampooing-canape-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/shampooing-canape-tunis-2025"
+        }
+      },
+      "title": "Shampooing Canape Tunis 2025",
+      "slug": "shampooing-canape-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/detachage-salon-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/detachage-salon-tunis-2025"
+        }
+      },
+      "title": "Detachage Salon Tunis 2025",
+      "slug": "detachage-salon-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/nettoyage-voiture-interieur-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/nettoyage-voiture-interieur-tunis-2025"
+        }
+      },
+      "title": "Nettoyage Voiture Interieur Tunis 2025",
+      "slug": "nettoyage-voiture-interieur-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/nettoyage-canape-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/nettoyage-canape-tunis-2025"
+        }
+      },
+      "title": "Nettoyage Canape Tunis 2025",
+      "slug": "nettoyage-canape-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/tarif-nettoyage-tapis-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/tarif-nettoyage-tapis-tunis-2025"
+        }
+      },
+      "title": "Tarif Nettoyage Tapis Tunis 2025",
+      "slug": "tarif-nettoyage-tapis-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/detachage-moquette-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/detachage-moquette-tunis-2025"
+        }
+      },
+      "title": "Detachage Moquette Tunis 2025",
+      "slug": "detachage-moquette-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/nettoyage-a-sec-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/nettoyage-a-sec-tunis-2025"
+        }
+      },
+      "title": "Nettoyage A Sec Tunis 2025",
+      "slug": "nettoyage-a-sec-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/lavage-vapeur-tapis-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/lavage-vapeur-tapis-tunis-2025"
+        }
+      },
+      "title": "Lavage Vapeur Tapis Tunis 2025",
+      "slug": "lavage-vapeur-tapis-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/injection-extraction-tapis-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/injection-extraction-tapis-tunis-2025"
+        }
+      },
+      "title": "Injection Extraction Tapis Tunis 2025",
+      "slug": "injection-extraction-tapis-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/nettoyage-urgent-tapis-tunis-service-express",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/nettoyage-urgent-tapis-tunis-service-express"
+        }
+      },
+      "title": "Nettoyage Urgent Tapis Tunis Service Express",
+      "slug": "nettoyage-urgent-tapis-tunis-service-express"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/guide-nettoyage-tapis-tunis-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/guide-nettoyage-tapis-tunis-2025"
+        }
+      },
+      "title": "Guide Nettoyage Tapis Tunis 2025",
+      "slug": "guide-nettoyage-tapis-tunis-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/nettoyage-salons-voiture-tapisseries-tunis",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/nettoyage-salons-voiture-tapisseries-tunis"
+        }
+      },
+      "title": "Nettoyage Salons Voiture Tapisseries Tunis",
+      "slug": "nettoyage-salons-voiture-tapisseries-tunis"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/traitement-poncage-polissage-marbre-tunisie",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/traitement-poncage-polissage-marbre-tunisie"
+        }
+      },
+      "title": "Traitement Poncage Polissage Marbre Tunisie",
+      "slug": "traitement-poncage-polissage-marbre-tunisie"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/nettoyage-post-chantier-tunisie-fin-travaux",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/nettoyage-post-chantier-tunisie-fin-travaux"
+        }
+      },
+      "title": "Nettoyage Post Chantier Tunisie Fin Travaux",
+      "slug": "nettoyage-post-chantier-tunisie-fin-travaux"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/prix-nettoyage-tapis-tunis-tarifs-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/prix-nettoyage-tapis-tunis-tarifs-2025"
+        }
+      },
+      "title": "Prix Nettoyage Tapis Tunis Tarifs 2025",
+      "slug": "prix-nettoyage-tapis-tunis-tarifs-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet"
+        }
+      },
+      "title": "Comment Nettoyer Canape Cuir Tunis Guide Complet",
+      "slug": "comment-nettoyer-canape-cuir-tunis-guide-complet"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/detartrage-marbre-cuisine-tunisie-guide-expert",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/detartrage-marbre-cuisine-tunisie-guide-expert"
+        }
+      },
+      "title": "Detartrage Marbre Cuisine Tunisie Guide Expert",
+      "slug": "detartrage-marbre-cuisine-tunisie-guide-expert"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/services-nettoyage-ariana-tunisie-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/services-nettoyage-ariana-tunisie-2025"
+        }
+      },
+      "title": "Services Nettoyage Ariana Tunisie 2025",
+      "slug": "services-nettoyage-ariana-tunisie-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/services-nettoyage-la-marsa-carthage-2025",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/services-nettoyage-la-marsa-carthage-2025"
+        }
+      },
+      "title": "Services Nettoyage La Marsa Carthage 2025",
+      "slug": "services-nettoyage-la-marsa-carthage-2025"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/services-nettoyage-el-aouina-guide-complet",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/services-nettoyage-el-aouina-guide-complet"
+        }
+      },
+      "title": "Services Nettoyage El Aouina Guide Complet",
+      "slug": "services-nettoyage-el-aouina-guide-complet"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/polissage-marbre-tunisie-techniques-tarifs",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/polissage-marbre-tunisie-techniques-tarifs"
+        }
+      },
+      "title": "Polissage Marbre Tunisie Techniques Tarifs",
+      "slug": "polissage-marbre-tunisie-techniques-tarifs"
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/conseils/cristallisation-marbre-tunisie-guide-complet",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/conseils/cristallisation-marbre-tunisie-guide-complet"
+        }
+      },
+      "title": "Cristallisation Marbre Tunisie Guide Complet",
+      "slug": "cristallisation-marbre-tunisie-guide-complet"
+    }
+  ],
+  "categories": {
+    "mainPage": 1,
+    "articles": 38
+  }
+}

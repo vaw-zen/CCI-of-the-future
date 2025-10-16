@@ -50,7 +50,7 @@ export default function RelatedArticles({ articles, sectionTitle = "Articles li√
 
                 <div className={styles.viewAllContainer}>
                     <Link href="/conseils" className={styles.viewAllButton}>
-                        Voir tous les conseils
+                        Voir tous les artricles
                     </Link>
                 </div>
             </div>

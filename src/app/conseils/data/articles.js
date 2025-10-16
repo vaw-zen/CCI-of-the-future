@@ -5722,6 +5722,859 @@ export const articles = [
           </div>
         </section>
       </article>`
+  },
+  {
+    id: 55,
+    slug: 'tapisserie-nautique-ignifuge-carthage-tanit-ferry',
+    title: 'Tapisserie Nautique Ignifuge Carthage & Tanit Ferry : Expertise CCI Services',
+    metaTitle: 'Tapisserie Nautique Ignifuge Ferry Carthage Tanit | CCI Services Tunis',
+    metaDescription: 'Tapisserie nautique ignifuge Carthage Tanit Ferry ⭐ Tissus anti-feu M1, retapissage ferry, rembourrage nautique. CCI Services depuis 2010.',
+    excerpt: 'Tapisserie nautique ignifuge pour ferries Carthage et Tanit - Tissus anti-feu M1, retapissage professionnel, rembourrage maritime. Expertise CCI Services.',
+    category: 'tapisserie',
+    categoryLabel: 'Tapisserie Nautique',
+    keywords: ["tapisserie","nautique","ignifuge","carthage","tanit","ferry","tissus anti-feu","retapissage ferry","rembourrage nautique","tapisserie maritime","tissus M1","sécurité nautique","tapisserie bateau","confection marine"],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-16T10:00:00Z',
+    updatedDate: '2025-10-16T10:00:00Z',
+    image: '/gallery/tapisserie/tapisserie-nautique-ferry.jpg',
+    imageAlt: 'Tapisserie nautique ignifuge pour ferry Carthage par CCI Services',
+    readTime: '8 min',
+    featured: true,
+    content: `
+      <div class="article-intro">
+        <p class="lead">Depuis 2010, CCI Services est le partenaire privilégié du Ferry Carthage pour la tapisserie nautique ignifuge. Depuis 2023, nous étendons notre expertise au Ferry Tanit. Découvrez notre savoir-faire unique en tissus anti-feu et tapisserie maritime professionnelle.</p>
+      </div>
+
+      <p>La tapisserie nautique exige des compétences spécialisées et des matériaux certifiés. Dans le secteur maritime, la sécurité incendie est primordiale, nécessitant l'usage exclusif de tissus ignifuges classés M1 conformes aux normes internationales.</p>
+
+      <div class="info-box">
+        <p>🚢 <strong>Références maritimes :</strong> Ferry Carthage (depuis 2010), Ferry Tanit (depuis 2023). Découvrez nos autres services de <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">tapisserie professionnelle</a> et obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
+      </div>
+
+      <div class="related-services">
+        <p>🔗 <strong>Services associés :</strong> Consultez nos guides <a href="/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet" style="color: var(--ac-primary); font-weight: 600;">entretien canapé cuir</a>, <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">nettoyage tissus d'ameublement</a> et nos techniques de <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">traitement textile professionnel</a>.</p>
+      </div>
+
+      <h2 id="expertise-nautique">🚢 Notre Expertise Nautique : 15 Ans d'Expérience</h2>
+
+      <h3>Partenariat Ferry Carthage (depuis 2010)</h3>
+      <p>Depuis plus de 15 ans, CCI Services assure la maintenance et la rénovation complète de la tapisserie du Ferry Carthage :</p>
+      
+      <ul>
+        <li><strong>Retapissage des sièges passagers :</strong> 400+ sièges en tissus ignifuges M1</li>
+        <li><strong>Rembourrage des banquettes :</strong> Mousse marine haute densité anti-feu</li>
+        <li><strong>Confection sur mesure :</strong> Coussins, dossiers, accoudoirs adaptés</li>
+        <li><strong>Maintenance préventive :</strong> Contrôles saisonniers et réparations rapides</li>
+      </ul>
+
+      <h3>Extension Ferry Tanit (depuis 2023)</h3>
+      <p>Notre expertise reconnue nous a menés à équiper également le Ferry Tanit :</p>
+      
+      <ul>
+        <li><strong>Modernisation complète :</strong> Remplacement de tous les revêtements</li>
+        <li><strong>Tissus nouvelle génération :</strong> Anti-UV, hydrofuges et ignifuges</li>
+        <li><strong>Optimisation du confort :</strong> Mousses ergonomiques dernière génération</li>
+        <li><strong>Harmonisation esthétique :</strong> Design cohérent avec l'identité de la compagnie</li>
+      </ul>
+
+      <h2 id="tissus-ignifuges">🔥 Tissus Ignifuges M1 : Sécurité Maritime Absolue</h2>
+
+      <h3>Classification et Normes</h3>
+      <p>Tous nos tissus nautiques respectent les classifications de sécurité les plus strictes :</p>
+      
+      <div class="classification-grid">
+        <div class="classification">
+          <h4>🏅 Classement M1</h4>
+          <p>Non inflammable, auto-extinguible, conforme IMO (International Maritime Organization)</p>
+        </div>
+        
+        <div class="classification">
+          <h4>🌊 Résistance Marine</h4>
+          <p>Anti-UV, hydrofuge, résistant aux embruns salins et variations thermiques</p>
+        </div>
+        
+        <div class="classification">
+          <h4>🧪 Certifications</h4>
+          <p>Tests feu, toxicité, durabilité selon normes européennes EN 13501</p>
+        </div>
+      </div>
+
+      <h3>Avantages des Tissus Ignifuges CCI</h3>
+      <ul>
+        <li><strong>Sécurité maximale :</strong> Propagation du feu stoppée, fumées non toxiques</li>
+        <li><strong>Durabilité exceptionnelle :</strong> Résistance 5-10 ans en usage maritime intensif</li>
+        <li><strong>Confort préservé :</strong> Douceur, respirabilité, facilité d'entretien</li>
+        <li><strong>Esthétique maritime :</strong> Large gamme de couleurs et textures</li>
+      </ul>
+
+      <h2 id="techniques-retapissage">🔧 Techniques de Retapissage Maritime</h2>
+
+      <h3>Démontage et Diagnostic</h3>
+      <ol>
+        <li><strong>Inspection complète :</strong> État de la structure, usure des mousses</li>
+        <li><strong>Démontage méthodique :</strong> Conservation des pièces réutilisables</li>
+        <li><strong>Nettoyage et préparation :</strong> Décontamination et traitement anti-corrosion</li>
+        <li><strong>Prise de mesures :</strong> Relevé précis pour confection sur mesure</li>
+      </ol>
+
+      <h3>Remplacement de Mousse Marine</h3>
+      <p>Les mousses nautiques doivent répondre à des exigences spécifiques :</p>
+      
+      <div class="foam-specs">
+        <div class="spec">
+          <h4>Densité Adaptée</h4>
+          <p>35-50 kg/m³ selon usage (sièges, dossiers, accoudoirs)</p>
+        </div>
+        
+        <div class="spec">
+          <h4>Résistance Feu</h4>
+          <p>Mousse classée M1, auto-extinguible, fumées non toxiques</p>
+        </div>
+        
+        <div class="spec">
+          <h4>Résistance Marine</h4>
+          <p>Anti-humidité, séchage rapide, résistance aux moisissures</p>
+        </div>
+      </div>
+
+      <h3>Confection et Assemblage</h3>
+      <ol>
+        <li><strong>Découpe précise :</strong> Patron sur mesure, optimisation des chutes</li>
+        <li><strong>Couture renforcée :</strong> Fils polyester haute résistance, coutures étanches</li>
+        <li><strong>Assemblage professionnel :</strong> Fixations inox, systèmes anti-vibration</li>
+        <li><strong>Contrôle qualité :</strong> Tests d'ajustement et finitions soignées</li>
+      </ol>
+
+      <h2 id="rembourrage-professionnel">🛠️ Rembourrage Professionnel Ferry</h2>
+
+      <h3>Spécificités du Rembourrage Maritime</h3>
+      <p>Le rembourrage de ferry nécessite une expertise particulière :</p>
+      
+      <ul>
+        <li><strong>Résistance aux vibrations :</strong> Mousses à cellules fermées</li>
+        <li><strong>Évacuation rapide :</strong> Systèmes de drainage intégrés</li>
+        <li><strong>Ergonomie prolongée :</strong> Confort pour trajets de plusieurs heures</li>
+        <li><strong>Facilité de maintenance :</strong> Démontage rapide pour nettoyage</li>
+      </ul>
+
+      <h3>Zones d'Intervention Ferry</h3>
+      
+      <div class="ferry-zones">
+        <div class="zone">
+          <h4>🪑 Sièges Passagers</h4>
+          <p>Retapissage complet, mousses ergonomiques, tissus ignifuges</p>
+        </div>
+        
+        <div class="zone">
+          <h4>🛋️ Salons VIP</h4>
+          <p>Canapés sur mesure, finitions luxueuses, confort premium</p>
+        </div>
+        
+        <div class="zone">
+          <h4>🏢 Espaces Équipage</h4>
+          <p>Banquettes fonctionnelles, résistance usage intensif</p>
+        </div>
+        
+        <div class="zone">
+          <h4>🍽️ Restaurants</h4>
+          <p>Sièges adaptés restauration, nettoyage facilité</p>
+        </div>
+      </div>
+
+      <h2 id="avantages-cci">💼 Pourquoi Choisir CCI Services ?</h2>
+
+      <h3>Expertise Reconnue</h3>
+      <ul>
+        <li><strong>15 ans d'expérience :</strong> Ferry Carthage, référence incontournable</li>
+        <li><strong>Certification maritime :</strong> Connaissance réglementations IMO</li>
+        <li><strong>Équipe spécialisée :</strong> Tapissiers formés aux spécificités nautiques</li>
+        <li><strong>Partenariats fournisseurs :</strong> Accès tissus et mousses haut de gamme</li>
+      </ul>
+
+      <h3>Service Complet</h3>
+      <ul>
+        <li><strong>Diagnostic gratuit :</strong> Évaluation complète des besoins</li>
+        <li><strong>Devis détaillé :</strong> Transparent, sans surprise</li>
+        <li><strong>Planning adapté :</strong> Interventions selon contraintes d'exploitation</li>
+        <li><strong>Garantie étendue :</strong> 2 ans sur matériaux et main d'œuvre</li>
+      </ul>
+
+      <h3>Réactivité et Flexibilité</h3>
+      <ul>
+        <li><strong>Urgences maritimes :</strong> Intervention 24h/48h si nécessaire</li>
+        <li><strong>Stock permanent :</strong> Tissus et mousses disponibles immédiatement</li>
+        <li><strong>Atelier mobile :</strong> Intervention directe à quai</li>
+        <li><strong>Maintenance préventive :</strong> Contrats d'entretien annuels</li>
+      </ul>
+
+      <h2 id="autres-applications">🏗️ Autres Applications Tapisserie Ignifuge</h2>
+
+      <h3>Secteur Hospitalier</h3>
+      <p>Nos tissus ignifuges équipent également :</p>
+      <ul>
+        <li>Hôpitaux et cliniques</li>
+        <li>Maisons de retraite</li>
+        <li>Centres de soins</li>
+      </ul>
+
+      <h3>Hôtellerie de Luxe</h3>
+      <p>Conformité aux normes ERP (Établissements Recevant du Public) :</p>
+      <ul>
+        <li>Suites et chambres d'hôtel</li>
+        <li>Salons et espaces communs</li>
+        <li>Restaurants et bars</li>
+      </ul>
+
+      <h3>Transport Public</h3>
+      <p>Expertise étendue au transport terrestre :</p>
+      <ul>
+        <li>Autobus et autocars</li>
+        <li>Trains et métros</li>
+        <li>Véhicules d'urgence</li>
+      </ul>
+
+      <h2 id="processus-commande">📋 Processus de Commande CCI</h2>
+
+      <h3>Étapes de Votre Projet</h3>
+      
+      <div class="process-timeline">
+        <div class="process-step">
+          <h4>1. Consultation Gratuite</h4>
+          <p>Visite sur site, diagnostic complet, conseils techniques</p>
+        </div>
+        
+        <div class="process-step">
+          <h4>2. Devis Personnalisé</h4>
+          <p>Proposition détaillée, choix matériaux, planning d'intervention</p>
+        </div>
+        
+        <div class="process-step">
+          <h4>3. Validation et Commande</h4>
+          <p>Confirmation techniques, commande matériaux, planification</p>
+        </div>
+        
+        <div class="process-step">
+          <h4>4. Exécution Professionnelle</h4>
+          <p>Démontage, confection, pose, contrôle qualité</p>
+        </div>
+        
+        <div class="process-step">
+          <h4>5. Livraison et Garantie</h4>
+          <p>Réception, formation entretien, garantie 2 ans</p>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2 id="contact">📞 Votre Projet Tapisserie Nautique</h2>
+        
+        <p>Confiez votre projet de tapisserie nautique aux experts CCI Services !</p>
+        <p><strong>Contact direct pour vos besoins en tapisserie ignifuge :</strong></p>
+        
+        <div class="contact-buttons">
+          <a href="tel:+21698557766" class="btn-phone">
+            📱 +216 98-557-766
+          </a>
+          <a href="mailto:contact@cciservices.online" class="btn-email">
+            📧 contact@cciservices.online
+          </a>
+          <a href="/tapisserie" class="btn-website">
+            🧵 Nos services tapisserie
+          </a>
+        </div>
+        
+        <div class="contact-info">
+          <p><strong>CCI Services - Expert Tapisserie Nautique Ignifuge</strong></p>
+          <p>📍 06 Rue Galant de nuit, L'Aouina, Tunis 2045</p>
+          <p>🕒 Lun-Ven: 8h-18h | Sam: 8h-13h</p>
+          <p><strong>🚢 Références : Ferry Carthage (2010) • Ferry Tanit (2023)</strong></p>
+          <p><strong>Tissus ignifuges M1 • Expertise maritime • Qualité garantie</strong></p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 56,
+    slug: 'retapissage-rembourrage-professionnel-tunis-sur-mesure',
+    title: 'Retapissage et Rembourrage Professionnel Tunis : Confection Sur Mesure CCI',
+    metaTitle: 'Retapissage Rembourrage Tunis - Confection Sur Mesure | CCI Services',
+    metaDescription: 'Retapissage rembourrage professionnel Tunis ⭐ Changement mousse, confection sur mesure, rénovation fauteuil. Expertise CCI Services.',
+    excerpt: 'Retapissage rembourrage professionnel Tunis - Changement mousse, confection sur mesure, rénovation complète. Expertise tapisserie CCI Services.',
+    category: 'tapisserie',
+    categoryLabel: 'Tapisserie Professionnelle',
+    keywords: ["retapissage","rembourrage","professionnel","tunis","confection sur mesure","changement mousse","rénovation fauteuil","tapisserie tunis","rembourrage canapé","restauration meuble"],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-16T11:30:00Z',
+    updatedDate: '2025-10-16T11:30:00Z',
+    image: '/gallery/tapisserie/retapissage-professionnel.jpg',
+    imageAlt: 'Retapissage professionnel et rembourrage sur mesure par CCI Services Tunis',
+    readTime: '9 min',
+    featured: true,
+    content: `
+      <div class="article-intro">
+        <p class="lead">Le retapissage et le rembourrage professionnels redonnent vie à vos meubles favoris. Chez CCI Services Tunis, nous maîtrisons l'art ancestral de la tapisserie combiné aux techniques modernes pour restaurer, rénover et confectionner sur mesure tous types de sièges et mobiliers.</p>
+      </div>
+
+      <p>Que ce soit pour un fauteuil vintage de famille, un canapé designer ou des banquettes professionnelles, notre expertise en retapissage garantit un résultat à la hauteur de vos attentes, alliant esthétique, confort et durabilité.</p>
+
+      <div class="info-box">
+        <p>🛋️ <strong>Expertise complète :</strong> Découvrez nos spécialités en <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de mobilier</a>, <a href="/conseils/tapisserie-nautique-ignifuge-carthage-tanit-ferry" style="color: var(--ac-primary); font-weight: 600;">tapisserie nautique</a> et obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis personnalisé</a>.</p>
+      </div>
+
+      <div class="related-services">
+        <p>🔗 <strong>Services connexes :</strong> Maîtrisez l'<a href="/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet" style="color: var(--ac-primary); font-weight: 600;">entretien canapé cuir</a>, découvrez le <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">nettoyage tissus d'ameublement</a> et consultez nos <a href="/conseils/prix-nettoyage-tapis-tunis-tarifs-2025" style="color: var(--ac-primary); font-weight: 600;">tarifs transparents</a>.</p>
+      </div>
+
+      <h2 id="expertise-retapissage">🎯 Notre Expertise en Retapissage</h2>
+
+      <h3>Qu'est-ce que le Retapissage ?</h3>
+      <p>Le retapissage consiste à remplacer entièrement le revêtement textile d'un meuble en conservant sa structure originale. Cette technique permet de :</p>
+      
+      <ul>
+        <li><strong>Moderniser l'esthétique :</strong> Nouveaux tissus, couleurs tendance</li>
+        <li><strong>Améliorer le confort :</strong> Remplacement des mousses usagées</li>
+        <li><strong>Prolonger la durée de vie :</strong> Restauration complète du mobilier</li>
+        <li><strong>Personnaliser :</strong> Confection selon vos goûts et besoins</li>
+      </ul>
+
+      <h3>Types de Mobiliers Traités</h3>
+      
+      <div class="furniture-grid">
+        <div class="furniture-type">
+          <h4>🪑 Sièges Individuels</h4>
+          <p>Fauteuils, chaises, tabourets, sièges de bureau</p>
+        </div>
+        
+        <div class="furniture-type">
+          <h4>🛋️ Canapés et Banquettes</h4>
+          <p>2-3 places, angle, convertibles, banquettes sur mesure</p>
+        </div>
+        
+        <div class="furniture-type">
+          <h4>🏺 Mobilier Vintage</h4>
+          <p>Fauteuils anciens, bergères, méridienne, Louis XV/XVI</p>
+        </div>
+        
+        <div class="furniture-type">
+          <h4>🏢 Mobilier Professionnel</h4>
+          <p>Sièges d'attente, banquettes hôtel, fauteuils bureau</p>
+        </div>
+      </div>
+
+      <h2 id="techniques-rembourrage">🔧 Techniques de Rembourrage Professionnel</h2>
+
+      <h3>Diagnostic Préalable</h3>
+      <p>Chaque projet commence par une analyse approfondie :</p>
+      
+      <ol>
+        <li><strong>Inspection structure :</strong> Bois, métal, sangles, ressorts</li>
+        <li><strong>État des mousses :</strong> Densité, usure, affaissement</li>
+        <li><strong>Qualité du tissu :</strong> Résistance, adaptation à l'usage</li>
+        <li><strong>Style et époque :</strong> Respect du design original ou modernisation</li>
+      </ol>
+
+      <h3>Démontage Méthodique</h3>
+      <p>Le démontage suit un protocole strict pour préserver la structure :</p>
+      
+      <ul>
+        <li><strong>Photos de référence :</strong> Documenter chaque étape</li>
+        <li><strong>Étiquetage des pièces :</strong> Faciliter le remontage</li>
+        <li><strong>Conservation des éléments :</strong> Bois, métal, mécanismes</li>
+        <li><strong>Nettoyage complet :</strong> Décontamination et traitement</li>
+      </ul>
+
+      <h3>Préparation de la Structure</h3>
+      
+      <div class="structure-prep">
+        <div class="prep-step">
+          <h4>Réparation Bois</h4>
+          <p>Renforcement, collage, ponçage, traitement insecticide</p>
+        </div>
+        
+        <div class="prep-step">
+          <h4>Vérification Ressorts</h4>
+          <p>Tension, remplacement, ajustement pour confort optimal</p>
+        </div>
+        
+        <div class="prep-step">
+          <h4>Sanglage Neuf</h4>
+          <p>Sangles élastiques haute résistance, pose professionnelle</p>
+        </div>
+      </div>
+
+      <h2 id="changement-mousse">🧽 Changement de Mousse : Le Cœur du Confort</h2>
+
+      <h3>Types de Mousses Selon l'Usage</h3>
+      <p>Le choix de la mousse détermine le confort et la durabilité :</p>
+      
+      <div class="foam-types">
+        <div class="foam-category">
+          <h4>Mousse Polyuréthane Standard</h4>
+          <p><strong>Densité :</strong> 25-30 kg/m³</p>
+          <p><strong>Usage :</strong> Dossiers, accoudoirs</p>
+          <p><strong>Avantages :</strong> Économique, souple</p>
+        </div>
+        
+        <div class="foam-category">
+          <h4>Mousse Haute Résilience (HR)</h4>
+          <p><strong>Densité :</strong> 35-50 kg/m³</p>
+          <p><strong>Usage :</strong> Assises, usage intensif</p>
+          <p><strong>Avantages :</strong> Durabilité 10+ ans, maintien</p>
+        </div>
+        
+        <div class="foam-category">
+          <h4>Mousse Viscoélastique</h4>
+          <p><strong>Densité :</strong> 40-80 kg/m³</p>
+          <p><strong>Usage :</strong> Confort premium</p>
+          <p><strong>Avantages :</strong> Mémoire de forme, ergonomie</p>
+        </div>
+      </div>
+
+      <h3>Découpe et Façonnage Sur Mesure</h3>
+      <p>Chaque mousse est travaillée spécifiquement :</p>
+      
+      <ul>
+        <li><strong>Découpe précise :</strong> Gabarits sur mesure, angles parfaits</li>
+        <li><strong>Façonnage 3D :</strong> Formes ergonomiques, courbes naturelles</li>
+        <li><strong>Stratification :</strong> Combinaison de densités pour confort optimal</li>
+        <li><strong>Collage professionnel :</strong> Adhésifs spécialisés, assemblage durable</li>
+      </ul>
+
+      <h2 id="confection-sur-mesure">✂️ Confection Sur Mesure : L'Art du Détail</h2>
+
+      <h3>Sélection des Tissus</h3>
+      <p>Notre gamme couvre tous les besoins et budgets :</p>
+      
+      <div class="fabric-selection">
+        <div class="fabric-type">
+          <h4>🧵 Tissus Naturels</h4>
+          <ul>
+            <li>Lin : Élégance naturelle, respirant</li>
+            <li>Coton : Doux, résistant, facile d'entretien</li>
+            <li>Laine : Chaleureux, isolant, noble</li>
+          </ul>
+        </div>
+        
+        <div class="fabric-type">
+          <h4>🧪 Synthétiques Techniques</h4>
+          <ul>
+            <li>Microfibre : Douceur velours, résistant</li>
+            <li>Polyester : Couleurs vives, anti-taches</li>
+            <li>Acrylique : Imitation laine, facile entretien</li>
+          </ul>
+        </div>
+        
+        <div class="fabric-type">
+          <h4>🏆 Cuirs et Similicuirs</h4>
+          <ul>
+            <li>Cuir pleine fleur : Luxe authentique</li>
+            <li>Cuir pigmenté : Résistant, entretien facile</li>
+            <li>Similicuir : Aspect cuir, prix accessible</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Techniques de Couture Professionnelle</h3>
+      <p>La qualité CCI se révèle dans les finitions :</p>
+      
+      <ul>
+        <li><strong>Coutures renforcées :</strong> Fils haute résistance, surpiqûres</li>
+        <li><strong>Passepoils contrastés :</strong> Finitions élégantes, bords nets</li>
+        <li><strong>Systèmes de fixation :</strong> Velcro, pressions, agrafage invisible</li>
+        <li><strong>Traitement anti-taches :</strong> Protection préventive intégrée</li>
+      </ul>
+
+      <h3>Personnalisation Avancée</h3>
+      <p>Chaque projet est unique :</p>
+      
+      <ul>
+        <li><strong>Capitonnage :</strong> Matelassage décoratif, boutons recouverts</li>
+        <li><strong>Broderies sur mesure :</strong> Logos, motifs, personnalisation</li>
+        <li><strong>Bi-matières :</strong> Combinaisons tissus, contrastes créatifs</li>
+        <li><strong>Finitions spéciales :</strong> Clous décoratifs, galons, franges</li>
+      </ul>
+
+      <h2 id="renovation-fauteuil">🪑 Rénovation de Fauteuils : Cas Pratiques</h2>
+
+      <h3>Fauteuil Bergère Louis XV</h3>
+      <div class="case-study">
+        <p><strong>Défi :</strong> Restaurer un fauteuil familial de 1890, structure fragile</p>
+        <p><strong>Solution :</strong></p>
+        <ul>
+          <li>Renforcement discret de la structure bois</li>
+          <li>Ressorts traditionnels retendus</li>
+          <li>Crin végétal + mousse HR pour authenticité/confort</li>
+          <li>Tissu jacquard reproduction d'époque</li>
+        </ul>
+        <p><strong>Résultat :</strong> Fauteuil authentique avec confort moderne</p>
+      </div>
+
+      <h3>Canapé Designer Scandinave</h3>
+      <div class="case-study">
+        <p><strong>Défi :</strong> Moderniser un canapé années 70, ligne épurée</p>
+        <p><strong>Solution :</strong></p>
+        <ul>
+          <li>Conservation de la structure originale</li>
+          <li>Mousse viscoélastique haute densité</li>
+          <li>Tissu technique anti-taches couleur tendance</li>
+          <li>Finitions minimalistes, coutures invisibles</li>
+        </ul>
+        <p><strong>Résultat :</strong> Design contemporain, confort optimal</p>
+      </div>
+
+      <h2 id="avantages-professionnel">💼 Avantages du Service Professionnel CCI</h2>
+
+      <h3>Expertise Technique</h3>
+      <ul>
+        <li><strong>15 ans d'expérience :</strong> Maîtrise de tous types de mobiliers</li>
+        <li><strong>Formation continue :</strong> Techniques modernes et traditionnelles</li>
+        <li><strong>Équipement professionnel :</strong> Machines industrielles, outils spécialisés</li>
+        <li><strong>Atelier équipé :</strong> Espace de travail optimal, contrôle qualité</li>
+      </ul>
+
+      <h3>Service Client Personnalisé</h3>
+      <ul>
+        <li><strong>Conseil personnalisé :</strong> Choix tissus, couleurs, finitions</li>
+        <li><strong>Devis transparent :</strong> Prix ferme, pas de surprise</li>
+        <li><strong>Planning respecté :</strong> Délais annoncés et tenus</li>
+        <li><strong>Garantie 2 ans :</strong> Matériaux et main d'œuvre</li>
+      </ul>
+
+      <h3>Respect de l'Environnement</h3>
+      <ul>
+        <li><strong>Réutilisation :</strong> Donner une seconde vie aux meubles</li>
+        <li><strong>Matériaux éco-responsables :</strong> Tissus certifiés, mousses sans COV</li>
+        <li><strong>Tri des déchets :</strong> Valorisation, recyclage optimal</li>
+        <li><strong>Économie circulaire :</strong> Alternative à l'achat neuf</li>
+      </ul>
+
+      <h2 id="tarifs-delais">💰 Tarifs et Délais</h2>
+
+      <h3>Grille Tarifaire Indicative</h3>
+      <div class="pricing-grid">
+        <div class="price-category">
+          <h4>Fauteuil Standard</h4>
+          <p>Retapissage complet : 150-300 DT</p>
+          <p>Selon tissu et finitions</p>
+        </div>
+        
+        <div class="price-category">
+          <h4>Canapé 2-3 Places</h4>
+          <p>Retapissage complet : 400-800 DT</p>
+          <p>Changement mousse inclus</p>
+        </div>
+        
+        <div class="price-category">
+          <h4>Confection Sur Mesure</h4>
+          <p>Coussins : 30-80 DT/pièce</p>
+          <p>Selon dimensions et tissu</p>
+        </div>
+      </div>
+
+      <h3>Délais de Réalisation</h3>
+      <ul>
+        <li><strong>Fauteuil simple :</strong> 7-10 jours</li>
+        <li><strong>Canapé standard :</strong> 15-20 jours</li>
+        <li><strong>Projet complexe :</strong> 3-4 semaines</li>
+        <li><strong>Urgences :</strong> Nous consulter</li>
+      </ul>
+
+      <div class="contact-section">
+        <h2 id="contact">📞 Votre Projet de Retapissage</h2>
+        
+        <p>Redonnez vie à vos meubles avec l'expertise CCI Services !</p>
+        <p><strong>Contactez-nous pour votre projet de retapissage sur mesure :</strong></p>
+        
+        <div class="contact-buttons">
+          <a href="tel:+21698557766" class="btn-phone">
+            📱 +216 98-557-766
+          </a>
+          <a href="mailto:contact@cciservices.online" class="btn-email">
+            📧 contact@cciservices.online
+          </a>
+          <a href="/tapisserie" class="btn-website">
+            🧵 Services tapisserie
+          </a>
+        </div>
+        
+        <div class="contact-info">
+          <p><strong>CCI Services - Maître Tapissier Tunis</strong></p>
+          <p>📍 06 Rue Galant de nuit, L'Aouina, Tunis 2045</p>
+          <p>🕒 Lun-Ven: 8h-18h | Sam: 8h-13h</p>
+          <p><strong>Retapissage • Rembourrage • Confection Sur Mesure • Garantie 2 ans</strong></p>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 57,
+    slug: 'changement-mousse-siege-professionnel-tunis-renovation',
+    title: 'Changement Mousse Siège Professionnel Tunis : Rénovation Complète CCI',
+    metaTitle: 'Changement Mousse Siège Tunis - Rénovation Professionnelle | CCI Services',
+    metaDescription: 'Changement mousse siège professionnel Tunis ⭐ Rénovation fauteuil bureau, remplacement mousse canapé. Expertise mousse HR CCI Services.',
+    excerpt: 'Changement mousse siège professionnel Tunis - Rénovation complète, remplacement mousse haute résilience. Expertise CCI Services.',
+    category: 'tapisserie',
+    categoryLabel: 'Rénovation Mobilier',
+    keywords: ["changement mousse","siege","professionnel","tunis","renovation","remplacement mousse","mousse haute resilience","fauteuil bureau","renovation mobilier","mousse ergonomique"],
+    author: 'CCI Services',
+    authorImage: '/team/expert-cci.jpg',
+    publishedDate: '2025-10-16T13:00:00Z',
+    updatedDate: '2025-10-16T13:00:00Z',
+    image: '/gallery/tapisserie/changement-mousse-professionnel.jpg',
+    imageAlt: 'Changement de mousse professionnel pour sièges par CCI Services Tunis',
+    readTime: '7 min',
+    featured: true,
+    content: `
+      <div class="article-intro">
+        <p class="lead">Le changement de mousse redonne confort et durabilité à vos sièges professionnels. Chez CCI Services Tunis, nous maîtrisons l'art du remplacement de mousse pour fauteuils de bureau, canapés d'accueil et banquettes, en utilisant des mousses haute résilience adaptées à l'usage intensif.</p>
+      </div>
+
+      <p>Un siège avec une mousse usagée compromet le confort, la posture et peut causer des douleurs dorsales. Notre expertise en changement de mousse professionnelle garantit un confort optimal et une durée de vie prolongée de vos mobiliers.</p>
+
+      <div class="info-box">
+        <p>🪑 <strong>Rénovation complète :</strong> Découvrez nos services de <a href="/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure" style="color: var(--ac-primary); font-weight: 600;">retapissage professionnel</a>, <a href="/conseils/tapisserie-nautique-ignifuge-carthage-tanit-ferry" style="color: var(--ac-primary); font-weight: 600;">tapisserie spécialisée</a> et obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis personnalisé</a>.</p>
+      </div>
+
+      <div class="related-services">
+        <p>🔗 <strong>Expertise associée :</strong> Maîtrisez l'<a href="/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet" style="color: var(--ac-primary); font-weight: 600;">entretien du mobilier</a>, découvrez le <a href="/conseils/nettoyage-salons-voiture-tapisseries-tunis" style="color: var(--ac-primary); font-weight: 600;">nettoyage professionnel</a> et consultez nos guides <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">techniques spécialisées</a>.</p>
+      </div>
+
+      <h2 id="signes-remplacement">🔍 Quand Changer la Mousse de vos Sièges ?</h2>
+
+      <h3>Signes d'Usure Évidents</h3>
+      <p>Plusieurs indicateurs révèlent qu'un changement de mousse s'impose :</p>
+      
+      <ul>
+        <li><strong>Affaissement visible :</strong> Creux permanent après utilisation</li>
+        <li><strong>Perte de fermeté :</strong> Mousse qui ne reprend plus sa forme</li>
+        <li><strong>Inconfort progressif :</strong> Douleurs après position assise prolongée</li>
+        <li><strong>Déformation asymétrique :</strong> Usure inégale, soutien insuffisant</li>
+        <li><strong>Âge avancé :</strong> Plus de 8-10 ans d'usage intensif</li>
+      </ul>
+
+      <h3>Impact sur la Santé et Productivité</h3>
+      <p>Une mousse défaillante affecte directement :</p>
+      
+      <div class="health-impact">
+        <div class="impact-category">
+          <h4>🦴 Posture</h4>
+          <p>Mauvais alignement vertébral, compensation musculaire</p>
+        </div>
+        
+        <div class="impact-category">
+          <h4>💼 Productivité</h4>
+          <p>Inconfort, distractions, pauses fréquentes</p>
+        </div>
+        
+        <div class="impact-category">
+          <h4>🏥 Santé</h4>
+          <p>TMS, lombalgies, fatigue chronique</p>
+        </div>
+      </div>
+
+      <h2 id="types-mousses">🧽 Types de Mousses Professionnelles</h2>
+
+      <h3>Mousse Polyuréthane Standard</h3>
+      <div class="foam-spec">
+        <p><strong>Densité :</strong> 25-35 kg/m³</p>
+        <p><strong>Durée de vie :</strong> 5-7 ans</p>
+        <p><strong>Usage :</strong> Dossiers, accoudoirs, usage occasionnel</p>
+        <p><strong>Avantages :</strong> Économique, souple, facile à travailler</p>
+        <p><strong>Inconvénients :</strong> Durabilité limitée en usage intensif</p>
+      </div>
+
+      <h3>Mousse Haute Résilience (HR)</h3>
+      <div class="foam-spec premium">
+        <p><strong>Densité :</strong> 35-50 kg/m³</p>
+        <p><strong>Durée de vie :</strong> 10-15 ans</p>
+        <p><strong>Usage :</strong> Assises professionnelles, usage intensif</p>
+        <p><strong>Avantages :</strong> Excellente résilience, maintien durable</p>
+        <p><strong>Spécialité :</strong> Résistance à la déformation permanente</p>
+      </div>
+
+      <h3>Mousse Viscoélastique (Mémoire de Forme)</h3>
+      <div class="foam-spec luxury">
+        <p><strong>Densité :</strong> 40-80 kg/m³</p>
+        <p><strong>Durée de vie :</strong> 8-12 ans</p>
+        <p><strong>Usage :</strong> Confort premium, ergonomie médicale</p>
+        <p><strong>Avantages :</strong> Adaptation morphologique, répartition pression</p>
+        <p><strong>Idéal pour :</strong> Sièges directoriaux, postes sensibles</p>
+      </div>
+
+      <h2 id="processus-changement">🔧 Processus de Changement Professionnel</h2>
+
+      <h3>Étape 1 : Diagnostic et Évaluation</h3>
+      <p>Notre intervention commence par une analyse complète :</p>
+      
+      <ol>
+        <li><strong>Inspection de la structure :</strong> Vérification châssis, ressorts, sangles</li>
+        <li><strong>Mesure de l'affaissement :</strong> Quantification de l'usure</li>
+        <li><strong>Analyse de l'usage :</strong> Fréquence, poids utilisateurs, contraintes</li>
+        <li><strong>Choix de la mousse :</strong> Sélection selon besoins et budget</li>
+      </ol>
+
+      <h3>Étape 2 : Démontage Méthodique</h3>
+      <p>Le démontage suit un protocole précis :</p>
+      
+      <ul>
+        <li><strong>Photos de référence :</strong> Documentation pour remontage identique</li>
+        <li><strong>Dépose du tissu :</strong> Préservation si réutilisable</li>
+        <li><strong>Retrait mousse usagée :</strong> Nettoyage complet de la structure</li>
+        <li><strong>Inspection structure :</strong> Réparations éventuelles</li>
+      </ul>
+
+      <h3>Étape 3 : Découpe et Façonnage Sur Mesure</h3>
+      <p>La mousse neuve est travaillée avec précision :</p>
+      
+      <div class="cutting-process">
+        <div class="cutting-step">
+          <h4>📏 Relevé de Cotes</h4>
+          <p>Mesures exactes, gabarits de découpe</p>
+        </div>
+        
+        <div class="cutting-step">
+          <h4>✂️ Découpe Professionnelle</h4>
+          <p>Outils électriques, découpe nette et précise</p>
+        </div>
+        
+        <div class="cutting-step">
+          <h4>🎯 Façonnage 3D</h4>
+          <p>Angles, courbes, évidements techniques</p>
+        </div>
+        
+        <div class="cutting-step">
+          <h4>🔗 Assemblage Multi-Densités</h4>
+          <p>Combinaisons pour confort optimal</p>
+        </div>
+      </div>
+
+      <h3>Étape 4 : Installation et Finitions</h3>
+      <p>La pose finale garantit la qualité :</p>
+      
+      <ul>
+        <li><strong>Positionnement précis :</strong> Centrage, alignement parfait</li>
+        <li><strong>Fixation professionnelle :</strong> Adhésifs spécialisés, agrafage</li>
+        <li><strong>Tension optimale :</strong> Éviter plis et déformations</li>
+        <li><strong>Contrôle qualité :</strong> Tests de confort et durabilité</li>
+      </ul>
+
+      <h2 id="applications-sectorielles">🏢 Applications par Secteur</h2>
+
+      <h3>Bureaux et Espaces Tertiaires</h3>
+      <p>Rénovation massive pour améliorer conditions de travail :</p>
+      
+      <ul>
+        <li><strong>Fauteuils direction :</strong> Mousse viscoélastique premium</li>
+        <li><strong>Sièges employés :</strong> Mousse HR densité adaptée</li>
+        <li><strong>Chaises réunion :</strong> Confort pour séances prolongées</li>
+        <li><strong>Banquettes accueil :</strong> Résistance usage public</li>
+      </ul>
+
+      <h3>Secteur Médical</h3>
+      <p>Exigences spécifiques santé et hygiène :</p>
+      
+      <ul>
+        <li><strong>Mousses antibactériennes :</strong> Traitement antimicrobien</li>
+        <li><strong>Facilité de nettoyage :</strong> Surfaces lisses, imperméables</li>
+        <li><strong>Confort thérapeutique :</strong> Soutien spécialisé patients</li>
+        <li><strong>Durabilité renforcée :</strong> Usage intensif 24h/24</li>
+      </ul>
+
+      <h3>Hôtellerie et Restauration</h3>
+      <p>Esthétique et résistance pour usage commercial :</p>
+      
+      <ul>
+        <li><strong>Banquettes restaurant :</strong> Résistance taches et usure</li>
+        <li><strong>Fauteuils lobby :</strong> Confort et prestance</li>
+        <li><strong>Sièges bar :</strong> Mousse ferme, nettoyage facile</li>
+        <li><strong>Mobilier extérieur :</strong> Mousses imputrescibles</li>
+      </ul>
+
+      <h2 id="avantages-renovation">💪 Avantages de la Rénovation vs Achat Neuf</h2>
+
+      <h3>Économies Substantielles</h3>
+      <p>La rénovation représente 40-60% d'économies :</p>
+      
+      <div class="savings-comparison">
+        <div class="cost-item">
+          <h4>Fauteuil Bureau Neuf</h4>
+          <p>800-2000 DT selon gamme</p>
+        </div>
+        
+        <div class="cost-item">
+          <h4>Changement Mousse CCI</h4>
+          <p>150-400 DT selon complexité</p>
+        </div>
+        
+        <div class="cost-item">
+          <h4>Économie Réalisée</h4>
+          <p>50-75% vs achat neuf</p>
+        </div>
+      </div>
+
+      <h3>Bénéfices Environnementaux</h3>
+      <ul>
+        <li><strong>Réduction déchets :</strong> Éviter décharge, valoriser existant</li>
+        <li><strong>Économie matières :</strong> Moins de production, transport</li>
+        <li><strong>Empreinte carbone :</strong> Impact écologique réduit</li>
+        <li><strong>Économie circulaire :</strong> Prolongation de vie produits</li>
+      </ul>
+
+      <h3>Préservation du Patrimoine</h3>
+      <ul>
+        <li><strong>Mobilier de valeur :</strong> Garder pièces authentiques</li>
+        <li><strong>Continuité esthétique :</strong> Cohérence décoration</li>
+        <li><strong>Amélioration performance :</strong> Mousse moderne, confort supérieur</li>
+        <li><strong>Personnalisation :</strong> Adapter aux besoins actuels</li>
+      </ul>
+
+      <h2 id="garanties-maintenance">🛡️ Garanties et Maintenance CCI</h2>
+
+      <h3>Garantie Matériaux et Main d'Œuvre</h3>
+      <ul>
+        <li><strong>Mousse HR :</strong> 2 ans contre affaissement prématuré</li>
+        <li><strong>Installation :</strong> 1 an sur la pose et fixations</li>
+        <li><strong>Satisfaction client :</strong> Retouches gratuites si nécessaire</li>
+        <li><strong>Conseil post-installation :</strong> Optimisation usage et entretien</li>
+      </ul>
+
+      <h3>Programme de Maintenance Préventive</h3>
+      <p>Prolongez la durée de vie avec notre suivi :</p>
+      
+      <ul>
+        <li><strong>Contrôle annuel :</strong> Vérification état, conseils d'usage</li>
+        <li><strong>Retouches ponctuelles :</strong> Ajustements mineurs inclus</li>
+        <li><strong>Planning de renouvellement :</strong> Anticipation besoins futurs</li>
+        <li><strong>Tarifs préférentiels :</strong> Remises pour clients fidèles</li>
+      </ul>
+
+      <div class="contact-section">
+        <h2 id="contact">📞 Votre Projet de Changement de Mousse</h2>
+        
+        <p>Redonnez confort et durabilité à vos sièges professionnels !</p>
+        <p><strong>Contactez CCI Services pour votre changement de mousse :</strong></p>
+        
+        <div class="contact-buttons">
+          <a href="tel:+21698557766" class="btn-phone">
+            📱 +216 98-557-766
+          </a>
+          <a href="mailto:contact@cciservices.online" class="btn-email">
+            📧 contact@cciservices.online
+          </a>
+          <a href="/tapisserie" class="btn-website">
+            🪑 Services rénovation
+          </a>
+        </div>
+        
+        <div class="contact-info">
+          <p><strong>CCI Services - Expert Changement Mousse Tunis</strong></p>
+          <p>📍 06 Rue Galant de nuit, L'Aouina, Tunis 2045</p>
+          <p>🕒 Lun-Ven: 8h-18h | Sam: 8h-13h</p>
+          <p><strong>Mousse HR • Installation Pro • Garantie 2 ans • Économies 50-75%</strong></p>
+        </div>
+      </div>
+    `
   }
 ];
 

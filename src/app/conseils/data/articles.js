@@ -4855,7 +4855,7 @@ export const articles = [
   // Article local SEO pour Ariana
   {
     id: 58,
-    slug: 'nettoyage-professionnel-El Aouina-cci-services',
+    slug: 'nettoyage-professionnel-el-aouina-cci-services',
     title: 'Nettoyage Professionnel El Aouina : Services CCI à Domicile',
     metaTitle: 'Nettoyage Professionnel El Aouina | CCI Services | Devis Gratuit',
     metaDescription: 'Nettoyage professionnel El Aouina ✓ Moquettes, salon, marbre ✓ Intervention rapide ✓ Devis gratuit ✓ CCI Services +216 98 557 766',

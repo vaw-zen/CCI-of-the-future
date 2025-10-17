@@ -10,9 +10,11 @@ export function useConseilsLogic() {
   const [activeFilter, setActiveFilter] = useState(categoryParam || 'all');
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [featuredArticles, setFeaturedArticles] = useState([]);
+  const [isClient, setIsClient] = useState(false);
 
   const isMobile = dimensionsStore((state) => state.isMobile());
 
+  // Use consistent filter order - start with desktop filters to avoid hydration mismatch
   const desktopFilters = [
     { key: 'all', label: '🔍 Tous les guides', category: null },
     { key: 'tapis', label: '🧽 Nettoyage Tapis', category: 'tapis' },
@@ -29,7 +31,13 @@ export function useConseilsLogic() {
     { key: 'tapisserie', label: '🛋️ Nettoyage Tapisserie', category: 'tapisserie' }
   ];
 
-  const filters = isMobile ? mobileFilters : desktopFilters;
+  // Always use desktop filters during SSR to prevent hydration mismatch
+  const filters = isClient && isMobile ? mobileFilters : desktopFilters;
+
+  // Set client flag after hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const allArticles = getAllArticles();
@@ -75,6 +83,7 @@ export function useConseilsLogic() {
     filteredArticles,
     featuredArticles,
     filters,
-    handleFilterClick
+    handleFilterClick,
+    isClient
   };
 }

@@ -46,7 +46,7 @@ export default function ConseilsClient() {
           }
           {activeFilter !== 'all' && (
             <span className={styles.activeCategory}>
-              • {filters.find(f => f.key === activeFilter)?.label}
+              / {filters.find(f => f.key === activeFilter)?.label}
             </span>
           )}
         </p>

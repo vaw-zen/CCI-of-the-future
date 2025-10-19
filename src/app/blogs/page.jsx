@@ -152,55 +152,80 @@ export default async function Page() {
         "@type": "ItemList",
         "name": "Publications et Reels CCI",
         "description": "Liste complète de nos publications et vidéos",
-        "numberOfItems": posts.length + reels.length,
+        "numberOfItems": posts.filter(post => post && post.id).length + reels.filter(reel => reel && reel.id).length,
         "itemListElement": [
           // Map posts
-          ...posts.map((post, index) => ({
-            "@type": "ListItem",
-            "position": index + 1,
-            "item": {
-              "@type": "Article",
-              "@id": post.permalink_url,
-              "headline": post.title || post.message?.slice(0, 100) || "Publication CCI",
-              "description": post.message?.slice(0, 200) || "Publication Facebook partagée sur CCI",
-              "image": post.attachments?.[0]?.src || undefined,
-              "datePublished": post.created_time,
-              "author": {
-                "@type": "Organization",
-                "name": "CCI Services"
-              },
-              "publisher": {
-                "@type": "Organization",
-                "name": "CCI Services",
-                "logo": {
-                  "@type": "ImageObject",
-                  "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/logo.png`
+          ...posts
+            .filter(post => post && post.id) // Only process posts with valid ID
+            .map((post, index) => {
+              // Ensure all required fields are valid
+              const headline = post.title || (post.message && post.message.trim() ? 
+                post.message.slice(0, 100) : 
+                "Publication CCI Services - Nettoyage Professionnel");
+              
+              const description = post.message && post.message.trim() ? 
+                post.message.slice(0, 200) : 
+                "Découvrez nos services de nettoyage professionnel. CCI Services, experts en entretien de tapis, marbre et intérieur automobile à Tunis.";
+              
+              const datePublished = post.created_time || new Date().toISOString();
+              const articleId = post.permalink_url || `https://cciservices.online/blogs#post-${post.id}`;
+              
+              // Ensure image URL is valid with fallback
+              const imageUrl = post.attachments?.[0]?.src || getVideoPlaceholderDataUrl();
+              
+              return {
+                "@type": "ListItem",
+                "position": index + 1,
+                  "item": {
+                    "@type": "Article",
+                    "@id": articleId,
+                    "headline": headline,
+                    "description": description,
+                    "image": imageUrl,
+                    "url": articleId,
+                    "datePublished": datePublished,
+                  "author": {
+                    "@type": "Organization",
+                    "name": "CCI Services"
+                  },
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "CCI Services",
+                    "logo": {
+                      "@type": "ImageObject",
+                      "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/logo.png`
+                    }
+                  },
+                  "interactionStatistic": [
+                    {
+                      "@type": "InteractionCounter",
+                      "interactionType": "https://schema.org/LikeAction",
+                      "userInteractionCount": post.likes || 0
+                    },
+                    {
+                      "@type": "InteractionCounter",
+                      "interactionType": "https://schema.org/CommentAction",
+                      "userInteractionCount": post.comments || 0
+                    }
+                  ],
+                  "mainEntityOfPage": articleId
                 }
-              },
-              "interactionStatistic": [
-                {
-                  "@type": "InteractionCounter",
-                  "interactionType": "https://schema.org/LikeAction",
-                  "userInteractionCount": post.likes || 0
-                },
-                {
-                  "@type": "InteractionCounter",
-                  "interactionType": "https://schema.org/CommentAction",
-                  "userInteractionCount": post.comments || 0
-                }
-              ],
-              "mainEntityOfPage": post.permalink_url
-            }
-          })),
+              };
+            }),
           
           // Map reels as VideoObject references
-          ...reels.map((reel, index) => ({
-            "@type": "ListItem",
-            "position": posts.length + index + 1,
-            "item": {
-              "@id": reel.permalink_url
-            }
-          }))
+          ...reels
+            .filter(reel => reel && reel.id) // Only process reels with valid ID
+            .map((reel, index) => {
+              const validPostsCount = posts.filter(post => post && post.id).length;
+              return {
+                "@type": "ListItem",
+                "position": validPostsCount + index + 1,
+                "item": {
+                  "@id": reel.permalink_url || `https://cciservices.online/blogs#reel-${reel.id}`
+                }
+              };
+            })
         ]
       }
     ]

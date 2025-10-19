@@ -133,12 +133,9 @@ export async function generateStaticParams() {
 }
 
 // Main page component
-export default async function ReelPage({ params, searchParams }) {
+export default async function ReelPage({ params }) {
   const { id } = await params;
   const reel = await getReelData(id);
-  
-  // Check if this is an embed request (for video:player_loc)
-  const isEmbed = searchParams?.embed === 'true';
 
   if (!reel) {
     notFound();
@@ -205,30 +202,6 @@ export default async function ReelPage({ params, searchParams }) {
       "Tunis"
     ].join(", ")
   };
-
-  // If embed mode, return minimal player view
-  if (isEmbed) {
-    return (
-      <div style={{ 
-        width: '100vw', 
-        height: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        backgroundColor: '#000'
-      }}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
-          }}
-        />
-        <Suspense fallback={<LoadingSkeleton />}>
-          <ReelPlayer reel={reel} />
-        </Suspense>
-      </div>
-    );
-  }
 
   return (
     <main className={styles.main} itemScope itemType="https://schema.org/VideoObject">

@@ -20,6 +20,7 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.cdninstagram.com' },
       { protocol: 'https', hostname: 'www.bouthouri.co' },
       { protocol: 'https', hostname: 'uploads-ssl.webflow.com' },
+      { protocol: 'https', hostname: 'cciservices.online' },
     ],
     qualities: [75, 80, 90, 100],
   },

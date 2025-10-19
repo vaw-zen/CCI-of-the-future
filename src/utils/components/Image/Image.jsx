@@ -20,7 +20,15 @@ const ResponsiveImage = ({
     onClick,
     onKeyDown,
     role,
-    tabIndex
+    tabIndex,
+    // Microdata attributes for structured data
+    itemProp,
+    itemScope,
+    itemType,
+    itemRef,
+    itemID,
+    // Catch any other attributes
+    ...otherProps
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     // Track whether we're rendering on the client
@@ -77,6 +85,14 @@ const ResponsiveImage = ({
             tabIndex={tabIndex}
             onClick={onClick}
             onKeyDown={onKeyDown}
+            // Pass through microdata attributes
+            itemProp={itemProp}
+            itemScope={itemScope}
+            itemType={itemType}
+            itemRef={itemRef}
+            itemID={itemID}
+            // Pass through any other attributes
+            {...otherProps}
         >
             {hasValidSrc && (
                 <Image

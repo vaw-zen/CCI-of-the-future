@@ -668,31 +668,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                       </div>
                     </div>
 
-                    {/* 🔥 JSON-LD Metadata for SEO */}
-                    <script
-                      type="application/ld+json"
-                      dangerouslySetInnerHTML={{
-                        __html: JSON.stringify({
-                          "@context": "https://schema.org",
-                          "@type": "VideoObject",
-                          name: reel.message && reel.message.trim() ? 
-                            reel.message : 
-                            "Reel vidéo CCI Services",
-                          description: reel.message && reel.message.trim() ? 
-                            reel.message.slice(0, 150) : 
-                            "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.",
-                          thumbnailUrl: reel.thumbnail || getVideoPlaceholderDataUrl(),
-                          uploadDate: reel.created_time || new Date().toISOString(),
-                          contentUrl: reel.video_url || reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`,
-                          embedUrl: reel.permalink_url || reel.video_url || `https://www.facebook.com/watch/?v=${reel.id}`,
-                          interactionStatistic: {
-                            "@type": "InteractionCounter",
-                            interactionType: "https://schema.org/WatchAction",
-                            userInteractionCount: reel.views || 0,
-                          },
-                        }),
-                      }}
-                    />
+                    {/* Note: VideoObject structured data is handled by the main page to avoid duplicates */}
                   </div>
                 );
               })}

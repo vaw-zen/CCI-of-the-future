@@ -128,27 +128,7 @@ const PostsGrid = ({ initialPosts = null, initialPostsPaging = null }) => {
                   id={post.id}
                 />
 
-                {/* 🔥 JSON-LD Metadata for SEO */}
-                <script
-                  type="application/ld+json"
-                  dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                      "@context": "https://schema.org",
-                      "@type": "Article",
-                      headline: post.title || "Publication CCI",
-                      description: post.message?.slice(0, 150) || "Publication Facebook partagée sur CCI",
-                      image: post.attachments?.[0]?.src || undefined,
-                      datePublished: post.created_time,
-                      interactionStatistic: {
-                        "@type": "InteractionCounter",
-                        interactionType: "https://schema.org/LikeAction",
-                        userInteractionCount: post.likes || 0,
-                      },
-                      commentCount: post.comments || 0,
-                      mainEntityOfPage: post.permalink_url,
-                    }),
-                  }}
-                />
+                {/* Note: Article structured data is handled by the main page to avoid duplicates */}
               </div>
             )) :
             <div className={styles['posts-grid-empty']}>

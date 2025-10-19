@@ -30,7 +30,43 @@ function escapeXml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
+    .replace(/'/g, '&apos;')
+    // Additional safety for any remaining special characters
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ''); // Remove control characters
+}
+
+// Fonction pour nettoyer les caractères Unicode problématiques
+function cleanUnicodeForXml(str) {
+  if (!str) return '';
+  
+  // First, normalize the string to handle Unicode properly
+  let cleaned = str.normalize('NFD');
+  
+  // Remove or replace problematic Unicode characters that cause GSC issues
+  cleaned = cleaned
+    // Fix common emoji and special characters
+    .replace(/[✨🎥🧽🧼🏠💼⭐️👍💪📞📧🌐📍]/g, '') // Remove emojis
+    .replace(/â¨/g, '') // Remove corrupted sparkles
+    .replace(/ð/g, '') // Remove corrupted emojis
+    .replace(/Ã©/g, 'é') // Fix é
+    .replace(/Ã¨/g, 'è') // Fix è
+    .replace(/Ã /g, 'à') // Fix à
+    .replace(/Ã´/g, 'ô') // Fix ô
+    .replace(/Ã¢/g, 'â') // Fix â
+    .replace(/Ã/g, 'À') // Fix À
+    .replace(/â/g, "'") // Fix apostrophes
+    .replace(/â/g, "'") // Fix apostrophes
+    .replace(/â/g, '"') // Fix quotes
+    .replace(/â/g, '"') // Fix quotes
+    .replace(/â/g, '-') // Fix dashes
+    // Remove any remaining non-printable or problematic characters
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+    .replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F\u1E00-\u1EFF]/g, '') // Keep only Latin characters
+    // Clean up whitespace
+    .replace(/\s+/g, ' ')
+    .trim();
+  
+  return cleaned;
 }
 
 // Fonction pour formater la date en format ISO
@@ -57,8 +93,8 @@ export async function GET() {
     <priority>0.7</priority>
     <video:video>
       <video:thumbnail_loc>${baseUrl}/api/thumbnails/${reel.id}</video:thumbnail_loc>
-      <video:title>${escapeXml(reel.message || 'Reel CCI Services')}</video:title>
-      <video:description>${escapeXml((reel.message || 'Vidéo reel publiée par CCI Services').slice(0, 2048))}</video:description>
+      <video:title>${escapeXml(cleanUnicodeForXml(reel.message || 'Reel CCI Services'))}</video:title>
+      <video:description>${escapeXml(cleanUnicodeForXml((reel.message || 'Vidéo reel publiée par CCI Services').slice(0, 2048)))}</video:description>
       <video:content_loc>${escapeXml(reel.video_url || `${baseUrl}/api/video/${reel.id}`)}</video:content_loc>
       <video:player_loc>${escapeXml(`${baseUrl}/reels/${reel.id}?player=embed`)}</video:player_loc>
       ${reel.length ? `<video:duration>${Math.round(reel.length)}</video:duration>` : '<video:duration>30</video:duration>'}
@@ -66,9 +102,9 @@ export async function GET() {
       <video:family_friendly>yes</video:family_friendly>
       <video:live>no</video:live>
       <video:requires_subscription>no</video:requires_subscription>
-      <video:uploader info="${baseUrl}">CCI Services</video:uploader>
+      <video:uploader info="${escapeXml(baseUrl)}">CCI Services</video:uploader>
       <video:platform relationship="allow">web mobile</video:platform>
-      ${reel.views ? `<video:view_count>${reel.views}</video:view_count>` : ''}
+      ${reel.views ? `<video:view_count>${Math.round(reel.views)}</video:view_count>` : ''}
       <video:tag>nettoyage professionnel</video:tag>
       <video:tag>services CCI</video:tag>
       <video:tag>entretien</video:tag>

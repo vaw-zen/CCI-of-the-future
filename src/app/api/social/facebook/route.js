@@ -109,9 +109,33 @@ function normalizeFbReels(raw) {
       thumbnail = getVideoPlaceholderDataUrl();
     }
 
+    // Clean Unicode characters from message/description
+    const cleanMessage = item.description ? 
+      item.description
+        .normalize('NFD')
+        .replace(/[✨🎥🧽🧼🏠💼⭐️👍💪📞📧🌐📍]/g, '') // Remove emojis
+        .replace(/â¨/g, '') // Remove corrupted sparkles
+        .replace(/ð/g, '') // Remove corrupted emojis  
+        .replace(/Ã©/g, 'é') // Fix é
+        .replace(/Ã¨/g, 'è') // Fix è
+        .replace(/Ã /g, 'à') // Fix à
+        .replace(/Ã´/g, 'ô') // Fix ô
+        .replace(/Ã¢/g, 'â') // Fix â
+        .replace(/Ã/g, 'À') // Fix À
+        .replace(/â/g, "'") // Fix apostrophes
+        .replace(/â/g, "'") // Fix apostrophes
+        .replace(/â/g, '"') // Fix quotes
+        .replace(/â/g, '"') // Fix quotes
+        .replace(/â/g, '-') // Fix dashes
+        .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+        .replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F\u1E00-\u1EFF]/g, '') // Keep only Latin characters
+        .replace(/\s+/g, ' ')
+        .trim() 
+      : null;
+
     return {
       id: item.id,
-      message: item.description || null,
+      message: cleanMessage,
       created_time: item.created_time || null,
       permalink_url: item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Always provide a valid URL
       video_url: item.source || item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Fallback chain

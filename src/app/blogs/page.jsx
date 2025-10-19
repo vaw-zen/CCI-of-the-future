@@ -92,8 +92,8 @@ export default async function Page() {
       ...reels
         .filter(reel => reel && reel.id) // Only process reels with valid ID
         .map((reel) => {
-          // Ensure thumbnail URL is valid for structured data
-          const thumbnailUrl = reel.thumbnail || getVideoPlaceholderDataUrl();
+          // Ensure valid thumbnail URL for structured data (Google requires HTTP(S) URLs)
+          const thumbnailUrl = reel.thumbnail || "https://cciservices.online/logo.png";
           
           // Ensure contentUrl and embedUrl are valid - Google requires at least one
           // Add fallback Facebook watch URL if both are missing

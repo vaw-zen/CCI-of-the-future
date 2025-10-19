@@ -8,6 +8,40 @@ import blogsData from "./blogs.json";
 import ResponsiveImage from '@/utils/components/Image/Image';
 import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 
+// Helper function to clean Unicode characters for structured data
+function cleanUnicodeForStructuredData(str) {
+  if (!str) return '';
+  
+  // First, normalize the string to handle Unicode properly
+  let cleaned = str.normalize('NFD');
+  
+  // Remove or replace problematic Unicode characters that cause GSC issues
+  cleaned = cleaned
+    // Fix common emoji and special characters
+    .replace(/[✨🎥🧽🧼🏠💼⭐️👍💪📞📧🌐📍🛠️🎯✔️📩]/g, '') // Remove emojis
+    .replace(/â¨/g, '') // Remove corrupted sparkles
+    .replace(/ð/g, '') // Remove corrupted emojis
+    .replace(/Ã©/g, 'é') // Fix é
+    .replace(/Ã¨/g, 'è') // Fix è
+    .replace(/Ã /g, 'à') // Fix à
+    .replace(/Ã´/g, 'ô') // Fix ô
+    .replace(/Ã¢/g, 'â') // Fix â
+    .replace(/Ã/g, 'À') // Fix À
+    .replace(/â/g, "'") // Fix apostrophes
+    .replace(/â/g, "'") // Fix apostrophes
+    .replace(/â/g, '"') // Fix quotes
+    .replace(/â/g, '"') // Fix quotes
+    .replace(/â/g, '-') // Fix dashes
+    // Remove any remaining non-printable or problematic characters
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+    .replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F\u1E00-\u1EFF]/g, '') // Keep only Latin characters
+    // Clean up whitespace
+    .replace(/\s+/g, ' ')
+    .trim();
+  
+  return cleaned;
+}
+
 // Fetch initial data on the server for SEO
 async function getInitialData() {
   try {
@@ -98,7 +132,7 @@ export default async function Page() {
           
           // Clean description for structured data (remove problematic Unicode characters)
           const cleanDescription = reel.message && reel.message.trim() ? 
-            reel.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 200) : 
+            cleanUnicodeForStructuredData(reel.message).slice(0, 200) : 
             "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.";
           
           // Ensure contentUrl and embedUrl are valid - Google requires at least one
@@ -114,7 +148,7 @@ export default async function Page() {
             "@type": "VideoObject",
             "@id": `https://cciservices.online/blogs#video-${reel.id}`, // Unique ID for blogs collection
             "name": reel.message && reel.message.trim() ? 
-              reel.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 100) : 
+              cleanUnicodeForStructuredData(reel.message).slice(0, 100) : 
               "Reel vidéo CCI Services",
             "description": cleanDescription,
             "thumbnailUrl": localThumbnailUrl,
@@ -260,8 +294,8 @@ export default async function Page() {
             
             return (
             <article key={reel.id} itemScope itemType="https://schema.org/VideoObject">
-              <h3 itemProp="name">{reel.message || 'Reel vidéo CCI Services'}</h3>
-              <p itemProp="description">{reel.message}</p>
+              <h3 itemProp="name">{cleanUnicodeForStructuredData(reel.message) || 'Reel vidéo CCI Services'}</h3>
+              <p itemProp="description">{cleanUnicodeForStructuredData(reel.message)}</p>
               <time itemProp="uploadDate" dateTime={reel.created_time}>
                 {new Date(reel.created_time).toLocaleDateString()}
               </time>

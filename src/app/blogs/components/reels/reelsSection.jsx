@@ -675,8 +675,10 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         __html: JSON.stringify({
                           "@context": "https://schema.org",
                           "@type": "VideoObject",
-                          name: reel.message || "Reel vidéo",
-                          description: reel.message?.slice(0, 150) || "Reel publié sur CCI",
+                          name: reel.message || "Reel vidéo CCI Services",
+                          description: reel.message && reel.message.trim() ? 
+                            reel.message.slice(0, 150) : 
+                            "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.",
                           thumbnailUrl: reel.thumbnail || getVideoPlaceholderDataUrl(),
                           uploadDate: reel.created_time,
                           contentUrl: reel.video_url || reel.permalink_url,

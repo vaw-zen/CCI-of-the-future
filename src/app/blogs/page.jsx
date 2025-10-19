@@ -101,7 +101,9 @@ export default async function Page() {
           "@type": "VideoObject",
           "@id": reel.permalink_url || `https://cciservices.online/blogs#reel-${reel.id}`,
           "name": reel.message || "Reel vidéo CCI Services",
-          "description": reel.message?.slice(0, 200) || "Vidéo reel publiée par CCI Services",
+          "description": reel.message && reel.message.trim() ? 
+            reel.message.slice(0, 200) : 
+            "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.",
           "thumbnailUrl": thumbnailUrl,
           "uploadDate": reel.created_time,
           "contentUrl": contentUrl,

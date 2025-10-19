@@ -31,6 +31,10 @@ const ReelPlayer = ({ reel }) => {
     parseHashtags
   } = useReelPlayerLogic(reel);
 
+  // Use local thumbnail URL
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  const localThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`;
+
   return (
          <>
           <ServiceDetails title={extractTitle(reel.message)} text={""} />
@@ -57,7 +61,7 @@ const ReelPlayer = ({ reel }) => {
         <video
           ref={videoRef}
           className={styles.video}
-          poster={reel.thumbnail}
+          poster={localThumbnailUrl}
           preload="metadata"
           playsInline
           onLoadedMetadata={handleLoadedMetadata}

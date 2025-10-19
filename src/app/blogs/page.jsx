@@ -92,8 +92,9 @@ export default async function Page() {
       ...reels
         .filter(reel => reel && reel.id) // Only process reels with valid ID
         .map((reel) => {
-          // Ensure valid thumbnail URL for structured data (Google requires HTTP(S) URLs)
-          const thumbnailUrl = reel.thumbnail || "https://cciservices.online/logo.png";
+          // Use local thumbnail URL for structured data (Google requires HTTP(S) URLs)
+          const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+          const localThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`;
           
           // Clean description for structured data (remove problematic Unicode characters)
           const cleanDescription = reel.message && reel.message.trim() ? 
@@ -116,7 +117,7 @@ export default async function Page() {
               reel.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 100) : 
               "Reel vidéo CCI Services",
             "description": cleanDescription,
-            "thumbnailUrl": thumbnailUrl,
+            "thumbnailUrl": localThumbnailUrl,
             "uploadDate": uploadDate,
             "contentUrl": contentUrl,
             "embedUrl": embedUrl,
@@ -253,7 +254,11 @@ export default async function Page() {
         {/* Section dédiée aux vidéos avec titre explicite */}
         <section>
           <h2>Vidéos et Reels CCI Services</h2>
-          {reels.map((reel) => (
+          {reels.map((reel) => {
+            const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+            const localThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`;
+            
+            return (
             <article key={reel.id} itemScope itemType="https://schema.org/VideoObject">
               <h3 itemProp="name">{reel.message || 'Reel vidéo CCI Services'}</h3>
               <p itemProp="description">{reel.message}</p>
@@ -262,7 +267,7 @@ export default async function Page() {
               </time>
               <video 
                 itemProp="contentUrl"
-                poster={reel.thumbnail || getVideoPlaceholderDataUrl()}
+                poster={localThumbnailUrl}
                 width="320" 
                 height="240"
                 controls
@@ -270,13 +275,14 @@ export default async function Page() {
                 <source src={reel.video_url} type="video/mp4" />
                 Votre navigateur ne supporte pas les vidéos HTML5.
               </video>
-              <ResponsiveImage itemProp="thumbnailUrl" src={reel.thumbnail || getVideoPlaceholderDataUrl()} alt="Aperçu vidéo" sizes={[25, 30, 35]} />
+              <ResponsiveImage itemProp="thumbnailUrl" src={localThumbnailUrl} alt="Aperçu vidéo" sizes={[25, 30, 35]} />
               <span itemProp="duration" content={reel.length ? `PT${Math.round(reel.length)}S` : "PT30S"}>
                 {reel.length ? `${Math.round(reel.length)}s` : "30s"}
               </span>
               <a href={reel.permalink_url} itemProp="url">Voir sur Facebook</a>
             </article>
-          ))}
+            );
+          })}
         </section>
         
         {/* Section dédiée aux publications */}

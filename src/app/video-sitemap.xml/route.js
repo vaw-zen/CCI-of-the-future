@@ -44,7 +44,7 @@ export async function GET() {
     const reels = await getReelsData();
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
 
-    // Générer le XML du sitemap vidéo avec des URLs distinctes
+    // Use thumbnail proxy API for reliable access
     const videoSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">${reels.map(reel => {
@@ -56,7 +56,7 @@ export async function GET() {
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <video:video>
-      <video:thumbnail_loc>${escapeXml(reel.thumbnail)}</video:thumbnail_loc>
+      <video:thumbnail_loc>${baseUrl}/api/thumbnails/${reel.id}</video:thumbnail_loc>
       <video:title>${escapeXml(reel.message || 'Reel CCI Services')}</video:title>
       <video:description>${escapeXml((reel.message || 'Vidéo reel publiée par CCI Services').slice(0, 2048))}</video:description>
       <video:content_loc>${escapeXml(reel.video_url || `${baseUrl}/api/video/${reel.id}`)}</video:content_loc>

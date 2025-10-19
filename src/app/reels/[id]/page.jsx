@@ -54,6 +54,9 @@ export async function generateMetadata({ params }) {
     `${reel.message.slice(0, 150)}...` : 
     'Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et intérieur automobile à Tunis.';
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  const localThumbnailUrl = `${baseUrl}/api/thumbnails/${id}`; // Use API endpoint
+
   return {
     title,
     description,
@@ -63,14 +66,14 @@ export async function generateMetadata({ params }) {
       description,
       type: 'video.other',
       url: `https://cciservices.online/reels/${id}`,
-      images: reel.thumbnail ? [
+      images: [
         {
-          url: reel.thumbnail,
+          url: localThumbnailUrl,
           width: 720,
           height: 1280,
           alt: title,
         }
-      ] : undefined,
+      ],
       videos: reel.video_url ? [
         {
           url: reel.video_url,
@@ -84,7 +87,7 @@ export async function generateMetadata({ params }) {
       card: 'player',
       title,
       description,
-      images: reel.thumbnail ? [reel.thumbnail] : undefined,
+      images: [localThumbnailUrl],
       players: reel.video_url ? [
         {
           playerUrl: reel.video_url,
@@ -139,7 +142,9 @@ export default async function ReelPage({ params }) {
   }
 
   // Ensure valid thumbnail URL for structured data (Google requires HTTP(S) URLs)
-  const thumbnailUrl = reel.thumbnail || "https://cciservices.online/logo.png";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  const localThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`; // Use API endpoint for reliable access
+  const thumbnailUrl = localThumbnailUrl; // Always use local thumbnail for GSC compatibility
 
   // Clean description for structured data (remove problematic Unicode characters)
   const cleanDescription = reel.message && reel.message.trim() ? 

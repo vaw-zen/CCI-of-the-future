@@ -19,17 +19,35 @@ function normalizeFbPosts(raw) {
   if (!raw || !Array.isArray(raw.data)) return [];
   return raw.data.map(item => {
     const attachments = [];
+    let attachmentSources = [];
+    
     if (item.attachments && Array.isArray(item.attachments.data)) {
       for (const att of item.attachments.data) {
-        if (att.media?.image?.src) attachments.push(att.media.image.src);
-        else if (att.media_url) attachments.push(att.media_url);
-        else if (att.subattachments?.data) {
+        if (att.media?.image?.src) {
+          attachments.push(att.media.image.src);
+          attachmentSources.push('media.image.src');
+        } else if (att.media_url) {
+          attachments.push(att.media_url);
+          attachmentSources.push('media_url');
+        } else if (att.subattachments?.data) {
           for (const sub of att.subattachments.data) {
-            if (sub.media?.image?.src) attachments.push(sub.media.image.src);
-            else if (sub.media_url) attachments.push(sub.media_url);
+            if (sub.media?.image?.src) {
+              attachments.push(sub.media.image.src);
+              attachmentSources.push('subattachments.media.image.src');
+            } else if (sub.media_url) {
+              attachments.push(sub.media_url);
+              attachmentSources.push('subattachments.media_url');
+            }
           }
         }
       }
+    }
+
+    // Log posts without attachments
+    if (attachments.length === 0 && item.attachments?.data?.length > 0) {
+      console.log(`🚨 POST MISSING MEDIA - Post ID: ${item.id}, Created: ${item.created_time}`);
+      console.log(`   Message preview: ${(item.message || '').substring(0, 100)}...`);
+      console.log(`   Attachments structure:`, JSON.stringify(item.attachments, null, 2));
     }
 
     return {
@@ -37,8 +55,10 @@ function normalizeFbPosts(raw) {
       message: item.message || null,
       created_time: item.created_time || null,
       permalink_url: item.permalink_url || null,
-      
       attachments,
+      attachment_sources: attachmentSources, // Track where attachments came from
+      has_attachments: item.attachments?.data?.length > 0,
+      attachment_count: attachments.length,
     };
   });
 }
@@ -61,16 +81,31 @@ function normalizeFbReels(raw) {
       }
     }
 
-    // Ensure we always have a valid thumbnail URL
+    // Check all possible thumbnail sources
     let thumbnail = item.picture || item.thumbnails?.data?.[0]?.uri || null;
+    let thumbnailSource = 'none';
+    let originalThumbnail = thumbnail;
     
-    // If no thumbnail from Facebook, create a fallback using our video icon
+    if (item.picture) {
+      thumbnailSource = 'picture';
+    } else if (item.thumbnails?.data?.[0]?.uri) {
+      thumbnailSource = 'thumbnails.data[0].uri';
+    }
+    
+    // Log items missing thumbnails for debugging
     if (!thumbnail) {
+      console.log(`🚨 MISSING THUMBNAIL - Reel ID: ${item.id}, Created: ${item.created_time}`);
+      console.log(`   Available fields:`, Object.keys(item));
+      console.log(`   Picture:`, item.picture);
+      console.log(`   Thumbnails:`, item.thumbnails);
+      thumbnailSource = 'fallback-placeholder';
       thumbnail = getVideoPlaceholderDataUrl();
     }
 
     // Validate that the thumbnail is a proper URL or data URL
     if (thumbnail && !thumbnail.startsWith('http') && !thumbnail.startsWith('data:')) {
+      console.log(`🔧 INVALID THUMBNAIL FORMAT - Reel ID: ${item.id}, Invalid thumbnail: ${thumbnail}`);
+      thumbnailSource = 'fallback-placeholder';
       thumbnail = getVideoPlaceholderDataUrl();
     }
 
@@ -81,6 +116,8 @@ function normalizeFbReels(raw) {
       permalink_url: item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Always provide a valid URL
       video_url: item.source || item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Fallback chain
       thumbnail: thumbnail, // Always provide a valid thumbnail URL
+      thumbnail_source: thumbnailSource, // Track where thumbnail came from
+      original_thumbnail: originalThumbnail, // Keep original for debugging
       views: item.views?.summary?.total_count || views,
       engaged_users: engaged,
       likes: item.likes?.summary?.total_count || 0,

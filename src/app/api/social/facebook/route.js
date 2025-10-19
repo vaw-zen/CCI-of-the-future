@@ -78,8 +78,8 @@ function normalizeFbReels(raw) {
       id: item.id,
       message: item.description || null,
       created_time: item.created_time || null,
-      permalink_url: item.perma_link || item.permalink_url || null, // Use perma_link first (full URL)
-      video_url: item.source || null, // direct video link
+      permalink_url: item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Always provide a valid URL
+      video_url: item.source || item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Fallback chain
       thumbnail: thumbnail, // Always provide a valid thumbnail URL
       views:item.views?.summary?.total_count || views,
       engaged_users: engaged,

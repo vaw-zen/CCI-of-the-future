@@ -93,15 +93,19 @@ export default async function Page() {
         // Ensure thumbnail URL is valid for structured data
         const thumbnailUrl = reel.thumbnail || getVideoPlaceholderDataUrl();
         
+        // Ensure contentUrl and embedUrl are valid - Google requires at least one
+        const contentUrl = reel.video_url || reel.permalink_url;
+        const embedUrl = reel.permalink_url || reel.video_url;
+        
         return {
           "@type": "VideoObject",
-          "@id": reel.permalink_url,
+          "@id": reel.permalink_url || `https://cciservices.online/blogs#reel-${reel.id}`,
           "name": reel.message || "Reel vidéo CCI Services",
           "description": reel.message?.slice(0, 200) || "Vidéo reel publiée par CCI Services",
           "thumbnailUrl": thumbnailUrl,
           "uploadDate": reel.created_time,
-          "contentUrl": reel.video_url,
-          "embedUrl": reel.permalink_url,
+          "contentUrl": contentUrl,
+          "embedUrl": embedUrl,
           "duration": reel.length ? `PT${Math.round(reel.length)}S` : "PT30S",
           "publisher": {
             "@type": "Organization",

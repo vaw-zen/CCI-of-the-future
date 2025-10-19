@@ -679,7 +679,8 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                           description: reel.message?.slice(0, 150) || "Reel publié sur CCI",
                           thumbnailUrl: reel.thumbnail || getVideoPlaceholderDataUrl(),
                           uploadDate: reel.created_time,
-                          contentUrl: reel.video_url,
+                          contentUrl: reel.video_url || reel.permalink_url,
+                          embedUrl: reel.permalink_url || reel.video_url,
                           interactionStatistic: {
                             "@type": "InteractionCounter",
                             interactionType: "https://schema.org/WatchAction",

@@ -90,13 +90,13 @@ export async function GET() {
     <loc>${baseUrl}/reels/${reel.id}</loc>
     <lastmod>${formatDate(reel.created_time)}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
     <video:video>
       <video:thumbnail_loc>${baseUrl}/api/thumbnails/${reel.id}</video:thumbnail_loc>
       <video:title>${escapeXml(cleanUnicodeForXml(reel.message || 'Reel CCI Services'))}</video:title>
       <video:description>${escapeXml(cleanUnicodeForXml(reel.message || 'Vidéo reel publiée par CCI Services'))}</video:description>
       <video:content_loc>${escapeXml(reel.video_url || `${baseUrl}/api/video/${reel.id}`)}</video:content_loc>
-      <video:player_loc>${escapeXml(`${baseUrl}/reels/${reel.id}?player=embed`)}</video:player_loc>
+      <video:player_loc>${escapeXml(`${baseUrl}/reels/${reel.id}`)}</video:player_loc>
       ${reel.length ? `<video:duration>${Math.round(reel.length)}</video:duration>` : '<video:duration>30</video:duration>'}
       <video:publication_date>${formatDate(reel.created_time)}</video:publication_date>
       <video:family_friendly>yes</video:family_friendly>

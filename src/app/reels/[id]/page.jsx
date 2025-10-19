@@ -204,13 +204,36 @@ export default async function ReelPage({ params }) {
   };
 
   return (
-    <main className={styles.main}>
+    <main className={styles.main} itemScope itemType="https://schema.org/VideoObject">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(structuredData),
         }}
       />
+      
+      {/* Hidden microdata for GSC */}
+      <div style={{ display: 'none' }} aria-hidden="true">
+        <h1 itemProp="name">{reel.message && reel.message.trim() ? 
+          reel.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 100) : 
+          "Reel vidéo CCI Services"}</h1>
+        <p itemProp="description">{cleanDescription}</p>
+        <img itemProp="thumbnailUrl" src={thumbnailUrl} alt="Video thumbnail" />
+        <time itemProp="uploadDate" dateTime={reel.created_time || new Date().toISOString()}>
+          {new Date(reel.created_time || new Date()).toLocaleDateString()}
+        </time>
+        <span itemProp="duration" content={reel.length ? `PT${Math.round(reel.length)}S` : "PT30S"}>
+          {reel.length ? `${Math.round(reel.length)}s` : "30s"}
+        </span>
+        <div itemProp="interactionStatistic" itemScope itemType="https://schema.org/InteractionCounter">
+          <span itemProp="interactionType" content="https://schema.org/WatchAction">Views</span>
+          <span itemProp="userInteractionCount">{reel.views || 0}</span>
+        </div>
+        <div itemProp="publisher" itemScope itemType="https://schema.org/Organization">
+          <span itemProp="name">CCI Services</span>
+          <span itemProp="url">https://cciservices.online</span>
+        </div>
+      </div>
       
       <HeroHeader title="Reel CCI Services" />
  

@@ -1,34 +1,16 @@
 User-agent: *
 Allow: /
-Disallow: /wp-admin/
-Disallow: /private/
-Disallow: /admin/
-Disallow: /api/
-Disallow: /*?s=*
-Disallow: /*search*
-Disallow: /_next/
-Disallow: /404
-Disallow: /500
 
-# Allow important resources
-Allow: /sitemap.xml
-Allow: /sitemap-index.xml
-Allow: /articles-sitemap.xml
-Allow: /posts-sitemap.xml
-Allow: /video-sitemap.xml
-Allow: /robots.txt
-Allow: /favicon.ico
-Allow: /logo.png
-Allow: /icons/
-Allow: /gallery/
-Allow: /home/
+# Sitemaps
+Sitemap: https://cciservices.online/sitemap.xml
+Sitemap: https://cciservices.online/video-sitemap.xml
 
-# Crawl delay for better server performance
+# Allow important API endpoints
+Allow: /api/thumbnails/
+Allow: /api/social/
+
+# Crawl-delay for better indexing
 Crawl-delay: 1
 
-Sitemap: https://cciservices.online/sitemap.xml
-Sitemap: https://cciservices.online/articles-sitemap.xml
-Sitemap: https://cciservices.online/posts-sitemap.xml
-Sitemap: https://cciservices.online/video-sitemap.xml
-Sitemap: https://cciservices.online/sitemap-index.xml
+# Host directive
 Host: https://cciservices.online

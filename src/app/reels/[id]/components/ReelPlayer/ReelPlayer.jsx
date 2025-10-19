@@ -65,6 +65,7 @@ const ReelPlayer = ({ reel }) => {
           poster={userFacingThumbnailUrl}
           preload="metadata"
           playsInline
+          itemProp="contentUrl"
           onLoadedMetadata={handleLoadedMetadata}
           onPlay={handlePlay}
           onPause={handlePause}

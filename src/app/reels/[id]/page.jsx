@@ -149,7 +149,7 @@ export default async function ReelPage({ params }) {
     "description": reel.message && reel.message.trim() ? 
       reel.message.slice(0, 500) : 
       "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.",
-    "thumbnailUrl": reel.thumbnail || getVideoPlaceholderDataUrl(),
+    "thumbnailUrl": reel.thumbnail || "https://cciservices.online/logo.png", // Always use HTTP(S) URL for Google
     "uploadDate": reel.created_time || new Date().toISOString(),
     "contentUrl": reel.video_url || reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`,
     "embedUrl": reel.permalink_url || reel.video_url || `https://www.facebook.com/watch/?v=${reel.id}`,

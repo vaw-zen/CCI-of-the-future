@@ -163,20 +163,21 @@ export default async function Page() {
           ...posts
             .filter(post => post && post.id) // Only process posts with valid ID
             .map((post, index) => {
-              // Ensure all required fields are valid
-              const headline = post.title || (post.message && post.message.trim() ? 
-                post.message.slice(0, 100) : 
+              // Clean headline for structured data (remove problematic Unicode characters)
+              const cleanHeadline = post.title || (post.message && post.message.trim() ? 
+                post.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 100) : 
                 "Publication CCI Services - Nettoyage Professionnel");
               
-              const description = post.message && post.message.trim() ? 
-                post.message.slice(0, 200) : 
+              // Clean description for structured data (remove problematic Unicode characters)
+              const cleanDescription = post.message && post.message.trim() ? 
+                post.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 200) : 
                 "Découvrez nos services de nettoyage professionnel. CCI Services, experts en entretien de tapis, marbre et intérieur automobile à Tunis.";
               
               const datePublished = post.created_time || new Date().toISOString();
               const articleId = post.permalink_url || `https://cciservices.online/blogs#post-${post.id}`;
               
-              // Ensure image URL is valid with fallback
-              const imageUrl = post.attachments?.[0]?.src || getVideoPlaceholderDataUrl();
+              // Ensure image URL is valid with fallback (use proper HTTP(S) URL)
+              const imageUrl = post.attachments?.[0]?.src || "https://cciservices.online/logo.png";
               
               return {
                 "@type": "ListItem",
@@ -184,8 +185,8 @@ export default async function Page() {
                   "item": {
                     "@type": "Article",
                     "@id": articleId,
-                    "headline": headline,
-                    "description": description,
+                    "headline": cleanHeadline,
+                    "description": cleanDescription,
                     "image": imageUrl,
                     "url": articleId,
                     "datePublished": datePublished,

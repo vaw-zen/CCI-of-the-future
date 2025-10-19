@@ -500,7 +500,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         }}
                         className={styles['reel-image']}
                         data-src={getBestVideoUrl(reel)}
-                        poster={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`}
+                        poster={reel.thumbnail || reel.original_thumbnail || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`}
                         controls={false}
                         preload="none"
                         playsInline

@@ -291,6 +291,8 @@ export default async function Page() {
           {reels.map((reel) => {
             const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
             const localThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`;
+            // Use Facebook CDN for user-facing images (performance), local for structured data (SEO)
+            const userFacingThumbnailUrl = reel.thumbnail || reel.original_thumbnail || localThumbnailUrl;
             
             return (
             <article key={reel.id} itemScope itemType="https://schema.org/VideoObject">
@@ -301,7 +303,7 @@ export default async function Page() {
               </time>
               <video 
                 itemProp="contentUrl"
-                poster={localThumbnailUrl}
+                poster={userFacingThumbnailUrl}
                 width="320" 
                 height="240"
                 controls
@@ -309,6 +311,7 @@ export default async function Page() {
                 <source src={reel.video_url} type="video/mp4" />
                 Votre navigateur ne supporte pas les vidéos HTML5.
               </video>
+              {/* Use local thumbnail for SEO/structured data, Facebook CDN would fail for search engines */}
               <ResponsiveImage itemProp="thumbnailUrl" src={localThumbnailUrl} alt="Aperçu vidéo" sizes={[25, 30, 35]} />
               <span itemProp="duration" content={reel.length ? `PT${Math.round(reel.length)}S` : "PT30S"}>
                 {reel.length ? `${Math.round(reel.length)}s` : "30s"}

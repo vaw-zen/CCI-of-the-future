@@ -31,9 +31,10 @@ const ReelPlayer = ({ reel }) => {
     parseHashtags
   } = useReelPlayerLogic(reel);
 
-  // Use local thumbnail URL
+  // Hybrid thumbnail approach: Facebook CDN for performance, local for SEO fallback
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   const localThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`;
+  const userFacingThumbnailUrl = reel.thumbnail || reel.original_thumbnail || localThumbnailUrl;
 
   return (
          <>
@@ -61,7 +62,7 @@ const ReelPlayer = ({ reel }) => {
         <video
           ref={videoRef}
           className={styles.video}
-          poster={localThumbnailUrl}
+          poster={userFacingThumbnailUrl}
           preload="metadata"
           playsInline
           onLoadedMetadata={handleLoadedMetadata}

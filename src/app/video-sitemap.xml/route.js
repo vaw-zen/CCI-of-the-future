@@ -96,7 +96,7 @@ export async function GET() {
       <video:title>${escapeXml(cleanUnicodeForXml(reel.message || 'Reel CCI Services'))}</video:title>
       <video:description>${escapeXml(cleanUnicodeForXml(reel.message || 'Vidéo reel publiée par CCI Services'))}</video:description>
       <video:content_loc>${escapeXml(reel.video_url || `https://www.facebook.com/watch/?v=${reel.id}`)}</video:content_loc>
-      <video:player_loc allow_embed="yes">${escapeXml(reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`)}</video:player_loc>
+      <video:player_loc allow_embed="yes">${escapeXml(`https://www.facebook.com/watch/?v=${reel.id}`)}</video:player_loc>
       ${reel.length ? `<video:duration>${Math.round(reel.length)}</video:duration>` : '<video:duration>30</video:duration>'}
       <video:publication_date>${formatDate(reel.created_time)}</video:publication_date>
       <video:family_friendly>yes</video:family_friendly>

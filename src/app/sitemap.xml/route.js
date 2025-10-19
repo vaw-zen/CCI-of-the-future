@@ -1,27 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAllArticles } from '../conseils/data/articles';
 
-// Fonction pour récupérer les reels
-async function getReelsForSitemap() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-    
-    const response = await fetch(`${baseUrl}/api/social/facebook?reels_limit=50`, {
-      next: { revalidate: 3600 }
-    });
 
-    if (!response.ok) {
-      console.error('Failed to fetch reels for sitemap');
-      return [];
-    }
-
-    const data = await response.json();
-    return data.reels || [];
-  } catch (error) {
-    console.error('Error fetching reels for sitemap:', error);
-    return [];
-  }
-}
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
@@ -30,8 +10,7 @@ export async function GET() {
   // Récupérer tous les articles dynamiquement
   const articles = getAllArticles();
   
-  // Récupérer tous les reels dynamiquement
-  const reels = await getReelsForSitemap();
+
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -141,14 +120,7 @@ export async function GET() {
     <changefreq>monthly</changefreq>
     <priority>${article.featured ? '0.90' : '0.85'}</priority>
   </url>`).join('')}
-  <!-- Reels individuels - Générés dynamiquement -->
-  ${reels.map(reel => `
-  <url>
-    <loc>${baseUrl}/reels/${reel.id}</loc>
-    <lastmod>${reel.created_time ? new Date(reel.created_time).toISOString().split('T')[0] : currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>`).join('')}
+
 </urlset>`;
 
   return new NextResponse(sitemap, {

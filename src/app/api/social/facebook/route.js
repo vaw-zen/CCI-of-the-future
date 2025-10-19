@@ -61,8 +61,11 @@ function normalizeFbReels(raw) {
       }
     }
 
-    // Ensure we always have a valid thumbnail URL
-    let thumbnail = item.picture || item.thumbnails?.data?.[0]?.uri || null;
+    // Ensure we always have a valid thumbnail URL - try multiple Facebook sources
+    let thumbnail = item.picture || // Primary source for video thumbnails
+                   item.thumbnails?.data?.[0]?.uri || // Secondary source from thumbnails field
+                   item.thumbnail || // Fallback if already processed
+                   null;
     
     // If no thumbnail from Facebook, create a fallback using our video icon
     if (!thumbnail) {
@@ -76,12 +79,12 @@ function normalizeFbReels(raw) {
 
     return {
       id: item.id,
-      message: item.description || null,
+      message: item.description || item.message || null, // Try description first, then message
       created_time: item.created_time || null,
-      permalink_url: item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Always provide a valid URL
-      video_url: item.source || item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Fallback chain
+      permalink_url: item.permalink_url || item.perma_link || `https://www.facebook.com/watch/?v=${item.id}`, // Always provide a valid URL
+      video_url: item.source || item.video_url || `https://www.facebook.com/watch/?v=${item.id}`, // Fallback chain for video URL
       thumbnail: thumbnail, // Always provide a valid thumbnail URL
-      views:item.views?.summary?.total_count || views,
+      views: item.views?.summary?.total_count || views,
       engaged_users: engaged,
       likes: item.likes?.summary?.total_count || 0,
       comments: item.comments?.summary?.total_count || 0,
@@ -120,7 +123,7 @@ export async function GET(request) {
     let fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
     if (postsLimit) fbPostsUrl += `&limit=${postsLimit}`;
     if (postsAfter) fbPostsUrl += `&after=${encodeURIComponent(postsAfter)}`;
-    let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,perma_link,source,description,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,perma_link,source,description,picture,thumbnails{data{uri}},insights.metric(video_views,post_engaged_users),likes.summary(true),comments.summary(true),shares,length,views&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
     if (reelsLimit) fbReelsUrl += `&limit=${reelsLimit}`;
     if (reelsAfter) fbReelsUrl += `&after=${encodeURIComponent(reelsAfter)}`;
 

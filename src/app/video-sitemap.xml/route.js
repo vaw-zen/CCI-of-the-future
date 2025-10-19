@@ -94,7 +94,7 @@ export async function GET() {
     <video:video>
       <video:thumbnail_loc>${baseUrl}/api/thumbnails/${reel.id}</video:thumbnail_loc>
       <video:title>${escapeXml(cleanUnicodeForXml(reel.message || 'Reel CCI Services'))}</video:title>
-      <video:description>${escapeXml(cleanUnicodeForXml((reel.message || 'Vidéo reel publiée par CCI Services').slice(0, 2048)))}</video:description>
+      <video:description>${escapeXml(cleanUnicodeForXml(reel.message || 'Vidéo reel publiée par CCI Services'))}</video:description>
       <video:content_loc>${escapeXml(reel.video_url || `${baseUrl}/api/video/${reel.id}`)}</video:content_loc>
       <video:player_loc>${escapeXml(`${baseUrl}/reels/${reel.id}?player=embed`)}</video:player_loc>
       ${reel.length ? `<video:duration>${Math.round(reel.length)}</video:duration>` : '<video:duration>30</video:duration>'}

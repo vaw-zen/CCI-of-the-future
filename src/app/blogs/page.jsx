@@ -132,7 +132,7 @@ export default async function Page() {
           
           // Clean description for structured data (remove problematic Unicode characters)
           const cleanDescription = reel.message && reel.message.trim() ? 
-            cleanUnicodeForStructuredData(reel.message).slice(0, 200) : 
+            cleanUnicodeForStructuredData(reel.message) : 
             "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.";
           
           // Ensure contentUrl and embedUrl are valid - Google requires at least one
@@ -205,7 +205,7 @@ export default async function Page() {
               
               // Clean description for structured data (remove problematic Unicode characters)
               const cleanDescription = post.message && post.message.trim() ? 
-                post.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 200) : 
+                post.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '') : 
                 "Découvrez nos services de nettoyage professionnel. CCI Services, experts en entretien de tapis, marbre et intérieur automobile à Tunis.";
               
               const datePublished = post.created_time || new Date().toISOString();

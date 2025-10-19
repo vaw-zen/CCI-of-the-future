@@ -13,22 +13,26 @@ async function getInitialData() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
     
-    // Fetch both posts and reels in a single optimized API call
-    const response = await fetch(`${baseUrl}/api/social/facebook?posts_limit=6&reels_limit=6`, { 
-      next: { revalidate: 3600 } // Revalidate every hour (ISR)
-    });
+    // Fetch both posts and reels in parallel
+    const [postsRes, reelsRes] = await Promise.all([
+      fetch(`${baseUrl}/api/social/facebook?posts_limit=6`, { 
+        next: { revalidate: 3600 } // Revalidate every hour (ISR)
+      }),
+      fetch(`${baseUrl}/api/social/facebook?reels_limit=6`, { 
+        next: { revalidate: 3600 } // Revalidate every hour (ISR)
+      })
+    ]);
 
-    if (!response.ok) {
-      return { posts: [], reels: [] };
-    }
-
-    const data = await response.json();
+    const [postsData, reelsData] = await Promise.all([
+      postsRes.ok ? postsRes.json() : { posts: [], posts_paging: null },
+      reelsRes.ok ? reelsRes.json() : { reels: [], reels_paging: null }
+    ]);
 
     return {
-      posts: data.posts || [],
-      postsPaging: data.posts_paging || null,
-      reels: data.reels || [],
-      reelsPaging: data.reels_paging || null
+      posts: postsData.posts || [],
+      postsPaging: postsData.posts_paging || null,
+      reels: reelsData.reels || [],
+      reelsPaging: reelsData.reels_paging || null
     };
   } catch (error) {
     console.error('Error fetching initial data:', error);
@@ -88,8 +92,8 @@ export default async function Page() {
       ...reels
         .filter(reel => reel && reel.id) // Only process reels with valid ID
         .map((reel) => {
-          // Ensure reliable thumbnail URL for structured data (Google-accessible URLs only)
-          const thumbnailUrl = "https://cciservices.online/mission.jpg"; // Use static image that Google can reliably access
+          // Ensure valid thumbnail URL for structured data (Google requires HTTP(S) URLs)
+          const thumbnailUrl = reel.thumbnail || "https://cciservices.online/logo.png";
           
           // Clean description for structured data (remove problematic Unicode characters)
           const cleanDescription = reel.message && reel.message.trim() ? 
@@ -172,8 +176,8 @@ export default async function Page() {
               const datePublished = post.created_time || new Date().toISOString();
               const articleId = post.permalink_url || `https://cciservices.online/blogs#post-${post.id}`;
               
-              // Ensure reliable image URL for structured data (Google-accessible URLs only)
-              const imageUrl = "https://cciservices.online/logo.png"; // Use static image that Google can reliably access
+              // Ensure image URL is valid with fallback (use proper HTTP(S) URL)
+              const imageUrl = post.attachments?.[0]?.src || "https://cciservices.online/logo.png";
               
               return {
                 "@type": "ListItem",

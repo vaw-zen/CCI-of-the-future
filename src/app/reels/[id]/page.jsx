@@ -138,8 +138,8 @@ export default async function ReelPage({ params }) {
     notFound();
   }
 
-  // Ensure valid thumbnail URL for structured data (Google requires HTTP(S) URLs)
-  const thumbnailUrl = reel.thumbnail || "https://cciservices.online/logo.png";
+  // Ensure reliable thumbnail URL for structured data (Google-accessible URLs only)
+  const thumbnailUrl = "https://cciservices.online/logo.png"; // Use static image that Google can reliably access
 
   // Clean description for structured data (remove problematic Unicode characters)
   const cleanDescription = reel.message && reel.message.trim() ? 

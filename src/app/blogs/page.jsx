@@ -6,6 +6,7 @@ import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import styles from "./blog.module.css";
 import blogsData from "./blogs.json";
 import ResponsiveImage from '@/utils/components/Image/Image';
+import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 
 // Fetch initial data on the server for SEO
 async function getInitialData() {
@@ -88,45 +89,50 @@ export default async function Page() {
       blogsData.collectionPageJSONLD,
       
       // Separate VideoObject for each reel (plus visible)
-      ...reels.map((reel) => ({
-        "@type": "VideoObject",
-        "@id": reel.permalink_url,
-        "name": reel.message || "Reel CCI Services",
-        "description": reel.message?.slice(0, 200) || "Vidéo reel publiée par CCI Services",
-        "thumbnailUrl": reel.thumbnail,
-        "uploadDate": reel.created_time,
-        "contentUrl": reel.video_url,
-        "embedUrl": reel.permalink_url,
-        "duration": reel.length ? `PT${Math.round(reel.length)}S` : "PT30S",
-        "publisher": {
-          "@type": "Organization",
-          "name": "CCI Services",
-          "logo": {
-            "@type": "ImageObject",
-            "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/logo.png`
-          }
-        },
-        "author": {
-          "@type": "Organization",
-          "name": "CCI Services"
-        },
-        "interactionStatistic": [
-          {
-            "@type": "InteractionCounter",
-            "interactionType": "https://schema.org/WatchAction",
-            "userInteractionCount": reel.views || 0
+      ...reels.map((reel) => {
+        // Ensure thumbnail URL is valid for structured data
+        const thumbnailUrl = reel.thumbnail || getVideoPlaceholderDataUrl();
+        
+        return {
+          "@type": "VideoObject",
+          "@id": reel.permalink_url,
+          "name": reel.message || "Reel vidéo CCI Services",
+          "description": reel.message?.slice(0, 200) || "Vidéo reel publiée par CCI Services",
+          "thumbnailUrl": thumbnailUrl,
+          "uploadDate": reel.created_time,
+          "contentUrl": reel.video_url,
+          "embedUrl": reel.permalink_url,
+          "duration": reel.length ? `PT${Math.round(reel.length)}S` : "PT30S",
+          "publisher": {
+            "@type": "Organization",
+            "name": "CCI Services",
+            "logo": {
+              "@type": "ImageObject",
+              "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/logo.png`
+            }
           },
-          {
-            "@type": "InteractionCounter",
-            "interactionType": "https://schema.org/LikeAction",
-            "userInteractionCount": reel.likes || 0
+          "author": {
+            "@type": "Organization",
+            "name": "CCI Services"
+          },
+          "interactionStatistic": [
+            {
+              "@type": "InteractionCounter",
+              "interactionType": "https://schema.org/WatchAction",
+              "userInteractionCount": reel.views || 0
+            },
+            {
+              "@type": "InteractionCounter",
+              "interactionType": "https://schema.org/LikeAction",
+              "userInteractionCount": reel.likes || 0
+            }
+          ],
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/blogs`
           }
-        ],
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/blogs`
-        }
-      })),
+        };
+      }),
       
       // ItemList for all content
       {
@@ -212,7 +218,7 @@ export default async function Page() {
               </time>
               <video 
                 itemProp="contentUrl"
-                poster={reel.thumbnail}
+                poster={reel.thumbnail || getVideoPlaceholderDataUrl()}
                 width="320" 
                 height="240"
                 controls
@@ -220,7 +226,7 @@ export default async function Page() {
                 <source src={reel.video_url} type="video/mp4" />
                 Votre navigateur ne supporte pas les vidéos HTML5.
               </video>
-              <ResponsiveImage itemProp="thumbnailUrl" src={reel.thumbnail} alt="Aperçu vidéo" sizes={[25, 30, 35]} />
+              <ResponsiveImage itemProp="thumbnailUrl" src={reel.thumbnail || getVideoPlaceholderDataUrl()} alt="Aperçu vidéo" sizes={[25, 30, 35]} />
               <span itemProp="duration" content={reel.length ? `PT${Math.round(reel.length)}S` : "PT30S"}>
                 {reel.length ? `${Math.round(reel.length)}s` : "30s"}
               </span>

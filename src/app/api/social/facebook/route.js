@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 
 const FB_API_VERSION = process.env.FB_API_VERSION || 'v17.0';
 const FB_PAGE_ID = process.env.FB_PAGE_ID;
@@ -60,13 +61,26 @@ function normalizeFbReels(raw) {
       }
     }
 
+    // Ensure we always have a valid thumbnail URL
+    let thumbnail = item.picture || item.thumbnails?.data?.[0]?.uri || null;
+    
+    // If no thumbnail from Facebook, create a fallback using our video icon
+    if (!thumbnail) {
+      thumbnail = getVideoPlaceholderDataUrl();
+    }
+
+    // Validate that the thumbnail is a proper URL or data URL
+    if (thumbnail && !thumbnail.startsWith('http') && !thumbnail.startsWith('data:')) {
+      thumbnail = getVideoPlaceholderDataUrl();
+    }
+
     return {
       id: item.id,
       message: item.description || null,
       created_time: item.created_time || null,
       permalink_url: item.perma_link || item.permalink_url || null, // Use perma_link first (full URL)
       video_url: item.source || null, // direct video link
-      thumbnail: item.picture || item.thumbnails?.data?.[0]?.uri || null, // preview image
+      thumbnail: thumbnail, // Always provide a valid thumbnail URL
       views:item.views?.summary?.total_count || views,
       engaged_users: engaged,
       likes: item.likes?.summary?.total_count || 0,

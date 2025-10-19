@@ -7,6 +7,7 @@ import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, Bi
 import { useReelsSection } from './reelsSection.func'
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
 import useAutoHeightTransition from '@/libs/useAutoHeightTransition/useAutoHeightTransition';
+import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 
 const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
   const {
@@ -499,7 +500,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         }}
                         className={styles['reel-image']}
                         data-src={getBestVideoUrl(reel)}
-                        poster={reel.thumbnail}
+                        poster={reel.thumbnail || getVideoPlaceholderDataUrl()}
                         controls={false}
                         preload="none"
                         playsInline
@@ -676,7 +677,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                           "@type": "VideoObject",
                           name: reel.message || "Reel vidéo",
                           description: reel.message?.slice(0, 150) || "Reel publié sur CCI",
-                          thumbnailUrl: reel.thumbnail,
+                          thumbnailUrl: reel.thumbnail || getVideoPlaceholderDataUrl(),
                           uploadDate: reel.created_time,
                           contentUrl: reel.video_url,
                           interactionStatistic: {

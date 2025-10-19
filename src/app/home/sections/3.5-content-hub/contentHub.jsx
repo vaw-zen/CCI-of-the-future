@@ -48,7 +48,7 @@ export default function ContentHub({ className = '' }) {
 
                 {/* Featured Articles Preview */}
                 <div className={styles.featuredSection}>
-                    <h4 className={styles.featuredTitle}>Articles Populaires</h4>
+                    <h4 className={styles.featuredTitle}>Nos Articles Populaires</h4>
                     <div className={styles.featuredGrid}>
                         {content.featuredArticles.map((article, index) => (
                             <Link key={index} href={article.link} className={styles.featuredCard}>

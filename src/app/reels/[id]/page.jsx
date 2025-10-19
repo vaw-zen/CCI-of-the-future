@@ -9,6 +9,7 @@ import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import styles from "../../blogs/blog.module.css";
 import ServiceDetails from '@/utils/components/servicesComponents/serviceDetails/serviceDetails';
+import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 
 // Fetch single reel data
 async function getReelData(reelId) {
@@ -45,11 +46,11 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const title = reel.message ? 
+  const title = reel.message && reel.message.trim() ? 
     `${reel.message.slice(0, 50)}... | CCI Services Reels` : 
     'Reel CCI Services - Nettoyage Professionnel';
     
-  const description = reel.message ? 
+  const description = reel.message && reel.message.trim() ? 
     `${reel.message.slice(0, 150)}...` : 
     'Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et intérieur automobile à Tunis.';
 
@@ -141,12 +142,14 @@ export default async function ReelPage({ params }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
-    "name": reel.message || "Reel CCI Services",
-    "description": (reel.message || "Vidéo reel publiée par CCI Services").slice(0, 500),
-    "thumbnailUrl": reel.thumbnail,
+    "name": reel.message || "Reel vidéo CCI Services",
+    "description": reel.message && reel.message.trim() ? 
+      reel.message.slice(0, 500) : 
+      "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.",
+    "thumbnailUrl": reel.thumbnail || getVideoPlaceholderDataUrl(),
     "uploadDate": reel.created_time,
-    "contentUrl": reel.video_url,
-    "embedUrl": reel.permalink_url,
+    "contentUrl": reel.video_url || reel.permalink_url,
+    "embedUrl": reel.permalink_url || reel.video_url,
     "duration": reel.length ? `PT${Math.round(reel.length)}S` : "PT30S",
     "publisher": {
       "@type": "Organization",

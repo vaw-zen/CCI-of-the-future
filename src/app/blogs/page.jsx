@@ -95,6 +95,11 @@ export default async function Page() {
           // Ensure valid thumbnail URL for structured data (Google requires HTTP(S) URLs)
           const thumbnailUrl = reel.thumbnail || "https://cciservices.online/logo.png";
           
+          // Clean description for structured data (remove problematic Unicode characters)
+          const cleanDescription = reel.message && reel.message.trim() ? 
+            reel.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 200) : 
+            "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.";
+          
           // Ensure contentUrl and embedUrl are valid - Google requires at least one
           // Add fallback Facebook watch URL if both are missing
           const fallbackUrl = `https://www.facebook.com/watch/?v=${reel.id}`;
@@ -108,11 +113,9 @@ export default async function Page() {
             "@type": "VideoObject",
             "@id": `https://cciservices.online/blogs#video-${reel.id}`, // Unique ID for blogs collection
             "name": reel.message && reel.message.trim() ? 
-              reel.message : 
+              reel.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 100) : 
               "Reel vidéo CCI Services",
-            "description": reel.message && reel.message.trim() ? 
-              reel.message.slice(0, 200) : 
-              "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.",
+            "description": cleanDescription,
             "thumbnailUrl": thumbnailUrl,
             "uploadDate": uploadDate,
             "contentUrl": contentUrl,

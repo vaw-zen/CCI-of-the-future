@@ -117,35 +117,18 @@ export async function GET(request) {
       });
     }
 
-    // Determine what to fetch based on parameters
-    const fetchPosts = postsLimit || postsAfter || (!reelsLimit && !reelsAfter); // Fetch posts if posts requested OR if nothing specific requested
-    const fetchReels = reelsLimit || reelsAfter || (!postsLimit && !postsAfter); // Fetch reels if reels requested OR if nothing specific requested
+    let fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    if (postsLimit) fbPostsUrl += `&limit=${postsLimit}`;
+    if (postsAfter) fbPostsUrl += `&after=${encodeURIComponent(postsAfter)}`;
+    let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,perma_link,source,description,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    if (reelsLimit) fbReelsUrl += `&limit=${reelsLimit}`;
+    if (reelsAfter) fbReelsUrl += `&after=${encodeURIComponent(reelsAfter)}`;
 
-    const promises = [];
-    let fbPostsUrl, fbReelsUrl;
-
-    // Only build and fetch posts URL if needed
-    if (fetchPosts) {
-      fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
-      if (postsLimit) fbPostsUrl += `&limit=${postsLimit}`;
-      if (postsAfter) fbPostsUrl += `&after=${encodeURIComponent(postsAfter)}`;
-      promises.push(fetchJson(fbPostsUrl));
-    } else {
-      promises.push(Promise.resolve({ data: [] })); // Empty posts response
-    }
-
-    // Only build and fetch reels URL if needed
-    if (fetchReels) {
-      fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,perma_link,source,description,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
-      if (reelsLimit) fbReelsUrl += `&limit=${reelsLimit}`;
-      if (reelsAfter) fbReelsUrl += `&after=${encodeURIComponent(reelsAfter)}`;
-      promises.push(fetchJson(fbReelsUrl));
-    } else {
-      promises.push(Promise.resolve({ data: [] })); // Empty reels response
-    }
-
-    // Fetch both in parallel (or just one if the other is not needed)
-    const [facebookPosts, facebookReels] = await Promise.all(promises);
+    // Fetch both in parallel
+    const [facebookPosts, facebookReels] = await Promise.all([
+      fetchJson(fbPostsUrl),
+      fetchJson(fbReelsUrl)
+    ]);
 
     const posts = normalizeFbPosts(facebookPosts);
     const reels = normalizeFbReels(facebookReels);

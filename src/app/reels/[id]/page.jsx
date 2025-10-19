@@ -138,10 +138,11 @@ export default async function ReelPage({ params }) {
     notFound();
   }
 
-  // Structured data for the video with robust validation
+  // Structured data for the individual video page with robust validation
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
+    "@id": `https://cciservices.online/reels/${id}`, // Unique ID for individual page
     "name": reel.message && reel.message.trim() ? 
       reel.message : 
       "Reel vidéo CCI Services",
@@ -156,7 +157,11 @@ export default async function ReelPage({ params }) {
     "publisher": {
       "@type": "Organization",
       "name": "CCI Services",
-      "url": "https://cciservices.online"
+      "url": "https://cciservices.online",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cciservices.online/logo.png"
+      }
     },
     "creator": {
       "@type": "Organization",
@@ -174,6 +179,10 @@ export default async function ReelPage({ params }) {
         "userInteractionCount": reel.likes || 0
       }
     ],
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://cciservices.online/reels/${id}`
+    },
     "keywords": [
       "nettoyage professionnel",
       "CCI Services",

@@ -106,7 +106,7 @@ export default async function Page() {
           
           return {
             "@type": "VideoObject",
-            "@id": reel.permalink_url || `https://cciservices.online/blogs#reel-${reel.id}`,
+            "@id": `https://cciservices.online/blogs#video-${reel.id}`, // Unique ID for blogs collection
             "name": reel.message && reel.message.trim() ? 
               reel.message : 
               "Reel vidéo CCI Services",
@@ -224,7 +224,7 @@ export default async function Page() {
                 "@type": "ListItem",
                 "position": validPostsCount + index + 1,
                 "item": {
-                  "@id": reel.permalink_url || `https://cciservices.online/blogs#reel-${reel.id}`
+                  "@id": `https://cciservices.online/blogs#video-${reel.id}` // Reference the same video ID
                 }
               };
             })

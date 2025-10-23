@@ -136,13 +136,55 @@ export default async function Page() {
             "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.";
           
           // Ensure contentUrl and embedUrl are valid - Google requires at least one
-          // Add fallback Facebook watch URL if both are missing
-          const fallbackUrl = `https://www.facebook.com/watch/?v=${reel.id}`;
-          const contentUrl = reel.video_url || reel.permalink_url || fallbackUrl;
-          const embedUrl = reel.permalink_url || reel.video_url || fallbackUrl;
+          // Priority: video_url (direct) > permalink_url (Facebook) > fallback
+          const hasVideoUrl = reel.video_url && reel.video_url.trim();
+          const hasPermalinkUrl = reel.permalink_url && reel.permalink_url.trim();
           
-          // Ensure upload date is valid
+          // Create fallback URL only if needed
+          const fallbackUrl = `https://www.facebook.com/watch/?v=${reel.id}`;
+          
+          // Determine best URLs (avoid duplication and ensure validity)
+          let contentUrl, embedUrl;
+          
+          if (hasVideoUrl) {
+            contentUrl = reel.video_url.trim();
+            embedUrl = hasPermalinkUrl ? reel.permalink_url.trim() : contentUrl;
+          } else if (hasPermalinkUrl) {
+            contentUrl = reel.permalink_url.trim();
+            embedUrl = contentUrl;
+          } else {
+            contentUrl = fallbackUrl;
+            embedUrl = fallbackUrl;
+          }
+          
+          // Ensure URLs are different when possible to provide multiple access points
+          if (contentUrl === embedUrl && hasVideoUrl && hasPermalinkUrl) {
+            contentUrl = reel.video_url.trim();
+            embedUrl = reel.permalink_url.trim();
+          }
+          
+          // Ensure upload date is valid and properly formatted
           const uploadDate = reel.created_time || new Date().toISOString();
+          
+          // Validate URLs are properly formatted
+          const isValidUrl = (url) => {
+            try {
+              new URL(url);
+              return url.startsWith('http://') || url.startsWith('https://');
+            } catch {
+              return false;
+            }
+          };
+          
+          // Final validation - ensure we have valid URLs
+          if (!isValidUrl(contentUrl)) {
+            console.warn(`Invalid contentUrl for reel ${reel.id}:`, contentUrl);
+            contentUrl = fallbackUrl;
+          }
+          if (!isValidUrl(embedUrl)) {
+            console.warn(`Invalid embedUrl for reel ${reel.id}:`, embedUrl);
+            embedUrl = fallbackUrl;
+          }
           
           return {
             "@type": "VideoObject",
@@ -303,12 +345,14 @@ export default async function Page() {
               </time>
               <video 
                 itemProp="contentUrl"
+                src={reel.video_url || reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`}
                 poster={userFacingThumbnailUrl}
                 width="320" 
                 height="240"
                 controls
+                preload="metadata"
               >
-                <source src={reel.video_url} type="video/mp4" />
+                <source src={reel.video_url || reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`} type="video/mp4" />
                 Votre navigateur ne supporte pas les vidéos HTML5.
               </video>
               {/* Use local thumbnail for SEO/structured data, Facebook CDN would fail for search engines */}

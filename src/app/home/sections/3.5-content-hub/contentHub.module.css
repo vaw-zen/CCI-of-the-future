@@ -1,5 +1,5 @@
-.section { padding-top: 6.25vw; position: relative; overflow: hidden; }
-.container { margin: 0 auto; padding: 0 1.04vw; }
+.section { padding-top: 6.25vw ; position: relative; overflow: hidden; }
+.container { margin: 0 auto;  }
 .header { text-align: left; margin-bottom: 4.17vw; }
 .description { font-size: 1.15vw; color: var(--t-secondary); margin: 1.04vw auto 0; line-height: 1.6; }
 .contentGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(20.83vw, 1fr)); gap: 2.08vw; margin-bottom: 4.17vw; }
@@ -19,8 +19,8 @@
 .articleCount { background: var(--ac-primary); color: var(--bg-base); padding: 0.31vw 0.63vw; border-radius: 0.78vw; font-size: 0.94vw; font-weight: 600; }
 .arrow { font-size: 1.25vw; color: var(--ac-primary); font-weight: bold; transition: transform 0.3s ease; }
 .contentCard:hover .arrow { transform: translateX(0.26vw); }
-.featuredSection { background: var(--bg-base); border-radius: 1.04vw; padding: 2.08vw; border: 0.05vw solid var(--border-color); }
-.featuredTitle { font-size: 1.88vw; font-weight: 700; color: var(--t-primary); margin-bottom: 1.56vw; text-align: center; }
+.featuredSection { background: var(--bg-base); border-radius: 1.04vw; padding: 2.08vw 0; border: 0.05vw solid var(--border-color); }
+.featuredTitle { font-size: 1.88vw; font-weight: 700; color: var(--t-primary); margin-bottom: 2.5vw; text-align: center; }
 .featuredGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.63vw, 1fr)); gap: 1.30vw; }
 .featuredCard { background: var(--bg-elevated); border-radius: 0.78vw; padding: 1.30vw; text-decoration: none; color: inherit; transition: all 0.3s ease; border: 0.05vw solid var(--border-color); }
 .featuredCard:hover { background: var(--bg-base); transform: translateY(-0.26vw); box-shadow: 0 0.52vw 1.56vw rgba(0, 0, 0, 0.1); }

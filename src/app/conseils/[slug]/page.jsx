@@ -367,12 +367,6 @@ export default async function ArticlePage({ params }) {
           )}
         </nav>
 
-        {/* Related Services */}
-        <RelatedServices 
-          services={relatedServices}
-          sectionTitle="Nos Services Professionnels"
-        />
-
         {/* CTA retour à la liste */}
         <div style={{
           textAlign: 'center',
@@ -404,6 +398,12 @@ export default async function ArticlePage({ params }) {
           </Link>
         </div>
       </div>
+      
+      {/* Related Services - en dehors du container pour utiliser ses propres styles */}
+      <RelatedServices 
+        services={relatedServices}
+        sectionTitle="Nos Services Professionnels"
+      />
     </main>
   );
 }

@@ -45,7 +45,7 @@ export default function RelatedServices({ services, sectionTitle = "Services li√
 
                 <div className={styles.viewAllContainer}>
                     <Link href="/services" className={styles.viewAllButton}>
-                        Tous nos services
+                       Voir Tous Nos Services
                     </Link>
                 </div>
             </div>

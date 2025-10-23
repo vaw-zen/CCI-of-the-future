@@ -1,0 +1,118 @@
+{
+  "timestamp": "2025-10-21T08:44:55.506Z",
+  "summary": {
+    "totalArticles": 15,
+    "indexedArticles": 3,
+    "nonIndexedArticles": 12,
+    "indexingRate": "20.0"
+  },
+  "analysis": {
+    "seoFactors": {
+      "metaTitle": {
+        "indexed": {
+          "count": 3,
+          "averageLength": 69,
+          "minLength": 68,
+          "maxLength": 70
+        },
+        "nonIndexed": {
+          "count": 12,
+          "averageLength": 66,
+          "minLength": 58,
+          "maxLength": 81
+        }
+      },
+      "metaDescription": {
+        "indexed": {
+          "count": 3,
+          "averageLength": 139,
+          "minLength": 132,
+          "maxLength": 146
+        },
+        "nonIndexed": {
+          "count": 12,
+          "averageLength": 141,
+          "minLength": 124,
+          "maxLength": 154
+        }
+      },
+      "title": {
+        "indexed": {
+          "count": 3,
+          "averageLength": 74,
+          "minLength": 71,
+          "maxLength": 76
+        },
+        "nonIndexed": {
+          "count": 12,
+          "averageLength": 66,
+          "minLength": 48,
+          "maxLength": 94
+        }
+      },
+      "excerpt": {
+        "indexed": {
+          "count": 3,
+          "averageLength": 148,
+          "minLength": 143,
+          "maxLength": 154
+        },
+        "nonIndexed": {
+          "count": 12,
+          "averageLength": 134,
+          "minLength": 97,
+          "maxLength": 160
+        }
+      }
+    },
+    "contentFactors": {},
+    "structuralFactors": {},
+    "recommendations": [
+      {
+        "type": "SEO",
+        "priority": "High",
+        "recommendation": "Allonger les meta-titles des articles non-indexés (moy. indexés: 69 vs non-indexés: 66)"
+      }
+    ]
+  },
+  "indexedSamples": [
+    {
+      "slug": "prix-nettoyage-tapis-tunis-tarifs-2025",
+      "metaTitleLength": 68,
+      "metaDescLength": 146,
+      "keywordCount": 15
+    },
+    {
+      "slug": "tapisserie-nautique-ignifuge-carthage-tanit-ferry",
+      "metaTitleLength": 70,
+      "metaDescLength": 138,
+      "keywordCount": 14
+    },
+    {
+      "slug": "retapissage-rembourrage-professionnel-tunis-sur-mesure",
+      "metaTitleLength": 68,
+      "metaDescLength": 132,
+      "keywordCount": 10
+    }
+  ],
+  "nonIndexedSamples": [
+    {
+      "slug": "guide-nettoyage-tapis-tunis-2025",
+      "metaTitleLength": 81,
+      "metaDescLength": 147,
+      "keywordCount": 21
+    },
+    {
+      "slug": "nettoyage-salons-voiture-tapisseries-tunis",
+      "metaTitleLength": 66,
+      "metaDescLength": 148,
+      "keywordCount": 16
+    },
+    {
+      "slug": "traitement-poncage-polissage-marbre-tunisie",
+      "metaTitleLength": 78,
+      "metaDescLength": 154,
+      "keywordCount": 20
+    }
+  ]
+}

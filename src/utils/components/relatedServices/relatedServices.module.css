@@ -1,8 +1,29 @@
-.section { padding: 4.17vw 0; background: var(--bg-base); border-top: 0.05vw solid var(--border-color); }
-.container { max-width: 62.5vw; margin: 0 auto; padding: 0 1.04vw; }
+.section { 
+  padding: 4.17vw 0; 
+  background: var(--bg-base); 
+  border-top: 0.05vw solid var(--border-color); 
+}
+
+/* Utiliser la même logique de conteneur que la page parente */
+.container { 
+  margin: 0 auto; 
+  padding: 0 var(--padding-base);
+  /* Même largeur max que les autres conteneurs de la page */
+}
 .header { text-align: center; margin-bottom: 3.13vw; }
-.title { font-size: 2.29vw; font-weight: 700; color: var(--t-primary); margin-bottom: 0.78vw; }
-.subtitle { font-size: 1.15vw; color: var(--t-secondary); max-width: 26.04vw; margin: 0 auto; line-height: 1.6; }
+.title { 
+  font-size: 2.29vw; 
+  font-weight: 700; 
+  color: var(--t-primary); 
+  margin-bottom: 0.78vw; 
+}
+.subtitle { 
+  font-size: 1.15vw; 
+  color: var(--t-secondary); 
+  max-width: 26.04vw; 
+  margin: 0 auto; 
+  line-height: 1.6; 
+}
 .servicesGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14.58vw, 1fr)); gap: 1.56vw; margin-bottom: 2.6vw; }
 .serviceCard { background: var(--bg-elevated); border-radius: 0.83vw; overflow: hidden; box-shadow: 0 0 0.83vw rgba(203, 251, 66, 0.15); transition: all 0.3s ease; border: 0.05vw solid var(--border-color); }
 .serviceCard:hover { transform: translateY(-0.42vw); box-shadow: 0 0 1.83vw rgba(202, 251, 66, 0.452); }
@@ -21,20 +42,46 @@
 .viewAllButton:hover { background: var(--ac-primary); color: var(--bg-base); transform: translateY(-0.1vw); box-shadow: 0 0.42vw 1.25vw rgba(0, 0, 0, 0.15); }
 
 @media screen and (max-width: 1024px) {
-.section { padding: 5.86vw 0; }
-.servicesGrid { grid-template-columns: 1fr; gap: 2.44vw; }
-.header { margin-bottom: 3.91vw; }
-.title { font-size: 1.76vw; }
-.subtitle { font-size: 0.98vw; }
-.cardContent { padding: 2.44vw; }
-.serviceTitle { font-size: 1.17vw; }
+  .section { padding: 5.86vw 0; }
+  .container { padding: 0 1.95vw; }
+  .servicesGrid { grid-template-columns: 1fr; gap: 2.44vw; }
+  .header { margin-bottom: 3.91vw; }
+  .title { font-size: 3.76vw; }
+  .subtitle { font-size: 1.98vw; max-width: none;}
+  .cardContent { padding: 2.44vw; }
+  .serviceTitle { font-size: 1.17vw; }
+     .serviceIcon { width: 12.14vw; height: 12.14vw; }
+  .icon { width: 6.07vw; height: 6.07vw; }
+  .serviceTitle { font-size: 3.40vw; }
+  .serviceDescription { font-size: 2.43vw; }
+  .ctaText { font-size: 2.43vw; }
+   .viewAllContainer{padding: 4vw 0;}
+  .viewAllButton { 
+    padding: 2.43vw 4.85vw; 
+    font-size: 2.43vw; 
+    border-radius: 2.43vw; 
+    border: 0.24vw solid var(--ac-primary); 
+  }
 }
 
 @media screen and (max-width: 480px) {
-.container { padding: 0 3.64vw; }
-.servicesGrid { gap: 4.85vw; }
-.cardContent { padding: 4.85vw; }
-.title { font-size: 3.88vw; }
-.serviceIcon { width: 12.14vw; height: 12.14vw; }
-.icon { width: 6.07vw; height: 6.07vw; }
+  .section { padding-bottom:4vw ; padding-top: 0;}
+  .container { padding: 0 3.64vw; }
+  .servicesGrid { gap: 4.85vw; }
+  .cardContent { padding: 4.85vw; }
+  .title { font-size: 3.88vw; }
+  .subtitle { font-size: 2.8vw; max-width: none; }
+  .serviceIcon { width: 12.14vw; height: 12.14vw; }
+  .icon { width: 6.07vw; height: 6.07vw; }
+  .serviceTitle { font-size: 3.40vw; }
+  .serviceDescription { font-size: 2.8vw; }
+  .ctaText { font-size: 2.9vw; }
+  .arrow { font-size: 3.40vw; }
+  .viewAllContainer{padding: 4vw 0;}
+  .viewAllButton { 
+    padding: 2.43vw 4.85vw; 
+    font-size: 3vw; 
+    border-radius: 2.43vw; 
+    border: 0.24vw solid var(--ac-primary); 
+  }
 }

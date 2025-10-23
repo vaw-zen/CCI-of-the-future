@@ -1,5 +1,5 @@
 # Comprehensive GSC Analysis Report
-Generated: 10/19/2025, 11:46:44 PM
+Generated: 10/20/2025, 12:20:10 AM
 Site: https://cciservices.online
 
 ## 📄 SITEMAP ANALYSIS
@@ -12,36 +12,36 @@ Total Sitemaps: 4
   - URLs Submitted: 6
   - URLs Indexed: 0
   - Indexing Rate: 0.0%
-  - Last Submitted: 2025-10-19T21:35:22.577Z
+  - Last Submitted: 2025-10-19T23:16:23.953Z
 
-- **https://cciservices.online/sitemap-index.xml**
-  - URLs Submitted: 141
+- **https://cciservices.online/articles-sitemap.xml**
+  - URLs Submitted: 39
   - URLs Indexed: 0
   - Indexing Rate: 0.0%
-  - Last Submitted: 2025-10-16T02:08:37.034Z
-
-- **https://cciservices.online/posts-sitemap.xml**
-  - URLs Submitted: 44
-  - URLs Indexed: 0
-  - Indexing Rate: 0.0%
-  - Last Submitted: 2025-10-13T16:11:26.170Z
+  - Last Submitted: 2025-10-19T23:16:23.856Z
 
 - **https://cciservices.online/sitemap.xml**
   - URLs Submitted: 58
   - URLs Indexed: 0
   - Indexing Rate: 0.0%
-  - Last Submitted: 2025-10-11T01:14:23.578Z
+  - Last Submitted: 2025-10-19T23:16:23.781Z
+
+- **https://cciservices.online/sitemap-index.xml**
+  - URLs Submitted: 141
+  - URLs Indexed: 0
+  - Indexing Rate: 0.0%
+  - Last Submitted: 2025-10-19T23:16:23.694Z
 
 
 ### Issues Found:
 - ⚠️ Low indexing rate (0.0%) for https://cciservices.online/video-sitemap.xml
 - ❌ Errors in https://cciservices.online/video-sitemap.xml: 1 errors
-- ⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap-index.xml
-- ❌ Errors in https://cciservices.online/sitemap-index.xml: 1 errors
-- ⚠️ Low indexing rate (0.0%) for https://cciservices.online/posts-sitemap.xml
-- ❌ Errors in https://cciservices.online/posts-sitemap.xml: 1 errors
+- ⚠️ Low indexing rate (0.0%) for https://cciservices.online/articles-sitemap.xml
+- ❌ Errors in https://cciservices.online/articles-sitemap.xml: 1 errors
 - ⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap.xml
 - ❌ Errors in https://cciservices.online/sitemap.xml: 1 errors
+- ⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap-index.xml
+- ❌ Errors in https://cciservices.online/sitemap-index.xml: 1 errors
 
 
 ## 📊 SEARCH PERFORMANCE
@@ -69,15 +69,15 @@ Total Sitemaps: 4
 - Action: Investigate and fix crawling/indexing issues
 - Impact: Medium - affects organic visibility
 
-**Indexing**: ⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap-index.xml
-- Action: Investigate and fix crawling/indexing issues
-- Impact: Medium - affects organic visibility
-
-**Indexing**: ⚠️ Low indexing rate (0.0%) for https://cciservices.online/posts-sitemap.xml
+**Indexing**: ⚠️ Low indexing rate (0.0%) for https://cciservices.online/articles-sitemap.xml
 - Action: Investigate and fix crawling/indexing issues
 - Impact: Medium - affects organic visibility
 
 **Indexing**: ⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap.xml
+- Action: Investigate and fix crawling/indexing issues
+- Impact: Medium - affects organic visibility
+
+**Indexing**: ⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap-index.xml
 - Action: Investigate and fix crawling/indexing issues
 - Impact: Medium - affects organic visibility
 

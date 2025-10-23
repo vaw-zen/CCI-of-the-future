@@ -181,7 +181,7 @@ export async function GET(request) {
     let fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
     if (postsLimit) fbPostsUrl += `&limit=${postsLimit}`;
     if (postsAfter) fbPostsUrl += `&after=${encodeURIComponent(postsAfter)}`;
-    let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,perma_link,source,description,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,perma_link,source,description,picture,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
     if (reelsLimit) fbReelsUrl += `&limit=${reelsLimit}`;
     if (reelsAfter) fbReelsUrl += `&after=${encodeURIComponent(reelsAfter)}`;
 

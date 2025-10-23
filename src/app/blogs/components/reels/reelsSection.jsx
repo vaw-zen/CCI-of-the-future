@@ -484,6 +484,8 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                     key={reel.id} 
                     className={styles['reel-card']} 
                     data-reel-id={reel.id}
+                    itemScope 
+                    itemType="https://schema.org/VideoObject"
                     onMouseEnter={() => handleMouseEnter(reel.id)}
                     onMouseLeave={() => handleMouseLeave(reel.id)}
                     onMouseMove={() => handleMouseMove(reel.id)}
@@ -492,6 +494,20 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                       className={styles['reel-image-container']}
                       onClick={(e) => handleOverlayClick(reel.id, e)}
                     >
+                      {/* Hidden structured data elements for GSC */}
+                      <span itemProp="name" style={{ display: 'none' }}>
+                        {reel.message?.slice(0, 100) || 'Reel vidéo CCI Services'}
+                      </span>
+                      <span itemProp="description" style={{ display: 'none' }}>
+                        {reel.message || 'Découvrez nos services de nettoyage professionnel en vidéo'}
+                      </span>
+                      <time itemProp="uploadDate" dateTime={reel.created_time} style={{ display: 'none' }}>
+                        {reel.created_time}
+                      </time>
+                      <span itemProp="duration" content={reel.length ? `PT${Math.round(reel.length)}S` : "PT30S"} style={{ display: 'none' }}>
+                        {reel.length ? `${Math.round(reel.length)}s` : "30s"}
+                      </span>
+                      
                       <video
                         ref={(el) => {
                           if (el) {
@@ -500,7 +516,8 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         }}
                         className={styles['reel-image']}
                         data-src={getBestVideoUrl(reel)}
-                        poster={reel.thumbnail || reel.original_thumbnail || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`}
+                        poster={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`}
+                        itemProp="contentUrl"
                         controls={false}
                         preload="none"
                         playsInline
@@ -509,6 +526,15 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         onEnded={() => handleVideoEnded(reel.id)}
                         onLoadedMetadata={() => handleVideoLoadedMetadata(reel.id)}
                         onTimeUpdate={() => handleVideoTimeUpdate(reel.id)}
+                      />
+                      
+                      {/* Explicit thumbnailUrl for GSC - same as JSON-LD */}
+                      <img 
+                        itemProp="thumbnailUrl" 
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`}
+                        alt="Aperçu vidéo"
+                        style={{ display: 'none' }}
+                        loading="lazy"
                       />
 
                       {/* Play Overlay - Only show when not playing */}

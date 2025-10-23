@@ -1,0 +1,255 @@
+name: 🤖 CCI Services - Automated Marketing
+
+on:
+  schedule:
+    # Run every Monday at 9:00 AM Tunisia time (UTC+1)
+    - cron: '0 8 * * 1'
+    # Run every Friday for weekly social media posts
+    - cron: '0 10 * * 5'
+  
+  workflow_dispatch:
+    inputs:
+      campaign_type:
+        description: 'Campaign type to run'
+        required: true
+        default: 'weekly'
+        type: choice
+        options:
+        - weekly
+        - social
+        - backlinks
+        - analytics
+      
+      force_run:
+        description: 'Force run even if conditions not met'
+        required: false
+        default: false
+        type: boolean
+
+  push:
+    branches: [ main ]
+    paths:
+      - 'scripts/**'
+      - 'src/app/**'
+      - '.github/workflows/**'
+
+# Add permissions for GitHub Actions to write to repository
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  # Weekly automated backlink campaign
+  weekly-backlinks:
+    if: github.event.schedule == '0 8 * * 1' || (github.event_name == 'workflow_dispatch' && github.event.inputs.campaign_type == 'backlinks')
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Install dependencies
+      run: |
+        cd scripts
+        npm install nodemailer dotenv google-auth-library googleapis
+        
+    - name: 🎯 Run weekly backlink campaign
+      env:
+        GMAIL_USER: ${{ secrets.GMAIL_USER }}
+        GMAIL_PASS: ${{ secrets.GMAIL_PASS }}
+        GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+        GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+        GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
+        GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+      run: |
+        cd scripts
+        echo "Starting weekly backlink campaign..."
+        node workflows/email-automation/updated-email-automation.cjs business-platforms platformSubmission
+        
+    - name: 📊 Generate campaign report
+      run: |
+        cd scripts
+        echo "# 📧 Weekly Backlink Campaign Report" > reports/campaign-report.md
+        echo "**Date**: $(date)" >> reports/campaign-report.md
+        echo "**Campaign**: International Business Platforms" >> reports/campaign-report.md
+        echo "**Status**: Completed" >> reports/campaign-report.md
+        echo "**Next Run**: Next Monday 9:00 AM Tunisia time" >> reports/campaign-report.md
+        
+    - name: 💾 Commit campaign report
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "📊 Weekly backlink campaign report - $(date +%Y-%m-%d)"
+        file_pattern: scripts/reports/campaign-report.md
+
+  # Social media automation
+  social-media-posts:
+    if: github.event.schedule == '0 10 * * 5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.campaign_type == 'social')
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Install dependencies
+      run: npm install
+      
+    - name: 📱 Post to Facebook
+      env:
+        FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+        FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+      run: |
+        curl -X POST "https://cciservices.online/api/post-to-facebook" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "caption": "🧽 Conseil du vendredi: Un nettoyage régulier de vos bureaux améliore la productivité de vos équipes! 💼✨ Contactez CCI Services pour un devis gratuit. 📞 +216 98 557 766 🌐 cciservices.online #NettoyageBureau #Tunis #CCI"
+        }'
+        
+    - name: 📧 Send social media campaign
+      env:
+        GMAIL_USER: ${{ secrets.GMAIL_USER }}
+        GMAIL_PASS: ${{ secrets.GMAIL_PASS }}
+      run: |
+        cd scripts
+        node updated-email-automation.cjs social-platforms platformSubmission
+
+  # Analytics and monitoring
+  analytics-report:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.campaign_type == 'analytics'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📊 Generate analytics report
+      env:
+        GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+        GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+        GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
+        GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+      run: |
+        # Setup GSC credentials
+        mkdir -p ~/.config/gcloud
+        echo '${{ secrets.GOOGLE_PRIVATE_KEY }}' > ~/.config/gcloud/service-account.json
+        
+        # Generate analytics report
+        echo "# 📈 CCI Services Analytics Report" > scripts/reports/analytics-report.md
+        echo "**Generated**: $(date)" >> scripts/reports/analytics-report.md
+        echo "" >> scripts/reports/analytics-report.md
+        echo "## 🎯 Key Metrics" >> scripts/reports/analytics-report.md
+        echo "- **Website**: https://cciservices.online/" >> scripts/reports/analytics-report.md
+        echo "- **Analytics**: Google Analytics 4 (G-0RDH6DH7TS)" >> scripts/reports/analytics-report.md
+        echo "- **Search Console**: Active and validated" >> scripts/reports/analytics-report.md
+        echo "- **Tag Manager**: GTM-MT495L62" >> scripts/reports/analytics-report.md
+        echo "" >> scripts/reports/analytics-report.md
+        echo "## 📧 Email Campaigns Status" >> scripts/reports/analytics-report.md
+        echo "- **Tunisia Directories**: 15/15 emails sent ✅" >> scripts/reports/analytics-report.md
+        echo "- **International Platforms**: Scheduled weekly" >> scripts/reports/analytics-report.md
+        echo "- **Social Media**: Automated Friday posts" >> scripts/reports/analytics-report.md
+        
+        # Run URL indexing if credentials are available
+        if [ -f ~/.config/gcloud/service-account.json ]; then
+          echo "" >> scripts/reports/analytics-report.md
+          echo "## 🔍 URL Indexing Status" >> scripts/reports/analytics-report.md
+          cd scripts
+          node workflows/seo-automation/submit-urls-indexing.cjs >> ../scripts/reports/analytics-report.md || echo "- **Indexing**: Skipped (no new URLs)" >> ../scripts/reports/analytics-report.md
+        fi
+        
+    - name: 💾 Commit analytics report
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "📈 Analytics report - $(date +%Y-%m-%d)"
+        file_pattern: scripts/reports/analytics-report.md
+
+  # Build and deploy check
+  build-check:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Install dependencies
+      run: npm install
+      
+    - name: 🔨 Build application
+      run: npm run build
+      
+    - name: ✅ Validate automation scripts
+      run: |
+        cd scripts
+        node -c workflows/email-automation/email-automation.cjs
+        node -c workflows/email-automation/updated-email-automation.cjs
+        echo "✅ All automation scripts validated"
+        
+    - name: 🧪 Test Facebook API integration
+      run: |
+        curl -X GET "https://cciservices.online/api/post-to-facebook" || true
+        echo "Facebook API endpoint tested"
+
+  # Backup and monitoring
+  backup-automation:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 8 * * 1'
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 💾 Create automation backup
+      run: |
+        mkdir -p backups/$(date +%Y%m%d)
+        cp -r scripts/ backups/$(date +%Y%m%d)/
+        cp -r .github/ backups/$(date +%Y%m%d)/
+        cp src/app/layout.js backups/$(date +%Y%m%d)/
+        
+        echo "# 🔄 Automation Backup" > backups/$(date +%Y%m%d)/backup-info.md
+        echo "**Date**: $(date)" >> backups/$(date +%Y%m%d)/backup-info.md
+        echo "**Files**: Scripts, workflows, layout" >> backups/$(date +%Y%m%d)/backup-info.md
+        echo "**Status**: Weekly automated backup" >> backups/$(date +%Y%m%d)/backup-info.md
+        
+    - name: 💾 Commit backup
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "💾 Weekly automation backup - $(date +%Y-%m-%d)"
+        file_pattern: backups/
+
+  # Emergency notifications
+  notify-results:
+    needs: [weekly-backlinks, social-media-posts]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: 📧 Send status notification
+      env:
+        GMAIL_USER: ${{ secrets.GMAIL_USER }}
+        GMAIL_PASS: ${{ secrets.GMAIL_PASS }}
+      run: |
+        echo "Automation completed. Status: ${{ needs.weekly-backlinks.result }} / ${{ needs.social-media-posts.result }}"
+        # Add email notification logic here if needed

@@ -1,0 +1,597 @@
+{
+  "realEstate": [
+    {
+      "website": "tunisie-immobilier.com",
+      "industry": "Real Estate",
+      "contactEmail": "contact@tunisie-immobilier.com",
+      "fallbackEmails": [
+        "info@tunisie-immobilier.com",
+        "redaction@tunisie-immobilier.com",
+        "partenariat@tunisie-immobilier.com",
+        "commercial@tunisie-immobilier.com"
+      ],
+      "priority": "High",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "immobilier.tn",
+      "industry": "Real Estate",
+      "contactEmail": "contact@immobilier.tn",
+      "fallbackEmails": [
+        "info@immobilier.tn",
+        "redaction@immobilier.tn",
+        "partenariat@immobilier.tn",
+        "commercial@immobilier.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "realestatetunis.com",
+      "industry": "Real Estate",
+      "contactEmail": "contact@realestatetunis.com",
+      "fallbackEmails": [
+        "info@realestatetunis.com",
+        "redaction@realestatetunis.com",
+        "partenariat@realestatetunis.com",
+        "commercial@realestatetunis.com"
+      ],
+      "priority": "Medium",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "propertytunis.net",
+      "industry": "Real Estate",
+      "contactEmail": "contact@propertytunis.net",
+      "fallbackEmails": [
+        "info@propertytunis.net",
+        "redaction@propertytunis.net",
+        "partenariat@propertytunis.net",
+        "commercial@propertytunis.net"
+      ],
+      "priority": "Standard",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "tunisiarealestate.net",
+      "industry": "Real Estate",
+      "contactEmail": "contact@tunisiarealestate.net",
+      "fallbackEmails": [
+        "info@tunisiarealestate.net",
+        "redaction@tunisiarealestate.net",
+        "partenariat@tunisiarealestate.net",
+        "commercial@tunisiarealestate.net"
+      ],
+      "priority": "Standard",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "laico.com.tn",
+      "industry": "Real Estate",
+      "contactEmail": "contact@laico.com.tn",
+      "fallbackEmails": [
+        "info@laico.com.tn",
+        "redaction@laico.com.tn",
+        "partenariat@laico.com.tn",
+        "commercial@laico.com.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "centurion-tunisia.com",
+      "industry": "Real Estate",
+      "contactEmail": "contact@centurion-tunisia.com",
+      "fallbackEmails": [
+        "info@centurion-tunisia.com",
+        "redaction@centurion-tunisia.com",
+        "partenariat@centurion-tunisia.com",
+        "commercial@centurion-tunisia.com"
+      ],
+      "priority": "Standard",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "coldwellbanker.tn",
+      "industry": "Real Estate",
+      "contactEmail": "contact@coldwellbanker.tn",
+      "fallbackEmails": [
+        "info@coldwellbanker.tn",
+        "redaction@coldwellbanker.tn",
+        "partenariat@coldwellbanker.tn",
+        "commercial@coldwellbanker.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "remax-tunisia.com",
+      "industry": "Real Estate",
+      "contactEmail": "contact@remax-tunisia.com",
+      "fallbackEmails": [
+        "info@remax-tunisia.com",
+        "redaction@remax-tunisia.com",
+        "partenariat@remax-tunisia.com",
+        "commercial@remax-tunisia.com"
+      ],
+      "priority": "Standard",
+      "notes": "Real Estate partnership opportunity"
+    },
+    {
+      "website": "era-tunisia.com",
+      "industry": "Real Estate",
+      "contactEmail": "contact@era-tunisia.com",
+      "fallbackEmails": [
+        "info@era-tunisia.com",
+        "redaction@era-tunisia.com",
+        "partenariat@era-tunisia.com",
+        "commercial@era-tunisia.com"
+      ],
+      "priority": "Standard",
+      "notes": "Real Estate partnership opportunity"
+    }
+  ],
+  "hospitality": [
+    {
+      "website": "tunisietourisme.com",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@tunisietourisme.com",
+      "fallbackEmails": [
+        "info@tunisietourisme.com",
+        "redaction@tunisietourisme.com",
+        "partenariat@tunisietourisme.com",
+        "commercial@tunisietourisme.com"
+      ],
+      "priority": "Standard",
+      "notes": "Hotels & Tourism partnership opportunity"
+    },
+    {
+      "website": "hotelstunisia.com",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@hotelstunisia.com",
+      "fallbackEmails": [
+        "info@hotelstunisia.com",
+        "redaction@hotelstunisia.com",
+        "partenariat@hotelstunisia.com",
+        "commercial@hotelstunisia.com"
+      ],
+      "priority": "High",
+      "notes": "Hotels & Tourism partnership opportunity"
+    },
+    {
+      "website": "tunisiahotels.net",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@tunisiahotels.net",
+      "fallbackEmails": [
+        "info@tunisiahotels.net",
+        "redaction@tunisiahotels.net",
+        "partenariat@tunisiahotels.net",
+        "commercial@tunisiahotels.net"
+      ],
+      "priority": "Standard",
+      "notes": "Hotels & Tourism partnership opportunity"
+    },
+    {
+      "website": "visittunis.tn",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@visittunis.tn",
+      "fallbackEmails": [
+        "info@visittunis.tn",
+        "redaction@visittunis.tn",
+        "partenariat@visittunis.tn",
+        "commercial@visittunis.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Hotels & Tourism partnership opportunity"
+    },
+    {
+      "website": "movenpick.com",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@movenpick.com",
+      "fallbackEmails": [
+        "info@movenpick.com",
+        "redaction@movenpick.com",
+        "partenariat@movenpick.com",
+        "commercial@movenpick.com"
+      ],
+      "priority": "Standard",
+      "notes": "Hotels & Tourism partnership opportunity"
+    },
+    {
+      "website": "fourpoints.com",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@fourpoints.com",
+      "fallbackEmails": [
+        "info@fourpoints.com",
+        "redaction@fourpoints.com",
+        "partenariat@fourpoints.com",
+        "commercial@fourpoints.com"
+      ],
+      "priority": "Standard",
+      "notes": "Hotels & Tourism partnership opportunity"
+    },
+    {
+      "website": "goldentulip.com",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@goldentulip.com",
+      "fallbackEmails": [
+        "info@goldentulip.com",
+        "redaction@goldentulip.com",
+        "partenariat@goldentulip.com",
+        "commercial@goldentulip.com"
+      ],
+      "priority": "Standard",
+      "notes": "Hotels & Tourism partnership opportunity"
+    },
+    {
+      "website": "laico.com",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@laico.com",
+      "fallbackEmails": [
+        "info@laico.com",
+        "redaction@laico.com",
+        "partenariat@laico.com",
+        "commercial@laico.com"
+      ],
+      "priority": "Standard",
+      "notes": "Hotels & Tourism partnership opportunity"
+    },
+    {
+      "website": "tunisia-hotels.org",
+      "industry": "Hotels & Tourism",
+      "contactEmail": "contact@tunisia-hotels.org",
+      "fallbackEmails": [
+        "info@tunisia-hotels.org",
+        "redaction@tunisia-hotels.org",
+        "partenariat@tunisia-hotels.org",
+        "commercial@tunisia-hotels.org"
+      ],
+      "priority": "Standard",
+      "notes": "Hotels & Tourism partnership opportunity"
+    }
+  ],
+  "business": [
+    {
+      "website": "business-tunisia.com",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@business-tunisia.com",
+      "fallbackEmails": [
+        "info@business-tunisia.com",
+        "redaction@business-tunisia.com",
+        "partenariat@business-tunisia.com",
+        "commercial@business-tunisia.com"
+      ],
+      "priority": "High",
+      "notes": "Business & B2B partnership opportunity"
+    },
+    {
+      "website": "tunisiab2b.com",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@tunisiab2b.com",
+      "fallbackEmails": [
+        "info@tunisiab2b.com",
+        "redaction@tunisiab2b.com",
+        "partenariat@tunisiab2b.com",
+        "commercial@tunisiab2b.com"
+      ],
+      "priority": "Medium",
+      "notes": "Business & B2B partnership opportunity"
+    },
+    {
+      "website": "entreprise-tunisie.net",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@entreprise-tunisie.net",
+      "fallbackEmails": [
+        "info@entreprise-tunisie.net",
+        "redaction@entreprise-tunisie.net",
+        "partenariat@entreprise-tunisie.net",
+        "commercial@entreprise-tunisie.net"
+      ],
+      "priority": "Standard",
+      "notes": "Business & B2B partnership opportunity"
+    },
+    {
+      "website": "commercetunis.tn",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@commercetunis.tn",
+      "fallbackEmails": [
+        "info@commercetunis.tn",
+        "redaction@commercetunis.tn",
+        "partenariat@commercetunis.tn",
+        "commercial@commercetunis.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Business & B2B partnership opportunity"
+    },
+    {
+      "website": "chambre-commerce-tunis.tn",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@chambre-commerce-tunis.tn",
+      "fallbackEmails": [
+        "info@chambre-commerce-tunis.tn",
+        "redaction@chambre-commerce-tunis.tn",
+        "partenariat@chambre-commerce-tunis.tn",
+        "commercial@chambre-commerce-tunis.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Business & B2B partnership opportunity"
+    },
+    {
+      "website": "utica.org.tn",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@utica.org.tn",
+      "fallbackEmails": [
+        "info@utica.org.tn",
+        "redaction@utica.org.tn",
+        "partenariat@utica.org.tn",
+        "commercial@utica.org.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Business & B2B partnership opportunity"
+    },
+    {
+      "website": "conect.org.tn",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@conect.org.tn",
+      "fallbackEmails": [
+        "info@conect.org.tn",
+        "redaction@conect.org.tn",
+        "partenariat@conect.org.tn",
+        "commercial@conect.org.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Business & B2B partnership opportunity"
+    },
+    {
+      "website": "startuptunis.com",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@startuptunis.com",
+      "fallbackEmails": [
+        "info@startuptunis.com",
+        "redaction@startuptunis.com",
+        "partenariat@startuptunis.com",
+        "commercial@startuptunis.com"
+      ],
+      "priority": "Standard",
+      "notes": "Business & B2B partnership opportunity"
+    },
+    {
+      "website": "businessnews.com.tn",
+      "industry": "Business & B2B",
+      "contactEmail": "contact@businessnews.com.tn",
+      "fallbackEmails": [
+        "info@businessnews.com.tn",
+        "redaction@businessnews.com.tn",
+        "partenariat@businessnews.com.tn",
+        "commercial@businessnews.com.tn"
+      ],
+      "priority": "Medium",
+      "notes": "Business & B2B partnership opportunity"
+    }
+  ],
+  "construction": [
+    {
+      "website": "construction-tunisia.com",
+      "industry": "Construction & Architecture",
+      "contactEmail": "contact@construction-tunisia.com",
+      "fallbackEmails": [
+        "info@construction-tunisia.com",
+        "redaction@construction-tunisia.com",
+        "partenariat@construction-tunisia.com",
+        "commercial@construction-tunisia.com"
+      ],
+      "priority": "Standard",
+      "notes": "Construction & Architecture partnership opportunity"
+    },
+    {
+      "website": "architecturetunis.net",
+      "industry": "Construction & Architecture",
+      "contactEmail": "contact@architecturetunis.net",
+      "fallbackEmails": [
+        "info@architecturetunis.net",
+        "redaction@architecturetunis.net",
+        "partenariat@architecturetunis.net",
+        "commercial@architecturetunis.net"
+      ],
+      "priority": "Standard",
+      "notes": "Construction & Architecture partnership opportunity"
+    },
+    {
+      "website": "batimenttunis.com",
+      "industry": "Construction & Architecture",
+      "contactEmail": "contact@batimenttunis.com",
+      "fallbackEmails": [
+        "info@batimenttunis.com",
+        "redaction@batimenttunis.com",
+        "partenariat@batimenttunis.com",
+        "commercial@batimenttunis.com"
+      ],
+      "priority": "Standard",
+      "notes": "Construction & Architecture partnership opportunity"
+    },
+    {
+      "website": "btp-tunisia.com",
+      "industry": "Construction & Architecture",
+      "contactEmail": "contact@btp-tunisia.com",
+      "fallbackEmails": [
+        "info@btp-tunisia.com",
+        "redaction@btp-tunisia.com",
+        "partenariat@btp-tunisia.com",
+        "commercial@btp-tunisia.com"
+      ],
+      "priority": "Standard",
+      "notes": "Construction & Architecture partnership opportunity"
+    },
+    {
+      "website": "ingenieur-tunisie.com",
+      "industry": "Construction & Architecture",
+      "contactEmail": "contact@ingenieur-tunisie.com",
+      "fallbackEmails": [
+        "info@ingenieur-tunisie.com",
+        "redaction@ingenieur-tunisie.com",
+        "partenariat@ingenieur-tunisie.com",
+        "commercial@ingenieur-tunisie.com"
+      ],
+      "priority": "Standard",
+      "notes": "Construction & Architecture partnership opportunity"
+    },
+    {
+      "website": "architecture-tunisia.org",
+      "industry": "Construction & Architecture",
+      "contactEmail": "contact@architecture-tunisia.org",
+      "fallbackEmails": [
+        "info@architecture-tunisia.org",
+        "redaction@architecture-tunisia.org",
+        "partenariat@architecture-tunisia.org",
+        "commercial@architecture-tunisia.org"
+      ],
+      "priority": "Standard",
+      "notes": "Construction & Architecture partnership opportunity"
+    },
+    {
+      "website": "syndic-tunisia.com",
+      "industry": "Construction & Architecture",
+      "contactEmail": "contact@syndic-tunisia.com",
+      "fallbackEmails": [
+        "info@syndic-tunisia.com",
+        "redaction@syndic-tunisia.com",
+        "partenariat@syndic-tunisia.com",
+        "commercial@syndic-tunisia.com"
+      ],
+      "priority": "Standard",
+      "notes": "Construction & Architecture partnership opportunity"
+    },
+    {
+      "website": "facilities-tunisia.com",
+      "industry": "Construction & Architecture",
+      "contactEmail": "contact@facilities-tunisia.com",
+      "fallbackEmails": [
+        "info@facilities-tunisia.com",
+        "redaction@facilities-tunisia.com",
+        "partenariat@facilities-tunisia.com",
+        "commercial@facilities-tunisia.com"
+      ],
+      "priority": "Standard",
+      "notes": "Construction & Architecture partnership opportunity"
+    }
+  ],
+  "media": [
+    {
+      "website": "businessnews.com.tn",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@businessnews.com.tn",
+      "fallbackEmails": [
+        "info@businessnews.com.tn",
+        "redaction@businessnews.com.tn",
+        "partenariat@businessnews.com.tn",
+        "commercial@businessnews.com.tn"
+      ],
+      "priority": "Medium",
+      "notes": "Media & Publications partnership opportunity"
+    },
+    {
+      "website": "lapresse.tn",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@lapresse.tn",
+      "fallbackEmails": [
+        "info@lapresse.tn",
+        "redaction@lapresse.tn",
+        "partenariat@lapresse.tn",
+        "commercial@lapresse.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Media & Publications partnership opportunity"
+    },
+    {
+      "website": "leconomistemaghrebin.com",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@leconomistemaghrebin.com",
+      "fallbackEmails": [
+        "info@leconomistemaghrebin.com",
+        "redaction@leconomistemaghrebin.com",
+        "partenariat@leconomistemaghrebin.com",
+        "commercial@leconomistemaghrebin.com"
+      ],
+      "priority": "Standard",
+      "notes": "Media & Publications partnership opportunity"
+    },
+    {
+      "website": "african-manager.com",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@african-manager.com",
+      "fallbackEmails": [
+        "info@african-manager.com",
+        "redaction@african-manager.com",
+        "partenariat@african-manager.com",
+        "commercial@african-manager.com"
+      ],
+      "priority": "Standard",
+      "notes": "Media & Publications partnership opportunity"
+    },
+    {
+      "website": "tunisienumerique.com",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@tunisienumerique.com",
+      "fallbackEmails": [
+        "info@tunisienumerique.com",
+        "redaction@tunisienumerique.com",
+        "partenariat@tunisienumerique.com",
+        "commercial@tunisienumerique.com"
+      ],
+      "priority": "Standard",
+      "notes": "Media & Publications partnership opportunity"
+    },
+    {
+      "website": "radiomosaiquefm.net",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@radiomosaiquefm.net",
+      "fallbackEmails": [
+        "info@radiomosaiquefm.net",
+        "redaction@radiomosaiquefm.net",
+        "partenariat@radiomosaiquefm.net",
+        "commercial@radiomosaiquefm.net"
+      ],
+      "priority": "Standard",
+      "notes": "Media & Publications partnership opportunity"
+    },
+    {
+      "website": "shemsfm.net",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@shemsfm.net",
+      "fallbackEmails": [
+        "info@shemsfm.net",
+        "redaction@shemsfm.net",
+        "partenariat@shemsfm.net",
+        "commercial@shemsfm.net"
+      ],
+      "priority": "Standard",
+      "notes": "Media & Publications partnership opportunity"
+    },
+    {
+      "website": "jawhara.fm",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@jawhara.fm",
+      "fallbackEmails": [
+        "info@jawhara.fm",
+        "redaction@jawhara.fm",
+        "partenariat@jawhara.fm",
+        "commercial@jawhara.fm"
+      ],
+      "priority": "Standard",
+      "notes": "Media & Publications partnership opportunity"
+    },
+    {
+      "website": "webdo.tn",
+      "industry": "Media & Publications",
+      "contactEmail": "contact@webdo.tn",
+      "fallbackEmails": [
+        "info@webdo.tn",
+        "redaction@webdo.tn",
+        "partenariat@webdo.tn",
+        "commercial@webdo.tn"
+      ],
+      "priority": "Standard",
+      "notes": "Media & Publications partnership opportunity"
+    }
+  ]
+}

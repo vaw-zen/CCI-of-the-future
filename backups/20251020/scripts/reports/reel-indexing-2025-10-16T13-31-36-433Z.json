@@ -1,0 +1,88 @@
+{
+  "timestamp": "2025-10-16T13:31:36.434Z",
+  "summary": {
+    "total": 8,
+    "successful": 8,
+    "failed": 0,
+    "successRate": "100.0%"
+  },
+  "results": [
+    {
+      "success": true,
+      "url": "https://cciservices.online/reels",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/reels"
+        }
+      }
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/video-sitemap.xml",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/video-sitemap.xml"
+        }
+      }
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/reels/1795992887605310",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/reels/1795992887605310"
+        }
+      }
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/reels/1247993576413121",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/reels/1247993576413121"
+        }
+      }
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/reels/558065453752089",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/reels/558065453752089"
+        }
+      }
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/reels/1246030820007499",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/reels/1246030820007499"
+        }
+      }
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/reels/595458862831133",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/reels/595458862831133"
+        }
+      }
+    },
+    {
+      "success": true,
+      "url": "https://cciservices.online/reels/1251663539372907",
+      "response": {
+        "urlNotificationMetadata": {
+          "url": "https://cciservices.online/reels/1251663539372907"
+        }
+      }
+    }
+  ],
+  "urls": {
+    "reelsPage": "https://cciservices.online/reels",
+    "videoSitemap": "https://cciservices.online/video-sitemap.xml",
+    "individualReels": 6
+  }
+}

@@ -47,6 +47,21 @@ scripts/*
 !scripts/data/
 !scripts/reports/
 
+# GSC Production Files - Exceptions pour cron jobs
+!scripts/gsc/
+!scripts/gsc/gsc-monitoring.cron
+!scripts/gsc/gsc-manager.cjs
+!scripts/gsc/config.json
+!scripts/gsc/tools/
+!scripts/gsc/tools/monitoring-dashboard.cjs
+!scripts/gsc/tools/complete-analysis.cjs
+!scripts/gsc/data/
+!scripts/gsc/data/.gitkeep
+!scripts/gsc/reports/
+!scripts/gsc/reports/.gitkeep
+!scripts/gsc/credentials/
+!scripts/gsc/credentials/.gitkeep
+
 # vercel
 .vercel
 

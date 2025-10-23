@@ -1,0 +1,23 @@
+{
+  "site": "https://cciservices.online",
+  "baseline": {
+    "date": "2025-10-23",
+    "indexed": 28,
+    "total": 104,
+    "rate": 26.9
+  },
+  "monitoring": {
+    "dailyChecks": true,
+    "alertThresholds": {
+      "criticalRate": 30,
+      "warningRate": 60,
+      "targetRate": 90
+    }
+  },
+  "paths": {
+    "tools": "./tools/",
+    "data": "./data/",
+    "reports": "./reports/",
+    "credentials": "./credentials/"
+  }
+}

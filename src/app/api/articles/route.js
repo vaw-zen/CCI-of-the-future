@@ -158,7 +158,12 @@ export async function POST(request) {
       persistence: persistenceMessage,
       deployment: deploySuccess ? 'triggered' : 'not configured',
       totalArticles: updatedArticles.length,
-      note: process.env.VERCEL ? 'Article will be persisted on next deployment' : 'Article saved locally'
+      note: process.env.VERCEL ? 'Article will be persisted on next deployment' : 'Article saved locally',
+      debug: {
+        githubToken: !!process.env.GITHUB_TOKEN,
+        tokenLength: process.env.GITHUB_TOKEN ? process.env.GITHUB_TOKEN.length : 0,
+        environment: process.env.VERCEL ? 'Production' : 'Development'
+      }
     }, { status: 201 });
     
   } catch (error) {

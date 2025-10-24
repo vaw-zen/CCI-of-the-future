@@ -21,31 +21,30 @@ const getBackupPath = () => {
  */
 export async function readArticles() {
   try {
-    const articlesPath = getArticlesPath();
-    
-    if (!fs.existsSync(articlesPath)) {
-      console.warn('Articles file does not exist, returning empty array');
-      return [];
-    }
-    
-    // Read the file content
-    const fileContent = fs.readFileSync(articlesPath, 'utf8');
-    
-    // Extract the articles array using regex
-    // This is safer than using eval() or require() for dynamic imports
-    const match = fileContent.match(/export const articles = (\[[\s\S]*?\]);/);
-    
-    if (match) {
-      // Parse the articles array
-      const articlesData = eval(`(${match[1]})`);
-      return articlesData;
-    } else {
-      console.error('Could not parse articles from file');
-      return [];
-    }
+    // For production safety, dynamically import the articles module
+    // This avoids file system operations in serverless environments
+    const { articles } = await import('../app/conseils/data/articles.js');
+    return [...articles]; // Return a copy to avoid mutations
   } catch (error) {
-    console.error('Error reading articles:', error);
-    return [];
+    console.error('Error reading articles via import:', error);
+    
+    // Fallback to file system reading for local development
+    try {
+      const articlesPath = getArticlesPath();
+      
+      if (!fs.existsSync(articlesPath)) {
+        console.warn('Articles file does not exist, returning empty array');
+        return [];
+      }
+      
+      // Read and evaluate the module content safely
+      delete require.cache[require.resolve(articlesPath)];
+      const moduleContent = require(articlesPath);
+      return [...moduleContent.articles];
+    } catch (fallbackError) {
+      console.error('Fallback reading also failed:', fallbackError);
+      return [];
+    }
   }
 }
 
@@ -86,6 +85,12 @@ export async function writeArticles(articles) {
     
     // Write the file
     fs.writeFileSync(articlesPath, fileContent, 'utf8');
+    
+    // Clear the require cache to ensure fresh imports
+    const moduleId = path.resolve(articlesPath);
+    if (require.cache[moduleId]) {
+      delete require.cache[moduleId];
+    }
     
     console.log(`Successfully wrote ${articles.length} articles to file`);
     return true;

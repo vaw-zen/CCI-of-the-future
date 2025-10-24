@@ -1,4 +1,52 @@
 .container { height: 21.67vw; width: 100%; position: relative; margin-top: 17.5vw; display: flex; gap: 5vw; }
+
+/* Loading State */
+.loadingContainer { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  height: 21.67vw; 
+  color: var(--t-secondary); 
+}
+.loadingSpinner { 
+  font-size: 2rem; 
+  margin-bottom: 1rem; 
+  animation: spin 2s linear infinite; 
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* API Source Badge */
+.sourceBadge {
+  position: absolute;
+  top: -2rem;
+  right: 0;
+  z-index: 10;
+}
+.googleBusiness {
+  background: linear-gradient(135deg, #4285f4, #34a853);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.googlePlaces {
+  background: linear-gradient(135deg, #ea4335, #fbbc05);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .mainImage { width: 21.67vw; height: 21.67vw; object-fit: cover; object-position: center; border-radius: 50%; }
 .mainImage img { border-radius: 50%; }
 .sliderContainer { flex: 1; overflow: hidden; position: relative; display: flex; align-items: flex-end; }

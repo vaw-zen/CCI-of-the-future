@@ -1,0 +1,38 @@
+{
+  "timestamp": "2025-10-23T03:00:00.369Z",
+  "submissionDate": "2025-10-23T03:00:00.369Z",
+  "status": {
+    "totalPages": 92,
+    "indexedBefore": 28,
+    "submitted": 57,
+    "expectedNew": 39
+  },
+  "projections": {
+    "conservative": 33,
+    "realistic": 39,
+    "optimistic": 43
+  },
+  "monitoringSchedule": [
+    {
+      "hours": 12,
+      "status": "PENDING"
+    },
+    {
+      "hours": 24,
+      "status": "PENDING"
+    },
+    {
+      "hours": 48,
+      "status": "PENDING"
+    },
+    {
+      "hours": 72,
+      "status": "PENDING"
+    }
+  ],
+  "nextActions": [
+    "Surveiller GSC dans 12h",
+    "Analyse complète dans 24h",
+    "Rapport final dans 48h"
+  ]
+}

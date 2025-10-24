@@ -44,27 +44,38 @@ export async function GET(request) {
  * Creates a new article
  */
 export async function POST(request) {
+  console.log('POST /api/articles - Starting request processing');
+  
   // Check API key
   const authError = checkApiKey(request);
-  if (authError) return authError;
+  if (authError) {
+    console.log('POST /api/articles - Authentication failed');
+    return authError;
+  }
 
   try {
+    console.log('POST /api/articles - Parsing request body');
     const body = await request.json();
+    console.log('POST /api/articles - Request body parsed:', { title: body.title, id: body.id });
     
     // Read existing articles using file operations (for write operations)
+    console.log('POST /api/articles - Reading existing articles');
     const existingArticles = await readArticles();
+    console.log('POST /api/articles - Found existing articles:', existingArticles.length);
     
     // Generate ID if not provided
     if (!body.id) {
       body.id = getNextId(existingArticles);
+      console.log('POST /api/articles - Generated new ID:', body.id);
     }
     
     // Generate slug if not provided
     if (!body.slug && body.title) {
       body.slug = generateSlug(body.title);
+      console.log('POST /api/articles - Generated slug:', body.slug);
     }
     
-    // Set default values for required fields
+    // Set default values to match existing articles.js structure
     const newArticle = {
       id: body.id,
       slug: body.slug,
@@ -73,7 +84,7 @@ export async function POST(request) {
       metaDescription: body.metaDescription || body.excerpt || '',
       excerpt: body.excerpt || '',
       category: body.category || 'general',
-      categoryLabel: body.categoryLabel || 'Général',
+      categoryLabel: body.categoryLabel || 'Général', 
       keywords: Array.isArray(body.keywords) ? body.keywords : [],
       author: body.author || 'CCI Services',
       authorImage: body.authorImage || '/logo.png',
@@ -86,8 +97,11 @@ export async function POST(request) {
       content: body.content || ''
     };
     
+    console.log('POST /api/articles - Created article object:', { id: newArticle.id, title: newArticle.title });
+    
     // Check for duplicate ID
     if (existingArticles.find(a => a.id === newArticle.id)) {
+      console.log('POST /api/articles - Duplicate ID found');
       return NextResponse.json(
         { 
           success: false, 
@@ -100,6 +114,7 @@ export async function POST(request) {
     
     // Check for duplicate slug
     if (existingArticles.find(a => a.slug === newArticle.slug)) {
+      console.log('POST /api/articles - Duplicate slug found');
       return NextResponse.json(
         { 
           success: false, 
@@ -112,11 +127,15 @@ export async function POST(request) {
     
     // Add new article
     existingArticles.push(newArticle);
+    console.log('POST /api/articles - Article added to array, total articles:', existingArticles.length);
     
     // Write articles to file
+    console.log('POST /api/articles - Writing articles to file');
     const writeSuccess = await writeArticles(existingArticles);
+    console.log('POST /api/articles - Write operation result:', writeSuccess);
     
     if (!writeSuccess) {
+      console.error('POST /api/articles - Write operation failed');
       return NextResponse.json(
         { 
           success: false, 
@@ -127,8 +146,11 @@ export async function POST(request) {
     }
     
     // Trigger deployment if configured
+    console.log('POST /api/articles - Triggering deployment');
     const deploySuccess = await deployChanges(`Add article: ${newArticle.title}`);
+    console.log('POST /api/articles - Deployment result:', deploySuccess);
     
+    console.log('POST /api/articles - Successfully created article');
     return NextResponse.json({
       success: true,
       data: newArticle,
@@ -138,12 +160,14 @@ export async function POST(request) {
     }, { status: 201 });
     
   } catch (error) {
-    console.error('Error creating article:', error);
+    console.error('POST /api/articles - Error occurred:', error);
+    console.error('POST /api/articles - Error stack:', error.stack);
     return NextResponse.json(
       { 
         success: false, 
         error: 'Failed to create article',
-        message: error.message 
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },
       { status: 500 }
     );

@@ -17,7 +17,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
     const handleEmailClick = handleContactEmail('desktop_menu_email');
     
     // Debug: Log the mailto URL to console
-    console.log('Mailto URL:', mail);
+    // console.log('Mailto URL:', mail);
     
     // Track checkbox state in React state instead of directly manipulating the DOM
     const [checkboxChecked, setCheckboxChecked] = useState(false);

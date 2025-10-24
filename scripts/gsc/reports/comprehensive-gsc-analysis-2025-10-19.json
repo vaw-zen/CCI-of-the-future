@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-10-19T23:20:10.280Z",
+  "site": "https://cciservices.online",
+  "analysis": {
+    "sitemaps": {
+      "total": 4,
+      "sitemaps": [
+        {
+          "path": "https://cciservices.online/video-sitemap.xml",
+          "lastSubmitted": "2025-10-19T23:16:23.953Z",
+          "urlsSubmitted": "6",
+          "urlsIndexed": "0",
+          "indexingRate": "0.0"
+        },
+        {
+          "path": "https://cciservices.online/articles-sitemap.xml",
+          "lastSubmitted": "2025-10-19T23:16:23.856Z",
+          "urlsSubmitted": "39",
+          "urlsIndexed": "0",
+          "indexingRate": "0.0"
+        },
+        {
+          "path": "https://cciservices.online/sitemap.xml",
+          "lastSubmitted": "2025-10-19T23:16:23.781Z",
+          "urlsSubmitted": "58",
+          "urlsIndexed": "0",
+          "indexingRate": "0.0"
+        },
+        {
+          "path": "https://cciservices.online/sitemap-index.xml",
+          "lastSubmitted": "2025-10-19T23:16:23.694Z",
+          "urlsSubmitted": "141",
+          "urlsIndexed": "0",
+          "indexingRate": "0.0"
+        }
+      ],
+      "issues": [
+        "⚠️ Low indexing rate (0.0%) for https://cciservices.online/video-sitemap.xml",
+        "❌ Errors in https://cciservices.online/video-sitemap.xml: 1 errors",
+        "⚠️ Low indexing rate (0.0%) for https://cciservices.online/articles-sitemap.xml",
+        "❌ Errors in https://cciservices.online/articles-sitemap.xml: 1 errors",
+        "⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap.xml",
+        "❌ Errors in https://cciservices.online/sitemap.xml: 1 errors",
+        "⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap-index.xml",
+        "❌ Errors in https://cciservices.online/sitemap-index.xml: 1 errors"
+      ]
+    },
+    "performance": {
+      "error": "Invalid value at 'dimension_filter_group[0].filter[0].operator' (type.googleapis.com/google.searchconsole.v1.searchanalytics.filters.ApiDimensionFilterOperator), \"containsAnyOf\""
+    },
+    "indexing": {
+      "error": "Request contains an invalid argument."
+    },
+    "structuredData": {
+      "faqPages": [
+        "https://cciservices.online/conseils"
+      ],
+      "breadcrumbPages": [
+        "https://cciservices.online/services"
+      ],
+      "videoPages": [],
+      "issues": []
+    }
+  },
+  "recommendations": {
+    "critical": [],
+    "high": [
+      {
+        "category": "Indexing",
+        "issue": "⚠️ Low indexing rate (0.0%) for https://cciservices.online/video-sitemap.xml",
+        "action": "Investigate and fix crawling/indexing issues",
+        "impact": "Medium - affects organic visibility"
+      },
+      {
+        "category": "Indexing",
+        "issue": "⚠️ Low indexing rate (0.0%) for https://cciservices.online/articles-sitemap.xml",
+        "action": "Investigate and fix crawling/indexing issues",
+        "impact": "Medium - affects organic visibility"
+      },
+      {
+        "category": "Indexing",
+        "issue": "⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap.xml",
+        "action": "Investigate and fix crawling/indexing issues",
+        "impact": "Medium - affects organic visibility"
+      },
+      {
+        "category": "Indexing",
+        "issue": "⚠️ Low indexing rate (0.0%) for https://cciservices.online/sitemap-index.xml",
+        "action": "Investigate and fix crawling/indexing issues",
+        "impact": "Medium - affects organic visibility"
+      }
+    ],
+    "medium": [],
+    "low": []
+  }
+}

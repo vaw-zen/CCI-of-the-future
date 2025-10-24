@@ -1,0 +1,14 @@
+{
+  "checks": [
+    {
+      "timestamp": "2025-10-23T02:34:03.612Z",
+      "totalArticles": 28,
+      "indexedCount": 28,
+      "indexingRate": "100.0",
+      "healthScore": 100,
+      "newArticles": 0,
+      "alerts": []
+    }
+  ],
+  "trends": {}
+}

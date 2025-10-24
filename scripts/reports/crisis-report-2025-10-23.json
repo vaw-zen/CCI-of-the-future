@@ -1,0 +1,118 @@
+{
+  "timestamp": "2025-10-23T02:35:48.254Z",
+  "status": "CRISIS_MODE",
+  "site": "https://cciservices.online",
+  "currentData": {
+    "date": "2025-10-23",
+    "indexed": 28,
+    "notIndexed": 76,
+    "total": 104,
+    "detectedNotIndexed": 71,
+    "technicalIssues": 5,
+    "indexingRate": 26.9
+  },
+  "analysis": {
+    "status": "CRITICAL",
+    "urgency": "IMMEDIATE",
+    "impact": "HIGH",
+    "details": {
+      "currentIndexing": 26.9,
+      "target": 90,
+      "gap": 63.1,
+      "potentialGain": 71
+    }
+  },
+  "urgency": {
+    "urgencyFactors": {
+      "lowIndexingRate": "CRITICAL",
+      "highPotential": "CRITICAL",
+      "businessImpact": "CRITICAL",
+      "timeFrameOpportunity": "IMMEDIATE"
+    },
+    "overallUrgency": "CRITICAL"
+  },
+  "actionPlan": {
+    "immediate": [
+      {
+        "action": "Soumission massive des 71 pages détectées",
+        "priority": "P0",
+        "timeframe": "1-2 heures",
+        "impact": "+253% d'indexation potentielle",
+        "status": "EN_COURS",
+        "tools": [
+          "massive-url-submission.cjs"
+        ]
+      },
+      {
+        "action": "Correction des 5 problèmes techniques",
+        "priority": "P1",
+        "timeframe": "4-8 heures",
+        "impact": "Déblocage des URLs bloquées",
+        "status": "PLANIFIE",
+        "tools": [
+          "manual intervention"
+        ]
+      }
+    ],
+    "monitoring": [
+      {
+        "action": "Surveillance intensive 24h",
+        "priority": "P1",
+        "timeframe": "Continu 48h",
+        "impact": "Détection rapide des améliorations",
+        "status": "ACTIVE",
+        "tools": [
+          "gsc-monitoring.cjs"
+        ]
+      },
+      {
+        "action": "Vérification quotidienne",
+        "priority": "P2",
+        "timeframe": "Quotidien 1 semaine",
+        "impact": "Suivi des résultats",
+        "status": "PLANIFIE",
+        "tools": [
+          "daily-gsc-check.cjs"
+        ]
+      }
+    ],
+    "optimization": [
+      {
+        "action": "Audit SEO des pages non indexées",
+        "priority": "P2",
+        "timeframe": "1-2 jours",
+        "impact": "Amélioration qualité contenu",
+        "status": "PLANIFIE",
+        "tools": [
+          "seo-audit.cjs"
+        ]
+      }
+    ]
+  },
+  "scenarios": {
+    "optimistic": {
+      "name": "Optimiste (70% succès)",
+      "newIndexed": 50,
+      "timeframe": "24-48h",
+      "probability": "60%"
+    },
+    "realistic": {
+      "name": "Réaliste (50% succès)",
+      "newIndexed": 36,
+      "timeframe": "48-72h",
+      "probability": "80%"
+    },
+    "conservative": {
+      "name": "Conservateur (30% succès)",
+      "newIndexed": 21,
+      "timeframe": "1 semaine",
+      "probability": "95%"
+    }
+  },
+  "recommendations": {
+    "immediate": "Lancer massive-url-submission.cjs immédiatement",
+    "priority": "Concentrer tous les efforts sur l'indexation",
+    "timeline": "Résultats attendus dans 24-48h",
+    "success_metric": "Objectif: >60% d'indexation dans 72h"
+  }
+}

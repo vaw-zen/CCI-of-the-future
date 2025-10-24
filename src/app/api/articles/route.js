@@ -5,11 +5,12 @@
 
 import { NextResponse } from 'next/server';
 import { checkApiKey } from '../../../libs/auth.js';
+import { articles } from '../../conseils/data/articles.js';
 import { readArticles, writeArticles, getNextId, generateSlug, deployChanges } from '../../../libs/fileUtils.js';
 
 /**
  * GET /api/articles
- * Returns all articles
+ * Returns all articles from the existing articles.js file
  */
 export async function GET(request) {
   // Check API key
@@ -17,13 +18,13 @@ export async function GET(request) {
   if (authError) return authError;
 
   try {
-    const articles = await readArticles();
-    
+    // Use the imported articles directly for better performance and reliability
     return NextResponse.json({
       success: true,
       data: articles,
       count: articles.length,
-      message: 'Articles retrieved successfully'
+      message: 'Articles retrieved successfully',
+      source: 'src/app/conseils/data/articles.js'
     });
   } catch (error) {
     console.error('Error reading articles:', error);
@@ -50,12 +51,12 @@ export async function POST(request) {
   try {
     const body = await request.json();
     
-    // Read existing articles
-    const articles = await readArticles();
+    // Read existing articles using file operations (for write operations)
+    const existingArticles = await readArticles();
     
     // Generate ID if not provided
     if (!body.id) {
-      body.id = getNextId(articles);
+      body.id = getNextId(existingArticles);
     }
     
     // Generate slug if not provided
@@ -86,19 +87,19 @@ export async function POST(request) {
     };
     
     // Check for duplicate ID
-    if (articles.find(a => a.id === newArticle.id)) {
+    if (existingArticles.find(a => a.id === newArticle.id)) {
       return NextResponse.json(
         { 
           success: false, 
           error: 'Article with this ID already exists',
-          suggestion: `Try using ID ${getNextId(articles)}`
+          suggestion: `Try using ID ${getNextId(existingArticles)}`
         },
         { status: 400 }
       );
     }
     
     // Check for duplicate slug
-    if (articles.find(a => a.slug === newArticle.slug)) {
+    if (existingArticles.find(a => a.slug === newArticle.slug)) {
       return NextResponse.json(
         { 
           success: false, 
@@ -110,10 +111,10 @@ export async function POST(request) {
     }
     
     // Add new article
-    articles.push(newArticle);
+    existingArticles.push(newArticle);
     
     // Write articles to file
-    const writeSuccess = await writeArticles(articles);
+    const writeSuccess = await writeArticles(existingArticles);
     
     if (!writeSuccess) {
       return NextResponse.json(
@@ -133,7 +134,7 @@ export async function POST(request) {
       data: newArticle,
       message: 'Article created successfully',
       deployment: deploySuccess ? 'triggered' : 'not configured',
-      totalArticles: articles.length
+      totalArticles: existingArticles.length
     }, { status: 201 });
     
   } catch (error) {

@@ -5,11 +5,12 @@
 
 import { NextResponse } from 'next/server';
 import { checkApiKey } from '../../../../libs/auth.js';
+import { articles } from '../../../conseils/data/articles.js';
 import { readArticles, writeArticles, findArticle, deployChanges } from '../../../../libs/fileUtils.js';
 
 /**
  * GET /api/articles/[id]
- * Returns a single article by ID or slug
+ * Returns a single article by ID or slug from the existing articles.js file
  */
 export async function GET(request, { params }) {
   // Check API key
@@ -18,7 +19,6 @@ export async function GET(request, { params }) {
 
   try {
     const { id } = params;
-    const articles = await readArticles();
     
     const article = findArticle(articles, id);
     
@@ -27,7 +27,8 @@ export async function GET(request, { params }) {
         { 
           success: false, 
           error: 'Article not found',
-          searchedFor: id
+          searchedFor: id,
+          availableIds: articles.map(a => ({ id: a.id, slug: a.slug })).slice(0, 5)
         },
         { status: 404 }
       );
@@ -36,7 +37,8 @@ export async function GET(request, { params }) {
     return NextResponse.json({
       success: true,
       data: article,
-      message: 'Article retrieved successfully'
+      message: 'Article retrieved successfully',
+      source: 'src/app/conseils/data/articles.js'
     });
   } catch (error) {
     console.error('Error reading article:', error);
@@ -64,11 +66,11 @@ export async function PUT(request, { params }) {
     const { id } = params;
     const body = await request.json();
     
-    // Read existing articles
-    const articles = await readArticles();
+    // Read existing articles using file operations (for write operations)
+    const existingArticles = await readArticles();
     
     // Find article to update
-    const articleIndex = articles.findIndex(a => 
+    const articleIndex = existingArticles.findIndex(a => 
       a.id === parseInt(id) || a.slug === id
     );
     
@@ -83,7 +85,7 @@ export async function PUT(request, { params }) {
       );
     }
     
-    const existingArticle = articles[articleIndex];
+    const existingArticle = existingArticles[articleIndex];
     
     // Update article with new data (preserve ID and slug unless explicitly changed)
     const updatedArticle = {
@@ -97,7 +99,7 @@ export async function PUT(request, { params }) {
     
     // Check for slug conflicts (if slug was changed)
     if (body.slug && body.slug !== existingArticle.slug) {
-      const slugConflict = articles.find((a, index) => 
+      const slugConflict = existingArticles.find((a, index) => 
         a.slug === body.slug && index !== articleIndex
       );
       
@@ -114,10 +116,10 @@ export async function PUT(request, { params }) {
     }
     
     // Replace the article
-    articles[articleIndex] = updatedArticle;
+    existingArticles[articleIndex] = updatedArticle;
     
     // Write articles to file
-    const writeSuccess = await writeArticles(articles);
+    const writeSuccess = await writeArticles(existingArticles);
     
     if (!writeSuccess) {
       return NextResponse.json(
@@ -164,11 +166,11 @@ export async function DELETE(request, { params }) {
   try {
     const { id } = params;
     
-    // Read existing articles
-    const articles = await readArticles();
+    // Read existing articles using file operations (for write operations)
+    const existingArticles = await readArticles();
     
     // Find article to delete
-    const articleIndex = articles.findIndex(a => 
+    const articleIndex = existingArticles.findIndex(a => 
       a.id === parseInt(id) || a.slug === id
     );
     
@@ -183,13 +185,13 @@ export async function DELETE(request, { params }) {
       );
     }
     
-    const deletedArticle = articles[articleIndex];
+    const deletedArticle = existingArticles[articleIndex];
     
     // Remove article from array
-    articles.splice(articleIndex, 1);
+    existingArticles.splice(articleIndex, 1);
     
     // Write articles to file
-    const writeSuccess = await writeArticles(articles);
+    const writeSuccess = await writeArticles(existingArticles);
     
     if (!writeSuccess) {
       return NextResponse.json(
@@ -208,7 +210,7 @@ export async function DELETE(request, { params }) {
       success: true,
       data: {
         deleted: deletedArticle,
-        remainingCount: articles.length
+        remainingCount: existingArticles.length
       },
       message: 'Article deleted successfully',
       deployment: deploySuccess ? 'triggered' : 'not configured'

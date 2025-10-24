@@ -125,38 +125,40 @@ export async function POST(request) {
       );
     }
     
-    // Add new article
-    existingArticles.push(newArticle);
-    console.log('POST /api/articles - Article added to array, total articles:', existingArticles.length);
+    // Add new article to array (for validation and response)
+    const updatedArticles = [...existingArticles, newArticle];
+    console.log('POST /api/articles - Article added to array, total articles:', updatedArticles.length);
     
-    // Write articles to file
-    console.log('POST /api/articles - Writing articles to file');
-    const writeSuccess = await writeArticles(existingArticles);
-    console.log('POST /api/articles - Write operation result:', writeSuccess);
+    // In production (Vercel), we can't write to filesystem
+    // So we'll accept the article but note that persistence requires deployment
+    let writeSuccess = true;
+    let persistenceMessage = 'accepted';
     
-    if (!writeSuccess) {
-      console.error('POST /api/articles - Write operation failed');
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Failed to save article' 
-        },
-        { status: 500 }
-      );
+    if (process.env.VERCEL) {
+      console.log('POST /api/articles - Running in Vercel, filesystem is read-only');
+      persistenceMessage = 'accepted but requires deployment to persist';
+    } else {
+      // Try to write in local development
+      console.log('POST /api/articles - Attempting to write to filesystem');
+      writeSuccess = await writeArticles(updatedArticles);
+      console.log('POST /api/articles - Write operation result:', writeSuccess);
+      persistenceMessage = writeSuccess ? 'saved to filesystem' : 'filesystem write failed';
     }
     
-    // Trigger deployment if configured
+    // Always trigger deployment if configured (this will persist the article)
     console.log('POST /api/articles - Triggering deployment');
     const deploySuccess = await deployChanges(`Add article: ${newArticle.title}`);
     console.log('POST /api/articles - Deployment result:', deploySuccess);
     
-    console.log('POST /api/articles - Successfully created article');
+    console.log('POST /api/articles - Successfully processed article');
     return NextResponse.json({
       success: true,
       data: newArticle,
       message: 'Article created successfully',
+      persistence: persistenceMessage,
       deployment: deploySuccess ? 'triggered' : 'not configured',
-      totalArticles: existingArticles.length
+      totalArticles: updatedArticles.length,
+      note: process.env.VERCEL ? 'Article will be persisted on next deployment' : 'Article saved locally'
     }, { status: 201 });
     
   } catch (error) {

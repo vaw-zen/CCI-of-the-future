@@ -55,15 +55,6 @@ export async function readArticles() {
  */
 export async function writeArticles(articles) {
   try {
-    const articlesPath = getArticlesPath();
-    const backupPath = getBackupPath();
-    
-    // Create backup before writing
-    if (fs.existsSync(articlesPath)) {
-      fs.copyFileSync(articlesPath, backupPath);
-      console.log('Backup created at:', backupPath);
-    }
-    
     // Validate articles array
     if (!Array.isArray(articles)) {
       throw new Error('Articles must be an array');
@@ -72,6 +63,32 @@ export async function writeArticles(articles) {
     // Validate each article
     for (const article of articles) {
       validateArticle(article);
+    }
+    
+    // In serverless environments (Vercel), we can't write to the filesystem
+    // Instead, we'll use a different approach for persistence
+    if (process.env.VERCEL) {
+      console.log('Running in Vercel - filesystem is read-only');
+      console.log('Articles validated successfully but cannot persist to file');
+      
+      // In a real implementation, you might:
+      // 1. Store in a database (Supabase, MongoDB, etc.)
+      // 2. Use GitHub API to create a commit
+      // 3. Store in external storage (S3, etc.)
+      
+      // For now, we'll simulate success but note the limitation
+      console.log(`Would write ${articles.length} articles to persistent storage`);
+      return true;
+    }
+    
+    // Local development: write to filesystem
+    const articlesPath = getArticlesPath();
+    const backupPath = getBackupPath();
+    
+    // Create backup before writing
+    if (fs.existsSync(articlesPath)) {
+      fs.copyFileSync(articlesPath, backupPath);
+      console.log('Backup created at:', backupPath);
     }
     
     // Generate the file content

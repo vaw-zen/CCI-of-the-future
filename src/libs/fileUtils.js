@@ -134,7 +134,6 @@ function validateArticle(article) {
  */
 function generateArticlesFileContent(articles) {
   const header = `// Base de données des articles de blog SEO
-// Last updated: ${new Date().toISOString()}
 `;
 
   const articlesJson = JSON.stringify(articles, null, 2);

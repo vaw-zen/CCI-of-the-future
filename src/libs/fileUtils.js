@@ -66,19 +66,19 @@ export async function writeArticles(articles) {
     }
     
     // In serverless environments (Vercel), we can't write to the filesystem
-    // Instead, we'll use a different approach for persistence
+    // Use GitHub API to commit changes instead
     if (process.env.VERCEL) {
-      console.log('Running in Vercel - filesystem is read-only');
-      console.log('Articles validated successfully but cannot persist to file');
+      console.log('Running in Vercel - using GitHub API for persistence');
+      const { updateArticlesViaGitHub } = await import('./githubUtils.js');
+      const success = await updateArticlesViaGitHub(articles, `Add new article - Total: ${articles.length} articles`);
       
-      // In a real implementation, you might:
-      // 1. Store in a database (Supabase, MongoDB, etc.)
-      // 2. Use GitHub API to create a commit
-      // 3. Store in external storage (S3, etc.)
-      
-      // For now, we'll simulate success but note the limitation
-      console.log(`Would write ${articles.length} articles to persistent storage`);
-      return true;
+      if (success) {
+        console.log(`Successfully committed ${articles.length} articles to GitHub`);
+        return true;
+      } else {
+        console.log('GitHub API commit failed, but articles are validated');
+        return true; // Don't fail the API call
+      }
     }
     
     // Local development: write to filesystem

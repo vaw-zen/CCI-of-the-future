@@ -133,10 +133,22 @@ export async function POST(request) {
     // So we'll accept the article but note that persistence requires deployment
     let writeSuccess = true;
     let persistenceMessage = 'accepted';
+    let githubError = null;
     
     if (process.env.VERCEL) {
       console.log('POST /api/articles - Running in Vercel, filesystem is read-only');
       persistenceMessage = 'accepted but requires deployment to persist';
+      
+      // Try GitHub API integration
+      try {
+        const success = await writeArticles(updatedArticles);
+        if (success) {
+          persistenceMessage = 'committed to GitHub successfully';
+        }
+      } catch (error) {
+        githubError = error.message;
+        console.error('POST /api/articles - GitHub integration error:', error);
+      }
     } else {
       // Try to write in local development
       console.log('POST /api/articles - Attempting to write to filesystem');
@@ -162,7 +174,8 @@ export async function POST(request) {
       debug: {
         githubToken: !!process.env.GITHUB_TOKEN,
         tokenLength: process.env.GITHUB_TOKEN ? process.env.GITHUB_TOKEN.length : 0,
-        environment: process.env.VERCEL ? 'Production' : 'Development'
+        environment: process.env.VERCEL ? 'Production' : 'Development',
+        githubError: githubError
       }
     }, { status: 201 });
     

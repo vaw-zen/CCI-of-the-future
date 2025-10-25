@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAllArticles } from '../conseils/data/articles';
+import { getAllArticles } from '../conseils/data/articles.js';
 
 
 

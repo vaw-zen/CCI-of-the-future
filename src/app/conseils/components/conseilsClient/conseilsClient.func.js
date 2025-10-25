@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getAllArticles, getArticlesByCategory } from '../../data/articles';
+import { getAllArticles, getArticlesByCategory } from '../../data/articles.js';
 import { dimensionsStore } from '@/utils/store/store';
 
 export function useConseilsLogic() {

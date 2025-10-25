@@ -221,7 +221,7 @@ class SEOContentAutomation {
    */
   getDefaultImage(category) {
     const images = {
-      'tapis': '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
+      'moquette': '/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp',
       'marbre': '/gallery/marbre/Blog-Body-floor-01-1024x640.webp',
       'tapisserie': '/home/retapissage-salon-en-cuir.webp',
       'post-chantier': '/home/nettoyage-professionel-post-chantier.webp'

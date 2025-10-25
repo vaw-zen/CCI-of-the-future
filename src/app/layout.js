@@ -5,7 +5,7 @@ import Script from 'next/script';
 import Initializer from '@/utils/initializer/initalizer';
 import ClientHeader from '@/layout/header/ClientHeader';
 import HydrationSuppressor from '@/utils/HydrationSuppressor';
-import FacebookReferralTracker from '@/components/FacebookReferralTracker';
+
 
 // Dynamically import components that might cause hydration issues
 const Footer = dynamic(() => import('@/layout/footer/footer'));
@@ -220,7 +220,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </head>
       <Initializer />
       <body suppressHydrationWarning>
-        <FacebookReferralTracker />
+      
         <ClientHeader roboto={roboto} />
         {children}
         <Footer />

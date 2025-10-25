@@ -1158,7 +1158,7 @@ export const articles = [
     "authorImage": "/logo.png",
     "publishedDate": "2025-10-25T21:08:56.177Z",
     "updatedDate": "2025-10-25T21:08:56.177Z",
-    "image": "/default-article.jpg",
+    "image": "/logo.png",
     "imageAlt": "CCI Tunisie: Nettoyage Professionnel à Tunis en 2025",
     "readTime": "5 min",
     "featured": false,

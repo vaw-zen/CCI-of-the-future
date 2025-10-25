@@ -112,26 +112,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr" className={dmSans.className} suppressHydrationWarning>
       <head>
-        {/* Google Tag Manager - IMMEDIATELY after <head> for GSC validation */}
-        <script 
-          dangerouslySetInnerHTML={{
-            __html: `
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-MT495L62');
-            `.trim()
-          }}
-        />
-        
-        {/* GTM DataLayer initialization - For better GSC detection */}
-        <script 
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || []; window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});`
-          }}
-        />
-        
         <HydrationSuppressor />
         {/* Global Open Graph / Twitter / icons (canonical removed - handled per page) */}
         <meta name="keywords" content="cci tunisie, cci tunis, nettoyage professionnel tunisie,ch nettoyage moquette tunis, nettoyage salon tunisie, restauration marbre tunis, services tapisserie tunisie, nettoyage post-chantier, CCI services" />
@@ -168,8 +148,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* Google Site Verification - Method 1 for Search Console */}
         <meta name="google-site-verification" content="sJRXBYO6D1wSw4INn0E56VlSp8hSgSQHYc4p6Czr78U" />
 
-
-        {/* Google Analytics - Method 3 for Search Console validation */}
+        {/* Google Analytics - G-0RDH6DH7TS */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RDH6DH7TS"></script>
         <script 
           dangerouslySetInnerHTML={{
@@ -185,7 +164,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             `
           }}
         />
-
 
         {/* JSON-LD site-wide */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />

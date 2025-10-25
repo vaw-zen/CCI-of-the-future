@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getArticleBySlug, getAllArticles } from '../data/articles';
+import { getArticleBySlug, getAllArticles } from '../data/articles.js';
 import styles from './article.module.css';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import RelatedServices from '@/utils/components/relatedServices/relatedServices';

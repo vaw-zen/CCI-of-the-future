@@ -1,0 +1,68 @@
+name: 🚀 CCI Services - Website Build & Health Check
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/app/**'
+      - '.github/workflows/**'
+      - 'package.json'
+      
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force run build check'
+        required: false
+        default: false
+        type: boolean
+
+# Add permissions for GitHub Actions
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  # Build and deploy check
+  build-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Install dependencies
+      run: npm install
+      
+    - name: 🔨 Build application
+      run: npm run build
+      
+    - name: ✅ Validate Next.js application
+      run: |
+        echo "✅ Next.js application built successfully"
+        echo "📊 Build completed for commit: ${{ github.sha }}"
+
+  # Website health check (lightweight)
+  health-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: 🔍 Basic Website Health Check
+      run: |
+        echo "🌐 Checking website health..."
+        
+        # Check main website
+        if curl -s --head https://cciservices.online | head -n 1 | grep -q "200 OK"; then
+          echo "✅ Main website is up and running"
+        else
+          echo "❌ Main website may be down"
+        fi
+        
+        echo "🎯 Basic health check completed"
+        echo "📝 Note: Comprehensive monitoring handled by CRM system"

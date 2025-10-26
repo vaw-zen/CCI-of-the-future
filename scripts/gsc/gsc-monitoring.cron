@@ -1,6 +1,0 @@
-# CCI Services GSC Monitoring Cron Job
-# Run every day at 9 AM
-0 9 * * * cd "C:\Users\chaab\Documents\CCI-of-the-future\scripts\gsc" && node tools/monitoring-dashboard.cjs >> reports/gsc-monitoring.log 2>&1
-
-# Run weekly comprehensive analysis on Sundays at 10 AM  
-0 10 * * 0 cd "C:\Users\chaab\Documents\CCI-of-the-future\scripts\gsc" && node tools/complete-analysis.cjs >> reports/gsc-analysis.log 2>&1

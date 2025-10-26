@@ -10,7 +10,7 @@ on:
       post_type:
         description: 'Type of post to generate'
         required: false
-        default: 'tip'
+        default: 'service'
         type: choice
         options:
         - tip

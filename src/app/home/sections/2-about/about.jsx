@@ -16,7 +16,8 @@ export default function About() {
                 <ResponsiveImage src={content.img}
                     skeleton
                     alt="about us"
-                    sizes={[40, 50,97]}
+                    sizes={[40, 50, 97]}
+                    quality={75}
                     className={styles.image} />
             </div>
             <div className={styles.contentContainer}>

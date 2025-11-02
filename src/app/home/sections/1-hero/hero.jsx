@@ -39,31 +39,34 @@ export default function Hero() {
           title="CCI Services - Leader du nettoyage professionnel en Tunisie"
         />
         <ResponsiveImage
-          sizes={[100, 90]}
+          sizes={[50, 100, 100]}
           src="/home/1-hero/linesGlow.webp"
           position="bottom right"
           alt="Éléments décoratifs CCI Services"
           title="Design moderne CCI Services"
           priority
           fetchPriority="high"
+          quality={60}
           className={styles.glowLines}
         />
         <div className={styles.mainImageContainer}>
           <ResponsiveImage
             skeleton
-            sizes={[60, 80, 85]}
+            sizes={[44, 81, 88]}
             src="/feedback/content (2).jpeg"
             alt="Nettoyage professionnel salons, canapés, fauteuils, matelas, rideaux et moquettes par CCI Tunisie"
+            quality={75}
             className={styles.mainImage}
             title="Nettoyage professionnel: salons, voitures, chaises, matelas, rideaux, moquettes - CCI Services"
           />
         </div>
         <ResponsiveImage
           skeleton
-          sizes={[60, 80, 85]}
+          sizes={[18, 30, 40]}
           src="/home/1-hero/circle.webp"
           alt="Équipement professionnel CCI - Essoreuse automatique de tapis"
           className={styles.circleImage}
+          quality={70}
           title="Première essoreuse automatique de tapis en Tunisie - CCI Services"
         />
       </div>

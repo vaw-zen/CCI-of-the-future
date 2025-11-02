@@ -9,7 +9,7 @@ import Footer from '@/layout/footer/footer';
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
-  display: 'swap',
+  display: 'optional',
   weight: ['400', '500', '600', '700'],
   preload: true,
   fallback: ['system-ui', 'arial'],
@@ -18,7 +18,7 @@ const dmSans = DM_Sans({
 
 const roboto = Roboto_Condensed({
   subsets: ['latin'],
-  display: 'swap',
+  display: 'optional',
   weight: ['400'],
   preload: true,
   fallback: ['sans-serif'],

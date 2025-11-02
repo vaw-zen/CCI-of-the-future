@@ -1,5 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { submitDevisRequest } from '@/services/devisService';
+import { 
+  trackFunnelStep, 
+  trackFunnelComplete, 
+  trackFormFieldFocus, 
+  trackFormFieldComplete,
+  trackFormAbandonment,
+  trackDevisSubmission 
+} from '@/utils/analytics';
 
 const initialFormData = {
   typePersonne: 'physique',
@@ -27,13 +35,48 @@ export function useDevisFormLogic() {
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const completedFields = useRef(new Set());
+  const formStartTime = useRef(Date.now());
+  const lastInteractionTime = useRef(Date.now());
+
+  // Track form entry on mount
+  useEffect(() => {
+    trackFunnelStep('devis_form', 'form_start', 1, { page: 'devis' });
+
+    // Track form abandonment on page exit
+    const handleBeforeUnload = () => {
+      const completionRate = Math.round((completedFields.current.size / Object.keys(initialFormData).length) * 100);
+      if (completionRate > 0 && completionRate < 100) {
+        const lastField = Array.from(completedFields.current).pop() || 'unknown';
+        trackFormAbandonment('devis_form', lastField, completionRate);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    lastInteractionTime.current = Date.now();
+    
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+
+    // Track field completion
+    if ((type !== 'checkbox' && value.trim()) || (type === 'checkbox' && checked)) {
+      if (!completedFields.current.has(name)) {
+        completedFields.current.add(name);
+        trackFormFieldComplete('devis_form', name);
+      }
+    }
+
+    // Track important field changes
+    if (name === 'typeService' && value) {
+      trackFunnelStep('devis_form', 'service_selected', 2, { serviceType: value });
+    }
   };
 
   const validateForm = () => {
@@ -135,8 +178,27 @@ export function useDevisFormLogic() {
           message: 'Votre demande de devis a été envoyée avec succès ! Nous vous contacterons dans les plus brefs délais. Un email de confirmation vous sera envoyé.'
         });
 
+        // Track successful devis submission
+        trackDevisSubmission(
+          formData.typeService,
+          formData.surfaceService || formData.nombrePlaces || 0,
+          'form'
+        );
+        trackFunnelComplete('devis_form', 'form_submitted', 3);
+
+        // Track time to complete
+        const timeToComplete = Math.round((Date.now() - formStartTime.current) / 1000);
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'timing_complete', {
+            event_category: 'form_completion',
+            name: 'devis_form_time',
+            value: timeToComplete
+          });
+        }
+
         // Reset form
         setFormData(initialFormData);
+        completedFields.current.clear();
       } else {
         setSubmitStatus({
           type: 'error',

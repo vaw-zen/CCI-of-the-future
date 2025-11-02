@@ -1,7 +1,10 @@
+'use client';
+
 import React from "react";
 import styles from "./actions.module.css";
 import { LineMdPhoneTwotone, SiMailDuotone } from "@/utils/components/icons";
 import content from "./content.json";
+import { AnalyticsLink } from "@/utils/components/analytics/AnalyticsComponents";
 
 export default function Actions() {
   const phoneNumber = content.phoneNumber.replace(/\s+/g, ""); // remove spaces
@@ -43,11 +46,17 @@ export default function Actions() {
         <div className={styles.infoContainer}>
           {/* WhatsApp Section */}
           <div className={styles.phoneSection}>
-            <a href={whatsappLink} className={styles.phoneInfoTop}>
+            <AnalyticsLink 
+              href={whatsappLink} 
+              className={styles.phoneInfoTop}
+              eventLabel="contact_page_whatsapp"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
                 <LineMdPhoneTwotone className={styles.icon} />
               <h3 className={styles.label}>{content.callNow}</h3>
               <h4 className={styles.phoneNumber}>{content.phoneNumber}</h4>
-            </a>
+            </AnalyticsLink>
             <div className={styles.phoneInfoBottom}>
               <p className={styles.phoneInfoText}>{content.phoneInfoText}</p>
               <strong className={styles.phoneHours}>{content.phoneHours}</strong>
@@ -55,7 +64,11 @@ export default function Actions() {
           </div>
 
           {/* Email Section */}
-          <a href={emailLink} className={styles.emailSection}>
+          <AnalyticsLink 
+            href={emailLink} 
+            className={styles.emailSection}
+            eventLabel="contact_page_email"
+          >
             <div className={styles.emailInfoTop}>
                 <SiMailDuotone className={styles.icon} />
               <h3 className={styles.label}>{content.emailLabel}</h3>
@@ -65,7 +78,7 @@ export default function Actions() {
               <p className={styles.emailInfoText}>{content.emailInfoText}</p>
               <strong className={styles.emailHours}>{content.emailHours}</strong>
             </div>
-          </a>
+          </AnalyticsLink>
         </div>
       </div>
     </div>

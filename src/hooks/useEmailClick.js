@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 import { useAnalytics } from './useAnalytics';
+import { trackEmailClick } from '../utils/analytics';
 
 /**
  * Custom hook for handling email click functionality with enhanced mailto support
@@ -57,6 +58,9 @@ export const useEmailClick = () => {
           is_mailto: true
         });
       }
+
+      // Track Google Ads conversion
+      trackEmailClick(analyticsLabel || 'email_contact', fallbackEmail);
 
       e.preventDefault();
       
@@ -127,6 +131,9 @@ export const useEmailClick = () => {
           is_mailto: true
         });
       }
+
+      // Track Google Ads conversion
+      trackEmailClick(analyticsLabel || 'email_contact_chrome', fallbackEmail);
       
       if (isChrome()) {
         // For Chrome, try iframe approach to bypass profile selector
@@ -174,6 +181,9 @@ export const useEmailClick = () => {
           is_mailto: true
         });
       }
+
+      // Track Google Ads conversion
+      trackEmailClick(analyticsLabel || 'email_contact_simple', '');
       
       // Use window.open with _self to avoid popup blockers
       try {

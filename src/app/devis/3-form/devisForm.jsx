@@ -2,6 +2,7 @@
 
 import styles from './devisForm.module.css';
 import { useDevisFormLogic } from './devisForm.func';
+import { trackFormFieldFocus } from '@/utils/analytics';
 
 export default function DevisForm() {
   const {
@@ -11,6 +12,10 @@ export default function DevisForm() {
     handleInputChange,
     handleSubmit
   } = useDevisFormLogic();
+
+  const handleFieldFocus = (fieldName, fieldType = 'text') => {
+    trackFormFieldFocus('devis_form', fieldName, fieldType);
+  };
 
   return (
     <section className={styles.formSection}>
@@ -40,6 +45,7 @@ export default function DevisForm() {
                   name="typePersonne"
                   value={formData.typePersonne}
                   onChange={handleInputChange}
+                  onFocus={() => handleFieldFocus('typePersonne', 'select')}
                   className={styles.select}
                   required
                 >
@@ -114,6 +120,7 @@ export default function DevisForm() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
+                    onFocus={() => handleFieldFocus('email', 'email')}
                     className={styles.input}
                     placeholder="votre.email@exemple.com"
                     required
@@ -255,6 +262,7 @@ export default function DevisForm() {
                   name="typeService"
                   value={formData.typeService}
                   onChange={handleInputChange}
+                  onFocus={() => handleFieldFocus('typeService', 'select')}
                   className={styles.select}
                   required
                 >

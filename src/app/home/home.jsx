@@ -1,7 +1,11 @@
+'use client';
+
 import dynamic from 'next/dynamic';
 import Hero from "./sections/1-hero/hero";
 import styles from './home.module.css';
 import Head from 'next/head';
+import { useScrollTracking } from '@/hooks/useScrollTracking';
+import { useTimeTracking } from '@/hooks/useTimeTracking';
 
 export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
@@ -42,6 +46,10 @@ const Overlay = dynamic(() => import("./sections/9-overlay/overlay"));
 const Initializer = dynamic(() => import("@/utils/initializer/initalizer"));
 
 export default function Home() {
+  // Track scroll depth and time on homepage
+  useScrollTracking('homepage');
+  useTimeTracking('homepage');
+
   return <>
     {/* Google Tag Manager - Additional for homepage GSC validation */}
     <script 

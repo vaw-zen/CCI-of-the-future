@@ -1,7 +1,7 @@
 'use client';
 
 import { useAnalytics } from '../../../hooks/useAnalytics';
-import { trackServiceInteraction, trackPhoneReveal, trackSocialClick, SERVICE_TYPES } from '../../analytics';
+import { trackServiceInteraction, trackPhoneReveal, trackEmailClick, trackWhatsAppClick, trackSocialClick, SERVICE_TYPES } from '../../analytics';
 import ResponsiveImage from '@/utils/components/Image/Image';
 
 /**
@@ -67,6 +67,7 @@ export function AnalyticsLink({
     );
     const isMailto = href && href.startsWith('mailto:');
     const isTel = href && href.startsWith('tel:');
+    const isWhatsApp = href && (href.includes('wa.me') || href.includes('whatsapp'));
 
     // Track the analytics event
     trackEvent(eventName, {
@@ -76,8 +77,24 @@ export function AnalyticsLink({
       link_destination: href,
       is_external: isExternal,
       is_mailto: isMailto,
-      is_tel: isTel
+      is_tel: isTel,
+      is_whatsapp: isWhatsApp
     });
+
+    // Track Google Ads conversions for email, phone, and WhatsApp links
+    if (isMailto) {
+      // Extract email from mailto: link
+      const emailMatch = href.match(/mailto:([^?]+)/);
+      const email = emailMatch ? emailMatch[1] : '';
+      trackEmailClick(eventLabel || 'link_click', email);
+    } else if (isTel) {
+      trackPhoneReveal(eventLabel || 'link_click');
+    } else if (isWhatsApp) {
+      // Extract phone number from WhatsApp link (wa.me/21698557766)
+      const phoneMatch = href.match(/wa\.me\/(\d+)/);
+      const phone = phoneMatch ? phoneMatch[1] : '';
+      trackWhatsAppClick(eventLabel || 'link_click', phone);
+    }
 
     // For mailto links, ensure they open properly
     if (isMailto) {

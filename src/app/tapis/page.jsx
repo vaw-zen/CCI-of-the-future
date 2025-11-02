@@ -1,13 +1,18 @@
+'use client';
+
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import ServiceDetails from "@/utils/components/servicesComponents/serviceDetails/serviceDetails";
 import PartnerTab from "@/utils/components/servicesComponents/partnerTab/PartnerTab";
-import React from "react";
+import React, { useEffect } from "react";
 import Feedback from "@/utils/components/servicesComponents/feedbackComponent/feedback";
 import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUsTab";
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 import tapisData from "./tapis.json";
+import { useScrollTracking } from '@/hooks/useScrollTracking';
+import { useTimeTracking } from '@/hooks/useTimeTracking';
+import { trackServiceInteraction, SERVICE_TYPES } from '@/utils/analytics';
 
 export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
@@ -36,6 +41,17 @@ export async function generateMetadata() {
 }
 
 export default function Page() {
+  // Track page engagement
+  useScrollTracking('tapis_page');
+  useTimeTracking('tapis_page');
+
+  useEffect(() => {
+    // Track service page view
+    trackServiceInteraction(SERVICE_TYPES.TAPIS, 'page_view', {
+      page_title: tapisData.metadata.title
+    });
+  }, []);
+
   return (
     <>
       <style>{`

@@ -5,6 +5,7 @@ import { getArticleBySlug, getAllArticles } from '../data/articles.js';
 import styles from './article.module.css';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import RelatedServices from '@/utils/components/relatedServices/relatedServices';
+import ArticleAnalyticsWrapper from './ArticleAnalyticsWrapper';
 
 // Générer les métadonnées pour chaque article
 export async function generateMetadata({ params }) {
@@ -270,23 +271,24 @@ export default async function ArticlePage({ params }) {
   const nextArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
 
   return (
-    <main className={styles.main}>
-      {/* Schema markup */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+    <ArticleAnalyticsWrapper articleTitle={article.title}>
+      <main className={styles.main}>
+        {/* Schema markup */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
 
-        <HeroHeader sty title={article.categoryLabel} />
-      <div className={styles.container}>
+          <HeroHeader sty title={article.categoryLabel} />
+        <div className={styles.container}>
         {/* Breadcrumbs */}
         <nav className={styles.breadcrumbs}>
           <Link href="/">Accueil</Link>
@@ -405,5 +407,6 @@ export default async function ArticlePage({ params }) {
         sectionTitle="Nos Services Professionnels"
       />
     </main>
+    </ArticleAnalyticsWrapper>
   );
 }

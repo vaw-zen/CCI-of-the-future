@@ -40,13 +40,328 @@ export const trackQuoteProgress = (step, serviceType, formData = {}) => {
   }
 };
 
-// Track phone number reveals/clicks
+// Track phone number reveals/clicks with Google Ads conversion
 export const trackPhoneReveal = (location = 'header') => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'phone_reveal', {
       event_category: 'lead_generation',
       event_label: location,
       value: 5 // Assign value to phone reveals
+    });
+    
+    // Trigger Google Ads conversion for phone clicks
+    if (typeof window.gtag_report_conversion === 'function') {
+      window.gtag_report_conversion();
+    }
+  }
+};
+
+// Track email link clicks with Google Ads conversion
+export const trackEmailClick = (location = 'general', emailAddress = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'email_click', {
+      event_category: 'lead_generation',
+      event_label: location,
+      email_address: emailAddress,
+      value: 5 // Assign value to email clicks
+    });
+    
+    // Trigger Google Ads conversion for email clicks
+    if (typeof window.gtag_report_conversion === 'function') {
+      window.gtag_report_conversion();
+    }
+  }
+};
+
+// Track WhatsApp link clicks with Google Ads conversion
+export const trackWhatsAppClick = (location = 'general', phoneNumber = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'whatsapp_click', {
+      event_category: 'lead_generation',
+      event_label: location,
+      phone_number: phoneNumber,
+      value: 5 // Assign value to WhatsApp clicks
+    });
+    
+    // Trigger Google Ads conversion for WhatsApp clicks
+    if (typeof window.gtag_report_conversion === 'function') {
+      window.gtag_report_conversion();
+    }
+  }
+};
+
+// ============================================================================
+// VISIBILITY & REACH TRACKING
+// ============================================================================
+
+// Track when key sections become visible (scroll depth/viewport entry)
+export const trackSectionView = (sectionName, sectionType = 'content', pageContext = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'view_section', {
+      event_category: 'visibility',
+      section_name: sectionName,
+      section_type: sectionType,
+      page_context: pageContext,
+      scroll_depth: Math.round((window.scrollY / document.documentElement.scrollHeight) * 100)
+    });
+  }
+};
+
+// Track scroll depth milestones
+export const trackScrollDepth = (percentage, pageName = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'scroll_depth', {
+      event_category: 'engagement',
+      event_label: `${percentage}%`,
+      page_name: pageName,
+      scroll_percentage: percentage
+    });
+  }
+};
+
+// Track CTA button visibility and impressions
+export const trackCTAImpression = (ctaText, ctaLocation, ctaType = 'primary') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'view_promotion', {
+      event_category: 'visibility',
+      promotion_name: ctaText,
+      creative_slot: ctaLocation,
+      promotion_type: ctaType
+    });
+  }
+};
+
+// Track CTA button clicks
+export const trackCTAClick = (ctaText, ctaLocation, ctaDestination = '', value = 0) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'select_promotion', {
+      event_category: 'engagement',
+      promotion_name: ctaText,
+      creative_slot: ctaLocation,
+      cta_destination: ctaDestination,
+      value: value
+    });
+  }
+};
+
+// ============================================================================
+// ENGAGEMENT TRACKING
+// ============================================================================
+
+// Track hero section interactions
+export const trackHeroInteraction = (actionType, actionValue = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'hero_interaction', {
+      event_category: 'engagement',
+      interaction_type: actionType,
+      interaction_value: actionValue,
+      page_location: window.location.pathname
+    });
+  }
+};
+
+// Track service card clicks/views
+export const trackServiceCardClick = (serviceName, serviceUrl, cardPosition = 0) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'select_content', {
+      event_category: 'engagement',
+      content_type: 'service_card',
+      item_id: serviceName.toLowerCase().replace(/\s+/g, '_'),
+      item_name: serviceName,
+      item_list_name: 'services_grid',
+      index: cardPosition
+    });
+  }
+};
+
+// Track gallery interactions
+export const trackGalleryInteraction = (galleryType, imageIndex, action = 'view') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'gallery_interaction', {
+      event_category: 'engagement',
+      gallery_type: galleryType,
+      image_index: imageIndex,
+      action_type: action
+    });
+  }
+};
+
+// Track video interactions (play, pause, complete)
+export const trackVideoEngagement = (videoTitle, action, progress = 0) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', `video_${action}`, {
+      event_category: 'engagement',
+      video_title: videoTitle,
+      video_progress: progress,
+      page_location: window.location.pathname
+    });
+  }
+};
+
+// Track time on page milestones
+export const trackTimeOnPage = (duration, pageName = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'timing_complete', {
+      event_category: 'engagement',
+      name: 'time_on_page',
+      value: duration,
+      event_label: pageName
+    });
+  }
+};
+
+// ============================================================================
+// CONVERSION FUNNEL TRACKING
+// ============================================================================
+
+// Track funnel step entry
+export const trackFunnelStep = (funnelName, stepName, stepNumber, stepData = {}) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'begin_checkout', {
+      event_category: 'conversion_funnel',
+      funnel_name: funnelName,
+      step_name: stepName,
+      step_number: stepNumber,
+      ...stepData
+    });
+  }
+};
+
+// Track funnel step completion
+export const trackFunnelComplete = (funnelName, stepName, stepNumber) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'checkout_progress', {
+      event_category: 'conversion_funnel',
+      funnel_name: funnelName,
+      step_name: stepName,
+      step_number: stepNumber
+    });
+  }
+};
+
+// Track form field interactions
+export const trackFormFieldFocus = (formName, fieldName, fieldType = 'text') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'form_field_focus', {
+      event_category: 'form_interaction',
+      form_name: formName,
+      field_name: fieldName,
+      field_type: fieldType
+    });
+  }
+};
+
+// Track form field completion
+export const trackFormFieldComplete = (formName, fieldName) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'form_field_complete', {
+      event_category: 'form_interaction',
+      form_name: formName,
+      field_name: fieldName
+    });
+  }
+};
+
+// Track form abandonment
+export const trackFormAbandonment = (formName, lastCompletedField, completionPercentage) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'form_abandonment', {
+      event_category: 'conversion_funnel',
+      form_name: formName,
+      last_field: lastCompletedField,
+      completion_rate: completionPercentage
+    });
+  }
+};
+
+// Track devis/quote calculator interactions
+export const trackDevisCalculation = (serviceType, calculatedValue, optionsSelected = []) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'devis_calculated', {
+      event_category: 'conversion',
+      service_type: serviceType,
+      estimated_value: calculatedValue,
+      options: optionsSelected.join(','),
+      value: calculatedValue * 0.1 // Assign conversion value (10% of quote)
+    });
+  }
+};
+
+// Track devis submission
+export const trackDevisSubmission = (serviceType, estimatedValue, contactMethod = 'form') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'generate_lead', {
+      event_category: 'conversion',
+      event_label: 'devis_submission',
+      service_type: serviceType,
+      estimated_value: estimatedValue,
+      contact_method: contactMethod,
+      value: estimatedValue * 0.2 // Higher conversion value for actual submission
+    });
+  }
+};
+
+// ============================================================================
+// CONTENT ENGAGEMENT TRACKING
+// ============================================================================
+
+// Track blog article read progress
+export const trackArticleReadProgress = (articleTitle, progressPercentage) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'article_read_progress', {
+      event_category: 'content_engagement',
+      article_title: articleTitle,
+      read_progress: progressPercentage
+    });
+  }
+};
+
+// Track blog article complete read
+export const trackArticleComplete = (articleTitle, timeSpent) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'article_complete', {
+      event_category: 'content_engagement',
+      article_title: articleTitle,
+      time_spent: timeSpent,
+      value: 2 // Assign value to complete article reads
+    });
+  }
+};
+
+// Track FAQ interaction
+export const trackFAQInteraction = (question, wasHelpful = null) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'faq_interaction', {
+      event_category: 'content_engagement',
+      question: question,
+      helpful: wasHelpful
+    });
+  }
+};
+
+// ============================================================================
+// SEARCH & NAVIGATION TRACKING
+// ============================================================================
+
+// Track internal search
+export const trackInternalSearch = (searchTerm, resultsCount, searchLocation = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'search', {
+      search_term: searchTerm,
+      results_count: resultsCount,
+      search_location: searchLocation
+    });
+  }
+};
+
+// Track navigation clicks
+export const trackNavigationClick = (linkText, linkDestination, navLocation = 'header') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'navigation_click', {
+      event_category: 'navigation',
+      link_text: linkText,
+      link_destination: linkDestination,
+      nav_location: navLocation
     });
   }
 };

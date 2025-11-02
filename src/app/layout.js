@@ -161,6 +161,29 @@ export default function RootLayout({ children }) {
                 page_location: window.location.href,
                 send_page_view: true
               });
+              gtag('config', 'AW-17696563349');
+            `
+          }}
+        />
+
+        {/* Google Ads Conversion Tracking */}
+        <script 
+          dangerouslySetInnerHTML={{
+            __html: `
+              function gtag_report_conversion(url) {
+                var callback = function () {
+                  if (typeof(url) != 'undefined') {
+                    window.location = url;
+                  }
+                };
+                gtag('event', 'conversion', {
+                  'send_to': 'AW-17696563349/oZpbCJfSzrgbEJXBsPZB',
+                  'value': 1.0,
+                  'currency': 'USD',
+                  'event_callback': callback
+                });
+                return false;
+              }
             `
           }}
         />

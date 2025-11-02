@@ -116,8 +116,8 @@ export function AnalyticsLink({
     ...props
   };
 
-  // For external links, add target and rel attributes
-  if (href && href.startsWith('http') && !href.includes(window.location.hostname)) {
+  // For external links, add target and rel attributes (check for window to avoid SSR error)
+  if (href && href.startsWith('http') && typeof window !== 'undefined' && !href.includes(window.location.hostname)) {
     linkProps.target = '_blank';
     linkProps.rel = 'noopener noreferrer';
   }

@@ -3,16 +3,12 @@ const nextConfig = {
   transpilePackages: ['@supabase/supabase-js'],
   experimental: {
     optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],
+    // optimizeCss causes FOUC (flash of unstyled content) - disabled
+    // cssChunking: 'strict', // Disabled - causes issues with CSS loading order
   },
   // Remove console logs in production builds
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
-  },
-  // Optimize CSS for production
-  experimental: {
-    ...nextConfig.experimental,
-    optimizeCss: true, // Enable CSS optimization
-    cssChunking: 'loose', // Better CSS chunking for faster loading
   },
   // Add preconnect hints for external domains (GTM loads later, so only preconnect when needed)
   async headers() {

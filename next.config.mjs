@@ -3,7 +3,6 @@ const nextConfig = {
   transpilePackages: ['@supabase/supabase-js'],
   experimental: {
     optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],
-    optimizeCss: true,
   },
   // Remove console logs in production builds
   compiler: {

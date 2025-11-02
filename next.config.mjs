@@ -3,10 +3,25 @@ const nextConfig = {
   transpilePackages: ['@supabase/supabase-js'],
   experimental: {
     optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],
+    optimizeCss: true,
   },
   // Remove console logs in production builds
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Add preconnect hints for external domains
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Link',
+            value: '<https://www.googletagmanager.com>; rel=preconnect; crossorigin, <https://www.google-analytics.com>; rel=preconnect; crossorigin',
+          },
+        ],
+      },
+    ];
   },
   // Suppress punycode deprecation warning
   onDemandEntries: {

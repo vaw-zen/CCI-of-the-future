@@ -14,15 +14,22 @@ export function parallaxMove(event, x, y, noCT = true, isCursor, more) {
         if (event.type === 'mousemove') {
             const { clientX, clientY } = event;
             const container = event.currentTarget;
-            const minTranslateX = -container.clientWidth / (x || 10);
-            const maxTranslateX = container.clientWidth / (x || 10);
-            const minTranslateY = -container.clientHeight / (y || 10);
-            const maxTranslateY = container.clientHeight / (y || 10);
+            
+            // Batch all DOM reads first
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            const minTranslateX = -containerWidth / (x || 10);
+            const maxTranslateX = containerWidth / (x || 10);
+            const minTranslateY = -containerHeight / (y || 10);
+            const maxTranslateY = containerHeight / (y || 10);
 
-            const { left, top } = link.getBoundingClientRect();
-            const linkCenterX = left + link.clientWidth / 2;
-            const linkCenterY = top + link.clientHeight / 2;
+            const rect = link.getBoundingClientRect();
+            const linkWidth = link.clientWidth;
+            const linkHeight = link.clientHeight;
+            const linkCenterX = rect.left + linkWidth / 2;
+            const linkCenterY = rect.top + linkHeight / 2;
 
+            // Calculate transforms
             let translateX = clientX - linkCenterX;
             let translateY = clientY - linkCenterY;
             if (translateX < minTranslateX) {
@@ -37,6 +44,7 @@ export function parallaxMove(event, x, y, noCT = true, isCursor, more) {
                 translateY = maxTranslateY;
             }
 
+            // Now do DOM write
             link.style.transform = `translate3d(${translateX}px, ${translateY}px, 0)${more || ''}`;
 
             // if (vzCursor) {

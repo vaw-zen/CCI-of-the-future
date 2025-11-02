@@ -235,7 +235,12 @@ export function headerSI() {
     // Only proceed if we have nav elements
     if (!nav.current || !container.current) return;
 
-    if (window.scrollY <= nav.current.clientHeight) {
+    // Batch DOM reads first (prevent forced reflow)
+    const scrollY = window.scrollY;
+    const navHeight = nav.current.clientHeight;
+
+    // Then do DOM writes
+    if (scrollY <= navHeight) {
         nav.current.style.transform = 'translateY(0px)'
         direction.current = 'up'
         container.current.style.background = 'rgba(0, 0, 0, 0)'

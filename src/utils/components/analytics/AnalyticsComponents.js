@@ -21,17 +21,28 @@ export function AnalyticsButton({
   const { trackEvent } = useAnalytics();
 
   const handleClick = (e) => {
-    // Track the analytics event
-    trackEvent(eventName, {
-      event_category: eventCategory,
-      event_label: eventLabel || children,
-      button_text: children,
-      page_location: window.location.href
-    });
-
-    // Call the original onClick handler
+    // Call the original onClick handler first (don't block user interaction)
     if (onClick) {
       onClick(e);
+    }
+
+    // Track analytics asynchronously (non-blocking)
+    if (typeof window !== 'undefined') {
+      const performTracking = () => {
+        trackEvent(eventName, {
+          event_category: eventCategory,
+          event_label: eventLabel || (typeof children === 'string' ? children : 'button'),
+          button_text: typeof children === 'string' ? children : 'button',
+          page_location: window.location.href
+        });
+      };
+
+      // Use requestIdleCallback for better performance
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(performTracking);
+      } else {
+        setTimeout(performTracking, 0);
+      }
     }
   };
 
@@ -60,7 +71,10 @@ export function AnalyticsLink({
   const { trackEvent } = useAnalytics();
 
   const handleClick = (e) => {
-    // Determine link type
+    // Only track on client-side
+    if (typeof window === 'undefined') return;
+    
+    // Determine link type (safe for client-side only)
     const isExternal = href && (
       href.startsWith('http') && 
       !href.includes(window.location.hostname)
@@ -69,40 +83,42 @@ export function AnalyticsLink({
     const isTel = href && href.startsWith('tel:');
     const isWhatsApp = href && (href.includes('wa.me') || href.includes('whatsapp'));
 
-    // Track the analytics event
-    trackEvent(eventName, {
-      event_category: isExternal ? 'outbound' : eventCategory,
-      event_label: eventLabel || href,
-      link_text: children,
-      link_destination: href,
-      is_external: isExternal,
-      is_mailto: isMailto,
-      is_tel: isTel,
-      is_whatsapp: isWhatsApp
-    });
+    // Use requestIdleCallback for non-critical tracking (better performance)
+    const performTracking = () => {
+      // Track the analytics event
+      trackEvent(eventName, {
+        event_category: isExternal ? 'outbound' : eventCategory,
+        event_label: eventLabel || href,
+        link_text: typeof children === 'string' ? children : href,
+        link_destination: href,
+        is_external: isExternal,
+        is_mailto: isMailto,
+        is_tel: isTel,
+        is_whatsapp: isWhatsApp
+      });
 
-    // Track Google Ads conversions for email, phone, and WhatsApp links
-    if (isMailto) {
-      // Extract email from mailto: link
-      const emailMatch = href.match(/mailto:([^?]+)/);
-      const email = emailMatch ? emailMatch[1] : '';
-      trackEmailClick(eventLabel || 'link_click', email);
-    } else if (isTel) {
-      trackPhoneReveal(eventLabel || 'link_click');
-    } else if (isWhatsApp) {
-      // Extract phone number from WhatsApp link (wa.me/21698557766)
-      const phoneMatch = href.match(/wa\.me\/(\d+)/);
-      const phone = phoneMatch ? phoneMatch[1] : '';
-      trackWhatsAppClick(eventLabel || 'link_click', phone);
+      // Track Google Ads conversions for email, phone, and WhatsApp links
+      if (isMailto) {
+        const emailMatch = href.match(/mailto:([^?]+)/);
+        const email = emailMatch ? emailMatch[1] : '';
+        trackEmailClick(eventLabel || 'link_click', email);
+      } else if (isTel) {
+        trackPhoneReveal(eventLabel || 'link_click');
+      } else if (isWhatsApp) {
+        const phoneMatch = href.match(/wa\.me\/(\d+)/);
+        const phone = phoneMatch ? phoneMatch[1] : '';
+        trackWhatsAppClick(eventLabel || 'link_click', phone);
+      }
+    };
+
+    // Use requestIdleCallback if available, otherwise setTimeout
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(performTracking);
+    } else {
+      setTimeout(performTracking, 0);
     }
 
-    // For mailto links, ensure they open properly
-    if (isMailto) {
-      // Let the browser handle the mailto link naturally
-      // Don't prevent default behavior for mailto links
-    }
-
-    // Call the original onClick handler
+    // Call the original onClick handler immediately (don't block user interaction)
     if (onClick) {
       onClick(e);
     }

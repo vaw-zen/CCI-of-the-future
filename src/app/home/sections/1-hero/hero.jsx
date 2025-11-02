@@ -45,6 +45,7 @@ export default function Hero() {
           alt="Éléments décoratifs CCI Services"
           title="Design moderne CCI Services"
           priority
+          fetchPriority="high"
           className={styles.glowLines}
         />
         <div className={styles.mainImageContainer}>

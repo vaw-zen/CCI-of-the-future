@@ -8,12 +8,17 @@ export function useTabLogic(activeTab) {
   useEffect(() => {
     const activeTabElement = tabRefs.current[activeTab]
     if (activeTabElement) {
-      const { offsetLeft, offsetWidth, offsetTop, offsetHeight } = activeTabElement
-      setSelectorStyle({
-        left: offsetLeft,
-        width: offsetWidth,
-        top: offsetTop + offsetHeight
+      // Use requestAnimationFrame to batch layout reads
+      const rafId = requestAnimationFrame(() => {
+        const { offsetLeft, offsetWidth, offsetTop, offsetHeight } = activeTabElement
+        setSelectorStyle({
+          left: offsetLeft,
+          width: offsetWidth,
+          top: offsetTop + offsetHeight
+        })
       })
+      
+      return () => cancelAnimationFrame(rafId)
     }
   }, [activeTab])
 

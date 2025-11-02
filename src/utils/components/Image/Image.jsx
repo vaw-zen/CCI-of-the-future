@@ -13,6 +13,7 @@ const ResponsiveImage = ({
     className = '',
     style,
     priority = false,
+    fetchPriority,
     quality = 80,
     contain,
     position,
@@ -112,6 +113,8 @@ const ResponsiveImage = ({
                     onLoad={handleLoadingComplete}
                     quality={quality}
                     priority={priority}
+                    fetchPriority={fetchPriority}
+                    loading={priority ? 'eager' : 'lazy'}
                 />
             )}
 

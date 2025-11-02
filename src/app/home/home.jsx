@@ -9,17 +9,17 @@ import { useTimeTracking } from '@/hooks/useTimeTracking';
 
 // Metadata is now in page.js (server component) - this component is client for analytics
 
-const About = dynamic(() => import("./sections/2-about/about"));
-const Services = dynamic(() => import("./sections/3-services/services"));
-const ContentHub = dynamic(() => import("./sections/3.5-content-hub/contentHub"));
-const Band = dynamic(() => import("./sections/4-band/band"));
-const Showcase = dynamic(() => import("./sections/5-showcase/showcase"));
-const Project = dynamic(() => import("./sections/6-projects/project"));
-const Refrences = dynamic(() => import("./sections/7-refrences/refrences"));
-const GreenBand = dynamic(() => import("@/utils/components/GreenBand/GreenBand"));
-const Testimonials = dynamic(() => import("./sections/8-testimonials/testimonials"));
-const Overlay = dynamic(() => import("./sections/9-overlay/overlay"));
-const Initializer = dynamic(() => import("@/utils/initializer/initalizer"));
+const About = dynamic(() => import("./sections/2-about/about"), { loading: () => null });
+const Services = dynamic(() => import("./sections/3-services/services"), { loading: () => null });
+const ContentHub = dynamic(() => import("./sections/3.5-content-hub/contentHub"), { loading: () => null });
+const Band = dynamic(() => import("./sections/4-band/band"), { loading: () => null });
+const Showcase = dynamic(() => import("./sections/5-showcase/showcase"), { loading: () => null });
+const Project = dynamic(() => import("./sections/6-projects/project"), { loading: () => null });
+const Refrences = dynamic(() => import("./sections/7-refrences/refrences"), { loading: () => null });
+const GreenBand = dynamic(() => import("@/utils/components/GreenBand/GreenBand"), { loading: () => null });
+const Testimonials = dynamic(() => import("./sections/8-testimonials/testimonials"), { loading: () => null });
+const Overlay = dynamic(() => import("./sections/9-overlay/overlay"), { loading: () => null });
+const Initializer = dynamic(() => import("@/utils/initializer/initalizer"), { loading: () => null });
 
 export default function Home() {
   // Track scroll depth and time on homepage
@@ -27,15 +27,19 @@ export default function Home() {
   useTimeTracking('homepage');
 
   return <>
-    {/* Google Tag Manager - Additional for homepage GSC validation */}
+    {/* Google Tag Manager - Deferred for better performance */}
     <script 
       dangerouslySetInnerHTML={{
         __html: `
-          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','GTM-MT495L62');
+          window.addEventListener('load', function() {
+            setTimeout(function() {
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-MT495L62');
+            }, 1000);
+          });
         `
       }}
     />
@@ -296,6 +300,14 @@ export default function Home() {
         as="image"
         href="/home/1-hero/main.webp"
         fetchpriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/feedback/content (2).jpeg"
+        fetchpriority="high"
+        imageSrcSet="/_next/image?url=%2Ffeedback%2Fcontent%20(2).jpeg&w=384&q=70 384w, /_next/image?url=%2Ffeedback%2Fcontent%20(2).jpeg&w=640&q=70 640w, /_next/image?url=%2Ffeedback%2Fcontent%20(2).jpeg&w=828&q=70 828w"
+        imageSizes="44vw"
       />
       
       {/* DNS prefetch for external domains */}

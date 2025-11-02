@@ -55,7 +55,9 @@ export default function Hero() {
             sizes={[44, 81, 88]}
             src="/feedback/content (2).jpeg"
             alt="Nettoyage professionnel salons, canapés, fauteuils, matelas, rideaux et moquettes par CCI Tunisie"
-            quality={75}
+            quality={70}
+            priority
+            fetchPriority="high"
             className={styles.mainImage}
             title="Nettoyage professionnel: salons, voitures, chaises, matelas, rideaux, moquettes - CCI Services"
           />

@@ -118,11 +118,7 @@ export default function TestimonialsClient({ className, fallbackTestimonials, ba
                             📍 Google Business Profile
                         </span>
                     )}
-                    {source === 'google_places' && (
-                        <span className={styles.googlePlaces}>
-                            🗺️ Google Places
-                        </span>
-                    )}
+                    
                 </div>
             )}
             

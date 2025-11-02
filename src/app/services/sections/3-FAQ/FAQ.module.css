@@ -7,18 +7,21 @@
 .question { display: flex; justify-content: space-between; border-bottom: 1px solid white; padding: 1.04vw 0; cursor: pointer; width: 100%; }
 .questionText { font-size: 1.35vw; font-weight: 700; }
 .icon { width: 1vw; height: 1vw; color: var(--ac-primary); }
-.answer { font-size: 0.83vw; font-weight: 400; overflow: hidden; transition: padding 0.3s ease-in-out, height 0.3s ease-in-out, margin-bottom 0.3s ease-in-out; }
+.answer { font-size: 0.83vw; font-weight: 400; overflow: hidden; transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; will-change: max-height, opacity; }
 .image { flex: 1; object-fit: cover; object-position: center; display: block; }
 
 /* New classes for active and inactive states */
 .answerActive {
   padding-top: 1.04vw;
+  max-height: 500px;
+  opacity: 1;
   margin-bottom: -2vw;
 }
 
 .answerInactive {
   padding-top: 0;
-  height: 0;
+  max-height: 0;
+  opacity: 0;
   margin-bottom: 0;
 }
 

@@ -37,7 +37,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'cciservices.online' },
     ],
     formats: ['image/avif', 'image/webp'],
-    qualities: [60, 65, 70, 75, 80, 90, 100],
+    qualities: [40, 60, 65, 70, 75, 80, 90, 100],
   },
   async redirects() {
     return [

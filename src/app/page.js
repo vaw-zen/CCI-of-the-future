@@ -23,6 +23,13 @@ export async function generateMetadata() {
       card: "summary_large_image",
       title: "CCI Services - Nettoyage Professionnel Tunis",
       description: "CCI Services - Leader du nettoyage professionnel en Tunisie. Devis gratuit."
+    },
+    other: {
+      // Preload critical LCP images for mobile performance
+      'link': [
+        '</_next/image?url=%2Ffeedback%2Fcontent%20(2).jpeg&w=640&q=70>; rel=preload; as=image; fetchpriority=high',
+        '</_next/image?url=%2Fhome%2F1-hero%2FlinesGlow.webp&w=640&q=40>; rel=preload; as=image'
+      ].join(', ')
     }
   };
 }

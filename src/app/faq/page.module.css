@@ -15,7 +15,8 @@
 .activeText { color: var(--bg-base) !important; }
 .icon { transition: transform 0.3s ease, color 0.3s ease; }
 .activeIcon { transform: rotate(45deg); color: var(--bg-base) !important; }
-.content { overflow: hidden; transition: height 0.3s ease; }
+.content { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; will-change: max-height, opacity; max-height: 0; opacity: 0; }
+.content.active { max-height: 500px; opacity: 1; }
 .answer { padding: 1.04vw 0; }
 .answer p { font-size: 0.83vw; line-height: 1.5; }
 

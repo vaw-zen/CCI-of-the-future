@@ -100,8 +100,12 @@ export function useSliderLogic() {
             event.preventDefault();
 
             const slider = sliderContainer.current?.children[0]
-            const newTransform = dragStartRef.current?.startTransform - (deltaX / slider.offsetWidth * 100)
-            slider.style.transform = `translatex(-${newTransform}00%)`
+            // Batch layout reads with RAF to prevent forced reflow
+            requestAnimationFrame(() => {
+                const sliderWidth = slider.offsetWidth
+                const newTransform = dragStartRef.current?.startTransform - (deltaX / sliderWidth * 100)
+                slider.style.transform = `translatex(-${newTransform}00%)`
+            })
         }
     }
 
@@ -116,20 +120,24 @@ export function useSliderLogic() {
             isDraggingRef.current = false;
             const slider = sliderContainer.current?.children[0]
             const dragDistance = clientX - dragStartRef.current?.startX
-            const sliderWidth = slider.offsetWidth
-            const threshold = sliderWidth * 0.1
 
-            slider.style.transition = '.4s'
+            // Batch layout reads with RAF to prevent forced reflow
+            requestAnimationFrame(() => {
+                const sliderWidth = slider.offsetWidth
+                const threshold = sliderWidth * 0.1
 
-            if (Math.abs(dragDistance) > threshold) {
-                if (dragDistance > 0) {
-                    moveLeft()
+                slider.style.transition = '.4s'
+
+                if (Math.abs(dragDistance) > threshold) {
+                    if (dragDistance > 0) {
+                        moveLeft()
+                    } else {
+                        moveRight()
+                    }
                 } else {
-                    moveRight()
+                    slider.style.transform = `translatex(-${count.current}00%)`
                 }
-            } else {
-                slider.style.transform = `translatex(-${count.current}00%)`
-            }
+            })
 
             dragStartRef.current = null
         }

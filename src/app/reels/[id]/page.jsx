@@ -7,6 +7,7 @@ import ReelPlayer from './components/ReelPlayer/ReelPlayer';
 import LoadingSkeleton from './components/LoadingSkeleton/LoadingSkeleton';
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
+import ReelAnalyticsWrapper from './ReelAnalyticsWrapper';
 import styles from "../../blogs/blog.module.css";
 import ServiceDetails from '@/utils/components/servicesComponents/serviceDetails/serviceDetails';
 import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
@@ -204,16 +205,20 @@ export default async function ReelPage({ params }) {
   };
 
   return (
-    <main className={styles.main} itemScope itemType="https://schema.org/VideoObject">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
-      />
-      
-      {/* Hidden microdata for GSC */}
-      <div style={{ display: 'none' }} aria-hidden="true">
+    <ReelAnalyticsWrapper 
+      reelId={reel.id} 
+      reelTitle={reel.message && reel.message.trim() ? reel.message.slice(0, 50) : 'Reel CCI Services'}
+    >
+      <main className={styles.main} itemScope itemType="https://schema.org/VideoObject">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
+        
+        {/* Hidden microdata for GSC */}
+        <div style={{ display: 'none' }} aria-hidden="true">
         <h1 itemProp="name">{reel.message && reel.message.trim() ? 
           reel.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 100) : 
           "Reel vidéo CCI Services"}</h1>
@@ -253,6 +258,7 @@ export default async function ReelPage({ params }) {
       </div>
 
       <GreenBand className={styles.greenBandWrapper} />
-    </main>
+      </main>
+    </ReelAnalyticsWrapper>
   );
 }

@@ -1,8 +1,14 @@
+'use client';
+
 import React from 'react'
 import Link from 'next/link'
+import { trackRelatedServiceClick } from '@/utils/analytics';
 import styles from './relatedServices.module.css'
 
-export default function RelatedServices({ services, sectionTitle = "Services liés" }) {
+export default function RelatedServices({ services, sectionTitle = "Services liés", sourceArticle = '' }) {
+    const handleServiceClick = (service) => {
+        trackRelatedServiceClick(service.title, service.link, sourceArticle);
+    };
     if (!services || services.length === 0) {
         return null;
     }
@@ -20,7 +26,11 @@ export default function RelatedServices({ services, sectionTitle = "Services li�
                 <div className={styles.servicesGrid}>
                     {services.map((service, index) => (
                         <article key={index} className={styles.serviceCard}>
-                            <Link href={service.link} className={styles.cardLink}>
+                            <Link 
+                                href={service.link} 
+                                className={styles.cardLink}
+                                onClick={() => handleServiceClick(service)}
+                            >
                                 <div className={styles.cardContent}>
                                     <div className={styles.serviceIcon}>
                                         {service.icon && (

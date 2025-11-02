@@ -1,39 +1,16 @@
 
-import { Suspense } from 'react';
+'use client';
+
+import { Suspense, useEffect } from 'react';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import ServiceDetails from '@/utils/components/servicesComponents/serviceDetails/serviceDetails';
 import ConseilsClient from './components/conseilsClient/conseilsClient';
+import { trackConseilsView } from '@/utils/analytics';
+import { useScrollTracking } from '@/hooks/useScrollTracking';
+import { useTimeTracking } from '@/hooks/useTimeTracking';
 import styles from './conseils.module.css';
-export const metadata = {
-  title: 'Conseils Nettoyage & Rénovation Tunis | Blog Expert CCI Services',
-  description: 'Guides complets, tutoriels et conseils d\'expert en nettoyage tapis, ponçage marbre et retapissage salon à Tunis. Astuces professionnelles et tarifs 2025.',
-  keywords: 'conseils nettoyage tunis, guide tapis, ponçage marbre, retapissage salon, blog nettoyage professionnel',
-  alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/conseils`
-  },
-  openGraph: {
-    title: 'Conseils Nettoyage & Rénovation Tunis | CCI Services',
-    description: 'Guides, tutoriels et conseils d\'expert en nettoyage et rénovation à Tunis.',
-    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/conseils`,
-    type: 'website',
-    locale: 'fr_TN',
-    siteName: 'CCI Services Tunis',
-    images: [
-      {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/og-conseils.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Conseils nettoyage professionnel Tunis',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Conseils Nettoyage & Rénovation Tunis | CCI Services',
-    description: 'Guides, tutoriels et conseils d\'expert en nettoyage et rénovation à Tunis.',
-    images: [`${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/og-conseils.png`],
-  }
-};
+
+// Metadata is now in layout.jsx (server component) - this page is client for analytics
 
 // Schema markup pour la page conseils
 const conseilsPageSchema = {
@@ -92,6 +69,15 @@ const conseilsPageSchema = {
 };
 
 export default function ConseilsPage() {
+  // Initialize tracking hooks
+  useScrollTracking('conseils_page');
+  useTimeTracking('conseils_page');
+
+  // Track initial page view
+  useEffect(() => {
+    trackConseilsView('all', 0);
+  }, []);
+
   return (
     <main className={styles.main}>
       {/* Schema markup */}

@@ -14,6 +14,16 @@ export const SERVICE_TYPES = {
   CONSEIL: 'conseil'
 };
 
+// Article categories for blog tracking
+export const ARTICLE_CATEGORIES = {
+  TAPIS: 'tapis',
+  MARBRE: 'marbre',
+  SALON: 'salon',
+  TAPISSERIE: 'tapisserie',
+  POST_CHANTIER: 'post-chantier',
+  ALL: 'all'
+};
+
 // Track service-specific interactions
 export const trackServiceInteraction = (serviceType, action, additionalData = {}) => {
   if (typeof window !== 'undefined' && window.gtag) {
@@ -530,6 +540,211 @@ export const initializeAnalyticsSession = () => {
       screen_resolution: `${screen.width}x${screen.height}`,
       viewport_size: `${window.innerWidth}x${window.innerHeight}`,
       connection_type: navigator.connection ? navigator.connection.effectiveType : 'unknown'
+    });
+  }
+};
+
+// ============================================================================
+// CONSEILS/BLOG TRACKING FUNCTIONS
+// ============================================================================
+
+/**
+ * Track conseils page view with filters applied
+ */
+export const trackConseilsView = (activeFilter = 'all', articleCount = 0) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'view_conseils_page', {
+      event_category: 'content_visibility',
+      active_filter: activeFilter,
+      article_count: articleCount,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track article card click from conseils listing
+ */
+export const trackArticleClick = (articleData = {}) => {
+  const { title, slug, category, categoryLabel, featured = false, position = null } = articleData;
+  
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'select_article', {
+      event_category: 'content_engagement',
+      article_title: title,
+      article_slug: slug,
+      article_category: category,
+      category_label: categoryLabel,
+      is_featured: featured,
+      article_position: position,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track category filter change
+ */
+export const trackCategoryFilter = (category, categoryLabel, resultCount = 0) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'filter_category', {
+      event_category: 'content_discovery',
+      filter_category: category,
+      filter_label: categoryLabel,
+      result_count: resultCount,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track table of contents link click in article
+ */
+export const trackTableOfContentsClick = (sectionId, sectionTitle, articleTitle) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'toc_navigation', {
+      event_category: 'content_navigation',
+      section_id: sectionId,
+      section_title: sectionTitle,
+      article_title: articleTitle,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track article navigation (prev/next)
+ */
+export const trackArticleNavigation = (direction, targetArticle) => {
+  const { title, slug, category } = targetArticle;
+  
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'navigate_article', {
+      event_category: 'content_navigation',
+      navigation_direction: direction, // 'previous' or 'next'
+      target_article_title: title,
+      target_article_slug: slug,
+      target_article_category: category,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track breadcrumb navigation click
+ */
+export const trackBreadcrumbClick = (linkText, linkHref, position) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'breadcrumb_click', {
+      event_category: 'content_navigation',
+      link_text: linkText,
+      link_href: linkHref,
+      breadcrumb_position: position,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track related service click from article page
+ */
+export const trackRelatedServiceClick = (serviceTitle, serviceLink, articleTitle) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'select_related_service', {
+      event_category: 'conversion_opportunity',
+      service_title: serviceTitle,
+      service_link: serviceLink,
+      source_article: articleTitle,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track "back to conseils" CTA click
+ */
+export const trackBackToConseilsClick = (articleTitle, articleCategory) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'back_to_conseils', {
+      event_category: 'content_navigation',
+      source_article: articleTitle,
+      source_category: articleCategory,
+      page_location: window.location.href
+    });
+  }
+};
+
+// ============================================================================
+// REELS/VIDEO TRACKING FUNCTIONS
+// ============================================================================
+
+/**
+ * Track reel/video view
+ */
+export const trackReelView = (reelId, reelTitle = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'view_reel', {
+      event_category: 'content_engagement',
+      reel_id: reelId,
+      reel_title: reelTitle,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track video play interaction
+ */
+export const trackVideoPlay = (reelId, reelTitle = '') => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'play_video', {
+      event_category: 'video_engagement',
+      reel_id: reelId,
+      reel_title: reelTitle,
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track video pause interaction
+ */
+export const trackVideoPause = (reelId, currentTime = 0) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'pause_video', {
+      event_category: 'video_engagement',
+      reel_id: reelId,
+      video_time: Math.round(currentTime),
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track video completion
+ */
+export const trackVideoComplete = (reelId, reelTitle = '', watchTime = 0) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'complete_video', {
+      event_category: 'video_engagement',
+      reel_id: reelId,
+      reel_title: reelTitle,
+      watch_time: Math.round(watchTime),
+      page_location: window.location.href
+    });
+  }
+};
+
+/**
+ * Track video progress milestones (25%, 50%, 75%)
+ */
+export const trackVideoProgress = (reelId, percentage) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', `video_progress_${percentage}`, {
+      event_category: 'video_engagement',
+      reel_id: reelId,
+      progress_percentage: percentage,
+      page_location: window.location.href
     });
   }
 };

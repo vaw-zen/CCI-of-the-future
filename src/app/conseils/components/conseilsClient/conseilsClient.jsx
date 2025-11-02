@@ -7,11 +7,42 @@ import CTAButtons from '../CTAButton/CTAButtons';
 import Tab from '@/utils/components/tab/tab';
 import { LineMdCalendar } from '@/utils/components/icons';
 import { formatDate, isWithin } from '@/libs/dateHelper/dateHelper';
+import { trackArticleClick, trackCategoryFilter, trackConseilsView } from '@/utils/analytics';
+import { useEffect } from 'react';
 import styles from '../../conseils.module.css';
 import localStyles from './conseilsClient.module.css';
 
 export default function ConseilsClient() {
   const { activeFilter, filteredArticles, featuredArticles, filters, handleFilterClick } = useConseilsLogic();
+
+  // Track when articles are displayed or filter changes
+  useEffect(() => {
+    const totalArticles = featuredArticles.length + filteredArticles.length;
+    trackConseilsView(activeFilter, totalArticles);
+  }, [activeFilter, featuredArticles.length, filteredArticles.length]);
+
+  // Enhanced filter handler with tracking
+  const handleFilterWithTracking = (filterKey) => {
+    const filter = filters.find(f => f.key === filterKey);
+    if (filter) {
+      handleFilterClick(filterKey);
+      
+      // Track filter change
+      trackCategoryFilter(filterKey, filter.label, 0); // Result count will be updated by useEffect
+    }
+  };
+
+  // Track article click with metadata
+  const handleArticleClick = (article, position, isFeatured = false) => {
+    trackArticleClick({
+      title: article.title,
+      slug: article.slug,
+      category: article.category,
+      categoryLabel: article.categoryLabel,
+      featured: isFeatured,
+      position: position
+    });
+  };
 
   const getDisplayedDate = (date) => {
     if (!date) return '';
@@ -32,7 +63,7 @@ export default function ConseilsClient() {
         <Tab
           tabs={filters}
           activeTab={activeFilter}
-          onTabChange={handleFilterClick}
+          onTabChange={handleFilterWithTracking}
           className={styles.tabWrapper}
         />
       </div>
@@ -55,11 +86,12 @@ export default function ConseilsClient() {
       {/* Grille d'articles */}
       <div className={styles.grid}>
         {/* Articles en vedette */}
-        {featuredArticles.map(article => (
+        {featuredArticles.map((article, index) => (
           <Link
             key={article.id}
             href={`/conseils/${article.slug}`}
             className={`${styles.card} ${styles.featured}`}
+            onClick={() => handleArticleClick(article, index, true)}
           >
             <div className={styles.imageWrapper}>
               <Image
@@ -88,11 +120,12 @@ export default function ConseilsClient() {
         ))}
 
         {/* Articles réguliers */}
-        {filteredArticles.map(article => (
+        {filteredArticles.map((article, index) => (
           <Link
             key={article.id}
             href={`/conseils/${article.slug}`}
             className={styles.card}
+            onClick={() => handleArticleClick(article, featuredArticles.length + index, false)}
           >
             <div className={styles.imageWrapper}>
               <Image

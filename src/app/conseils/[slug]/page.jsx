@@ -6,6 +6,12 @@ import styles from './article.module.css';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import RelatedServices from '@/utils/components/relatedServices/relatedServices';
 import ArticleAnalyticsWrapper from './ArticleAnalyticsWrapper';
+import { 
+  TrackedBreadcrumbs, 
+  TrackedTableOfContents, 
+  TrackedArticleNav,
+  TrackedBackToCTA 
+} from './ArticleNavigation';
 
 // Générer les métadonnées pour chaque article
 export async function generateMetadata({ params }) {
@@ -289,16 +295,8 @@ export default async function ArticlePage({ params }) {
 
           <HeroHeader sty title={article.categoryLabel} />
         <div className={styles.container}>
-        {/* Breadcrumbs */}
-        <nav className={styles.breadcrumbs}>
-          <Link href="/">Accueil</Link>
-          <span>›</span>
-          <Link href="/conseils">Conseils</Link>
-          <span>›</span>
-          <span>{article.categoryLabel}</span>
-          <span>›</span>
-          <span>{article.title}</span>
-        </nav>
+        {/* Breadcrumbs with tracking */}
+        <TrackedBreadcrumbs article={article} />
 
         {/* Header de l'article */}
         <header className={styles.articleHeader}>
@@ -329,22 +327,8 @@ export default async function ArticlePage({ params }) {
           />
         </div>
 
-        {/* Table des matières */}
-        <nav className={styles.tableOfContents}>
-          <h3>📋 Sommaire</h3>
-          <ul>
-            <li><a href="#pourquoi-nettoyer-professionnellement">Pourquoi nettoyer professionnellement ?</a></li>
-            <li><a href="#methode-injection-extraction">Méthode injection-extraction</a></li>
-            <li><a href="#types-nettoyage">Types de nettoyage</a></li>
-            <li><a href="#tarifs-nettoyage-2025">Tarifs 2025</a></li>
-            <li><a href="#zones-intervention">Zones d'intervention</a></li>
-            <li><a href="#quand-nettoyer">Quand nettoyer ?</a></li>
-            <li><a href="#choisir-professionnel">Choisir son professionnel</a></li>
-            <li><a href="#entretien-quotidien">Entretien quotidien</a></li>
-            <li><a href="#faq">Questions fréquentes</a></li>
-            <li><a href="#urgences">Interventions d'urgence</a></li>
-          </ul>
-        </nav>
+        {/* Table des matières with tracking */}
+        <TrackedTableOfContents articleTitle={article.title} />
 
         {/* Contenu de l'article */}
         <article 
@@ -352,59 +336,18 @@ export default async function ArticlePage({ params }) {
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
-        {/* Navigation entre articles */}
-        <nav className={styles.articleNav}>
-          {prevArticle && (
-            <Link href={`/conseils/${prevArticle.slug}`} className={`${styles.navLink} ${styles.prev}`}>
-              <div className={styles.label}>← Article précédent</div>
-              <div className={styles.title}>{prevArticle.title}</div>
-            </Link>
-          )}
-          
-          {nextArticle && (
-            <Link href={`/conseils/${nextArticle.slug}`} className={`${styles.navLink} ${styles.next}`}>
-              <div className={styles.label}>Article suivant →</div>
-              <div className={styles.title}>{nextArticle.title}</div>
-            </Link>
-          )}
-        </nav>
+        {/* Navigation between articles with tracking */}
+        <TrackedArticleNav prevArticle={prevArticle} nextArticle={nextArticle} />
 
-        {/* CTA retour à la liste */}
-        <div style={{
-          textAlign: 'center',
-          marginTop: '50px',
-          padding: '30px',
-          background: 'var(--bg-elevated)',
-          borderRadius: '16px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
-        }}>
-          <h3 style={{ marginBottom: '20px', color: 'var(--t-primary)' }}>
-            Découvrez Nos Autres Guides
-          </h3>
-          <Link 
-            href="/conseils"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'var(--ac-primary)',
-              color: 'var(--bg-base)',
-              padding: '12px 25px',
-              borderRadius: '8px',
-              textDecoration: 'none',
-              fontWeight: '600',
-              transition: 'transform 0.2s'
-            }}
-          >
-            📚 Tous les Conseils & Guides
-          </Link>
-        </div>
+        {/* Back to conseils CTA with tracking */}
+        <TrackedBackToCTA articleTitle={article.title} articleCategory={article.category} />
       </div>
       
       {/* Related Services - en dehors du container pour utiliser ses propres styles */}
       <RelatedServices 
         services={relatedServices}
         sectionTitle="Nos Services Professionnels"
+        sourceArticle={article.title}
       />
     </main>
     </ArticleAnalyticsWrapper>

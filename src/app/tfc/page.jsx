@@ -14,27 +14,7 @@ import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
 import { trackServiceInteraction, SERVICE_TYPES } from '@/utils/analytics';
 
-export async function generateMetadata() {
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-
-  return {
-    title: tfcData.metadata.title,
-    description: tfcData.metadata.description,
-    alternates: {
-      canonical: `${SITE_URL}/tfc`
-    },
-    openGraph: {
-      title: tfcData.metadata.title,
-      description: tfcData.metadata.description,
-      url: `${SITE_URL}/tfc`,
-      type: 'website'
-    },
-    twitter: {
-      title: tfcData.metadata.title,
-      description: tfcData.metadata.description
-    }
-  };
-}
+// Metadata is now in layout.jsx (server component) - this page is client for analytics
 
 export default function Page() {
   // Track page engagement

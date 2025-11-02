@@ -14,31 +14,7 @@ import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
 import { trackServiceInteraction, SERVICE_TYPES } from '@/utils/analytics';
 
-export async function generateMetadata() {
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-
-  return {
-    title: tapisData.metadata.title,
-    description: tapisData.metadata.description,
-    keywords: tapisData.metadata.keywords,
-    alternates: {
-      canonical: `${SITE_URL}/tapis`
-    },
-    openGraph: {
-      title: "Nettoyage Tapis & Moquette Tunis - Injection Extraction | CCI",
-      description: tapisData.metadata.description,
-      url: `${SITE_URL}/tapis`,
-      type: 'website',
-      locale: 'fr_TN',
-      siteName: 'CCI Services'
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: "Nettoyage Tapis & Moquette Tunis | CCI",
-      description: tapisData.metadata.description
-    }
-  };
-}
+// Metadata is now in layout.jsx (server component) - this page is client for analytics
 
 export default function Page() {
   // Track page engagement

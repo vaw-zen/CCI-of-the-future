@@ -1,10 +1,7 @@
-'use client';
-
 import React from "react";
 import styles from "./hero.module.css";
 import Link from "next/link";
 import {
-  LineMdTiktok,
   LineMdFacebook,
   LineMdInstagram,
   LineMdLinkedin,
@@ -13,23 +10,10 @@ import {
   LineMdYoutubeTwotone,
 } from "@/utils/components/icons";
 import ResponsiveImage from "@/utils/components/Image/Image";
-import { AnalyticsLink } from "@/utils/components/analytics/AnalyticsComponents";
-import { trackHeroInteraction, trackCTAClick, trackSocialClick } from "@/utils/analytics";
-import { useSectionVisibility } from "@/hooks/useSectionVisibility";
-
 
 export default function Hero() {
-  const heroRef = useSectionVisibility('hero_section', 'hero', { pageContext: 'homepage' });
-
-  const handleCTAClick = (ctaType, ctaText, destination) => {
-    trackCTAClick(ctaText, 'hero_section', destination, ctaType === 'primary' ? 10 : 5);
-  };
-
-  const handleSocialClick = (platform) => {
-    trackSocialClick(platform, 'hero_section');
-  };
   return (
-    <div className={styles.heroContainer} ref={heroRef}>
+    <div className={styles.heroContainer}>
       <div className={styles.backgroundImages}>
         <ResponsiveImage
           sizes={[100, 150, 200]}
@@ -85,27 +69,25 @@ export default function Hero() {
         </header>
         <div className={styles.contactDetails}>
           <div itemScope itemType="https://schema.org/ContactPoint">
-            <AnalyticsLink 
+            <a 
               href="mailto:contact@cciservices.online"
               itemProp="email"
               title="Contactez CCI Services par email"
               id="email"
-              eventLabel="hero_email"
             >
               contact@cciservices.online
-            </AnalyticsLink>
+            </a>
             <br />
-            <AnalyticsLink
+            <a
               href="https://wa.me/21698557766"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.phoneLink}
               itemProp="telephone"
               title="Appelez CCI Services - Devis gratuit"
-              eventLabel="hero_whatsapp"
             >
                +216 98 557 766
-            </AnalyticsLink>
+            </a>
           </div>
           <div className={styles.addressAndSocial}>
             <address itemScope itemType="https://schema.org/PostalAddress">
@@ -120,67 +102,56 @@ export default function Hero() {
             </address>
 
             <div className={styles.socialIcons}>
-              <AnalyticsLink
+              <a
                 href="https://wa.me/21698557766"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Contacter via WhatsApp"
-                eventLabel="hero_social_whatsapp"
-                onClick={() => handleSocialClick('whatsapp')}
               >
                 <LineMdPhoneTwotone className={styles.icon} />
-              </AnalyticsLink>
-              <AnalyticsLink 
+              </a>
+              <a 
                 href="mailto:contact@cciservices.online" 
                 aria-label="Envoyer un email"
-                eventLabel="hero_social_email"
               >
                 <SiMailDuotone className={styles.icon} />
-              </AnalyticsLink>
-              <AnalyticsLink 
+              </a>
+              <a 
                 href="https://www.instagram.com/cci.services/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 title="Suivez CCI Services sur Instagram - Photos avant/après nettoyage" 
                 aria-label="Instagram CCI Services"
-                eventLabel="hero_social_instagram"
-                onClick={() => handleSocialClick('instagram')}
               >
                 <LineMdInstagram className={styles.icon} />
-              </AnalyticsLink>
-              <AnalyticsLink 
+              </a>
+              <a 
                 href="https://www.facebook.com/Chaabanes.Cleaning.Intelligence" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 title="Page Facebook CCI Services - Avis clients et promotions" 
                 aria-label="Facebook CCI Services"
-                eventLabel="hero_social_facebook"
-                onClick={() => handleSocialClick('facebook')}
               >
                 <LineMdFacebook className={styles.icon} />
-              </AnalyticsLink>
-              <AnalyticsLink 
+              </a>
+              <a 
                 href="https://www.linkedin.com/company/chaabanes-cleaning-int" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 title="Profil professionnel CCI Services sur LinkedIn" 
                 aria-label="LinkedIn CCI Services"
-                eventLabel="hero_social_linkedin"
-                onClick={() => handleSocialClick('linkedin')}
               >
                 <LineMdLinkedin className={styles.icon} />
-              </AnalyticsLink>
-              <AnalyticsLink 
+              </a>
+              <a 
                 href="https://www.youtube.com/@ChaabanesCleaningIntelligence" 
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Youtube channel CCI Services" 
                 aria-label="YouTube CCI Services"
-                eventLabel="hero_social_youtube"
-                onClick={() => handleSocialClick('youtube')}
               >
                 <LineMdYoutubeTwotone className={styles.icon} />
-              </AnalyticsLink>
+              </a>
             </div>
           </div>
         </div>
@@ -188,7 +159,6 @@ export default function Hero() {
           <Link 
             href="/contact#devis" 
             title="Demander un devis gratuit CCI Services"
-            onClick={() => handleCTAClick('primary', 'Devis Gratuit', '/contact#devis')}
           >
             <button className={`${styles.button} ${styles.primaryButton}`} type="button">
                Devis Gratuit
@@ -197,7 +167,6 @@ export default function Hero() {
           <Link 
             href="/services" 
             title="Découvrir tous nos services de nettoyage professionnel"
-            onClick={() => handleCTAClick('secondary', 'Nos Services', '/services')}
           >
             <button className={`${styles.button} ${styles.secondaryButton}`} type="button">
                Nos Services

@@ -8,6 +8,12 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  // Optimize CSS for production
+  experimental: {
+    ...nextConfig.experimental,
+    optimizeCss: true, // Enable CSS optimization
+    cssChunking: 'loose', // Better CSS chunking for faster loading
+  },
   // Add preconnect hints for external domains (GTM loads later, so only preconnect when needed)
   async headers() {
     return [

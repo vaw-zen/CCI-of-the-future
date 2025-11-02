@@ -15,12 +15,18 @@ const dmSans = DM_Sans({
   subsets: ['latin'],
   display: 'swap',
   weight: ['400', '500', '600', '700'],
+  preload: true,
+  fallback: ['system-ui', 'arial'],
+  adjustFontFallback: true,
 });
 
 const roboto = Roboto_Condensed({
   subsets: ['latin'],
   display: 'swap',
-  weight: ['400']
+  weight: ['400'],
+  preload: true,
+  fallback: ['sans-serif'],
+  adjustFontFallback: true,
 });
 
 export const metadata = {
@@ -113,6 +119,10 @@ export default function RootLayout({ children }) {
     <html lang="fr" className={dmSans.className} suppressHydrationWarning>
       <head>
         <HydrationSuppressor />
+        {/* Resource hints for faster loading */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Global Open Graph / Twitter / icons (canonical removed - handled per page) */}
         <meta name="keywords" content="cci tunisie, cci tunis, nettoyage professionnel tunisie,ch nettoyage moquette tunis, nettoyage salon tunisie, restauration marbre tunis, services tapisserie tunisie, nettoyage post-chantier, CCI services" />
         <meta name="author" content="CCI Tunisie" />

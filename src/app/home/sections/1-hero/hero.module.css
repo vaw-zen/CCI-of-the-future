@@ -1,7 +1,7 @@
 .heroContainer { width: 100%; height: clamp(32vw, 100svh, 100svh); background: black; contain: paint; }
 .heroContainer img { transition: opacity .2s; }
 .backgroundImage { position: absolute !important; left: 0; top: 0; width: 100vw; height: 100svh; object-fit: cover; object-position: center; }
-.glowLines { opacity: .75; z-index: 1; height: 100%; width: 50%; object-fit: cover; object-position: bottom; position: absolute !important; right: 20vw; top: 0; transition: opacity .5 !important; }
+.glowLines { opacity: .75; z-index: 1; height: 100%; width: 50%; object-fit: cover; object-position: bottom; position: absolute !important; right: 20vw; top: 0; transition: opacity .5s; will-change: opacity; }
 .mainImageContainer { z-index: 1; position: absolute; right: -5vw; bottom: -13vw; border-radius: 50vw 50vw 0 0; height: 60vw; width: 35vw; transform: rotate(-40deg); overflow: hidden; border: .5vw solid var(--bg-elevated); }
 .mainImage { width: 125%; height: 100%; object-fit: cover; object-position: center; transform: rotate(45deg) translatex(-25%);}
 .circleImage { z-index: 1; width: 17.5vw; height: 17.5vw; border-radius: 50%; object-fit: contain; object-position: center; position: absolute !important; right: 25vw; bottom: 2.5vw; }

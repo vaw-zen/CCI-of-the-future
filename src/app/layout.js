@@ -1,14 +1,10 @@
 import { DM_Sans, Roboto_Condensed } from 'next/font/google';
 import "./globals.css";
-import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import Initializer from '@/utils/initializer/initalizer';
 import ClientHeader from '@/layout/header/ClientHeader';
 import HydrationSuppressor from '@/utils/HydrationSuppressor';
-
-
-// Dynamically import components that might cause hydration issues
-const Footer = dynamic(() => import('@/layout/footer/footer'));
+import Footer from '@/layout/footer/footer';
 
 
 const dmSans = DM_Sans({

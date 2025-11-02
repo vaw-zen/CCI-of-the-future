@@ -8,7 +8,7 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  // Add preconnect hints for external domains
+  // Add preconnect hints for external domains (GTM loads later, so only preconnect when needed)
   async headers() {
     return [
       {
@@ -16,7 +16,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Link',
-            value: '<https://www.googletagmanager.com>; rel=preconnect; crossorigin, <https://www.google-analytics.com>; rel=preconnect; crossorigin',
+            value: '<https://www.googletagmanager.com>; rel=preconnect; crossorigin',
           },
         ],
       },
@@ -36,7 +36,8 @@ const nextConfig = {
       { protocol: 'https', hostname: 'uploads-ssl.webflow.com' },
       { protocol: 'https', hostname: 'cciservices.online' },
     ],
-    qualities: [75, 80, 90, 100],
+    formats: ['image/avif', 'image/webp'],
+    qualities: [60, 70, 75, 80, 90, 100],
   },
   async redirects() {
     return [

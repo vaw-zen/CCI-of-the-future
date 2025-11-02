@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
 export function useTabLogic(activeTab) {
-  const [selectorStyle, setSelectorStyle] = useState({ left: 0, width: 0, top: 0 })
+  const [selectorStyle, setSelectorStyle] = useState({ transform: 'translateX(0)', width: 0, top: 0 })
   const tabRefs = useRef({})
   const containerRef = useRef(null)
 
@@ -12,9 +12,9 @@ export function useTabLogic(activeTab) {
       const rafId = requestAnimationFrame(() => {
         const { offsetLeft, offsetWidth, offsetTop, offsetHeight } = activeTabElement
         setSelectorStyle({
-          left: offsetLeft,
+          transform: `translate(${offsetLeft}px, ${offsetTop + offsetHeight}px)`,
           width: offsetWidth,
-          top: offsetTop + offsetHeight
+          top: 0 // Set in CSS, not JS
         })
       })
       

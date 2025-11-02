@@ -11,7 +11,7 @@
 .navigation { display: flex; flex-direction: column; text-transform: uppercase; font-weight: bolder; gap: 2vw; list-style: none; line-height: .85; }
 .navLink { display: flex; gap: .75vw; height: auto; }
 .index { max-width: 3.75vw; min-width: 3.75vw; flex: 1; position: relative; font-size: 1.25vw; color: var(--t-secondary); display: flex; flex-direction: column; justify-content: space-between; }
-.line { transition: width .4s; height: 2px; width: 60%; background: var(--t-secondary); border-radius: 1vw; }
+.line { transition: transform .4s, background .4s; height: 2px; width: 100%; background: var(--t-secondary); border-radius: 1vw; transform: scaleX(0.6); transform-origin: left; will-change: transform; }
 .pageName { font-size: 1.97vw; }
 .bottom { font-size: .834vw; min-height: 3vw; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; padding: .9vw 17.5vw .9vw 15.72vw; align-items: center; }
 .copyright { font-size: 0.9375vw; color: var(--t-secondary); }
@@ -26,7 +26,7 @@
 .socials li :hover {color: var(--ac-primary);}
 .navLink:hover {color: var(--ac-primary);}
 .navLink:hover span {color: var(--ac-primary);}
-.navLink:hover .line {background: var(--ac-primary); width: 92.5%;}
+.navLink:hover .line {background: var(--ac-primary); transform: scaleX(0.925);}
 
 @media (max-width: 1024px) {
 .footer { aspect-ratio: 100 / 97.5; }
@@ -40,7 +40,7 @@
 
 .navLink { gap: 2vw;  }
 .index { max-width: 10vw; min-width: 10vw; font-size: 3.5vw; }
-.line { transition: width .4s; height: 2px; width: 60%; }
+.line { transition: transform .4s, background .4s; height: 2px; width: 100%; transform: scaleX(0.6); }
 .pageName { font-size: 5vw; }
 .navigation { gap: 4vw; line-height: 1; }
 
@@ -64,7 +64,7 @@
     
     .navLink { gap: 5vw;  }
     .index { max-width: 12.5vw; min-width: 12.5vw; font-size: 5vw; }
-    .line { transition: width .4s; height: 2px; width: 60%; }
+    .line { transition: transform .4s, background .4s; height: 2px; width: 100%; transform: scaleX(0.6); }
     .pageName { font-size: 9vw; }
     .navigation { gap: 7.5vw; line-height: 1; }
     

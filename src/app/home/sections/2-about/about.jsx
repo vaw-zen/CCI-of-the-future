@@ -17,7 +17,7 @@ export default function About() {
                     skeleton
                     alt="about us"
                     sizes={[40, 50, 97]}
-                    quality={75}
+                    quality={65}
                     className={styles.image} />
             </div>
             <div className={styles.contentContainer}>

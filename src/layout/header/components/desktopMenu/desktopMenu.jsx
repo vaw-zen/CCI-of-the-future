@@ -169,7 +169,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                         <div className={styles.contactSection}>
                             {/* link for google map or google search here */}
                             <a href='/' target='_blank' className={styles.locationLink}>
-                                <ResponsiveImage src='/contact/location.png' alt='location' skeleton sizes={12.5} className={styles.locationImage} />
+                                <ResponsiveImage src='/contact/location.png' alt='location' skeleton quality={70} sizes={12.5} className={styles.locationImage} />
                             </a>
                             <AnalyticsLink
                                 href={phone}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import Actions from "./1-actions/actions";
 import Welcome from "./2-welcoming/welcome";
@@ -95,9 +95,11 @@ export default function ContactPage() {
         }}
       />
 
-      <Actions />
-      <Welcome />
-      <Form />
+      <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Chargement...</div>}>
+        <Actions />
+        <Welcome />
+        <Form />
+      </Suspense>
     </>
   );
 }

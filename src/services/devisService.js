@@ -23,7 +23,14 @@ export async function submitDevisRequest(formData) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ formData }),
+    }).catch(error => {
+      console.error('Network error:', error);
+      throw new Error('Erreur de connexion. Vérifiez votre connexion internet.');
     });
+
+    if (!response) {
+      throw new Error('Aucune réponse du serveur');
+    }
 
     const result = await response.json();
 

@@ -3,24 +3,21 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// During build time, we might not have these variables, so we create a mock client
+// Validate Supabase configuration
 if (!supabaseUrl || !supabaseAnonKey) {
-  // Only throw error at runtime, not during build
-  if (typeof window !== 'undefined' || process.env.NODE_ENV !== 'production') {
-    console.warn('Missing Supabase environment variables - using mock client for build');
+  if (typeof window !== 'undefined') {
+    console.error('⚠️ Supabase configuration missing. Check your .env.local file.');
   }
 }
 
-// Create browser client with proper auth configuration
+// Create browser client with minimal auth configuration
+// Auth is disabled since we're only using the database for devis requests
 export const supabase = (supabaseUrl && supabaseAnonKey) 
   ? createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true,
-        storageKey: 'supabase-auth',
-        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-        flowType: 'pkce'
+        autoRefreshToken: false,
+        persistSession: false,
+        detectSessionInUrl: false
       }
     })
   : null; // Mock client for build time

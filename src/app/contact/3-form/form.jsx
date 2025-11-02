@@ -152,6 +152,17 @@ export default function DevisForm() {
           message: 'Votre demande de devis a été envoyée avec succès ! Nous vous contacterons dans les plus brefs délais.'
         });
         
+        // Track conversion with Google Analytics
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'conversion_event_contact', {
+            'event_category': 'Contact',
+            'event_label': 'Devis Request',
+            'value': 1,
+            'service_type': getServiceName(formData.typeService),
+            'person_type': formData.typePersonne
+          });
+        }
+        
         // Reset form
         setFormData({
           typePersonne: 'physique',

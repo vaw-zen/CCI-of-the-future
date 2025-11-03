@@ -65,17 +65,22 @@ export default function DevisCalculator() {
                   <div className={styles.serviceOptions}>
                     <div className={styles.optionGroup}>
                       <label>Type de service:</label>
-                      <select
-                        value={selectedServices[serviceId]}
-                        onChange={(e) => handleOptionChange(serviceId, e.target.value)}
-                        className={styles.select}
-                      >
-                        {Object.entries(service.options).map(([optionId, option]) => (
-                          <option key={optionId} value={optionId}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </select>
+                      <div className={styles.selectWrapper}>
+                        <select
+                          value={selectedServices[serviceId]}
+                          onChange={(e) => handleOptionChange(serviceId, e.target.value)}
+                          className={styles.select}
+                        >
+                          {Object.entries(service.options).map(([optionId, option]) => (
+                            <option key={optionId} value={optionId} title={option.description || option.name}>
+                              {option.name}
+                            </option>
+                          ))}
+                        </select>
+                        <div className={styles.optionDescription}>
+                          {service.options[selectedServices[serviceId]]?.description || 'Aucune description disponible'}
+                        </div>
+                      </div>
                     </div>
 
                     <div className={styles.optionGroup}>

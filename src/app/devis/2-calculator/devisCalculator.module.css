@@ -10,7 +10,7 @@
 
 .servicesGrid { display: grid; gap: 1.25vw; margin-bottom: 2.5vw; }
 
-.serviceCard { border-radius: 0.63vw; padding: 1.25vw; transition: all 0.3s ease; border: 0.05vw solid rgba(203, 251, 66, 0.1); }
+.serviceCard { border-radius: 0.63vw; padding: 1.25vw; transition: all 0.3s ease; border: 0.05vw solid rgba(203, 251, 66, 0.1); width: 100%; box-sizing: border-box; }
 
 .serviceCard:hover { border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15); transform: translateY(-0.21vw); }
 
@@ -34,17 +34,29 @@
 
 .serviceCard.selected .selectButton { background: var(--ac-primary); color: var(--bg-base); }
 
-.serviceOptions { margin-top: 1.25vw; padding-top: 1.25vw; border-top: 0.05vw solid #e9ecef; display: grid; grid-template-columns: 2fr 1fr; gap: 0.83vw; }
+.serviceOptions { margin-top: 1.25vw; padding-top: 1.25vw; border-top: 0.05vw solid #e9ecef; display: grid; grid-template-columns: 2fr 1fr; gap: 0.83vw; width: 100%; }
 
-.optionGroup { display: flex; flex-direction: column; gap: 0.42vw; }
+.optionGroup { display: flex; flex-direction: column; gap: 0.42vw; min-width: 0; position: relative; }
 
-.optionGroup label { font-size: 0.75vw; font-weight: 600; color: var(--t-primary); }
+.optionGroup label { font-size: 0.75vw; font-weight: 600; color: var(--t-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
 .optionGroup small { font-size: 0.67vw; color: var(--t-secondary); margin-top: 0.21vw; }
 
-.select, .input { padding: 0.63vw; border: 0.05vw solid #ced4da; border-radius: 0.31vw; font-size: 0.79vw; transition: border-color 0.3s ease; }
+.selectWrapper { position: relative; width: 100%; }
+
+.optionDescription { position: absolute; top: 100%; left: 0; right: 0; background: linear-gradient(135deg, rgba(20,20,22,0.98), rgba(26,26,28,0.98)); color: var(--ac-primary); padding: 0.63vw; border-radius: 0.31vw; font-size: 0.67vw; line-height: 1.4; margin-top: 0.21vw; box-shadow: 0 0.21vw 0.83vw rgba(0, 0, 0, 0.3); z-index: 1000; opacity: 0; visibility: hidden; transform: translateY(-0.52vw); transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease; max-width: 100%; word-wrap: break-word; }
+
+.selectWrapper:hover .optionDescription { opacity: 1; visibility: visible; transform: translateY(0); }
+
+.select:focus + .optionDescription { opacity: 1; visibility: visible; transform: translateY(0); color: var(--ac-primary) !important; }
+
+.select, .input { width: 100%; padding: 0.63vw; border: 0.05vw solid #ced4da; border-radius: 0.31vw; font-size: 0.79vw; transition: border-color 0.3s ease; box-sizing: border-box; min-width: 0; max-width: 100%; }
 
 .select:focus, .input:focus { outline: none; border-color: var(--ac-primary); box-shadow: 0 0 0 0.10vw rgba(0, 123, 255, 0.25); }
+
+.select { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.select option { overflow: hidden; text-overflow: ellipsis; max-width: 100%; font-size: 0.79vw; padding: 0.42vw; }
 
 .additionalOptions { border-radius: 0.63vw; padding: 1.67vw; margin-bottom: 1.67vw; }
 
@@ -85,7 +97,7 @@
   .title { font-size: 4.56vw; font-weight: 700; color: var(--t-primary); text-align: center; margin-bottom: 1.04vw; }
   .subtitle { text-align: center; color: var(--t-secondary); font-size: 2.28vw; margin-bottom: 6.25vw; }
   .servicesGrid { display: grid; gap: 3.13vw; margin-bottom: 6.25vw; }
-  .serviceCard { border-radius: 1.56vw; padding: 3.13vw; transition: all 0.3s ease; border: 0.13vw solid rgba(203, 251, 66, 0.1); }
+  .serviceCard { border-radius: 1.56vw; padding: 3.13vw; transition: all 0.3s ease; border: 0.13vw solid rgba(203, 251, 66, 0.1); width: 100%; box-sizing: border-box; }
   .serviceCard:hover { border-color: var(--ac-primary); box-shadow: 0 0 5.21vw rgba(203, 251, 66, 0.15); transform: translateY(-0.52vw); }
   .serviceCard.selected { border-color: var(--ac-primary); box-shadow: 0 0 5.21vw rgba(203, 251, 66, 0.15); }
   .serviceHeader { display: flex; align-items: center; gap: 2.08vw; }
@@ -97,12 +109,18 @@
   .selectButton { width: 5.21vw; height: 5.21vw; border-radius: 50%; border: 0.26vw solid var(--ac-primary); background: transparent; color: var(--ac-primary); font-size: 2.50vw; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
   .selectButton:hover { background: var(--ac-primary); color: var(--bg-base); }
   .serviceCard.selected .selectButton { background: var(--ac-primary); color: var(--bg-base); }
-  .serviceOptions { margin-top: 3.13vw; padding-top: 3.13vw; border-top: 0.13vw solid #e9ecef; display: grid; grid-template-columns: 2fr 1fr; gap: 2.08vw; }
-  .optionGroup { display: flex; flex-direction: column; gap: 1.04vw; }
-  .optionGroup label { font-size: 1.88vw; font-weight: 600; color: var(--t-primary); }
+  .serviceOptions { margin-top: 3.13vw; padding-top: 3.13vw; border-top: 0.13vw solid #e9ecef; display: grid; grid-template-columns: 2fr 1fr; gap: 2.08vw; width: 100%; max-width: 100%; overflow: hidden; }
+  .optionGroup { display: flex; flex-direction: column; gap: 1.04vw; min-width: 0; max-width: 100%; position: relative; }
+  .optionGroup label { font-size: 1.88vw; font-weight: 600; color: var(--t-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .optionGroup small { font-size: 1.67vw; color: var(--t-secondary); margin-top: 0.52vw; }
-  .select, .input { padding: 1.56vw; border: 0.13vw solid #ced4da; border-radius: 0.78vw; font-size: 1.98vw; transition: border-color 0.3s ease; }
+  .selectWrapper { position: relative; width: 100%; }
+  .optionDescription { position: absolute; top: 100%; left: 0; right: 0; background: linear-gradient(135deg, rgba(20,20,22,0.98), rgba(26,26,28,0.98)); color: var(--ac-primary); padding: 1.56vw; border-radius: 0.78vw; font-size: 1.67vw; line-height: 1.4; margin-top: 0.52vw; box-shadow: 0 0.52vw 2.08vw rgba(0, 0, 0, 0.3); z-index: 1000; opacity: 0; visibility: hidden; transform: translateY(-1.30vw); transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease; max-width: 100%; word-wrap: break-word; }
+  .selectWrapper:hover .optionDescription { opacity: 1; visibility: visible; transform: translateY(0); }
+  .select:focus + .optionDescription { opacity: 1; visibility: visible; transform: translateY(0); color: var(--ac-primary) !important; }
+  .select, .input { width: 100%; max-width: 100%; padding: 1.56vw; border: 0.13vw solid #ced4da; border-radius: 0.78vw; font-size: 1.98vw; transition: border-color 0.3s ease; box-sizing: border-box; min-width: 0; }
   .select:focus, .input:focus { outline: none; border-color: var(--ac-primary); box-shadow: 0 0 0 0.26vw rgba(0, 123, 255, 0.25); }
+  .select { overflow: hidden; text-overflow: ellipsis; }
+  .select option { max-width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 1.98vw; padding: 1.04vw 0.52vw; }
   .additionalOptions { border-radius: 1.56vw; padding: 4.17vw; margin-bottom: 4.17vw; }
   .additionalOptions h3 { font-size: 2.92vw; font-weight: 600; color: #2c3e50; margin-bottom: 3.13vw; }
   .optionsRow { display: grid; grid-template-columns: repeat(auto-fit, minmax(32.55vw, 1fr)); gap: 3.13vw; }
@@ -128,7 +146,7 @@
   .title { font-size: 8.50vw; color: var(--t-primary); text-align: center; margin-bottom: 1.94vw; font-weight: 700; }
   .subtitle { text-align: center; color: var(--t-secondary); font-size: 4.25vw; margin-bottom: 11.65vw; }
   .servicesGrid { display: grid; grid-template-columns: 1fr; gap: 5.83vw; margin-bottom: 11.65vw; }
-  .serviceCard { width: 100%; text-align: center; border-radius: 2.91vw; padding: 5.83vw; transition: all 0.3s ease; border: 0.24vw solid rgba(203, 251, 66, 0.1); }
+  .serviceCard { width: 100%; text-align: center; border-radius: 2.91vw; padding: 5.83vw; transition: all 0.3s ease; border: 0.24vw solid rgba(203, 251, 66, 0.1); box-sizing: border-box; }
   .serviceCard:hover { border-color: var(--ac-primary); box-shadow: 0 0 9.71vw rgba(203, 251, 66, 0.15); transform: translateY(-0.97vw); }
   .serviceCard.selected { border-color: var(--ac-primary); box-shadow: 0 0 9.71vw rgba(203, 251, 66, 0.15); }
   .serviceHeader { flex-direction: column; align-items: center; text-align: center; gap: 3.88vw; display: flex; }
@@ -140,12 +158,18 @@
   .selectButton { align-self: center; margin: 0 auto; width: 9.71vw; height: 9.71vw; border-radius: 50%; border: 0.49vw solid var(--ac-primary); background: transparent; color: var(--ac-primary); font-size: 4.66vw; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
   .selectButton:hover { background: var(--ac-primary); color: var(--bg-base); }
   .serviceCard.selected .selectButton { background: var(--ac-primary); color: var(--bg-base); }
-  .serviceOptions { grid-template-columns: 1fr; justify-items: center; margin-top: 5.83vw; padding-top: 5.83vw; border-top: 0.24vw solid #e9ecef; display: grid; gap: 3.88vw; }
-  .optionGroup { text-align: center; width: 100%; display: flex; flex-direction: column; gap: 1.94vw; }
-  .optionGroup label { font-size: 3.50vw; font-weight: 600; color: var(--t-primary); }
+  .serviceOptions { grid-template-columns: 1fr; justify-items: center; margin-top: 5.83vw; padding-top: 5.83vw; border-top: 0.24vw solid #e9ecef; display: grid; gap: 3.88vw; width: 100%; max-width: 100%; overflow: hidden; }
+  .optionGroup { text-align: center; width: 100%; display: flex; flex-direction: column; gap: 1.94vw; min-width: 0; max-width: 100%; position: relative; }
+  .optionGroup label { font-size: 3.50vw; font-weight: 600; color: var(--t-primary); overflow: hidden; text-overflow: ellipsis; max-width: 100%; display: block; word-wrap: break-word; hyphens: auto; }
   .optionGroup small { font-size: 3.11vw; color: var(--t-secondary); margin-top: 0.97vw; }
-  .select, .input { width: 100%; text-align: center; padding: 2.91vw; border: 0.24vw solid #ced4da; border-radius: 1.46vw; font-size: 3.69vw; transition: border-color 0.3s ease; }
+  .selectWrapper { position: relative; width: 100%; }
+  .optionDescription { position: absolute; top: 100%; left: 0; right: 0; background: linear-gradient(135deg, rgba(20,20,22,0.98), rgba(26,26,28,0.98)); color: var(--ac-primary); padding: 2.91vw; border-radius: 1.46vw; font-size: 3.11vw; line-height: 1.4; margin-top: 0.97vw; box-shadow: 0 0.97vw 3.88vw rgba(0, 0, 0, 0.3); z-index: 1000; opacity: 0; visibility: hidden; transform: translateY(-2.43vw); transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease; max-width: 100%; word-wrap: break-word; text-align: left; }
+  .selectWrapper:hover .optionDescription { opacity: 1; visibility: visible; transform: translateY(0); }
+  .select:focus + .optionDescription { opacity: 1; visibility: visible; transform: translateY(0); color: var(--ac-primary) !important; }
+  .select, .input { width: 100%; max-width: 100%; text-align: center; padding: 2.91vw; border: 0.24vw solid #ced4da; border-radius: 1.46vw; font-size: 3.69vw; transition: border-color 0.3s ease; box-sizing: border-box; min-width: 0; }
   .select:focus, .input:focus { outline: none; border-color: var(--ac-primary); box-shadow: 0 0 0 0.49vw rgba(0, 123, 255, 0.25); }
+  .select { overflow: hidden; text-overflow: ellipsis; direction: ltr; }
+  .select option { max-width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 3.40vw; padding: 1.94vw 0.97vw; direction: ltr; text-align: left; }
   .additionalOptions { border-radius: 2.91vw; padding: 7.77vw; margin-bottom: 7.77vw; }
   .additionalOptions h3 { font-size: 5.44vw; font-weight: 600; color: #2c3e50; margin-bottom: 5.83vw; }
   .optionsRow { grid-template-columns: 1fr; gap: 5.83vw; justify-items: center; display: grid; }

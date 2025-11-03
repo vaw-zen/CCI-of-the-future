@@ -8,56 +8,57 @@ const services = {
     unity:"place",
     description: 'Nettoyage professionnel de canapés, fauteuils et meubles',
     options: {
-      'standard': { name: 'Standard', multiplier: 1 },
-      'premium': { name: 'Premium avec protection', multiplier: 1.5 },
-      'deep': { name: 'Nettoyage en profondeur', multiplier: 1.8 }
+      'standard': { name: 'Standard', description: 'Nettoyage canapés et fauteuils à domicile avec injection extraction', multiplier: 1 },
+     
     }
   },
   tapis: {
-    name: 'Nettoyage de Tapis',
+    name: 'Nettoyage de Moquette et Tapis',
     icon: '🏠',
     basePrice: 6,
     unity:"m²",
     description: 'Nettoyage et désinfection de tous types de tapis',
     options: {
-      'standard': { name: 'Standard', multiplier: 1 },
-      'premium': { name: 'Avec traitement anti-taches', multiplier: 1.4 },
-      'restoration': { name: 'Restauration complète', multiplier: 2 }
+      'Moquette': { name: 'Nettoyage Moquette ', description: 'Nettoyage professionnel moquette', multiplier: 1 },
+      'tapis synthetique': { name: 'Nettoyage Tapis synthétique', description: 'Nettoyage tapis synthétique en profondeur', multiplier: 1.2 },
+      'tapis naturel': { name: 'Nettoyage Tapis naturel', description: 'Nettoyage délicat tapis naturel (laine, soie, margoum)', multiplier: 1.4 },
     }
   },
-  tapisserie: {
-    name: 'Tapisserie',
-    icon: '🎨',
-    basePrice: 120,
-    description: 'Rénovation et nettoyage de tapisseries anciennes',
-    options: {
-      'cleaning': { name: 'Confection', multiplier: 1 },
-      'restoration': { name: 'Restauration partielle', multiplier: 1.6 },
-      'full': { name: 'Restauration complète', multiplier: 2.5 }
-    }
-  },
+  // tapisserie: {
+  //   name: 'Tapisserie',
+  //   icon: '🎨',
+  //   basePrice: 120,
+  //   description: 'Rénovation et nettoyage de tapisseries anciennes',
+  //   options: {
+  //     'cleaning': { name: 'Confection', multiplier: 1 },
+  //     'restoration': { name: 'Restauration partielle', multiplier: 1.6 },
+  //     'full': { name: 'Restauration complète', multiplier: 2.5 }
+  //   }
+  // },
   marbre: {
-    name: 'Polissage de Marbre',
+    name: 'Entretien de Marbre et Sols',
     icon: '💎',
-    basePrice: 15,
+    basePrice: 12,
     unity:"m²",
     description: 'Polissage et cristallisation du marbre',
     options: {
-      'polish': { name: 'Polissage standard', multiplier: 1 },
-      'crystal': { name: 'Cristallisation', multiplier: 1.3 },
-      'restoration': { name: 'Restauration complète', multiplier: 2 }
+      'polish': { name: 'Polissage standard', description: 'Polissage standard pour un éclat naturel', multiplier: 1 },
+      'crystal': { name: 'Cristallisation', description: 'Cristallisation pour protection durable', multiplier: 1.3 },
+      'crystal premium': { name: 'Cristallisation premium', description: 'Cristallisation premium haute brillance + protection durable + anti-dérappant', multiplier: 1.5 },
+
+      'Ponçage': { name: 'Restauration complète', description: 'Restauration complète avec ponçage et polissage', multiplier: 1.7 }
     }
   },
   tfc: {
-    name: 'Nettoyage TFC',
+    name: 'Nettoyage post-chantier (TFC)',
     icon: '🏢',
     basePrice: 10,
     unity:"m²",
     description: 'Nettoyage de bureaux et espaces commerciaux',
     options: {
-      'basic': { name: 'Nettoyage de base', multiplier: 1 },
-      'complete': { name: 'Nettoyage complet', multiplier: 1.5 },
-      'maintenance': { name: 'Contrat maintenance', multiplier: 0.8 }
+      'basic': { name: 'Nettoyage de base', description: 'dépoussiérage professionnel, entretien sols et murs', multiplier: 1 },
+      'premium': { name: 'Nettoyage complet', description: 'dépoussiérage professionnel, entretien sols et murs, nettoyage approfondi, désinfection, nettoyage des vitres, nettoyage des meubles', multiplier: 1.5 },
+     
     }
   }
 };
@@ -135,8 +136,9 @@ export function useDevisCalculatorLogic() {
         delete newQuantities[serviceId];
         setQuantities(newQuantities);
       } else {
-        // add
-        newSelected[serviceId] = 'standard';
+        // add - select the first option available for this service
+        const firstOptionKey = Object.keys(services[serviceId].options)[0];
+        newSelected[serviceId] = firstOptionKey;
       }
       return newSelected;
     });

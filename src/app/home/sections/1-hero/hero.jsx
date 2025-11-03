@@ -30,7 +30,7 @@ export default function Hero() {
           title="Design moderne CCI Services"
           priority
           fetchPriority="high"
-          quality={65}
+          quality={80}
           className={styles.glowLines}
         />
         <div className={styles.mainImageContainer}>
@@ -39,7 +39,7 @@ export default function Hero() {
             sizes={[44, 81, 88]}
             src="/feedback/content (2).jpeg"
             alt="Nettoyage professionnel salons, canapés, fauteuils, matelas, rideaux et moquettes par CCI Tunisie"
-            quality={70}
+            quality={100}
             priority
             fetchPriority="high"
             className={styles.mainImage}

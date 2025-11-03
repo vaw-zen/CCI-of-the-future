@@ -51,11 +51,11 @@ export default function Page() {
           text={salonData.sections.secondaryService.text}
         />
 
-        <AboutUsTab
+        {/* <AboutUsTab
           historyText={salonData.aboutUs.historyText}
           missionText={salonData.aboutUs.missionText}
           visionText={salonData.aboutUs.visionText}
-        />
+        /> */}
 
         <PartnerTab tabData={salonData.tabData} />
 
@@ -63,6 +63,7 @@ export default function Page() {
           title={salonData.serviceList.title}
           text={salonData.serviceList.text}
           items={salonData.serviceList.items}
+          image={salonData.serviceList.image}
         />
 
         <ServiceDetails

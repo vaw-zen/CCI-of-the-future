@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
 export function useTabLogic(activeTab) {
-  const [selectorStyle, setSelectorStyle] = useState({ transform: 'translateX(0)', width: 0, top: 0 })
+  const [selectorStyle, setSelectorStyle] = useState({ left: 0, width: 0, top: 0 })
   const tabRefs = useRef({})
   const containerRef = useRef(null)
 
@@ -10,11 +10,11 @@ export function useTabLogic(activeTab) {
     if (activeTabElement) {
       // Use requestAnimationFrame to batch layout reads
       const rafId = requestAnimationFrame(() => {
-        const { offsetLeft, offsetWidth, offsetTop, offsetHeight } = activeTabElement
+        const { offsetLeft, offsetWidth, offsetHeight } = activeTabElement
         setSelectorStyle({
-          transform: `translate(${offsetLeft}px, ${offsetTop + offsetHeight}px)`,
+          left: offsetLeft,
           width: offsetWidth,
-          top: 0 // Set in CSS, not JS
+          top: offsetHeight
         })
       })
       

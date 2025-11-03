@@ -62,11 +62,11 @@ export default function Page() {
         />
 
         <PartnerTab tabData={tapisserieData.tabData} />
-        <AboutUsTab
+        {/* <AboutUsTab
           historyText={tapisserieData.aboutUs.historyText}
           missionText={tapisserieData.aboutUs.missionText}
           visionText={tapisserieData.aboutUs.visionText}
-        />
+        /> */}
 
         <ServiceList
           title={tapisserieData.serviceList.title}

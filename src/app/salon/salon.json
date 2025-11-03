@@ -6,7 +6,7 @@
       "nettoyage salon tunis",
       "nettoyage canapé",
       "nettoyage voiture intérieur",
-      "nettoyage salon domicile tunis",
+      "nettoyage salon à domicile tunis",
       "détachage salon",
       "shampooing canapé",
       "désinfection salon",
@@ -203,7 +203,8 @@
         "text": "Nettoyage bateaux et avions",
         "icon": "/icons/shield.png"
       }
-    ]
+    ],
+    "image": "/home/nettoyagesolonméthodeinjectionextraction.webp"
   },
   "relatedArticles": [
     {

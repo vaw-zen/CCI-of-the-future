@@ -170,7 +170,8 @@
         "text": "Entretien de tout type de sol",
         "icon": "/icons/shield.png"
       }
-    ]
+    ],
+    "image": "/gallery/tfc/tfc.webp"
   },
   "relatedArticles": [
     {

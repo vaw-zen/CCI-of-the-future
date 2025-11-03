@@ -59,16 +59,17 @@ export default function Page() {
           title={tapisData.sections.secondaryService.title}
           text={tapisData.sections.secondaryService.text}
         />
-        <AboutUsTab
+        {/* <AboutUsTab
           historyText={tapisData.aboutUs.historyText}
           missionText={tapisData.aboutUs.missionText}
           visionText={tapisData.aboutUs.visionText}
-        />
+        /> */}
         <PartnerTab tabData={tapisData.tabData} />
         <ServiceList
           title={tapisData.serviceList.title}
           text={tapisData.serviceList.text}
           items={tapisData.serviceList.items}
+          image={tapisData.serviceList.image}
         />
 
         <ServiceDetails

@@ -59,15 +59,16 @@ export default function Page() {
           text={marbreData.sections.secondaryService.text}
         />
         <PartnerTab tabData={marbreData.tabData} />
-        <AboutUsTab
+        {/* <AboutUsTab
           historyText={marbreData.aboutUs.historyText}
           missionText={marbreData.aboutUs.missionText}
           visionText={marbreData.aboutUs.visionText}
-        />
+        /> */}
         <ServiceList
           title={marbreData.serviceList.title}
           text={marbreData.serviceList.text}
           items={marbreData.serviceList.items}
+          image={marbreData.serviceList.image}
         />
         <ImageSlider images={marbreData.images} />
         <RelatedArticles 

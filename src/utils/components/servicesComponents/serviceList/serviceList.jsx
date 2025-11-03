@@ -27,8 +27,11 @@ function ServiceItem({ icon, text }) {
  * - Reusable list component that accepts an array of items
  * Props:
  *  - items: Array<{ id?: string, text: string, icon?: string }>
+ *  - title: string - Title for the service list
+ *  - text: string - Description text
+ *  - image: string - Image URL for the service
  */
-export default function ServiceList({ items = [], title = 'Nos solutions', text = "Des solutions de tapisserie adaptées à tous vos besoins" }) {
+export default function ServiceList({ items = [], title = 'Nos solutions', text = "Des solutions de tapisserie adaptées à tous vos besoins", image = DEFAULT_ICON }) {
     const defaults = [
         'Dedicated Team Members',
         'Specific gravity of soil conduct',
@@ -58,7 +61,7 @@ export default function ServiceList({ items = [], title = 'Nos solutions', text 
                     </div>
                     </div>
                     <ResponsiveImage
-                        src={DEFAULT_ICON}
+                        src={image}
                         alt="service image"
                         sizes={[60]}
                         skeleton

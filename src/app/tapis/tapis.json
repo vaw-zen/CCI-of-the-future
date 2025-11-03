@@ -294,10 +294,11 @@
       },
       {
         "id": "8",
-        "text": "Tarifs transparents dès 15 DT/m²",
+        "text": "Tarifs transparents dès 6 DT/m²",
         "icon": "/icons/polisher1.png"
       }
-    ]
+    ],
+    "image": "/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp"
   },
   "relatedArticles": [
     {

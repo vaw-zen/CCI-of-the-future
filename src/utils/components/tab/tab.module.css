@@ -32,9 +32,8 @@
   width: 0;
   height: 0.10vw;
   background-color: var(--ac-primary);
-  transition: transform 0.3s ease;
-  will-change: transform;
-  transform-origin: left;
+  transition: left 0.3s ease, width 0.3s ease;
+  will-change: left, width;
 }
 
 @media screen and (max-width: 1024px) {

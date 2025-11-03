@@ -51,11 +51,11 @@ export default function Page() {
           text={tfcData.sections.secondaryService.text}
         />
 
-        <AboutUsTab
+        {/* <AboutUsTab
           historyText={tfcData.aboutUs.historyText}
           missionText={tfcData.aboutUs.missionText}
           visionText={tfcData.aboutUs.visionText}
-        />
+        /> */}
 
         <PartnerTab tabData={tfcData.tabData} />
 
@@ -63,6 +63,7 @@ export default function Page() {
           title={tfcData.serviceList.title}
           text={tfcData.serviceList.text}
           items={tfcData.serviceList.items}
+          image={tfcData.serviceList.image}
         />
 
         <ServiceDetails

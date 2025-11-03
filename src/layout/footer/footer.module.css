@@ -53,7 +53,7 @@
 
 
 @media (max-width: 480px) {
-    .footer { aspect-ratio: 1 / 1; min-height: 100vh; }
+    .footer { aspect-ratio: 1 / 1; min-height: 120vh; }
     .contentWrapper { display: flex; flex: 1; min-height: 80%; padding: 5vw 3.75vw 7.5vw 3.75vw;  flex-direction: column; justify-content: space-between; align-items: flex-start;}
     
     .title { font-size:  6.75vw;}

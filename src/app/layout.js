@@ -162,12 +162,49 @@ export default function RootLayout({ children }) {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
+              
+              // Configure Google Analytics with UTM tracking
               gtag('config', 'G-0RDH6DH7TS', {
                 page_title: document.title,
                 page_location: window.location.href,
-                send_page_view: true
+                send_page_view: true,
+                // Enable automatic UTM parameter collection
+                campaign_source: new URLSearchParams(window.location.search).get('utm_source'),
+                campaign_medium: new URLSearchParams(window.location.search).get('utm_medium'),
+                campaign_name: new URLSearchParams(window.location.search).get('utm_campaign'),
+                campaign_content: new URLSearchParams(window.location.search).get('utm_content'),
+                campaign_term: new URLSearchParams(window.location.search).get('utm_term')
               });
-              gtag('config', 'AW-17696563349');
+              
+              // Configure Google Ads with UTM tracking
+              gtag('config', 'AW-17696563349', {
+                campaign_source: new URLSearchParams(window.location.search).get('utm_source'),
+                campaign_medium: new URLSearchParams(window.location.search).get('utm_medium'),
+                campaign_name: new URLSearchParams(window.location.search).get('utm_campaign')
+              });
+              
+              // Log UTM parameters for debugging
+              const urlParams = new URLSearchParams(window.location.search);
+              if (urlParams.get('utm_source')) {
+                console.log('UTM Parameters detected:', {
+                  source: urlParams.get('utm_source'),
+                  medium: urlParams.get('utm_medium'),
+                  campaign: urlParams.get('utm_campaign'),
+                  content: urlParams.get('utm_content'),
+                  term: urlParams.get('utm_term')
+                });
+                
+                // Send custom event to track UTM arrival
+                gtag('event', 'utm_arrival', {
+                  event_category: 'traffic_source',
+                  utm_source: urlParams.get('utm_source'),
+                  utm_medium: urlParams.get('utm_medium'),
+                  utm_campaign: urlParams.get('utm_campaign'),
+                  utm_content: urlParams.get('utm_content'),
+                  utm_term: urlParams.get('utm_term'),
+                  page_location: window.location.href
+                });
+              }
             `
           }}
         />

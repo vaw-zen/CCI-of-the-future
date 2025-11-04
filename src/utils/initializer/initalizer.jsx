@@ -7,6 +7,7 @@ import { homeScrollTriggers } from "@/app/home/home.func";
 import { servicesScrollTriggers } from "@/app/services/services.func";
 import { headerSI } from "@/layout/header/header.func";
 import { usePathname } from "next/navigation";
+import { storeUTMParameters } from "../utmGenerator";
 
 export default function Initializer() {
     // Add state to track if we're in client-side rendering
@@ -31,6 +32,9 @@ export default function Initializer() {
     useEffect(() => {
         // Mark that we're now on the client
         setIsClient(true);
+        
+        // Capture and store UTM parameters on initial load
+        storeUTMParameters();
     }, []);
     
     // Effect for handling route changes 

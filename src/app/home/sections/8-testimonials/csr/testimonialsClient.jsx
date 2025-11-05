@@ -7,7 +7,7 @@ import ButtonContainer from './buttonContainer';
 import ResponsiveImage from '@/utils/components/Image/Image';
 import testimonialsData from '../testimonials.json';
 
-export default function TestimonialsClient({ className, backgroundImage }) {
+export default function TestimonialsClient({ id, className, backgroundImage }) {
     const testimonials = testimonialsData.testimonials;
     const slideAnchor = Math.floor((testimonials.length * 3) / 2);
 
@@ -20,7 +20,7 @@ export default function TestimonialsClient({ className, backgroundImage }) {
     }
 
     return (
-        <section className={`${styles.container} ${className || ''}`}>
+        <section id={id} className={`${styles.container} ${className || ''}`}>
             <ResponsiveImage
                 sizes={[22, 55, 86]} 
                 skeleton 

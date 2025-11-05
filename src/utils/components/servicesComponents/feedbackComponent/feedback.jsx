@@ -33,7 +33,7 @@ export default function Feedback() {
           </p>
 
           <div className={styles.readMoreContainer}>
-            <Link href="/contact" className={styles.iconContainer}>
+            <Link href="/#testimonials" className={styles.iconContainer}>
               <UilArrowRight className={styles.icon} />
             </Link>
             <span className={styles.readMoreText}>

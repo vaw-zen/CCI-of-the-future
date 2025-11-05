@@ -27,9 +27,9 @@ const FaqItem = memo(({ faq, index, isActive, onToggle }) => {
             </div>
             <div
                 ref={contentRef}
-                className={styles.content}
+                className={`${styles.content} ${isActive ? styles.active : ''}`}
                 style={{
-                    height: isActive ? `${height}px` : '0px',
+                    maxHeight: isActive ? `${height}px` : '0px',
                 }}
             >
                 <div className={styles.answer}>

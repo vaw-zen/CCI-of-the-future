@@ -133,12 +133,24 @@ function normalizeFbReels(raw) {
         .trim() 
       : null;
 
+    // Fix relative URLs from Facebook API (e.g., /reel/123/ -> https://www.facebook.com/reel/123/)
+    const fixRelativeUrl = (url) => {
+      if (!url) return null;
+      if (url.startsWith('/')) {
+        return `https://www.facebook.com${url}`;
+      }
+      return url;
+    };
+
+    const permalinkUrl = fixRelativeUrl(item.perma_link || item.permalink_url) || `https://www.facebook.com/watch/?v=${item.id}`;
+    const videoUrl = fixRelativeUrl(item.source) || fixRelativeUrl(item.perma_link || item.permalink_url) || `https://www.facebook.com/watch/?v=${item.id}`;
+
     return {
       id: item.id,
       message: cleanMessage,
       created_time: item.created_time || null,
-      permalink_url: item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Always provide a valid URL
-      video_url: item.source || item.perma_link || item.permalink_url || `https://www.facebook.com/watch/?v=${item.id}`, // Fallback chain
+      permalink_url: permalinkUrl, // Always provide a valid URL
+      video_url: videoUrl, // Fallback chain
       thumbnail: thumbnail, // Always provide a valid thumbnail URL
       thumbnail_source: thumbnailSource, // Track where thumbnail came from
       original_thumbnail: originalThumbnail, // Keep original for debugging

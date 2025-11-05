@@ -208,7 +208,7 @@ export const ImageSlider = ({
                     src={image.src}
                     alt={image.title}
                     className={styles.slideImage}
-                    sizes={[100]}
+                    sizes={[50, 100, 100]}
                     priority={index === 0}
                     skeleton
                     contain

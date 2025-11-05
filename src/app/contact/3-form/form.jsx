@@ -5,6 +5,7 @@ import styles from "./form.module.css";
 import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
 import { submitDevisRequest } from "@/services/devisService";
+import { LineMdCalendar } from "@/utils/components/icons";
 
 export default function DevisForm() {
   const formRef = useRef();
@@ -390,16 +391,19 @@ export default function DevisForm() {
         )}
         
         {/* Date and Time Row 5 */}
-        <input 
-          className={styles.formGroup} 
-          type="date" 
-          name="datePreferee" 
-          placeholder="Sélectionnez la date d'intervention"
-          title="Sélectionnez la date d'intervention"
-          value={formData.datePreferee}
-          onChange={handleInputChange}
-          min={new Date().toISOString().split('T')[0]}
-        />
+        <div className={styles.dateInputWrapper}>
+          <input 
+            className={styles.formGroup} 
+            type="date" 
+            name="datePreferee" 
+            placeholder="Sélectionnez la date d'intervention"
+            title="Sélectionnez la date d'intervention"
+            value={formData.datePreferee}
+            onChange={handleInputChange}
+            min={new Date().toISOString().split('T')[0]}
+          />
+          <LineMdCalendar className={styles.calendarIcon} />
+        </div>
         <select 
           className={styles.formGroup} 
           name="heurePreferee" 

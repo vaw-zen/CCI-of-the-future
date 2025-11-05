@@ -2,7 +2,7 @@
 .header { display: flex; justify-content: center; flex-direction: column; align-items: center; }
 .title { margin-bottom: 1.04vw; font-size: 3.33vw; text-align: center; }
 .description { width: 42.5%; font-size: 0.83vw; text-align: center; color: var(--t-secondary); }
-
+.faqTitle { font-size: 1.25vw; color: var(--ac-primary); margin-bottom: 0.52vw; font-weight: 700; text-transform: uppercase;letter-spacing: .2vw; }
 /* ClientFAQ styles */
 .faqContainer { display: flex; padding: 0 10.4vw; margin-top: 2vw; gap: 1.2vw; }
 .column { width: 50%; display: flex; flex-direction: column; gap: 1.2vw; }

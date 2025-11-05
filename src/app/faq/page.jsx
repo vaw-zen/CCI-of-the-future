@@ -80,6 +80,7 @@ export default function FAQ() {
       />
       <section className={styles.section}>
         <div className={styles.header}>
+          <h3 className={styles.faqTitle}>FAQ</h3>
           <h2 className={styles.title}>{title}</h2>
           <p className={styles.description}>{description}</p>
         </div>

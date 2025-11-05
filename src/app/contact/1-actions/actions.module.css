@@ -5,7 +5,7 @@
 .title {  font-size: 3.33vw; line-height: 3.85vw; text-transform: none;margin: 0 0 1.04vw;font-family: "DM Sans", sans-serif;}
 .headerRight { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .headerMessage { margin-top: 0; margin-bottom: 0.78vw; font-size: 1.25vw; line-height: 1.56vw; }
-.socialList { display: flex;flex-wrap: wrap;  gap: 1.30vw;  list-style: none; }
+.socialList { display: flex;flex-wrap: wrap;  gap: 1.30vw;  list-style: none;color:var(--ac-primary); }
 
 .socialItem { font-size: 0.94vw; line-height: 1.46vw; text-align: left; font-weight: 700; }
 .infoSection { display: flex; height: 19.90vw; width: 100%; }

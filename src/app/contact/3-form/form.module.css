@@ -2,21 +2,11 @@
 .formGroup { color: rgba(255, 255, 255, 0.7); font-size: 0.91vw; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.09); outline: none; width: 100%; background: transparent !important; padding: 0.59vw 0.98vw 0.59vw 0; }
 .formGroup::placeholder { color: rgba(255, 255, 255, 0.3); font-size: 0.78vw; }
 .formGroup:focus { border-bottom: 1px solid #cafb42; }
-.heading {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #2c3e50;
-  text-align: center;
-  margin-bottom: 0.5rem;
-  
-}
-
-.description {
-  text-align: center;
-  color: #6c757d;
-  font-size: 1.1rem;
-  margin-bottom: 3rem;
-}
+.formHeader{ display: flex; flex-direction: column; align-items: start;padding: 0 var(--padding-base); }
+.demandeDevis { margin-bottom: 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; text-transform: uppercase; }
+.hook { font-size: 3.33vw; line-height: 3.85vw; text-transform: none; margin: 0 0 1.04vw; font-family: "DM Sans", sans-serif; font-weight: 700; }
+.heading { font-size: 1.15vw; font-weight: 700; color: #2c3e50; text-align: center; margin-bottom: 0.26vw; }
+.description { color: #6c757d; font-size: 0.83vw; margin-bottom: 1.56vw; }
 
 /* Select dropdown styling */
 .formGroup  {
@@ -47,6 +37,10 @@
 }
 
 @media screen and (max-width: 1024px) {
+  .demandeDevis { margin-bottom: 1.30vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 2.08vw; line-height: 3.39vw; text-transform: uppercase; }
+  .hook { font-size: 5.86vw; line-height: 3.85vw; text-transform: none; margin: 0 0 3.6vw; font-family: "DM Sans", sans-serif; font-weight: 700; }
+  .heading { font-size: 2.86vw; font-weight: 700; color: #2c3e50; text-align: center; margin-bottom: 0.65vw; }
+  .description { color: #6c757d; font-size: 2.08vw; margin-bottom: 3.91vw; }
   .formContainer { min-height: 35.68vw; line-height: 3.39vw; gap: 2.60vw; padding: 1.30vw 2vw !important; width: 100%; }
   .formGroup { font-size: 1.82vw; padding: 1.17vw 1.95vw 1.17vw 0; }
   .formGroup::placeholder { font-size: 1.56vw; }
@@ -58,6 +52,10 @@
 }
 
 @media screen and (max-width: 480px) {
+  .demandeDevis { margin-bottom: 2.43vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 3.88vw; line-height: 6.31vw; text-transform: uppercase; }
+  .hook { font-size: 8.5vw; line-height: 10.92vw; text-transform: none; margin: 0 0 4.85vw; font-family: "DM Sans", sans-serif; font-weight: 700; }
+  .heading { font-size: 5.34vw; font-weight: 700; color: #2c3e50; text-align: center; margin-bottom: 1.21vw; }
+  .description { color: #6c757d; font-size: 3.88vw; margin-bottom: 7.28vw; }
   .formContainer { min-height: 66.50vw; line-height: 6.31vw; gap: 4.85vw; }
   .formGroup { font-size: 3.40vw; padding: 2.18vw 3.64vw 2.18vw 0; }
   .formGroup::placeholder { font-size: 2.91vw; }
@@ -65,11 +63,7 @@
   .checkboxContainer { gap: 1.94vw; font-size: 3.40vw; }
   .checkboxContainer input { width: 3.40vw; height: 3.40vw; }
   .submitButton { padding: 3.64vw 7.28vw; font-size: 3.88vw; margin-top: 3.64vw; border-radius: 7.77vw; }
- .heading {
-    font-size: 1.8rem;
-  }
-
-    .formContainer { padding: 2.43vw 4vw !important; width: 100%; }
+  .formContainer { padding: 2.43vw 4vw !important; width: 100%; }
     .checkboxContainer { display: flex; align-items: center; gap: 3.64vw; font-size: 3.40vw; font-weight: 400; color: rgba(255, 255, 255, 0.7); width: 100%; justify-content: flex-start; }
     .checkboxContainer input { width: 3.88vw; height: 3.88vw; margin: 0; }
     .greenBandWrapper { margin: 10vw 0 15vw 0 !important; overflow: hidden; }

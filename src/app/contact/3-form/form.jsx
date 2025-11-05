@@ -204,9 +204,12 @@ export default function DevisForm() {
 
   return (
     <div>
-  
+      <div className={styles.formHeader}>
+        <h3 className={styles.demandeDevis}>Demande de devis</h3>
+        <h2 className={styles.hook}>Obtenez votre devis personnalisé</h2>
+        <h4 className={styles.description}>Remplissez le formulaire ci-dessous pour recevoir votre devis dans les plus brefs délais.</h4>
+      </div>
       <form ref={formRef} className={styles.formContainer} onSubmit={handleSubmit}>
-
         {/* Type de personne */}
         <select 
           className={styles.formGroup} 

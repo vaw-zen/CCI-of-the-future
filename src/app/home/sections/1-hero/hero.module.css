@@ -22,7 +22,20 @@
 .socialIcons > a:nth-of-type(2) {display: none; }
 .button:hover { background: var(--t-primary); border-color: var(--t-primary); color: var(--bg-base);  }
 
+@keyframes iconBounce {
+    0%, 10%, 100% { transform: translateY(0) rotate(0deg); }
+    3% { transform: translateY(-3px) rotate(-5deg); }
+    6% { transform: translateY(-3px) rotate(5deg); }
+}
+
 @media (max-width: 1024px) {
+    .socialIcons a { animation: iconBounce 3s ease-in-out infinite; }
+    .socialIcons a:nth-child(1) { animation-delay: 0s; }
+    .socialIcons a:nth-child(2) { animation-delay: 0.1s; }
+    .socialIcons a:nth-child(3) { animation-delay: 0.2s; }
+    .socialIcons a:nth-child(4) { animation-delay: 0.3s; }
+    .socialIcons a:nth-child(5) { animation-delay: 0.4s; }
+    .socialIcons a:nth-child(6) { animation-delay: 0.5s; }
     .glowLines { height: 100%; width: 100%; object-fit: cover; object-position: bottom right; position: absolute; right: 20vw; position: absolute !important;  }
     .content { width: 70vw; height: auto; padding: 5vw 0 0 2vw; margin-top: -24vw; margin-left: 23.5vw; }
     .heroContainer { height: clamp(129vw, 100svh, 100svh); display: flex; align-items: center; justify-content: center; }

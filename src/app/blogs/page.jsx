@@ -127,12 +127,9 @@ export default async function Page() {
         .filter(reel => reel && reel.id) // Only process reels with valid ID
         .map((reel) => {
           // Check if reel has a valid thumbnail (not a data URL placeholder)
+          // Use direct Facebook CDN URL for better reliability with Google
           const hasValidThumbnail = reel.thumbnail && 
             (reel.thumbnail.startsWith('http://') || reel.thumbnail.startsWith('https://'));
-          
-          // Use direct Facebook thumbnail URL for structured data (more reliable than proxy)
-          // Google can directly access Facebook CDN URLs
-          const thumbnailUrl = hasValidThumbnail ? reel.thumbnail : null;
           
           // Clean description for structured data (remove problematic Unicode characters)
           const cleanDescription = reel.message && reel.message.trim() ? 
@@ -190,7 +187,7 @@ export default async function Page() {
             embedUrl = fallbackUrl;
           }
           
-          // Build VideoObject with conditional thumbnailUrl
+          // Build VideoObject - only include thumbnailUrl if we have a valid HTTP(S) URL
           const videoObject = {
             "@type": "VideoObject",
             "@id": `https://cciservices.online/blogs#video-${reel.id}`, // Unique ID for blogs collection
@@ -233,9 +230,9 @@ export default async function Page() {
         };
         
         // Only add thumbnailUrl if we have a valid HTTP(S) thumbnail from Facebook
-        // Use direct Facebook CDN URL - more reliable than proxy endpoint
-        if (thumbnailUrl) {
-          videoObject.thumbnailUrl = thumbnailUrl;
+        // This ensures Google can access the thumbnail directly from Facebook CDN
+        if (hasValidThumbnail) {
+          videoObject.thumbnailUrl = reel.thumbnail;
         }
         
         return videoObject;

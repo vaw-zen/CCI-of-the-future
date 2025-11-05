@@ -23,7 +23,7 @@
   background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary-glow)));
   background-clip: text;
   -webkit-background-clip: text;
-  color: transparent;
+  color: var(--ac-primary);
 }
 
 .subtitle {
@@ -362,7 +362,7 @@
   .showcase { padding: 23.30vw 0; }
   .container { padding:0 73.40vw; margin: 0 auto; padding: 0 3.88vw; }
   .header { margin-bottom: 15.53vw; }
-  .title { font-size: 9.71vw; margin-bottom: 5.83vw; }
+  .title { font-size: 5.5vw; margin-bottom: 5.83vw; }
   .subtitle { font-size: 4.85vw; max-width: 186.41vw; }
   .carouselWrapper { max-width: 233.98vw; }
   .imageContainer { height: 121.36vw; border-radius: 3.88vw; box-shadow: 0 6.07vw 12.14vw -2.91vw rgba(0, 0, 0, 0.25); }

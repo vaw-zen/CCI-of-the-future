@@ -260,7 +260,6 @@
   object-fit: contain;
   background: transparent;
   animation: fadeInImage 0.5s ease-out 0.2s both;
-  border-radius: inherit;
 }
 
 .lightboxCaption {
@@ -275,9 +274,10 @@
   position: absolute;
   bottom: 0;
   left: 0;
+  right: 0;
   animation: slideUpCaption 0.5s ease-out 0.3s both;
-  border-bottom-left-radius: 1.2rem;
-  border-bottom-right-radius: 1.2rem;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
 }
 
 .lightboxCaption strong {
@@ -445,8 +445,6 @@
   .lightboxCaption {
     padding: 1.2rem 1.5rem 1.8rem;
     background: linear-gradient(180deg, transparent 20%, rgba(0, 0, 0, 0.9) 80%);
-    border-bottom-left-radius: 1.5rem;
-    border-bottom-right-radius: 1.5rem;
   }
 }
 
@@ -512,18 +510,20 @@
     aspect-ratio: unset;
     border-radius: 0;
     box-shadow: none;
-    background: transparent;
+    background: rgba(0, 0, 0, 0.95);
   }
   .lightboxImage {
     width: 100%;
     height: 100%;
     object-fit: contain;
     padding: 4rem 1rem 6rem;
+    border-radius: 0;
   }
   .lightboxCaption {
     padding: 1.5rem 1.5rem 2.5rem;
     background: linear-gradient(180deg, transparent 10%, rgba(0, 0, 0, 0.95) 90%);
     backdrop-filter: blur(15px);
+    border-radius: 0;
   }
   .lightboxCaption strong {
     font-size: 1.1rem;

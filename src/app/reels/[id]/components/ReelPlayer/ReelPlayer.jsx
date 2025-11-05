@@ -38,7 +38,7 @@ const ReelPlayer = ({ reel }) => {
 
   return (
          <>
-          <ServiceDetails title={extractTitle(reel.message)} text={""} />
+          {/* <ServiceDetails title={extractTitle(reel.message)} text={""} /> */}
     <div className={styles.reelPlayer}>
       <div className={styles.header}>
         <Link href="/blogs" className={styles.backButton}>

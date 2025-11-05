@@ -129,7 +129,11 @@ export const ImageSlider = ({
   const isDraggingRef = useRef(false);
   const shouldOpenLightboxRef = useRef(true);
 
-  const handlePointerStart = (clientX) => {
+  const handlePointerStart = (clientX, target) => {
+    // Don't start drag/click if clicking on a button
+    if (target?.tagName === 'BUTTON' || target?.closest('button')) {
+      return;
+    }
     startXRef.current = clientX;
     currentXRef.current = clientX;
     isDraggingRef.current = true;
@@ -161,11 +165,11 @@ export const ImageSlider = ({
     currentXRef.current = 0;
   };
 
-  const onTouchStart = (e) => handlePointerStart(e.touches[0].clientX);
+  const onTouchStart = (e) => handlePointerStart(e.touches[0].clientX, e.target);
   const onTouchMove = (e) => handlePointerMove(e.touches[0].clientX);
   const onTouchEnd = () => handlePointerEnd();
 
-  const onPointerDown = (e) => handlePointerStart(e.clientX);
+  const onPointerDown = (e) => handlePointerStart(e.clientX, e.target);
   const onPointerMoveEvt = (e) => handlePointerMove(e.clientX);
   const onPointerUp = () => handlePointerEnd();
 
@@ -223,7 +227,10 @@ export const ImageSlider = ({
             {/* Navigation Arrows */}
             <button
               className={`${styles.navButton} ${styles.navButtonLeft}`}
-              onClick={goToPrevious}
+              onClick={(e) => {
+                e.stopPropagation();
+                goToPrevious();
+              }}
               aria-label="Previous slide"
             >
               {/* Left arrow from local icons (rotated) */}
@@ -236,7 +243,10 @@ export const ImageSlider = ({
 
             <button
               className={`${styles.navButton} ${styles.navButtonRight}`}
-              onClick={goToNext}
+              onClick={(e) => {
+                e.stopPropagation();
+                goToNext();
+              }}
               aria-label="Next slide"
             >
               {/* Right arrow from local icons */}
@@ -292,7 +302,12 @@ export const ImageSlider = ({
           role="dialog"
           aria-modal="true"
           aria-label={images[lightboxIndex]?.title || 'Image en plein écran'}
+          onClick={closeLightbox}
         >
+          <div className={styles.lightboxCounter}>
+            {lightboxIndex + 1} / {images.length}
+          </div>
+          
           <button
             type="button"
             className={styles.lightboxClose}
@@ -305,7 +320,10 @@ export const ImageSlider = ({
           <button
             type="button"
             className={`${styles.lightboxNavButton} ${styles.lightboxNavButtonLeft}`}
-            onClick={goToPreviousLightbox}
+            onClick={(e) => {
+              e.stopPropagation();
+              goToPreviousLightbox();
+            }}
             aria-label="Image précédente"
           >
             <RadixIconsCaretRight
@@ -315,7 +333,10 @@ export const ImageSlider = ({
             />
           </button>
 
-          <figure className={styles.lightboxFrame}>
+          <figure 
+            className={styles.lightboxFrame}
+            onClick={(e) => e.stopPropagation()}
+          >
             <ResponsiveImage
               src={images[lightboxIndex]?.src}
               alt={images[lightboxIndex]?.title || 'Aperçu en plein écran'}
@@ -335,7 +356,10 @@ export const ImageSlider = ({
           <button
             type="button"
             className={`${styles.lightboxNavButton} ${styles.lightboxNavButtonRight}`}
-            onClick={goToNextLightbox}
+            onClick={(e) => {
+              e.stopPropagation();
+              goToNextLightbox();
+            }}
             aria-label="Image suivante"
           >
             <RadixIconsCaretRight className={styles.lightboxNavIcon} aria-hidden />

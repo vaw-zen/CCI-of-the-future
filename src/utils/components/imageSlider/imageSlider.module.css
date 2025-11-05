@@ -207,44 +207,77 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
   z-index: 999;
   padding: 1.5rem;
   gap: 1rem;
+  animation: fadeInLightbox 0.3s ease-out;
+  cursor: pointer;
+}
+
+.lightboxCounter {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(20, 20, 25, 0.8);
+  backdrop-filter: blur(20px);
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border-radius: 2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  animation: fadeInButton 0.4s ease-out 0.25s both;
+  letter-spacing: 0.05em;
 }
 
 .lightboxFrame {
   position: relative;
   width: min(90vw, 1200px);
   aspect-ratio: 16 / 9;
-  border-radius: 1rem;
+  border-radius: 1.2rem;
   overflow: hidden;
-  background: rgba(15, 15, 17, 0.85);
-  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.65);
+  background: rgba(10, 10, 12, 0.9);
+  backdrop-filter: blur(40px);
+  box-shadow: 
+    0 50px 100px -20px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  animation: scaleInLightbox 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+  cursor: default;
 }
 
 .lightboxImage {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: rgba(9, 9, 11, 0.85);
+  background: transparent;
+  animation: fadeInImage 0.5s ease-out 0.2s both;
+  border-radius: inherit;
 }
 
 .lightboxCaption {
   width: 100%;
-  padding: 0.85rem 1.5rem 1.25rem;
+  padding: 1.5rem 2rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  color: hsl(var(--secondary-foreground));
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 50%);
+  gap: 0.5rem;
+  color: white;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.85) 70%);
+  backdrop-filter: blur(10px);
   position: absolute;
   bottom: 0;
   left: 0;
+  animation: slideUpCaption 0.5s ease-out 0.3s both;
+  border-bottom-left-radius: 1.2rem;
+  border-bottom-right-radius: 1.2rem;
 }
 
 .lightboxCaption strong {
@@ -258,12 +291,12 @@
 
 .lightboxClose {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 2rem;
+  right: 2rem;
   border: none;
-  background: rgba(255, 255, 255, 0.12);
-  width: 2.75rem;
-  height: 2.75rem;
+  background: rgba(20, 20, 25, 0.8);
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   font-size: 2rem;
   color: white;
@@ -272,15 +305,23 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1001;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: fadeInButton 0.4s ease-out 0.2s both;
 }
 
 .lightboxClose:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
+  background: rgba(255, 50, 50, 0.9);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 6px 20px rgba(255, 50, 50, 0.4);
+}
+
+.lightboxClose:active {
+  transform: scale(0.95) rotate(90deg);
 }
 
 .lightboxNavButton {
@@ -288,7 +329,7 @@
   top: 50%;
   transform: translateY(-50%);
   border: none;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(20, 20, 25, 0.7);
   color: white;
   width: 3.5rem;
   height: 3.5rem;
@@ -297,25 +338,43 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: fadeInButton 0.4s ease-out 0.3s both;
 }
 
 .lightboxNavButton:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-50%) scale(1.05);
+  background: rgba(203, 251, 66, 0.9);
+  border-color: rgba(203, 251, 66, 0.5);
+  transform: translateY(-50%) scale(1.15);
+  box-shadow: 0 8px 24px rgba(203, 251, 66, 0.4);
+  color: #000;
+}
+
+.lightboxNavButton:active {
+  transform: translateY(-50%) scale(0.95);
 }
 
 .lightboxNavButtonLeft {
   left: 2rem;
+  animation-delay: 0.35s;
 }
 
 .lightboxNavButtonRight {
   right: 2rem;
+  animation-delay: 0.4s;
 }
 
 .lightboxNavIcon {
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 2rem;
+  height: 2rem;
+  transition: transform 0.3s ease;
+}
+
+.lightboxNavButton:hover .lightboxNavIcon {
+  transform: scale(1.2);
 }
 
 @media screen and (max-width: 1024px) {
@@ -339,23 +398,56 @@
   .thumbnail { height: 10.42vw; border-radius: 1.04vw; }
   .thumbnailActive { box-shadow: 0 0.52vw 1.04vw rgba(0, 0, 0, 0.2); border: 0.26vw solid hsl(var(--primary)); }
   .iconPlaceholder { width: 3.13vw; height: 3.13vw; border-radius: 0.52vw; }
-  .lightbox { padding: 2.5rem 1.5rem; }
-  .lightboxFrame { width: 92vw; border-radius: 1.5rem; }
+  .lightbox { padding: 2rem 1rem; }
+  .lightboxCounter {
+    top: 1.5rem;
+    left: 1.5rem;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+  .lightboxFrame { 
+    width: 94vw; 
+    border-radius: 1.5rem;
+    box-shadow: 
+      0 40px 80px -20px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
   .lightboxClose {
-    width: 3rem;
-    height: 3rem;
-    top: 1.25rem;
-    right: 1.25rem;
-    min-width: 44px;
-    min-height: 44px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.25);
+    width: 3.2rem;
+    height: 3.2rem;
+    top: 1.5rem;
+    right: 1.5rem;
+    min-width: 48px;
+    min-height: 48px;
+    background: rgba(20, 20, 25, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     z-index: 1001;
     touch-action: manipulation;
+    font-size: 1.8rem;
   }
-  .lightboxNavButton { width: 3.75rem; height: 3.75rem; }
-  .lightboxNavButtonLeft { left: 1.5rem; }
-  .lightboxNavButtonRight { right: 1.5rem; }
+  .lightboxClose:hover,
+  .lightboxClose:active {
+    background: rgba(255, 50, 50, 0.95);
+    transform: scale(1.05);
+  }
+  .lightboxNavButton { 
+    width: 4rem; 
+    height: 4rem;
+    min-width: 48px;
+    min-height: 48px;
+  }
+  .lightboxNavButtonLeft { left: 1rem; }
+  .lightboxNavButtonRight { right: 1rem; }
+  .lightboxNavIcon {
+    width: 2rem;
+    height: 2rem;
+  }
+  .lightboxCaption {
+    padding: 1.2rem 1.5rem 1.8rem;
+    background: linear-gradient(180deg, transparent 20%, rgba(0, 0, 0, 0.9) 80%);
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -380,26 +472,38 @@
   .thumbnail { height: 19.42vw; border-radius: 1.94vw; }
   .thumbnailActive { box-shadow: 0 0.97vw 1.94vw rgba(0, 0, 0, 0.2); border: 0.49vw solid hsl(var(--primary)); }
   .iconPlaceholder { width: 5.83vw; height: 5.83vw; border-radius: 0.97vw; }
-  .lightbox { padding: 0; }
+  .lightbox { 
+    padding: 0;
+    background: rgba(0, 0, 0, 0.98);
+  }
+  .lightboxCounter {
+    top: 1.2rem;
+    left: 1.2rem;
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
+    border-width: 2px;
+  }
   .lightboxClose { 
-    top: 1rem; 
-    right: 1rem; 
-    width: 3rem; 
-    height: 3rem; 
-    font-size: 1.8rem;
-    background: rgba(0, 0, 0, 0.7);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    top: 1.2rem; 
+    right: 1.2rem; 
+    width: 3.5rem; 
+    height: 3.5rem; 
+    font-size: 2rem;
+    background: rgba(20, 20, 25, 0.9);
+    border: 2.5px solid rgba(255, 255, 255, 0.25);
     z-index: 1002;
-    backdrop-filter: blur(12px);
-    /* Ensure it's always visible and touchable */
-    min-width: 44px;
-    min-height: 44px;
+    backdrop-filter: blur(20px);
+    min-width: 52px;
+    min-height: 52px;
     touch-action: manipulation;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   }
   .lightboxClose:hover,
   .lightboxClose:active {
-    background: rgba(0, 0, 0, 0.9);
-    transform: scale(1.1);
+    background: rgba(255, 50, 50, 0.95);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.08) rotate(90deg);
+    box-shadow: 0 8px 28px rgba(255, 50, 50, 0.5);
   }
   .lightboxNavButton { display: none; }
   .lightboxFrame {
@@ -408,15 +512,24 @@
     aspect-ratio: unset;
     border-radius: 0;
     box-shadow: none;
+    background: transparent;
   }
   .lightboxImage {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    padding: 4rem 1rem 6rem;
   }
   .lightboxCaption {
-    padding: 1.2rem 1.5rem 2.3rem;
-    background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.75) 100%);
+    padding: 1.5rem 1.5rem 2.5rem;
+    background: linear-gradient(180deg, transparent 10%, rgba(0, 0, 0, 0.95) 90%);
+    backdrop-filter: blur(15px);
+  }
+  .lightboxCaption strong {
+    font-size: 1.1rem;
+  }
+  .lightboxCaption span {
+    font-size: 0.95rem;
   }
 }
 
@@ -439,5 +552,58 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes fadeInLightbox {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleInLightbox {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInImage {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUpCaption {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInButton {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

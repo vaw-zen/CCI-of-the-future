@@ -126,9 +126,13 @@ export default async function Page() {
       ...reels
         .filter(reel => reel && reel.id) // Only process reels with valid ID
         .map((reel) => {
-          // Use local thumbnail URL for structured data (Google requires HTTP(S) URLs)
-          const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-          const localThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`;
+          // Check if reel has a valid thumbnail (not a data URL placeholder)
+          const hasValidThumbnail = reel.thumbnail && 
+            (reel.thumbnail.startsWith('http://') || reel.thumbnail.startsWith('https://'));
+          
+          // Use direct Facebook thumbnail URL for structured data (more reliable than proxy)
+          // Google can directly access Facebook CDN URLs
+          const thumbnailUrl = hasValidThumbnail ? reel.thumbnail : null;
           
           // Clean description for structured data (remove problematic Unicode characters)
           const cleanDescription = reel.message && reel.message.trim() ? 
@@ -186,14 +190,14 @@ export default async function Page() {
             embedUrl = fallbackUrl;
           }
           
-          return {
+          // Build VideoObject with conditional thumbnailUrl
+          const videoObject = {
             "@type": "VideoObject",
             "@id": `https://cciservices.online/blogs#video-${reel.id}`, // Unique ID for blogs collection
             "name": reel.message && reel.message.trim() ? 
               cleanUnicodeForStructuredData(reel.message).slice(0, 100) : 
               "Reel vidéo CCI Services",
             "description": cleanDescription,
-            "thumbnailUrl": localThumbnailUrl,
             "uploadDate": uploadDate,
             "contentUrl": contentUrl,
             "embedUrl": embedUrl,
@@ -227,6 +231,14 @@ export default async function Page() {
             "@id": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/blogs`
           }
         };
+        
+        // Only add thumbnailUrl if we have a valid HTTP(S) thumbnail from Facebook
+        // Use direct Facebook CDN URL - more reliable than proxy endpoint
+        if (thumbnailUrl) {
+          videoObject.thumbnailUrl = thumbnailUrl;
+        }
+        
+        return videoObject;
       }),
       
       // ItemList for all content

@@ -59,13 +59,13 @@ export const ScrollVelocity = ({
     const { scrollY } = useScroll(scrollOptions);
     const scrollVelocity = useVelocity(scrollY);
     const smoothVelocity = useSpring(scrollVelocity, {
-      damping: damping ?? 50,
-      stiffness: stiffness ?? 400
+      damping: damping ?? 80,
+      stiffness: stiffness ?? 300
     });
     const velocityFactor = useTransform(
       smoothVelocity,
       velocityMapping?.input || [0, 1000],
-      velocityMapping?.output || [0, 5],
+      velocityMapping?.output || [0, 3],
       { clamp: false }
     );
 
@@ -108,7 +108,15 @@ export const ScrollVelocity = ({
 
     return (
       <div className={parallaxClassName} style={parallaxStyle}>
-        <motion.div className={scrollerClassName} style={{ x, ...scrollerStyle }}>
+        <motion.div 
+          className={scrollerClassName} 
+          style={{ 
+            x, 
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
+            ...scrollerStyle 
+          }}
+        >
           {spans}
         </motion.div>
       </div>

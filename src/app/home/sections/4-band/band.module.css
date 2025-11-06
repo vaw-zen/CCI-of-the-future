@@ -33,7 +33,7 @@
 
 @media (max-width: 1024px) {
     .container { 
-        margin: 30vw calc(-1.953125vw) 30vw calc(-1.953125vw);
+        margin: 10vw calc(-1.953125vw) 10vw calc(-1.953125vw);
     }
     
     .container section {
@@ -41,12 +41,16 @@
     }
     
     .bandText { 
-        font-size: 10vw;  
+        font-size: 6vw;  
     }
 }
 
 @media (max-width: 480px) {
     .container { 
-        margin: 30vw calc(-3.75vw) 30vw calc(-3.75vw);
+        margin: 20vw calc(-3.75vw) 20vw calc(-3.75vw);
+    }
+    
+    .bandText { 
+        font-size: 8vw 
     }
 }

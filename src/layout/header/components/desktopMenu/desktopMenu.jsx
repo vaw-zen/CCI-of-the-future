@@ -8,7 +8,7 @@ import ResponsiveImage from '@/utils/components/Image/Image';
 import {AnalyticsLink } from '@/utils/components/analytics/AnalyticsComponents';
 import { useEmailClick } from '@/hooks/useEmailClick';
 
-export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
+export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMenuOpen }) {
     const mail = `mailto:${contact.mail.link}?subject=${encodeURIComponent(contact.mail.subject)}&body=${encodeURIComponent(contact.mail.body)}`;
     const phone = 'tel:' + contact.phone;
     
@@ -110,7 +110,13 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton }) {
                         </div>
                     </div>
                     <div className={styles.rightSection}>
-                        <h2 className={styles.menuTitle}>Menu</h2>
+                        <h2 className={styles.menuTitle} key={isMenuOpen ? 'open' : 'closed'}>
+                            {'Menu'.split('').map((letter, index) => (
+                                <span key={index} style={{ animationDelay: `${index * 0.1}s` }}>
+                                    {letter}
+                                </span>
+                            ))}
+                        </h2>
                         <div className={styles.rightContent}>
                             <div className={styles.rightSidebarLabels}>
                                 <p>Plus de pages</p>

@@ -32,7 +32,7 @@ export default function DevisCalculator() {
       <div className={styles.container}>
         <div className={styles.calculatorCard}>
           <div className={styles.header}>
-            <h2 className={styles.title}>Calculateur de Devis</h2>
+            <h2 className={styles.title}>Simulateur de Devis</h2>
             <p className={styles.subtitle}>
               Sélectionnez vos services et obtenez un devis personnalisé instantané
             </p>

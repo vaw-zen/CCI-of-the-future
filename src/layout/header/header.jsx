@@ -109,6 +109,7 @@ function Header({ roboto }) {
         hasActiveSublink,
         isLinkActive,
         currentPath,
+        menu,
         showTopButton
     } = useHeaderLogic();
 
@@ -168,7 +169,7 @@ function Header({ roboto }) {
             {/* Chat Widget - Lazy loaded once, then kept mounted for smooth transitions */}
             {chatLoaded && <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />}
 
-            <DesktopMenu desktopMenuStyles={desktopMenuStyles} handleMenuButton={handleMenuButton} />
+            <DesktopMenu desktopMenuStyles={desktopMenuStyles} handleMenuButton={handleMenuButton} isMenuOpen={menu} />
         </>
     );
 }

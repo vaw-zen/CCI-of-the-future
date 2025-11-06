@@ -183,6 +183,15 @@ export function useHeaderLogic() {
     const hasActiveSublink = useCallback((subLinks) => {
         if (!isClientSide) return false;
         if (!subLinks) return false;
+        
+        // Check if current path exists as a top-level nav item
+        const existsAsTopLevel = memoizedContent.some(item => 
+            item.link && (item.link === currentPath || currentPath?.startsWith(item.link + '/'))
+        );
+        
+        // If the link exists as top-level, don't highlight it in dropdown
+        if (existsAsTopLevel) return false;
+        
         return subLinks.some(subLink => {
             // Exact match OR parent path match
             return currentPath === subLink.link || currentPath?.startsWith(subLink.link + '/');

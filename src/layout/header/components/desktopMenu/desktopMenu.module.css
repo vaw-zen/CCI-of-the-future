@@ -7,13 +7,39 @@
 .leftSidebarLabels { width: 30%; font-size: 1.1vw; color: var(--t-secondary); margin-top: 1.5vw; display: flex; flex-direction: column; gap: 10.5vw; }
 .leftLinks { flex: 1; display: flex; flex-direction: column; gap: 5vw; font-size: 2.25vw; }
 .linkGroup { display: flex; flex-direction: column; gap: 1vw; }
+.linkGroup a { position: relative; display: inline-block; transition: transform 0.3s ease, color 0.3s ease; }
+.linkGroup a:hover { transform: translateX(0.5vw); color: var(--ac-primary); }
+
 .socialLinks { display: flex; flex-direction: column; font-size: 2.25vw; gap: 1vw; }
+.socialLinks a { position: relative; display: inline-block; transition: transform 0.3s ease, color 0.3s ease; }
+.socialLinks a:hover { transform: translateX(0.5vw); color: var(--ac-primary); }
 .rightSection { width: 60%; height: 100%; }
-.menuTitle { font-size: 6vw; border-bottom: 2px solid white; margin-bottom: 1vw; }
+.menuTitle { font-size: 6vw; border-bottom: 2px solid var(--ac-primary); margin-bottom: 1vw; }
+.menuTitle span { display: inline-block; animation: letterBlurIn 0.8s cubic-bezier(0.230, 1.000, 0.320, 1.000) forwards; opacity: 0; filter: blur(10px); transform: translateY(-20px); }
+
+@keyframes letterBlurIn {
+    0% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateY(-20px);
+    }
+    50% {
+        opacity: 0.5;
+        filter: blur(5px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
+
 .rightContent { display: flex; padding: 0 0; gap: 4.5vw; margin-top: 5vw; }
 .rightSidebarLabels { width: 22%; font-size: 1.1vw; color: var(--t-secondary); margin-top: .75vw; display: flex; flex-direction: column; gap: 10.5vw; }
 .rightLinks { display: flex; flex-direction: column; font-size: 2.25vw; font-weight: 500; flex: 1; gap: 5vw; }
 .pageLinks { display: flex; flex-direction: column; gap: 1vw; }
+.pageLinks a { position: relative; display: inline-block; transition: transform 0.3s ease, color 0.3s ease; }
+.pageLinks a:hover { transform: translateX(0.5vw); color: var(--ac-primary); }
 .newsletterForm { display: block; position: relative; }
 .emailInput { padding: .75vw 0; margin-top: 1vw; width: 100%; background: transparent; border: none; color: var(--t-primary); font-size: .9vw; outline: none; border-bottom: 1px solid rgba(255, 255,255, .2); }
 .submitButton { width: 3.25vw; height: 3.25vw; border-radius: 50%; border: 2px solid var(--t-primary); color: var(--t-primary); position: absolute; right: 0; bottom: 0; transform: translateY(50%); }

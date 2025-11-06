@@ -73,7 +73,7 @@ export default function DevisPage() {
       "@type": "Service",
       "name": "Simulateur de Devis Nettoyage Instantané",
       "description": "Premier et seul service en Tunisie à afficher les prix de nettoyage de manière transparente avec simulation instantanée. Aucune surprise, prix clairs avant commande.",
-      "serviceType": "Calculateur de Prix Nettoyage Professionnel",
+      "serviceType": "Simulateur de devis:Prix Nettoyage Professionnel pour chaque service",
       "areaServed": {
         "@type": "City",
         "name": "Tunis",
@@ -164,7 +164,7 @@ export default function DevisPage() {
         "name": "Quel est le prix du polissage de marbre à Tunis ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Le tarif de polissage et cristallisation de marbre est calculé au m². Utilisez notre calculateur de prix pour une estimation précise et immédiate selon votre surface. Prix transparents garantis, innovation unique en Tunisie."
+          "text": "Le tarif de polissage et cristallisation de marbre est calculé au m². Utilisez notre simulateur de devis pour une estimation précise et immédiate selon votre surface. Prix transparents garantis, innovation unique en Tunisie."
         }
       },
       {
@@ -201,7 +201,7 @@ export default function DevisPage() {
       },
       {
         "@type": "Question",
-        "name": "Quels services puis-je simuler avec le calculateur de prix ?",
+        "name": "Quels services puis-je simuler avec le simulateur de devis ?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Vous pouvez simuler les prix pour : nettoyage de salon (canapé, fauteuils), polissage de marbre, nettoyage de tapis et moquettes, nettoyage post-chantier, nettoyage de bateaux, et plus. Tous avec tarifs transparents et instantanés."

@@ -1,14 +1,52 @@
-.container { z-index: 0; width: 100%; margin: 7.5vw 0;  }
-.band {display: flex;gap: 2vw;color: rgba(255, 255, 255, 0.5);transform: translateX(-428%);animation: slideRight 60s linear infinite;}
-.band strong { font-weight: 500; font-size: 4vw; white-space: nowrap;  }
-.container:hover .band { animation-play-state: paused;  }
+.container { 
+    z-index: 0;
+    width: 100%;
+    margin: 7.5vw calc(-17.5vw) 7.5vw calc(-15.72vw);
+}
 
-@keyframes slideRight {
-    0% {transform: translateX(-25%);}
-    100% {transform: translateX(-428%);}
+.container section {
+    width: 100vw;
+}
+
+.parallax {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.scroller {
+    display: flex;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.5);
+    gap: 2vw;
+}
+
+.scroller span {
+    flex-shrink: 0;
+}
+
+.bandText {
+    font-weight: 500;
+    font-size: 4vw;
+    white-space: nowrap;
 }
 
 @media (max-width: 1024px) {
-.container { margin: 30vw 0;  }
-.band strong { font-size: 10vw;  }
+    .container { 
+        margin: 30vw calc(-1.953125vw) 30vw calc(-1.953125vw);
+    }
+    
+    .container section {
+        width: 100vw;
+    }
+    
+    .bandText { 
+        font-size: 10vw;  
+    }
+}
+
+@media (max-width: 480px) {
+    .container { 
+        margin: 30vw calc(-3.75vw) 30vw calc(-3.75vw);
+    }
 }

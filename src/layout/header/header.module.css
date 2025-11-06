@@ -10,10 +10,14 @@
 .button, .link { font-size: .8vw; color: inherit; font-weight: bolder; text-transform: uppercase; display: flex; align-items: center }
 .icon { width: 1.75vw; height: 1.75vw; margin: -.1vw 0 0 -.2vw; transition: transform .3s }
 .activeIcon {transform: rotate(180deg); color: var(--ac-primary); }
-.dropdown { width: 12vw; max-height: 0; opacity: 0; background: rgb(36, 39, 42); position: absolute; top: calc(100% + 1.5vw); left: 0; border-radius: .75vw; pointer-events: none; padding: 0; display: flex; flex-direction: column; transition: opacity .3s ease, max-height .3s ease; overflow: hidden; will-change: max-height, opacity; }
-.dropdownActive { max-height: 500px; opacity: 1; pointer-events: all; padding: .75vw 0 }
-.dropdownArrow { width: 1.5vw; height: 1.5vw; color: rgb(36, 39, 42); position: absolute; left: 1vw; top: 0; transform: translateY(-75%) }
-.subLink { font-size: .9vw; padding: .4vw 1.1vw; text-transform: capitalize }
+.dropdown { width: 12vw; max-height: 0; opacity: 0; background: rgb(36, 39, 42); position: absolute; top: calc(100% + 1.5vw); left: 0; border-radius: .75vw; pointer-events: none; padding: 0; display: flex; flex-direction: column; transition: opacity .3s ease, max-height .3s ease, transform .3s ease; overflow: hidden; will-change: max-height, opacity, transform; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+.dropdownActive { max-height: 500px; opacity: 1; pointer-events: all; padding: .75vw 0; transform: translateY(0); }
+.dropdownArrow { width: 1.5vw; height: 1.5vw; color: rgb(36, 39, 42); position: absolute; left: 1vw; top: 0; transform: translateY(-75%); transition: color .3s ease; }
+.subLink { font-size: .9vw; padding: .4vw 1.1vw; text-transform: capitalize; transition: all .3s ease; position: relative; overflow: hidden; }
+.subLink::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 0; background: rgba(203, 251, 66, 0.1); transition: width .3s ease; z-index: -1; }
+.subLink:hover { color: var(--ac-primary); padding-left: 1.5vw; transform: translateX(2px); }
+.subLink:hover::before { width: 100%; }
+.button:hover + .dropdown, .menuItem:hover .dropdown { box-shadow: 0 8px 24px rgba(203, 251, 66, 0.2); }
 .menuIcon {  display: flex; justify-content: center; align-items: center; border-radius: 50%; background: var(--bg-elevated); cursor: pointer;z-index: 2; }
 .menuIcon svg { height: 2.97vw; padding: 1vw; width: 2.97vw; color: var(--t-primary); }
 
@@ -26,6 +30,43 @@
 .topButton.active { width: 2.5vw !important; height: 2.5vw !important; overflow: visible; }
 .chatButton { opacity: 0.8; transition: all 0.3s ease; }
 .chatButton:hover { transform: scale(1.1); opacity: 1; }
+.button, .link { 
+    position: relative; 
+    transition: color .3s ease; 
+    padding: 0.4vw 0.8vw;
+    z-index: 1;
+}
+.button::before, .link::before { 
+    content: ''; 
+    position: absolute; 
+    left: 50%; 
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 0; 
+    height: 100%; 
+    background: rgba(203, 251, 66, 0.15); 
+    border: 1px solid var(--ac-primary);
+    border-radius: 0.5vw;
+    transition: width .4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+    opacity: 0;
+}
+.button:hover, .link:hover { 
+    color: var(--ac-primary); 
+}
+.button:hover::before, .link:hover::before { 
+    width: calc(100% + 0.5vw);
+    opacity: 1;
+}
+
+.activeLink {
+    color: var(--ac-primary) !important;
+}
+
+.activeLink::before {
+    width: calc(100% + 0.5vw) !important;
+    opacity: 1 !important;
+}
 
 /* Chat button heartbeat animation */
 @keyframes chatPulse {
@@ -70,12 +111,6 @@
   animation: none !important;
   transform: scale(1.1);
   opacity: 1;
-}
-
-
-  
-.activeLink {
-    color: var(--ac-primary) !important;
 }
 
 @media (max-width: 1024px) {

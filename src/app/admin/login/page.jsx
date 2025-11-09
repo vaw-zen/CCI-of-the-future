@@ -16,7 +16,10 @@ export default function AdminLogin() {
 
   // Redirect if already authenticated as admin
   useEffect(() => {
+    console.log('Login page - Auth state check:', { user: !!user, isAdmin, loading });
+    
     if (!loading && user && isAdmin) {
+      console.log('Redirecting authenticated admin to devis page');
       router.push('/admin/devis');
     }
   }, [user, isAdmin, loading, router]);
@@ -33,15 +36,17 @@ export default function AdminLogin() {
     e.preventDefault();
     if (isLoading) return;
 
+    console.log('Login form submitted with email:', credentials.email);
     setIsLoading(true);
     setResetMessage('');
 
     try {
       const result = await signInWithEmail(credentials.email, credentials.password);
+      console.log('Login result:', result);
       
       if (result.success) {
+        console.log('Login successful, waiting for auth state update...');
         // The useAdminAuth hook will handle the admin check and redirect
-        console.log('Login successful, checking admin privileges...');
       }
       // Error is handled by the useAdminAuth hook
     } catch (err) {
@@ -133,6 +138,17 @@ export default function AdminLogin() {
           {resetMessage && (
             <div className={resetMessage.includes('Erreur') ? styles.error : styles.success}>
               {resetMessage}
+            </div>
+          )}
+
+          {/* Temporary debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div style={{ padding: '10px', backgroundColor: '#f8f9fa', border: '1px solid #dee2e6', borderRadius: '4px', fontSize: '12px', marginBottom: '10px' }}>
+              <strong>Debug Info:</strong><br />
+              Loading: {loading ? 'Yes' : 'No'}<br />
+              User: {user ? user.email : 'None'}<br />
+              Is Admin: {isAdmin ? 'Yes' : 'No'}<br />
+              Error: {error || 'None'}
             </div>
           )}
 

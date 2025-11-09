@@ -35,6 +35,16 @@ export const trackServiceInteraction = (serviceType, action, additionalData = {}
       ...additionalData
     });
   }
+  // Forward to Facebook Pixel when available
+  try {
+    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
+      const payload = { service_type: serviceType, page_location: typeof window !== 'undefined' ? window.location.href : undefined, ...additionalData };
+      // Use a custom event name for service interactions
+      window.fbq('trackCustom', action, payload);
+    }
+  } catch (e) {
+    // swallow
+  }
 };
 
 // Track quote form progression
@@ -64,6 +74,11 @@ export const trackPhoneReveal = (location = 'header') => {
       window.gtag_report_conversion();
     }
   }
+  try {
+    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
+      window.fbq('track', 'Lead', { method: 'phone', location });
+    }
+  } catch (e) {}
 };
 
 // Track email link clicks with Google Ads conversion
@@ -81,6 +96,11 @@ export const trackEmailClick = (location = 'general', emailAddress = '') => {
       window.gtag_report_conversion();
     }
   }
+  try {
+    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
+      window.fbq('track', 'Lead', { method: 'email', location, email: emailAddress });
+    }
+  } catch (e) {}
 };
 
 // Track WhatsApp link clicks with Google Ads conversion
@@ -98,6 +118,11 @@ export const trackWhatsAppClick = (location = 'general', phoneNumber = '') => {
       window.gtag_report_conversion();
     }
   }
+  try {
+    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
+      window.fbq('track', 'Lead', { method: 'whatsapp', phone: phoneNumber, location });
+    }
+  } catch (e) {}
 };
 
 // ============================================================================
@@ -309,6 +334,11 @@ export const trackDevisSubmission = (serviceType, estimatedValue, contactMethod 
       value: estimatedValue * 0.2 // Higher conversion value for actual submission
     });
   }
+  try {
+    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
+      window.fbq('track', 'Lead', { service_type: serviceType, estimated_value: estimatedValue, contact_method: contactMethod });
+    }
+  } catch (e) {}
 };
 
 // ============================================================================

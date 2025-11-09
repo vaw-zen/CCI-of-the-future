@@ -44,7 +44,39 @@ export function useAnalytics() {
           gtagExists: typeof window !== 'undefined' ? typeof window.gtag : 'N/A'
         });
       }
-    },
+        
+        // Also forward important events to Facebook Pixel if available
+        try {
+          if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
+            const mapToFb = (name) => {
+              const n = name.toLowerCase();
+              if (n.includes('lead') || n === 'generate_lead' || n === 'quote_request' || n === 'form_submit') return { standard: true, name: 'Lead' };
+              if (n.includes('view') || n === 'view_item' || n === 'view_item_list' || n === 'page_view') return { standard: true, name: 'ViewContent' };
+              if (n.includes('purchase') || n.includes('order') || n === 'purchase') return { standard: true, name: 'Purchase' };
+              if (n.includes('search')) return { standard: true, name: 'Search' };
+              // fallback to custom event
+              return { standard: false, name };
+            };
+
+            const fbMap = mapToFb(eventName);
+            const fbPayload = Object.assign({}, parameters, {
+              page_location: typeof window !== 'undefined' ? window.location.href : undefined
+            });
+
+            if (fbMap.standard) {
+              window.fbq('track', fbMap.name, fbPayload);
+              console.log('📘 FB Pixel tracked', fbMap.name, fbPayload);
+            } else {
+              // use trackCustom for arbitrary events
+              window.fbq('trackCustom', fbMap.name, fbPayload);
+              console.log('📘 FB Pixel tracked custom', fbMap.name, fbPayload);
+            }
+          }
+        } catch (e) {
+          // don't block analytics on fbq errors
+          console.warn('FB tracking error', e);
+        }
+        },
 
     // Track form submissions
     trackFormSubmission: (formName, formData = {}) => {

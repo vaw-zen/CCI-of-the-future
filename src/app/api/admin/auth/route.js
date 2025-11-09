@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 // Simple admin credentials - In production, use a proper authentication system
 const ADMIN_CREDENTIALS = {
+  email: 'cci.services.tn@gmail.com',
   username: 'admin',
   password: 'cci2025'
 };
@@ -15,32 +16,40 @@ export async function POST(request) {
     const body = await request.json();
     console.log('Request body:', body);
     
-    const { username, password } = body;
+    const { username, password, email } = body;
 
-    if (!username || !password) {
+    if ((!username && !email) || !password) {
       return NextResponse.json({
         success: false,
-        error: 'Nom d\'utilisateur et mot de passe requis'
+        error: 'Email/Username et mot de passe requis'
       }, { status: 400 });
     }
 
-    // Validate credentials
-    if (username === ADMIN_CREDENTIALS.username && 
-        password === ADMIN_CREDENTIALS.password) {
-      
+    // Validate credentials - support both email and username
+    const isValidCredentials = (
+      (email === ADMIN_CREDENTIALS.email || username === ADMIN_CREDENTIALS.username) && 
+      password === ADMIN_CREDENTIALS.password
+    );
+
+    if (isValidCredentials) {
       console.log('Login successful');
       
       return NextResponse.json({
         success: true,
         token: ADMIN_TOKEN,
-        message: 'Connexion réussie'
+        message: 'Connexion réussie',
+        user: {
+          email: ADMIN_CREDENTIALS.email,
+          username: ADMIN_CREDENTIALS.username,
+          role: 'admin'
+        }
       });
     } else {
       console.log('Invalid credentials');
       
       return NextResponse.json({
         success: false,
-        error: 'Nom d\'utilisateur ou mot de passe incorrect'
+        error: 'Email/Username ou mot de passe incorrect'
       }, { status: 401 });
     }
   } catch (error) {

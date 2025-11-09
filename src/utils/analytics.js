@@ -3,6 +3,8 @@
  * Business-specific tracking functions for cleaning services
  */
 
+import { trackLead, trackViewContent, trackInitiateCheckout, trackCustomEvent } from './facebook-pixel-helper';
+
 // Service types mapping for consistent tracking
 export const SERVICE_TYPES = {
   MARBRE: 'marbre',
@@ -74,11 +76,9 @@ export const trackPhoneReveal = (location = 'header') => {
       window.gtag_report_conversion();
     }
   }
-  try {
-    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
-      window.fbq('track', 'Lead', { method: 'phone', location });
-    }
-  } catch (e) {}
+  
+  // Enhanced Facebook Pixel tracking
+  trackLead('phone', location, { action: 'phone_reveal' });
 };
 
 // Track email link clicks with Google Ads conversion
@@ -96,11 +96,9 @@ export const trackEmailClick = (location = 'general', emailAddress = '') => {
       window.gtag_report_conversion();
     }
   }
-  try {
-    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
-      window.fbq('track', 'Lead', { method: 'email', location, email: emailAddress });
-    }
-  } catch (e) {}
+  
+  // Enhanced Facebook Pixel tracking
+  trackLead('email', location, { email: emailAddress, action: 'email_click' });
 };
 
 // Track WhatsApp link clicks with Google Ads conversion
@@ -118,11 +116,9 @@ export const trackWhatsAppClick = (location = 'general', phoneNumber = '') => {
       window.gtag_report_conversion();
     }
   }
-  try {
-    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
-      window.fbq('track', 'Lead', { method: 'whatsapp', phone: phoneNumber, location });
-    }
-  } catch (e) {}
+  
+  // Enhanced Facebook Pixel tracking
+  trackLead('whatsapp', location, { phone: phoneNumber, action: 'whatsapp_click' });
 };
 
 // ============================================================================
@@ -207,6 +203,9 @@ export const trackServiceCardClick = (serviceName, serviceUrl, cardPosition = 0)
       index: cardPosition
     });
   }
+  
+  // Track service page view in Facebook Pixel
+  trackViewContent('service', serviceName, serviceName.toLowerCase().replace(/\s+/g, '_'));
 };
 
 // Track gallery interactions
@@ -334,11 +333,14 @@ export const trackDevisSubmission = (serviceType, estimatedValue, contactMethod 
       value: estimatedValue * 0.2 // Higher conversion value for actual submission
     });
   }
-  try {
-    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
-      window.fbq('track', 'Lead', { service_type: serviceType, estimated_value: estimatedValue, contact_method: contactMethod });
-    }
-  } catch (e) {}
+  
+  // Enhanced Facebook Pixel tracking for quote submissions
+  trackInitiateCheckout(serviceType, estimatedValue);
+  trackLead('form', 'devis_submission', { 
+    service_type: serviceType, 
+    estimated_value: estimatedValue, 
+    contact_method: contactMethod 
+  });
 };
 
 // ============================================================================
@@ -610,6 +612,9 @@ export const trackArticleClick = (articleData = {}) => {
       page_location: window.location.href
     });
   }
+  
+  // Track article view in Facebook Pixel
+  trackViewContent('article', title, slug);
 };
 
 /**

@@ -9,6 +9,7 @@ import { headerSI } from "@/layout/header/header.func";
 import { usePathname } from "next/navigation";
 import { storeUTMParameters } from "../utmGenerator";
 import { initFacebookPixel } from "@/utils/facebookTracking";
+import { initializeFacebookPixelTracking, debugFacebookPixel } from "@/utils/facebook-pixel-helper";
 
 export default function Initializer() {
     // Add state to track if we're in client-side rendering
@@ -41,10 +42,17 @@ export default function Initializer() {
         try {
             if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID) {
                 initFacebookPixel();
+                // Wait a bit for pixel to load, then initialize tracking
+                setTimeout(() => {
+                    initializeFacebookPixelTracking();
+                    // Debug pixel status in development only
+                    if (process.env.NODE_ENV === 'development') {
+                        setTimeout(() => debugFacebookPixel(), 2000);
+                    }
+                }, 1500);
             }
         } catch (e) {
             // fail silently if pixel init errors
-            console.warn('Facebook Pixel init error', e);
         }
     }, []);
     

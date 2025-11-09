@@ -1,5 +1,5 @@
 .footer { aspect-ratio: 100 / 26.823; width: 100%; display: flex; flex-direction: column; contain: layout style paint; background: var(--bg-elevated); }
-.contentWrapper { display: flex; flex: 1; min-height: 80%; padding: 0 17.5vw 0 15.72vw; align-items: center; justify-content: space-between; }
+.contentWrapper { display: flex; flex: 1; padding: 0 17.5vw 0 15.72vw; align-items: center; justify-content: space-between; }
 .leftSection { display: flex; flex-direction: column; }
 .title { font-size: 3vw; width: fit-content; min-height: 3vw; }
 .mailLink { position: relative; transition: color .4s;}
@@ -29,11 +29,11 @@
 .navLink:hover .line {background: var(--ac-primary); transform: scaleX(0.925);}
 
 @media (max-width: 1024px) {
-.footer { aspect-ratio: 100 / 97.5; }
-.contentWrapper { display: flex; flex: 1; min-height: 85%; padding: 5vw 1.953125vw; flex-direction: column; justify-content: space-between; align-items: flex-start;}
+.footer { aspect-ratio: auto }
+.contentWrapper { display: flex; flex: 1;min-height: fit-content;  padding: 5vw 1.953125vw; flex-direction: column; justify-content: space-around; align-items: flex-start; gap: 10.5vw;}
 
 .title { font-size:  6.9vw;}
-.infoGrid { margin-top: 7.5vw; }
+/* .infoGrid { margin-top: 7.5vw; } */
 .infoBlock {  gap: 1.25vw; }
 .label {font-size: 2.25vw; }
 .value { font-size: 3.5vw;}
@@ -42,7 +42,14 @@
 .index { max-width: 10vw; min-width: 10vw; font-size: 3.5vw; }
 .line { transition: transform .4s, background .4s; height: 2px; width: 100%; transform: scaleX(0.6); }
 .pageName { font-size: 5vw; }
-.navigation { gap: 4vw; line-height: 1; }
+    /* On iPad/tablet widths split navigation into two columns while preserving order */
+    .navigation { 
+        display: grid; 
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6vw; 
+        line-height: 1; 
+        list-style: none;
+    }
 
 .bottom { font-size: .834vw; padding: 2.5vw 1.953125vw; flex-direction: column; gap: 2vw; }
 .copyright { font-size: 2.255vw; }
@@ -53,11 +60,11 @@
 
 
 @media (max-width: 480px) {
-    .footer { aspect-ratio: 1 / 1; min-height: 120vh; }
-    .contentWrapper { display: flex; flex: 1; min-height: 80%; padding: 5vw 3.75vw 7.5vw 3.75vw;  flex-direction: column; justify-content: space-between; align-items: flex-start;}
-    
+    .footer { aspect-ratio: auto; min-height: fit-content; }
+    .contentWrapper { display: flex; flex: 1; height: auto; padding: 5vw 3.75vw 7.5vw 3.75vw; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 10vw; }
+  
     .title { font-size:  6.75vw;}
-    .infoGrid { margin-top: 15vw; flex-direction: column; gap: 5vw; }
+    .infoGrid { margin-top: 0; flex-direction: column; gap: 7vw; }
     .infoBlock {  gap: 2vw; }
     .label {font-size: 4.25vw; }
     .value { font-size: 5.75vw;}
@@ -66,7 +73,8 @@
     .index { max-width: 12.5vw; min-width: 12.5vw; font-size: 5vw; }
     .line { transition: transform .4s, background .4s; height: 2px; width: 100%; transform: scaleX(0.6); }
     .pageName { font-size: 9vw; }
-    .navigation { gap: 7.5vw; line-height: 1; }
+    
+    .navigation { display: flex; flex-direction: column; text-transform: uppercase; font-weight: bolder; gap: 7.5vw; line-height: .85; list-style: none; }
     
     .bottom { font-size: .834vw; padding: 7.5vw 5vw; gap: 5vw }
     .copyright { font-size: 4.25vw; text-align: center; }

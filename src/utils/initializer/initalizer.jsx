@@ -8,6 +8,7 @@ import { servicesScrollTriggers } from "@/app/services/services.func";
 import { headerSI } from "@/layout/header/header.func";
 import { usePathname } from "next/navigation";
 import { storeUTMParameters } from "../utmGenerator";
+import { initFacebookPixel } from "@/utils/facebookTracking";
 
 export default function Initializer() {
     // Add state to track if we're in client-side rendering
@@ -35,6 +36,16 @@ export default function Initializer() {
         
         // Capture and store UTM parameters on initial load
         storeUTMParameters();
+        
+        // Initialize Facebook Pixel if ID is present
+        try {
+            if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID) {
+                initFacebookPixel();
+            }
+        } catch (e) {
+            // fail silently if pixel init errors
+            console.warn('Facebook Pixel init error', e);
+        }
     }, []);
     
     // Effect for handling route changes 

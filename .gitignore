@@ -74,3 +74,7 @@ CLAUDE.md
 # Development-only SEO tools
 scripts/fix-seo-issues.cjs
 *.backup*
+
+# Private Dashboard - Admin access only
+src/app/public-dashboard/
+src/app/api/devis/

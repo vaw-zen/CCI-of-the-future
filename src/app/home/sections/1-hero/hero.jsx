@@ -60,7 +60,7 @@ export default function Hero() {
       <div className={styles.content}>
         <header>
           <h1 className={styles.title}>
-          Augmenter la qualité de vos services de nettoyage
+          Augmentez la qualité de vos services de nettoyage
           </h1>
           <p className={styles.subtitle}>
           Experts en nettoyage, nous proposons des services variés et de

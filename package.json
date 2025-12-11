@@ -24,7 +24,7 @@
     "franc-min": "^6.2.0",
     "google-auth-library": "^10.4.1",
     "google-search-results-nodejs": "^2.1.0",
-    "next": "^15.5.2",
+    "next": "15.5.8",
     "nodemailer": "^7.0.9",
     "prop-types": "^15.8.1",
     "puppeteer": "^24.24.1",

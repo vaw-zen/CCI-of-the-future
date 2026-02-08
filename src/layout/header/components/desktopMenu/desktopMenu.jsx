@@ -25,6 +25,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
     const [isClient, setIsClient] = useState(false);
     // Newsletter form state
     const [email, setEmail] = useState('');
+    const [website, setWebsite] = useState(''); // honeypot field
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState('');
     const [submitStatus, setSubmitStatus] = useState(''); // 'success', 'error', ''
@@ -65,15 +66,17 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
                 body: JSON.stringify({
                     email: email.trim(),
                     acceptedPrivacy: checkboxChecked,
+                    website: website,
                 }),
             });
 
             const data = await response.json();
 
             if (response.ok && data.status === 'success') {
-                setSubmitMessage('🎉 Inscription réussie ! Vérifiez votre boîte mail.');
+                setSubmitMessage('Vérifiez votre boîte mail pour confirmer votre inscription.');
                 setSubmitStatus('success');
                 setEmail('');
+                setWebsite('');
                 setCheckboxChecked(false);
             } else {
                 setSubmitMessage(data.message || 'Erreur lors de l\'inscription.');
@@ -129,6 +132,19 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
                                 </div>
                                 <form className={styles.newsletterForm} onSubmit={handleNewsletterSubmit}>
                                     <label>Restez à jour</label>
+                                    {/* Honeypot field — hidden from real users, bots auto-fill it */}
+                                    <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+                                        <label htmlFor="desktop-website">Site web</label>
+                                        <input
+                                            type="text"
+                                            id="desktop-website"
+                                            name="website"
+                                            value={website}
+                                            onChange={(e) => setWebsite(e.target.value)}
+                                            tabIndex={-1}
+                                            autoComplete="off"
+                                        />
+                                    </div>
                                     <input 
                                         type="email"
                                         placeholder='Adresse Email' 

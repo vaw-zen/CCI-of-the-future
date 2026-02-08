@@ -28,7 +28,8 @@ const initialFormData = {
   heurePreferee: 'matin',
   message: '',
   newsletter: false,
-  conditions: false
+  conditions: false,
+  honeypotWebsite: ''
 };
 
 export function useDevisFormLogic() {

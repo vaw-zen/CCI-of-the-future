@@ -408,6 +408,20 @@ export default function DevisForm() {
               </div>
             </div>
 
+            {/* Honeypot field — hidden from real users, bots auto-fill it */}
+            <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+              <label htmlFor="devis-website">Site web</label>
+              <input
+                type="text"
+                id="devis-website"
+                name="honeypotWebsite"
+                value={formData.honeypotWebsite}
+                onChange={handleInputChange}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
             {/* Checkboxes */}
             <div className={styles.checkboxSection}>
               <div className={styles.checkboxGroup}>

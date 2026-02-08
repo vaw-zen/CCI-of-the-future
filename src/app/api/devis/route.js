@@ -14,6 +14,16 @@ export async function POST(request) {
     const body = await request.json().catch(() => ({}));
     const formData = body?.formData || body || {};
 
+    // Honeypot check — bots fill this hidden field, real users never see it
+    if (formData.honeypotWebsite) {
+      return NextResponse.json({
+        status: 'success',
+        message: 'Votre demande de devis a été envoyée avec succès !',
+        data: { id: 'ok' },
+        details: { devisConfirmed: true, devisSaved: true }
+      });
+    }
+
     // Extract and validate required fields
     const {
       nom, prenom, email, telephone, adresse, ville,
@@ -312,7 +322,8 @@ export async function POST(request) {
           body: JSON.stringify({
             email: email,
             acceptedPrivacy: true,
-            fromDevis: true // Flag to indicate this comes from devis form
+            website: '',
+            source: 'devis_form',
           }),
         });
         

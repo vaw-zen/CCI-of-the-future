@@ -42,7 +42,8 @@ export default function DevisForm() {
     heurePreferee: '',
     message: '',
     newsletter: false,
-    conditions: false
+    conditions: false,
+    honeypotWebsite: ''
   });
 
   const handleInputChange = (e) => {
@@ -184,7 +185,8 @@ export default function DevisForm() {
           heurePreferee: '',
           message: '',
           newsletter: false,
-          conditions: false
+          conditions: false,
+          honeypotWebsite: ''
         });
       } else {
         setResult({
@@ -429,6 +431,20 @@ export default function DevisForm() {
           />
         )}
         
+        {/* Honeypot field — hidden from real users, bots auto-fill it */}
+        <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+          <label htmlFor="contact-website">Site web</label>
+          <input
+            type="text"
+            id="contact-website"
+            name="honeypotWebsite"
+            value={formData.honeypotWebsite}
+            onChange={handleInputChange}
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </div>
+
         {/* Newsletter Checkbox */}
         <label className={styles.checkboxContainer}>
           <input 

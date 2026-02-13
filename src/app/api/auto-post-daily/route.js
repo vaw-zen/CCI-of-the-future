@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {GoogleGenerativeAI} from "@google/generative-ai"; 
 import PostRotationManager from "../../../utils/post-rotation-manager.js";
+import { generateUTMUrl, UTM_PRESETS } from "../../../utils/utmGenerator.js";
 
 const FB_API_VERSION = process.env.FB_API_VERSION || 'v23.0';
 const FB_PAGE_ID = process.env.FB_PAGE_ID;
@@ -23,7 +24,7 @@ export async function POST(req) {
 
     // Initialize Gemini AI
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Parse request body for custom prompts (optional)
     let requestBody = {};
@@ -33,7 +34,36 @@ export async function POST(req) {
       // Use defaults if no body provided
     }
 
-    const { customPrompt, postType = "tip", includeHashtags = true, includeImage = true, forceService = null } = requestBody;
+    const { 
+      customPrompt, 
+      postType = "tip", 
+      includeHashtags = true, 
+      includeImage = true, 
+      forceService = null,
+      dryRun = false,
+      currentSeason = null,
+      currentMonth = null 
+    } = requestBody;
+
+    // Resolve season dynamically (from payload or auto-detect)
+    const resolvedSeason = currentSeason || (() => {
+      const month = new Date().getMonth() + 1;
+      if (month >= 3 && month <= 5) return 'printemps';
+      if (month >= 6 && month <= 8) return 'été';
+      if (month >= 9 && month <= 11) return 'automne';
+      return 'hiver';
+    })();
+    const resolvedMonth = currentMonth || new Date().toLocaleDateString('fr-FR', { month: 'long' });
+
+    // UTM helper for auto-post links
+    const addUTM = (url, service = '') => {
+      return generateUTMUrl(url, {
+        source: 'facebook',
+        medium: 'social',
+        campaign: `auto_post_${postType}`,
+        content: service || 'general'
+      });
+    };
 
     // Get recommended service based on rotation
     const recommendedService = forceService || rotationManager.getNextRecommendedService(postType);
@@ -43,33 +73,65 @@ export async function POST(req) {
       rotationStatus: rotationManager.getRotationStatus()
     });
 
-    // Enhanced call-to-action system with service-specific URLs
+    // Enhanced call-to-action system with UTM-tracked, service-specific URLs
     const generateCallToAction = (targetService) => {
-      // Use service-specific CTA if we have a target service
-      if (targetService && rotationManager.serviceConfig[targetService]) {
-        const serviceCTA = rotationManager.generateServiceCallToAction(targetService);
-        
-        // Always include full contact information
-        const contactInfo = `
-🔗 Site: https://cciservices.online
+      const siteUrl = addUTM('https://cciservices.online', targetService);
+      const devisUrl = addUTM('https://cciservices.online/devis', targetService);
+
+      const contactInfo = `
+🔗 Site: ${siteUrl}
 ☎️ Tel: +216 98 55 77 66
 📧 Email: contact@cciservices.online`;
 
-        return serviceCTA + contactInfo;
+      // Use service-specific CTA if we have a target service
+      if (targetService && rotationManager.serviceConfig[targetService]) {
+        const serviceUrl = addUTM(rotationManager.getServiceUrl(targetService), targetService);
+        const serviceName = rotationManager.getServiceDisplayName(targetService);
+        
+        const serviceSpecificCTAs = {
+          salon: [
+            `💺 Découvrez nos techniques de nettoyage salon: ${serviceUrl}`,
+            `🛋️ Redonnez vie à votre salon: ${serviceUrl}`,
+            `✨ Salon comme neuf avec CCI Services: ${serviceUrl}`
+          ],
+          tapis: [
+            `🧽 Expertise nettoyage tapis & moquette: ${serviceUrl}`,
+            `🌟 Tapis impeccables garantis: ${serviceUrl}`,
+            `💯 Détachage professionnel: ${serviceUrl}`
+          ],
+          marbre: [
+            `💎 Polissage marbre professionnel: ${serviceUrl}`,
+            `⭐ Cristallisation et entretien marbre: ${serviceUrl}`,
+            `✨ Redonnez l'éclat à votre marbre: ${serviceUrl}`
+          ],
+          tapisserie: [
+            `🪑 Services tapisserie & rembourrage: ${serviceUrl}`,
+            `🛠️ Restauration mobilier expert: ${serviceUrl}`,
+            `✨ Retapissage professionnel: ${serviceUrl}`
+          ],
+          tfc: [
+            `🏢 Nettoyage TFC & post-chantier: ${serviceUrl}`,
+            `🔧 Expertise nettoyage professionnel: ${serviceUrl}`,
+            `💼 Solutions entreprises: ${serviceUrl}`
+          ],
+          entreprises: [
+            `🏢 Conventions de nettoyage annuelles pour entreprises: ${serviceUrl}`,
+            `📋 Découvrez nos offres B2B sur mesure: ${serviceUrl}`,
+            `🤝 Partenariat nettoyage professionnel: ${serviceUrl}`
+          ]
+        };
+
+        const ctas = serviceSpecificCTAs[targetService] || [`📞 ${serviceName}: ${serviceUrl}`];
+        return ctas[Math.floor(Math.random() * ctas.length)] + contactInfo;
       }
       
       // Fallback to general CTAs
       const generalCallToActions = [
-        "💬 Simulateur de Devis gratuit: https://cciservices.online/devis",
-        "💬 Demandez votre devis gratuit maintenant!",
-        "💬 Devis personnalisé en 24h - gratuit!",
-        "💬 Consultation gratuite pour votre projet!"
+        `💬 Simulateur de Devis gratuit: ${devisUrl}`,
+        `💬 Demandez votre devis gratuit: ${devisUrl}`,
+        `💬 Devis personnalisé en 24h - gratuit!`,
+        `💬 Consultation gratuite pour votre projet!`
       ];
-      
-      const contactInfo = `
-🔗 Site: https://cciservices.online
-☎️ Tel: +216 98 55 77 66
-📧 Email: contact@cciservices.online`;
 
       const randomCTA = generalCallToActions[Math.floor(Math.random() * generalCallToActions.length)];
       return randomCTA + contactInfo;
@@ -180,29 +242,75 @@ EXEMPLE TAPIS:
 EXEMPLE SALON:
 "🛋️ CCI Services redonne vie à vos canapés ! Nettoyage adapté à chaque tissu avec produits professionnels non-toxiques. Comme neufs ! ✨"`,
 
-      seasonal: `Tu créés UN SEUL post saisonnier Facebook pour CCI Services, entreprise de nettoyage professionnel en Tunisie.
+      seasonal: (() => {
+        const seasonalThemes = {
+          hiver: {
+            emoji: '❄️',
+            emojiEnd: '🏠',
+            themes: [
+              'Confort hivernal et intérieur douillet',
+              'Entretien pendant les mois froids',
+              'Préparation pour les fêtes',
+              'Protection des textiles contre l\'humidité hivernale'
+            ],
+            example: `❄️ Hiver avec CCI Services : gardez votre intérieur impeccable et douillet ! Tapis, salons et marbre brillent pour vos soirées en famille 🏠`
+          },
+          printemps: {
+            emoji: '🌸',
+            emojiEnd: '✨',
+            themes: [
+              'Grand ménage de printemps',
+              'Renouveau et fraîcheur de votre intérieur',
+              'Nettoyage en profondeur après l\'hiver',
+              'Redonner vie à vos espaces pour la belle saison'
+            ],
+            example: `🌸 Printemps avec CCI Services : c'est le moment du grand nettoyage ! Rafraîchissez tapis, salons et marbre pour accueillir la belle saison ✨`
+          },
+          été: {
+            emoji: '☀️',
+            emojiEnd: '🌊',
+            themes: [
+              'Fraîcheur et propreté estivale',
+              'Entretien léger et régulier en été',
+              'Préparation pour les invités d\'été',
+              'Protection contre la poussière et la chaleur'
+            ],
+            example: `☀️ Été avec CCI Services : un intérieur frais et impeccable malgré la chaleur ! Profitez de la saison avec des espaces propres et accueillants 🌊`
+          },
+          automne: {
+            emoji: '🍂',
+            emojiEnd: '🏡',
+            themes: [
+              'Préparation pour l\'hiver',
+              'Nettoyage de rentrée et changement de saison',
+              'Maintenance avant les mois froids',
+              'Préparation des fêtes de fin d\'année'
+            ],
+            example: `🍂 Automne avec CCI Services : préparez votre cocon pour l'hiver ! Tapis, canapés et marbre retrouvent leur éclat avant les soirées douillettes 🏡`
+          }
+        };
+        const theme = seasonalThemes[resolvedSeason] || seasonalThemes.automne;
+        return `Tu créés UN SEUL post saisonnier Facebook pour CCI Services, entreprise de nettoyage professionnel en Tunisie.
 
-CONSIGNE: Génère EXACTEMENT UN POST adapté à la saison actuelle (octobre/automne).
+CONSIGNE: Génère EXACTEMENT UN POST adapté à la saison actuelle (${resolvedMonth}/${resolvedSeason}).
 
-THÈME AUTOMNAL:
-- Préparation pour l'hiver
-- Nettoyage de rentrée/changement de saison
-- Maintenance avant les mois froids
-- Préparation des fêtes de fin d'année
+THÈMES ${resolvedSeason.toUpperCase()}:
+${theme.themes.map(t => '- ' + t).join('\n')}
 
 RÈGLES STRICTES:
 - EXACTEMENT 180-280 caractères pour le contenu principal
-- Contexte saisonnier automne/hiver
-- 2-3 emojis max, liés à la saison
+- Contexte saisonnier ${resolvedSeason}
+- 2-3 emojis max, liés à la saison (${theme.emoji} ${theme.emojiEnd})
 - Mentionner "CCI Services" UNE FOIS
-- Conseil pertinent pour octobre
+- Conseil pertinent pour ${resolvedMonth}
 - Pas de call-to-action (ajouté automatiquement)
 
 FORMAT:
-[Emoji saison] [Conseil CCI Services saisonnier] [Bénéfice préparation] [Emoji cocooning]
+[Emoji saison] [Conseil CCI Services saisonnier] [Bénéfice préparation] [Emoji]
 
 EXEMPLE:
-"🍂 Octobre avec CCI Services : préparez votre cocon pour l'hiver ! Tapis, canapés et marbre retrouvent leur éclat avant les soirées douillettes 🏠"` 
+"${theme.example}"`;
+      })() 
     };
 
     const selectedPrompt = customPrompt || prompts[postType] || prompts.tip;
@@ -270,7 +378,7 @@ EXEMPLE:
 
     // Add hashtags if requested
     if (includeHashtags) {
-      const hashtags = "\n\n#CCIServices #NettoyageProfessionnel #Tunisie #CleaningTips #Marbre #Salon #Tapis #Tapisserie #NettoayageTunisie #ServicesNettoyage";
+      const hashtags = "\n\n#CCIServices #NettoyageProfessionnel #Tunisie #CleaningTips #Marbre #Salon #Tapis #Tapisserie #NettoyageTunisie #ServicesNettoyage";
       generatedCaption += hashtags;
     }
 
@@ -509,12 +617,45 @@ EXEMPLE:
       });
     }
 
-    // Determine Facebook API endpoint based on whether we have an image
+    // Detect final service from content
+    const finalDetectedService = rotationManager.detectServiceFromContent(generatedCaption) || recommendedService;
+
+    // ── Dry run: return generated content without posting ──
+    if (dryRun) {
+      console.log('👁️ Dry run — skipping Facebook post');
+      return NextResponse.json({
+        success: true,
+        dry_run: true,
+        generated_content: generatedCaption,
+        selected_image: selectedImageUrl,
+        facebook_response: { id: 'DRY_RUN' },
+        post_type: postType,
+        season: resolvedSeason,
+        month: resolvedMonth,
+        timestamp: new Date().toISOString(),
+        posted_with_image: !!selectedImageUrl,
+        content_analysis: {
+          recommended_service: recommendedService,
+          detected_service: finalDetectedService,
+          service_url: rotationManager.getServiceUrl(finalDetectedService),
+          has_all_contact_info: generatedCaption.includes('cciservices.online') && 
+                                generatedCaption.includes('+216 98 55 77 66') && 
+                                generatedCaption.includes('contact@cciservices.online')
+        },
+        rotation_info: {
+          service_used: finalDetectedService,
+          can_post_again: rotationManager.canPostService(finalDetectedService),
+          next_recommended: rotationManager.getNextRecommendedService(),
+          post_recorded: false
+        }
+      });
+    }
+
+    // ── Post to Facebook ──
     let facebookApiUrl;
     let postData;
 
     if (selectedImageUrl) {
-      // Post with image - use photos endpoint
       facebookApiUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/photos`;
       postData = {
         caption: generatedCaption,
@@ -522,7 +663,6 @@ EXEMPLE:
         access_token: FB_PAGE_ACCESS_TOKEN,
       };
     } else {
-      // Text-only post - use feed endpoint
       facebookApiUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/feed`;
       postData = {
         message: generatedCaption,
@@ -537,12 +677,9 @@ EXEMPLE:
       captionLength: generatedCaption.length
     });
 
-    // Post to Facebook
     const facebookResponse = await fetch(facebookApiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(postData),
     });
 
@@ -580,7 +717,6 @@ EXEMPLE:
     console.log("Successfully posted to Facebook:", facebookData);
 
     // Record the post in rotation history
-    const finalDetectedService = rotationManager.detectServiceFromContent(generatedCaption) || recommendedService;
     rotationManager.recordPost(generatedCaption, finalDetectedService, postType, selectedImageUrl);
 
     return NextResponse.json({
@@ -589,6 +725,8 @@ EXEMPLE:
       selected_image: selectedImageUrl,
       facebook_response: facebookData,
       post_type: postType,
+      season: resolvedSeason,
+      month: resolvedMonth,
       timestamp: new Date().toISOString(),
       posted_with_image: !!selectedImageUrl,
       content_analysis: {
@@ -601,7 +739,7 @@ EXEMPLE:
       },
       rotation_info: {
         service_used: finalDetectedService,
-        can_post_again: false, // This service can't be posted immediately again
+        can_post_again: false,
         next_recommended: rotationManager.getNextRecommendedService(),
         post_recorded: true
       }

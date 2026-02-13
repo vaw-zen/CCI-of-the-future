@@ -42,6 +42,12 @@ class PostRotationManager {
         url: 'https://cciservices.online/tfc',
         priority: 2,
         displayName: 'Nettoyage TFC & Post-Chantier'
+      },
+      entreprises: {
+        keywords: ['convention', 'entreprise', 'b2b', 'annuel', 'contrat', 'banque', 'assurance', 'société', 'corporate'],
+        url: 'https://cciservices.online/entreprises',
+        priority: 3,
+        displayName: 'Conventions Entreprises (B2B)'
       }
     };
   }

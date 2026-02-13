@@ -12,34 +12,51 @@ import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 function cleanUnicodeForStructuredData(str) {
   if (!str) return '';
   
-  // First, normalize the string to handle Unicode properly
-  let cleaned = str.normalize('NFD');
+  // Use NFC normalization to compose characters (keeps accents intact)
+  let cleaned = str.normalize('NFC');
   
-  // Remove or replace problematic Unicode characters that cause GSC issues
+  // Remove emojis and special Unicode symbols while preserving French accented characters
   cleaned = cleaned
-    // Fix common emoji and special characters
-    .replace(/[✨🎥🧽🧼🏠💼⭐️👍💪📞📧🌐📍🛠️🎯✔️📩]/g, '') // Remove emojis
-    .replace(/â¨/g, '') // Remove corrupted sparkles
-    .replace(/ð/g, '') // Remove corrupted emojis
-    .replace(/Ã©/g, 'é') // Fix é
-    .replace(/Ã¨/g, 'è') // Fix è
-    .replace(/Ã /g, 'à') // Fix à
-    .replace(/Ã´/g, 'ô') // Fix ô
-    .replace(/Ã¢/g, 'â') // Fix â
-    .replace(/Ã/g, 'À') // Fix À
-    .replace(/â/g, "'") // Fix apostrophes
-    .replace(/â/g, "'") // Fix apostrophes
-    .replace(/â/g, '"') // Fix quotes
-    .replace(/â/g, '"') // Fix quotes
-    .replace(/â/g, '-') // Fix dashes
-    // Remove any remaining non-printable or problematic characters
-    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
-    .replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F\u1E00-\u1EFF]/g, '') // Keep only Latin characters
+    // Remove all emoji ranges
+    .replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
+    .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Misc symbols & pictographs
+    .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport & map
+    .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, '') // Flags
+    .replace(/[\u{2600}-\u{26FF}]/gu, '')   // Misc symbols
+    .replace(/[\u{2700}-\u{27BF}]/gu, '')   // Dingbats
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')   // Variation selectors
+    .replace(/[\u{200D}]/gu, '')             // Zero-width joiner
+    .replace(/[\u{20E3}]/gu, '')             // Combining enclosing keycap
+    .replace(/[\u{E0020}-\u{E007F}]/gu, '') // Tags
+    .replace(/[✨🎥🧽🧼🏠💼⭐️👍💪📞📧🌐📍🛠️🎯✔️📩✓✅❌⭐☎]/g, '') // Common symbols
+    // Fix mojibake (UTF-8 bytes misread as Latin-1)
+    .replace(/Ã©/g, 'é').replace(/Ã¨/g, 'è').replace(/Ã /g, 'à')
+    .replace(/Ã´/g, 'ô').replace(/Ã¢/g, 'â').replace(/Ã§/g, 'ç')
+    .replace(/Ã®/g, 'î').replace(/Ã¹/g, 'ù').replace(/Ãª/g, 'ê')
+    // Fix smart quotes and dashes
+    .replace(/[\u2018\u2019\u201A]/g, "'")  // Smart single quotes → '
+    .replace(/[\u201C\u201D\u201E]/g, '"')  // Smart double quotes → "
+    .replace(/[\u2013\u2014]/g, '-')         // En/em dashes → -
+    .replace(/[\u2026]/g, '...')              // Ellipsis
+    // Remove control characters but keep standard whitespace
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '')
     // Clean up whitespace
     .replace(/\s+/g, ' ')
     .trim();
   
   return cleaned;
+}
+
+// Extract a short, clean title from a reel/post message (max 60 chars)
+function extractShortTitle(message, fallback) {
+  if (!message || !message.trim()) return fallback;
+  const cleaned = cleanUnicodeForStructuredData(message);
+  // Take first sentence or first 60 chars
+  const firstSentence = cleaned.split(/[.!?\n]/)[0]?.trim();
+  if (firstSentence && firstSentence.length > 5) {
+    return firstSentence.length > 60 ? firstSentence.slice(0, 57) + '...' : firstSentence;
+  }
+  return cleaned.length > 60 ? cleaned.slice(0, 57) + '...' : cleaned;
 }
 
 // Fetch initial data on the server for SEO
@@ -136,33 +153,14 @@ export default async function Page() {
             cleanUnicodeForStructuredData(reel.message) : 
             "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.";
           
-          // Ensure contentUrl and embedUrl are valid - Google requires at least one
-          // Priority: video_url (direct) > permalink_url (Facebook) > fallback
-          const hasVideoUrl = reel.video_url && reel.video_url.trim();
+          // Use stable Facebook permalink URLs — direct video_url from Facebook CDN expires
+          // Google can't validate expired CDN links during crawling
           const hasPermalinkUrl = reel.permalink_url && reel.permalink_url.trim();
-          
-          // Create fallback URL only if needed
           const fallbackUrl = `https://www.facebook.com/watch/?v=${reel.id}`;
           
-          // Determine best URLs (avoid duplication and ensure validity)
-          let contentUrl, embedUrl;
-          
-          if (hasVideoUrl) {
-            contentUrl = reel.video_url.trim();
-            embedUrl = hasPermalinkUrl ? reel.permalink_url.trim() : contentUrl;
-          } else if (hasPermalinkUrl) {
-            contentUrl = reel.permalink_url.trim();
-            embedUrl = contentUrl;
-          } else {
-            contentUrl = fallbackUrl;
-            embedUrl = fallbackUrl;
-          }
-          
-          // Ensure URLs are different when possible to provide multiple access points
-          if (contentUrl === embedUrl && hasVideoUrl && hasPermalinkUrl) {
-            contentUrl = reel.video_url.trim();
-            embedUrl = reel.permalink_url.trim();
-          }
+          // Always prefer permalink (stable) over video_url (temporary CDN)
+          let contentUrl = hasPermalinkUrl ? reel.permalink_url.trim() : fallbackUrl;
+          let embedUrl = fallbackUrl;
           
           // Ensure upload date is valid and properly formatted
           const uploadDate = reel.created_time || new Date().toISOString();
@@ -190,11 +188,9 @@ export default async function Page() {
           // Build VideoObject - only include thumbnailUrl if we have a valid HTTP(S) URL
           const videoObject = {
             "@type": "VideoObject",
-            "@id": `https://cciservices.online/blogs#video-${reel.id}`, // Unique ID for blogs collection
-            "name": reel.message && reel.message.trim() ? 
-              cleanUnicodeForStructuredData(reel.message).slice(0, 100) : 
-              "Reel vidéo CCI Services",
-            "description": cleanDescription,
+            "@id": `https://cciservices.online/blogs#video-${reel.id}`,
+            "name": extractShortTitle(reel.message, "Vidéo CCI Services - Nettoyage Professionnel Tunis"),
+            "description": cleanDescription.length > 10 ? cleanDescription : "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services Tunis.",
             "uploadDate": uploadDate,
             "contentUrl": contentUrl,
             "embedUrl": embedUrl,
@@ -248,14 +244,15 @@ export default async function Page() {
           ...posts
             .filter(post => post && post.id) // Only process posts with valid ID
             .map((post, index) => {
-              // Clean headline for structured data (remove problematic Unicode characters)
-              const cleanHeadline = post.title || (post.message && post.message.trim() ? 
-                post.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 100) : 
-                "Publication CCI Services - Nettoyage Professionnel");
+              // Clean headline for structured data - use short title extraction
+              const cleanHeadline = extractShortTitle(
+                post.title || post.message,
+                "Publication CCI Services - Nettoyage Professionnel Tunis"
+              );
               
-              // Clean description for structured data (remove problematic Unicode characters)
+              // Clean description for structured data
               const cleanDescription = post.message && post.message.trim() ? 
-                post.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '') : 
+                cleanUnicodeForStructuredData(post.message) : 
                 "Découvrez nos services de nettoyage professionnel. CCI Services, experts en entretien de tapis, marbre et intérieur automobile à Tunis.";
               
               const datePublished = post.created_time || new Date().toISOString();
@@ -346,21 +343,21 @@ export default async function Page() {
             
             return (
             <article key={reel.id} itemScope itemType="https://schema.org/VideoObject">
-              <h3 itemProp="name">{cleanUnicodeForStructuredData(reel.message) || 'Reel vidéo CCI Services'}</h3>
-              <p itemProp="description">{cleanUnicodeForStructuredData(reel.message)}</p>
+              <h3 itemProp="name">{extractShortTitle(reel.message, 'Vidéo CCI Services - Nettoyage Professionnel')}</h3>
+              <p itemProp="description">{cleanUnicodeForStructuredData(reel.message) || 'Découvrez nos services de nettoyage professionnel en vidéo.'}</p>
               <time itemProp="uploadDate" dateTime={reel.created_time}>
                 {new Date(reel.created_time).toLocaleDateString()}
               </time>
               <video 
                 itemProp="contentUrl"
-                src={reel.video_url || reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`}
+                src={reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`}
                 poster={userFacingThumbnailUrl}
                 width="320" 
                 height="240"
                 controls
                 preload="metadata"
               >
-                <source src={reel.video_url || reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`} type="video/mp4" />
+                <source src={reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`} type="video/mp4" />
                 Votre navigateur ne supporte pas les vidéos HTML5.
               </video>
               {/* Use local thumbnail for SEO/structured data, Facebook CDN would fail for search engines */}

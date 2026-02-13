@@ -1,0 +1,105 @@
+.section {
+  padding: 4.17vw var(--padding-base);
+}
+
+.container {
+  max-width: 52.08vw;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.08vw;
+  font-weight: 700;
+  color: var(--t-primary);
+  text-align: center;
+  margin-bottom: 0.52vw;
+}
+
+.subtitle {
+  font-size: 1.04vw;
+  color: var(--t-secondary);
+  text-align: center;
+  margin-bottom: 3.13vw;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.78vw;
+}
+
+.faqItem {
+  background: var(--bg-elevated);
+  border-radius: 0.63vw;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.faqItem.open {
+  border-color: rgba(203, 251, 66, 0.3);
+}
+
+.faqQuestion {
+  width: 100%;
+  padding: 1.3vw 1.56vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.94vw;
+  font-weight: 600;
+  color: var(--t-primary);
+  text-align: left;
+  font-family: inherit;
+  gap: 1.04vw;
+}
+
+.faqQuestion:hover {
+  color: var(--ac-primary);
+}
+
+.chevron {
+  font-size: 1.3vw;
+  color: var(--ac-primary);
+  flex-shrink: 0;
+  font-weight: 300;
+}
+
+.faqAnswer {
+  overflow: hidden;
+}
+
+.faqAnswer p {
+  padding: 0 1.56vw 1.3vw;
+  font-size: 0.83vw;
+  color: var(--t-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .container { max-width: 85vw; }
+  .title { font-size: 3.91vw; }
+  .subtitle { font-size: 1.95vw; margin-bottom: 3.91vw; }
+  .faqQuestion { font-size: 1.82vw; padding: 2.6vw 2.6vw; }
+  .chevron { font-size: 2.6vw; }
+  .faqAnswer p { font-size: 1.56vw; padding: 0 2.6vw 2.6vw; }
+  .faqList { gap: 1.3vw; }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .section { padding: 9.71vw var(--padding-base); }
+  .container { max-width: 100%; }
+  .title { font-size: 5.83vw; }
+  .subtitle { font-size: 3.4vw; margin-bottom: 7.28vw; }
+  .faqQuestion { font-size: 3.64vw; padding: 4.85vw 4.85vw; }
+  .chevron { font-size: 4.85vw; }
+  .faqAnswer p { font-size: 3.4vw; padding: 0 4.85vw 4.85vw; }
+  .faqList { gap: 2.43vw; }
+  .faqItem { border-radius: 1.94vw; }
+}

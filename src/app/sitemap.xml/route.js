@@ -105,6 +105,13 @@ export async function GET() {
     <changefreq>monthly</changefreq>
     <priority>0.50</priority>
   </url>
+  <!--Conventions Entreprises B2B-->
+  <url>
+    <loc>${baseUrl}/entreprises</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
   <!-- Page d'Articles de conseils et astuces informatives -->
   <url>
     <loc>${baseUrl}/conseils</loc>

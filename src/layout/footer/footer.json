@@ -41,6 +41,10 @@
         {
             "name": "contact",
             "link": "/contact"
+        },
+        {
+            "name": "entreprises",
+            "link": "/entreprises"
         }
     ]
 }

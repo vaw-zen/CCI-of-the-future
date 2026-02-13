@@ -1,4 +1,4 @@
-.footer { aspect-ratio: 100 / 26.823; width: 100%; display: flex; flex-direction: column; contain: layout style paint; background: var(--bg-elevated); }
+.footer { aspect-ratio: 100 / 30; width: 100%; display: flex; flex-direction: column; contain: layout style paint; background: var(--bg-elevated); }
 .contentWrapper { display: flex; flex: 1; padding: 0 17.5vw 0 15.72vw; align-items: center; justify-content: space-between; }
 .leftSection { display: flex; flex-direction: column; }
 .title { font-size: 3vw; width: fit-content; min-height: 3vw; }

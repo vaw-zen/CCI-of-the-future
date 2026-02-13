@@ -33,6 +33,10 @@
         ]
     },
     {
+        "name": "entreprises",
+        "link": "/entreprises"
+    },
+    {
         "name": "services",
         "subLinks": [
             {

@@ -13,7 +13,8 @@ export const SERVICE_TYPES = {
   SALON: 'salon',
   TAPISSERIE: 'tapisserie',
   TFC: 'travaux_fin_chantier',
-  CONSEIL: 'conseil'
+  CONSEIL: 'conseil',
+  CONVENTION: 'convention'
 };
 
 // Article categories for blog tracking

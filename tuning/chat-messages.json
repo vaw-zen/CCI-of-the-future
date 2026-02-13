@@ -15,6 +15,7 @@
     "🚢 Nettoyage Yacht/Ferry",
     "🏗️ Post-Chantier",
     "🚨 Urgence Immédiate",
+    "🏢 Convention Entreprise",
     "💬 Parler à Fares"
   ],
   "quickRepliesMultilang": {
@@ -96,6 +97,11 @@
       "Je voudrais un devis personnalisé",
       "Fares peut-il me conseiller ?",
       "Inspection technique gratuite ?"
+    ],
+    "b2b": [
+      "Nous cherchons un prestataire de nettoyage pour notre entreprise",
+      "Convention annuelle de nettoyage pour nos bureaux",
+      "Nettoyage régulier pour notre banque/clinique"
     ]
   }
 } 

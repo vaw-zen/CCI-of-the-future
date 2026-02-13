@@ -1,0 +1,120 @@
+.section {
+  padding: 4.17vw var(--padding-base);
+}
+
+.container {
+  max-width: 100%;
+}
+
+.title {
+  font-size: 2.08vw;
+  font-weight: 700;
+  color: var(--t-primary);
+  text-align: center;
+  margin-bottom: 0.52vw;
+}
+
+.subtitle {
+  font-size: 1.04vw;
+  color: var(--t-secondary);
+  text-align: center;
+  margin-bottom: 3.13vw;
+  max-width: 41.67vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.56vw;
+}
+
+.card {
+  background: var(--bg-elevated);
+  border-radius: 0.83vw;
+  padding: 1.82vw;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.78vw;
+}
+
+.card:hover {
+  border-color: rgba(203, 251, 66, 0.3);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.78vw;
+}
+
+.icon {
+  font-size: 1.82vw;
+}
+
+.cardTitle {
+  font-size: 1.04vw;
+  font-weight: 600;
+  color: var(--t-primary);
+}
+
+.cardDescription {
+  font-size: 0.78vw;
+  color: var(--t-secondary);
+  line-height: 1.7;
+}
+
+.frequences {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.42vw;
+  margin-top: auto;
+  padding-top: 0.78vw;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.frequenceLabel {
+  font-size: 0.68vw;
+  color: var(--t-secondary);
+  font-weight: 600;
+}
+
+.frequenceBadge {
+  font-size: 0.63vw;
+  padding: 0.21vw 0.52vw;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--t-secondary);
+  border-radius: 0.52vw;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .title { font-size: 3.91vw; }
+  .subtitle { font-size: 1.95vw; max-width: 70vw; margin-bottom: 3.91vw; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 2.6vw; }
+  .icon { font-size: 3.13vw; }
+  .cardTitle { font-size: 2.08vw; }
+  .cardDescription { font-size: 1.56vw; }
+  .frequenceLabel { font-size: 1.3vw; }
+  .frequenceBadge { font-size: 1.17vw; padding: 0.39vw 1.04vw; }
+  .card { padding: 2.6vw; }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .section { padding: 9.71vw var(--padding-base); }
+  .title { font-size: 5.83vw; }
+  .subtitle { font-size: 3.4vw; max-width: 85vw; margin-bottom: 7.28vw; }
+  .grid { grid-template-columns: 1fr; gap: 3.88vw; }
+  .icon { font-size: 5.83vw; }
+  .cardTitle { font-size: 4.37vw; }
+  .cardDescription { font-size: 3.4vw; }
+  .frequenceLabel { font-size: 2.91vw; }
+  .frequenceBadge { font-size: 2.67vw; padding: 0.97vw 2.43vw; }
+  .card { padding: 4.85vw; }
+}

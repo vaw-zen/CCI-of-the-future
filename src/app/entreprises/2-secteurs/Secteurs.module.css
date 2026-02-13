@@ -1,0 +1,106 @@
+.section {
+  padding: 4.17vw var(--padding-base);
+}
+
+.container {
+  max-width: 100%;
+}
+
+.title {
+  font-size: 2.08vw;
+  font-weight: 700;
+  color: var(--t-primary);
+  text-align: center;
+  margin-bottom: 0.52vw;
+}
+
+.subtitle {
+  font-size: 1.04vw;
+  color: var(--t-secondary);
+  text-align: center;
+  margin-bottom: 3.13vw;
+  max-width: 36.46vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.56vw;
+}
+
+.card {
+  background: var(--bg-elevated);
+  border-radius: 0.83vw;
+  padding: 2.08vw;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.78vw;
+}
+
+.card:hover {
+  border-color: var(--ac-primary);
+  transform: translateY(-0.26vw);
+  box-shadow: 0 0.52vw 1.56vw rgba(203, 251, 66, 0.08);
+}
+
+.icon {
+  font-size: 2.6vw;
+}
+
+.cardTitle {
+  font-size: 1.15vw;
+  font-weight: 600;
+  color: var(--t-primary);
+}
+
+.cardDescription {
+  font-size: 0.83vw;
+  color: var(--t-secondary);
+  line-height: 1.6;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.42vw;
+  margin-top: auto;
+  padding-top: 0.78vw;
+}
+
+.tag {
+  font-size: 0.68vw;
+  padding: 0.26vw 0.63vw;
+  background: rgba(203, 251, 66, 0.1);
+  color: var(--ac-primary);
+  border-radius: 1.04vw;
+  border: 1px solid rgba(203, 251, 66, 0.2);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .title { font-size: 3.91vw; }
+  .subtitle { font-size: 1.95vw; max-width: 65vw; margin-bottom: 3.91vw; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 2.6vw; }
+  .icon { font-size: 4.17vw; }
+  .cardTitle { font-size: 2.08vw; }
+  .cardDescription { font-size: 1.56vw; }
+  .tag { font-size: 1.3vw; padding: 0.52vw 1.04vw; }
+  .card { padding: 3.13vw; border-radius: 1.3vw; }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .section { padding: 9.71vw var(--padding-base); }
+  .title { font-size: 5.83vw; }
+  .subtitle { font-size: 3.4vw; max-width: 85vw; margin-bottom: 7.28vw; }
+  .grid { grid-template-columns: 1fr; gap: 3.88vw; }
+  .icon { font-size: 7.77vw; }
+  .cardTitle { font-size: 4.37vw; }
+  .cardDescription { font-size: 3.4vw; }
+  .tag { font-size: 2.67vw; padding: 0.97vw 2.43vw; }
+  .card { padding: 5.83vw; border-radius: 2.43vw; }
+}

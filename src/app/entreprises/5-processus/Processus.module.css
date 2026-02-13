@@ -1,0 +1,115 @@
+.section {
+  padding: 4.17vw var(--padding-base);
+}
+
+.container {
+  max-width: 52.08vw;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.08vw;
+  font-weight: 700;
+  color: var(--t-primary);
+  text-align: center;
+  margin-bottom: 0.52vw;
+}
+
+.subtitle {
+  font-size: 1.04vw;
+  color: var(--t-secondary);
+  text-align: center;
+  margin-bottom: 3.13vw;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.56vw;
+  position: relative;
+  padding-bottom: 2.6vw;
+}
+
+.step:last-child {
+  padding-bottom: 0;
+}
+
+.stepNumber {
+  width: 2.6vw;
+  height: 2.6vw;
+  min-width: 2.6vw;
+  border-radius: 50%;
+  background: var(--ac-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.stepNumber span {
+  font-size: 1.15vw;
+  font-weight: 700;
+  color: var(--t-highlight);
+}
+
+.connector {
+  position: absolute;
+  left: 1.25vw;
+  top: 2.6vw;
+  bottom: 0;
+  width: 0.1vw;
+  background: rgba(203, 251, 66, 0.2);
+}
+
+.stepContent {
+  flex: 1;
+  padding-top: 0.26vw;
+}
+
+.stepTitle {
+  font-size: 1.15vw;
+  font-weight: 600;
+  color: var(--t-primary);
+  margin-bottom: 0.42vw;
+}
+
+.stepDescription {
+  font-size: 0.83vw;
+  color: var(--t-secondary);
+  line-height: 1.6;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .container { max-width: 80vw; }
+  .title { font-size: 3.91vw; }
+  .subtitle { font-size: 1.95vw; margin-bottom: 3.91vw; }
+  .stepNumber { width: 5.21vw; height: 5.21vw; min-width: 5.21vw; }
+  .stepNumber span { font-size: 2.34vw; }
+  .stepTitle { font-size: 2.34vw; }
+  .stepDescription { font-size: 1.69vw; }
+  .step { gap: 2.6vw; padding-bottom: 3.91vw; }
+  .connector { left: 2.47vw; top: 5.21vw; }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .section { padding: 9.71vw var(--padding-base); }
+  .container { max-width: 100%; }
+  .title { font-size: 5.83vw; }
+  .subtitle { font-size: 3.4vw; margin-bottom: 7.28vw; }
+  .stepNumber { width: 9.71vw; height: 9.71vw; min-width: 9.71vw; }
+  .stepNumber span { font-size: 4.37vw; }
+  .stepTitle { font-size: 4.37vw; }
+  .stepDescription { font-size: 3.4vw; }
+  .step { gap: 3.88vw; padding-bottom: 7.28vw; }
+  .connector { left: 4.61vw; top: 9.71vw; }
+}

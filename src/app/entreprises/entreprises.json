@@ -1,0 +1,292 @@
+{
+  "metadata": {
+    "title": "Conventions Nettoyage Entreprises Tunis | Contrats Annuels B2B | CCI Services",
+    "description": "Conventions de nettoyage annuelles pour entreprises à Tunis ✓ Banques, assurances, cliniques, hôtels ✓ Contrats sur mesure ✓ Audit gratuit ✓ CCI Services",
+    "keywords": [
+      "convention nettoyage entreprise tunis",
+      "contrat nettoyage annuel tunisie",
+      "société nettoyage professionnel tunisie",
+      "nettoyage bureaux tunis",
+      "nettoyage banque tunisie",
+      "nettoyage clinique hôpital tunis",
+      "entretien locaux professionnels",
+      "contrat entretien entreprise",
+      "nettoyage hôtel résidence tunis",
+      "nettoyage grande surface tunisie",
+      "convention nettoyage assurance",
+      "prestataire nettoyage professionnel",
+      "nettoyage industriel tunis",
+      "entretien marbre bureaux",
+      "nettoyage moquette entreprise",
+      "nettoyage vitres façades tunis",
+      "B2B nettoyage tunisie",
+      "facility management tunis",
+      "sous-traitance nettoyage entreprise"
+    ]
+  },
+  "heroTitle": "Conventions de Nettoyage pour Entreprises",
+  "heroSubtitle": "Des contrats annuels sur mesure pour banques, assurances, cliniques et entreprises à Tunis",
+  "tabData": [
+    {
+      "id": "approche",
+      "title": "Notre approche",
+      "content": "CCI Services accompagne les entreprises avec des conventions de nettoyage annuelles adaptées à chaque secteur d'activité. Notre approche repose sur un audit préalable gratuit de vos locaux, suivi d'une proposition personnalisée intégrant planning, fréquences et protocoles spécifiques à votre environnement professionnel."
+    },
+    {
+      "id": "engagements",
+      "title": "Nos engagements",
+      "content": "Interlocuteur dédié disponible 7j/7, rapports qualité mensuels, équipes formées aux normes d'hygiène sectorielles, produits certifiés et traçabilité complète des interventions. Nous garantissons une continuité de service sans interruption et une réactivité sous 24h pour toute demande exceptionnelle."
+    },
+    {
+      "id": "pourquoi",
+      "title": "Pourquoi CCI",
+      "content": "Plus de 10 ans d'expérience dans le nettoyage professionnel en Tunisie, des références solides dans le secteur bancaire et hôtelier, des équipements professionnels de dernière génération et une flexibilité tarifaire adaptée à la taille de votre structure. CCI est votre partenaire de confiance pour l'entretien de vos espaces professionnels."
+    }
+  ],
+  "secteurs": [
+    {
+      "id": "banques",
+      "title": "Banques & Institutions Financières",
+      "icon": "🏦",
+      "description": "Entretien quotidien des agences, sièges sociaux et salles de coffres. Protocoles de confidentialité et interventions en dehors des heures d'ouverture.",
+      "services": ["Nettoyage tapis & moquettes", "Entretien marbre & sols", "Nettoyage vitres & façades"]
+    },
+    {
+      "id": "assurances",
+      "title": "Compagnies d'Assurances",
+      "icon": "🛡️",
+      "description": "Nettoyage régulier des bureaux, espaces d'accueil et salles de réunion. Entretien impeccable pour une image professionnelle irréprochable.",
+      "services": ["Nettoyage tapis & moquettes", "Nettoyage salon & mobilier", "Nettoyage des locaux"]
+    },
+    {
+      "id": "cliniques",
+      "title": "Cliniques & Hôpitaux",
+      "icon": "🏥",
+      "description": "Nettoyage et désinfection selon les normes sanitaires strictes. Protocoles spécifiques pour les environnements médicaux sensibles.",
+      "services": ["Nettoyage tapis & moquettes", "Entretien marbre & sols", "Nettoyage vitres & façades"]
+    },
+    {
+      "id": "hotels",
+      "title": "Hôtels & Résidences",
+      "icon": "🏨",
+      "description": "Entretien des parties communes, halls, restaurants et espaces de conférence. Qualité hôtelière garantie pour satisfaire vos clients les plus exigeants.",
+      "services": [ "Nettoyage salon & mobilier", "Entretien marbre & sols", "Nettoyage tapis & moquettes"]
+    },
+    {
+      "id": "bureaux",
+      "title": "Bureaux & Espaces de Coworking",
+      "icon": "🏢",
+      "description": "Entretien régulier des open spaces, salles de réunion, sanitaires et cuisines communes. Flexibilité horaire et fréquences adaptées à votre rythme.",
+      "services": ["Nettoyage tapis & moquettes", "Nettoyage salon & mobilier", "Nettoyage des locaux"]
+    },
+    {
+      "id": "commerces",
+      "title": "Grandes Surfaces & Commerces",
+      "icon": "🏬",
+      "description": "Nettoyage des surfaces de vente, réserves et espaces clients. Interventions nocturnes possibles pour ne pas perturber l'activité commerciale.",
+      "services": ["Nettoyage des locaux", "Entretien marbre & sols", "Nettoyage vitres & façades"]
+    }
+  ],
+  "services": [
+   
+    {
+      "id": "salon",
+      "title": "Nettoyage salon & mobilier",
+      "icon": "🛋️",
+      "description": "Entretien professionnel des canapés, fauteuils, chaises rembourrées et mobilier textile de vos espaces d'accueil et salles d'attente. Injection-extraction, détachage et désodorisation.",
+      "frequences": ["Mensuel", "Trimestriel", "Semestriel"]
+    },
+    {
+      "id": "tapis",
+      "title": "Nettoyage tapis & moquettes",
+      "icon": "🧶",
+      "description": "Shampooing professionnel, injection-extraction et traitement anti-acariens pour vos moquettes de bureaux et tapis d'accueil. Séchage rapide garanti pour minimiser les perturbations.",
+      "frequences": ["Mensuel", "Trimestriel", "Semestriel"]
+    },
+    {
+      "id": "marbre",
+      "title": "Entretien marbre & sols",
+      "icon": "💎",
+      "description": "Polissage, cristallisation et ponçage de vos sols en marbre, granit ou carrelage. Redonner éclat et brillance aux halls d'entrée, couloirs et espaces de réception.",
+      "frequences": ["Trimestriel", "Semestriel", "Annuel"]
+    },
+    {
+      "id": "vitres",
+      "title": "Nettoyage vitres & façades",
+      "icon": "🪟",
+      "description": "Nettoyage intérieur et extérieur des vitrages, baies vitrées, façades en verre et enseignes. Équipements professionnels pour travaux en hauteur.",
+      "frequences": ["Mensuel", "Trimestriel", "Semestriel"]
+    }
+  ],
+  "avantages": [
+    {
+      "id": "tarifs",
+      "icon": "💰",
+      "title": "Tarifs préférentiels",
+      "description": "Bénéficiez de tarifs avantageux grâce à un engagement annuel. Jusqu'à 30% d'économies par rapport aux interventions ponctuelles."
+    },
+    {
+      "id": "interlocuteur",
+      "icon": "👤",
+      "title": "Interlocuteur dédié",
+      "description": "Un responsable de compte unique qui connaît vos locaux et vos exigences. Joignable 7j/7 pour toute demande ou ajustement."
+    },
+    {
+      "id": "planning",
+      "icon": "📅",
+      "title": "Planning flexible",
+      "description": "Interventions adaptées à vos horaires : tôt le matin, en soirée ou le week-end. Aucune perturbation de votre activité."
+    },
+    {
+      "id": "rapports",
+      "icon": "📊",
+      "title": "Rapports mensuels",
+      "description": "Suivi qualité avec rapports d'intervention détaillés, photos avant/après et indicateurs de performance."
+    },
+    {
+      "id": "garantie",
+      "icon": "✅",
+      "title": "Garantie qualité",
+      "description": "Contrôles qualité réguliers et reprise gratuite en cas d'insatisfaction. Votre satisfaction est notre priorité absolue."
+    },
+    {
+      "id": "reactivite",
+      "icon": "⚡",
+      "title": "Réactivité 24h",
+      "description": "Interventions d'urgence sous 24h pour les besoins exceptionnels : dégâts des eaux, événements spéciaux, audits imprévus."
+    }
+  ],
+  "processus": [
+    {
+      "etape": 1,
+      "titre": "Audit gratuit",
+      "description": "Visite de vos locaux par notre expert pour évaluer les surfaces, les besoins spécifiques et les contraintes horaires."
+    },
+    {
+      "etape": 2,
+      "titre": "Devis personnalisé",
+      "description": "Proposition détaillée avec planning, fréquences, équipes dédiées et tarification transparente adaptée à votre budget."
+    },
+    {
+      "etape": 3,
+      "titre": "Signature convention",
+      "description": "Mise en place du contrat annuel avec clauses claires, engagements qualité et conditions de flexibilité."
+    },
+    {
+      "etape": 4,
+      "titre": "Démarrage",
+      "description": "Formation de l'équipe dédiée à vos locaux, mise en place des protocoles et premier passage de référence."
+    },
+    {
+      "etape": 5,
+      "titre": "Suivi qualité",
+      "description": "Contrôles réguliers, rapports mensuels et réunions de suivi trimestrielles pour garantir l'excellence du service."
+    }
+  ],
+  "faq": [
+    {
+      "question": "Quelle est la durée minimale d'une convention ?",
+      "answer": "Nos conventions sont proposées à partir de 6 mois, avec des tarifs préférentiels pour les engagements de 1 an ou plus. La durée la plus courante est de 12 mois renouvelable."
+    },
+    {
+      "question": "Pouvez-vous intervenir en dehors des heures de bureau ?",
+      "answer": "Absolument. La majorité de nos interventions en entreprise se font tôt le matin (avant 7h), en soirée (après 18h) ou le week-end, selon vos préférences et contraintes."
+    },
+    {
+      "question": "Comment se déroule l'audit initial ?",
+      "answer": "Notre expert se déplace gratuitement dans vos locaux pour évaluer les surfaces, identifier les matériaux, comprendre vos contraintes et établir un cahier des charges précis. L'audit dure généralement 1 à 2 heures."
+    },
+    {
+      "question": "Que comprend le rapport mensuel ?",
+      "answer": "Le rapport inclut : le détail de chaque intervention réalisée, les observations de nos équipes, des photos avant/après si nécessaire, des recommandations d'entretien et les indicateurs de qualité."
+    },
+    {
+      "question": "Pouvez-vous gérer plusieurs sites ?",
+      "answer": "Oui, nous gérons des conventions multi-sites dans tout le Grand Tunis. Un planning coordonné est établi pour assurer une couverture optimale de tous vos établissements."
+    },
+    {
+      "question": "Le tarif est-il fixe ou variable ?",
+      "answer": "Le tarif mensuel est fixe et défini dans la convention. Les interventions exceptionnelles (hors contrat) sont facturées séparément à un tarif préférentiel pour les clients conventionnés."
+    },
+    {
+      "question": "Quels produits utilisez-vous ?",
+      "answer": "Nous utilisons exclusivement des produits professionnels certifiés, biodégradables et adaptés à chaque type de surface. Pour les environnements sensibles (cliniques, crèches), nous proposons des gammes hypoallergéniques."
+    },
+    {
+      "question": "Puis-je modifier la fréquence en cours de contrat ?",
+      "answer": "Oui, nos conventions incluent une clause de flexibilité permettant d'ajuster les fréquences avec un préavis de 15 jours, dans la limite des conditions initiales."
+    }
+  ],
+  "sections": {
+    "mainService": {
+      "title": "Conventions de nettoyage annuelles pour professionnels",
+      "text": "CCI Services propose des conventions de nettoyage sur mesure aux entreprises, banques, compagnies d'assurances, cliniques, hôtels et grandes surfaces à Tunis et dans le Grand Tunis. Nos contrats annuels couvrent l'ensemble de vos besoins d'entretien : nettoyage quotidien des locaux, entretien du mobilier textile, shampooing des moquettes, polissage des sols en marbre et nettoyage des vitres et façades. Chaque convention est précédée d'un audit gratuit pour garantir une prestation parfaitement adaptée à votre environnement professionnel."
+    },
+    "whyChooseUs": {
+      "title": "Un partenaire de confiance pour l'entretien de vos locaux",
+      "text": "Fort de plus de 10 ans d'expérience dans le nettoyage professionnel en Tunisie, CCI Services s'est imposé comme le partenaire privilégié des entreprises exigeantes. Nos conventions annuelles offrent une qualité constante grâce à des équipes dédiées formées à vos protocoles, des équipements professionnels de pointe et un suivi qualité rigoureux. Nous intervenons dans tout le Grand Tunis (Tunis, Ariana, Ben Arous, Manouba) avec des horaires flexibles adaptés à votre activité."
+    }
+  },
+  "localBusinessJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
+    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
+    "url": "https://cciservices.online/",
+    "logo": "https://cciservices.online/logo.png",
+    "telephone": "+216-98-557-766",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "06 Rue Galant de nuit, El Aouina",
+      "addressLocality": "Tunis",
+      "addressRegion": "Grand Tunis",
+      "postalCode": "2045",
+      "addressCountry": "Tunisia"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 36.8527438,
+      "longitude": 10.254949
+    }
+  },
+  "serviceJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": "https://cciservices.online/entreprises",
+    "name": "Conventions de Nettoyage Entreprises - CCI Tunisie",
+    "description": "Conventions de nettoyage annuelles pour entreprises à Tunis. Contrats sur mesure pour banques, assurances, cliniques, hôtels. Audit gratuit, interlocuteur dédié, rapports qualité mensuels.",
+    "url": "https://cciservices.online/entreprises",
+    "serviceType": "Nettoyage professionnel B2B",
+    "areaServed": [
+      { "@type": "City", "name": "Tunis" },
+      { "@type": "City", "name": "Ariana" },
+      { "@type": "City", "name": "Ben Arous" },
+      { "@type": "City", "name": "Manouba" }
+    ],
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "CCI Tunisie",
+      "alternateName": "CCI Tunis",
+      "url": "https://cciservices.online/",
+      "telephone": "+216-98-557-766",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "06 Rue Galant de nuit, El Aouina",
+        "addressLocality": "Tunis",
+        "addressRegion": "Grand Tunis",
+        "postalCode": "2045",
+        "addressCountry": "Tunisia"
+      },
+      "logo": "https://cciservices.online/logo.png"
+    },
+    "offers": {
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "priceCurrency": "TND",
+        "description": "Tarification sur devis après audit gratuit"
+      }
+    }
+  }
+}

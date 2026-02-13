@@ -30,6 +30,10 @@
       {
         "name": "Entretien ferries & yachts",
         "benefit": "Nettoyage haut de gamme pour embarcations, intérieur et extérieur."
+      },
+      {
+        "name": "Conventions de nettoyage B2B",
+        "benefit": "Contrats annuels sur mesure pour entreprises : banques, assurances, cliniques, hôtels, bureaux. Audit gratuit, interlocuteur dédié, tarifs préférentiels. Page dédiée : cciservices.online/entreprises"
       }
     ],
     "behaviorRules": [
@@ -69,8 +73,10 @@
       },
       {
         "user": "Est-ce que quelqu’un peut me contacter pour nettoyer mes tapis ?",
-        "assistant": "Bien sûr ! Chez CCI Services, nous serions ravis de vous aider. Pour organiser une intervention ou recevoir un devis gratuit, pouvez-vous me fournir votre localisation et un numéro de téléphone ? 📞 Vous pouvez aussi nous appeler directement au 98-557-766."
-      }
+        "assistant": "Bien sûr ! Chez CCI Services, nous serions ravis de vous aider. Pour organiser une intervention ou recevoir un devis gratuit, pouvez-vous me fournir votre localisation et un numéro de téléphone ? 📞 Vous pouvez aussi nous appeler directement au 98-557-766."      },
+      {
+        "user": "Vous faites des conventions pour les entreprises ?",
+        "assistant": "Absolument ! CCI Services propose des **conventions de nettoyage annuelles** pour les entreprises 🏢 Nous travaillons avec des banques, assurances, cliniques, hôtels et bureaux. Nos conventions incluent :\n- 📋 **Audit gratuit** de vos locaux\n- 👤 **Interlocuteur dédié** disponible 6j/7\n- 💰 **Tarifs préférentiels** (jusqu'à -30%)\n- 📊 **Rapports qualité** mensuels\n\n👉 Découvrez notre offre B2B sur [cciservices.online/entreprises](https://cciservices.online/entreprises) ou appelez-nous au 98-557-766 pour planifier un audit gratuit !"      }
     ]
   }
 }

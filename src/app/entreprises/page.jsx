@@ -14,6 +14,7 @@ import Avantages from "./4-avantages/Avantages";
 import Processus from "./5-processus/Processus";
 import ConventionForm from "./6-form/ConventionForm";
 import FaqEntreprises from "./7-faq/FaqEntreprises";
+import NodeNetwork from "./1-background/NodeNetwork";
 
 export default function Page() {
   useScrollTracking('entreprises_page');
@@ -31,7 +32,7 @@ export default function Page() {
         .responsive-padding { padding: 115px 0px; }
         @media (max-width: 900px) { .responsive-padding { padding: 60px 0px; } }
         @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
-      `}</style>
+        `}</style>
       <HeroHeader title={entreprisesData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(entreprisesData.localBusinessJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(entreprisesData.serviceJSONLD)}</script>
@@ -57,6 +58,7 @@ export default function Page() {
         />
 
         <ConventionForm />
+        <NodeNetwork />
 
         <FaqEntreprises faqItems={entreprisesData.faq} />
       </div>

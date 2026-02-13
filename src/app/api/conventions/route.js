@@ -4,6 +4,7 @@ import { supabase } from '../../../libs/supabase';
 export async function POST(request) {
   try {
     if (!supabase) {
+      console.error('[conventions] Supabase not configured — missing URL or key');
       return NextResponse.json({
         status: 'config_error',
         message: 'Service de base de données non configuré.'
@@ -89,32 +90,38 @@ export async function POST(request) {
       .single();
 
     if (supabaseError) {
-      console.error('Supabase error:', supabaseError);
+      console.error('[conventions] Supabase insert error:', {
+        message: supabaseError.message,
+        code: supabaseError.code,
+        details: supabaseError.details,
+        hint: supabaseError.hint
+      });
       return NextResponse.json({
         status: 'database_error',
         message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.'
       }, { status: 500 });
     }
 
-    // Check Gmail credentials
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
-      return NextResponse.json({
-        status: 'config_error',
-        message: 'Service email non configuré.'
-      }, { status: 500 });
-    }
+    // === Email sending (non-blocking — DB insert already succeeded) ===
+    let emailSent = false;
+    let emailError = null;
 
-    const { default: nodemailer } = await import('nodemailer');
+    try {
+      if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
+        throw new Error('GMAIL_USER or GMAIL_PASS not configured');
+      }
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-      },
-    });
+      const { default: nodemailer } = await import('nodemailer');
 
-    await transporter.verify();
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+
+      await transporter.verify();
 
     const now = new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' });
     const adminRecipient = 'chaaben.fares94@gmail.com';
@@ -330,10 +337,15 @@ export async function POST(request) {
     };
 
     // Send emails
-    await Promise.all([
-      transporter.sendMail(adminMail),
-      transporter.sendMail(userMail)
-    ]);
+        await Promise.all([
+          transporter.sendMail(adminMail),
+          transporter.sendMail(userMail)
+        ]);
+        emailSent = true;
+      } catch (mailErr) {
+        console.error('[conventions] Email sending failed (DB insert succeeded):', mailErr?.message || mailErr);
+        emailError = mailErr?.message;
+      }
 
     return NextResponse.json({
       status: 'success',
@@ -342,12 +354,18 @@ export async function POST(request) {
       details: {
         conventionConfirmed: true,
         conventionSaved: true,
-        conventionId: supabaseData.id
+        conventionId: supabaseData.id,
+        emailSent,
+        ...(emailError && { emailNote: 'Demande enregistrée, notification email en attente.' })
       },
     });
 
   } catch (error) {
-    console.error('Convention submission error:', error);
+    console.error('[conventions] Convention submission error:', {
+      message: error?.message,
+      code: error?.code,
+      stack: error?.stack?.split('\n').slice(0, 3).join('\n')
+    });
     return NextResponse.json({
       status: 'error',
       message: 'Erreur lors de l\'envoi de votre demande. Veuillez réessayer.',

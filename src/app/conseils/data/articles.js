@@ -1171,7 +1171,7 @@ export const articles = [
     "authorImage": "/logo.png",
     "publishedDate": "2026-01-21T09:00:00Z",
     "updatedDate": "2026-01-21T09:00:00Z",
-    "image": "/home/intervention-inondation-nettoyage.webp",
+    "image": "/inondation.webp",
     "imageAlt": "Intervention professionnelle après inondation et catastrophe naturelle en Tunisie",
     "readTime": "10 min",
     "featured": true,

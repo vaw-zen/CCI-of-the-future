@@ -90,7 +90,7 @@ export async function POST(request) {
       authorImage: body.authorImage || '/logo.png',
       publishedDate: body.publishedDate || new Date().toISOString(),
       updatedDate: new Date().toISOString(),
-      image: body.image || '/default-article.jpg',
+      image: body.image || '/gallery/conventions.jpg',
       imageAlt: body.imageAlt || body.title,
       readTime: body.readTime || '5 min',
       featured: body.featured || false,

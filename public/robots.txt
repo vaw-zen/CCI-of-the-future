@@ -2,7 +2,9 @@ User-agent: *
 Allow: /
 
 # Sitemaps
+Sitemap: https://cciservices.online/sitemap-index.xml
 Sitemap: https://cciservices.online/sitemap.xml
+Sitemap: https://cciservices.online/articles-sitemap.xml
 Sitemap: https://cciservices.online/video-sitemap.xml
 
 # Allow important API endpoints

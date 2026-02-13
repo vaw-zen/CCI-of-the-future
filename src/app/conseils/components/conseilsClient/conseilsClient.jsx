@@ -8,12 +8,18 @@ import Tab from '@/utils/components/tab/tab';
 import { LineMdCalendar } from '@/utils/components/icons';
 import { formatDate, isWithin } from '@/libs/dateHelper/dateHelper';
 import { trackArticleClick, trackCategoryFilter, trackConseilsView } from '@/utils/analytics';
+import { useScrollTracking } from '@/hooks/useScrollTracking';
+import { useTimeTracking } from '@/hooks/useTimeTracking';
 import { useEffect } from 'react';
 import styles from '../../conseils.module.css';
 import localStyles from './conseilsClient.module.css';
 
 export default function ConseilsClient() {
   const { activeFilter, filteredArticles, featuredArticles, filters, handleFilterClick } = useConseilsLogic();
+
+  // Page-level analytics tracking (moved from page.jsx which is now a server component)
+  useScrollTracking('conseils_page');
+  useTimeTracking('conseils_page');
 
   // Track when articles are displayed or filter changes
   useEffect(() => {

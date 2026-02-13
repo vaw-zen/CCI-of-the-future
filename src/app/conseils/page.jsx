@@ -1,16 +1,12 @@
 
-'use client';
-
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import ServiceDetails from '@/utils/components/servicesComponents/serviceDetails/serviceDetails';
 import ConseilsClient from './components/conseilsClient/conseilsClient';
-import { trackConseilsView } from '@/utils/analytics';
-import { useScrollTracking } from '@/hooks/useScrollTracking';
-import { useTimeTracking } from '@/hooks/useTimeTracking';
+import { getAllArticles } from './data/articles.js';
 import styles from './conseils.module.css';
-
-// Metadata is now in layout.jsx (server component) - this page is client for analytics
 
 // Schema markup pour la page conseils
 const conseilsPageSchema = {
@@ -69,14 +65,8 @@ const conseilsPageSchema = {
 };
 
 export default function ConseilsPage() {
-  // Initialize tracking hooks
-  useScrollTracking('conseils_page');
-  useTimeTracking('conseils_page');
-
-  // Track initial page view
-  useEffect(() => {
-    trackConseilsView('all', 0);
-  }, []);
+  // Server-side: get all articles for SSR link rendering
+  const allArticles = getAllArticles();
 
   return (
     <main className={styles.main}>
@@ -96,7 +86,7 @@ export default function ConseilsPage() {
         imageAlt={"Conseils nettoyage professionnel Tunis"} 
       />
       
-      {/* Composant client pour les filtres et articles */}
+      {/* Interactive client component for filters and article cards */}
       <Suspense fallback={
         <div style={{ 
           padding: '60px 20px', 
@@ -118,6 +108,35 @@ export default function ConseilsPage() {
       }>
         <ConseilsClient />
       </Suspense>
+
+      {/* 
+        SSR article links for search engine crawlers.
+        These are rendered server-side so Google sees all article URLs 
+        in the initial HTML without needing JavaScript execution.
+        Hidden visually since ConseilsClient handles the UI.
+      */}
+      <nav aria-label="Tous les articles" style={{ 
+        position: 'absolute', 
+        width: '1px', 
+        height: '1px', 
+        padding: 0, 
+        margin: '-1px', 
+        overflow: 'hidden', 
+        clip: 'rect(0, 0, 0, 0)', 
+        whiteSpace: 'nowrap', 
+        borderWidth: 0 
+      }}>
+        <h2>Tous nos articles et guides</h2>
+        <ul>
+          {allArticles.map((article) => (
+            <li key={article.id}>
+              <Link href={`/conseils/${article.slug}`}>
+                {article.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </main>
   );
 }

@@ -1,7 +1,4 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir, access } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
 
 export async function GET(request, { params }) {
   try {
@@ -11,74 +8,55 @@ export async function GET(request, { params }) {
       return new NextResponse('Reel ID required', { status: 400 });
     }
 
-    // Check if thumbnail already exists locally
-    const publicDir = path.join(process.cwd(), 'public', 'thumbnails');
-    const thumbnailPath = path.join(publicDir, `${reelId}.jpg`);
-    const publicUrl = `/thumbnails/${reelId}.jpg`;
-
-    // If file exists, redirect to it
-    if (existsSync(thumbnailPath)) {
-      return NextResponse.redirect(new URL(publicUrl, request.url));
-    }
-
     // Fetch Facebook data to get original thumbnail
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-    const facebookRes = await fetch(`${baseUrl}/api/social/facebook?reels_limit=50`);
+    const facebookRes = await fetch(`${baseUrl}/api/social/facebook?reels_limit=50`, {
+      next: { revalidate: 3600 } // Cache Facebook API response for 1 hour
+    });
     
     if (!facebookRes.ok) {
-      return new NextResponse('Failed to fetch Facebook data', { status: 500 });
+      return new NextResponse('Failed to fetch Facebook data', { status: 502 });
     }
 
     const data = await facebookRes.json();
     const reel = data.reels?.find(r => r.id === reelId);
 
     if (!reel || !reel.thumbnail) {
-      return new NextResponse('Reel not found or no thumbnail', { status: 404 });
+      // Return a fallback placeholder image instead of 404
+      // This ensures Google always gets a valid image response
+      return NextResponse.redirect(new URL('/logo.png', request.url), 302);
     }
 
-    // Download and cache the thumbnail
+    // Fetch the thumbnail from Facebook CDN and proxy it directly
     try {
       const imageResponse = await fetch(reel.thumbnail, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
       });
 
       if (!imageResponse.ok) {
-        return new NextResponse('Failed to fetch original thumbnail', { status: 404 });
+        // Facebook CDN URL expired — redirect to logo as fallback
+        return NextResponse.redirect(new URL('/logo.png', request.url), 302);
       }
 
       const imageBuffer = await imageResponse.arrayBuffer();
       
-      // Ensure thumbnails directory exists
-      await mkdir(publicDir, { recursive: true });
-      
-      // Save the image
-      await writeFile(thumbnailPath, Buffer.from(imageBuffer));
-      
-      // Return the cached image
+      // Serve the image directly from memory (no filesystem write — works on serverless)
       return new NextResponse(Buffer.from(imageBuffer), {
         headers: {
           'Content-Type': imageResponse.headers.get('content-type') || 'image/jpeg',
-          'Cache-Control': 'public, max-age=31536000, immutable',
-          'CDN-Cache-Control': 'public, max-age=31536000',
+          'Cache-Control': 'public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400',
         },
       });
 
     } catch (downloadError) {
       console.error('Error downloading thumbnail:', downloadError);
-      
-      // Fallback to placeholder
-      const placeholderPath = path.join(process.cwd(), 'public', 'icons', 'video-placeholder.svg');
-      if (existsSync(placeholderPath)) {
-        return NextResponse.redirect(new URL('/icons/video-placeholder.svg', request.url));
-      }
-      
-      return new NextResponse('Thumbnail not available', { status: 404 });
+      return NextResponse.redirect(new URL('/logo.png', request.url), 302);
     }
 
   } catch (error) {
     console.error('Error in thumbnail proxy:', error);
-    return new NextResponse('Internal server error', { status: 500 });
+    return NextResponse.redirect(new URL('/logo.png', request.url), 302);
   }
 }

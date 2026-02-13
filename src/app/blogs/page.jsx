@@ -229,13 +229,10 @@ export default async function Page() {
           }
         };
         
-        // Always include thumbnailUrl - Google REQUIRES this field for VideoObject
-        // Use Facebook CDN thumbnail if valid, otherwise fall back to our thumbnail proxy API
-        if (hasValidThumbnail) {
-          videoObject.thumbnailUrl = reel.thumbnail;
-        } else {
-          videoObject.thumbnailUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`;
-        }
+        // Always use our own thumbnail proxy API for structured data
+        // Facebook CDN URLs are signed/temporary and expire — Google can't reliably access them
+        // Our /api/thumbnails/ proxy fetches from Facebook on demand and serves a stable URL
+        videoObject.thumbnailUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`;
         
         return videoObject;
       }),

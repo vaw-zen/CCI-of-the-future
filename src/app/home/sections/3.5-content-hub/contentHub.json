@@ -8,7 +8,7 @@
             "title": "Guides & Conseils",
             "description": "Tutoriels détaillés, astuces d'entretien et conseils d'experts pour le nettoyage et la rénovation.",
             "img": "/home/nettoyagemoquetteaveclaméthodeinjectionextraction.webp",
-            "count": "25+ Articles"
+            "count": "40+ Articles"
         },
         {
             "link": "/blogs",
@@ -36,6 +36,12 @@
             "title": "Nettoyage Salons Voiture Tapisseries Tunis",
             "category": "Salon",
             "excerpt": "Tout savoir sur l'entretien et le nettoyage de vos salons."
+        },
+        {
+            "link": "/conseils/conventions-nettoyage-entreprises-tunisie-contrats-b2b",
+            "title": "Conventions Nettoyage Entreprises Tunisie",
+            "category": "Commercial B2B",
+            "excerpt": "Contrats de nettoyage réguliers pour entreprises. Tarifs préférentiels et service premium."
         }
     ]
 }

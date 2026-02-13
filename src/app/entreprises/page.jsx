@@ -15,6 +15,7 @@ import Processus from "./5-processus/Processus";
 import ConventionForm from "./6-form/ConventionForm";
 import FaqEntreprises from "./7-faq/FaqEntreprises";
 import NodeNetwork from "./1-background/NodeNetwork";
+import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 
 export default function Page() {
   useScrollTracking('entreprises_page');
@@ -61,6 +62,11 @@ export default function Page() {
         <NodeNetwork />
 
         <FaqEntreprises faqItems={entreprisesData.faq} />
+
+        <RelatedArticles 
+          articles={entreprisesData.relatedArticles} 
+          serviceName="Conventions Entreprises"
+        />
       </div>
     </>
   );

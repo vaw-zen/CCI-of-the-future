@@ -20,11 +20,13 @@ export function useConseilsLogic() {
     { key: 'tapis', label: '🧽 Nettoyage Tapis', category: 'tapis' },
     { key: 'tapisserie', label: '🛋️ Nettoyage Tapisserie', category: 'tapisserie' },
     { key: 'marbre', label: '💎 Traitement Marbre', category: 'marbre' },
-    { key: 'post-chantier', label: '🔧 Post-Chantier', category: 'post-chantier' }
+    { key: 'post-chantier', label: '🔧 Post-Chantier', category: 'post-chantier' },
+    { key: 'commercial', label: '🏢 Nettoyage Commercial', category: 'commercial' }
   ];
 
   const mobileFilters = [
     { key: 'all', label: '🔍 Tous les guides', category: null },
+    { key: 'commercial', label: '🏢 Nettoyage Commercial', category: 'commercial' },
     { key: 'marbre', label: '💎 Traitement Marbre', category: 'marbre' },
     { key: 'post-chantier', label: '🔧 Post-Chantier', category: 'post-chantier' },
     { key: 'tapis', label: '🧽 Nettoyage Tapis', category: 'tapis' },

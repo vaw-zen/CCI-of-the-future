@@ -288,5 +288,28 @@
         "description": "Tarification sur devis après audit gratuit"
       }
     }
-  }
+  },
+  "relatedArticles": [
+    {
+      "link": "/conseils/conventions-nettoyage-entreprises-tunisie-contrats-b2b",
+      "title": "Conventions Nettoyage Entreprises Tunisie : Contrats B2B",
+      "category": "Commercial B2B",
+      "excerpt": "Conventions et contrats de nettoyage professionnel pour entreprises en Tunisie. Tarifs préférentiels, service premium, devis gratuit.",
+      "tags": ["convention", "B2B", "entreprise", "contrat"]
+    },
+    {
+      "link": "/conseils/nettoyage-post-chantier-tunisie-fin-travaux",
+      "title": "Nettoyage Post-Chantier Tunisie",
+      "category": "Post-chantier",
+      "excerpt": "Guide professionnel pour le nettoyage après travaux. Techniques, équipements et protocoles pour une remise en état parfaite.",
+      "tags": ["post-chantier", "professionnel", "protocoles"]
+    },
+    {
+      "link": "/conseils/traitement-poncage-polissage-marbre-tunisie",
+      "title": "Traitement Ponçage Polissage Marbre Tunisie",
+      "category": "Marbre",
+      "excerpt": "Les secrets du lustrage professionnel pour un marbre éclatant dans vos locaux d'entreprise.",
+      "tags": ["marbre", "lustrage", "professionnel"]
+    }
+  ]
 }

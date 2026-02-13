@@ -229,10 +229,12 @@ export default async function Page() {
           }
         };
         
-        // Only add thumbnailUrl if we have a valid HTTP(S) thumbnail from Facebook
-        // This ensures Google can access the thumbnail directly from Facebook CDN
+        // Always include thumbnailUrl - Google REQUIRES this field for VideoObject
+        // Use Facebook CDN thumbnail if valid, otherwise fall back to our thumbnail proxy API
         if (hasValidThumbnail) {
           videoObject.thumbnailUrl = reel.thumbnail;
+        } else {
+          videoObject.thumbnailUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`;
         }
         
         return videoObject;

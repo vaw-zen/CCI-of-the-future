@@ -212,6 +212,11 @@ jobs:
           echo "detected_service=$DETECTED_SVC" >> $GITHUB_OUTPUT
           echo "attempts=$ATTEMPT" >> $GITHUB_OUTPUT
 
+          # Save content for the article publishing step
+          # Use a temp file to safely pass multiline content
+          echo "$CONTENT" > /tmp/post_content.txt
+          echo "$IMAGE_URL" > /tmp/post_image.txt
+
           # ── Rich GitHub Actions Summary ──
           {
             if [ "$DRY_RUN" = "true" ]; then
@@ -278,7 +283,119 @@ jobs:
           exit 1
         fi
 
-    # ── Step 4: Alert on failure ──────────────────────────────────────
+    # ── Step 4: Publish as website article ──────────────────────────
+    - name: Publish article to website
+      if: steps.post.outputs.result == 'success' && steps.config.outputs.dry_run != 'true'
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+      run: |
+        DETECTED_SVC="${{ steps.post.outputs.detected_service }}"
+        POST_TYPE="${{ steps.config.outputs.post_type }}"
+        SEASON="${{ steps.config.outputs.current_season }}"
+        MONTH="${{ steps.config.outputs.current_month }}"
+
+        # Read saved content from the post step
+        CONTENT=$(cat /tmp/post_content.txt 2>/dev/null || echo "")
+        IMAGE_URL=$(cat /tmp/post_image.txt 2>/dev/null || echo "none")
+
+        if [ -z "$CONTENT" ] || [ -z "$API_KEY" ]; then
+          echo "⚠️ Skipping article publish — missing content or API_KEY secret"
+          exit 0
+        fi
+
+        echo "📰 Publishing article to website..."
+
+        # Map detected service to article category and label
+        case $DETECTED_SVC in
+          salon)       CATEGORY="salon";       CATEGORY_LABEL="Nettoyage Salon" ;;
+          tapis)       CATEGORY="tapis";       CATEGORY_LABEL="Nettoyage Tapis" ;;
+          marbre)      CATEGORY="marbre";      CATEGORY_LABEL="Polissage Marbre" ;;
+          tapisserie)  CATEGORY="tapisserie";  CATEGORY_LABEL="Tapisserie" ;;
+          tfc)         CATEGORY="tfc";         CATEGORY_LABEL="Nettoyage Post-Chantier" ;;
+          entreprises) CATEGORY="entreprises"; CATEGORY_LABEL="Conventions Entreprises" ;;
+          *)           CATEGORY="general";     CATEGORY_LABEL="Conseils Nettoyage" ;;
+        esac
+
+        # Extract first line as title (strip emojis), rest as body
+        TITLE=$(echo "$CONTENT" | head -1 | sed 's/^[^a-zA-ZÀ-ÿ]*//' | cut -c1-120)
+        
+        # Build HTML content from the Facebook post text
+        HTML_CONTENT=$(echo "$CONTENT" | jq -Rs '
+          split("\n\n") | 
+          map(select(length > 0)) | 
+          map("<p>" + . + "</p>") | 
+          join("\n")
+        ')
+
+        # Set image path (use service default if FB image is unavailable)
+        if [ "$IMAGE_URL" != "none" ] && [ "$IMAGE_URL" != "null" ]; then
+          ARTICLE_IMAGE="$IMAGE_URL"
+        else
+          ARTICLE_IMAGE="/default-article.jpg"
+        fi
+
+        # Build article payload
+        ARTICLE_PAYLOAD=$(jq -n \
+          --arg title "$TITLE" \
+          --arg metaTitle "$TITLE | CCI Services Tunisie" \
+          --arg metaDescription "$(echo "$CONTENT" | head -3 | tr '\n' ' ' | cut -c1-160)" \
+          --arg excerpt "$(echo "$CONTENT" | head -2 | tr '\n' ' ' | cut -c1-200)" \
+          --arg category "$CATEGORY" \
+          --arg categoryLabel "$CATEGORY_LABEL" \
+          --arg author "CCI Services" \
+          --arg image "$ARTICLE_IMAGE" \
+          --arg imageAlt "$TITLE" \
+          --arg readTime "3 min" \
+          --argjson featured false \
+          --argjson content "$HTML_CONTENT" \
+          --argjson keywords "[\"$DETECTED_SVC\", \"nettoyage tunisie\", \"CCI Services\", \"$CATEGORY\"]" \
+          '{
+            title: $title,
+            metaTitle: $metaTitle,
+            metaDescription: $metaDescription,
+            excerpt: $excerpt,
+            category: $category,
+            categoryLabel: $categoryLabel,
+            keywords: $keywords,
+            author: $author,
+            image: $image,
+            imageAlt: $imageAlt,
+            readTime: $readTime,
+            featured: $featured,
+            content: $content
+          }')
+
+        # Call articles API
+        ART_RESPONSE=$(curl -s -w "\n%{http_code}" --max-time 30 \
+          -X POST https://cciservices.online/api/articles \
+          -H "Content-Type: application/json" \
+          -H "x-api-key: $API_KEY" \
+          -d "$ARTICLE_PAYLOAD") || true
+
+        ART_HTTP=$(echo "$ART_RESPONSE" | tail -1)
+        ART_BODY=$(echo "$ART_RESPONSE" | sed '$d')
+
+        if [ "$ART_HTTP" = "201" ]; then
+          ART_SLUG=$(echo "$ART_BODY" | jq -r '.article.slug // "unknown"')
+          echo "✅ Article published: /conseils/$ART_SLUG"
+          {
+            echo ""
+            echo "### 📰 Article Published"
+            echo "| Detail | Value |"
+            echo "|--------|-------|"
+            echo "| **URL** | [/conseils/$ART_SLUG](https://cciservices.online/conseils/$ART_SLUG) |"
+            echo "| **Category** | \`$CATEGORY_LABEL\` |"
+          } >> $GITHUB_STEP_SUMMARY
+        else
+          ART_ERROR=$(echo "$ART_BODY" | jq -r '.error // .message // "Unknown"' 2>/dev/null || echo "$ART_BODY")
+          echo "⚠️ Article publish failed (HTTP $ART_HTTP): $ART_ERROR"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ⚠️ Article Publish Failed" >> $GITHUB_STEP_SUMMARY
+          echo "HTTP $ART_HTTP — $ART_ERROR" >> $GITHUB_STEP_SUMMARY
+          # Don't fail the workflow — Facebook post was already successful
+        fi
+
+    # ── Step 5: Alert on failure ──────────────────────────────────────
     - name: Send failure alert
       if: failure()
       env:

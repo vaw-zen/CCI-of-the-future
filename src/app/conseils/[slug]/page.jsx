@@ -230,8 +230,8 @@ export default async function ArticlePage({ params }) {
     ]
   };
 
-  // FAQ Schema si l'article contient des FAQs
-  const faqSchema = {
+  // FAQ Schema — only for tapis-category articles where these FAQs are relevant
+  const faqSchema = article.category === 'tapis' ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
@@ -268,7 +268,7 @@ export default async function ArticlePage({ params }) {
         }
       }
     ]
-  };
+  } : null;
 
   // Trouver les articles précédent et suivant
   const allArticles = getAllArticles();
@@ -288,10 +288,12 @@ export default async function ArticlePage({ params }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
+        {faqSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          />
+        )}
 
           <HeroHeader sty title={article.categoryLabel} />
         <div className={styles.container}>

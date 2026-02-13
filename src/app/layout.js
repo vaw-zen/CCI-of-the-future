@@ -27,9 +27,32 @@ const roboto = Roboto_Condensed({
 
 export const metadata = {
   title: "CCI Services — Leader du Nettoyage Professionnel en Tunisie | Moquettes, Salons & Marbre",
-  description: "CCI Services : Leader du nettoyage professionnel en Tunisie ✓ Nettoyage moquettes ✓ Restauration marbre ✓ Salon à domicile ✓ Devis gratuit ✓ +216 98 557 766",   alternates: {
-
+  description: "CCI Services : Leader du nettoyage professionnel en Tunisie ✓ Nettoyage moquettes ✓ Restauration marbre ✓ Salon à domicile ✓ Devis gratuit ✓ +216 98 557 766",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'),
+  alternates: {},
+  openGraph: {
+    locale: 'fr_TN',
+    siteName: 'CCI Services',
+    type: 'website',
+    images: [
+      {
+        url: '/home/1-hero/main.webp',
+        width: 1200,
+        height: 630,
+        alt: 'CCI Services - Nettoyage Professionnel Tunisie'
+      }
+    ]
   },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@cciservices',
+    images: ['/home/1-hero/main.webp']
+  },
+  robots: { index: true, follow: true },
+  authors: [{ name: 'CCI Tunisie' }],
+  verification: {
+    google: 'sJRXBYO6D1wSw4INn0E56VlSp8hSgSQHYc4p6Czr78U'
+  }
 };
 
 export const viewport = {
@@ -40,7 +63,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   const SITE_NAME = "CCI"; // or "Chaabane's Cleaning Intelligence"
-  const SITE_LOGO = `${SITE_URL}/favicon.ico`;
+  const SITE_LOGO = `${SITE_URL}/home/1-hero/main.webp`;
 
   // WebSite schema with SearchAction
   const websiteJSONLD = {
@@ -98,17 +121,7 @@ export default function RootLayout({ children }) {
     ]
   };
 
-  const breadcrumbJSONLD = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/services` },
-      { "@type": "ListItem", position: 3, name: "Contact", item: `${SITE_URL}/contact` },
-      { "@type": "ListItem", position: 4, name: "Blog", item: `${SITE_URL}/blogs` }
-
-    ]
-  };
+  // Breadcrumb removed from global layout — each page injects its own contextual breadcrumb
   const FB_APP_ID = process.env.FB_APP_ID || '';
   const FB_API_VERSION = process.env.FB_API_VERSION || 'v17.0';
   return (
@@ -119,25 +132,12 @@ export default function RootLayout({ children }) {
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Global Open Graph / Twitter / icons (canonical removed - handled per page) */}
-        <meta name="keywords" content="cci tunisie, cci tunis, nettoyage professionnel tunisie,ch nettoyage moquette tunis, nettoyage salon tunisie, restauration marbre tunis, services tapisserie tunisie, nettoyage post-chantier, CCI services" />
-        <meta name="author" content="CCI Tunisie" />
-        <meta name="robots" content="index,follow" />
-        <meta property="og:locale" content="fr_FR" />
-        <meta property="og:site_name" content={SITE_NAME} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={SITE_URL} />
-        <meta property="og:title" content={metadata.title || SITE_NAME} />
-        <meta property="og:description" content={metadata.description || 'Services de nettoyage professionnels CCI'} />
-        <meta property="og:image" content={SITE_LOGO} />
-        <meta property="og:image:alt" content={`${SITE_NAME} logo`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@cciservices" />
-        <meta name="twitter:title" content={metadata.title || SITE_NAME} />
-        <meta name="twitter:description" content={metadata.description || ''} />
-        <meta name="twitter:image" content={SITE_LOGO} />
+        {/* OG/Twitter tags handled by Next.js metadata API — no manual tags needed */}
+        {/* Geo and business meta for local SEO */}
+        <meta name="geo.region" content="TN-11" />
+        <meta name="geo.placename" content="Tunis" />
+        <meta name="geo.position" content="36.8527438;10.254949" />
+        <meta name="ICBM" content="36.8527438, 10.254949" />
 
 {/* Icons & Manifest for PWA */}
 <link rel="icon" href="/favicon.ico" />
@@ -151,8 +151,7 @@ export default function RootLayout({ children }) {
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="CCI Services" />
 
-        {/* Google Site Verification - Method 1 for Search Console */}
-        <meta name="google-site-verification" content="sJRXBYO6D1wSw4INn0E56VlSp8hSgSQHYc4p6Czr78U" />
+        {/* Google Site Verification now handled via metadata.verification */}
 
         {/* Google Analytics - G-0RDH6DH7TS */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RDH6DH7TS"></script>
@@ -234,13 +233,12 @@ export default function RootLayout({ children }) {
         {/* JSON-LD site-wide */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJSONLD) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJSONLD) }} />
         {/* Conditionally load Facebook SDK: only when app id is set and in production or when explicitly allowed in env */}
         {FB_APP_ID && (process.env.NODE_ENV === 'production' || process.env.ALLOW_FB_IN_DEV === 'true') && (
           <>
             <Script
               id="fb-init"
-              strategy="beforeInteractive"
+              strategy="lazyOnload"
               dangerouslySetInnerHTML={{
                 __html: `
                 window.fbAsyncInit = function() {

@@ -8,20 +8,20 @@ export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   
   return {
-    title: 'Contact CCI Tunisie - Devis Gratuit Nettoyage Professionnel Tunis',
-    description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.',
+    title: 'Contactez CCI Tunisie | Appelez le +216 98 557 766 | Devis Gratuit Tunis',
+    description: 'Contactez CCI Services à Tunis pour un devis gratuit ✆ +216 98 557 766 ✉ contact@cciservices.online 📍 06 Rue Galant de nuit, El Aouina. Réponse rapide garantie.',
     alternates: {
       canonical: `${SITE_URL}/contact`
     },
     openGraph: {
-      title: 'Contact CCI Tunisie - Devis Gratuit Nettoyage Professionnel Tunis',
-      description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.',
+      title: 'Contactez CCI Tunisie | +216 98 557 766 | Devis Gratuit',
+      description: 'Contactez CCI Services à Tunis pour un devis gratuit. Nettoyage moquettes, restauration marbre, tapisserie. Réponse sous 24h.',
       url: `${SITE_URL}/contact`,
       type: 'website'
     },
     twitter: {
-      title: 'Contact CCI Tunisie - Devis Gratuit Nettoyage Professionnel Tunis',
-      description: 'Contactez CCI pour un devis gratuit : polissage marbre, nettoyage moquettes, tapisserie et nettoyages post-chantier.'
+      title: 'Contactez CCI Tunisie | +216 98 557 766 | Devis Gratuit',
+      description: 'Contactez CCI Services à Tunis pour un devis gratuit. Nettoyage moquettes, restauration marbre, tapisserie. Réponse sous 24h.'
     }
   };
 }

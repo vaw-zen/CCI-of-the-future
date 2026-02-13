@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import Hero from "./sections/1-hero/hero";
 import styles from './home.module.css';
-import Head from 'next/head';
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
 
@@ -286,50 +285,7 @@ export default function Home() {
     }}
   />
 
-    <Head>
-      {/* Preload critical resources */}
-      <meta name="google-site-verification" content="sJRXBYO6D1wSw4INn0E56VlSp8hSgSQHYc4p6Czr78U" />
-      <link
-        rel="preload"
-        as="image"
-        href="/home/1-hero/linesGlow.webp"
-        fetchpriority="high"
-      />
-      <link
-        rel="preload"
-        as="image"
-        href="/home/1-hero/main.webp"
-        fetchpriority="high"
-      />
-      <link
-        rel="preload"
-        as="image"
-        href="/feedback/content (2).jpeg"
-        fetchpriority="high"
-        imageSrcSet="/_next/image?url=%2Ffeedback%2Fcontent%20(2).jpeg&w=384&q=70 384w, /_next/image?url=%2Ffeedback%2Fcontent%20(2).jpeg&w=640&q=70 640w, /_next/image?url=%2Ffeedback%2Fcontent%20(2).jpeg&w=828&q=70 828w"
-        imageSizes="44vw"
-      />
-      
-      {/* DNS prefetch for external domains */}
-      <link rel="dns-prefetch" href="//www.google.com" />
-      <link rel="dns-prefetch" href="//www.facebook.com" />
-      <link rel="dns-prefetch" href="//www.instagram.com" />
-      
-      {/* Additional SEO meta tags */}
-      <meta name="geo.region" content="TN-11" />
-      <meta name="geo.placename" content="Tunis" />
-      <meta name="geo.position" content="36.8527438;10.254949" />
-      <meta name="ICBM" content="36.8527438, 10.254949" />
-      
-      {/* Business specific meta */}
-      <meta name="business:contact_data:street_address" content="06 Rue Galant de nuit" />
-      <meta name="business:contact_data:locality" content="El Aouina" />
-      <meta name="business:contact_data:region" content="Tunis" />
-      <meta name="business:contact_data:postal_code" content="2045" />
-      <meta name="business:contact_data:country_name" content="Tunisia" />
-      <meta name="business:contact_data:phone_number" content="+216-98-557-766" />
-      <meta name="business:contact_data:email" content="contact@cciservices.online" />
-    </Head>
+  {/* Geo/business meta and image preloads now in page.js generateMetadata + layout.js */}
   {/* site JSON-LD is injected globally in layout.js; page-specific Service JSON-LD could be added here if needed */}
     <Hero />
     <main className={styles.Home} role="main" itemScope itemType="https://schema.org/WebPage">

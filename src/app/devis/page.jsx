@@ -8,15 +8,15 @@ export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   
   return {
-    title: 'Simulateur Devis Nettoyage Tunisie | Prix Transparent & Instantané - CCI Services',
-    description: '🎯 Premier simulateur de devis en ligne en Tunisie ! Obtenez instantanément vos prix de nettoyage : salon, marbre, tapis, moquette. Transparence totale, aucune surprise. Devis gratuit et immédiat.',
-    keywords: 'simulateur devis nettoyage Tunisie, prix nettoyage transparent Tunisie, devis en ligne nettoyage, tarif nettoyage salon Tunisie, prix polissage marbre, devis nettoyage tapis, calculateur prix nettoyage, combien coûte nettoyage salon Tunisie, simuler prix nettoyage Tunis, devis instantané nettoyage, nettoyage salon à domicile, nettoyage moquette professionnel, entretien marbre, restauration marbre, cristallisation marbre Tunisie, nettoyage canapé à domicile, lavage tapis professionnel, nettoyage post-chantier Tunis, détartrage marbre, polissage sol marbre, nettoyage bateau Tunisie, désinfection salon',
+    title: 'Devis Gratuit Nettoyage Tunis | Simulateur Prix Instantané - CCI Services',
+    description: '🎯 Calculez votre devis nettoyage en ligne en 2 min ! Prix transparent : salon dès 35 DT, tapis dès 5 DT/m², polissage marbre dès 8 DT/m². Résultat instantané, sans engagement. ✆ +216 98 557 766',
+    keywords: 'devis nettoyage tunis, simulateur tarif nettoyage, devis gratuit nettoyage tunisie, prix nettoyage salon tunisie, prix polissage marbre tunisie, combien coûte nettoyage tapis tunis, devis en ligne nettoyage',
     alternates: {
       canonical: `${SITE_URL}/devis`
     },
     openGraph: {
-      title: 'Simulateur Devis Nettoyage Tunisie | Prix Transparent & Instantané',
-      description: '🎯 Premier service en Tunisie avec simulation de prix instantanée ! Calculez votre devis nettoyage en ligne : tarifs clairs pour salon, marbre, tapis. Résultats immédiats, sans attente.',
+      title: 'Devis Gratuit Nettoyage Tunis | Simulateur Prix Instantané',
+      description: '🎯 Calculez votre devis nettoyage en ligne ! Prix transparent pour salon, marbre, tapis, moquette. Résultat instantané sans engagement.',
       url: `${SITE_URL}/devis`,
       type: 'website',
       images: [

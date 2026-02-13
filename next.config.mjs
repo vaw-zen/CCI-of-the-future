@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  trailingSlash: false,
   transpilePackages: ['@supabase/supabase-js'],
   experimental: {
     optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],

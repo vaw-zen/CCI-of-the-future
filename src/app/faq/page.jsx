@@ -8,20 +8,20 @@ export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   
   return {
-    title: 'FAQ — CCI',
-    description: 'Questions fréquentes sur nos services : nettoyage de tapis, restauration de marbre, tapisserie et nettoyages post-chantier. Astuces pratiques sur le détachage, solutions maison au vinaigre et entretien du marbre.',
+    title: 'FAQ Nettoyage Professionnel Tunisie | Questions Fréquentes - CCI Services',
+    description: 'Réponses à vos questions sur le nettoyage de tapis, polissage marbre, tapisserie et post-chantier à Tunis. Prix, délais, méthodes — tout savoir avant de commander.',
     alternates: {
       canonical: `${SITE_URL}/faq`
     },
     openGraph: {
-      title: 'FAQ — CCI',
-      description: 'Questions fréquentes sur nos services : nettoyage de tapis, restauration de marbre, tapisserie et nettoyages post-chantier. Astuces pratiques sur le détachage, solutions maison au vinaigre et entretien du marbre.',
+      title: 'FAQ Nettoyage Professionnel Tunisie | CCI Services',
+      description: 'Réponses à vos questions sur le nettoyage de tapis, polissage marbre, tapisserie et post-chantier à Tunis.',
       url: `${SITE_URL}/faq`,
       type: 'website'
     },
     twitter: {
-      title: 'FAQ — CCI',
-      description: 'Questions fréquentes sur nos services : nettoyage de tapis, restauration de marbre, tapisserie et nettoyages post-chantier. Astuces pratiques sur le détachage, solutions maison au vinaigre et entretien du marbre.'
+      title: 'FAQ Nettoyage Professionnel Tunisie | CCI Services',
+      description: 'Réponses à vos questions sur le nettoyage de tapis, polissage marbre, tapisserie et post-chantier à Tunis.'
     }
   };
 }

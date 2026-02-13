@@ -1,18 +1,20 @@
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://cciservices.online/sitemap-index.xml
-Sitemap: https://cciservices.online/sitemap.xml
-Sitemap: https://cciservices.online/articles-sitemap.xml
-Sitemap: https://cciservices.online/video-sitemap.xml
+# Block admin and test routes
+Disallow: /admin/
+Disallow: /api-test/
+Disallow: /api/
 
 # Allow important API endpoints
 Allow: /api/thumbnails/
 Allow: /api/social/
 
-# Crawl-delay for better indexing
-Crawl-delay: 1
+# Sitemaps
+Sitemap: https://cciservices.online/sitemap-index.xml
+Sitemap: https://cciservices.online/sitemap.xml
+Sitemap: https://cciservices.online/articles-sitemap.xml
+Sitemap: https://cciservices.online/video-sitemap.xml
 
 # Host directive
 Host: https://cciservices.online

@@ -32,5 +32,15 @@ export async function generateMetadata() {
 }
 
 export default function TapisLayout({ children }) {
-  return children;
+  return (
+    <>
+      {children}
+      {tapisData.breadcrumbJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisData.breadcrumbJSONLD) }} />
+      )}
+      {tapisData.faqJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisData.faqJSONLD) }} />
+      )}
+    </>
+  );
 }

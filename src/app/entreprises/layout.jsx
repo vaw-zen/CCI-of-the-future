@@ -32,5 +32,15 @@ export async function generateMetadata() {
 }
 
 export default function EntreprisesLayout({ children }) {
-  return children;
+  return (
+    <>
+      {children}
+      {entreprisesData.breadcrumbJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(entreprisesData.breadcrumbJSONLD) }} />
+      )}
+      {entreprisesData.faqJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(entreprisesData.faqJSONLD) }} />
+      )}
+    </>
+  );
 }

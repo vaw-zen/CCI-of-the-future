@@ -32,5 +32,15 @@ export async function generateMetadata() {
 }
 
 export default function TapisserieLayout({ children }) {
-  return children;
+  return (
+    <>
+      {children}
+      {tapisserieData.breadcrumbJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisserieData.breadcrumbJSONLD) }} />
+      )}
+      {tapisserieData.faqJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisserieData.faqJSONLD) }} />
+      )}
+    </>
+  );
 }

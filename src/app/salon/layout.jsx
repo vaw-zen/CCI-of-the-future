@@ -32,5 +32,15 @@ export async function generateMetadata() {
 }
 
 export default function SalonLayout({ children }) {
-  return children;
+  return (
+    <>
+      {children}
+      {salonData.breadcrumbJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(salonData.breadcrumbJSONLD) }} />
+      )}
+      {salonData.faqJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(salonData.faqJSONLD) }} />
+      )}
+    </>
+  );
 }

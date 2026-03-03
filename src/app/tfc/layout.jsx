@@ -32,5 +32,15 @@ export async function generateMetadata() {
 }
 
 export default function TFCLayout({ children }) {
-  return children;
+  return (
+    <>
+      {children}
+      {tfcData.breadcrumbJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tfcData.breadcrumbJSONLD) }} />
+      )}
+      {tfcData.faqJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tfcData.faqJSONLD) }} />
+      )}
+    </>
+  );
 }

@@ -32,5 +32,15 @@ export async function generateMetadata() {
 }
 
 export default function MarbreLayout({ children }) {
-  return children;
+  return (
+    <>
+      {children}
+      {marbreData.breadcrumbJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(marbreData.breadcrumbJSONLD) }} />
+      )}
+      {marbreData.faqJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(marbreData.faqJSONLD) }} />
+      )}
+    </>
+  );
 }

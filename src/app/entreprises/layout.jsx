@@ -15,10 +15,16 @@ export async function generateMetadata() {
       description: entreprisesData.metadata.description,
       url: `${SITE_URL}/entreprises`,
       type: 'website'
+      ,
+      locale: 'fr_TN',
+      siteName: 'CCI Services',
+      images: entreprisesData.images && entreprisesData.images.length ? [{ url: `${SITE_URL}${entreprisesData.images[0].src}`, alt: entreprisesData.images[0].title }] : []
     },
     twitter: {
       title: entreprisesData.metadata.title,
-      description: entreprisesData.metadata.description
+      description: entreprisesData.metadata.description,
+      card: 'summary_large_image',
+      images: entreprisesData.images && entreprisesData.images.length ? [`${SITE_URL}${entreprisesData.images[0].src}`] : []
     }
   };
 }

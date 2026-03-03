@@ -16,12 +16,14 @@ export async function generateMetadata() {
       url: `${SITE_URL}/tapis`,
       type: 'website',
       locale: 'fr_TN',
-      siteName: 'CCI Services'
+      siteName: 'CCI Services',
+      images: tapisData.images && tapisData.images.length ? [{ url: `${SITE_URL}${tapisData.images[0].src}`, alt: tapisData.images[0].title }] : []
     },
     twitter: {
       card: 'summary_large_image',
       title: "Nettoyage Tapis & Moquette Tunis | CCI",
-      description: tapisData.metadata.description
+      description: tapisData.metadata.description,
+      images: tapisData.images && tapisData.images.length ? [`${SITE_URL}${tapisData.images[0].src}`] : []
     }
   };
 }

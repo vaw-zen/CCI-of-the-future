@@ -77,7 +77,7 @@
       "title": "Bureaux & Espaces de Coworking",
       "icon": "🏢",
       "description": "Entretien régulier des open spaces, salles de réunion, sanitaires et cuisines communes. Flexibilité horaire et fréquences adaptées à votre rythme.",
-      "services": ["Nettoyage tapis & moquettes", "Nettoyage salon & mobilier", "Nettoyage des locaux"]
+      "services": ["Nettoyage tapis & moquettes", "Nettoyage salon & mobilier", "Nettoyage des locaux"],
       "breadcrumbJSONLD": {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",

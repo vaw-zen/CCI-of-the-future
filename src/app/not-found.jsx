@@ -1,18 +1,23 @@
 import Link from 'next/link'
+import HeroHeader from '@/utils/components/reusableHeader/HeroHeader'
+import styles from './not-found.module.css'
 
 export default function NotFound() {
   return (
-    <main style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--padding-base)' }}>
-      <div style={{ textAlign: 'center', maxWidth: 720 }}>
-        <h1 style={{ marginBottom: 12 }}>404 — Page non trouvée</h1>
-        <p style={{ color: 'var(--muted-color, #6b7280)', marginBottom: 20 }}>
-          La page que vous recherchez n'existe pas ou a été déplacée. Essayez l'accueil ou contactez-nous pour obtenir de l'aide.
-        </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-          <Link href="/" className="button">Accueil</Link>
-          <Link href="/devis" className="button button--primary">Demander un devis</Link>
+    <>
+      <HeroHeader title="404 — Page non trouvée" />
+      <main className={styles.container}>
+        <div className={styles.card}>
+          <h1 className={styles.title}>404 — Page non trouvée</h1>
+          <p className={styles.desc}>
+            La page que vous recherchez n'existe pas ou a été déplacée. Essayez l'accueil ou contactez-nous pour obtenir de l'aide.
+          </p>
+          <div className={styles.actions}>
+            <Link href="/" className={styles.btn}>Accueil</Link>
+            <Link href="/devis" className={`${styles.btn} ${styles.btnPrimary}`}>Demander un devis</Link>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   )
 }

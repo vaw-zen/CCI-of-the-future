@@ -18,13 +18,13 @@ export async function generateMetadata() {
       ,
       locale: 'fr_TN',
       siteName: 'CCI Services',
-      images: entreprisesData.images && entreprisesData.images.length ? [{ url: `${SITE_URL}${entreprisesData.images[0].src}`, alt: entreprisesData.images[0].title }] : []
+      images: entreprisesData.images && entreprisesData.images.length ? [{ url: `${SITE_URL}${entreprisesData.images[0].src}`, alt: entreprisesData.images[0].title }] : [{ url: `${SITE_URL}/og/entreprises-og.svg`, alt: 'Conventions Nettoyage Entreprises - CCI' }]
     },
     twitter: {
       title: entreprisesData.metadata.title,
       description: entreprisesData.metadata.description,
       card: 'summary_large_image',
-      images: entreprisesData.images && entreprisesData.images.length ? [`${SITE_URL}${entreprisesData.images[0].src}`] : []
+      images: entreprisesData.images && entreprisesData.images.length ? [`${SITE_URL}${entreprisesData.images[0].src}`] : [`${SITE_URL}/og/entreprises-og.svg`]
     }
   };
 }

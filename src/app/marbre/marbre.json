@@ -136,6 +136,14 @@
       "@id": "https://cciservices.online#localbusiness"
     }
   },
+  "breadcrumbJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
+      { "@type": "ListItem", "position": 2, "name": "Restauration Marbre", "item": "https://cciservices.online/marbre" }
+    ]
+  },
   "faqJSONLD": {
     "@context": "https://schema.org",
     "@type": "FAQPage",

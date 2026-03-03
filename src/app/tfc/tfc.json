@@ -104,6 +104,14 @@
       "@id": "https://cciservices.online#localbusiness"
     }
   },
+  "breadcrumbJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
+      { "@type": "ListItem", "position": 2, "name": "Nettoyage Après Travaux (TFC)", "item": "https://cciservices.online/tfc" }
+    ]
+  },
   "sections": {
     "mainService": {
       "title": "Nettoyage technique après chantier",

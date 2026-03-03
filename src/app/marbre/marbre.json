@@ -136,6 +136,52 @@
       "@id": "https://cciservices.online#localbusiness"
     }
   },
+  "faqJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quel est le prix du polissage marbre à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Les prix commencent généralement autour de 8 DT/m² selon l'état du marbre et le type d'intervention (ponçage, polissage, cristallisation). Pour un devis précis, contactez-nous pour une visite technique gratuite."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quelle méthode utilisez-vous pour restaurer le marbre ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nous utilisons des phases de ponçage progressive, puis polissage et éventuellement cristallisation ou traitement hydrofuge selon le besoin. Chaque surface est testée pour choisir les abrasifs et produits adaptés."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien de temps faut-il pour réutiliser une surface après polissage ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le temps de remise en service dépend du traitement ; en général la surface peut être utilisée le jour même après polissage léger, mais certains traitements (cristallisation ou protections) peuvent nécessiter 24 heures pour un durcissement optimal."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Pouvez-vous enlever les taches profondes et l'eau calcaire ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, la plupart des taches organiques, oxydation ou dépôts calcaires peuvent être traités par un diagnostic adapté, décapage mécanique et produits spécifiques. Certaines tâches très anciennes peuvent nécessiter des étapes répétées."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Le traitement endommage-t-il le marbre ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Non si le protocole est respecté : nous testons toujours la surface et utilisons des machines et abrasifs adaptés à la dureté et porosité du marbre pour éviter l'érosion excessive."
+        }
+      }
+    ]
+  },
   "sections": {
     "mainService": {
       "title": "Restauration et entretien de marbre - CCI Tunisie",

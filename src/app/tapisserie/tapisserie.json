@@ -111,6 +111,52 @@
       "@id": "https://cciservices.online#localbusiness"
     }
   },
+  "faqJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce que le retapissage et pourquoi le choisir ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le retapissage consiste à remplacer le revêtement et/ou la mousse d'un siège pour lui redonner confort et esthétique. C'est idéal pour restaurer un meuble ancien ou améliorer le confort sans changer la structure."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien de temps prend une intervention de tapisserie ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La durée dépend de la complexité : un fauteuil peut être retapissé en 2-5 jours, tandis que des banquettes ou suites complètes peuvent demander plus de temps. Nous fournissons un délai estimé lors du devis."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Proposez-vous des tissus ignifuges pour bateaux et hôtels ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nous proposons une large sélection de tissus certifiés M1 et hydrofuges spécialement conçus pour l'usage nautique et hôtellerie, assurant sécurité et durabilité."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Remplacez-vous la mousse et les suspensions ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nous remplaçons les mousses, sangles et suspensions si nécessaire, en choisissant des densités adaptées pour un confort et une longévité optimisés."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Faites-vous la prise de mesure et la collecte des pièces ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nous effectuons la prise de mesure sur place et pouvons organiser la collecte des pièces pour des travaux en atelier, ou travailler sur place selon la nature de l'intervention."
+        }
+      }
+    ]
+  },
   "sections": {
     "mainService": {
       "title": "Services de tapisserie",

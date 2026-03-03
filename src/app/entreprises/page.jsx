@@ -16,6 +16,7 @@ import ConventionForm from "./6-form/ConventionForm";
 import FaqEntreprises from "./7-faq/FaqEntreprises";
 import NodeNetwork from "./1-background/NodeNetwork";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
+import OtherServices from "@/utils/components/servicesComponents/otherServices/otherServices";
 
 export default function Page() {
   useScrollTracking('entreprises_page');
@@ -36,7 +37,7 @@ export default function Page() {
         `}</style>
       <HeroHeader title={entreprisesData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(entreprisesData.serviceJSONLD)}</script>
-      <div className="responsive-padding">
+      <main className="responsive-padding">
         <ServiceDetails
           title={entreprisesData.sections.mainService.title}
           text={entreprisesData.sections.mainService.text}
@@ -62,11 +63,13 @@ export default function Page() {
 
         <FaqEntreprises faqItems={entreprisesData.faq} />
 
+        <OtherServices currentSlug="entreprises" />
+
         <RelatedArticles 
           articles={entreprisesData.relatedArticles} 
           serviceName="Conventions Entreprises"
         />
-      </div>
+      </main>
     </>
   );
 }

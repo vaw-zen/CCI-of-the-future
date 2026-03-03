@@ -111,23 +111,20 @@
     "description": "CCI Tunisie - Nettoyage professionnel canapés, rideaux et textiles d'ameublement à Tunis. Détachage, désodorisation et protection des fibres. CCI Tunis : experts nettoyage textile.",
     "url": "https://cciservices.online/salon",
     "areaServed": [
-      {
-        "@type": "City",
-        "name": "Tunis"
-      },
-      {
-        "@type": "City",
-        "name": "Ariana"
-      },
-      {
-        "@type": "City",
-        "name": "El Aouina"
-      },
-      {
-        "@type": "City",
-        "name": "Ben Arous"
-      }
+      { "@type": "City", "name": "Tunis" },
+      { "@type": "City", "name": "Ariana" },
+      { "@type": "City", "name": "El Aouina" },
+      { "@type": "City", "name": "Ben Arous" },
+      { "@type": "City", "name": "La Marsa" },
+      { "@type": "City", "name": "Carthage" },
+      { "@type": "City", "name": "Manouba" }
     ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5"
+    },
     "provider": {
       "@id": "https://cciservices.online#localbusiness"
     }

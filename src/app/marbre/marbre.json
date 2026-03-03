@@ -115,23 +115,20 @@
     "description": "CCI Tunisie - Ponçage, polissage, cristallisation et protection marbre à Tunis. Services professionnels pour particuliers et entreprises. CCI Tunis : Expert restauration marbre.",
     "url": "https://cciservices.online/marbre",
     "areaServed": [
-      {
-        "@type": "City",
-        "name": "Tunis"
-      },
-      {
-        "@type": "City",
-        "name": "Ariana"
-      },
-      {
-        "@type": "City",
-        "name": "El Aouina"
-      },
-      {
-        "@type": "City",
-        "name": "Ben Arous"
-      }
+      { "@type": "City", "name": "Tunis" },
+      { "@type": "City", "name": "Ariana" },
+      { "@type": "City", "name": "El Aouina" },
+      { "@type": "City", "name": "Ben Arous" },
+      { "@type": "City", "name": "La Marsa" },
+      { "@type": "City", "name": "Carthage" },
+      { "@type": "City", "name": "Manouba" }
     ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5"
+    },
     "provider": {
       "@id": "https://cciservices.online#localbusiness"
     }

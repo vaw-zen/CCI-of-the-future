@@ -10,6 +10,7 @@ import ServiceList from "@/utils/components/servicesComponents/serviceList/servi
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 import LeadCTA from "@/utils/components/servicesComponents/leadCTA/leadCTA";
+import OtherServices from "@/utils/components/servicesComponents/otherServices/otherServices";
 import marbreData from "./marbre.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
@@ -48,7 +49,7 @@ export default function Page() {
       `}</style>
       <HeroHeader title={marbreData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(marbreData.serviceJSONLD)}</script>
-      <div className="responsive-padding">
+      <main className="responsive-padding">
         <ServiceDetails
           title={marbreData.sections.mainService.title}
           text={marbreData.sections.mainService.text}
@@ -79,11 +80,13 @@ export default function Page() {
           whatsappMessage="Bonjour, je souhaite un devis gratuit pour le polissage de marbre. Merci !"
         />
 
+        <OtherServices currentSlug="marbre" />
+
         <RelatedArticles 
           articles={marbreData.relatedArticles} 
           sectionTitle="Guides Restauration & Entretien Marbre"
         />
-      </div>
+      </main>
     </>
   );
 }

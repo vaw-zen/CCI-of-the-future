@@ -10,6 +10,7 @@ import ServiceList from '@/utils/components/servicesComponents/serviceList/servi
 import { ImageSlider } from '@/utils/components/imageSlider/imageSlider'
 import RelatedArticles from '@/utils/components/servicesComponents/relatedArticles/relatedArticles'
 import LeadCTA from '@/utils/components/servicesComponents/leadCTA/leadCTA'
+import OtherServices from '@/utils/components/servicesComponents/otherServices/otherServices'
 import tapisserieData from './tapisserie.json'
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
@@ -48,7 +49,7 @@ export default function Page() {
       `}</style>
       <HeroHeader title={tapisserieData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(tapisserieData.serviceJSONLD)}</script>
-      <div className="responsive-padding">
+      <main className="responsive-padding">
         <ServiceDetails
           title={tapisserieData.sections.mainService.title}
           text={tapisserieData.sections.mainService.text}
@@ -82,11 +83,13 @@ export default function Page() {
           whatsappMessage="Bonjour, je souhaite un devis gratuit pour la tapisserie. Merci !"
         />
 
+        <OtherServices currentSlug="tapisserie" />
+
         <RelatedArticles 
           articles={tapisserieData.relatedArticles} 
           sectionTitle="Guides Tapisserie & Retapissage"
         />
-      </div>
+      </main>
     </>
   )
 }

@@ -10,6 +10,7 @@ import ServiceList from "@/utils/components/servicesComponents/serviceList/servi
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 import LeadCTA from "@/utils/components/servicesComponents/leadCTA/leadCTA";
+import OtherServices from "@/utils/components/servicesComponents/otherServices/otherServices";
 import tapisData from "./tapis.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
@@ -51,8 +52,7 @@ export default function Page() {
       `}</style>
       <HeroHeader title={tapisData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(tapisData.serviceJSONLD)}</script>
-      <script type="application/ld+json">{JSON.stringify(tapisData.faqJSONLD)}</script>
-      <div className="responsive-padding">
+      <main className="responsive-padding">
         <ServiceDetails
           title={tapisData.sections.mainService.title}
           text={tapisData.sections.mainService.text}
@@ -88,11 +88,13 @@ export default function Page() {
           whatsappMessage="Bonjour, je souhaite un devis gratuit pour le nettoyage de mes tapis/moquettes. Merci !"
         />
 
+        <OtherServices currentSlug="tapis" />
+
         <RelatedArticles 
           articles={tapisData.relatedArticles} 
           sectionTitle="Guides Nettoyage Tapis & Moquettes"
         />
-      </div>
+      </main>
     </>
   );
 }

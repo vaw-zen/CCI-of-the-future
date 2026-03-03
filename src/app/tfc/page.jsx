@@ -10,6 +10,7 @@ import ServiceList from "@/utils/components/servicesComponents/serviceList/servi
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 import LeadCTA from "@/utils/components/servicesComponents/leadCTA/leadCTA";
+import OtherServices from "@/utils/components/servicesComponents/otherServices/otherServices";
 import tfcData from "./tfc.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
@@ -38,7 +39,7 @@ export default function Page() {
       `}</style>
       <HeroHeader title={tfcData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(tfcData.serviceJSONLD)}</script>
-      <div className="responsive-padding">
+      <main className="responsive-padding">
         <ServiceDetails
           title={tfcData.sections.mainService.title}
           text={tfcData.sections.mainService.text}
@@ -80,11 +81,13 @@ export default function Page() {
           whatsappMessage="Bonjour, je souhaite un devis gratuit pour un nettoyage fin de chantier. Merci !"
         />
 
+        <OtherServices currentSlug="tfc" />
+
         <RelatedArticles 
           articles={tfcData.relatedArticles} 
           sectionTitle="Guides Nettoyage Post-Chantier"
         />
-      </div>
+      </main>
     </>
   );
 }

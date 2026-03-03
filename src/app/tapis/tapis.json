@@ -121,19 +121,20 @@
     "description": "CCI Tunisie - Nettoyage professionnel de tapis et moquettes à Tunis par injection-extraction. Shampooing, détachage et désinfection avec méthodes adaptées. CCI Tunis : séchage rapide garanti.",
     "url": "https://cciservices.online/tapis",
     "areaServed": [
-      {
-        "@type": "City",
-        "name": "Tunis"
-      },
-      {
-        "@type": "City",
-        "name": "Ariana"
-      },
-      {
-        "@type": "City",
-        "name": "Ben Arous"
-      }
+      { "@type": "City", "name": "Tunis" },
+      { "@type": "City", "name": "Ariana" },
+      { "@type": "City", "name": "El Aouina" },
+      { "@type": "City", "name": "Ben Arous" },
+      { "@type": "City", "name": "La Marsa" },
+      { "@type": "City", "name": "Carthage" },
+      { "@type": "City", "name": "Manouba" }
     ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5"
+    },
     "provider": {
       "@id": "https://cciservices.online#localbusiness"
     }

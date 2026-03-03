@@ -4,11 +4,11 @@
     "faqs": [
         {
             "question": "Comment nettoyer efficacement un tapis en profondeur ?",
-            "answer": "Nous utilisons des machines injecteur-extracteur et des produits professionnels pour éliminer taches et saletés."
+            "answer": "Nous utilisons des machines injecteur-extracteur et des produits professionnels pour éliminer taches et saletés. Découvrez notre service complet sur la page nettoyage tapis."
         },
         {
             "question": "Faites-vous le nettoyage complet des salons et canapés ?",
-            "answer": "Oui, nous proposons un service complet pour tissus, cuirs et rembourrages."
+            "answer": "Oui, nous proposons un service complet pour tissus, cuirs et rembourrages. Consultez notre page nettoyage salon pour plus de détails."
         },
         {
             "question": "Proposez-vous le lavage intérieur de voitures ?",
@@ -20,27 +20,115 @@
         },
         {
             "question": "Pouvez-vous restaurer un marbre rayé ou terni ?",
-            "answer": "Nous effectuons ponçage, polissage et cristallisation pour redonner brillance et protection."
+            "answer": "Nous effectuons ponçage, polissage et cristallisation pour redonner brillance et protection. Voir notre page restauration marbre."
         },
         {
             "question": "Le nettoyage enlève-t-il les odeurs incrustées ?",
-            "answer": "Oui, nous utilisons des produits spécifiques contre les mauvaises odeurs et bactéries."
+            "answer": "Oui, nous utilisons des produits spécifiques contre les mauvaises odeurs et bactéries. Le procédé d'injection-extraction élimine en profondeur les résidus organiques responsables des odeurs."
         },
         {
             "question": "Quel est le délai pour un nettoyage de tapis ?",
-            "answer": "En moyenne 24 à 48h selon la taille et l’état du tapis."
+            "answer": "En moyenne 24 à 48h selon la taille et l'état du tapis. Nous proposons un service de ramassage et livraison à domicile dans tout le Grand Tunis."
         },
         {
             "question": "Intervenez-vous à domicile pour le nettoyage des canapés ?",
-            "answer": "Oui, nous nous déplaçons avec tout le matériel nécessaire."
+            "answer": "Oui, nous nous déplaçons avec tout le matériel nécessaire dans tout le Grand Tunis (Tunis, Ariana, El Aouina, La Marsa, Carthage, Ben Arous, Manouba)."
         },
         {
             "question": "Vos produits sont-ils sûrs pour les enfants et animaux ?",
-            "answer": "Oui, nous utilisons des produits certifiés non toxiques et respectueux de l’environnement."
+            "answer": "Oui, nous utilisons des produits certifiés non toxiques et respectueux de l'environnement, sans danger pour les enfants et les animaux de compagnie."
         },
         {
             "question": "Comment obtenir un devis rapide ?",
-            "answer": "Contactez-nous par téléphone ou via notre site, nous répondons sous 1h."
+            "answer": "Contactez-nous par téléphone au +216 98 557 766, par WhatsApp ou via notre formulaire de devis en ligne. Nous répondons sous 1h."
+        },
+        {
+            "question": "Quel est le prix du nettoyage d'un canapé à Tunis ?",
+            "answer": "Le tarif commence à 15 DT par place pour un nettoyage professionnel par injection-extraction. Le prix exact dépend du nombre de places, du tissu et de l'état du canapé. Demandez un devis gratuit."
+        },
+        {
+            "question": "Combien coûte le nettoyage d'un tapis ?",
+            "answer": "Le tarif dépend de la surface (m²), du type de tapis (laine, synthétique, soie) et de son état. Nous proposons des tarifs compétitifs avec devis gratuit personnalisé."
+        },
+        {
+            "question": "Quelle est la différence entre ponçage et polissage du marbre ?",
+            "answer": "Le ponçage élimine les rayures profondes et les imperfections à l'aide d'abrasifs diamantés. Le polissage affine la surface pour obtenir un aspect lisse et brillant. La cristallisation finale crée une couche protectrice durable."
+        },
+        {
+            "question": "Faites-vous la tapisserie de meubles anciens ?",
+            "answer": "Oui, CCI Services est spécialisé dans le retapissage de mobilier classique et contemporain : canapés, fauteuils, chaises, têtes de lit. Nous réalisons remplacement mousse, rembourrage et pose de tissu sur mesure."
+        },
+        {
+            "question": "Qu'est-ce que le nettoyage fin de chantier (TFC) ?",
+            "answer": "C'est un nettoyage technique complet réalisé après des travaux de construction ou rénovation : dépoussiérage industriel, élimination des gravats, lavage des sols et surfaces, nettoyage des vitres et mise en conformité pour livraison."
+        },
+        {
+            "question": "Proposez-vous des conventions de nettoyage pour entreprises ?",
+            "answer": "Oui, CCI Services propose des contrats annuels de nettoyage pour banques, assurances, cliniques, hôtels, bureaux et grandes surfaces. Chaque convention est précédée d'un audit gratuit. Voir notre page conventions entreprises."
+        },
+        {
+            "question": "Dans quelles villes intervenez-vous ?",
+            "answer": "Nous couvrons tout le Grand Tunis : Tunis, Ariana, El Aouina, La Marsa, Carthage, Ben Arous et Manouba. Pour les projets hors zone, contactez-nous pour étude de faisabilité."
+        },
+        {
+            "question": "Combien de temps dure le séchage après nettoyage du canapé ?",
+            "answer": "Le temps de séchage varie de 4 à 8 heures selon le tissu et la ventilation. Nous utilisons des techniques d'aspiration puissante qui réduisent considérablement la quantité d'eau résiduelle."
+        },
+        {
+            "question": "Le ponçage du marbre abîme-t-il la pierre ?",
+            "answer": "Non, le ponçage professionnel réalisé par CCI Services n'abîme pas le marbre. Au contraire, il élimine les couches endommagées pour révéler la beauté naturelle de la pierre."
+        },
+        {
+            "question": "Utilisez-vous des tissus ignifuges pour la tapisserie ?",
+            "answer": "Oui, nous disposons d'une gamme complète de tissus anti-feu classés M1, conformes aux normes internationales. C'est une exigence pour la tapisserie maritime et les espaces recevant du public."
+        },
+        {
+            "question": "Pouvez-vous nettoyer un tapis en soie ?",
+            "answer": "Oui, nous avons l'expertise pour traiter les tapis délicats en soie avec des produits et techniques adaptés. Un diagnostic préalable permet de déterminer la méthode la plus sûre."
+        },
+        {
+            "question": "Faites-vous le nettoyage de matelas ?",
+            "answer": "Oui, nous proposons le nettoyage professionnel de matelas par injection-extraction : élimination des acariens, des taches et des odeurs. Le matelas est utilisable le jour même après séchage."
+        },
+        {
+            "question": "Comment fonctionne le nettoyage par injection-extraction ?",
+            "answer": "Une solution nettoyante est injectée sous pression dans les fibres du tissu, puis immédiatement aspirée avec toutes les saletés dissoutes. C'est la méthode la plus efficace pour un nettoyage en profondeur sans excès d'humidité."
+        },
+        {
+            "question": "Quel entretien recommandez-vous après un polissage marbre ?",
+            "answer": "Après cristallisation, il faut éviter les produits acides (citron, vinaigre), utiliser un savon neutre et passer une serpillière légèrement humide. Un imperméabilisant prolonge la durée de vie du traitement. Nous recommandons un entretien professionnel tous les 12 à 18 mois."
+        },
+        {
+            "question": "Acceptez-vous les paiements en plusieurs fois ?",
+            "answer": "Pour les conventions entreprises et les projets d'envergure, nous proposons des facilités de paiement adaptées. Contactez-nous pour discuter de vos besoins."
+        },
+        {
+            "question": "Offrez-vous une garantie sur vos prestations ?",
+            "answer": "Oui, toutes nos prestations sont garanties satisfaction. Si le résultat ne correspond pas à nos engagements, nous repassons gratuitement. C'est notre engagement qualité."
+        },
+        {
+            "question": "Quel est le meilleur moment pour nettoyer un tapis ?",
+            "answer": "Nous recommandons un nettoyage professionnel au moins une fois par an, idéalement au printemps ou à l'automne. Pour les tapis très sollicités, un nettoyage semestriel est conseillé."
+        },
+        {
+            "question": "Comment enlever une tache de café sur un canapé en tissu ?",
+            "answer": "En urgence, tamponnez avec un chiffon humide sans frotter. Pour les taches anciennes, un nettoyage professionnel par injection-extraction est recommandé pour éviter d'abîmer les fibres. Contactez-nous pour une intervention rapide."
+        },
+        {
+            "question": "Nettoyez-vous les rideaux et voilages ?",
+            "answer": "Oui, nous nettoyons tous types de rideaux et voilages, y compris les tissus délicats. Nous pouvons intervenir sur place ou les traiter dans nos locaux selon le type de tissu."
+        },
+        {
+            "question": "Combien coûte un nettoyage après travaux pour un appartement ?",
+            "answer": "Le tarif dépend de la superficie et de l'état du chantier. Pour un appartement standard (S+2/S+3), comptez généralement 1 à 2 jours d'intervention. Nous établissons un devis gratuit après visite technique."
+        },
+        {
+            "question": "Faites-vous le nettoyage de moquettes de bureau ?",
+            "answer": "Oui, nous nettoyons les moquettes de bureaux, halls d'accueil et espaces commerciaux. Nos interventions peuvent se faire en dehors des heures de travail pour ne pas perturber votre activité."
+        },
+        {
+            "question": "Quelle est votre zone d'intervention principale ?",
+            "answer": "Notre siège est à El Aouina, Tunis. Nous intervenons dans tout le Grand Tunis : Tunis Centre, Ariana, La Marsa, Carthage, Ben Arous, Manouba et environs. Appelez le +216 98 557 766 pour confirmer votre secteur."
         }
     ]
 }

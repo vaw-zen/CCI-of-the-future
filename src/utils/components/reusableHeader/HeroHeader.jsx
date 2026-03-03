@@ -4,13 +4,13 @@ import styles from './HeroHeader.module.css'
 import { LineMdHomeTwotone } from '../icons'
 import Link from 'next/link'
 
-export default function HeroHeader({ title }) {
+export default function HeroHeader({ title, bgAlt }) {
   return (
     <div className={styles.heroContainer}>
       <div className={styles.backgroundImages}>
         <Image
           src="/contact/bg contact.jpg"
-          alt="Background"
+          alt={bgAlt || `${title} - CCI Services Tunisie`}
           fill
           style={{ objectFit: 'cover', objectPosition: 'left' }}
         />

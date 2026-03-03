@@ -87,19 +87,20 @@
     "description": "CCI Tunisie - Nettoyage technique fin de chantier à Tunis : dépoussiérage industriel, gravats, préparation livraison. CCI Tunis : Expert TFC post-chantier.",
     "url": "https://cciservices.online/tfc",
     "areaServed": [
-      {
-        "@type": "City",
-        "name": "Tunis"
-      },
-      {
-        "@type": "City",
-        "name": "Ariana"
-      },
-      {
-        "@type": "City",
-        "name": "Ben Arous"
-      }
+      { "@type": "City", "name": "Tunis" },
+      { "@type": "City", "name": "Ariana" },
+      { "@type": "City", "name": "El Aouina" },
+      { "@type": "City", "name": "Ben Arous" },
+      { "@type": "City", "name": "La Marsa" },
+      { "@type": "City", "name": "Carthage" },
+      { "@type": "City", "name": "Manouba" }
     ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5"
+    },
     "provider": {
       "@id": "https://cciservices.online#localbusiness"
     }
@@ -110,6 +111,60 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
       { "@type": "ListItem", "position": 2, "name": "Nettoyage Après Travaux (TFC)", "item": "https://cciservices.online/tfc" }
+    ]
+  },
+  "faqJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce que le nettoyage fin de chantier (TFC) ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le nettoyage fin de chantier (TFC) est une intervention professionnelle réalisée après des travaux de construction ou de rénovation. Il comprend le dépoussiérage industriel, l'élimination des gravats, le lavage des sols, vitres et surfaces, et la mise en conformité pour la réception du bâtiment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien coûte un nettoyage post-chantier à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le tarif dépend de la superficie, du type de travaux réalisés et de l'état des lieux. CCI Services propose un devis gratuit après visite technique. Contactez-nous au +216 98 557 766 pour une estimation personnalisée."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quels types de chantiers nettoyez-vous ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nous intervenons sur tous types de chantiers : appartements neufs, villas, immeubles résidentiels, locaux commerciaux, bureaux, hôtels et bâtiments industriels. Nos équipes sont formées pour le nettoyage technique post-travaux de toute envergure."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien de temps prend un nettoyage fin de chantier ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La durée dépend de la superficie et de l'état du chantier. En général, un appartement standard nécessite 1 à 2 jours. Pour les grands projets, nous établissons un planning détaillé lors de la visite technique préalable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Est-ce que CCI Services intervient dans tout le Grand Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nous intervenons dans tout le Grand Tunis : Tunis, Ariana, El Aouina, Ben Arous, La Marsa, Carthage et Manouba. Nos équipes se déplacent gratuitement pour l'évaluation de votre chantier."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quels produits utilisez-vous pour le nettoyage post-chantier ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nous utilisons des produits professionnels adaptés à chaque surface : décapants pour ciment et enduit, dégraissants industriels, nettoyants vitres professionnels et produits de finition pour sols. Tous nos produits respectent les normes environnementales en vigueur."
+        }
+      }
     ]
   },
   "sections": {

@@ -94,19 +94,20 @@
     "description": "CCI Tunisie - Retapissage, remplacement mousse, rembourrage et tissus ignifuges à Tunis. Solutions sur mesure mobiliers, bateaux et yachts. CCI Tunis : Expert tapisserie.",
     "url": "https://cciservices.online/tapisserie",
     "areaServed": [
-      {
-        "@type": "City",
-        "name": "Tunis"
-      },
-      {
-        "@type": "City",
-        "name": "Ariana"
-      },
-      {
-        "@type": "City",
-        "name": "Ben Arous"
-      }
+      { "@type": "City", "name": "Tunis" },
+      { "@type": "City", "name": "Ariana" },
+      { "@type": "City", "name": "El Aouina" },
+      { "@type": "City", "name": "Ben Arous" },
+      { "@type": "City", "name": "La Marsa" },
+      { "@type": "City", "name": "Carthage" },
+      { "@type": "City", "name": "Manouba" }
     ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5"
+    },
     "provider": {
       "@id": "https://cciservices.online#localbusiness"
     }

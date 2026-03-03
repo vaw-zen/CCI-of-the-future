@@ -77,15 +77,7 @@
       "title": "Bureaux & Espaces de Coworking",
       "icon": "🏢",
       "description": "Entretien régulier des open spaces, salles de réunion, sanitaires et cuisines communes. Flexibilité horaire et fréquences adaptées à votre rythme.",
-      "services": ["Nettoyage tapis & moquettes", "Nettoyage salon & mobilier", "Nettoyage des locaux"],
-      "breadcrumbJSONLD": {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
-          { "@type": "ListItem", "position": 2, "name": "Conventions Entreprises", "item": "https://cciservices.online/entreprises" }
-        ]
-      }
+      "services": ["Nettoyage tapis & moquettes", "Nettoyage salon & mobilier", "Nettoyage des locaux"]
     },
     {
       "id": "commerces",
@@ -268,9 +260,18 @@
     "areaServed": [
       { "@type": "City", "name": "Tunis" },
       { "@type": "City", "name": "Ariana" },
+      { "@type": "City", "name": "El Aouina" },
       { "@type": "City", "name": "Ben Arous" },
+      { "@type": "City", "name": "La Marsa" },
+      { "@type": "City", "name": "Carthage" },
       { "@type": "City", "name": "Manouba" }
     ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5"
+    },
     "provider": {"@id": "https://cciservices.online#localbusiness"},
     "offers": {
       "@type": "Offer",
@@ -281,6 +282,68 @@
         "description": "Tarification sur devis après audit gratuit"
       }
     }
+  },
+  "breadcrumbJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
+      { "@type": "ListItem", "position": 2, "name": "Conventions Entreprises", "item": "https://cciservices.online/entreprises" }
+    ]
+  },
+  "faqJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quels types de conventions de nettoyage proposez-vous aux entreprises ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CCI Services propose des conventions annuelles de nettoyage adaptées à chaque secteur : banques, assurances, cliniques, hôtels, bureaux et grandes surfaces. Chaque contrat est personnalisé après un audit gratuit de vos locaux."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Comment fonctionne l'audit gratuit avant signature du contrat ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Notre équipe se déplace gratuitement dans vos locaux pour évaluer les surfaces, les fréquences de passage nécessaires et les besoins spécifiques de votre activité. Nous vous remettons ensuite une proposition détaillée avec planning et tarifs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quelle est la durée minimale d'un contrat de nettoyage B2B ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nos conventions sont généralement annuelles avec tacite reconduction. Nous proposons également des contrats semestriels ou trimestriels selon vos besoins. La flexibilité est notre priorité."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Intervenez-vous en dehors des heures de bureau ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nous adaptons nos horaires d'intervention à votre activité. Pour les banques, commerces et cliniques, nous proposons des interventions nocturnes, tôt le matin ou le week-end, sans perturbation de votre fonctionnement."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quels sont les avantages d'une convention annuelle par rapport à des prestations ponctuelles ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Une convention annuelle offre des tarifs préférentiels, un interlocuteur dédié, des rapports qualité mensuels, une réactivité sous 24h pour les demandes exceptionnelles, et une continuité de service garantie. C'est la solution la plus économique pour un entretien professionnel régulier."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Dans quelles zones géographiques intervenez-vous pour les entreprises ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CCI Services intervient dans tout le Grand Tunis : Tunis, Ariana, El Aouina, Ben Arous, La Marsa, Carthage et Manouba. Pour les projets hors zone, contactez-nous pour une étude de faisabilité."
+        }
+      }
+    ]
   },
   "relatedArticles": [
     {

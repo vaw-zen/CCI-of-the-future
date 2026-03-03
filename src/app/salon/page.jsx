@@ -10,6 +10,7 @@ import ServiceList from "@/utils/components/servicesComponents/serviceList/servi
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
 import LeadCTA from "@/utils/components/servicesComponents/leadCTA/leadCTA";
+import OtherServices from "@/utils/components/servicesComponents/otherServices/otherServices";
 import salonData from "./salon.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
@@ -41,8 +42,7 @@ export default function Page() {
       `}</style>
       <HeroHeader title={salonData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(salonData.serviceJSONLD)}</script>
-      {salonData.faqJSONLD && <script type="application/ld+json">{JSON.stringify(salonData.faqJSONLD)}</script>}
-      <div className="responsive-padding">
+      <main className="responsive-padding">
         <ServiceDetails
           title={salonData.sections.mainService.title}
           text={salonData.sections.mainService.text}
@@ -84,11 +84,13 @@ export default function Page() {
           whatsappMessage="Bonjour, je souhaite un devis gratuit pour le nettoyage de mon salon/canapé. Merci !"
         />
 
+        <OtherServices currentSlug="salon" />
+
         <RelatedArticles 
           articles={salonData.relatedArticles} 
           sectionTitle="Guides Nettoyage & Entretien Salon"
         />
-      </div>
+      </main>
     </>
   );
 }

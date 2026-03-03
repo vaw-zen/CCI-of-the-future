@@ -85,7 +85,7 @@
           { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
           { "@type": "ListItem", "position": 2, "name": "Conventions Entreprises", "item": "https://cciservices.online/entreprises" }
         ]
-      },
+      }
     },
     {
       "id": "commerces",

@@ -263,22 +263,7 @@
       { "@type": "City", "name": "Ben Arous" },
       { "@type": "City", "name": "Manouba" }
     ],
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "CCI Tunisie",
-      "alternateName": "CCI Tunis",
-      "url": "https://cciservices.online/",
-      "telephone": "+216-98-557-766",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "06 Rue Galant de nuit, El Aouina",
-        "addressLocality": "Tunis",
-        "addressRegion": "Grand Tunis",
-        "postalCode": "2045",
-        "addressCountry": "Tunisia"
-      },
-      "logo": "https://cciservices.online/logo.png"
-    },
+    "provider": {"@id": "https://cciservices.online#localbusiness"},
     "offers": {
       "@type": "Offer",
       "availability": "https://schema.org/InStock",

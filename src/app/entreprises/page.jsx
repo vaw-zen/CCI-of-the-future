@@ -35,7 +35,6 @@ export default function Page() {
         @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
         `}</style>
       <HeroHeader title={entreprisesData.heroTitle} />
-      <script type="application/ld+json">{JSON.stringify(entreprisesData.localBusinessJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(entreprisesData.serviceJSONLD)}</script>
       <div className="responsive-padding">
         <ServiceDetails

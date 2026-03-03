@@ -47,7 +47,6 @@ export default function Page() {
         }
       `}</style>
       <HeroHeader title={tapisserieData.heroTitle} />
-      <script type="application/ld+json">{JSON.stringify(tapisserieData.localBusinessJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(tapisserieData.serviceJSONLD)}</script>
       <div className="responsive-padding">
         <ServiceDetails

@@ -82,19 +82,7 @@ export default function DevisPage() {
           "name": "Tunisie"
         }
       },
-      "provider": {
-        "@type": "LocalBusiness",
-        "name": "CCI Services",
-        "url": SITE_URL,
-        "telephone": "+216-98-557-766",
-        "priceRange": "$$",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "06 Rue Galant de nuit, El Aouina",
-          "addressLocality": "Tunis",
-          "addressCountry": "TN"
-        }
-      },
+      "provider": { "@id": `${SITE_URL}#localbusiness` },
       "offers": {
         "@type": "Offer",
         "price": "0",

@@ -168,23 +168,7 @@ export default async function ArticlePage({ params }) {
       "name": "CCI Services",
       "url": "https://cciservices.online"
     },
-    "publisher": {
-      "@type": "LocalBusiness",
-      "name": "CCI Services",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://cciservices.online/logo.png"
-      },
-      "telephone": "+216-98-557-766",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "06 Rue Galant de nuit",
-        "addressLocality": "L'Aouina",
-        "addressRegion": "Tunis",
-        "postalCode": "2045",
-        "addressCountry": "TN"
-      }
-    },
+    "publisher": { "@id": "https://cciservices.online#localbusiness" },
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `https://cciservices.online/conseils/${resolvedParams.slug}`
@@ -196,10 +180,7 @@ export default async function ArticlePage({ params }) {
       {
         "@type": "Service",
         "name": "Nettoyage Tapis et Moquettes",
-        "provider": {
-          "@type": "LocalBusiness",
-          "name": "CCI Services"
-        }
+        "provider": { "@id": "https://cciservices.online#localbusiness" }
       }
     ]
   };

@@ -40,7 +40,6 @@ export default function Page() {
         @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
       `}</style>
       <HeroHeader title={salonData.heroTitle} />
-      <script type="application/ld+json">{JSON.stringify(salonData.localBusinessJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(salonData.serviceJSONLD)}</script>
       {salonData.faqJSONLD && <script type="application/ld+json">{JSON.stringify(salonData.faqJSONLD)}</script>}
       <div className="responsive-padding">

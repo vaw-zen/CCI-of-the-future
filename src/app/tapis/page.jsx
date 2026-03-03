@@ -50,7 +50,6 @@ export default function Page() {
         }
       `}</style>
       <HeroHeader title={tapisData.heroTitle} />
-      <script type="application/ld+json">{JSON.stringify(tapisData.localBusinessJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(tapisData.serviceJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(tapisData.faqJSONLD)}</script>
       <div className="responsive-padding">

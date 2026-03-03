@@ -80,6 +80,7 @@ export default function RootLayout({ children }) {
 
   // LocalBusiness schema
   const localBusinessJSONLD = {
+    "@id": `${SITE_URL}#localbusiness`,
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
@@ -153,82 +154,69 @@ export default function RootLayout({ children }) {
 
         {/* Google Site Verification now handled via metadata.verification */}
 
-        {/* Google Analytics - G-0RDH6DH7TS */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RDH6DH7TS"></script>
-        <script 
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              
-              // Configure Google Analytics with UTM tracking
-              gtag('config', 'G-0RDH6DH7TS', {
-                page_title: document.title,
-                page_location: window.location.href,
-                send_page_view: true,
-                // Enable automatic UTM parameter collection
-                campaign_source: new URLSearchParams(window.location.search).get('utm_source'),
-                campaign_medium: new URLSearchParams(window.location.search).get('utm_medium'),
-                campaign_name: new URLSearchParams(window.location.search).get('utm_campaign'),
-                campaign_content: new URLSearchParams(window.location.search).get('utm_content'),
-                campaign_term: new URLSearchParams(window.location.search).get('utm_term')
-              });
-              
-              // Configure Google Ads with UTM tracking
-              gtag('config', 'AW-17696563349', {
-                campaign_source: new URLSearchParams(window.location.search).get('utm_source'),
-                campaign_medium: new URLSearchParams(window.location.search).get('utm_medium'),
-                campaign_name: new URLSearchParams(window.location.search).get('utm_campaign')
-              });
-              
-              // Log UTM parameters for debugging
-              const urlParams = new URLSearchParams(window.location.search);
-              if (urlParams.get('utm_source')) {
-                console.log('UTM Parameters detected:', {
-                  source: urlParams.get('utm_source'),
-                  medium: urlParams.get('utm_medium'),
-                  campaign: urlParams.get('utm_campaign'),
-                  content: urlParams.get('utm_content'),
-                  term: urlParams.get('utm_term')
-                });
-                
-                // Send custom event to track UTM arrival
-                gtag('event', 'utm_arrival', {
-                  event_category: 'traffic_source',
-                  utm_source: urlParams.get('utm_source'),
-                  utm_medium: urlParams.get('utm_medium'),
-                  utm_campaign: urlParams.get('utm_campaign'),
-                  utm_content: urlParams.get('utm_content'),
-                  utm_term: urlParams.get('utm_term'),
-                  page_location: window.location.href
-                });
-              }
-            `
-          }}
-        />
+        {/* Google Analytics - non-blocking via Next.js Script */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-0RDH6DH7TS" strategy="afterInteractive" />
+        <Script id="gtag-init" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
 
-        {/* Google Ads Conversion Tracking */}
-        <script 
-          dangerouslySetInnerHTML={{
-            __html: `
-              function gtag_report_conversion(url) {
-                var callback = function () {
-                  if (typeof(url) != 'undefined') {
-                    window.location = url;
-                  }
-                };
-                gtag('event', 'conversion', {
-                  'send_to': 'AW-17696563349/oZpbCJfSzrgbEJXBsPZB',
-                  'value': 1.0,
-                  'currency': 'USD',
-                  'event_callback': callback
-                });
-                return false;
+          gtag('config', 'G-0RDH6DH7TS', {
+            page_title: document.title,
+            page_location: window.location.href,
+            send_page_view: true,
+            campaign_source: new URLSearchParams(window.location.search).get('utm_source'),
+            campaign_medium: new URLSearchParams(window.location.search).get('utm_medium'),
+            campaign_name: new URLSearchParams(window.location.search).get('utm_campaign'),
+            campaign_content: new URLSearchParams(window.location.search).get('utm_content'),
+            campaign_term: new URLSearchParams(window.location.search).get('utm_term')
+          });
+
+          gtag('config', 'AW-17696563349', {
+            campaign_source: new URLSearchParams(window.location.search).get('utm_source'),
+            campaign_medium: new URLSearchParams(window.location.search).get('utm_medium'),
+            campaign_name: new URLSearchParams(window.location.search).get('utm_campaign')
+          });
+
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get('utm_source')) {
+            try{console.log('UTM Parameters detected:', {
+              source: urlParams.get('utm_source'),
+              medium: urlParams.get('utm_medium'),
+              campaign: urlParams.get('utm_campaign'),
+              content: urlParams.get('utm_content'),
+              term: urlParams.get('utm_term')
+            });}catch(e){}
+
+            gtag('event', 'utm_arrival', {
+              event_category: 'traffic_source',
+              utm_source: urlParams.get('utm_source'),
+              utm_medium: urlParams.get('utm_medium'),
+              utm_campaign: urlParams.get('utm_campaign'),
+              utm_content: urlParams.get('utm_content'),
+              utm_term: urlParams.get('utm_term'),
+              page_location: window.location.href
+            });
+          }
+        ` }} />
+
+        {/* Google Ads Conversion Tracking (non-blocking) */}
+        <Script id="gtag-conversion" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: `
+          function gtag_report_conversion(url) {
+            var callback = function () {
+              if (typeof(url) != 'undefined') {
+                window.location = url;
               }
-            `
-          }}
-        />
+            };
+            gtag('event', 'conversion', {
+              'send_to': 'AW-17696563349/oZpbCJfSzrgbEJXBsPZB',
+              'value': 1.0,
+              'currency': 'USD',
+              'event_callback': callback
+            });
+            return false;
+          }
+        ` }} />
 
         {/* JSON-LD site-wide */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />

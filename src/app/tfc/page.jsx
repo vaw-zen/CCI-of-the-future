@@ -37,7 +37,6 @@ export default function Page() {
         @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
       `}</style>
       <HeroHeader title={tfcData.heroTitle} />
-      <script type="application/ld+json">{JSON.stringify(tfcData.localBusinessJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(tfcData.serviceJSONLD)}</script>
       <div className="responsive-padding">
         <ServiceDetails

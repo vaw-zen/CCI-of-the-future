@@ -1,30 +1,32 @@
 import marbreData from "./marbre.json";
 
 export async function generateMetadata() {
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  const metadataBase = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online');
+
+  const canonical = new URL('/marbre', metadataBase).toString();
+  const ogImage = marbreData.images && marbreData.images.length ? new URL(marbreData.images[0].src, metadataBase).toString() : null;
 
   return {
     title: marbreData.metadata.title,
     description: marbreData.metadata.description,
     keywords: marbreData.metadata.keywords,
     alternates: {
-      canonical: `${SITE_URL}/marbre`
+      canonical
     },
     openGraph: {
       title: marbreData.metadata.title,
       description: marbreData.metadata.description,
-      url: `${SITE_URL}/marbre`,
-      type: 'website'
-      ,
+      url: canonical,
+      type: 'website',
       locale: 'fr_TN',
       siteName: 'CCI Services',
-      images: marbreData.images && marbreData.images.length ? [{ url: `${SITE_URL}${marbreData.images[0].src}`, alt: marbreData.images[0].title }] : []
+      images: ogImage ? [{ url: ogImage, alt: marbreData.images[0].title }] : []
     },
     twitter: {
       title: marbreData.metadata.title,
       description: marbreData.metadata.description,
       card: 'summary_large_image',
-      images: marbreData.images && marbreData.images.length ? [`${SITE_URL}${marbreData.images[0].src}`] : []
+      images: ogImage ? [ogImage] : []
     }
   };
 }

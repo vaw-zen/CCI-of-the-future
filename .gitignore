@@ -78,3 +78,6 @@ scripts/fix-seo-issues.cjs
 # Private Dashboard - Admin access only
 src/app/public-dashboard/
 src/app/api/devis/
+
+# Local plans directory (not for source control)
+plans/

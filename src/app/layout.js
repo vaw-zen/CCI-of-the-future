@@ -126,7 +126,7 @@ export default function RootLayout({ children }) {
   const FB_APP_ID = process.env.FB_APP_ID || '';
   const FB_API_VERSION = process.env.FB_API_VERSION || 'v17.0';
   return (
-    <html lang="fr" className={dmSans.className} suppressHydrationWarning>
+    <html lang="fr-TN" className={dmSans.className} suppressHydrationWarning>
       <head>
         <HydrationSuppressor />
         {/* Resource hints for faster loading */}
@@ -145,6 +145,10 @@ export default function RootLayout({ children }) {
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
 <link rel="manifest" href="/site.webmanifest" />
+
+  {/* hreflang for French Tunisian audience */}
+  <link rel="alternate" href={SITE_URL} hrefLang="fr-TN" />
+  <link rel="alternate" href={SITE_URL} hrefLang="x-default" />
 
 {/* Theme & Status Bar */}
 <meta name="theme-color" content="rgba(203, 251, 66, 1)" />

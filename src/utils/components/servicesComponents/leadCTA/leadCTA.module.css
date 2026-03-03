@@ -1,0 +1,233 @@
+/* ── Lead Generation CTA Block ── */
+.ctaSection {
+  margin: 3vw auto;
+  padding: 3vw 4vw;
+  max-width: 60vw;
+  background: linear-gradient(135deg, rgba(203, 251, 66, 0.08) 0%, rgba(203, 251, 66, 0.03) 100%);
+  border: 1px solid rgba(203, 251, 66, 0.2);
+  border-radius: 1.5vw;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaSection::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(203, 251, 66, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.ctaTitle {
+  font-size: 1.8vw;
+  font-weight: 800;
+  margin-bottom: 0.5vw;
+  color: var(--t-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ctaHighlight {
+  color: var(--ac-primary);
+}
+
+.ctaSubtitle {
+  font-size: 0.95vw;
+  color: var(--t-secondary);
+  margin-bottom: 2vw;
+  max-width: 35vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaPricing {
+  font-size: 1.1vw;
+  color: var(--ac-primary);
+  font-weight: 700;
+  margin-bottom: 2vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vw;
+}
+
+.ctaPricing span {
+  font-size: 1.6vw;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2vw;
+  flex-wrap: wrap;
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5vw;
+  padding: 0.85vw 2vw;
+  border-radius: 50vw;
+  font-size: 0.85vw;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.ctaBtnWhatsapp {
+  background: var(--ac-primary);
+  color: var(--bg-base);
+  border-color: var(--ac-primary);
+}
+.ctaBtnWhatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(203, 251, 66, 0.3);
+}
+
+.ctaBtnDevis {
+  background: var(--ac-primary);
+  color: var(--bg-base);
+  border-color: var(--ac-primary);
+}
+.ctaBtnDevis:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(203, 251, 66, 0.3);
+}
+
+.ctaBtnPhone {
+  background: transparent;
+  color: var(--t-primary);
+  border: 1px solid var(--t-primary);
+}
+.ctaBtnPhone:hover {
+  background: var(--t-primary);
+  color: var(--bg-base);
+  transform: translateY(-2px);
+}
+
+.ctaBtnIcon {
+  width: 1.2vw;
+  height: 1.2vw;
+  flex-shrink: 0;
+}
+
+.ctaTrust {
+  margin-top: 1.5vw;
+  font-size: 0.75vw;
+  color: var(--t-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5vw;
+}
+
+.ctaTrustItem {
+  display: flex;
+  align-items: center;
+  gap: 0.3vw;
+}
+
+.ctaTrustItem svg {
+  width: 0.9vw;
+  height: 0.9vw;
+  color: var(--ac-primary);
+}
+
+/* ── Sticky Mobile CTA Bar ── */
+.stickyBar {
+  display: none;
+}
+
+/* ── Tablet ── */
+@media (max-width: 1024px) {
+  .ctaSection {
+    max-width: 85vw;
+    padding: 5vw 5vw;
+    border-radius: 3vw;
+    margin: 5vw auto;
+  }
+  .ctaTitle { font-size: 3.2vw; }
+  .ctaSubtitle { font-size: 1.8vw; max-width: 65vw; margin-bottom: 3vw; }
+  .ctaPricing { font-size: 2vw; margin-bottom: 3vw; }
+  .ctaPricing span { font-size: 2.8vw; }
+  .ctaBtn { padding: 1.5vw 3.5vw; font-size: 1.6vw; gap: 0.8vw; }
+  .ctaBtnIcon { width: 2.2vw; height: 2.2vw; }
+  .ctaButtons { gap: 2vw; }
+  .ctaTrust { font-size: 1.4vw; margin-top: 2.5vw; gap: 2vw; }
+  .ctaTrustItem svg { width: 1.6vw; height: 1.6vw; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .ctaSection {
+    max-width: 92vw;
+    padding: 7vw 5vw;
+    border-radius: 5vw;
+    margin: 8vw auto;
+  }
+  .ctaTitle { font-size: 5vw; margin-bottom: 1.5vw; }
+  .ctaSubtitle { font-size: 3.5vw; max-width: 80vw; margin-bottom: 5vw; }
+  .ctaPricing { font-size: 3.8vw; margin-bottom: 5vw; }
+  .ctaPricing span { font-size: 5.5vw; }
+  .ctaButtons { flex-direction: column; gap: 3vw; width: 100%; }
+  .ctaBtn { padding: 3.5vw 6vw; font-size: 3.5vw; width: 100%; justify-content: center; gap: 2vw; border-radius: 8vw; }
+  .ctaBtnIcon { width: 4.5vw; height: 4.5vw; }
+  .ctaTrust { flex-direction: column; font-size: 2.8vw; margin-top: 4vw; gap: 1.5vw; }
+  .ctaTrustItem svg { width: 3vw; height: 3vw; }
+
+  /* Sticky bottom bar on mobile */
+  .stickyBar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    background: rgba(20, 20, 22, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 3vw 4vw;
+    gap: 3vw;
+    border-top: 1px solid rgba(203, 251, 66, 0.2);
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4);
+  }
+  .stickyBar a {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+    padding: 2.5vw 0;
+    border-radius: 6vw;
+    font-size: 3.2vw;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .stickyBar a:first-child {
+    background: var(--ac-primary);
+    color: var(--bg-base);
+  }
+  .stickyBar a:nth-child(2) {
+    background: var(--ac-primary);
+    color: var(--bg-base);
+  }
+  .stickyBar a:last-child {
+    background: transparent;
+    border: 1px solid var(--t-primary);
+    color: var(--t-primary);
+    flex: 0.6;
+  }
+  .stickyBar svg {
+    width: 4vw;
+    height: 4vw;
+  }
+}

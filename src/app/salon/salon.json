@@ -150,6 +150,60 @@
       "logo": "https://cciservices.online/logo.png"
     }
   },
+  "faqJSONLD": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Combien coûte le nettoyage de salon à Tunis ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le nettoyage de salon chez CCI Tunisie commence à partir de 15 DT par place. Le tarif dépend du nombre de places, du type de tissu et du niveau d'encrassement. Contactez-nous au +216 98 557 766 pour un devis gratuit et personnalisé."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "CCI Tunisie intervient-elle à domicile pour le nettoyage de canapé ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, CCI Tunisie se déplace à domicile dans tout le Grand Tunis (Tunis, El Aouina, Ariana, La Marsa, Carthage, Ben Arous, Manouba). Nos techniciens réalisent un diagnostic gratuit sur place avant toute intervention."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quelle méthode CCI utilise pour nettoyer les canapés ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CCI Tunisie utilise principalement la méthode injection-extraction professionnelle, complétée selon le tissu par la vapeur basse pression ou la mousse sèche (encapsulation). Chaque textile est diagnostiqué individuellement : test de solidité des couleurs, identification de la fibre, puis traitement adapté."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Combien de temps faut-il pour que le salon sèche après le nettoyage ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le temps de séchage varie de 2 à 6 heures selon la ventilation, la densité du rembourrage et la méthode utilisée. Avec notre technique d'extraction haute performance, nous récupérons plus de 90% de l'humidité injectée pour un séchage rapide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "CCI nettoie-t-elle les canapés en cuir ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, CCI Tunisie traite tous les types de revêtements : cuir pigmenté, simili, microfibre, velours, lin, coton mixte. Chaque matière bénéficie d'un protocole spécifique avec des produits à pH contrôlé pour préserver les fibres."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "CCI propose-t-elle un traitement anti-acariens pour les salons ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nous proposons un traitement anti-acariens et désinfectant professionnel en complément du nettoyage. Particulièrement recommandé pour les familles avec enfants ou personnes allergiques."
+        }
+      }
+    ]
+  },
   "sections": {
     "mainService": {
       "title": "Nettoyage canapé et tissus d'ameublement",
@@ -175,7 +229,7 @@
     "items": [
       {
         "id": "1",
-        "text": "Nettoyage canapé et tissue d'ameublement",
+        "text": "Nettoyage canapé et tissu d'ameublement",
         "icon": "/icons/polisher.png"
       },
       {
@@ -195,7 +249,7 @@
       },
       {
         "id": "5",
-        "text": "Nettoayeg siéges cinéma",
+        "text": "Nettoyage sièges cinéma",
         "icon": "/icons/shield.png"
       },
       {

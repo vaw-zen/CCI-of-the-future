@@ -22,6 +22,9 @@
 
 .stickyBottom { position: fixed; bottom: 2vw; right: 2vw; z-index: 99; display: flex; align-items: center; gap: 0.5vw; }
 .stickyBottom button { width: 2.5vw; height: 2.5vw; background: var(--ac-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.whatsappButton { width: 2.5vw; height: 2.5vw; min-width: 2.5vw; min-height: 2.5vw; max-width: 2.5vw; max-height: 2.5vw; background: var(--ac-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.15); overflow: hidden; flex-shrink: 0; text-decoration: none; line-height: 0; }
+.whatsappButton:hover { transform: scale(1.1); box-shadow: 0 4px 15px rgba(203, 251, 66, 0.4); }
+.whatsappButton svg { color: var(--bg-base); width: 60%; height: 60%; max-width: 60%; max-height: 60%; flex-shrink: 0; }
 .topButton { width: 0 !important; height: 0 !important; overflow: hidden; opacity: 0.8; }
 .topButton:hover { opacity: 1; transform: scale(1.1) rotate(-45deg) !important; }
 .stickyBottom button svg { color: var(--bg-base); width: 70%; height: 70%; }
@@ -135,6 +138,7 @@
     .stickyBottom { bottom: 3.13vw; right: 3.13vw; gap: 1vw; }
     .topButton { width: 0 !important; height: 0 !important; overflow: hidden; }
     .topButton.active { width: 6vw !important; height: 6vw !important; overflow: visible; }
+    .whatsappButton { width: 6vw !important; height: 6vw !important; min-width: 6vw; min-height: 6vw; max-width: 6vw !important; max-height: 6vw !important; }
     .chatButton { 
       width: 6vw !important; 
       height: 6vw !important; 
@@ -162,6 +166,7 @@
     .stickyBottom { bottom: 7.77vw; right: 7.77vw; gap: 2vw; }
     .topButton { width: 0 !important; height: 0 !important; overflow: hidden; }
     .topButton.active { width: 10vw !important; height: 10vw !important; overflow: visible; }
+    .whatsappButton { width: 10vw !important; height: 10vw !important; min-width: 10vw; min-height: 10vw; max-width: 10vw !important; max-height: 10vw !important; }
     .chatButton { 
       width: 10vw !important; 
       height: 10vw !important; 

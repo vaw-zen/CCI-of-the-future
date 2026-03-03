@@ -9,6 +9,7 @@ import AboutUsTab from '@/utils/components/servicesComponents/aboutUsTab/AboutUs
 import ServiceList from '@/utils/components/servicesComponents/serviceList/serviceList'
 import { ImageSlider } from '@/utils/components/imageSlider/imageSlider'
 import RelatedArticles from '@/utils/components/servicesComponents/relatedArticles/relatedArticles'
+import LeadCTA from '@/utils/components/servicesComponents/leadCTA/leadCTA'
 import tapisserieData from './tapisserie.json'
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
@@ -74,6 +75,14 @@ export default function Page() {
           items={tapisserieData.serviceList.items}
         />
         <ImageSlider images={tapisserieData.images} />
+
+        <LeadCTA
+          serviceName="Tapisserie"
+          serviceType="tapisserie"
+          pricing=""
+          whatsappMessage="Bonjour, je souhaite un devis gratuit pour la tapisserie. Merci !"
+        />
+
         <RelatedArticles 
           articles={tapisserieData.relatedArticles} 
           sectionTitle="Guides Tapisserie & Retapissage"

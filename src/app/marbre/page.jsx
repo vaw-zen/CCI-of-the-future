@@ -9,6 +9,7 @@ import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUs
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
+import LeadCTA from "@/utils/components/servicesComponents/leadCTA/leadCTA";
 import marbreData from "./marbre.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
@@ -71,6 +72,14 @@ export default function Page() {
           image={marbreData.serviceList.image}
         />
         <ImageSlider images={marbreData.images} />
+
+        <LeadCTA
+          serviceName="Polissage Marbre"
+          serviceType="marbre"
+          pricing="12 DT/m²"
+          whatsappMessage="Bonjour, je souhaite un devis gratuit pour le polissage de marbre. Merci !"
+        />
+
         <RelatedArticles 
           articles={marbreData.relatedArticles} 
           sectionTitle="Guides Restauration & Entretien Marbre"

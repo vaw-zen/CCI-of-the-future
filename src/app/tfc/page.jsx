@@ -9,6 +9,7 @@ import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUs
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
+import LeadCTA from "@/utils/components/servicesComponents/leadCTA/leadCTA";
 import tfcData from "./tfc.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
@@ -72,7 +73,14 @@ export default function Page() {
         />
 
         <ImageSlider images={tfcData.images} />
-        
+
+        <LeadCTA
+          serviceName="Nettoyage Fin de Chantier"
+          serviceType="tfc"
+          pricing="10 DT/m²"
+          whatsappMessage="Bonjour, je souhaite un devis gratuit pour un nettoyage fin de chantier. Merci !"
+        />
+
         <RelatedArticles 
           articles={tfcData.relatedArticles} 
           sectionTitle="Guides Nettoyage Post-Chantier"

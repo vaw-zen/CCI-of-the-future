@@ -9,10 +9,12 @@ import AboutUsTab from "@/utils/components/servicesComponents/aboutUsTab/AboutUs
 import ServiceList from "@/utils/components/servicesComponents/serviceList/serviceList";
 import { ImageSlider } from "@/utils/components/imageSlider/imageSlider";
 import RelatedArticles from "@/utils/components/servicesComponents/relatedArticles/relatedArticles";
+import LeadCTA from "@/utils/components/servicesComponents/leadCTA/leadCTA";
 import salonData from "./salon.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
 import { trackServiceInteraction, SERVICE_TYPES } from '@/utils/analytics';
+import { trackViewContent } from '@/utils/facebook-pixel-helper';
 
 // Metadata is now in layout.jsx (server component) - this page is client for analytics
 
@@ -26,6 +28,8 @@ export default function Page() {
     trackServiceInteraction(SERVICE_TYPES.SALON, 'page_view', {
       page_title: salonData.metadata.title
     });
+    // Facebook Pixel ViewContent for retargeting
+    trackViewContent('service_page', 'Nettoyage Salon', 'salon');
   }, []);
 
   return (
@@ -38,6 +42,7 @@ export default function Page() {
       <HeroHeader title={salonData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(salonData.localBusinessJSONLD)}</script>
       <script type="application/ld+json">{JSON.stringify(salonData.serviceJSONLD)}</script>
+      {salonData.faqJSONLD && <script type="application/ld+json">{JSON.stringify(salonData.faqJSONLD)}</script>}
       <div className="responsive-padding">
         <ServiceDetails
           title={salonData.sections.mainService.title}
@@ -72,7 +77,14 @@ export default function Page() {
         />
 
         <ImageSlider images={salonData.images} />
-        
+
+        <LeadCTA
+          serviceName="Nettoyage Salon"
+          serviceType="salon"
+          pricing="15 DT/place"
+          whatsappMessage="Bonjour, je souhaite un devis gratuit pour le nettoyage de mon salon/canapé. Merci !"
+        />
+
         <RelatedArticles 
           articles={salonData.relatedArticles} 
           sectionTitle="Guides Nettoyage & Entretien Salon"

@@ -59,7 +59,7 @@ export default function Page() {
         />
 
         <ConventionForm />
-        <NodeNetwork />
+        {/* <NodeNetwork /> */}
 
         <FaqEntreprises faqItems={entreprisesData.faq} />
 

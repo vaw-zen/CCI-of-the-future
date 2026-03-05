@@ -129,6 +129,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
                                 <div className={styles.pageLinks}>
                                     <Link href='/contact'>Contact</Link>
                                     <Link href='/blogs'>Nouveauté</Link>
+                                    
                                 </div>
                                 <form className={styles.newsletterForm} onSubmit={handleNewsletterSubmit}>
                                     <label>Restez à jour</label>

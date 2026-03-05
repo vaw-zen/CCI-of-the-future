@@ -11,8 +11,24 @@
                 "link": "/about"
             },
             {
+                "name": "notre equipe",
+                "link": "/team"
+            },
+            {
                 "name": "services",
                 "link": "/services"
+            },
+            {
+                "name": "astuces",
+                "link": "/conseils"
+            },
+            {
+                "name": "blog",
+                "link": "/blogs"
+            },
+            {
+                "name": "FAQ",
+                "link": "/faq"
             },
             {
                 "name": "simulateur de devis",
@@ -21,16 +37,9 @@
             {
                 "name": "contact",
                 "link": "/contact"
-            },
-            {
-                "name": "notre equipe",
-                "link": "/team"
-            },
-            {
-                "name": "FAQ",
-                "link": "/faq"
             }
         ]
+        
     },
     {
         "name": "entreprises",
@@ -62,14 +71,7 @@
                
         ]
     },
-    {
-        "name": "astuces",
-        "link": "/conseils"
-    },
-    {
-        "name": "blog",
-        "link": "/blogs"
-    },
+  
     {
         "name": "contact",
         "link": "/contact"

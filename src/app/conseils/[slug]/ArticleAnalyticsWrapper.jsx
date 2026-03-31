@@ -9,7 +9,7 @@ import { trackArticleReadProgress, trackArticleComplete } from '@/utils/analytic
  * Client-side wrapper for article pages to track reading engagement
  */
 export default function ArticleAnalyticsWrapper({ children, articleTitle }) {
-  const startTime = useRef(Date.now());
+  const startTime = useRef(0);
   const trackedMilestones = useRef(new Set());
   
   // Track scroll and time
@@ -17,6 +17,9 @@ export default function ArticleAnalyticsWrapper({ children, articleTitle }) {
   useTimeTracking(`article_${articleTitle}`);
 
   useEffect(() => {
+    startTime.current = Date.now();
+    trackedMilestones.current.clear();
+
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;

@@ -43,7 +43,7 @@ export default function DevisIntro() {
           <div className={styles.notice}>
             <p>
               <strong>Important :</strong> Les prix affichés sont indicatifs. 
-              Le montant final dépend de l'état initial constaté lors de notre visite gratuite.
+              Le montant final dépend de l&apos;état initial constaté lors de notre visite gratuite.
             </p>
           </div>
         </div>

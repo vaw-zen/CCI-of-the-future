@@ -1,16 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { getAllArticles, getArticlesByCategory } from '../../data/articles.js';
 import { dimensionsStore } from '@/utils/store/store';
 
 export function useConseilsLogic() {
+  const pathname = usePathname();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
-
-  const [activeFilter, setActiveFilter] = useState(categoryParam || 'all');
-  const [filteredArticles, setFilteredArticles] = useState([]);
-  const [featuredArticles, setFeaturedArticles] = useState([]);
-  const [isClient, setIsClient] = useState(false);
+  const activeFilter = categoryParam || 'all';
 
   const isMobile = dimensionsStore((state) => state.isMobile());
 
@@ -33,15 +31,9 @@ export function useConseilsLogic() {
     { key: 'tapisserie', label: '🛋️ Nettoyage Tapisserie', category: 'tapisserie' }
   ];
 
-  // Always use desktop filters during SSR to prevent hydration mismatch
-  const filters = isClient && isMobile ? mobileFilters : desktopFilters;
+  const filters = isMobile ? mobileFilters : desktopFilters;
 
-  // Set client flag after hydration
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
+  const { featuredArticles, filteredArticles } = useMemo(() => {
     const allArticles = getAllArticles();
 
     if (activeFilter === 'all') {
@@ -49,35 +41,33 @@ export function useConseilsLogic() {
       const latestTwoFeatured = sortedArticles.slice(0, 2);
       const remainingArticles = sortedArticles.slice(2);
 
-      setFeaturedArticles(latestTwoFeatured);
-      setFilteredArticles(remainingArticles);
-    } else {
-      const categoryArticles = getArticlesByCategory(activeFilter);
-      const sortedCategoryArticles = [...categoryArticles].sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
-      const featuredFromCategory = sortedCategoryArticles.slice(0, Math.min(2, sortedCategoryArticles.length));
-      const remainingFromCategory = sortedCategoryArticles.slice(featuredFromCategory.length);
-
-      setFeaturedArticles(featuredFromCategory);
-      setFilteredArticles(remainingFromCategory);
+      return {
+        featuredArticles: latestTwoFeatured,
+        filteredArticles: remainingArticles
+      };
     }
+
+    const categoryArticles = getArticlesByCategory(activeFilter);
+    const sortedCategoryArticles = [...categoryArticles].sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+    const featuredFromCategory = sortedCategoryArticles.slice(0, Math.min(2, sortedCategoryArticles.length));
+    const remainingFromCategory = sortedCategoryArticles.slice(featuredFromCategory.length);
+
+    return {
+      featuredArticles: featuredFromCategory,
+      filteredArticles: remainingFromCategory
+    };
   }, [activeFilter]);
 
-  useEffect(() => {
-    if (categoryParam) {
-      setActiveFilter(categoryParam);
-    }
-  }, [categoryParam]);
-
   const handleFilterClick = (filterKey) => {
-    setActiveFilter(filterKey);
-
-    const url = new URL(window.location);
+    const params = new URLSearchParams(searchParams.toString());
     if (filterKey === 'all') {
-      url.searchParams.delete('category');
+      params.delete('category');
     } else {
-      url.searchParams.set('category', filterKey);
+      params.set('category', filterKey);
     }
-    window.history.pushState({}, '', url);
+
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 
   return {
@@ -85,7 +75,6 @@ export function useConseilsLogic() {
     filteredArticles,
     featuredArticles,
     filters,
-    handleFilterClick,
-    isClient
+    handleFilterClick
   };
 }

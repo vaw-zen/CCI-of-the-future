@@ -36,7 +36,7 @@ function ConfirmationContent() {
         <h1 className={styles.title}>{current.title}</h1>
         <p className={styles.message}>{current.message}</p>
         <Link href="/" className={styles.homeLink}>
-          Retour à l'accueil
+          Retour à l&apos;accueil
         </Link>
       </div>
     </div>

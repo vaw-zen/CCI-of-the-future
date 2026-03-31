@@ -16,7 +16,7 @@ export default function NotFound() {
       <h1 style={{ fontSize: '48px', margin: '0 0 20px 0' }}>404</h1>
       <h2 style={{ fontSize: '24px', margin: '0 0 20px 0' }}>Reel non trouvé</h2>
       <p style={{ fontSize: '16px', margin: '0 0 30px 0', color: '#aaa' }}>
-        Ce reel n'existe pas ou a été supprimé.
+        Ce reel n&apos;existe pas ou a été supprimé.
       </p>
       <a 
         href="/blogs" 

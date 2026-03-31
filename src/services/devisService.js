@@ -1,5 +1,3 @@
-import { supabase } from '../libs/supabase';
-
 /**
  * Submit a devis request to Supabase
  * @param {Object} formData - The form data from the devis form
@@ -147,6 +145,16 @@ function validateFormData(formData) {
   return { isValid: true };
 }
 
+async function getSupabaseClient() {
+  const { supabase } = await import('@/libs/supabase');
+
+  if (!supabase) {
+    throw new Error('Supabase client not available');
+  }
+
+  return supabase;
+}
+
 /**
  * Get all devis requests (for admin use)
  * @param {Object} options - Query options
@@ -154,6 +162,8 @@ function validateFormData(formData) {
  */
 export async function getDevisRequests(options = {}) {
   try {
+    const supabase = await getSupabaseClient();
+
     let query = supabase
       .from('devis_requests')
       .select('*')
@@ -187,6 +197,8 @@ export async function getDevisRequests(options = {}) {
  */
 export async function getDevisRequest(id) {
   try {
+    const supabase = await getSupabaseClient();
+
     const { data, error } = await supabase
       .from('devis_requests')
       .select('*')

@@ -104,7 +104,7 @@ const PostsGrid = ({ initialPosts = null, initialPostsPaging = null }) => {
         <div className={styles['posts-header']}>
           <h2 className={styles['posts-title']}>Dernières publications</h2>
           <p className={styles['posts-subtitle']}>
-            Une sélection d'idées, d'expériences et de moments à partager
+            Une sélection d&apos;idées, d&apos;expériences et de moments à partager
           </p>
         </div>
 

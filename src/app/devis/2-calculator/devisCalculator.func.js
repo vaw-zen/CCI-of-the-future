@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 const services = {
   salon: {
@@ -78,13 +78,34 @@ const areas = {
   'other': { name: 'Autre région', multiplier: 1.4 }
 };
 
+function calculateEstimateTotal({ selectedServices, quantities, urgency, area, surfaceArea }) {
+  let subtotal = 0;
+
+  Object.entries(selectedServices).forEach(([serviceId, option]) => {
+    const service = services[serviceId];
+    const quantity = quantities[serviceId] || 1;
+    const optionMultiplier = service.options[option]?.multiplier || 1;
+
+    subtotal += service.basePrice * optionMultiplier * quantity;
+  });
+
+  const surface = parseInt(surfaceArea) || 0;
+  if (surface > 50) {
+    subtotal *= 1.2;
+  }
+
+  subtotal *= urgencyLevels[urgency].multiplier;
+  subtotal *= areas[area].multiplier;
+
+  return Math.round(subtotal);
+}
+
 export function useDevisCalculatorLogic() {
   const [selectedServices, setSelectedServices] = useState({});
   const [quantities, setQuantities] = useState({});
   const [urgency, setUrgency] = useState('normal');
   const [area, setArea] = useState('tunis');
   const [surfaceArea, setSurfaceArea] = useState('');
-  const [total, setTotal] = useState(0);
   const [showTicker, setShowTickerState] = useState(false);
   const [tickerValue, setTickerValue] = useState(0);
 
@@ -95,8 +116,9 @@ export function useDevisCalculatorLogic() {
   const cardRef = useRef(null);
   const isCardVisibleRef = useRef(false); // Start as not visible so ticker shows initially
   const totalRef = useRef(0);
+  const selectedServiceCount = Object.keys(selectedServices).length;
 
-  function triggerAddAnimation(newTotal) {
+  const triggerAddAnimation = useCallback((newTotal) => {
     if (tickerRef.current.raf) {
       cancelAnimationFrame(tickerRef.current.raf);
     }
@@ -124,7 +146,7 @@ export function useDevisCalculatorLogic() {
     }
 
     tickerRef.current.raf = requestAnimationFrame(step);
-  }
+  }, []);
 
   const handleServiceToggle = (serviceId) => {
     setSelectedServices(prev => {
@@ -179,45 +201,38 @@ export function useDevisCalculatorLogic() {
     return 'Ex: 1';
   };
 
-  const calculateTotal = () => {
-    let subtotal = 0;
-
-    Object.entries(selectedServices).forEach(([serviceId, option]) => {
-      const service = services[serviceId];
-      const quantity = quantities[serviceId] || 1;
-      const optionMultiplier = service.options[option]?.multiplier || 1;
-
-      subtotal += service.basePrice * optionMultiplier * quantity;
-    });
-
-    const surface = parseInt(surfaceArea) || 0;
-    if (surface > 50) {
-      subtotal *= 1.2;
-    }
-
-    subtotal *= urgencyLevels[urgency].multiplier;
-    subtotal *= areas[area].multiplier;
-
-    const newTotal = Math.round(subtotal);
-
-    if (newTotal !== total) {
-      if (newTotal === 0) {
-        setShowTicker(false);
-        tickerRef.current.previousTotal = 0;
-      } else if (!isCardVisibleRef.current) {
-        triggerAddAnimation(newTotal);
-      } else {
-        tickerRef.current.previousTotal = newTotal;
-      }
-    }
-
-    setTotal(newTotal);
-    totalRef.current = newTotal;
-  };
+  const total = useMemo(() => (
+    calculateEstimateTotal({ selectedServices, quantities, urgency, area, surfaceArea })
+  ), [selectedServices, quantities, urgency, area, surfaceArea]);
 
   useEffect(() => {
-    calculateTotal();
-  }, [selectedServices, quantities, urgency, area, surfaceArea]);
+    if (total === totalRef.current) {
+      return;
+    }
+
+    totalRef.current = total;
+
+    if (total === 0) {
+      tickerRef.current.previousTotal = 0;
+
+      const frameId = requestAnimationFrame(() => {
+        setTickerValue(0);
+        setShowTicker(false);
+      });
+
+      return () => cancelAnimationFrame(frameId);
+    }
+
+    if (!isCardVisibleRef.current) {
+      const frameId = requestAnimationFrame(() => {
+        triggerAddAnimation(total);
+      });
+
+      return () => cancelAnimationFrame(frameId);
+    }
+
+    tickerRef.current.previousTotal = total;
+  }, [total, triggerAddAnimation]);
 
   // Show ticker when total card is fully hidden, hide when fully visible
   useEffect(() => {
@@ -262,7 +277,7 @@ export function useDevisCalculatorLogic() {
     return () => {
       observer.disconnect();
     };
-  }, [Object.keys(selectedServices).length > 0]);
+  }, [selectedServiceCount, triggerAddAnimation]);
 
   return {
     services,

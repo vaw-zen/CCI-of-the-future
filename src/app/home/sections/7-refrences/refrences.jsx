@@ -14,7 +14,7 @@ export default function Refrences({ className }) {
         <div key={index} className={styles.refrenceCell}>
           {!index ? (
             <h2 className={styles.heading}>
-              Découvrez nos références<br />Gages d'expertise.
+              Découvrez nos références<br />Gages d&apos;expertise.
             </h2>
           ) : index === 7 ? (
             <Link href='/' className={styles.refrenceLink}>

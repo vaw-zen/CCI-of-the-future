@@ -8,7 +8,7 @@ import ResponsiveImage from '@/utils/components/Image/Image';
 // Lazy load the markdown renderer
 const MarkdownRenderer = lazy(() => import('@/utils/components/markdownRenderer/markdownRenderer'));
 
-const ChatWidget = React.memo(({ isOpen, onClose }) => {
+const ChatWidget = React.memo(function ChatWidget({ isOpen, onClose }) {
     const chatMessages = useMemo(() => getChatMessages(), []);
     const [markdownLoaded, setMarkdownLoaded] = useState(false);
     const isMobile = dimensionsStore((state) => state.isMobile());

@@ -16,7 +16,7 @@ export default function FaqEntreprises({ faqItems }) {
       <div className={styles.container}>
         <h2 className={styles.title}>Questions fréquentes</h2>
         <p className={styles.subtitle}>
-          Tout ce que vous devez savoir sur nos conventions d'entreprise
+          Tout ce que vous devez savoir sur nos conventions d&apos;entreprise
         </p>
         <div className={styles.faqList}>
           {faqItems.map((item, index) => (

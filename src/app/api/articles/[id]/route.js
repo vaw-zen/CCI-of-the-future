@@ -5,7 +5,6 @@
 
 import { NextResponse } from 'next/server';
 import { checkApiKey } from '../../../../libs/auth.js';
-import { articles } from '../../../conseils/data/articles.js';
 import { readArticles, writeArticles, findArticle, deployChanges } from '../../../../libs/fileUtils.js';
 
 /**
@@ -19,8 +18,8 @@ export async function GET(request, { params }) {
 
   try {
     const { id } = params;
-    
-    const article = findArticle(articles, id);
+    const existingArticles = await readArticles();
+    const article = findArticle(existingArticles, id);
     
     if (!article) {
       return NextResponse.json(
@@ -28,7 +27,7 @@ export async function GET(request, { params }) {
           success: false, 
           error: 'Article not found',
           searchedFor: id,
-          availableIds: articles.map(a => ({ id: a.id, slug: a.slug })).slice(0, 5)
+          availableIds: existingArticles.map(a => ({ id: a.id, slug: a.slug })).slice(0, 5)
         },
         { status: 404 }
       );

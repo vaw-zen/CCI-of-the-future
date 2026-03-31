@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useRef, useCallback } from "react"
 import { dimensionsStore } from "../store/store";
 import { useInitializerLogic } from "./initializer.func";
 import { homeScrollTriggers } from "@/app/home/home.func";
@@ -10,14 +10,9 @@ import { usePathname } from "next/navigation";
 import { storeUTMParameters } from "../utmGenerator";
 import { initFacebookPixel } from "@/utils/facebookTracking";
 import { initializeFacebookPixelTracking, debugFacebookPixel } from "@/utils/facebook-pixel-helper";
+import { trackContactLinkClick } from "@/utils/analytics";
 
 export default function Initializer() {
-    // Add state to track if we're in client-side rendering
-    const [isClient, setIsClient] = useState(false);
-    const [currentPath, setCurrentPath] = useState("");
-    const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
-    const [navigationOccurred, setNavigationOccurred] = useState(false);
-    
     // Get the current path for route change detection
     const pathname = usePathname();
     
@@ -30,11 +25,27 @@ export default function Initializer() {
     
     // Ref to track initialization attempts for current page
     const initAttemptsRef = useRef(0);
+    const currentPathRef = useRef(pathname || "");
+
+    const initializePageAnimations = useCallback((isRetry = false) => {
+        if (pathname === "/" || pathname.includes("/home")) {
+            try {
+                homeScrollTriggers();
+            } catch (error) {
+                // Silent fail
+            }
+        }
+        
+        if (pathname.includes("/services")) {
+            try {
+                servicesScrollTriggers();
+            } catch (error) {
+                // Silent fail
+            }
+        }
+    }, [pathname])
   
     useEffect(() => {
-        // Mark that we're now on the client
-        setIsClient(true);
-        
         // Capture and store UTM parameters on initial load
         storeUTMParameters();
         
@@ -55,15 +66,42 @@ export default function Initializer() {
             // fail silently if pixel init errors
         }
     }, []);
+
+    useEffect(() => {
+        const handleTrackedLinkClick = (event) => {
+            const anchor = event.target?.closest?.('a[href]');
+            if (!anchor) return;
+            if (anchor.dataset.analyticsHandled === 'true') return;
+
+            const href = anchor.getAttribute('href') || '';
+            const fallbackText = (anchor.textContent || '').replace(/\s+/g, ' ').trim();
+            const eventLabel =
+                anchor.dataset.analyticsLabel ||
+                anchor.getAttribute('aria-label') ||
+                anchor.getAttribute('title') ||
+                fallbackText ||
+                'contact_link';
+
+            trackContactLinkClick(href, eventLabel, {
+                tracking_source: 'global_link_listener',
+                page_path: window.location.pathname
+            });
+        };
+
+        document.addEventListener('click', handleTrackedLinkClick, true);
+
+        return () => {
+            document.removeEventListener('click', handleTrackedLinkClick, true);
+        };
+    }, [pathname]);
     
     // Effect for handling route changes 
     useEffect(() => {
-        if (!isClient || !pathname) return;
+        if (!pathname) return;
         
         // If the path changed, update and re-initialize animations
-        if (currentPath !== pathname) {
-            setCurrentPath(pathname);
-            setNavigationOccurred(true);
+        if (currentPathRef.current !== pathname) {
+            currentPathRef.current = pathname;
             initAttemptsRef.current = 0; // Reset attempts counter
             
             // Short delay to let the new page start rendering
@@ -81,44 +119,10 @@ export default function Initializer() {
                 });
             }, 100);
         }
-    }, [pathname, isClient]);
-    
-    // Reset navigation flag when it's processed
-    useEffect(() => {
-        if (navigationOccurred) {
-            const timer = setTimeout(() => {
-                setNavigationOccurred(false);
-            }, 1500); // Reset flag after all retries are done
-            
-            return () => clearTimeout(timer);
-        }
-    }, [navigationOccurred]);
-    
-    // Function to initialize page-specific animations
-    const initializePageAnimations = (isRetry = false) => {
-        // Check if we're on the home page
-        if (pathname === "/" || pathname.includes("/home")) {
-            try {
-                homeScrollTriggers();
-            } catch (error) {
-                // Silent fail
-            }
-        }
-        
-        // Check if we're on the services page
-        if (pathname.includes("/services")) {
-            try {
-                servicesScrollTriggers();
-            } catch (error) {
-                // Silent fail
-            }
-        }
-    };
+    }, [pathname, initializePageAnimations]);
     
     // Monitor viewport size changes
     useEffect(() => {
-        if (!isClient) return;
-
         const handleResize = () => {
             const width = window.innerWidth;
             const height = window.innerHeight;
@@ -126,10 +130,7 @@ export default function Initializer() {
             // Update viewport measurements in the store
             setVw(width);
             setVh(height);
-            
-            // Track viewport size changes
-            setViewportSize({ width, height });
-            
+
             // Determine current device type
             let currentDeviceType = "";
             if (isDesktop()) currentDeviceType = "desktop";
@@ -180,12 +181,10 @@ export default function Initializer() {
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('scroll', headerSI);
         };
-    }, [isClient, setVw, setVh, isDesktop, isTablet, isMobile]);
+    }, [setVw, setVh, isDesktop, isTablet, isMobile, initializePageAnimations, initializeLenis, lenisRef, rafIdRef, startLenisRaf]);
 
     // Initialize Lenis and other effects on initial load
     useEffect(() => {
-        if (!isClient) return;
-        
         try {
             // Initialize Lenis only on client-side
             const isDesktopView = isDesktop();
@@ -219,7 +218,7 @@ export default function Initializer() {
                 lenisRef.current = null;
             }
         };
-    }, [isClient, isDesktop]);
+    }, [isDesktop, initializeLenis, initializePageAnimations, lenisRef, rafIdRef, startLenisRaf]);
 
     return null;
 }

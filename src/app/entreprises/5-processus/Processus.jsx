@@ -9,7 +9,7 @@ export default function Processus({ etapes }) {
       <div className={styles.container}>
         <h2 className={styles.title}>Comment ça marche ?</h2>
         <p className={styles.subtitle}>
-          Un processus simple et transparent, de l'audit initial au suivi qualité
+          Un processus simple et transparent, de l&apos;audit initial au suivi qualité
         </p>
         <div className={styles.timeline}>
           {etapes.map((etape, index) => (

@@ -81,7 +81,7 @@ export default function AdminLogin() {
         <div className={styles.loginCard}>
           <div className={styles.header}>
             <h1>Administration CCI</h1>
-            <p>Vérification de l'authentification...</p>
+            <p>Vérification de l&apos;authentification...</p>
           </div>
         </div>
       </div>

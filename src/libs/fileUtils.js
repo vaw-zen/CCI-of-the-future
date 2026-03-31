@@ -5,6 +5,8 @@
 
 import fs from 'fs';
 import path from 'path';
+import { articles as bundledArticles } from '../app/conseils/data/articles.js';
+import { generateArticlesFileContent, parseArticlesFile } from './articlesFileFormat.js';
 
 // Get the path to the articles data file (existing structure)
 const getArticlesPath = () => {
@@ -15,36 +17,32 @@ const getBackupPath = () => {
   return path.join(process.cwd(), 'src', 'app', 'conseils', 'data', 'articles.backup.js');
 };
 
+function cloneArticles(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 /**
  * Read articles from the data file
  * @returns {Array} Array of articles
  */
 export async function readArticles() {
+  if (process.env.VERCEL) {
+    return cloneArticles(bundledArticles);
+  }
+
   try {
-    // For production safety, dynamically import the articles module
-    // This avoids file system operations in serverless environments
-    const { articles } = await import('../app/conseils/data/articles.js');
-    return [...articles]; // Return a copy to avoid mutations
-  } catch (error) {
-    console.error('Error reading articles via import:', error);
-    
-    // Fallback to file system reading for local development
-    try {
-      const articlesPath = getArticlesPath();
-      
-      if (!fs.existsSync(articlesPath)) {
-        console.warn('Articles file does not exist, returning empty array');
-        return [];
-      }
-      
-      // Read and evaluate the module content safely
-      delete require.cache[require.resolve(articlesPath)];
-      const moduleContent = require(articlesPath);
-      return [...moduleContent.articles];
-    } catch (fallbackError) {
-      console.error('Fallback reading also failed:', fallbackError);
-      return [];
+    const articlesPath = getArticlesPath();
+
+    if (!fs.existsSync(articlesPath)) {
+      console.warn('Articles file does not exist, using bundled articles');
+      return cloneArticles(bundledArticles);
     }
+
+    const source = fs.readFileSync(articlesPath, 'utf8');
+    return cloneArticles(parseArticlesFile(source));
+  } catch (error) {
+    console.error('Error reading articles from filesystem:', error);
+    return cloneArticles(bundledArticles);
   }
 }
 
@@ -103,12 +101,6 @@ export async function writeArticles(articles) {
     // Write the file
     fs.writeFileSync(articlesPath, fileContent, 'utf8');
     
-    // Clear the require cache to ensure fresh imports
-    const moduleId = path.resolve(articlesPath);
-    if (require.cache[moduleId]) {
-      delete require.cache[moduleId];
-    }
-    
     console.log(`Successfully wrote ${articles.length} articles to file`);
     return true;
   } catch (error) {
@@ -147,21 +139,6 @@ function validateArticle(article) {
   if (!slugRegex.test(article.slug)) {
     throw new Error('Article slug must contain only lowercase letters, numbers, and hyphens');
   }
-}
-
-/**
- * Generate the complete file content for articles.js (maintaining existing format)
- * @param {Array} articles - Array of article objects
- * @returns {string} File content
- */
-function generateArticlesFileContent(articles) {
-  const header = `// Base de données des articles de blog SEO
-`;
-
-  const articlesJson = JSON.stringify(articles, null, 2);
-  const exportStatement = `export const articles = ${articlesJson};`;
-
-  return header + exportStatement;
 }
 
 /**

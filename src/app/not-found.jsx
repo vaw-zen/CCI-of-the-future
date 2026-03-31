@@ -19,7 +19,7 @@ export default function NotFound() {
           <div className={styles.card}>
             <h1 className={styles.title}>404 — Page non trouvée</h1>
             <p className={styles.desc}>
-              La page que vous recherchez n'existe pas ou a été déplacée. Essayez l'accueil ou contactez-nous pour obtenir de l'aide.
+              La page que vous recherchez n&apos;existe pas ou a été déplacée. Essayez l&apos;accueil ou contactez-nous pour obtenir de l&apos;aide.
             </p>
             <div className={styles.actions}>
               <Link href="/" className={styles.btn}>Accueil</Link>

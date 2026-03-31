@@ -3,6 +3,8 @@
  * Since Vercel has read-only filesystem, we use GitHub API to commit changes
  */
 
+import { generateArticlesFileContent } from './articlesFileFormat.js';
+
 /**
  * Update articles.js file via GitHub API
  * @param {Array} articles - Array of article objects
@@ -101,21 +103,6 @@ export async function updateArticlesViaGitHub(articles, commitMessage = 'Update 
     console.error('❌ Error stack:', error.stack);
     return false;
   }
-}
-
-/**
- * Generate the complete file content for articles.js (maintaining existing format)
- * @param {Array} articles - Array of article objects
- * @returns {string} File content
- */
-function generateArticlesFileContent(articles) {
-  const header = `// Base de données des articles de blog SEO
-`;
-
-  const articlesJson = JSON.stringify(articles, null, 2);
-  const exportStatement = `export const articles = ${articlesJson};`;
-
-  return header + exportStatement;
 }
 
 /**

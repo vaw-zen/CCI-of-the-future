@@ -4,7 +4,7 @@ import { IconoirArrowUpRight } from '@/utils/components/icons'
 import styles from '../FAQ.module.css'
 
 export default function FAQQuestions({ QA }) {
-  const { activeIndex, heights, answerRefs, toggleQuestion } = useFAQLogic(QA)
+  const { activeIndex, heights, setAnswerRef, toggleQuestion } = useFAQLogic(QA)
 
   return (
     <div className={styles.questions}>
@@ -26,7 +26,7 @@ export default function FAQQuestions({ QA }) {
               height: activeIndex === index ? `${heights[index]}px` : '0'
             }}
           >
-            <p ref={el => answerRefs.current[index] = el}>{qa.A}</p>
+            <p ref={setAnswerRef(index)}>{qa.A}</p>
           </div>
         </div>
       ))}

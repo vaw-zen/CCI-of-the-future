@@ -1,9 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import styles from './animatedLink.module.css'
 
-export function useAnimatedLinkLogic(container, movingDiv, wrapper, makeObserver, fill) {
+export function useAnimatedLinkLogic(makeObserver, fill) {
+  const containerRef = useRef(null);
+  const movingDivRef = useRef(null);
+  const wrapperRef = useRef(null);
+
   useEffect(() => {
-    if (!makeObserver || !wrapper.current) return
+    const wrapperElement = wrapperRef.current
+    if (!makeObserver || !wrapperElement) return
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -17,21 +22,19 @@ export function useAnimatedLinkLogic(container, movingDiv, wrapper, makeObserver
       }
     );
 
-    if (wrapper.current) {
-      observer.observe(wrapper.current);
-    }
+    observer.observe(wrapperElement);
 
     return () => {
-      if (wrapper.current) {
-        observer.unobserve(wrapper.current);
-      }
+      observer.unobserve(wrapperElement);
+      observer.disconnect();
     };
-  }, []);
+  }, [makeObserver]);
 
   const calculateOffsets = (e) => {
-    if (!container.current) return { offsetX: 0, offsetY: 0 };
+    const containerElement = containerRef.current;
+    if (!containerElement) return { offsetX: 0, offsetY: 0 };
 
-    const rect = container.current.getBoundingClientRect();
+    const rect = containerElement.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
@@ -45,49 +48,71 @@ export function useAnimatedLinkLogic(container, movingDiv, wrapper, makeObserver
   };
 
   const handleMouseEnter = (e) => {
-    if (movingDiv.current && container.current) {
-      movingDiv.current.style.transition = 'border-color 1s ease-out, color .4s';
+    const movingElement = movingDivRef.current;
+    const containerElement = containerRef.current;
+
+    if (movingElement && containerElement) {
+      movingElement.style.transition = 'border-color 1s ease-out, color .4s';
 
       const { offsetX, offsetY } = calculateOffsets(e);
 
-      movingDiv.current.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(0)`;
+      movingElement.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(0)`;
 
       requestAnimationFrame(() => {
-        movingDiv.current.style.transition = 'transform 0.5s ease-out, border-color 1s ease-out, color .4s';
-        movingDiv.current.style.transform = `translate(0px, 0px) scale(1.5)`;
-        container.current.style.borderColor = fill || `var(--ac-primary)`;
-        container.current.style.color = fill && fill.includes('primary') ? 'white' : `black`;
-        container.current.style.fontWeight = `500`;
+        const nextMovingElement = movingDivRef.current;
+        const nextContainerElement = containerRef.current;
+        if (!nextMovingElement || !nextContainerElement) return;
+
+        nextMovingElement.style.transition = 'transform 0.5s ease-out, border-color 1s ease-out, color .4s';
+        nextMovingElement.style.transform = `translate(0px, 0px) scale(1.5)`;
+        nextContainerElement.style.borderColor = fill || `var(--ac-primary)`;
+        nextContainerElement.style.color = fill && fill.includes('primary') ? 'white' : `black`;
+        nextContainerElement.style.fontWeight = `500`;
 
       });
     }
   };
 
   const handleMouseLeave = (e) => {
-    if (movingDiv.current && container.current) {
-      movingDiv.current.style.transition = 'transform 0.7s ease-out, border-color 1s ease-out, color .4s';
+    const movingElement = movingDivRef.current;
+    const containerElement = containerRef.current;
+
+    if (movingElement && containerElement) {
+      movingElement.style.transition = 'transform 0.7s ease-out, border-color 1s ease-out, color .4s';
 
       const { offsetX, offsetY } = calculateOffsets(e);
 
       requestAnimationFrame(() => {
-        movingDiv.current.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(0)`;
-        container.current.style.transform = `translate(0px, 0px)`;
-        container.current.style.borderColor = `inherit`;
-        container.current.style.color = `inherit`;
-        container.current.style.fontWeight = `400`;
+        const nextMovingElement = movingDivRef.current;
+        const nextContainerElement = containerRef.current;
+        if (!nextMovingElement || !nextContainerElement) return;
+
+        nextMovingElement.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(0)`;
+        nextContainerElement.style.transform = `translate(0px, 0px)`;
+        nextContainerElement.style.borderColor = `inherit`;
+        nextContainerElement.style.color = `inherit`;
+        nextContainerElement.style.fontWeight = `400`;
       });
     }
   };
 
   const handleMouseMove = (e) => {
-    if (container.current) {
-      container.current.style.transition = 'transform 0.7s ease-out, border-color 1s ease-out, color .4s';
+    const containerElement = containerRef.current;
+    if (containerElement) {
+      containerElement.style.transition = 'transform 0.7s ease-out, border-color 1s ease-out, color .4s';
 
       const { offsetX, offsetY } = calculateOffsets(e);
 
-      container.current.style.transform = `translate(${offsetX * 0.7}px, ${offsetY * 0.7}px)`;
+      containerElement.style.transform = `translate(${offsetX * 0.7}px, ${offsetY * 0.7}px)`;
     }
   };
 
-  return { handleMouseEnter, handleMouseLeave, handleMouseMove };
+  return {
+    containerRef,
+    movingDivRef,
+    wrapperRef,
+    handleMouseEnter,
+    handleMouseLeave,
+    handleMouseMove
+  };
 }

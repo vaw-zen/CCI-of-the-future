@@ -102,7 +102,7 @@ export default function ConseilsPage() {
           <div style={{ 
             fontSize: '0.9rem' 
           }}>
-            Préparation de nos guides d'expert
+            Préparation de nos guides d&apos;expert
           </div>
         </div>
       }>

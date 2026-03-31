@@ -9,6 +9,17 @@ import SharedButton from "@/utils/components/SharedButton/SharedButton";
 import useAutoHeightTransition from '@/libs/useAutoHeightTransition/useAutoHeightTransition';
 import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 
+const createVideoState = (overrides = {}) => ({
+  isLoaded: false,
+  isPlaying: false,
+  currentTime: 0,
+  duration: 0,
+  volume: 1,
+  isMuted: false,
+  isFullscreen: false,
+  ...overrides
+});
+
 const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
   const {
     reels,
@@ -43,14 +54,8 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
     setVideoStates(prev => ({
       ...prev,
       [videoId]: {
-        ...prev[videoId],
-        isPlaying: false,
-        currentTime: 0,
-        duration: 0,
-        volume: 1,
-        isMuted: false,
-        isFullscreen: false,
-        isLoaded: false
+        ...(prev[videoId] || createVideoState()),
+        ...createVideoState()
       }
     }));
     
@@ -186,7 +191,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
       setVideoStates(prev => ({
         ...prev,
         [reelId]: {
-          ...prev[reelId],
+          ...(prev[reelId] || createVideoState()),
           volume: newVolume,
           isMuted: newVolume === 0
         }
@@ -207,7 +212,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
       setVideoStates(prev => ({
         ...prev,
         [reelId]: {
-          ...prev[reelId],
+          ...(prev[reelId] || createVideoState()),
           isMuted: video.muted
         }
       }));
@@ -267,7 +272,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
       setVideoStates(prev => ({
         ...prev,
         [reelId]: {
-          ...prev[reelId],
+          ...(prev[reelId] || createVideoState()),
           isLoaded: true,
           duration: video.duration,
           volume: video.volume,
@@ -281,7 +286,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
     setVideoStates(prev => ({
       ...prev,
       [reelId]: {
-        ...prev[reelId],
+        ...(prev[reelId] || createVideoState()),
         isPlaying: true
       }
     }));
@@ -293,7 +298,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
     setVideoStates(prev => ({
       ...prev,
       [reelId]: {
-        ...prev[reelId],
+        ...(prev[reelId] || createVideoState()),
         isPlaying: false
       }
     }));
@@ -310,7 +315,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
       setVideoStates(prev => ({
         ...prev,
         [reelId]: {
-          ...prev[reelId],
+          ...(prev[reelId] || createVideoState()),
           currentTime: video.currentTime
         }
       }));
@@ -343,7 +348,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
           setVideoStates(prev => ({
             ...prev,
             [videoId]: {
-              ...prev[videoId],
+              ...(prev[videoId] || createVideoState()),
               isFullscreen: true
             }
           }));
@@ -353,7 +358,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
           setVideoStates(prev => ({
             ...prev,
             [videoId]: {
-              ...prev[videoId],
+              ...(prev[videoId] || createVideoState()),
               isFullscreen: false
             }
           }));
@@ -398,25 +403,6 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
   const showLoadMore = Boolean(reelsPaging?.next);
   const loadMoreRef = useAutoHeightTransition(showLoadMore, { duration: 250, easing: 'ease' });
 
-  // Initialize video states for each reel
-  useEffect(() => {
-    if (reels?.length) {
-      const initialStates = {};
-      reels.forEach(reel => {
-        initialStates[reel.id] = {
-          isLoaded: false,
-          isPlaying: false,
-          currentTime: 0,
-          duration: 0,
-          volume: 1,
-          isMuted: false,
-          isFullscreen: false
-        };
-      });
-      setVideoStates(prev => ({ ...prev, ...initialStates }));
-    }
-  }, [reels]);
-
   // Cleanup timeouts on unmount
   useEffect(() => {
     // Add fullscreen change event listeners for different browsers
@@ -430,9 +416,11 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
     fullscreenEvents.forEach(event => {
       document.addEventListener(event, handleFullscreenChange);
     });
+
+    const timeoutRefs = controlTimeoutRefs.current;
     
     return () => {
-      Object.values(controlTimeoutRefs.current).forEach(timeout => {
+      Object.values(timeoutRefs).forEach(timeout => {
         clearTimeout(timeout);
       });
       // Remove fullscreen change event listeners
@@ -458,7 +446,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
         <div className={styles['reels-header']}>
           <h2 className={styles['reels-title']}>Featured Reels</h2>
           <p className={styles['reels-subtitle']}>
-            Quick, engaging videos that capture life's best moments and creative ideas
+            Quick, engaging videos that capture life&apos;s best moments and creative ideas
           </p>
         </div>
 

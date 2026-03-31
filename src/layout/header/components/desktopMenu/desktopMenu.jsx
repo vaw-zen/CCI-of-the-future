@@ -178,7 +178,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
                                             } : {}}
                                         />
                                         <label htmlFor="privacy-checkbox" className={styles.checkboxLabel}>
-                                            J'accepte la politique de confidentialité
+                                            J&apos;accepte la politique de confidentialité
                                         </label>
                                     </div>
                                     {submitMessage && (
@@ -205,18 +205,17 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
                                 <strong>Appelez maintenant</strong>
                                 <abbr>+216 98 55 77 66</abbr>
                             </AnalyticsLink>
-                            <AnalyticsLink
+                            <a
                                 href={mail}
-                                eventName="email_click"
-                                eventCategory="conversion"
-                                eventLabel="desktop_menu_email"
                                 className={styles.contactItem}
                                 onClick={handleEmailClick}
+                                data-analytics-handled="true"
+                                data-analytics-label="desktop_menu_email"
                             >
                                 <SiMailDuotone className={styles.contactIcon} />
                                 <strong>E-mail</strong>
                                 <abbr>contact@cciservices.online</abbr>
-                            </AnalyticsLink>
+                            </a>
                             <div className={styles.divider} />
                         </div>
                     </div>

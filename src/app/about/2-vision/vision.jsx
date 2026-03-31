@@ -14,9 +14,9 @@ export default function vision() {
     <p>
           Nous sommes spécialisés dans la fourniture de services de nettoyage
           industriel et de tapisserie de premier ordre. Notre équipe, dotée
-          d'une expertise approfondie et de technologies de pointe, s'engage à
+          d&apos;une expertise approfondie et de technologies de pointe, s&apos;engage à
           offrir des solutions de nettoyage inégalées dans une variété
-          d'industries.
+          d&apos;industries.
         </p>
     <div className={styles.button}>
     <IconoirArrowUpRight className={styles.arrow} />

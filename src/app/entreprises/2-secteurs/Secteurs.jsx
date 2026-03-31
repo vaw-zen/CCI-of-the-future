@@ -7,7 +7,7 @@ export default function Secteurs({ secteurs }) {
   return (
     <section className={styles.section}>
       <div className={styles.container}>
-        <h2 className={styles.title}>Secteurs d'activité</h2>
+        <h2 className={styles.title}>Secteurs d&apos;activité</h2>
         <p className={styles.subtitle}>
           Des solutions de nettoyage adaptées à chaque environnement professionnel
         </p>

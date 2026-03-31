@@ -72,7 +72,7 @@ export default function ConventionForm() {
 
               <div className={styles.formGroup}>
                 <label htmlFor="secteurActivite" className={styles.label}>
-                  Secteur d'activité <span className={styles.required}>*</span>
+                  Secteur d&apos;activité <span className={styles.required}>*</span>
                 </label>
                 <select
                   id="secteurActivite"
@@ -84,7 +84,7 @@ export default function ConventionForm() {
                 >
                   <option value="">Sélectionnez votre secteur</option>
                   <option value="banque">Banque / Institution financière</option>
-                  <option value="assurance">Compagnie d'assurances</option>
+                  <option value="assurance">Compagnie d&apos;assurances</option>
                   <option value="clinique">Clinique / Hôpital</option>
                   <option value="hotel">Hôtel / Résidence</option>
                   <option value="bureau">Bureau / Espace de coworking</option>
@@ -371,7 +371,7 @@ export default function ConventionForm() {
                   required
                 />
                 <label htmlFor="conditions" className={styles.checkboxLabel}>
-                  J'accepte les <a href="/conditions" target="_blank">conditions générales</a> et la <a href="/confidentialite" target="_blank">politique de confidentialité</a> <span className={styles.required}>*</span>
+                  J&apos;accepte les <a href="/conditions" target="_blank">conditions générales</a> et la <a href="/confidentialite" target="_blank">politique de confidentialité</a> <span className={styles.required}>*</span>
                 </label>
               </div>
             </div>

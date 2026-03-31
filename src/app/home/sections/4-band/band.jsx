@@ -1,20 +1,20 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import s from './band.module.css'
 import content from './band.json'
 import ScrollVelocity from './ScrollVelocity'
 
 export default function Band() {
-    const [mounted, setMounted] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(() => (
+        typeof window !== 'undefined' ? window.innerWidth <= 1024 : false
+    ));
     
     useEffect(() => {
-        setMounted(true);
-        // Detect mobile/tablet devices
         const checkMobile = () => {
             setIsMobile(window.innerWidth <= 1024);
         };
+
         checkMobile();
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
@@ -26,8 +26,6 @@ export default function Band() {
         const line2 = [...content].reverse().join(' - ');
         return [line1, line2];
     }, []);
-    
-    if (!mounted) return null;
     
     // Lower velocity sensitivity on mobile to prevent flickering
     const velocityConfig = isMobile 

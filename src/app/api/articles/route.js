@@ -5,7 +5,6 @@
 
 import { NextResponse } from 'next/server';
 import { checkApiKey } from '../../../libs/auth.js';
-import { articles } from '../../conseils/data/articles.js';
 import { readArticles, writeArticles, getNextId, generateSlug, deployChanges } from '../../../libs/fileUtils.js';
 
 /**
@@ -18,11 +17,12 @@ export async function GET(request) {
   if (authError) return authError;
 
   try {
-    // Use the imported articles directly for better performance and reliability
+    const existingArticles = await readArticles();
+
     return NextResponse.json({
       success: true,
-      data: articles,
-      count: articles.length,
+      data: existingArticles,
+      count: existingArticles.length,
       message: 'Articles retrieved successfully',
       source: 'src/app/conseils/data/articles.js'
     });

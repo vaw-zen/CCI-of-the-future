@@ -176,7 +176,7 @@ export default function ConseilsClient() {
       {/* Section CTA */}
       <div className={localStyles.ctaSection}>
         <h2 className={localStyles.ctaTitle}>
-          Besoin d'un Service Professionnel ?
+          Besoin d&apos;un Service Professionnel ?
         </h2>
         <p className={localStyles.ctaDescription}>
           Nos experts CCI Services sont à votre disposition pour tous vos besoins

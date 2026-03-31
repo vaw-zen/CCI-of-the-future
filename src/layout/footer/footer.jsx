@@ -13,7 +13,7 @@ export default function Footer() {
                 <div className={styles.leftSection}>
                     <h2 className={styles.title}>
                         Contactez-nous à <br />
-                        <a href={mail} className={styles.mailLink}>
+                        <a href={mail} className={styles.mailLink} data-analytics-label="footer_email">
                             {contact.mail.link}
                             <div className={styles.underline} />
                         </a>
@@ -21,7 +21,7 @@ export default function Footer() {
                     <div className={styles.infoGrid}>
                         <div className={styles.infoBlock}>
                             <p className={styles.label}>Notre Numéro</p>
-                            <a href={phone} className={styles.value}>{contact.phone}</a>
+                            <a href={phone} className={styles.value} data-analytics-label="footer_phone">{contact.phone}</a>
                         </div>
                         <div className={styles.infoBlock}>
                             <p className={styles.label}>Notre localisation</p>
@@ -54,9 +54,16 @@ export default function Footer() {
 
             <div className={styles.bottom}>
                 <div className={styles.copyright}>
-                    Copyright 2021 <strong className={styles.highlight}>CCI</strong>
+                    <span>
+                        Copyright 2021 <strong className={styles.highlight}>CCI</strong>
+                    </span>
                     <span className={styles.divider}>|</span>
-                    Designed and developed by - <Link href='https://www.vawzen.org/' target='_blank' className={styles.highlight}>Vawzen</Link>
+                    <span>
+                        Designed and developed by -{' '}
+                        <Link href='https://www.vawzen.org/' target='_blank' className={styles.highlight}>
+                            Vawzen
+                        </Link>
+                    </span>
                 </div>
 
                 <ul className={styles.socials}>

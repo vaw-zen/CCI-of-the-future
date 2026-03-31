@@ -9,7 +9,7 @@ export default function ServicesConvention({ services }) {
       <div className={styles.container}>
         <h2 className={styles.title}>Services inclus dans nos conventions</h2>
         <p className={styles.subtitle}>
-          Une gamme complète de prestations pour l'entretien de vos locaux professionnels
+          Une gamme complète de prestations pour l&apos;entretien de vos locaux professionnels
         </p>
         <div className={styles.grid}>
           {services.map((service, index) => (

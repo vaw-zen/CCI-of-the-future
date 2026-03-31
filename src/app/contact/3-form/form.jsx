@@ -6,22 +6,12 @@ import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
 import { submitDevisRequest } from "@/services/devisService";
 import { LineMdCalendar } from "@/utils/components/icons";
+import { trackDevisSubmission, trackFunnelComplete, trackFunnelStep } from "@/utils/analytics";
 
 export default function DevisForm() {
   const formRef = useRef();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState({ type: '', message: '' });
-
-  const getServiceName = (serviceCode) => {
-    const services = {
-      'salon': 'Nettoyage de salon',
-      'tapis': 'Nettoyage de tapis/moquette',
-      'tapisserie': 'Tapisserie',
-      'marbre': 'Polissage de marbre',
-      'tfc': 'Nettoyage TFC (bureaux/commerces)'
-    };
-    return services[serviceCode] || serviceCode;
-  };
 
   const [formData, setFormData] = useState({
     typePersonne: 'physique',
@@ -52,7 +42,15 @@ export default function DevisForm() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+
+    if (name === 'typeService' && value) {
+      trackFunnelStep('contact_form', 'service_selected', 2, { serviceType: value });
+    }
   };
+
+  useEffect(() => {
+    trackFunnelStep('contact_form', 'form_start', 1, { page: 'contact' });
+  }, []);
 
   const validateForm = () => {
     const required = ['nom', 'prenom', 'email', 'telephone', 'adresse', 'ville', 'typeService'];
@@ -153,17 +151,13 @@ export default function DevisForm() {
           type: 'success',
           message: 'Votre demande de devis a été envoyée avec succès ! Nous vous contacterons dans les plus brefs délais.'
         });
-        
-        // Track conversion with Google Analytics
-        if (typeof window !== 'undefined' && window.gtag) {
-          window.gtag('event', 'conversion_event_contact', {
-            'event_category': 'Contact',
-            'event_label': 'Devis Request',
-            'value': 1,
-            'service_type': getServiceName(formData.typeService),
-            'person_type': formData.typePersonne
-          });
-        }
+
+        trackDevisSubmission(
+          formData.typeService,
+          Number(formData.surfaceService || formData.nombrePlaces || 0),
+          'contact_form'
+        );
+        trackFunnelComplete('contact_form', 'form_submitted', 3);
         
         // Reset form
         setFormData({
@@ -412,7 +406,7 @@ export default function DevisForm() {
           value={formData.heurePreferee}
           onChange={handleInputChange}
         >
-          <option value="">Sélectionnez vos heures d'intervention préférées</option>
+          <option value="">Sélectionnez vos heures d&apos;intervention préférées</option>
           <option value="matin">Matin (8h-12h)</option>
           <option value="apres_midi">Après-midi (14h-18h)</option>
           <option value="soir">Soir (18h-20h)</option>
@@ -453,7 +447,7 @@ export default function DevisForm() {
             checked={formData.newsletter}
             onChange={handleInputChange}
           /> 
-          Je souhaite recevoir les offres spéciales et conseils d'entretien par email
+          Je souhaite recevoir les offres spéciales et conseils d&apos;entretien par email
         </label>
         
         {/* Conditions Checkbox */}
@@ -465,7 +459,7 @@ export default function DevisForm() {
             onChange={handleInputChange}
             required 
           /> 
-          J'accepte les conditions générales et la politique de confidentialité *
+          J&apos;accepte les conditions générales et la politique de confidentialité *
         </label>
 
         <SharedButton

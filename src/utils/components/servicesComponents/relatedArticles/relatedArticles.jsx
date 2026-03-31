@@ -13,7 +13,7 @@ export default function RelatedArticles({ articles, sectionTitle = "Articles li�
                 <div className={styles.header}>
                     <h2 className={styles.title}>{sectionTitle}</h2>
                     <p className={styles.subtitle}>
-                        Découvrez nos guides d'expert et conseils professionnels
+                        Découvrez nos guides d&apos;expert et conseils professionnels
                     </p>
                 </div>
 
@@ -39,7 +39,7 @@ export default function RelatedArticles({ articles, sectionTitle = "Articles li�
                                             ))}
                                         </div>
                                         <span className={styles.readMore}>
-                                            Lire l'article →
+                                            Lire l&apos;article →
                                         </span>
                                     </div>
                                 </div>

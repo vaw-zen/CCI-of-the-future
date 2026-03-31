@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 /**
  * Custom hook for enhanced Google Analytics tracking
@@ -9,12 +9,11 @@ import { usePathname, useSearchParams } from 'next/navigation';
  */
 export function useAnalytics() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   // Track page views on route changes
   useEffect(() => {
     if (typeof window !== 'undefined' && window.gtag) {
-      const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '');
+      const url = pathname + window.location.search;
       
       window.gtag('config', 'G-0RDH6DH7TS', {
         page_path: url,
@@ -22,7 +21,7 @@ export function useAnalytics() {
         page_location: window.location.href,
       });
     }
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   // Return tracking functions for manual events
   return {

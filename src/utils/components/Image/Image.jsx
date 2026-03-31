@@ -1,7 +1,7 @@
 "use client";
 
 import styles from './image.module.css'
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { dimensionsStore } from '@/utils/store/store';
 
@@ -32,13 +32,7 @@ const ResponsiveImage = ({
     ...otherProps
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
-    // Track whether we're rendering on the client
-    const [isMounted, setIsMounted] = useState(false);
-    
-    // Get safe dimensions on client side only
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
+    const viewportWidth = dimensionsStore((state) => state.vw);
     
     const handleLoadingComplete = useCallback(() => {
         setIsLoaded(true);
@@ -50,22 +44,13 @@ const ResponsiveImage = ({
         if (sizes.length === 1) {
             effectiveSize = sizes[0];
         } else if (sizes.length === 2) {
-            // Use largest size for server rendering (first render)
-            effectiveSize = isMounted ? 
-                (dimensionsStore.getState().vw >= 1024 ? sizes[0] : sizes[1]) : 
-                sizes[0];
+            effectiveSize = viewportWidth >= 1024 ? sizes[0] : sizes[1];
         } else {
-            // Use largest size for server rendering (first render)
-            if (!isMounted) {
-                effectiveSize = sizes[0];
-            } else {
-                const state = dimensionsStore.getState();
-                effectiveSize = state.vw >= 1024 ? 
-                    sizes[0] : 
-                    (state.vw > 480 && state.vw <= 1024) ? 
-                        sizes[1] : 
-                        sizes[2];
-            }
+            effectiveSize = viewportWidth >= 1024
+                ? sizes[0]
+                : (viewportWidth > 480 && viewportWidth <= 1024)
+                    ? sizes[1]
+                    : sizes[2];
         }
     } else {
         effectiveSize = sizes;

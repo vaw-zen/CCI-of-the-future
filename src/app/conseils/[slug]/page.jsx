@@ -92,8 +92,8 @@ export default async function ArticlePage({ params }) {
     const serviceMap = {
       'tapis': [
         {
-          title: "Nettoyage Tapis & Moquettes",
-          description: "Service professionnel de nettoyage par injection-extraction pour tous types de tapis et moquettes.",
+          title: "Nettoyage Moquette & Tapis",
+          description: "Service professionnel de nettoyage moquette par injection-extraction pour tous types de tapis et moquettes.",
           link: "/tapis",
           icon: "/icons/polisher.png",
           ctaText: "Obtenir un devis"
@@ -124,6 +124,15 @@ export default async function ArticlePage({ params }) {
           link: "/tapisserie",
           icon: "/icons/polisher1.png",
           ctaText: "Voir nos créations"
+        }
+      ],
+      'commercial': [
+        {
+          title: "Conventions de Nettoyage B2B",
+          description: "Entretien régulier des amphithéâtres, salles de conférence, auditoriums et autres espaces professionnels à forte fréquentation.",
+          link: "/services",
+          icon: "/icons/shield.png",
+          ctaText: "Demander un audit"
         }
       ],
       'post-chantier': [

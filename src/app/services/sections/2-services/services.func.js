@@ -1,5 +1,40 @@
-import { createRef, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import styles from './services.module.css'
+
+export function useServiceLinkObserver(linkRef) {
+    useEffect(() => {
+        const linkElement = linkRef.current;
+        if (!linkElement) return;
+
+        const intersectionObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        Array.from(linkElement.children, (element, index) => {
+                            if (index) {
+                                element.style.transitionDelay = `${index * 0.1}s`
+                                element.style.opacity = 1
+                                element.style.transform = 'none'
+                            }
+                        })
+
+                        intersectionObserver.unobserve(entry.target)
+                    }
+                })
+            },
+            {
+                threshold: 1
+            }
+        )
+
+        intersectionObserver.observe(linkElement)
+
+        return () => {
+            intersectionObserver.unobserve(linkElement)
+            intersectionObserver.disconnect()
+        }
+    }, [linkRef])
+}
 
 export function useServicesLogic() {
     // Move refs inside the hook so they're recreated for each component instance
@@ -91,42 +126,6 @@ export function useServicesLogic() {
         })
     }
 
-    function observer(linkRef) {
-        useEffect(() => {
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            Array.from(linkRef.current.children, (element, index) => {
-                                if (index) {
-                                    element.style.transitionDelay = `${index * 0.1}s`
-                                    element.style.opacity = 1
-                                    element.style.transform = 'none'
-                                }
-                            })
-
-                            // Immediately unobserve after first trigger
-                            observer.unobserve(entry.target)
-                        }
-                    })
-                },
-                {
-                    threshold: 1
-                }
-            )
-
-            if (linkRef.current) {
-                observer.observe(linkRef.current)
-            }
-
-            return () => {
-                if (linkRef.current) {
-                    observer.unobserve(linkRef.current)
-                }
-            }
-        }, [])
-    }
-    
     function handleMouseEnter(index) {
         return (event) => {
             // Always try to initialize refs on mouse enter to ensure they're up to date
@@ -135,5 +134,5 @@ export function useServicesLogic() {
         }
     }
 
-    return { handleMouseEnter, observer }
+    return { handleMouseEnter }
 }

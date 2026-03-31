@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './devisConfirmation.module.css';
+import { AnalyticsLink } from '@/utils/components/analytics/AnalyticsComponents';
 
 export default function DevisConfirmation({ 
   isVisible = false, 
@@ -78,7 +79,7 @@ export default function DevisConfirmation({
               <li>Appel de notre équipe pour planifier la visite</li>
               <li>Évaluation gratuite sur site</li>
               <li>Remise de votre devis personnalisé</li>
-              <li>Planification de l'intervention si acceptation</li>
+              <li>Planification de l&apos;intervention si acceptation</li>
             </ol>
           </div>
           
@@ -98,7 +99,7 @@ export default function DevisConfirmation({
           <div className={styles.contact}>
             <p>
               <strong>Une question urgente ?</strong><br />
-              Contactez-nous directement au <a href="tel:+21698557766">+216 98 557 766</a>
+              Contactez-nous directement au <AnalyticsLink href="tel:+21698557766" eventName="cta_click" eventCategory="post_submit" eventLabel="devis_confirmation_phone">+216 98 557 766</AnalyticsLink>
             </p>
           </div>
         </div>

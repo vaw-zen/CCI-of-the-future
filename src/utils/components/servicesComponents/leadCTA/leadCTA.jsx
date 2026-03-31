@@ -83,7 +83,7 @@ export default function LeadCTA({
     <>
       <section ref={sectionRef} className={styles.ctaSection}>
         <h2 className={styles.ctaTitle}>
-          Besoin d'un <span className={styles.ctaHighlight}>{serviceName}</span> ?
+          Besoin d&apos;un <span className={styles.ctaHighlight}>{serviceName}</span> ?
         </h2>
         <p className={styles.ctaSubtitle}>
           Devis gratuit en 2 minutes, sans engagement. Intervention rapide dans tout le Grand Tunis.
@@ -102,6 +102,8 @@ export default function LeadCTA({
             rel="noopener noreferrer"
             className={`${styles.ctaBtn} ${styles.ctaBtnWhatsapp}`}
             onClick={() => handleWhatsAppClick('cta_block')}
+            data-analytics-handled="true"
+            data-analytics-label={`${serviceType}_cta_whatsapp`}
             title={`Demander un devis ${serviceName} via WhatsApp`}
           >
             <WhatsAppIcon className={styles.ctaBtnIcon} />
@@ -122,6 +124,8 @@ export default function LeadCTA({
             href={phoneUrl}
             className={`${styles.ctaBtn} ${styles.ctaBtnPhone}`}
             onClick={() => handlePhoneClick('cta_block')}
+            data-analytics-handled="true"
+            data-analytics-label={`${serviceType}_cta_phone`}
             title="Appelez CCI Services maintenant"
           >
             <PhoneIcon className={styles.ctaBtnIcon} />

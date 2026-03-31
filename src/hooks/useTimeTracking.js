@@ -8,11 +8,14 @@ import { trackTimeOnPage } from '@/utils/analytics';
  * Tracks at 30s, 60s, 120s, and 300s milestones
  */
 export function useTimeTracking(pageName = '') {
-  const startTime = useRef(Date.now());
+  const startTime = useRef(0);
   const trackedMilestones = useRef(new Set());
   const intervalRef = useRef(null);
 
   useEffect(() => {
+    startTime.current = Date.now();
+    trackedMilestones.current.clear();
+
     const milestones = [30, 60, 120, 300]; // seconds
 
     intervalRef.current = setInterval(() => {

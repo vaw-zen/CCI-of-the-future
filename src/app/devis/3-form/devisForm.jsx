@@ -149,7 +149,7 @@ export default function DevisForm() {
             <div className={styles.section}>
               <h3 className={styles.sectionTitle}>
                 <span className={styles.sectionIcon}>📍</span>
-                Adresse d'intervention
+                Adresse d&apos;intervention
               </h3>
               
               <div className={styles.formGroup}>
@@ -434,7 +434,7 @@ export default function DevisForm() {
                   className={styles.checkbox}
                 />
                 <label htmlFor="newsletter" className={styles.checkboxLabel}>
-                  Je souhaite recevoir les offres spéciales et conseils d'entretien par email
+                  Je souhaite recevoir les offres spéciales et conseils d&apos;entretien par email
                 </label>
               </div>
               
@@ -449,7 +449,7 @@ export default function DevisForm() {
                   required
                 />
                 <label htmlFor="conditions" className={styles.checkboxLabel}>
-                  J'accepte les <a href="/conditions" target="_blank">conditions générales</a> et la <a href="/confidentialite" target="_blank">politique de confidentialité</a> <span className={styles.required}>*</span>
+                  J&apos;accepte les <a href="/conditions" target="_blank">conditions générales</a> et la <a href="/confidentialite" target="_blank">politique de confidentialité</a> <span className={styles.required}>*</span>
                 </label>
               </div>
             </div>

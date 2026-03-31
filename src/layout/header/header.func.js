@@ -19,28 +19,18 @@ const memoizedContent = content;
 export function useHeaderLogic() {
     const [active, setActive] = useState(-1)
     const [menu, setMenu] = useState(false)
-    const [isClientSide, setIsClientSide] = useState(false)
     const [showTopButton, setShowTopButton] = useState(false)
     
     // Use Next.js pathname hook instead of manually tracking
     const currentPath = usePathname();
     const prevPathRef = useRef(currentPath);
 
-    // Use this safe version of isDesktop to prevent hydration issues
     const safeIsDesktop = useCallback(() => {
-        if (!isClientSide) return false;
         return dimensionsStore.getState().vw >= 1024;
-    }, [isClientSide]);
-
-    // Set client-side flag after first render
-    useEffect(() => {
-        setIsClientSide(true);
     }, []);
 
     // Handle scroll for top button visibility
     useEffect(() => {
-        if (!isClientSide) return;
-
         const handleScroll = () => {
             const shouldShow = window.scrollY > window.innerHeight * 0.25;
             setShowTopButton(shouldShow);
@@ -48,16 +38,22 @@ export function useHeaderLogic() {
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [isClientSide]);
+    }, []);
 
     // Close menu when navigating to a different page
     useEffect(() => {
-        if (isClientSide && menu && prevPathRef.current !== currentPath) {
-            setMenu(false);
-            setActive(-1);
+        if (menu && prevPathRef.current !== currentPath) {
+            const frameId = requestAnimationFrame(() => {
+                setMenu(false);
+                setActive(-1);
+            });
+
+            prevPathRef.current = currentPath;
+            return () => cancelAnimationFrame(frameId);
         }
+
         prevPathRef.current = currentPath;
-    }, [currentPath, isClientSide, menu]);
+    }, [currentPath, menu]);
 
     const toggleDropdown = useCallback((index) => {
         setActive((prev) => (prev === index ? -1 : index));
@@ -138,20 +134,18 @@ export function useHeaderLogic() {
 
     // Modified to ensure consistent string format between server and client
     const handleMenuStyles = useCallback((normal, active) => {
-        if (!isClientSide) return normal;
         if (safeIsDesktop()) return normal;
         return menu ? `${normal} ${active}` : normal;
-    }, [safeIsDesktop, menu, isClientSide]);
+    }, [safeIsDesktop, menu]);
 
     // Modified to ensure consistent string format between server and client
     const desktopMenuStyles = useCallback((normal, active) => {
-        if (!isClientSide) return normal;
         if (!safeIsDesktop()) return normal;
         return menu ? `${normal} ${active}` : normal;
-    }, [safeIsDesktop, menu, isClientSide]);
+    }, [safeIsDesktop, menu]);
 
     const scrollToTop = useCallback(() => {
-        if (!isBrowser || !isClientSide || window.scrollY === 0) return;
+        if (!isBrowser || window.scrollY === 0) return;
     
         if (lenisRef.current) {
           requestAnimationFrame(() => {
@@ -169,19 +163,17 @@ export function useHeaderLogic() {
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    }, [isClientSide]);
+    }, []);
 
     // Memoized helper functions that depend on currentPath
     // Modified to ensure consistent behavior between server and client
     const isLinkActive = useCallback((link) => {
-        if (!isClientSide) return false;
         // Exact match OR parent path match (e.g., /conseils matches /conseils/some-article)
         return currentPath === link || currentPath?.startsWith(link + '/');
-    }, [currentPath, isClientSide]);
+    }, [currentPath]);
 
     // Modified to ensure consistent behavior between server and client
     const hasActiveSublink = useCallback((subLinks) => {
-        if (!isClientSide) return false;
         if (!subLinks) return false;
         
         // Check if current path exists as a top-level nav item
@@ -196,7 +188,7 @@ export function useHeaderLogic() {
             // Exact match OR parent path match
             return currentPath === subLink.link || currentPath?.startsWith(subLink.link + '/');
         });
-    }, [currentPath, isClientSide]);
+    }, [currentPath]);
 
     const findActiveSublink = useCallback((subLinks) => {
         if (!subLinks) return null;
@@ -283,6 +275,5 @@ export function headerSI() {
     }
     prevScroll.current = window.scrollY
 }
-
 
 

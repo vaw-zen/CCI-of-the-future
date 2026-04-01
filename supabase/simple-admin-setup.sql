@@ -26,23 +26,39 @@ CREATE POLICY "Allow users to read own admin record" ON admin_users
 
 -- 4. Create a simple function to check if user is admin
 CREATE OR REPLACE FUNCTION is_admin(user_email TEXT)
-RETURNS BOOLEAN AS $$
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM admin_users 
+    SELECT 1
+    FROM public.admin_users
     WHERE email = user_email 
     AND is_active = TRUE
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
--- 5. Update devis_requests policies to allow service role access
+-- 5. Update devis_requests policies for authenticated admins only.
+DROP POLICY IF EXISTS "Allow public devis requests insertion" ON devis_requests;
 DROP POLICY IF EXISTS "Allow authenticated users to read devis requests" ON devis_requests;
 DROP POLICY IF EXISTS "Allow admin users to read devis requests" ON devis_requests;
+DROP POLICY IF EXISTS "Allow service role full access" ON devis_requests;
+DROP POLICY IF EXISTS "Allow service role full access to devis requests" ON devis_requests;
+DROP POLICY IF EXISTS "Allow service role to read devis requests" ON devis_requests;
+DROP POLICY IF EXISTS "Enable all for service role" ON devis_requests;
+DROP POLICY IF EXISTS "Enable insert for anonymous users" ON devis_requests;
+DROP POLICY IF EXISTS "Enable insert for authenticated users" ON devis_requests;
+DROP POLICY IF EXISTS "Enable read for authenticated users" ON devis_requests;
+DROP POLICY IF EXISTS "allow_insert_for_all" ON devis_requests;
+DROP POLICY IF EXISTS "allow_select_for_service_role" ON devis_requests;
 
--- Simple policy: service role can read all, authenticated users with admin record can read
-CREATE POLICY "Allow service role to read devis requests" ON devis_requests
-  FOR SELECT USING (auth.jwt() ->> 'role' = 'service_role');
+CREATE POLICY "Allow admin users to read devis requests" ON devis_requests
+  FOR SELECT
+  TO authenticated
+  USING ((SELECT public.is_admin(auth.jwt() ->> 'email')));
 
 -- 6. Insert your admin user
 INSERT INTO admin_users (email, full_name, role) 

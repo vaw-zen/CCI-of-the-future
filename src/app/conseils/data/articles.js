@@ -1239,7 +1239,7 @@ export const articles = [
       <p>Chez <strong>CCI Services</strong>, nous accompagnons les établissements tunisiens avec des prestations ciblées pour les salles à forte fréquentation. Notre approche combine dépoussiérage technique, nettoyage textile, détachage, désodorisation et interventions périodiques adaptées au rythme d'utilisation de chaque site.</p>
 
       <div class="info-box">
-        <p>🎯 <strong>Vous gérez un auditorium ou une grande salle ?</strong> Demandez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a> pour un entretien régulier. Nous pouvons aussi intégrer l'amphithéâtre dans une <a href="/conseils/conventions-nettoyage-entreprises-tunisie-contrats-b2b" style="color: var(--ac-primary); font-weight: 600;">convention de nettoyage B2B</a>.</p>
+        <p>🎯 <strong>Vous gérez un auditorium ou une grande salle ?</strong> Demandez un <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a> pour un entretien régulier. Nous pouvons aussi intégrer l'amphithéâtre dans une <a href="/conseils/conventions-nettoyage-entreprises-tunisie-contrats-b2b" style="color: var(--ac-primary); font-weight: 600;">convention de nettoyage B2B</a>.</p>
       </div>
 
       <div class="related-services">
@@ -1492,7 +1492,7 @@ export const articles = [
           <a href="mailto:contact@cciservices.online" class="btn-email">
             📧 contact@cciservices.online
           </a>
-          <a href="/devis" class="btn-website">
+          <a href="/contact" class="btn-website">
             📋 Demander un devis
           </a>
         </div>

@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../../libs/supabase';
+import { createServiceClient } from '@/libs/supabase';
 
 export async function POST(request) {
   try {
-    // Check if Supabase is available
-    if (!supabase) {
+    let supabase;
+    try {
+      supabase = createServiceClient();
+    } catch (error) {
       return NextResponse.json({ 
         status: 'config_error', 
         message: 'Service de base de données non configuré.' 

@@ -54,6 +54,15 @@ CREATE TABLE IF NOT EXISTS email_notifications (
   error_message TEXT
 );
 
+-- Lock down the queue table so it is never publicly readable/writable.
+ALTER TABLE email_notifications ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow service role full access to email notifications" ON email_notifications;
+CREATE POLICY "Allow service role full access to email notifications" ON email_notifications
+  FOR ALL
+  USING (auth.jwt() ->> 'role' = 'service_role')
+  WITH CHECK (auth.jwt() ->> 'role' = 'service_role');
+
 -- Function to queue email notifications
 CREATE OR REPLACE FUNCTION queue_devis_email_notification()
 RETURNS TRIGGER AS $$

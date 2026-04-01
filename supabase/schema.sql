@@ -57,24 +57,33 @@ CREATE INDEX IF NOT EXISTS idx_devis_requests_type_service ON devis_requests(typ
 -- Enable Row Level Security
 ALTER TABLE devis_requests ENABLE ROW LEVEL SECURITY;
 
--- Create policy to allow inserts from the application
--- This allows anyone to insert a devis request (since it's a public form)
-CREATE POLICY "Allow public devis requests insertion" ON devis_requests
-  FOR INSERT WITH CHECK (true);
+-- Public inserts should go through the server route using the service role.
+DROP POLICY IF EXISTS "Allow public devis requests insertion" ON devis_requests;
+DROP POLICY IF EXISTS "Allow service role full access" ON devis_requests;
+DROP POLICY IF EXISTS "Allow service role full access to devis requests" ON devis_requests;
+DROP POLICY IF EXISTS "Allow service role to read devis requests" ON devis_requests;
+DROP POLICY IF EXISTS "Enable all for service role" ON devis_requests;
+DROP POLICY IF EXISTS "Enable insert for anonymous users" ON devis_requests;
+DROP POLICY IF EXISTS "Enable insert for authenticated users" ON devis_requests;
+DROP POLICY IF EXISTS "Enable read for authenticated users" ON devis_requests;
+DROP POLICY IF EXISTS "allow_insert_for_all" ON devis_requests;
+DROP POLICY IF EXISTS "allow_select_for_service_role" ON devis_requests;
 
--- Create policy to allow reading only by authenticated users (for admin access)
--- You can adjust this based on your authentication needs
-CREATE POLICY "Allow authenticated users to read devis requests" ON devis_requests
-  FOR SELECT USING (auth.role() = 'authenticated');
-
--- Alternative: Allow service role to read all data (for API routes)
-CREATE POLICY "Allow service role full access" ON devis_requests
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+-- Only authenticated admin users can read devis requests from the dashboard.
+DROP POLICY IF EXISTS "Allow authenticated users to read devis requests" ON devis_requests;
+DROP POLICY IF EXISTS "Allow admin users to read devis requests" ON devis_requests;
+CREATE POLICY "Allow admin users to read devis requests" ON devis_requests
+  FOR SELECT
+  TO authenticated
+  USING ((SELECT public.is_admin(auth.jwt() ->> 'email')));
 
 -- Create a function to send email notifications
 -- This will be called by a database trigger
 CREATE OR REPLACE FUNCTION notify_new_devis_request()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = pg_catalog, public
+AS $$
 BEGIN
   -- Insert into a notifications queue table or call an edge function
   -- For now, we'll use Supabase's built-in notification system
@@ -89,7 +98,7 @@ BEGIN
   
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Create trigger to call the notification function
 DROP TRIGGER IF EXISTS trigger_notify_new_devis_request ON devis_requests;

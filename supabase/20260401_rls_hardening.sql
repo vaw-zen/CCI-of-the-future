@@ -1,15 +1,30 @@
--- SECURITY FIX for Supabase Security Advisor "Table publicly accessible"
--- Run this in the Supabase SQL editor instead of disabling RLS.
+-- Tighten RLS for public tables and remove stale permissive policies.
+-- Public form submissions now go through server routes using the service role.
 
--- 1. Re-enable RLS on public-facing tables
+-- Enable RLS on all exposed tables flagged by the advisor.
 ALTER TABLE IF EXISTS public.devis_requests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.email_notifications ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.admin_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS public.convention_requests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.articles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.leads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.lead_events ENABLE ROW LEVEL SECURITY;
 
--- 2. Tighten devis_requests policies
+-- Recreate admin helper with a fixed search_path so policies can safely call it.
+CREATE OR REPLACE FUNCTION public.is_admin(user_email TEXT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1
+    FROM public.admin_users
+    WHERE email = user_email
+      AND is_active = TRUE
+  );
+END;
+$$;
+
+-- Drop stale permissive devis policies that accumulated over time.
 DROP POLICY IF EXISTS "Allow public devis requests insertion" ON public.devis_requests;
 DROP POLICY IF EXISTS "Allow authenticated users to read devis requests" ON public.devis_requests;
 DROP POLICY IF EXISTS "Allow admin users to read devis requests" ON public.devis_requests;
@@ -28,7 +43,7 @@ CREATE POLICY "Allow admin users to read devis requests" ON public.devis_request
   TO authenticated
   USING ((SELECT public.is_admin(auth.jwt() ->> 'email')));
 
--- 3. Tighten convention_requests and enable RLS on other exposed tables
+-- Public inserts are handled by Next.js API routes with the service role.
 DROP POLICY IF EXISTS "Allow public insert on convention_requests" ON public.convention_requests;
 DROP POLICY IF EXISTS "Allow authenticated read on convention_requests" ON public.convention_requests;
 DROP POLICY IF EXISTS "Allow authenticated update on convention_requests" ON public.convention_requests;
@@ -46,24 +61,33 @@ CREATE POLICY "Allow admin users to update convention requests" ON public.conven
   USING ((SELECT public.is_admin(auth.jwt() ->> 'email')))
   WITH CHECK ((SELECT public.is_admin(auth.jwt() ->> 'email')));
 
-ALTER TABLE IF EXISTS public.leads ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.lead_events ENABLE ROW LEVEL SECURITY;
+-- Fix mutable search_path warnings on existing functions.
+CREATE OR REPLACE FUNCTION public.notify_new_devis_request()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path = pg_catalog, public
+AS $$
+BEGIN
+  PERFORM pg_notify('new_devis_request', json_build_object(
+    'id', NEW.id,
+    'email', NEW.email,
+    'nom', NEW.nom,
+    'prenom', NEW.prenom,
+    'type_service', NEW.type_service,
+    'created_at', NEW.created_at
+  )::text);
 
--- 4. Lock down the email queue table as well
-DROP POLICY IF EXISTS "Allow service role full access to email notifications" ON public.email_notifications;
-CREATE POLICY "Allow service role full access to email notifications" ON public.email_notifications
-  FOR ALL
-  USING (auth.jwt() ->> 'role' = 'service_role')
-  WITH CHECK (auth.jwt() ->> 'role' = 'service_role');
+  RETURN NEW;
+END;
+$$;
 
--- 5. Quick audit: list public tables that still do not have RLS enabled
-SELECT
-  n.nspname AS schema_name,
-  c.relname AS table_name,
-  c.relrowsecurity AS rls_enabled
-FROM pg_class c
-JOIN pg_namespace n ON n.oid = c.relnamespace
-WHERE c.relkind = 'r'
-  AND n.nspname = 'public'
-  AND c.relrowsecurity = FALSE
-ORDER BY 1, 2;
+CREATE OR REPLACE FUNCTION public.update_convention_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path = pg_catalog, public
+AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$;

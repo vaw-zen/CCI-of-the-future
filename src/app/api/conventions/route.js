@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../../libs/supabase';
+import { createServiceClient } from '@/libs/supabase';
 
 export async function POST(request) {
   try {
-    if (!supabase) {
+    let supabase;
+    try {
+      supabase = createServiceClient();
+    } catch (error) {
       console.error('[conventions] Supabase not configured — missing URL or key');
       return NextResponse.json({
         status: 'config_error',

@@ -43,32 +43,38 @@ CREATE INDEX IF NOT EXISTS idx_convention_requests_secteur ON convention_request
 -- Enable RLS
 ALTER TABLE convention_requests ENABLE ROW LEVEL SECURITY;
 
--- Allow public inserts (for form submissions)
-CREATE POLICY "Allow public insert on convention_requests"
-  ON convention_requests
-  FOR INSERT
-  WITH CHECK (true);
+-- Public inserts should go through the server route using the service role.
+DROP POLICY IF EXISTS "Allow public insert on convention_requests" ON convention_requests;
+DROP POLICY IF EXISTS "Allow authenticated read on convention_requests" ON convention_requests;
+DROP POLICY IF EXISTS "Allow authenticated update on convention_requests" ON convention_requests;
+DROP POLICY IF EXISTS "Allow admin users to read convention requests" ON convention_requests;
+DROP POLICY IF EXISTS "Allow admin users to update convention requests" ON convention_requests;
 
--- Allow authenticated users to read (admin access)
-CREATE POLICY "Allow authenticated read on convention_requests"
+-- Allow authenticated admin users to review and manage convention requests.
+CREATE POLICY "Allow admin users to read convention requests"
   ON convention_requests
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  TO authenticated
+  USING ((SELECT public.is_admin(auth.jwt() ->> 'email')));
 
--- Allow authenticated users to update (admin status tracking)
-CREATE POLICY "Allow authenticated update on convention_requests"
+CREATE POLICY "Allow admin users to update convention requests"
   ON convention_requests
   FOR UPDATE
-  USING (auth.role() = 'authenticated');
+  TO authenticated
+  USING ((SELECT public.is_admin(auth.jwt() ->> 'email')))
+  WITH CHECK ((SELECT public.is_admin(auth.jwt() ->> 'email')));
 
 -- Auto-update updated_at on changes
 CREATE OR REPLACE FUNCTION update_convention_updated_at()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = pg_catalog, public
+AS $$
 BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 CREATE TRIGGER convention_requests_updated_at
   BEFORE UPDATE ON convention_requests

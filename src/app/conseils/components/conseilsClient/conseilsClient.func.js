@@ -3,6 +3,11 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { getAllArticles, getArticlesByCategory } from '../../data/articles.js';
 import { dimensionsStore } from '@/utils/store/store';
 
+const pinnedFeaturedSlugs = [
+  'entretien-periodique-amphitheatres-tunisie-moquette-chaises-rideaux',
+  'conventions-nettoyage-entreprises-tunisie-contrats-b2b',
+];
+
 export function useConseilsLogic() {
   const pathname = usePathname();
   const router = useRouter();
@@ -40,11 +45,15 @@ export function useConseilsLogic() {
 
     if (activeFilter === 'all') {
       const sortedArticles = [...allArticles].sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
-      const latestTwoFeatured = sortedArticles.slice(0, 2);
-      const remainingArticles = sortedArticles.slice(2);
+      const pinnedFeaturedArticles = pinnedFeaturedSlugs
+        .map((slug) => sortedArticles.find((article) => article.slug === slug))
+        .filter(Boolean);
+      const remainingArticles = sortedArticles.filter(
+        (article) => !pinnedFeaturedArticles.some((featuredArticle) => featuredArticle.slug === article.slug)
+      );
 
       return {
-        featuredArticles: latestTwoFeatured,
+        featuredArticles: pinnedFeaturedArticles,
         filteredArticles: remainingArticles
       };
     }

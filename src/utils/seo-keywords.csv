@@ -14,21 +14,21 @@ Company Brand,CCI Services,Navigational,Medium,/,Optimized,Homepage,High,60,224,
 Company Brand,Chaabane's Cleaning Intelligence,Navigational,Low,/about,Needs Optimization,About Page,High,73,304,1,24.01,82,Improving,2025-10-15
 Tapis & Moquette,nettoyage tapis tunis,Transactional,High,/tapis,Optimized,Service Page,High,93,1380,0,6.74,712,Dropped Out,2025-10-15
 Tapis & Moquette,nettoyage moquettes tunisie,Transactional,High,/tapis,Optimized,Service Page,High,136,1207,4,11.27,661,Declining,2025-10-15
-Tapis & Moquette,injection extraction,Informational,Medium,/blog/injection-extraction-guide,Optimized,Blog Post,High,147,546,0,26.92,210,Dropped Out,2025-10-15
-Tapis & Moquette,lavage vapeur,Informational,Medium,/blog/nettoyage-vapeur-guide,Optimized,Blog Post,High,105,897,0,11.71,168,Dropped Out,2025-10-15
-Tapis & Moquette,nettoyage à sec,Informational,Low,/blog/nettoyage-sec-guide,Optimized,Blog Post,High,27,493,0,5.48,143,Dropped Out,2025-10-15
+Tapis & Moquette,injection extraction,Informational,Medium,/conseils/injection-extraction-tapis-tunis-2025,Optimized,Blog Post,High,147,546,0,26.92,210,Dropped Out,2025-10-15
+Tapis & Moquette,lavage vapeur,Informational,Medium,/conseils/lavage-vapeur-tapis-tunis-2025,Optimized,Blog Post,High,105,897,0,11.71,168,Dropped Out,2025-10-15
+Tapis & Moquette,nettoyage à sec,Informational,Low,/conseils/nettoyage-a-sec-tunis-2025,Optimized,Blog Post,High,27,493,0,5.48,143,Dropped Out,2025-10-15
 Tapis & Moquette,shampouinage moquette Tunis,Commercial,Medium,/tapis,Needs Optimization,Service Page,High,58,1296,2,4.48,330,Declining,2025-10-15
-Tapis & Moquette,détachage moquette Tunis,Commercial,Low,/blog/detachage-moquette,Optimized,Blog Post,High,114,809,2,14.09,151,Declining,2025-10-15
+Tapis & Moquette,détachage moquette Tunis,Commercial,Low,/conseils/detachage-moquette-tunis-2025,Optimized,Blog Post,High,114,809,2,14.09,151,Declining,2025-10-15
 Tapis & Moquette,entreprise nettoyage moquette Tunis,Commercial,High,/tapis,Optimized,Service Page,High,81,284,4,28.52,664,Improving,2025-10-15
 Tapis & Moquette,devis nettoyage moquette Tunis,Transactional,Medium,/devis,Optimized,Landing Page,High,18,522,3,3.45,372,Improving,2025-10-15
-Tapis & Moquette,tarif nettoyage tapis Tunis,Commercial,Medium,/blog/prix-nettoyage-tapis,Optimized,Blog Post,High,87,444,4,19.59,567,Declining,2025-10-15
+Tapis & Moquette,tarif nettoyage tapis Tunis,Commercial,Medium,/conseils/prix-nettoyage-tapis-tunis-tarifs-2025,Optimized,Blog Post,High,87,444,4,19.59,567,Declining,2025-10-15
 Salon & Canapé,nettoyage salon tunis,Commercial,Medium,/salon,Optimized,Service Page,High,96,1023,0,9.38,445,Dropped Out,2025-10-15
-Salon & Canapé,nettoyage canapé,Informational,Medium,/blog/guide-nettoyage-canape,Optimized,Blog Post,High,111,834,0,13.31,326,Dropped Out,2025-10-15
+Salon & Canapé,nettoyage canapé,Informational,Medium,/conseils/nettoyage-canape-tunis-2025,Optimized,Blog Post,High,111,834,0,13.31,326,Dropped Out,2025-10-15
 Salon & Canapé,nettoyage voiture intérieur,Commercial,Low,/blog/nettoyage-voiture-interieur,Optimized,Blog Post,High,123,1131,0,10.88,186,Dropped Out,2025-10-15
 Salon & Canapé,nettoyage salon domicile tunis,Transactional,Medium,/salon,Needs Optimization,Service Page,High,3,1157,0,0.26,338,Dropped Out,2025-10-15
-Salon & Canapé,détachage salon,Informational,Low,/blog/detachage-salon-guide,Optimized,Blog Post,High,0,583,0,0,170,Dropped Out,2025-10-15
-Salon & Canapé,shampooing canapé,Informational,Low,/blog/shampooing-canape,Optimized,Blog Post,High,21,1362,0,1.54,135,Dropped Out,2025-10-15
-Salon & Canapé,désinfection salon,Informational,Medium,/blog/desinfection-salon,Optimized,Blog Post,High,45,561,0,8.02,253,Dropped Out,2025-10-15
+Salon & Canapé,détachage salon,Informational,Low,/conseils/detachage-salon-tunis-2025,Optimized,Blog Post,High,0,583,0,0,170,Dropped Out,2025-10-15
+Salon & Canapé,shampooing canapé,Informational,Low,/conseils/shampooing-canape-tunis-2025,Optimized,Blog Post,High,21,1362,0,1.54,135,Dropped Out,2025-10-15
+Salon & Canapé,désinfection salon,Informational,Medium,/conseils/desinfection-salon-tunis-2025,Optimized,Blog Post,High,45,561,0,8.02,253,Dropped Out,2025-10-15
 Marbre & Pierre,traitement marbre tunisie,Commercial,High,/marbre,Optimized,Service Page,High,138,323,8,42.72,490,Declining,2025-10-15
 Marbre & Pierre,ponçage marbre,Informational,Medium,/blog/poncage-marbre-guide,Optimized,Blog Post,High,70,1387,0,5.05,211,Dropped Out,2025-10-15
 Marbre & Pierre,polissage marbre,Informational,Medium,/blog/polissage-marbre-technique,Optimized,Blog Post,Medium,2,150,0,1.33,286,Dropped Out,2025-10-15
@@ -61,20 +61,20 @@ Tapisserie,remplacement mousse,Informational,Low,/blog/remplacement-mousse-canap
 Tapisserie,tapisserie nautique,Commercial,Low,/tapisserie,Needs Optimization,Service Page,High,45,830,0,5.42,90,Stable,2025-10-15
 Tapisserie,confection sur mesure,Commercial,Low,/tapisserie,Needs Optimization,Service Page,High,39,847,0,4.6,76,Stable,2025-10-15
 Tapisserie,rénovation fauteuil,Informational,Medium,/blog/renovation-fauteuil-guide,Not Optimized,Blog Post,Medium,22,111,0,19.82,278,Stable,2025-10-15
-Pricing & Services,prix nettoyage tapis tunis,Commercial,Medium,/blog/prix-nettoyage-tapis,Not Optimized,Blog Post,High,22,817,0,2.69,416,Stable,2025-10-15
-Pricing & Services,tarif nettoyage tapis,Commercial,Medium,/blog/tarifs-nettoyage-tapis,Not Optimized,Blog Post,High,24,920,0,2.61,290,Stable,2025-10-15
+Pricing & Services,prix nettoyage tapis tunis,Commercial,Medium,/conseils/prix-nettoyage-tapis-tunis-tarifs-2025,Not Optimized,Blog Post,High,22,817,0,2.69,416,Stable,2025-10-15
+Pricing & Services,tarif nettoyage tapis,Commercial,Medium,/conseils/prix-nettoyage-tapis-tunis-tarifs-2025,Not Optimized,Blog Post,High,24,920,0,2.61,290,Stable,2025-10-15
 Pricing & Services,devis nettoyage tapis,Transactional,High,/devis,Optimized,Landing Page,High,122,2012,0,6.06,433,Stable,2025-10-15
-Pricing & Services,cout nettoyage tapis tunisie,Commercial,Medium,/blog/cout-nettoyage-tapis,Not Optimized,Blog Post,High,34,481,0,7.07,404,Stable,2025-10-15
-Pricing & Services,prix injection extraction,Commercial,Low,/blog/prix-injection-extraction,Not Optimized,Blog Post,High,28,244,0,11.48,283,Stable,2025-10-15
+Pricing & Services,cout nettoyage tapis tunisie,Commercial,Medium,/conseils/prix-nettoyage-tapis-tunis-tarifs-2025,Not Optimized,Blog Post,High,34,481,0,7.07,404,Stable,2025-10-15
+Pricing & Services,prix injection extraction,Commercial,Low,/conseils/injection-extraction-tapis-tunis-2025,Not Optimized,Blog Post,High,28,244,0,11.48,283,Stable,2025-10-15
 Pricing & Services,devis gratuit,Transactional,High,/devis,Optimized,Landing Page,High,104,992,0,10.48,334,Stable,2025-10-15
 Pricing & Services,simulateur devis nettoyage tunisie,Transactional,Low,/devis,Optimized,Landing Page,High,50,1175,1,4.26,325,New Entry,2025-10-15
 Pricing & Services,prix transparent,Commercial,Low,/blog/prix-transparent-nettoyage,Not Optimized,Blog Post,High,6,933,0,0.64,92,Stable,2025-10-15
 Pricing & Services,devis en ligne,Transactional,Medium,/devis,Optimized,Landing Page,High,50,1965,0,2.54,192,Stable,2025-10-15
-Pricing & Services,tarif nettoyage salon tunisie,Commercial,Medium,/blog/tarif-nettoyage-salon,Not Optimized,Blog Post,High,9,494,0,1.82,457,Stable,2025-10-15
-Specialized Services,comment nettoyer canapé cuir,Informational,Medium,/blog/nettoyer-canape-cuir,Not Optimized,Blog Post,High,13,1177,0,1.1,185,Stable,2025-10-15
-Specialized Services,entretien canapé cuir tunis,Commercial,Low,/blog/entretien-canape-cuir,Not Optimized,Blog Post,High,64,269,0,23.79,153,Stable,2025-10-15
-Specialized Services,nettoyage cuir professionnel,Commercial,Low,/blog/nettoyage-cuir-professionnel,Not Optimized,Blog Post,High,34,369,0,9.21,231,Stable,2025-10-15
-Specialized Services,produits nettoyage cuir,Informational,Low,/blog/produits-nettoyage-cuir,Not Optimized,Blog Post,High,7,705,0,0.99,209,Stable,2025-10-15
+Pricing & Services,tarif nettoyage salon tunisie,Commercial,Medium,/conseils/tarif-nettoyage-salon-tunis-2026,Not Optimized,Blog Post,High,9,494,0,1.82,457,Stable,2025-10-15
+Specialized Services,comment nettoyer canapé cuir,Informational,Medium,/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet,Not Optimized,Blog Post,High,13,1177,0,1.1,185,Stable,2025-10-15
+Specialized Services,entretien canapé cuir tunis,Commercial,Low,/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet,Not Optimized,Blog Post,High,64,269,0,23.79,153,Stable,2025-10-15
+Specialized Services,nettoyage cuir professionnel,Commercial,Low,/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet,Not Optimized,Blog Post,High,34,369,0,9.21,231,Stable,2025-10-15
+Specialized Services,produits nettoyage cuir,Informational,Low,/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet,Not Optimized,Blog Post,High,7,705,0,0.99,209,Stable,2025-10-15
 Specialized Services,détartrage marbre cuisine,Informational,Medium,/blog/detartrage-marbre-cuisine,Not Optimized,Blog Post,High,10,243,0,4.12,124,Stable,2025-10-15
 Specialized Services,entretien marbre cuisine tunis,Commercial,Low,/blog/entretien-marbre-cuisine,Not Optimized,Blog Post,High,72,479,0,15.03,266,Stable,2025-10-15
 Specialized Services,nettoyer plan travail marbre,Informational,Medium,/blog/nettoyer-plan-travail-marbre,Not Optimized,Blog Post,Low,24,129,0,18.6,141,Stable,2025-10-15
@@ -89,9 +89,9 @@ Geographic Areas,services carthage,Commercial,Low,/services,Needs Optimization,S
 Geographic Areas,nettoyage prestige tunis,Commercial,Medium,/services,Needs Optimization,Service Page,High,6,1244,0,0.48,335,Stable,2025-10-15
 Geographic Areas,marbre la marsa,Commercial,Low,/marbre,Needs Optimization,Service Page,High,13,1309,0,0.99,266,Stable,2025-10-15
 Geographic Areas,CCI services premium,Commercial,Low,/services,Needs Optimization,Service Page,High,63,598,1,10.54,304,New Entry,2025-10-15
-Technical Methods,injection-extraction,Informational,Medium,/blog/injection-extraction-guide,Optimized,Blog Post,High,87,893,0,9.74,237,Stable,2025-10-15
-Technical Methods,lavage vapeur,Informational,Medium,/blog/lavage-vapeur-technique,Not Optimized,Blog Post,Medium,18,299,0,6.02,132,Stable,2025-10-15
-Technical Methods,nettoyage à sec,Informational,Medium,/blog/nettoyage-sec-technique,Not Optimized,Blog Post,High,34,262,0,12.98,289,Stable,2025-10-15
+Technical Methods,injection-extraction,Informational,Medium,/conseils/injection-extraction-tapis-tunis-2025,Optimized,Blog Post,High,87,893,0,9.74,237,Stable,2025-10-15
+Technical Methods,lavage vapeur,Informational,Medium,/conseils/lavage-vapeur-tapis-tunis-2025,Not Optimized,Blog Post,Medium,18,299,0,6.02,132,Stable,2025-10-15
+Technical Methods,nettoyage à sec,Informational,Medium,/conseils/nettoyage-a-sec-tunis-2025,Not Optimized,Blog Post,High,34,262,0,12.98,289,Stable,2025-10-15
 Technical Methods,shampooing,Informational,Low,/blog/shampooing-technique,Not Optimized,Blog Post,Medium,41,907,0,4.52,102,Stable,2025-10-15
 Technical Methods,cristallisation,Informational,High,/blog/cristallisation-technique,Not Optimized,Blog Post,High,37,1071,0,3.45,320,Stable,2025-10-15
 Technical Methods,polissage,Informational,Medium,/blog/polissage-technique,Not Optimized,Blog Post,High,15,174,0,8.62,180,Stable,2025-10-15
@@ -110,9 +110,9 @@ Materials & Surfaces,canapé,Informational,High,/salon,Optimized,Service Page,Hi
 Materials & Surfaces,salon,Informational,High,/salon,Optimized,Service Page,High,126,360,0,35,339,Stable,2025-10-15
 Materials & Surfaces,rideaux,Informational,Low,/blog/nettoyage-rideaux,Not Optimized,Blog Post,High,9,1014,0,0.89,265,Stable,2025-10-15
 Materials & Surfaces,matelas,Informational,Medium,/blog/nettoyage-matelas,Not Optimized,Blog Post,Medium,18,793,0,2.27,198,Error,2025-10-15
-Materials & Surfaces,tissus d'ameublement,Informational,Low,/blog/nettoyage-tissus-ameublement,Not Optimized,Blog Post,High,73,284,0,25.7,170,Error,2025-10-15
+Materials & Surfaces,tissus d'ameublement,Informational,Low,/conseils/nettoyage-tissus-ameublement-tunis-2026,Not Optimized,Blog Post,High,73,284,0,25.7,170,Error,2025-10-15
 Materials & Surfaces,cuir,Informational,Medium,/blog/nettoyage-cuir-guide,Not Optimized,Blog Post,High,34,1036,0,3.28,277,Error,2025-10-15
-Materials & Surfaces,microfibre,Informational,Low,/blog/nettoyage-microfibre,Not Optimized,Blog Post,High,51,1199,0,4.25,91,Error,2025-10-15
+Materials & Surfaces,microfibre,Informational,Low,/conseils/nettoyage-canape-microfibre-tunis-2026,Not Optimized,Blog Post,High,51,1199,0,4.25,91,Error,2025-10-15
 Materials & Surfaces,velours,Informational,Low,/blog/nettoyage-velours,Not Optimized,Blog Post,High,45,1007,0,4.47,206,Error,2025-10-15
 Materials & Surfaces,coton,Informational,Low,/blog/nettoyage-coton,Not Optimized,Blog Post,High,19,336,0,5.65,195,Error,2025-10-15
 Materials & Surfaces,lin,Informational,Low,/blog/nettoyage-lin,Not Optimized,Blog Post,Medium,25,904,0,2.77,254,Error,2025-10-15

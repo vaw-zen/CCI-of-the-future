@@ -43,6 +43,13 @@ export default function Page() {
       <HeroHeader title={salonData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(salonData.serviceJSONLD)}</script>
       <main className="responsive-padding">
+        {salonData.sections.localProof && (
+          <ServiceDetails
+            title={salonData.sections.localProof.title}
+            text={salonData.sections.localProof.text}
+          />
+        )}
+
         <ServiceDetails
           title={salonData.sections.mainService.title}
           text={salonData.sections.mainService.text}
@@ -54,6 +61,13 @@ export default function Page() {
           title={salonData.sections.secondaryService.title}
           text={salonData.sections.secondaryService.text}
         />
+
+        {salonData.sections.materials && (
+          <ServiceDetails
+            title={salonData.sections.materials.title}
+            text={salonData.sections.materials.text}
+          />
+        )}
 
         {/* <AboutUsTab
           historyText={salonData.aboutUs.historyText}
@@ -75,6 +89,13 @@ export default function Page() {
           text={salonData.sections.whyChooseUs.text}
         />
 
+        {salonData.sections.pricing && (
+          <ServiceDetails
+            title={salonData.sections.pricing.title}
+            text={salonData.sections.pricing.text}
+          />
+        )}
+
         <ImageSlider images={salonData.images} />
 
         <LeadCTA
@@ -88,7 +109,7 @@ export default function Page() {
 
         <RelatedArticles 
           articles={salonData.relatedArticles} 
-          sectionTitle="Guides Nettoyage & Entretien Salon"
+          sectionTitle="Guides Nettoyage Salon, Canapé & Tissus d'ameublement"
         />
       </main>
     </>

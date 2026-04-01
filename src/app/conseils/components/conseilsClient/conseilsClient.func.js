@@ -16,7 +16,8 @@ export function useConseilsLogic() {
   const desktopFilters = [
     { key: 'all', label: '🔍 Tous les guides', category: null },
     { key: 'tapis', label: '🧽 Nettoyage Tapis', category: 'tapis' },
-    { key: 'tapisserie', label: '🛋️ Nettoyage Tapisserie', category: 'tapisserie' },
+    { key: 'salon', label: '🛋️ Nettoyage Salon & Canapé', category: 'salon' },
+    { key: 'tapisserie', label: '🪑 Retapissage & Tapisserie', category: 'tapisserie' },
     { key: 'marbre', label: '💎 Traitement Marbre', category: 'marbre' },
     { key: 'post-chantier', label: '🔧 Post-Chantier', category: 'post-chantier' },
     { key: 'commercial', label: '🏢 Nettoyage Commercial', category: 'commercial' }
@@ -28,7 +29,8 @@ export function useConseilsLogic() {
     { key: 'marbre', label: '💎 Traitement Marbre', category: 'marbre' },
     { key: 'post-chantier', label: '🔧 Post-Chantier', category: 'post-chantier' },
     { key: 'tapis', label: '🧽 Nettoyage Tapis', category: 'tapis' },
-    { key: 'tapisserie', label: '🛋️ Nettoyage Tapisserie', category: 'tapisserie' }
+    { key: 'salon', label: '🛋️ Nettoyage Salon & Canapé', category: 'salon' },
+    { key: 'tapisserie', label: '🪑 Retapissage & Tapisserie', category: 'tapisserie' }
   ];
 
   const filters = isMobile ? mobileFilters : desktopFilters;

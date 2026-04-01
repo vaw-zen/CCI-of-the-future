@@ -87,6 +87,15 @@ export default async function ArticlePage({ params }) {
     notFound();
   }
 
+  const serviceAboutMap = {
+    tapis: 'Nettoyage Tapis et Moquettes',
+    salon: 'Nettoyage Salon, Canapé et Tissus d\'ameublement',
+    tapisserie: 'Retapissage, Rembourrage et Tapisserie sur mesure',
+    marbre: 'Traitement, Ponçage et Polissage Marbre',
+    'post-chantier': 'Nettoyage Post-Chantier',
+    commercial: 'Nettoyage Commercial B2B',
+  };
+
   // Get related services based on article category
   const getRelatedServices = (category) => {
     const serviceMap = {
@@ -188,8 +197,79 @@ export default async function ArticlePage({ params }) {
     "about": [
       {
         "@type": "Service",
-        "name": "Nettoyage Tapis et Moquettes",
+        "name": serviceAboutMap[article.category] || "Services de nettoyage professionnels",
         "provider": { "@id": "https://cciservices.online#localbusiness" }
+      }
+    ]
+  };
+
+  const faqSchemaMap = {
+    tapis: [
+      {
+        "@type": "Question",
+        "name": "Combien de temps pour nettoyer un tapis de salon ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Entre 30 minutes et 2 heures selon la taille et l'état. Un tapis standard 2x3m prend environ 45 minutes avec notre méthode injection-extraction."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Le tapis sèche en combien de temps ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Moins d'1 heure avec notre méthode injection-extraction professionnelle, contre 6 à 12 heures avec les méthodes traditionnelles."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Intervenez-vous le week-end ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nous travaillons le samedi de 8h à 13h. Des interventions d'urgence sont possibles le dimanche sur devis."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Faut-il vider la pièce avant le nettoyage ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Non, nous déplaçons les meubles légers. Pour les gros meubles, nous nettoyons autour et vous pouvez les replacer après séchage."
+        }
+      }
+    ],
+    salon: [
+      {
+        "@type": "Question",
+        "name": "En combien de temps sèche un canapé après nettoyage ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Comptez généralement 2 à 6 heures selon le tissu, l'épaisseur du rembourrage et la ventilation de la pièce."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Nettoyez-vous les canapés en microfibre et en cuir ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Nous adaptons le protocole selon la matière : microfibre, velours, coton, lin, simili ou cuir pigmenté."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Le nettoyage de salon se fait-il à domicile ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nos équipes interviennent à domicile dans tout le Grand Tunis avec diagnostic et devis gratuit avant l'intervention."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Peut-on traiter les odeurs et les taches anciennes ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, nous combinons pré-détachage ciblé, injection-extraction, désodorisation et traitements adaptés selon l'origine de la tache."
+        }
       }
     ]
   };
@@ -220,44 +300,11 @@ export default async function ArticlePage({ params }) {
     ]
   };
 
-  // FAQ Schema — only for tapis-category articles where these FAQs are relevant
-  const faqSchema = article.category === 'tapis' ? {
+  // FAQ Schema — only for category clusters where these FAQs are relevant
+  const faqSchema = faqSchemaMap[article.category] ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Combien de temps pour nettoyer un tapis de salon ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Entre 30 minutes et 2 heures selon la taille et l'état. Un tapis standard 2x3m prend environ 45 minutes avec notre méthode injection-extraction."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Le tapis sèche en combien de temps ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Moins d'1 heure avec notre méthode injection-extraction professionnelle, contre 6-12h avec les méthodes traditionnelles."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Intervenez-vous le week-end ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui, nous travaillons le samedi de 8h à 13h. Interventions d'urgence possibles le dimanche avec supplément de 50 DT."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Faut-il vider la pièce avant le nettoyage ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Non, nous déplaçons les meubles légers. Pour les gros meubles, nous nettoyons autour et vous pouvez les déplacer après séchage."
-        }
-      }
-    ]
+    "mainEntity": faqSchemaMap[article.category]
   } : null;
 
   // Trouver les articles précédent et suivant

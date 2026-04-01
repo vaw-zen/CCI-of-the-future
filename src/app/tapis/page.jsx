@@ -53,6 +53,13 @@ export default function Page() {
       <HeroHeader title={tapisData.heroTitle} />
       <script type="application/ld+json">{JSON.stringify(tapisData.serviceJSONLD)}</script>
       <main className="responsive-padding">
+        {tapisData.sections.localProof && (
+          <ServiceDetails
+            title={tapisData.sections.localProof.title}
+            text={tapisData.sections.localProof.text}
+          />
+        )}
+
         <ServiceDetails
           title={tapisData.sections.mainService.title}
           text={tapisData.sections.mainService.text}
@@ -62,6 +69,13 @@ export default function Page() {
           title={tapisData.sections.secondaryService.title}
           text={tapisData.sections.secondaryService.text}
         />
+
+        {tapisData.sections.pricing && (
+          <ServiceDetails
+            title={tapisData.sections.pricing.title}
+            text={tapisData.sections.pricing.text}
+          />
+        )}
         {/* <AboutUsTab
           historyText={tapisData.aboutUs.historyText}
           missionText={tapisData.aboutUs.missionText}

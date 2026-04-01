@@ -1,42 +1,21 @@
 {
   "metadata": {
-    "title": "Nettoyage Salon Tunis & El Aouina | Canapés Fauteuils | CCI Services",
-    "description": "Nettoyage salon professionnel Tunis & El Aouina ✓ Canapés, fauteuils ✓ À domicile ✓ Toutes matières ✓ Devis gratuit CCI",
+    "title": "Nettoyage Salon Tunis | Canapé, Microfibre & Tissus d'ameublement | CCI",
+    "description": "Nettoyage salon Tunis et Grand Tunis : canapé tissu, microfibre, cuir et tissus d'ameublement. Détachage, shampooing, désinfection et devis gratuit.",
     "keywords": [
       "nettoyage salon tunis",
-      "nettoyage canapé",
-      "nettoyage voiture intérieur",
-      "nettoyage salon à domicile tunis",
-      "détachage salon",
-      "shampooing canapé",
-      "désinfection salon",
+      "nettoyage canapé tunis",
+      "nettoyage salon domicile tunis",
+      "shampooing canapé tunis",
       "détachage salon tunis",
-      "lavage salon tunis",
-      "entretien salon tunis",
-      "comment nettoyer canapé cuir",
-      "entretien canapé cuir tunis",
-      "nettoyage cuir professionnel",
-      "produits nettoyage cuir",
-      "canapé",
-      "salon",
-      "rideaux",
-      "matelas",
-      "tissus d'ameublement",
-      "cuir",
-      "microfibre",
-      "velours",
-      "coton",
-      "lin",
-      "nettoyage rideaux tunis",
-      "détachage rideaux tunis",
-      "lavage rideaux tunis",
-      "entretien rideaux tunis",
-      "nettoyage matelas tunis",
-      "détachage matelas tunis",
-      "tarif nettoyage salon tunisie"
+      "nettoyage tissus d'ameublement tunis",
+      "nettoyage canapé microfibre tunis",
+      "comment nettoyer canapé cuir tunis",
+      "prix nettoyage salon tunis",
+      "devis nettoyage salon tunis"
     ]
   },
-  "heroTitle": "Nettoyage Salon et Canapés à Domicile - Tunis",
+  "heroTitle": "Nettoyage Salon, Canapé & Tissus d'ameublement à Tunis",
   "tabData": [
     {
       "id": "mission",
@@ -85,7 +64,10 @@
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
-    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
+    "alternateName": [
+      "CCI Tunis",
+      "CCI Services Tunisie"
+    ],
     "url": "https://cciservices.online/",
     "logo": "https://cciservices.online/logo.png",
     "telephone": "+216-98-557-766",
@@ -111,13 +93,34 @@
     "description": "CCI Tunisie - Nettoyage professionnel canapés, rideaux et textiles d'ameublement à Tunis. Détachage, désodorisation et protection des fibres. CCI Tunis : experts nettoyage textile.",
     "url": "https://cciservices.online/salon",
     "areaServed": [
-      { "@type": "City", "name": "Tunis" },
-      { "@type": "City", "name": "Ariana" },
-      { "@type": "City", "name": "El Aouina" },
-      { "@type": "City", "name": "Ben Arous" },
-      { "@type": "City", "name": "La Marsa" },
-      { "@type": "City", "name": "Carthage" },
-      { "@type": "City", "name": "Manouba" }
+      {
+        "@type": "City",
+        "name": "Tunis"
+      },
+      {
+        "@type": "City",
+        "name": "Ariana"
+      },
+      {
+        "@type": "City",
+        "name": "El Aouina"
+      },
+      {
+        "@type": "City",
+        "name": "Ben Arous"
+      },
+      {
+        "@type": "City",
+        "name": "La Marsa"
+      },
+      {
+        "@type": "City",
+        "name": "Carthage"
+      },
+      {
+        "@type": "City",
+        "name": "Manouba"
+      }
     ],
     "aggregateRating": {
       "@type": "AggregateRating",
@@ -133,8 +136,18 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
-      { "@type": "ListItem", "position": 2, "name": "Nettoyage Salon", "item": "https://cciservices.online/salon" }
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Accueil",
+        "item": "https://cciservices.online/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Nettoyage Salon",
+        "item": "https://cciservices.online/salon"
+      }
     ]
   },
   "faqJSONLD": {
@@ -193,16 +206,28 @@
   },
   "sections": {
     "mainService": {
-      "title": "Nettoyage canapé et tissus d'ameublement",
-      "text": "Procédé complet et adapté à chaque support : diagnostic de la fibre (microfibre, velours, lin, coton mixte, simili, cuir pigmenté) et test de tenue des couleurs avant toute action, suivi d'une aspiration profonde (buses battantes) puis d'un pré‑détachage ciblé (graisse, tanins, protéines) avec agents à pH contrôlé. Selon le tissu et son niveau d'encrassement, nous privilégions soit l'injection‑extraction à l'eau tiède filtrée (véritable shampooing des fibres) pour extraire la saleté en profondeur, soit une vapeur basse pression contrôlée pour désinfection et désodorisation sur surfaces compatibles, soit une mousse sèche / encapsulation à faible humidité pour les textiles sensibles afin d'accélérer le séchage. Un brossage doux (orbital ou manuel), la neutralisation des odeurs organiques par enzymes et l'égalisation finale des fibres complètent l'intervention. Temps de séchage indicatif : 2 à 6 h selon ventilation et densité du rembourrage."
+      "title": "Nettoyage salon et canapé : un protocole adapté à chaque matière",
+      "text": "Nous commençons par identifier la fibre et vérifier sa réaction aux produits. Selon le support, nous utilisons l'injection-extraction, le shampooing des fibres, la vapeur basse pression ou une méthode faible humidité. L'objectif est d'enlever les salissures, réduire les odeurs, traiter les taches et préserver le toucher du tissu. Nous nettoyons les canapés tissu, les fauteuils, les banquettes, la microfibre, les textiles d'ameublement et certains cuirs pigmentés avec un protocole spécifique."
     },
     "secondaryService": {
-      "title": "Entretien rideaux et textiles",
-      "text": "Traitement sur place sans dépose lorsque c'est possible : nous éliminons les poussières fines et allergènes par micro‑aspiration filtrée, appliquons une brume douce de solution adaptée au type de fibre, travaillons les zones tachées par gestes contrôlés puis retirons l'humidité excédentaire pour éviter les auréoles. La finition associe défroissage vapeur vertical, neutralisation des odeurs et, en option, une protection anti‑UV / anti‑dépôt. Résultat : tombé naturel préservé, couleurs stables, aucune tension ni retrait indésirable."
+      "title": "Détachage, odeurs et remise en fraîcheur du canapé",
+      "text": "Le vrai sujet n'est pas seulement de laver : il faut aussi gérer les taches grasses, les auréoles, les odeurs organiques et les zones très sollicitées comme les accoudoirs et les assises centrales. Nous travaillons donc par étapes : aspiration profonde, pré-détachage ciblé, nettoyage principal, récupération maximale d'humidité puis remise en ordre des fibres pour un rendu homogène."
     },
     "whyChooseUs": {
-      "title": "Pourquoi nous choisir",
-      "text": "Protocoles structurés : diagnostic + fiche d'intervention + test de solidité des couleurs avant traitement. Équipements injection‑extraction bi‑turbine haut débit, contrôle du pH en fin de cycle pour préserver l'élasticité des fibres, produits certifiés (formules biodégradables, faible résidu). Techniciens formés aux méthodes vapeur, encapsulation et traitement sélectif des taches (graisse, boisson, sébum, moisissure superficielle). Séchage optimisé par passes croisées et limitation de la saturation en eau. Transparence, traçabilité et respect des matériaux garantissent un résultat durable et homogène."
+      "title": "Pourquoi choisir CCI pour votre salon et vos tissus d'ameublement",
+      "text": "Nous ne traitons pas un canapé tissu comme une microfibre ni une microfibre comme un cuir. Notre différence est dans le diagnostic, le contrôle de l'humidité et le choix de la bonne méthode. Nous travaillons avec des produits à pH contrôlé, des injecteurs-extracteurs performants et des protocoles de détachage sélectif pour limiter les auréoles, préserver le toucher du textile et optimiser le séchage à domicile."
+    },
+    "localProof": {
+      "title": "Interventions à domicile dans tout le Grand Tunis",
+      "text": "CCI intervient à domicile à Tunis, El Aouina, Ariana, La Soukra, La Marsa, Carthage, Ben Arous et Manouba pour le nettoyage de salons, canapés, fauteuils et tissus d'ameublement.\n\nLes demandes les plus fréquentes concernent les canapés tachés, les assises ternies, les odeurs persistantes, la microfibre qui marque vite et les canapés cuir qui nécessitent un nettoyage doux."
+    },
+    "materials": {
+      "title": "Canapé tissu, cuir, microfibre et tissus d'ameublement",
+      "text": "Chaque matière demande sa logique.\n\n• Microfibre : humidité contrôlée pour éviter les auréoles et les fibres tassées.\n• Tissu d'ameublement : injection-extraction ou shampooing selon la densité du textile.\n• Cuir pigmenté : nettoyage doux, sans agresser la finition.\n• Banquettes et fauteuils professionnels : traitement par zones et remise en service rapide.\n\nCette approche évite les erreurs classiques du nettoyage maison et sécurise le résultat."
+    },
+    "pricing": {
+      "title": "Prix et devis pour le nettoyage de salon à Tunis",
+      "text": "Le tarif dépend du nombre de places, du type de tissu, du niveau de taches et des options demandées : désinfection, traitement anti-odeurs, nettoyage du cuir ou travail sur microfibre. Nous donnons une estimation claire puis un devis gratuit, sans engagement, pour que vous sachiez précisément quelle méthode sera utilisée et pourquoi."
     }
   },
   "aboutUs": {
@@ -211,37 +236,37 @@
     "visionText": "Devenir le partenaire privilégié pour l'entretien de l'ameublement dans la région, grâce à des protocoles éprouvés."
   },
   "serviceList": {
-    "title": "Services salon",
-    "text": "Solutions sur mesure pour tous les textiles d'ameublement : aspiration anti‑poussières profondes, pré‑détachage multi‑taches, injection‑extraction, vapeur basse pression désinfectante, mousse sèche / encapsulation pour tissus sensibles, traitement anti‑acariens & anti‑odeurs, protection optionnelle anti‑taches.",
+    "title": "Nos solutions pour canapé, salon et ameublement",
+    "text": "Des prestations centrées sur l'entretien réel des tissus d'ameublement : nettoyage, détachage, désodorisation et entretien des matières délicates.",
     "items": [
       {
         "id": "1",
-        "text": "Nettoyage canapé et tissu d'ameublement",
+        "text": "Nettoyage canapé tissu à domicile",
         "icon": "/icons/polisher.png"
       },
       {
         "id": "2",
-        "text": "Détachage & désodorisation",
+        "text": "Détachage salon et pré-traitement ciblé",
         "icon": "/icons/polisher1.png"
       },
       {
         "id": "3",
-        "text": "Nettoyage rideaux",
+        "text": "Shampooing canapé et ravivage des fibres",
         "icon": "/icons/crystal3.png"
       },
       {
         "id": "4",
-        "text": "Nettoyage intérieur de voitures et bus",
+        "text": "Nettoyage canapé microfibre",
         "icon": "/icons/shield.png"
       },
       {
         "id": "5",
-        "text": "Nettoyage sièges cinéma",
+        "text": "Entretien doux du canapé cuir",
         "icon": "/icons/shield.png"
       },
       {
         "id": "6",
-        "text": "Nettoyage bateaux et avions",
+        "text": "Nettoyage tissus d'ameublement",
         "icon": "/icons/shield.png"
       }
     ],
@@ -249,25 +274,59 @@
   },
   "relatedArticles": [
     {
-      "link": "/conseils/nettoyage-salons-voiture-tapisseries-tunis",
-      "title": "Nettoyage Salons Voiture Tapisseries Tunis",
+      "link": "/conseils/nettoyage-salon-canape-tunis-2026",
+      "title": "Nettoyage Salon & Canapé Tunis",
       "category": "Salon",
-      "excerpt": "Tout savoir sur l'entretien et le nettoyage de vos salons. Techniques professionnelles, produits adaptés et conseils d'entretien.",
-      "tags": ["salon", "entretien", "guide"]
+      "excerpt": "Le guide pilier pour comprendre les bonnes méthodes de nettoyage salon et canapé à domicile à Tunis.",
+      "tags": [
+        "guide",
+        "salon",
+        "canapé"
+      ]
     },
     {
-      "link": "/conseils/detachage-salon-tunis-2025",
-      "title": "Détachage Salon Tunis 2025",
+      "link": "/conseils/nettoyage-canape-tunis-2025",
+      "title": "Nettoyage Canapé Tunis",
       "category": "Salon",
-      "excerpt": "Méthodes professionnelles pour éliminer les taches sur canapés et tapis. Solutions adaptées par type de textile et de salissure.",
-      "tags": ["détachage", "canapé", "techniques"]
+      "excerpt": "Principes, méthodes et bonnes pratiques pour nettoyer efficacement un canapé à domicile.",
+      "tags": [
+        "canapé",
+        "domicile",
+        "nettoyage"
+      ]
     },
     {
-      "link": "/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet",
-      "title": "Comment Nettoyer Canapé Cuir Tunis",
+      "link": "/conseils/tarif-nettoyage-salon-tunis-2026",
+      "title": "Tarif Nettoyage Salon Tunis",
       "category": "Salon",
-      "excerpt": "Guide complet pour le nettoyage et l'entretien des canapés en cuir. Techniques professionnelles et produits adaptés.",
-      "tags": ["cuir", "canapé", "salon"]
+      "excerpt": "Ce qui fait varier le prix d'un nettoyage de salon à Tunis et comment demander un devis sérieux.",
+      "tags": [
+        "tarif",
+        "prix",
+        "devis"
+      ]
+    },
+    {
+      "link": "/conseils/nettoyage-tissus-ameublement-tunis-2026",
+      "title": "Nettoyage Tissus d'Ameublement Tunis",
+      "category": "Salon",
+      "excerpt": "Fauteuils, banquettes, assises rembourrées et tissus d'ameublement : méthodes et précautions.",
+      "tags": [
+        "ameublement",
+        "fauteuil",
+        "banquette"
+      ]
+    },
+    {
+      "link": "/conseils/nettoyage-canape-microfibre-tunis-2026",
+      "title": "Nettoyage Canapé Microfibre Tunis",
+      "category": "Salon",
+      "excerpt": "Guide pratique pour nettoyer la microfibre sans auréoles, sans surmouillage et sans abîmer les fibres.",
+      "tags": [
+        "microfibre",
+        "canapé",
+        "précautions"
+      ]
     }
   ]
 }

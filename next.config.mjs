@@ -56,6 +56,32 @@ const nextConfig = {
 
       // Reel URL redirects - fix singular to plural routing
       { source: '/reel/:id', destination: '/reels/:id', permanent: true },
+
+      // Legacy blog URLs -> conseils/service pages
+      { source: '/blog/injection-extraction-guide', destination: '/conseils/injection-extraction-tapis-tunis-2025', permanent: true },
+      { source: '/blog/nettoyage-vapeur-guide', destination: '/conseils/lavage-vapeur-tapis-tunis-2025', permanent: true },
+      { source: '/blog/lavage-vapeur-technique', destination: '/conseils/lavage-vapeur-tapis-tunis-2025', permanent: true },
+      { source: '/blog/nettoyage-sec-guide', destination: '/conseils/nettoyage-a-sec-tunis-2025', permanent: true },
+      { source: '/blog/nettoyage-sec-technique', destination: '/conseils/nettoyage-a-sec-tunis-2025', permanent: true },
+      { source: '/blog/detachage-moquette', destination: '/conseils/detachage-moquette-tunis-2025', permanent: true },
+      { source: '/blog/prix-nettoyage-tapis', destination: '/conseils/prix-nettoyage-tapis-tunis-tarifs-2025', permanent: true },
+      { source: '/blog/tarifs-nettoyage-tapis', destination: '/conseils/prix-nettoyage-tapis-tunis-tarifs-2025', permanent: true },
+      { source: '/blog/cout-nettoyage-tapis', destination: '/conseils/prix-nettoyage-tapis-tunis-tarifs-2025', permanent: true },
+      { source: '/blog/prix-injection-extraction', destination: '/conseils/injection-extraction-tapis-tunis-2025', permanent: true },
+      { source: '/blog/guide-nettoyage-canape', destination: '/conseils/nettoyage-canape-tunis-2025', permanent: true },
+      { source: '/blog/detachage-salon-guide', destination: '/conseils/detachage-salon-tunis-2025', permanent: true },
+      { source: '/blog/shampooing-canape', destination: '/conseils/shampooing-canape-tunis-2025', permanent: true },
+      { source: '/blog/desinfection-salon', destination: '/conseils/desinfection-salon-tunis-2025', permanent: true },
+      { source: '/blog/tarif-nettoyage-salon', destination: '/conseils/tarif-nettoyage-salon-tunis-2026', permanent: true },
+      { source: '/blog/nettoyage-tissus-ameublement', destination: '/conseils/nettoyage-tissus-ameublement-tunis-2026', permanent: true },
+      { source: '/blog/nettoyage-microfibre', destination: '/conseils/nettoyage-canape-microfibre-tunis-2026', permanent: true },
+      { source: '/blog/nettoyer-canape-cuir', destination: '/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet', permanent: true },
+      { source: '/blog/entretien-canape-cuir', destination: '/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet', permanent: true },
+      { source: '/blog/nettoyage-cuir-professionnel', destination: '/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet', permanent: true },
+      { source: '/blog/produits-nettoyage-cuir', destination: '/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet', permanent: true },
+
+      // Cleanup of older conseils slug that mixed unrelated intent
+      { source: '/conseils/nettoyage-salons-voiture-tapisseries-tunis', destination: '/conseils/nettoyage-salon-canape-tunis-2026', permanent: true },
     ];
   },
   webpack: (config, { isServer }) => {

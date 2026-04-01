@@ -48,7 +48,15 @@ export const metadata = {
     site: '@cciservices',
     images: ['/home/1-hero/main.webp']
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      maxImagePreview: 'large',
+    },
+  },
   authors: [{ name: 'CCI Tunisie' }],
   verification: {
     google: 'sJRXBYO6D1wSw4INn0E56VlSp8hSgSQHYc4p6Czr78U'

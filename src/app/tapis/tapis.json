@@ -1,56 +1,21 @@
 {
   "metadata": {
-    "title": "Nettoyage Moquette Tunis | Injection Extraction & Devis Gratuit | CCI",
-    "description": "Nettoyage moquette Tunis et Grand Tunis par injection-extraction. Shampooing moquette, détachage, anti-acariens, séchage rapide et devis gratuit avec CCI Services.",
+    "title": "Nettoyage Moquette Tunis | Shampouinage, Détachage & Moquette Bureau | CCI",
+    "description": "Nettoyage moquette Tunis et Grand Tunis : shampouinage, injection-extraction, détachage, moquette bureau et moquette à domicile. Devis gratuit avec CCI Services.",
     "keywords": [
-      "nettoyage tapis tunis",
       "nettoyage moquette tunis",
       "nettoyage moquettes tunisie",
       "shampouinage moquette tunis",
-      "shampooing moquette tunis",
-      "lavage moquette tunis",
-      "injection extraction",
-      "injection extraction tunis",
-      "injection extraction moquette tunis",
       "détachage moquette tunis",
       "entreprise nettoyage moquette tunis",
-      "devis nettoyage moquette tunis",
       "nettoyage moquette bureau tunis",
-      "nettoyage moquette ariana",
-      "tarif nettoyage tapis tunis",
-      "prix nettoyage tapis tunis",
-      "tarif nettoyage tapis",
-      "devis nettoyage tapis",
-      "cout nettoyage tapis tunisie",
-      "prix injection extraction",
-      "nettoyage tapis ariana",
-      "nettoyage tapisserie tunis",
-      "détachage tapisserie tunis",
-      "lavage tapisserie tunis",
-      "entretien tapisserie tunis",
-      "détachage tapis tunis",
-      "lavage tapis tunis",
-      "entretien tapis tunis",
-      "lavage vapeur",
-      "nettoyage à sec",
-      "shampooing",
-      "encapsulation",
-      "détachage",
-      "désinfection",
-      "séchage rapide",
-      "moquette",
-      "tapis",
-      "microfibre",
-      "nettoyage professionnel tunisie",
-      "services nettoyage ariana",
-      "nettoyage tapis ariana",
-      "CCI services ariana",
-      "simulateur devis nettoyage tunisie",
-      "devis en ligne",
-      "devis gratuit"
+      "nettoyage moquette domicile tunis",
+      "prix nettoyage moquette tunis",
+      "injection extraction moquette tunis",
+      "devis nettoyage moquette tunis"
     ]
   },
-  "heroTitle": "Nettoyage Moquette Tunis & Tapis en Tunisie - CCI",
+  "heroTitle": "Nettoyage Moquette Tunis, Bureau & Domicile",
   "heroSubtitle": "Service professionnel de nettoyage moquette Tunis par injection-extraction, shampooing et détachage | Devis gratuit",
   "tabData": [
     {
@@ -100,7 +65,10 @@
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
-    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
+    "alternateName": [
+      "CCI Tunis",
+      "CCI Services Tunisie"
+    ],
     "url": "https://cciservices.online/",
     "logo": "https://cciservices.online/logo.png",
     "telephone": "+216-98-557-766",
@@ -126,13 +94,34 @@
     "description": "CCI Tunisie propose le nettoyage moquette Tunis par injection-extraction, shampooing, détachage et désinfection. Moquettes de bureaux, hôtels, maisons et espaces professionnels avec séchage rapide.",
     "url": "https://cciservices.online/tapis",
     "areaServed": [
-      { "@type": "City", "name": "Tunis" },
-      { "@type": "City", "name": "Ariana" },
-      { "@type": "City", "name": "El Aouina" },
-      { "@type": "City", "name": "Ben Arous" },
-      { "@type": "City", "name": "La Marsa" },
-      { "@type": "City", "name": "Carthage" },
-      { "@type": "City", "name": "Manouba" }
+      {
+        "@type": "City",
+        "name": "Tunis"
+      },
+      {
+        "@type": "City",
+        "name": "Ariana"
+      },
+      {
+        "@type": "City",
+        "name": "El Aouina"
+      },
+      {
+        "@type": "City",
+        "name": "Ben Arous"
+      },
+      {
+        "@type": "City",
+        "name": "La Marsa"
+      },
+      {
+        "@type": "City",
+        "name": "Carthage"
+      },
+      {
+        "@type": "City",
+        "name": "Manouba"
+      }
     ],
     "aggregateRating": {
       "@type": "AggregateRating",
@@ -148,8 +137,18 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
-      { "@type": "ListItem", "position": 2, "name": "Nettoyage Moquette & Tapis", "item": "https://cciservices.online/tapis" }
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Accueil",
+        "item": "https://cciservices.online/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Nettoyage Moquette & Tapis",
+        "item": "https://cciservices.online/tapis"
+      }
     ]
   },
   "faqJSONLD": {
@@ -224,24 +223,28 @@
   },
   "sections": {
     "mainService": {
-      "title": "Nettoyage Moquette Tunis | Injection Extraction Professionnelle",
-      "text": "CCI est votre spécialiste du nettoyage moquette Tunis et Grand Tunis. Nous nettoyons les moquettes de maison, bureau, hôtel et commerce avec une méthode d'injection-extraction professionnelle, un détachage ciblé et un séchage rapide. Notre service de nettoyage moquette garantit des résultats visibles, une meilleure hygiène et un devis gratuit."
+      "title": "Nettoyage moquette Tunis : injection-extraction, shampouinage et détachage",
+      "text": "CCI est spécialisée dans le nettoyage moquette à Tunis et dans le Grand Tunis. Nous traitons les moquettes de maison, de bureau, d'hôtel et de commerce avec une méthode adaptée : injection-extraction pour le nettoyage en profondeur, shampouinage pour raviver les fibres, détachage ciblé pour les zones critiques et encapsulation basse humidité pour les espaces qui doivent rouvrir rapidement. Chaque intervention commence par un diagnostic de la fibre, du niveau d'encrassement et du temps de séchage acceptable."
     },
     "secondaryService": {
-      "title": "Notre expertise moquette",
-      "text": "Adaptation par secteur :\n• Bureaux & open-space : nettoyage moquette bureau avec protocole cyclique, réduction des temps d'arrêt et remise en service rapide.\n• Centres d'appel : intervention nocturne avec encapsulation basse humidité pour reprise immédiate des postes.\n• Salles de cinéma et espaces à forte occupation : gestion des taches grasses, boissons sucrées et neutralisation des odeurs.\n• Mosquées et lieux sensibles : désinfection douce, traitement anti-acariens et orientation des fibres sans trace. Protection optionnelle anti-taches et plan de maintenance documenté."
+      "title": "Moquette bureau, moquette à domicile et zones de passage",
+      "text": "Nous adaptons le protocole selon l'usage du lieu.\n\n• Moquette bureau : intervention hors horaires, réduction du temps d'arrêt et entretien cyclique des zones de passage.\n• Moquette à domicile : priorité au confort, à la neutralisation des odeurs et au traitement anti-acariens si besoin.\n• Hôtels et accueils : gestion des taches récurrentes, remise en ordre des fibres et image soignée dès l'entrée.\n• Espaces sensibles : travail contrôlé en humidité, séchage rapide et conseils d'entretien pour prolonger la durée de vie du revêtement."
     },
     "whyChooseUs": {
       "title": "Pourquoi choisir CCI pour votre moquette à Tunis",
-      "text": "Chaîne de valeur structurée : audit initial des zones de trafic, mesure d'humidité résiduelle post-traitement, contrôle pH pour la stabilité colorimétrique et fiches produits disponibles. Matériel : injecteurs bi-turbine haut débit, machines orbitales basse vitesse, pads microfibre encapsulation et buses de détachage ciblé. Objectifs : prolonger la durée de vie de votre moquette, réduire les allergènes, améliorer l'image de vos espaces et limiter les indisponibilités."
+      "text": "Notre valeur ajoutée tient au diagnostic, pas seulement à la machine. Nous analysons l'état de la fibre, la densité, les zones de trafic, les odeurs et les taches avant de choisir la bonne méthode. Nous utilisons des injecteurs-extracteurs haute performance, des solutions de shampouinage adaptées, des pads basse humidité pour encapsulation et des protocoles de détachage sélectif. Résultat : une moquette plus propre, un séchage maîtrisé et moins de risque de résidus ou d'auréoles."
     },
     "stainRemoval": {
       "title": "Détachage Tapis Tunis - Expertise CCI",
       "text": "Spécialistes du détachage tapis Tunis, nous traitons tous types de taches : alimentaires, boissons, encre, sang, urine d'animaux. Notre service de détachage tapis tunis utilise des techniques professionnelles et des produits spécialisés selon la nature de la tache et du textile. Intervention rapide garantie dans tout le Grand Tunis pour un détachage efficace et respectueux des fibres."
     },
     "pricing": {
-      "title": "Tarifs Nettoyage Tapis - Prix Transparents",
-      "text": "Nos tarifs nettoyage tapis sont transparents et compétitifs : à partir de 15 DT/m² pour un nettoyage standard, 25 DT/m² pour un service premium avec traitement anti-acariens. Prix nettoyage tapis tunis tout compris avec déplacement gratuit dans le Grand Tunis. Devis gratuit et sans engagement pour tous vos besoins."
+      "title": "Prix et devis pour le nettoyage de moquette à Tunis",
+      "text": "Le prix dépend surtout de la surface, du type de fibre, du niveau de taches et de la méthode nécessaire. Les petites surfaces et les moquettes entretenues régulièrement sont naturellement plus rapides à traiter que les grands plateaux de bureaux ou les moquettes très marquées.\n\nCCI propose des devis gratuits, avec une estimation claire pour la moquette à domicile comme pour la moquette bureau. Nous pouvons aussi prévoir des passages périodiques pour garder un revêtement propre toute l'année."
+    },
+    "localProof": {
+      "title": "CCI intervient sur les moquettes dans tout le Grand Tunis",
+      "text": "Nous nettoyons les moquettes à domicile et en locaux professionnels à Tunis, El Aouina, Ariana, La Soukra, La Marsa, Carthage, Ben Arous et Manouba.\n\nCas traités le plus souvent : salons, chambres, open spaces, centres d'appel, hôtels, salles d'attente, salles de cinéma et espaces à fort passage.\n\nNotre objectif est double : retrouver une moquette visuellement propre et réduire les poussières, odeurs et allergènes sans immobiliser les lieux plus longtemps que nécessaire."
     }
   },
   "aboutUs": {
@@ -250,47 +253,47 @@
     "visionText": "Être le partenaire de confiance pour tous les besoins de nettoyage textile, avec des solutions innovantes et durables."
   },
   "serviceList": {
-    "title": "Nos services moquette & tapis",
-    "text": "Solutions spécialisées pour le nettoyage moquette en environnements exigeants : réduction du temps d'arrêt, maîtrise des allergènes dans les espaces fermés, neutralisation des odeurs persistantes, détachage ciblé sur zones de passage et plans de maintenance pour prolonger la durée de vie des fibres.",
+    "title": "Nos solutions pour moquettes à domicile et en entreprise",
+    "text": "Des services pensés pour la moquette résidentielle et professionnelle : entretien courant, remise à niveau, taches localisées, zones de trafic et séchage rapide.",
     "items": [
       {
-        "id": "6",
-        "text": "Nettoyage moquette bureau & centres d'appel",
-        "icon": "/icons/shield.png"
-      },
-      {
-        "id": "3",
-        "text": "Shampooing moquette & traitement anti-acariens",
-        "icon": "/icons/crystal3.png"
-      },
-      {
         "id": "1",
-        "text": "Injection-extraction moquette en profondeur",
-        "icon": "/icons/polisher.png"
+        "text": "Nettoyage moquette bureau et open space",
+        "icon": "/icons/shield.png"
       },
       {
         "id": "2",
-        "text": "Encapsulation basse humidité",
-        "icon": "/icons/polisher1.png"
+        "text": "Shampouinage moquette et ravivage des fibres",
+        "icon": "/icons/crystal3.png"
+      },
+      {
+        "id": "3",
+        "text": "Injection-extraction en profondeur",
+        "icon": "/icons/polisher.png"
       },
       {
         "id": "4",
-        "text": "Neutralisation odeurs moquette et zones cinéma",
-        "icon": "/icons/shield.png"
+        "text": "Détachage ciblé sur zones de passage",
+        "icon": "/icons/polisher1.png"
       },
       {
         "id": "5",
-        "text": "Entretien moquettes de mosquées",
+        "text": "Encapsulation basse humidité",
+        "icon": "/icons/shield.png"
+      },
+      {
+        "id": "6",
+        "text": "Traitement anti-odeurs et anti-acariens",
         "icon": "/icons/shield.png"
       },
       {
         "id": "7",
-        "text": "Détachage spécialisé moquette Tunis",
+        "text": "Nettoyage moquette à domicile à Tunis",
         "icon": "/icons/crystal3.png"
       },
       {
         "id": "8",
-        "text": "Devis nettoyage moquette dès 6 DT/m²",
+        "text": "Devis moquette simple et rapide",
         "icon": "/icons/polisher1.png"
       }
     ],
@@ -298,32 +301,59 @@
   },
   "relatedArticles": [
     {
-      "link": "/conseils/prix-nettoyage-tapis-tunis-tarifs-2025",
-      "title": "Prix Nettoyage Moquette Tunis : Tarifs 2025",
-      "category": "Tapis",
-      "excerpt": "Guide complet des tarifs de nettoyage moquette à Tunis : injection-extraction, shampooing professionnel et conseils d'entretien.",
-      "tags": ["tarifs", "injection-extraction", "tunis"]
+      "link": "/conseils/guide-nettoyage-tapis-tunis-2025",
+      "title": "Guide Nettoyage Moquette Tunis",
+      "category": "Moquette",
+      "excerpt": "Vue d'ensemble des méthodes, équipements et bons réflexes pour le nettoyage de tapis et moquettes à Tunis.",
+      "tags": [
+        "guide",
+        "moquette",
+        "tunis"
+      ]
     },
     {
-      "link": "/conseils/injection-extraction-tapis-tunis-2025",
-      "title": "Injection-Extraction Moquette Tunis 2025",
-      "category": "Tapis",
-      "excerpt": "Découvrez la technique d'injection-extraction pour un nettoyage en profondeur de vos moquettes à Tunis. Avantages et processus détaillé.",
-      "tags": ["méthode", "professionnel", "technique"]
+      "link": "/conseils/shampouinage-moquette-tunis-2026",
+      "title": "Shampouinage Moquette Tunis",
+      "category": "Moquette",
+      "excerpt": "Quand choisir un shampouinage moquette, quand préférer l'injection-extraction et quels résultats attendre.",
+      "tags": [
+        "shampouinage",
+        "méthode",
+        "fibres"
+      ]
+    },
+    {
+      "link": "/conseils/nettoyage-moquette-bureau-tunis-2026",
+      "title": "Nettoyage Moquette Bureau Tunis",
+      "category": "Moquette",
+      "excerpt": "Organisation, faible humidité et entretien cyclique pour open spaces, hôtels et centres d'appel.",
+      "tags": [
+        "bureau",
+        "open-space",
+        "entretien"
+      ]
     },
     {
       "link": "/conseils/detachage-moquette-tunis-2025",
-      "title": "Détachage Moquette Tunis 2025",
-      "category": "Tapis",
-      "excerpt": "Techniques professionnelles pour éliminer tous types de taches sur moquette : alimentaires, boissons, encre, sang. Solutions adaptées par type de fibre.",
-      "tags": ["détachage", "taches", "fibres"]
+      "title": "Détachage Moquette Tunis",
+      "category": "Moquette",
+      "excerpt": "Traitement des taches tenaces, boissons, graisses et zones à fort passage sans abîmer la fibre.",
+      "tags": [
+        "détachage",
+        "taches",
+        "profondeur"
+      ]
     },
     {
-      "link": "/conseils/guide-nettoyage-tapis-tunis-2025",
-      "title": "Guide Nettoyage Moquette Tunis 2025",
-      "category": "Tapis",
-      "excerpt": "Guide complet pour le nettoyage professionnel de moquettes et tapis. Méthodes, équipements et conseils d'experts à Tunis.",
-      "tags": ["guide", "nettoyage", "maintenance"]
+      "link": "/conseils/prix-nettoyage-tapis-tunis-tarifs-2025",
+      "title": "Prix Nettoyage Moquette Tunis",
+      "category": "Moquette",
+      "excerpt": "Repères de prix, facteurs de variation et conseils pour demander un devis réaliste à Tunis.",
+      "tags": [
+        "prix",
+        "devis",
+        "tarifs"
+      ]
     }
   ]
 }

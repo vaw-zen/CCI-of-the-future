@@ -129,6 +129,8 @@ export function AnalyticsLink({
     href,
     className,
     onClick: handleClick,
+    'data-analytics-handled': 'true',
+    'data-analytics-label': eventLabel || '',
     ...props
   };
 
@@ -161,6 +163,7 @@ export function AnalyticsPhoneLink({
       href={`tel:${phoneNumber}`}
       className={className}
       onClick={handlePhoneClick}
+      data-analytics-handled="true"
     >
       {displayText || phoneNumber}
     </a>
@@ -185,6 +188,7 @@ export function AnalyticsSocialLink({
       onClick={handleSocialClick}
       target="_blank"
       rel="noopener noreferrer"
+      data-analytics-handled="true"
     >
       {children}
     </a>

@@ -14,7 +14,7 @@ export async function generateMetadata() {
       canonical
     },
     openGraph: {
-      title: "Nettoyage Tapis & Moquette Tunis - Injection Extraction | CCI",
+      title: "Nettoyage Moquette Tunis | Injection Extraction & Devis Gratuit | CCI",
       description: tapisData.metadata.description,
       url: canonical,
       type: 'website',
@@ -24,7 +24,7 @@ export async function generateMetadata() {
     },
     twitter: {
       card: 'summary_large_image',
-      title: "Nettoyage Tapis & Moquette Tunis | CCI",
+      title: "Nettoyage Moquette Tunis | CCI Services",
       description: tapisData.metadata.description,
       images: ogImage ? [ogImage] : []
     }

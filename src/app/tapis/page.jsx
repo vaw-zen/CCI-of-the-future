@@ -30,7 +30,7 @@ export default function Page() {
       page_title: tapisData.metadata.title
     });
     // Facebook Pixel ViewContent for retargeting
-    trackViewContent('service_page', 'Nettoyage Tapis', 'tapis');
+    trackViewContent('service_page', 'Nettoyage Moquette Tunis', 'tapis');
   }, []);
 
   return (
@@ -82,7 +82,7 @@ export default function Page() {
         <ImageSlider images={tapisData.images} />
 
         <LeadCTA
-          serviceName="Nettoyage Tapis"
+          serviceName="Nettoyage Moquette"
           serviceType="tapis"
           pricing="6 DT/m²"
           whatsappMessage="Bonjour, je souhaite un devis gratuit pour le nettoyage de mes tapis/moquettes. Merci !"
@@ -92,7 +92,7 @@ export default function Page() {
 
         <RelatedArticles 
           articles={tapisData.relatedArticles} 
-          sectionTitle="Guides Nettoyage Tapis & Moquettes"
+          sectionTitle="Guides Nettoyage Moquette Tunis"
         />
       </main>
     </>

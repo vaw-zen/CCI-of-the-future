@@ -74,6 +74,7 @@ export default function Hero() {
               itemProp="email"
               title="Contactez CCI Services par email"
               id="email"
+              data-analytics-label="home_hero_email"
             >
               contact@cciservices.online
             </a>
@@ -85,6 +86,7 @@ export default function Hero() {
               className={styles.phoneLink}
               itemProp="telephone"
               title="Appelez CCI Services - Devis gratuit"
+              data-analytics-label="home_hero_whatsapp_main"
             >
                +216 98 557 766
             </a>
@@ -107,12 +109,14 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Contacter via WhatsApp"
+                data-analytics-label="home_hero_whatsapp_icon"
               >
                 <LineMdPhoneTwotone className={styles.icon} />
               </a>
               <a 
                 href="mailto:contact@cciservices.online" 
                 aria-label="Envoyer un email"
+                data-analytics-label="home_hero_email_icon"
               >
                 <SiMailDuotone className={styles.icon} />
               </a>

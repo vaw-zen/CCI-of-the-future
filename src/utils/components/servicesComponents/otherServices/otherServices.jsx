@@ -6,7 +6,7 @@ import styles from './otherServices.module.css';
 import { trackCTAClick } from '@/utils/analytics';
 
 const ALL_SERVICES = [
-  { slug: 'tapis', label: 'Nettoyage Tapis & Moquettes', icon: '🧶', href: '/tapis' },
+  { slug: 'tapis', label: 'Nettoyage Moquette & Tapis', icon: '🧶', href: '/tapis' },
   { slug: 'salon', label: 'Nettoyage Salon & Canapé', icon: '🛋️', href: '/salon' },
   { slug: 'marbre', label: 'Restauration Marbre', icon: '💎', href: '/marbre' },
   { slug: 'tapisserie', label: 'Tapisserie Sur Mesure', icon: '🪑', href: '/tapisserie' },

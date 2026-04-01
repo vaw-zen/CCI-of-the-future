@@ -64,12 +64,21 @@ export const trackQuoteProgress = (step, serviceType, formData = {}) => {
 };
 
 // Track phone number reveals/clicks with Google Ads conversion
-export const trackPhoneReveal = (location = 'header') => {
+export const trackPhoneReveal = (location = 'header', additionalData = {}) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'phone_reveal', {
       event_category: 'lead_generation',
       event_label: location,
-      value: 5 // Assign value to phone reveals
+      value: 5, // Assign value to phone reveals
+      ...additionalData
+    });
+
+    // Standardized click event for reporting clarity
+    window.gtag('event', 'phone_click', {
+      event_category: 'lead_generation',
+      event_label: location,
+      value: 5,
+      ...additionalData
     });
     
     // Trigger Google Ads conversion for phone clicks
@@ -83,13 +92,14 @@ export const trackPhoneReveal = (location = 'header') => {
 };
 
 // Track email link clicks with Google Ads conversion
-export const trackEmailClick = (location = 'general', emailAddress = '') => {
+export const trackEmailClick = (location = 'general', emailAddress = '', additionalData = {}) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'email_click', {
       event_category: 'lead_generation',
       event_label: location,
       email_address: emailAddress,
-      value: 5 // Assign value to email clicks
+      value: 5, // Assign value to email clicks
+      ...additionalData
     });
     
     // Trigger Google Ads conversion for email clicks
@@ -103,13 +113,14 @@ export const trackEmailClick = (location = 'general', emailAddress = '') => {
 };
 
 // Track WhatsApp link clicks with Google Ads conversion
-export const trackWhatsAppClick = (location = 'general', phoneNumber = '') => {
+export const trackWhatsAppClick = (location = 'general', phoneNumber = '', additionalData = {}) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'whatsapp_click', {
       event_category: 'lead_generation',
       event_label: location,
       phone_number: phoneNumber,
-      value: 5 // Assign value to WhatsApp clicks
+      value: 5, // Assign value to WhatsApp clicks
+      ...additionalData
     });
     
     // Trigger Google Ads conversion for WhatsApp clicks
@@ -120,6 +131,62 @@ export const trackWhatsAppClick = (location = 'general', phoneNumber = '') => {
   
   // Enhanced Facebook Pixel tracking
   trackLead('whatsapp', location, { phone: phoneNumber, action: 'whatsapp_click' });
+};
+
+const getContactLinkDetails = (href = '') => {
+  if (!href) return null;
+
+  if (href.startsWith('mailto:')) {
+    const emailMatch = href.match(/mailto:([^?]+)/i);
+    return {
+      method: 'email',
+      value: emailMatch ? emailMatch[1] : ''
+    };
+  }
+
+  if (href.startsWith('tel:')) {
+    const phoneValue = href.replace(/^tel:/i, '').trim();
+    return {
+      method: 'phone',
+      value: phoneValue
+    };
+  }
+
+  if (href.includes('wa.me') || href.includes('api.whatsapp.com') || href.includes('whatsapp')) {
+    const phoneMatch = href.match(/(?:wa\.me\/|phone=)(\d+)/i);
+    return {
+      method: 'whatsapp',
+      value: phoneMatch ? phoneMatch[1] : ''
+    };
+  }
+
+  return null;
+};
+
+export const trackContactLinkClick = (href, location = 'contact_link', additionalData = {}) => {
+  const contactDetails = getContactLinkDetails(href);
+
+  if (!contactDetails) {
+    return false;
+  }
+
+  const payload = {
+    contact_method: contactDetails.method,
+    contact_value: contactDetails.value,
+    link_destination: href,
+    page_location: typeof window !== 'undefined' ? window.location.href : '',
+    ...additionalData
+  };
+
+  if (contactDetails.method === 'email') {
+    trackEmailClick(location, contactDetails.value, payload);
+  } else if (contactDetails.method === 'phone') {
+    trackPhoneReveal(location, payload);
+  } else if (contactDetails.method === 'whatsapp') {
+    trackWhatsAppClick(location, contactDetails.value, payload);
+  }
+
+  return true;
 };
 
 // ============================================================================
@@ -332,6 +399,15 @@ export const trackDevisSubmission = (serviceType, estimatedValue, contactMethod 
       estimated_value: estimatedValue,
       contact_method: contactMethod,
       value: estimatedValue * 0.2 // Higher conversion value for actual submission
+    });
+
+    // Preserve the existing GA event used in reports while standardizing around generate_lead.
+    window.gtag('event', 'conversion_event_contact', {
+      event_category: 'Contact',
+      event_label: 'Devis Request',
+      service_type: serviceType,
+      contact_method: contactMethod,
+      value: 1
     });
   }
   

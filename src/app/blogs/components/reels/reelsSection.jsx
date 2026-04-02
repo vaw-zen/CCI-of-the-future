@@ -7,7 +7,6 @@ import { MdiHeartOutline, MdiShareOutline, MdiCommentOutline, LineMdCalendar, Bi
 import { useReelsSection } from './reelsSection.func'
 import SharedButton from "@/utils/components/SharedButton/SharedButton";
 import useAutoHeightTransition from '@/libs/useAutoHeightTransition/useAutoHeightTransition';
-import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 
 const createVideoState = (overrides = {}) => ({
   isLoaded: false,
@@ -466,6 +465,11 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                 const isMuted = videoStates[reel.id]?.isMuted || false;
                 const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
                 const volumePercent = isMuted ? 0 : volume * 100;
+                const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+                const reelPageUrl = `${baseUrl}/reels/${reel.id}`;
+                const reelEmbedUrl = `${reelPageUrl}?player=1`;
+                const reelContentUrl = `${baseUrl}/api/video/${reel.id}`;
+                const reelThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`;
 
                 return (
                   <div 
@@ -483,6 +487,10 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                       onClick={(e) => handleOverlayClick(reel.id, e)}
                     >
                       {/* Hidden structured data elements for GSC */}
+                      <link itemProp="url" href={reelPageUrl} />
+                      <link itemProp="contentUrl" href={reelContentUrl} />
+                      <link itemProp="embedUrl" href={reelEmbedUrl} />
+                      <meta itemProp="thumbnailUrl" content={reelThumbnailUrl} />
                       <span itemProp="name" style={{ display: 'none' }}>
                         {reel.message?.slice(0, 100) || 'Reel vidéo CCI Services'}
                       </span>
@@ -504,8 +512,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         }}
                         className={styles['reel-image']}
                         data-src={getBestVideoUrl(reel)}
-                        poster={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`}
-                        itemProp="contentUrl"
+                        poster={reelThumbnailUrl}
                         controls={false}
                         preload="none"
                         playsInline
@@ -516,10 +523,8 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         onTimeUpdate={() => handleVideoTimeUpdate(reel.id)}
                       />
                       
-                      {/* Explicit thumbnailUrl for GSC - same as JSON-LD */}
                       <img 
-                        itemProp="thumbnailUrl" 
-                        src={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`}
+                        src={reelThumbnailUrl}
                         alt="Aperçu vidéo"
                         style={{ display: 'none' }}
                         loading="lazy"

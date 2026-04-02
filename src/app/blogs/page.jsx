@@ -6,7 +6,19 @@ import GreenBand from "@/utils/components/GreenBand/GreenBand";
 import styles from "./blog.module.css";
 import blogsData from "./blogs.json";
 import ResponsiveImage from '@/utils/components/Image/Image';
-import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
+
+function getReelStructuredUrls(reelId) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+  const reelPageUrl = `${baseUrl}/reels/${reelId}`;
+
+  return {
+    baseUrl,
+    reelPageUrl,
+    reelEmbedUrl: `${reelPageUrl}?player=1`,
+    reelContentUrl: `${baseUrl}/api/video/${reelId}`,
+    reelThumbnailUrl: `${baseUrl}/api/thumbnails/${reelId}`,
+  };
+}
 
 // Helper function to clean Unicode characters for structured data
 function cleanUnicodeForStructuredData(str) {
@@ -143,64 +155,39 @@ export default async function Page() {
       ...reels
         .filter(reel => reel && reel.id) // Only process reels with valid ID
         .map((reel) => {
-          // Check if reel has a valid thumbnail (not a data URL placeholder)
-          // Use direct Facebook CDN URL for better reliability with Google
-          const hasValidThumbnail = reel.thumbnail && 
-            (reel.thumbnail.startsWith('http://') || reel.thumbnail.startsWith('https://'));
+          const {
+            baseUrl,
+            reelPageUrl,
+            reelEmbedUrl,
+            reelContentUrl,
+            reelThumbnailUrl,
+          } = getReelStructuredUrls(reel.id);
           
           // Clean description for structured data (remove problematic Unicode characters)
           const cleanDescription = reel.message && reel.message.trim() ? 
             cleanUnicodeForStructuredData(reel.message) : 
             "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services, experts en nettoyage de tapis, marbre et entretien automobile à Tunis.";
           
-          // Use stable Facebook permalink URLs — direct video_url from Facebook CDN expires
-          // Google can't validate expired CDN links during crawling
-          const hasPermalinkUrl = reel.permalink_url && reel.permalink_url.trim();
-          const fallbackUrl = `https://www.facebook.com/watch/?v=${reel.id}`;
-          
-          // Always prefer permalink (stable) over video_url (temporary CDN)
-          let contentUrl = hasPermalinkUrl ? reel.permalink_url.trim() : fallbackUrl;
-          let embedUrl = fallbackUrl;
-          
           // Ensure upload date is valid and properly formatted
           const uploadDate = reel.created_time || new Date().toISOString();
           
-          // Validate URLs are properly formatted
-          const isValidUrl = (url) => {
-            try {
-              new URL(url);
-              return url.startsWith('http://') || url.startsWith('https://');
-            } catch {
-              return false;
-            }
-          };
-          
-          // Final validation - ensure we have valid URLs
-          if (!isValidUrl(contentUrl)) {
-            console.warn(`Invalid contentUrl for reel ${reel.id}:`, contentUrl);
-            contentUrl = fallbackUrl;
-          }
-          if (!isValidUrl(embedUrl)) {
-            console.warn(`Invalid embedUrl for reel ${reel.id}:`, embedUrl);
-            embedUrl = fallbackUrl;
-          }
-          
-          // Build VideoObject - only include thumbnailUrl if we have a valid HTTP(S) URL
+          // Build VideoObject with explicit local URLs so Google can keep a stable crawl target
           const videoObject = {
             "@type": "VideoObject",
             "@id": `https://cciservices.online/blogs#video-${reel.id}`,
             "name": extractShortTitle(reel.message, "Vidéo CCI Services - Nettoyage Professionnel Tunis"),
             "description": cleanDescription.length > 10 ? cleanDescription : "Découvrez nos services de nettoyage professionnel en vidéo. CCI Services Tunis.",
             "uploadDate": uploadDate,
-            "contentUrl": contentUrl,
-            "embedUrl": embedUrl,
+            "url": reelPageUrl,
+            "contentUrl": reelContentUrl,
+            "embedUrl": reelEmbedUrl,
           "duration": reel.length ? `PT${Math.round(reel.length)}S` : "PT30S",
           "publisher": {
             "@type": "Organization",
             "name": "CCI Services",
             "logo": {
               "@type": "ImageObject",
-              "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/logo.png`
+              "url": `${baseUrl}/logo.png`
             }
           },
           "author": {
@@ -221,14 +208,11 @@ export default async function Page() {
           ],
           "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/blogs`
+            "@id": reelPageUrl
           }
         };
         
-        // Always use our own thumbnail proxy API for structured data
-        // Facebook CDN URLs are signed/temporary and expire — Google can't reliably access them
-        // Our /api/thumbnails/ proxy fetches from Facebook on demand and serves a stable URL
-        videoObject.thumbnailUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online'}/api/thumbnails/${reel.id}`;
+        videoObject.thumbnailUrl = reelThumbnailUrl;
         
         return videoObject;
       }),
@@ -336,36 +320,28 @@ export default async function Page() {
         <section>
           <h2>Vidéos et Reels CCI Services</h2>
           {reels.map((reel) => {
-            const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-            const localThumbnailUrl = `${baseUrl}/api/thumbnails/${reel.id}`;
-            // Use Facebook CDN for user-facing images (performance), local for structured data (SEO)
-            const userFacingThumbnailUrl = reel.thumbnail || reel.original_thumbnail || localThumbnailUrl;
+            const {
+              reelPageUrl,
+              reelEmbedUrl,
+              reelContentUrl,
+              reelThumbnailUrl,
+            } = getReelStructuredUrls(reel.id);
             
             return (
             <article key={reel.id} itemScope itemType="https://schema.org/VideoObject">
+              <link itemProp="url" href={reelPageUrl} />
+              <link itemProp="contentUrl" href={reelContentUrl} />
+              <link itemProp="embedUrl" href={reelEmbedUrl} />
+              <meta itemProp="thumbnailUrl" content={reelThumbnailUrl} />
               <h3 itemProp="name">{extractShortTitle(reel.message, 'Vidéo CCI Services - Nettoyage Professionnel')}</h3>
               <p itemProp="description">{cleanUnicodeForStructuredData(reel.message) || 'Découvrez nos services de nettoyage professionnel en vidéo.'}</p>
               <time itemProp="uploadDate" dateTime={reel.created_time}>
                 {new Date(reel.created_time).toLocaleDateString()}
               </time>
-              <video 
-                itemProp="contentUrl"
-                src={reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`}
-                poster={userFacingThumbnailUrl}
-                width="320" 
-                height="240"
-                controls
-                preload="metadata"
-              >
-                <source src={reel.permalink_url || `https://www.facebook.com/watch/?v=${reel.id}`} type="video/mp4" />
-                Votre navigateur ne supporte pas les vidéos HTML5.
-              </video>
-              {/* Use local thumbnail for SEO/structured data, Facebook CDN would fail for search engines */}
-              <ResponsiveImage itemProp="thumbnailUrl" src={localThumbnailUrl} alt="Aperçu vidéo" sizes={[25, 30, 35]} />
               <span itemProp="duration" content={reel.length ? `PT${Math.round(reel.length)}S` : "PT30S"}>
                 {reel.length ? `${Math.round(reel.length)}s` : "30s"}
               </span>
-              <a href={reel.permalink_url} itemProp="url">Voir sur Facebook</a>
+              <a href={reelPageUrl}>Voir le reel</a>
             </article>
             );
           })}

@@ -226,7 +226,7 @@ async function sendWelcomeEmails(email) {
           <div style="font-size: 12px; color: ${colors.textMuted}; line-height: 1.5;">
             📧 contact@cciservices.online<br>
             📞 +216 98 55 77 66<br>
-            🌐 www.cciservices.online
+            🌐 cciservices.online
           </div>
           <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #dee2e6; font-size: 11px; color: ${colors.textMuted};">
             Vous recevez cet email car vous vous êtes inscrit(e) à notre newsletter.<br>

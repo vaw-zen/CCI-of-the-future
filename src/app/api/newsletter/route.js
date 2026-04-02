@@ -182,7 +182,7 @@ export async function POST(request) {
             <div style="font-size: 12px; color: ${colors.textMuted}; line-height: 1.5;">
               📧 contact@cciservices.online<br>
               📞 +216 98 55 77 66<br>
-              🌐 www.cciservices.online
+              🌐 cciservices.online
             </div>
           </div>
         </div>

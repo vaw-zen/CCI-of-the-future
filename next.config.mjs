@@ -44,6 +44,20 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Domain canonicalization
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.cciservices.online' }],
+        destination: 'https://cciservices.online/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'header', key: 'x-forwarded-proto', value: 'http' }],
+        destination: 'https://cciservices.online/:path*',
+        permanent: true,
+      },
+
       // Root index variants
       { source: '/index', destination: '/', permanent: true },
       { source: '/index.html', destination: '/', permanent: true },

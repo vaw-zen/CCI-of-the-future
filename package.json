@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "setup-supabase": "node setup-supabase.js"
+    "setup-supabase": "node setup-supabase.js",
+    "gsc:prepare-indexing": "node scripts/gsc/prepare-indexing-batch.cjs",
+    "gsc:submit-sitemap": "node scripts/gsc/submit-sitemap.cjs",
+    "gsc:inspect-batch": "node scripts/gsc/inspect-batch.cjs"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

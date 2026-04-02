@@ -41,7 +41,7 @@ credentials.json
 *-service-account.json
 service-account-*.json
 
-# Scripts directory - only track workflows, data, and reports
+# Scripts directory - only track reusable workflows and tooling
 scripts/*
 !scripts/workflows/
 !scripts/data/
@@ -56,8 +56,10 @@ scripts/*
 !scripts/gsc/tools/monitoring-dashboard.cjs
 !scripts/gsc/tools/complete-analysis.cjs
 !scripts/gsc/data/
+scripts/gsc/data/*
 !scripts/gsc/data/.gitkeep
 !scripts/gsc/reports/
+scripts/gsc/reports/*
 !scripts/gsc/reports/.gitkeep
 !scripts/gsc/credentials/
 !scripts/gsc/credentials/.gitkeep

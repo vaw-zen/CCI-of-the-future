@@ -80,6 +80,13 @@ const nextConfig = {
       { source: '/blog/nettoyage-cuir-professionnel', destination: '/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet', permanent: true },
       { source: '/blog/produits-nettoyage-cuir', destination: '/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet', permanent: true },
 
+      // Legacy URLs from earlier CCI site versions
+      { source: '/home', destination: '/', permanent: true },
+      { source: '/Contact', destination: '/contact', permanent: true },
+      { source: '/projects', destination: '/services', permanent: true },
+      { source: '/moquette', destination: '/tapis', permanent: true },
+      { source: '/conseils/cci-tunisie-expert-nettoyage-commercial-tunis', destination: '/conseils/conventions-nettoyage-entreprises-tunisie-contrats-b2b', permanent: true },
+
       // Cleanup of older conseils slug that mixed unrelated intent
       { source: '/conseils/nettoyage-salons-voiture-tapisseries-tunis', destination: '/conseils/nettoyage-salon-canape-tunis-2026', permanent: true },
     ];

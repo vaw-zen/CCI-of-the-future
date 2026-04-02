@@ -1,7 +1,7 @@
 "use client";
 
 import styles from './image.module.css'
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { dimensionsStore } from '@/utils/store/store';
 
@@ -31,12 +31,23 @@ const ResponsiveImage = ({
     // Catch any other attributes
     ...otherProps
 }) => {
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [loadedSrc, setLoadedSrc] = useState(null);
+    const imageRef = useRef(null);
     const viewportWidth = dimensionsStore((state) => state.vw);
+    const isLoaded = loadedSrc === src;
     
     const handleLoadingComplete = useCallback(() => {
-        setIsLoaded(true);
-    }, []);
+        setLoadedSrc(src);
+    }, [src]);
+
+    const handleImageRef = useCallback((node) => {
+        imageRef.current = node;
+
+        // Cached images can already be complete before React attaches onLoad.
+        if (node?.complete && node.naturalWidth > 0) {
+            setLoadedSrc(src);
+        }
+    }, [src]);
 
     // Determine effective size based on client or server rendering
     let effectiveSize;
@@ -82,6 +93,7 @@ const ResponsiveImage = ({
         >
             {hasValidSrc && (
                 <Image
+                    ref={handleImageRef}
                     src={src}
                     alt={alt}
                     title={title}

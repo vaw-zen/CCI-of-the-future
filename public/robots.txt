@@ -15,6 +15,7 @@ Sitemap: https://cciservices.online/sitemap-index.xml
 Sitemap: https://cciservices.online/sitemap.xml
 Sitemap: https://cciservices.online/articles-sitemap.xml
 Sitemap: https://cciservices.online/video-sitemap.xml
+Sitemap: https://cciservices.online/sitemap-priority.xml
 
 # Host directive
 Host: https://cciservices.online

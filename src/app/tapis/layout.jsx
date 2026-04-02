@@ -35,6 +35,9 @@ export default function TapisLayout({ children }) {
   return (
     <>
       {children}
+      {tapisData.localBusinessJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisData.localBusinessJSONLD) }} />
+      )}
       {tapisData.breadcrumbJSONLD && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisData.breadcrumbJSONLD) }} />
       )}

@@ -88,6 +88,7 @@
   "localBusinessJSONLD": {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": "https://cciservices.online#localbusiness",
     "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
     "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
     "url": "https://cciservices.online/",
@@ -105,6 +106,12 @@
       "@type": "GeoCoordinates",
       "latitude": 36.8527438,
       "longitude": 10.254949
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5"
     }
   },
   "serviceJSONLD": {
@@ -123,12 +130,6 @@
       { "@type": "City", "name": "Carthage" },
       { "@type": "City", "name": "Manouba" }
     ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5.0",
-      "reviewCount": "4",
-      "bestRating": "5"
-    },
     "provider": {
       "@id": "https://cciservices.online#localbusiness"
     }

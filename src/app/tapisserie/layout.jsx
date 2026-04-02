@@ -35,6 +35,9 @@ export default function TapisserieLayout({ children }) {
   return (
     <>
       {children}
+      {tapisserieData.localBusinessJSONLD && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisserieData.localBusinessJSONLD) }} />
+      )}
       {tapisserieData.breadcrumbJSONLD && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisserieData.breadcrumbJSONLD) }} />
       )}

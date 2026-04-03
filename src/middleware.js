@@ -1,10 +1,50 @@
 /**
  * Next.js Middleware — merged from root + src middleware
- * Handles: CSS caching, CORS for API routes, admin auth via Supabase
+ * Handles: CSS caching, CORS for API routes, admin auth via Supabase,
+ * and analytics gating for Tunisia-only traffic.
  */
 
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
+
+const ANALYTICS_COOKIE_NAME = 'cci_analytics';
+const ANALYTICS_ALLOWED_COUNTRIES = new Set(['TN']);
+const BOT_USER_AGENT_PATTERN = /(bot|crawler|spider|crawling|headless|facebookexternalhit|whatsapp|telegrambot|slackbot|discordbot|linkedinbot|skypeuripreview|google-inspectiontool|adsbot|apis-google|mediapartners-google|lighthouse|pagespeed|pingdom|curl|wget|python-requests|axios|node-fetch|go-http-client)/i;
+
+function getVisitorCountry(request) {
+  const country =
+    request.headers.get('x-vercel-ip-country') ||
+    request.headers.get('cf-ipcountry') ||
+    request.headers.get('x-country-code') ||
+    '';
+
+  return country.toUpperCase();
+}
+
+function isBotTraffic(request) {
+  const userAgent = request.headers.get('user-agent') || '';
+  return BOT_USER_AGENT_PATTERN.test(userAgent);
+}
+
+function shouldEnableAnalytics(request) {
+  if (process.env.NODE_ENV !== 'production') {
+    return true;
+  }
+
+  return ANALYTICS_ALLOWED_COUNTRIES.has(getVisitorCountry(request)) && !isBotTraffic(request);
+}
+
+function attachAnalyticsCookie(request, response) {
+  response.cookies.set({
+    name: ANALYTICS_COOKIE_NAME,
+    value: shouldEnableAnalytics(request) ? '1' : '0',
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
+
+  return response;
+}
 
 export async function middleware(request) {
   // 1. Aggressive caching for CSS files (mobile perf)
@@ -73,14 +113,14 @@ export async function middleware(request) {
     }
   }
 
-  return NextResponse.next();
+  return attachAnalyticsCookie(request, NextResponse.next());
 }
 
 export const config = {
   matcher: [
+    '/_next/static/css/:path*',
     '/api/articles/:path*',
     '/api/rebuild',
-    '/admin/((?!login).*)',
-    '/admin'
-  ]
+    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*\\..*).*)',
+  ],
 };

@@ -98,7 +98,6 @@ const nextConfig = {
 
       // Legacy URLs from earlier CCI site versions
       { source: '/home', destination: '/', permanent: true },
-      { source: '/Contact', destination: '/contact', permanent: true },
       { source: '/projects', destination: '/services', permanent: true },
       { source: '/moquette', destination: '/tapis', permanent: true },
       { source: '/conseils/cci-tunisie-expert-nettoyage-commercial-tunis', destination: '/conseils/conventions-nettoyage-entreprises-tunisie-contrats-b2b', permanent: true },

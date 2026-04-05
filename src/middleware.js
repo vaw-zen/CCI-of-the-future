@@ -10,6 +10,7 @@ import { NextResponse } from 'next/server';
 const ANALYTICS_COOKIE_NAME = 'cci_analytics';
 const ANALYTICS_ALLOWED_COUNTRIES = new Set(['TN']);
 const BOT_USER_AGENT_PATTERN = /(bot|crawler|spider|crawling|headless|facebookexternalhit|whatsapp|telegrambot|slackbot|discordbot|linkedinbot|skypeuripreview|google-inspectiontool|adsbot|apis-google|mediapartners-google|lighthouse|pagespeed|pingdom|curl|wget|python-requests|axios|node-fetch|go-http-client)/i;
+const ADMIN_PUBLIC_PATHS = ['/admin/login', '/admin/reset-password'];
 
 function getVisitorCountry(request) {
   const country =
@@ -46,17 +47,49 @@ function attachAnalyticsCookie(request, response) {
   return response;
 }
 
+function isPublicAdminPath(pathname) {
+  return ADMIN_PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+}
+
+function copyCookies(source, target) {
+  const cookies = source.cookies.getAll();
+
+  if (cookies.length) {
+    cookies.forEach((cookie) => {
+      target.cookies.set(cookie);
+    });
+    return target;
+  }
+
+  const setCookie = source.headers.get('set-cookie');
+
+  if (setCookie) {
+    target.headers.append('set-cookie', setCookie);
+  }
+
+  return target;
+}
+
+function createLoginRedirect(request, sourceResponse) {
+  const loginUrl = new URL('/admin/login', request.url);
+  const redirectResponse = NextResponse.redirect(loginUrl);
+
+  return copyCookies(sourceResponse, redirectResponse);
+}
+
 export async function middleware(request) {
+  const pathname = request.nextUrl.pathname;
+
   // 1. Aggressive caching for CSS files (mobile perf)
-  if (request.nextUrl.pathname.includes('/_next/static/css/')) {
+  if (pathname.includes('/_next/static/css/')) {
     const response = NextResponse.next();
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
     return response;
   }
 
   // 2. CORS for API routes
-  if (request.nextUrl.pathname.startsWith('/api/articles') || 
-      request.nextUrl.pathname.startsWith('/api/rebuild')) {
+  if (pathname.startsWith('/api/articles') || 
+      pathname.startsWith('/api/rebuild')) {
     
     if (request.method === 'OPTIONS') {
       return new NextResponse(null, {
@@ -78,21 +111,18 @@ export async function middleware(request) {
   }
 
   // 3. Admin routes auth (except login page)
-  if (request.nextUrl.pathname.startsWith('/admin') && 
-      !request.nextUrl.pathname.startsWith('/admin/login')) {
-    
+  if (pathname.startsWith('/admin') && !isPublicAdminPath(pathname)) {
+    const supabaseResponse = NextResponse.next();
+
     try {
-      const supabaseResponse = NextResponse.next();
       const supabase = createMiddlewareClient({ req: request, res: supabaseResponse });
 
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session) {
-        const loginUrl = new URL('/admin/login', request.url);
-        return NextResponse.redirect(loginUrl);
+        return createLoginRedirect(request, supabaseResponse);
       }
 
-      const adminResponse = NextResponse.next();
       const { data: adminData, error } = await supabase
         .from('admin_users')
         .select('id')
@@ -101,15 +131,13 @@ export async function middleware(request) {
         .single();
 
       if ((error && error.code !== 'PGRST116') || !adminData) {
-        const loginUrl = new URL('/admin/login', request.url);
-        return NextResponse.redirect(loginUrl);
+        return createLoginRedirect(request, supabaseResponse);
       }
 
-      return adminResponse;
+      return attachAnalyticsCookie(request, supabaseResponse);
     } catch (error) {
       console.error('Middleware auth error:', error);
-      const loginUrl = new URL('/admin/login', request.url);
-      return NextResponse.redirect(loginUrl);
+      return createLoginRedirect(request, supabaseResponse);
     }
   }
 

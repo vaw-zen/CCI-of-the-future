@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/libs/supabase';
 
 export function useAdminAuth() {
@@ -6,65 +6,16 @@ export function useAdminAuth() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isAuthChecking, setIsAuthChecking] = useState(false);
+  const isAuthCheckingRef = useRef(false);
 
-  useEffect(() => {
-    // Check if supabase client is available
-    if (!supabase) {
-      setError('Configuration error: Supabase client not available');
-      setLoading(false);
-      return;
-    }
-
-    let mounted = true;
-    let timeoutId;
-
-    // Set a timeout to prevent infinite loading
-    timeoutId = setTimeout(() => {
-      if (mounted) {
-        setLoading(false);
-        setError('Authentication check timed out');
-      }
-    }, 10000);
-
-    // Get initial session
-    checkUserAuth().finally(() => {
-      if (timeoutId) clearTimeout(timeoutId);
-    });
-
-    // Listen for auth changes with debouncing
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Prevent multiple simultaneous auth checks
-      if (isAuthChecking) {
-        return;
-      }
-
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        await checkUserAuth(session);
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        setIsAdmin(false);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      mounted = false;
-      if (timeoutId) clearTimeout(timeoutId);
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  const checkUserAuth = async (session = null) => {
+  const checkUserAuth = useCallback(async (session = null) => {
     // Prevent multiple simultaneous auth checks
-    if (isAuthChecking) {
+    if (isAuthCheckingRef.current) {
       return;
     }
 
     try {
-      setIsAuthChecking(true);
+      isAuthCheckingRef.current = true;
       setLoading(true);
       setError(null);
 
@@ -125,10 +76,59 @@ export function useAdminAuth() {
       setUser(null);
       setIsAdmin(false);
     } finally {
-      setIsAuthChecking(false);
+      isAuthCheckingRef.current = false;
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Check if supabase client is available
+    if (!supabase) {
+      setError('Configuration error: Supabase client not available');
+      setLoading(false);
+      return;
+    }
+
+    let mounted = true;
+    let timeoutId;
+
+    // Set a timeout to prevent infinite loading
+    timeoutId = setTimeout(() => {
+      if (mounted) {
+        setLoading(false);
+        setError('Authentication check timed out');
+      }
+    }, 10000);
+
+    // Get initial session
+    checkUserAuth().finally(() => {
+      if (timeoutId) clearTimeout(timeoutId);
+    });
+
+    // Listen for auth changes with debouncing
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // Prevent multiple simultaneous auth checks
+      if (isAuthCheckingRef.current) {
+        return;
+      }
+
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        await checkUserAuth(session);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setIsAdmin(false);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
+  }, [checkUserAuth]);
 
   const signInWithEmail = async (email, password) => {
     try {

@@ -1,3 +1,4 @@
+import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -10,16 +11,24 @@ if (!supabaseUrl || !supabaseAnonKey) {
   }
 }
 
-// Create browser client with minimal auth configuration
-// Auth is disabled since we're only using the database for devis requests
+const isBrowser = typeof window !== 'undefined';
+
+// Browser client uses the auth helpers cookie adapter so middleware and client
+// share the same session source for admin routes.
 export const supabase = (supabaseUrl && supabaseAnonKey) 
-  ? createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-        detectSessionInUrl: false
-      }
-    })
+  ? (isBrowser
+      ? createPagesBrowserClient({
+          supabaseUrl,
+          supabaseKey: supabaseAnonKey,
+          options: {
+            auth: {
+              autoRefreshToken: true,
+              persistSession: true,
+              detectSessionInUrl: true,
+            },
+          },
+        })
+      : null)
   : null; // Mock client for build time
 
 // For server-side operations that need elevated permissions

@@ -1,3 +1,6 @@
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
+const { origin: siteOrigin, hostname: siteHostname } = new URL(siteUrl);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   trailingSlash: false,
@@ -44,19 +47,18 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Domain canonicalization
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.cciservices.online' }],
-        destination: 'https://cciservices.online/:path*',
-        permanent: true,
-      },
-      {
-        source: '/:path*',
-        has: [{ type: 'header', key: 'x-forwarded-proto', value: 'http' }],
-        destination: 'https://cciservices.online/:path*',
-        permanent: true,
-      },
+      // Domain canonicalization.
+      // HTTPS should be enforced at the proxy/CDN layer; redirecting on
+      // x-forwarded-proto here can self-loop when an upstream proxy always
+      // forwards "http" to the app, even for already-HTTPS requests.
+      ...(!siteHostname.startsWith('www.')
+        ? [{
+            source: '/:path*',
+            has: [{ type: 'host', value: `www.${siteHostname}` }],
+            destination: `${siteOrigin}/:path*`,
+            permanent: true,
+          }]
+        : []),
 
       // Root index variants
       { source: '/index', destination: '/', permanent: true },

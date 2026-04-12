@@ -300,8 +300,10 @@ export default async function ArticlePage({ params }) {
     ]
   };
 
+  const hasEmbeddedFaqSchema = /<script[^>]*application\/ld\+json[^>]*>[\s\S]*?"@type"\s*:\s*"FAQPage"/i.test(article.content);
+
   // FAQ Schema — only for category clusters where these FAQs are relevant
-  const faqSchema = faqSchemaMap[article.category] ? {
+  const faqSchema = !hasEmbeddedFaqSchema && faqSchemaMap[article.category] ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": faqSchemaMap[article.category]

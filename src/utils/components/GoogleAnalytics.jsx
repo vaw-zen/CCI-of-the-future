@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 const ANALYTICS_COOKIE_NAME = 'cci_analytics';
+const SESSION_ATTRIBUTION_KEY = 'cci_session_attribution';
 const GA_MEASUREMENT_ID = 'G-0RDH6DH7TS';
 const GOOGLE_ADS_ID = 'AW-17696563349';
 
@@ -16,11 +18,144 @@ function getCookieValue(name) {
   return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : '';
 }
 
+function isAnalyticsEnabled() {
+  return (
+    process.env.NODE_ENV !== 'production' ||
+    getCookieValue(ANALYTICS_COOKIE_NAME) === '1'
+  );
+}
+
+function getCurrentPagePath() {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  return `${window.location.pathname}${window.location.search}`;
+}
+
+function getReferrerHost(referrer = '') {
+  if (!referrer) {
+    return '';
+  }
+
+  try {
+    return new URL(referrer).hostname.replace(/^www\./, '');
+  } catch (error) {
+    return '';
+  }
+}
+
+function inferSessionAttribution() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentHost = window.location.hostname.replace(/^www\./, '');
+  const referrerHost = getReferrerHost(document.referrer);
+  const utmSource = urlParams.get('utm_source');
+  const utmMedium = urlParams.get('utm_medium');
+  const utmCampaign = urlParams.get('utm_campaign');
+
+  let source = utmSource;
+  let medium = utmMedium;
+
+  if (!source) {
+    if (referrerHost.includes('google.')) {
+      source = 'google';
+      medium = 'organic';
+    } else if (referrerHost.includes('bing.')) {
+      source = 'bing';
+      medium = 'organic';
+    } else if (referrerHost.includes('facebook.')) {
+      source = 'facebook';
+      medium = 'social';
+    } else if (referrerHost.includes('instagram.')) {
+      source = 'instagram';
+      medium = 'social';
+    } else if (referrerHost.includes('linkedin.')) {
+      source = 'linkedin';
+      medium = 'social';
+    } else if (referrerHost && referrerHost !== currentHost) {
+      source = referrerHost;
+      medium = 'referral';
+    } else {
+      source = 'direct';
+      medium = '(none)';
+    }
+  }
+
+  return {
+    source,
+    medium: medium || '(none)',
+    campaign: utmCampaign || undefined,
+    content: urlParams.get('utm_content') || undefined,
+    term: urlParams.get('utm_term') || undefined,
+    landingPage: window.location.pathname,
+    landingLocation: window.location.href,
+    referrerHost: referrerHost || undefined,
+    capturedAt: new Date().toISOString()
+  };
+}
+
+function persistSessionAttribution() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const existing = window.sessionStorage.getItem(SESSION_ATTRIBUTION_KEY);
+  if (existing) {
+    try {
+      return JSON.parse(existing);
+    } catch (error) {
+      window.sessionStorage.removeItem(SESSION_ATTRIBUTION_KEY);
+    }
+  }
+
+  const attribution = inferSessionAttribution();
+  if (attribution) {
+    window.sessionStorage.setItem(
+      SESSION_ATTRIBUTION_KEY,
+      JSON.stringify(attribution)
+    );
+  }
+
+  return attribution;
+}
+
+function trackUtmArrival() {
+  if (typeof window === 'undefined' || typeof window.gtag === 'undefined') {
+    return;
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const utmSource = urlParams.get('utm_source');
+
+  if (!utmSource) {
+    return;
+  }
+
+  window.gtag('event', 'utm_arrival', {
+    event_category: 'traffic_source',
+    utm_source: utmSource,
+    utm_medium: urlParams.get('utm_medium'),
+    utm_campaign: urlParams.get('utm_campaign'),
+    utm_content: urlParams.get('utm_content'),
+    utm_term: urlParams.get('utm_term'),
+    page_location: window.location.href,
+    page_path: getCurrentPagePath()
+  });
+}
+
 export default function GoogleAnalytics() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const lastTrackedPathRef = useRef('');
+
   useEffect(() => {
-    const shouldLoadAnalytics =
-      process.env.NODE_ENV !== 'production' ||
-      getCookieValue(ANALYTICS_COOKIE_NAME) === '1';
+    const shouldLoadAnalytics = isAnalyticsEnabled();
+
+    persistSessionAttribution();
 
     if (!shouldLoadAnalytics || document.getElementById('gtag-loader')) {
       return;
@@ -36,47 +171,17 @@ export default function GoogleAnalytics() {
     initScript.text = `
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      window.gtag = window.gtag || gtag;
       gtag('js', new Date());
 
       gtag('config', '${GA_MEASUREMENT_ID}', {
+        page_path: window.location.pathname + window.location.search,
         page_title: document.title,
         page_location: window.location.href,
-        send_page_view: true,
-        campaign_source: new URLSearchParams(window.location.search).get('utm_source'),
-        campaign_medium: new URLSearchParams(window.location.search).get('utm_medium'),
-        campaign_name: new URLSearchParams(window.location.search).get('utm_campaign'),
-        campaign_content: new URLSearchParams(window.location.search).get('utm_content'),
-        campaign_term: new URLSearchParams(window.location.search).get('utm_term')
+        send_page_view: true
       });
 
-      gtag('config', '${GOOGLE_ADS_ID}', {
-        campaign_source: new URLSearchParams(window.location.search).get('utm_source'),
-        campaign_medium: new URLSearchParams(window.location.search).get('utm_medium'),
-        campaign_name: new URLSearchParams(window.location.search).get('utm_campaign')
-      });
-
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('utm_source')) {
-        try {
-          console.log('UTM Parameters detected:', {
-            source: urlParams.get('utm_source'),
-            medium: urlParams.get('utm_medium'),
-            campaign: urlParams.get('utm_campaign'),
-            content: urlParams.get('utm_content'),
-            term: urlParams.get('utm_term')
-          });
-        } catch (error) {}
-
-        gtag('event', 'utm_arrival', {
-          event_category: 'traffic_source',
-          utm_source: urlParams.get('utm_source'),
-          utm_medium: urlParams.get('utm_medium'),
-          utm_campaign: urlParams.get('utm_campaign'),
-          utm_content: urlParams.get('utm_content'),
-          utm_term: urlParams.get('utm_term'),
-          page_location: window.location.href
-        });
-      }
+      gtag('config', '${GOOGLE_ADS_ID}');
     `;
 
     const conversionScript = document.createElement('script');
@@ -101,7 +206,47 @@ export default function GoogleAnalytics() {
     document.head.appendChild(loaderScript);
     document.head.appendChild(initScript);
     document.head.appendChild(conversionScript);
+
+    lastTrackedPathRef.current = getCurrentPagePath();
+    trackUtmArrival();
   }, []);
+
+  useEffect(() => {
+    if (!isAnalyticsEnabled() || typeof window === 'undefined') {
+      return;
+    }
+
+    persistSessionAttribution();
+
+    const currentPath = `${pathname || window.location.pathname}${
+      searchParams?.toString() ? `?${searchParams.toString()}` : ''
+    }`;
+
+    if (!currentPath) {
+      return;
+    }
+
+    if (!lastTrackedPathRef.current) {
+      lastTrackedPathRef.current = currentPath;
+      return;
+    }
+
+    if (lastTrackedPathRef.current === currentPath) {
+      return;
+    }
+
+    lastTrackedPathRef.current = currentPath;
+
+    if (typeof window.gtag !== 'undefined') {
+      window.gtag('event', 'page_view', {
+        page_title: document.title,
+        page_location: window.location.href,
+        page_path: currentPath
+      });
+
+      trackUtmArrival();
+    }
+  }, [pathname, searchParams]);
 
   return null;
 }

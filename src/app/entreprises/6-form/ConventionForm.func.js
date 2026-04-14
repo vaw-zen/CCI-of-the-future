@@ -5,6 +5,7 @@ import {
   trackFunnelComplete,
   trackFormFieldComplete,
   trackFormAbandonment,
+  trackConventionSubmission,
   trackServiceInteraction,
   SERVICE_TYPES
 } from '@/utils/analytics';
@@ -179,6 +180,14 @@ export function useConventionFormLogic() {
           services_count: formData.servicesSouhaites.length,
           frequence: formData.frequence,
           duree: formData.dureeContrat
+        });
+        trackConventionSubmission({
+          secteur: formData.secteurActivite,
+          nombreSites: formData.nombreSites,
+          servicesCount: formData.servicesSouhaites.length,
+          frequence: formData.frequence,
+          duree: formData.dureeContrat,
+          surfaceTotale: formData.surfaceTotale
         });
         trackFunnelComplete('convention_form', 'form_submitted', 3);
 

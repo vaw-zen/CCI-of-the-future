@@ -26,7 +26,7 @@ export default function Page() {
 
   useEffect(() => {
     // Track service page view
-    trackServiceInteraction(SERVICE_TYPES.SALON, 'page_view', {
+    trackServiceInteraction(SERVICE_TYPES.SALON, 'view_service_page', {
       page_title: salonData.metadata.title
     });
     // Facebook Pixel ViewContent for retargeting

@@ -99,20 +99,18 @@ export function AnalyticsLink({
 
       // Track Google Ads conversions for email, phone, and WhatsApp links
       if (isMailto) {
-        const emailMatch = href.match(/mailto:([^?]+)/);
-        const email = emailMatch ? emailMatch[1] : '';
-        trackEmailClick(eventLabel || 'link_click', email);
+        trackEmailClick(eventLabel || 'link_click');
       } else if (isTel) {
         trackPhoneReveal(eventLabel || 'link_click');
       } else if (isWhatsApp) {
-        const phoneMatch = href.match(/wa\.me\/(\d+)/);
-        const phone = phoneMatch ? phoneMatch[1] : '';
-        trackWhatsAppClick(eventLabel || 'link_click', phone);
+        trackWhatsAppClick(eventLabel || 'link_click');
       }
     };
 
-    // Use requestIdleCallback if available, otherwise setTimeout
-    if ('requestIdleCallback' in window) {
+    // Contact-intent links should track immediately before navigation.
+    if (isMailto || isTel || isWhatsApp) {
+      performTracking();
+    } else if ('requestIdleCallback' in window) {
       requestIdleCallback(performTracking);
     } else {
       setTimeout(performTracking, 0);

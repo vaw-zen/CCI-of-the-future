@@ -25,7 +25,7 @@ export default function Page() {
 
   useEffect(() => {
     // Track service page view
-    trackServiceInteraction(SERVICE_TYPES.TAPISSERIE, 'page_view', {
+    trackServiceInteraction(SERVICE_TYPES.TAPISSERIE, 'view_service_page', {
       page_title: tapisserieData.metadata.title
     });
   }, []);

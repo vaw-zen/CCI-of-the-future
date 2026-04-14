@@ -4,6 +4,9 @@
  */
 
 import { trackLead, trackViewContent, trackInitiateCheckout, trackCustomEvent } from './facebook-pixel-helper';
+import { getStoredUTMParameters } from './utmGenerator';
+
+const SESSION_ATTRIBUTION_KEY = 'cci_session_attribution';
 
 // Service types mapping for consistent tracking
 export const SERVICE_TYPES = {
@@ -25,6 +28,63 @@ export const ARTICLE_CATEGORIES = {
   TAPISSERIE: 'tapisserie',
   POST_CHANTIER: 'post-chantier',
   ALL: 'all'
+};
+
+const removeEmptyValues = (payload = {}) => Object.fromEntries(
+  Object.entries(payload).filter(([, value]) => value !== undefined && value !== null && value !== '')
+);
+
+const getReferrerHost = (referrer = '') => {
+  if (!referrer) {
+    return '';
+  }
+
+  try {
+    return new URL(referrer).hostname.replace(/^www\./, '');
+  } catch (error) {
+    return '';
+  }
+};
+
+const getSessionAttribution = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const stored = window.sessionStorage.getItem(SESSION_ATTRIBUTION_KEY);
+  if (!stored) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(stored);
+  } catch (error) {
+    window.sessionStorage.removeItem(SESSION_ATTRIBUTION_KEY);
+    return null;
+  }
+};
+
+const getLeadContext = (additionalData = {}) => {
+  if (typeof window === 'undefined') {
+    return additionalData;
+  }
+
+  const storedUtm = getStoredUTMParameters() || {};
+  const sessionAttribution = getSessionAttribution() || {};
+  const searchParams = new URLSearchParams(window.location.search);
+
+  return removeEmptyValues({
+    page_location: window.location.href,
+    page_path: window.location.pathname,
+    page_title: document.title,
+    landing_page: sessionAttribution.landingPage || window.location.pathname,
+    landing_location: sessionAttribution.landingLocation,
+    session_source: searchParams.get('utm_source') || storedUtm.source || sessionAttribution.source,
+    session_medium: searchParams.get('utm_medium') || storedUtm.medium || sessionAttribution.medium,
+    session_campaign: searchParams.get('utm_campaign') || storedUtm.campaign || sessionAttribution.campaign,
+    referrer_host: sessionAttribution.referrerHost || getReferrerHost(document.referrer),
+    ...additionalData
+  });
 };
 
 // Track service-specific interactions
@@ -63,22 +123,16 @@ export const trackQuoteProgress = (step, serviceType, formData = {}) => {
   }
 };
 
-// Track phone number reveals/clicks with Google Ads conversion
+// Track phone contact clicks with Google Ads conversion
 export const trackPhoneReveal = (location = 'header', additionalData = {}) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'phone_reveal', {
-      event_category: 'lead_generation',
-      event_label: location,
-      value: 5, // Assign value to phone reveals
-      ...additionalData
-    });
+  const payload = getLeadContext(additionalData);
 
-    // Standardized click event for reporting clarity
+  if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'phone_click', {
       event_category: 'lead_generation',
       event_label: location,
       value: 5,
-      ...additionalData
+      ...payload
     });
     
     // Trigger Google Ads conversion for phone clicks
@@ -88,18 +142,19 @@ export const trackPhoneReveal = (location = 'header', additionalData = {}) => {
   }
   
   // Enhanced Facebook Pixel tracking
-  trackLead('phone', location, { action: 'phone_reveal' });
+  trackLead('phone', location, { action: 'phone_click', ...payload });
 };
 
 // Track email link clicks with Google Ads conversion
 export const trackEmailClick = (location = 'general', emailAddress = '', additionalData = {}) => {
+  const payload = getLeadContext(additionalData);
+
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'email_click', {
       event_category: 'lead_generation',
       event_label: location,
-      email_address: emailAddress,
       value: 5, // Assign value to email clicks
-      ...additionalData
+      ...payload
     });
     
     // Trigger Google Ads conversion for email clicks
@@ -109,18 +164,19 @@ export const trackEmailClick = (location = 'general', emailAddress = '', additio
   }
   
   // Enhanced Facebook Pixel tracking
-  trackLead('email', location, { email: emailAddress, action: 'email_click' });
+  trackLead('email', location, { action: 'email_click', ...payload });
 };
 
 // Track WhatsApp link clicks with Google Ads conversion
 export const trackWhatsAppClick = (location = 'general', phoneNumber = '', additionalData = {}) => {
+  const payload = getLeadContext(additionalData);
+
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'whatsapp_click', {
       event_category: 'lead_generation',
       event_label: location,
-      phone_number: phoneNumber,
       value: 5, // Assign value to WhatsApp clicks
-      ...additionalData
+      ...payload
     });
     
     // Trigger Google Ads conversion for WhatsApp clicks
@@ -130,7 +186,7 @@ export const trackWhatsAppClick = (location = 'general', phoneNumber = '', addit
   }
   
   // Enhanced Facebook Pixel tracking
-  trackLead('whatsapp', location, { phone: phoneNumber, action: 'whatsapp_click' });
+  trackLead('whatsapp', location, { action: 'whatsapp_click', ...payload });
 };
 
 const getContactLinkDetails = (href = '') => {
@@ -172,7 +228,6 @@ export const trackContactLinkClick = (href, location = 'contact_link', additiona
 
   const payload = {
     contact_method: contactDetails.method,
-    contact_value: contactDetails.value,
     link_destination: href,
     page_location: typeof window !== 'undefined' ? window.location.href : '',
     ...additionalData
@@ -391,14 +446,21 @@ export const trackDevisCalculation = (serviceType, calculatedValue, optionsSelec
 
 // Track devis submission
 export const trackDevisSubmission = (serviceType, estimatedValue, contactMethod = 'form') => {
+  const normalizedValue = Number(estimatedValue) || 0;
+  const payload = getLeadContext({
+    lead_type: 'quote_request',
+    business_line: 'b2c'
+  });
+
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'generate_lead', {
       event_category: 'conversion',
       event_label: 'devis_submission',
       service_type: serviceType,
-      estimated_value: estimatedValue,
+      estimated_value: normalizedValue,
       contact_method: contactMethod,
-      value: estimatedValue * 0.2 // Higher conversion value for actual submission
+      value: normalizedValue > 0 ? normalizedValue * 0.2 : 1,
+      ...payload
     });
 
     // Preserve the existing GA event used in reports while standardizing around generate_lead.
@@ -407,16 +469,58 @@ export const trackDevisSubmission = (serviceType, estimatedValue, contactMethod 
       event_label: 'Devis Request',
       service_type: serviceType,
       contact_method: contactMethod,
-      value: 1
+      value: 1,
+      ...payload
     });
   }
   
   // Enhanced Facebook Pixel tracking for quote submissions
-  trackInitiateCheckout(serviceType, estimatedValue);
+  trackInitiateCheckout(serviceType, normalizedValue);
   trackLead('form', 'devis_submission', { 
     service_type: serviceType, 
-    estimated_value: estimatedValue, 
-    contact_method: contactMethod 
+    estimated_value: normalizedValue, 
+    contact_method: contactMethod,
+    ...payload
+  });
+};
+
+export const trackConventionSubmission = ({
+  secteur = '',
+  nombreSites = 1,
+  servicesCount = 0,
+  frequence = '',
+  duree = '',
+  surfaceTotale = 0
+} = {}) => {
+  const normalizedSites = Number(nombreSites) || 1;
+  const normalizedSurface = Number(surfaceTotale) || 0;
+  const leadValue = Math.max(20, (normalizedSites * 10) + (servicesCount * 5));
+  const payload = getLeadContext({
+    lead_type: 'convention_request',
+    business_line: 'b2b',
+    company_sector: secteur,
+    number_of_sites: normalizedSites,
+    services_count: servicesCount,
+    contract_frequency: frequence,
+    contract_duration: duree,
+    surface_total: normalizedSurface || undefined
+  });
+
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'generate_lead', {
+      event_category: 'conversion',
+      event_label: 'convention_submission',
+      service_type: SERVICE_TYPES.CONVENTION,
+      contact_method: 'form',
+      value: leadValue,
+      ...payload
+    });
+  }
+
+  trackLead('form', 'convention_submission', {
+    service_type: SERVICE_TYPES.CONVENTION,
+    contact_method: 'form',
+    ...payload
   });
 };
 

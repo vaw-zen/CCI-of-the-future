@@ -12,6 +12,25 @@ import { initFacebookPixel } from "@/utils/facebookTracking";
 import { initializeFacebookPixelTracking, debugFacebookPixel } from "@/utils/facebook-pixel-helper";
 import { trackContactLinkClick } from "@/utils/analytics";
 
+const ANALYTICS_COOKIE_NAME = 'cci_analytics';
+
+function getAnalyticsCookieValue(name) {
+    if (typeof document === 'undefined') {
+        return '';
+    }
+
+    const cookies = document.cookie ? document.cookie.split('; ') : [];
+    const match = cookies.find((entry) => entry.startsWith(`${name}=`));
+    return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : '';
+}
+
+function shouldLoadMarketingTracking() {
+    return (
+        process.env.NODE_ENV !== 'production' ||
+        getAnalyticsCookieValue(ANALYTICS_COOKIE_NAME) === '1'
+    );
+}
+
 export default function Initializer() {
     // Get the current path for route change detection
     const pathname = usePathname();
@@ -51,7 +70,7 @@ export default function Initializer() {
         
         // Initialize Facebook Pixel if ID is present
         try {
-            if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID) {
+            if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID && shouldLoadMarketingTracking()) {
                 initFacebookPixel();
                 // Wait a bit for pixel to load, then initialize tracking
                 setTimeout(() => {

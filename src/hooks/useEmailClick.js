@@ -46,14 +46,11 @@ export const useEmailClick = () => {
    */
   const handleMailtoClick = useCallback((mailtoUrl, fallbackEmail = null, fallbackSubject = null, analyticsLabel = '') => {
     return (e) => {
-      console.log('Email click handler called:', mailtoUrl);
-      
       // Track analytics event
       if (trackEvent) {
         trackEvent('email_click', {
           event_category: 'conversion',
           event_label: analyticsLabel || 'email_contact',
-          email_address: fallbackEmail,
           page_location: typeof window !== 'undefined' ? window.location.href : '',
           is_mailto: true
         });
@@ -126,7 +123,6 @@ export const useEmailClick = () => {
         trackEvent('email_click_chrome', {
           event_category: 'conversion',
           event_label: analyticsLabel || 'email_contact_chrome',
-          email_address: fallbackEmail,
           browser: 'chrome',
           is_mailto: true
         });

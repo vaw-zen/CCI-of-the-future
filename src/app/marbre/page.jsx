@@ -25,7 +25,7 @@ export default function Page() {
 
   useEffect(() => {
     // Track service page view
-    trackServiceInteraction(SERVICE_TYPES.MARBRE, 'page_view', {
+    trackServiceInteraction(SERVICE_TYPES.MARBRE, 'view_service_page', {
       page_title: marbreData.metadata.title
     });
   }, []);

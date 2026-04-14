@@ -23,7 +23,7 @@ export default function Page() {
   useTimeTracking('entreprises_page');
 
   useEffect(() => {
-    trackServiceInteraction(SERVICE_TYPES.CONVENTION, 'page_view', {
+    trackServiceInteraction(SERVICE_TYPES.CONVENTION, 'view_service_page', {
       page_title: entreprisesData.metadata.title
     });
   }, []);

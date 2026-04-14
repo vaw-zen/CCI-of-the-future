@@ -25,7 +25,7 @@ export default function Page() {
 
   useEffect(() => {
     // Track service page view
-    trackServiceInteraction(SERVICE_TYPES.TFC, 'page_view', {
+    trackServiceInteraction(SERVICE_TYPES.TFC, 'view_service_page', {
       page_title: tfcData.metadata.title
     });
   }, []);

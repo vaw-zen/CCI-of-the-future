@@ -1,6 +1,7 @@
 import { DM_Sans, Roboto_Condensed } from 'next/font/google';
 import "./globals.css";
 import Script from 'next/script';
+import { Suspense } from 'react';
 import Initializer from '@/utils/initializer/initalizer';
 import GoogleAnalytics from '@/utils/components/GoogleAnalytics';
 import ClientHeader from '@/layout/header/ClientHeader';
@@ -199,7 +200,9 @@ export default function RootLayout({ children }) {
       </head>
       <Initializer />
       <body suppressHydrationWarning>
-        <GoogleAnalytics />
+        <Suspense fallback={null}>
+          <GoogleAnalytics />
+        </Suspense>
       
         <ClientHeader roboto={roboto} />
         {children}

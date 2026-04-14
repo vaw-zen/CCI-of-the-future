@@ -1,6 +1,6 @@
-.page { min-height: 100vh; }
-.section { padding: 5.2vw var(--padding-base) 0; display: flex; flex-direction: column; gap: 2.3vw; }
-.introBlock { display: flex; flex-direction: column; gap: 0.9vw; max-width: 55vw; }
+.page { min-height: 100vh; overflow-x: clip; }
+.section { padding: 5.2vw var(--padding-base) 0; display: flex; flex-direction: column; gap: 2.3vw; overflow-x: clip; }
+.introBlock { display: flex; flex-direction: column; gap: 0.9vw; max-width: 55vw; min-width: 0; }
 .eyebrow { font-size: 0.88vw; font-weight: 700; letter-spacing: 0.16vw; text-transform: uppercase; color: var(--ac-primary); }
 .title { font-size: 3.45vw; line-height: 1.08; }
 .description { font-size: 1vw; line-height: 1.65; color: var(--t-secondary); }
@@ -9,11 +9,11 @@
 .summaryCard { display: flex; flex-direction: column; gap: 0.7vw; padding: 1.35vw; border-radius: 1.2vw; background: linear-gradient(180deg, rgba(30, 30, 33, 0.96), rgba(22, 22, 24, 0.98)); border: 1px solid rgba(255, 255, 255, 0.09); }
 .summaryTitle { font-size: 1.15vw; }
 .summaryText { font-size: 0.92vw; line-height: 1.6; color: var(--t-secondary); }
-.contentGrid { display: grid; grid-template-columns: 16vw minmax(0, 1fr); gap: 1.3vw; align-items: start; }
+.contentGrid { display: grid; grid-template-columns: 16vw minmax(0, 1fr); gap: 1.3vw; align-items: start; min-width: 0; }
 .sideNav { position: sticky; top: 7vw; display: flex; flex-direction: column; gap: 0.8vw; padding: 1.25vw; border-radius: 1.2vw; background: rgba(26, 26, 28, 0.88); border: 1px solid rgba(255, 255, 255, 0.08); }
 .sideNavLink { font-size: 0.88vw; line-height: 1.45; color: var(--t-secondary); transition: color .2s ease, transform .2s ease; }
 .sideNavLink:hover { color: var(--ac-primary); transform: translateX(2px); }
-.sections { display: flex; flex-direction: column; gap: 1.25vw; }
+.sections { display: flex; flex-direction: column; gap: 1.25vw; min-width: 0; }
 .sectionCard { scroll-margin-top: 8vw; display: flex; flex-direction: column; gap: 0.85vw; padding: 1.45vw; border-radius: 1.2vw; background: linear-gradient(180deg, rgba(25, 25, 27, 0.95), rgba(20, 20, 22, 1)); border: 1px solid rgba(255, 255, 255, 0.1); }
 .sectionEyebrow { font-size: 0.8vw; font-weight: 700; letter-spacing: 0.14vw; text-transform: uppercase; color: var(--ac-primary); }
 .sectionTitle { font-size: 1.7vw; line-height: 1.15; }

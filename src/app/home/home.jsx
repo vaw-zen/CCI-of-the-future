@@ -18,7 +18,6 @@ const Refrences = dynamic(() => import("./sections/7-refrences/refrences"), { lo
 const GreenBand = dynamic(() => import("@/utils/components/GreenBand/GreenBand"), { loading: () => null });
 const Testimonials = dynamic(() => import("./sections/8-testimonials/testimonials"), { loading: () => null });
 const Overlay = dynamic(() => import("./sections/9-overlay/overlay"), { loading: () => null });
-const Initializer = dynamic(() => import("@/utils/initializer/initalizer"), { loading: () => null });
 
 export default function Home() {
   // Track scroll depth and time on homepage
@@ -26,22 +25,6 @@ export default function Home() {
   useTimeTracking('homepage');
 
   return <>
-    {/* Google Tag Manager - Deferred for better performance */}
-    <script 
-      dangerouslySetInnerHTML={{
-        __html: `
-          window.addEventListener('load', function() {
-            setTimeout(function() {
-              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','GTM-MT495L62');
-            }, 1000);
-          });
-        `
-      }}
-    />
     {/* Enhanced JSON-LD Schema for Better SEO */}
   <script
     type="application/ld+json"

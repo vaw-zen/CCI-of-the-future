@@ -1,0 +1,70 @@
+.page { min-height: 100vh; }
+.section { padding: 5.2vw var(--padding-base) 0; display: flex; flex-direction: column; gap: 2.3vw; }
+.introBlock { display: flex; flex-direction: column; gap: 0.9vw; max-width: 55vw; }
+.eyebrow { font-size: 0.88vw; font-weight: 700; letter-spacing: 0.16vw; text-transform: uppercase; color: var(--ac-primary); }
+.title { font-size: 3.45vw; line-height: 1.08; }
+.description { font-size: 1vw; line-height: 1.65; color: var(--t-secondary); }
+.updatedAt { font-size: 0.82vw; color: var(--t-secondary); }
+.summaryGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1vw; }
+.summaryCard { display: flex; flex-direction: column; gap: 0.7vw; padding: 1.35vw; border-radius: 1.2vw; background: linear-gradient(180deg, rgba(30, 30, 33, 0.96), rgba(22, 22, 24, 0.98)); border: 1px solid rgba(255, 255, 255, 0.09); }
+.summaryTitle { font-size: 1.15vw; }
+.summaryText { font-size: 0.92vw; line-height: 1.6; color: var(--t-secondary); }
+.contentGrid { display: grid; grid-template-columns: 16vw minmax(0, 1fr); gap: 1.3vw; align-items: start; }
+.sideNav { position: sticky; top: 7vw; display: flex; flex-direction: column; gap: 0.8vw; padding: 1.25vw; border-radius: 1.2vw; background: rgba(26, 26, 28, 0.88); border: 1px solid rgba(255, 255, 255, 0.08); }
+.sideNavLink { font-size: 0.88vw; line-height: 1.45; color: var(--t-secondary); transition: color .2s ease, transform .2s ease; }
+.sideNavLink:hover { color: var(--ac-primary); transform: translateX(2px); }
+.sections { display: flex; flex-direction: column; gap: 1.25vw; }
+.sectionCard { scroll-margin-top: 8vw; display: flex; flex-direction: column; gap: 0.85vw; padding: 1.45vw; border-radius: 1.2vw; background: linear-gradient(180deg, rgba(25, 25, 27, 0.95), rgba(20, 20, 22, 1)); border: 1px solid rgba(255, 255, 255, 0.1); }
+.sectionEyebrow { font-size: 0.8vw; font-weight: 700; letter-spacing: 0.14vw; text-transform: uppercase; color: var(--ac-primary); }
+.sectionTitle { font-size: 1.7vw; line-height: 1.15; }
+.sectionText { font-size: 0.95vw; line-height: 1.7; color: var(--t-secondary); }
+.listTitle { font-size: 0.95vw; font-weight: 700; color: var(--t-primary); margin-top: 0.2vw; }
+.sectionList { display: flex; flex-direction: column; gap: 0.55vw; padding-left: 1.3vw; }
+.sectionItem { font-size: 0.92vw; line-height: 1.65; color: var(--t-secondary); }
+.greenBand { margin: 5.8vw 0 4vw !important; }
+
+@media (max-width: 1024px) {
+  .section { padding: 8vw 1.953125vw 0; gap: 4vw; }
+  .introBlock { max-width: none; gap: 1.8vw; }
+  .eyebrow { font-size: 2vw; letter-spacing: 0.28vw; }
+  .title { font-size: 5.9vw; }
+  .description { font-size: 2.2vw; }
+  .updatedAt { font-size: 1.8vw; }
+  .summaryGrid { grid-template-columns: 1fr; gap: 1.8vw; }
+  .summaryCard { gap: 1.3vw; padding: 2.9vw; border-radius: 2.8vw; }
+  .summaryTitle { font-size: 2.4vw; }
+  .summaryText { font-size: 2.05vw; }
+  .contentGrid { grid-template-columns: 1fr; gap: 2vw; }
+  .sideNav { position: static; flex-direction: row; flex-wrap: wrap; gap: 1.3vw; padding: 2.6vw; border-radius: 2.8vw; }
+  .sideNavLink { font-size: 1.95vw; }
+  .sections { gap: 2vw; }
+  .sectionCard { scroll-margin-top: 16vw; gap: 1.5vw; padding: 3vw; border-radius: 2.8vw; }
+  .sectionEyebrow { font-size: 1.75vw; letter-spacing: 0.2vw; }
+  .sectionTitle { font-size: 3.3vw; }
+  .sectionText, .listTitle, .sectionItem { font-size: 2vw; }
+  .sectionList { gap: 1vw; padding-left: 2.8vw; }
+  .greenBand { margin: 9vw 0 11vw !important; }
+}
+
+@media (max-width: 480px) {
+  .section { padding: 12vw 3.75vw 0; gap: 6vw; }
+  .introBlock { gap: 3vw; }
+  .eyebrow { font-size: 3.8vw; letter-spacing: 0.4vw; }
+  .title { font-size: 8.6vw; }
+  .description { font-size: 4vw; }
+  .updatedAt { font-size: 3.5vw; }
+  .summaryGrid { gap: 3vw; }
+  .summaryCard { gap: 2.5vw; padding: 4.5vw; border-radius: 5vw; }
+  .summaryTitle { font-size: 4.8vw; }
+  .summaryText { font-size: 3.95vw; }
+  .contentGrid { gap: 3.5vw; }
+  .sideNav { gap: 2.2vw; padding: 4vw; border-radius: 5vw; }
+  .sideNavLink { font-size: 3.8vw; }
+  .sections { gap: 3.5vw; }
+  .sectionCard { scroll-margin-top: 24vw; gap: 2.8vw; padding: 4.8vw; border-radius: 5vw; }
+  .sectionEyebrow { font-size: 3.4vw; letter-spacing: 0.35vw; }
+  .sectionTitle { font-size: 5.9vw; }
+  .sectionText, .listTitle, .sectionItem { font-size: 3.9vw; }
+  .sectionList { gap: 1.8vw; padding-left: 5vw; }
+  .greenBand { margin: 13vw 0 17vw !important; }
+}

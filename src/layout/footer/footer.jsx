@@ -53,17 +53,27 @@ export default function Footer() {
             </div>
 
             <div className={styles.bottom}>
-                <div className={styles.copyright}>
-                    <span>
-                        Copyright 2021 <strong className={styles.highlight}>CCI</strong>
-                    </span>
-                    <span className={styles.divider}>|</span>
-                    <span>
-                        Designed and developed by -{' '}
-                        <Link href='https://www.vawzen.org/' target='_blank' className={styles.highlight}>
-                            Vawzen
-                        </Link>
-                    </span>
+                <div className={styles.bottomLeft}>
+                    <div className={styles.copyright}>
+                        <span>
+                            Copyright 2021 <strong className={styles.highlight}>CCI</strong>
+                        </span>
+                        <span className={styles.divider}>|</span>
+                        <span>
+                            Designed and developed by -{' '}
+                            <Link href='https://www.vawzen.org/' target='_blank' className={styles.highlight}>
+                                Vawzen
+                            </Link>
+                        </span>
+                    </div>
+
+                    <div className={styles.legalLinks}>
+                        {content.legalLinks.map((element) => (
+                            <Link key={element.link} href={element.link} className={styles.legalLink}>
+                                {element.name}
+                            </Link>
+                        ))}
+                    </div>
                 </div>
 
                 <ul className={styles.socials}>

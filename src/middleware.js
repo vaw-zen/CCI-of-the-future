@@ -7,7 +7,8 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 
-const ANALYTICS_COOKIE_NAME = 'cci_analytics';
+const TRACKING_ELIGIBLE_COOKIE_NAME = 'cci_tracking_eligible';
+const LEGACY_ANALYTICS_COOKIE_NAME = 'cci_analytics';
 const ANALYTICS_ALLOWED_COUNTRIES = new Set(['TN']);
 const BOT_USER_AGENT_PATTERN = /(bot|crawler|spider|crawling|headless|facebookexternalhit|whatsapp|telegrambot|slackbot|discordbot|linkedinbot|skypeuripreview|google-inspectiontool|adsbot|apis-google|mediapartners-google|lighthouse|pagespeed|pingdom|curl|wget|python-requests|axios|node-fetch|go-http-client)/i;
 const ADMIN_PUBLIC_PATHS = ['/admin/login', '/admin/reset-password'];
@@ -37,12 +38,13 @@ function shouldEnableAnalytics(request) {
 
 function attachAnalyticsCookie(request, response) {
   response.cookies.set({
-    name: ANALYTICS_COOKIE_NAME,
+    name: TRACKING_ELIGIBLE_COOKIE_NAME,
     value: shouldEnableAnalytics(request) ? '1' : '0',
     path: '/',
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
   });
+  response.cookies.delete(LEGACY_ANALYTICS_COOKIE_NAME);
 
   return response;
 }

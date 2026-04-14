@@ -7,6 +7,8 @@ import GoogleAnalytics from '@/utils/components/GoogleAnalytics';
 import ClientHeader from '@/layout/header/ClientHeader';
 import HydrationSuppressor from '@/utils/HydrationSuppressor';
 import Footer from '@/layout/footer/footer';
+import CookieBanner from '@/utils/components/cookieBanner/cookieBanner';
+import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID } from '@/utils/consent/consent.constants';
 
 
 const dmSans = DM_Sans({
@@ -131,14 +133,40 @@ export default function RootLayout({ children }) {
       "https://www.linkedin.com/company/chaabanes-cleaning-int/"
     ]
   };
-
-  // Breadcrumb removed from global layout — each page injects its own contextual breadcrumb
-  const FB_APP_ID = process.env.FB_APP_ID || '';
-  const FB_API_VERSION = process.env.FB_API_VERSION || 'v17.0';
   return (
     <html lang="fr-TN" className={dmSans.className} suppressHydrationWarning>
       <head>
         <HydrationSuppressor />
+        <Script
+          id="google-consent-default"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              window.__cciConsentGranted = false;
+              window.gtag = window.gtag || function gtag() {
+                var args = Array.prototype.slice.call(arguments);
+                var command = args[0];
+                if (command === 'consent') {
+                  window.dataLayer.push(args);
+                  return;
+                }
+                if (window.__cciConsentGranted) {
+                  window.dataLayer.push(args);
+                }
+              };
+              window['ga-disable-${GA_MEASUREMENT_ID}'] = true;
+              window['ga-disable-${GOOGLE_ADS_ID}'] = true;
+              window.gtag('consent', 'default', {
+                analytics_storage: 'denied',
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied',
+                wait_for_update: 500
+              });
+            `
+          }}
+        />
         {/* Resource hints for faster loading */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -166,38 +194,11 @@ export default function RootLayout({ children }) {
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="CCI Services" />
-
         {/* Google Site Verification now handled via metadata.verification */}
 
         {/* JSON-LD site-wide */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJSONLD) }} />
-        {/* Conditionally load Facebook SDK: only when app id is set and in production or when explicitly allowed in env */}
-        {FB_APP_ID && (process.env.NODE_ENV === 'production' || process.env.ALLOW_FB_IN_DEV === 'true') && (
-          <>
-            <Script
-              id="fb-init"
-              strategy="lazyOnload"
-              dangerouslySetInnerHTML={{
-                __html: `
-                window.fbAsyncInit = function() {
-                  try {
-                    FB.init({
-                      appId      : '${FB_APP_ID}',
-                      cookie     : true,
-                      xfbml      : true,
-                      version    : '${FB_API_VERSION}'
-                    });
-                    if (FB.AppEvents && FB.AppEvents.logPageView) FB.AppEvents.logPageView();
-                  } catch (e) {
-                    console.warn('FB SDK init failed', e);
-                  }
-                };
-              ` }}
-            />
-           
-          </>
-        )}
       </head>
       <Initializer />
       <body suppressHydrationWarning>
@@ -208,6 +209,7 @@ export default function RootLayout({ children }) {
         <ClientHeader roboto={roboto} />
         {children}
         <Footer />
+        <CookieBanner />
 
       </body>
     </html>

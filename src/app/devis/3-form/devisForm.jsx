@@ -449,7 +449,7 @@ export default function DevisForm() {
                   required
                 />
                 <label htmlFor="conditions" className={styles.checkboxLabel}>
-                  J&apos;accepte les <a href="/conditions" target="_blank">conditions générales</a> et la <a href="/confidentialite" target="_blank">politique de confidentialité</a> <span className={styles.required}>*</span>
+                  J&apos;accepte les <a href="/confidentialite#conditions-generales" target="_blank" rel="noopener noreferrer">conditions générales</a> et la <a href="/confidentialite#donnees-personnelles" target="_blank" rel="noopener noreferrer">politique de confidentialité</a> <span className={styles.required}>*</span>
                 </label>
               </div>
             </div>

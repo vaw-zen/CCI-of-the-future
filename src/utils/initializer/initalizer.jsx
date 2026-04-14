@@ -11,29 +11,12 @@ import { storeUTMParameters } from "../utmGenerator";
 import { initFacebookPixel } from "@/utils/facebookTracking";
 import { initializeFacebookPixelTracking, debugFacebookPixel } from "@/utils/facebook-pixel-helper";
 import { trackContactLinkClick } from "@/utils/analytics";
-
-const ANALYTICS_COOKIE_NAME = 'cci_analytics';
-
-function getAnalyticsCookieValue(name) {
-    if (typeof document === 'undefined') {
-        return '';
-    }
-
-    const cookies = document.cookie ? document.cookie.split('; ') : [];
-    const match = cookies.find((entry) => entry.startsWith(`${name}=`));
-    return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : '';
-}
-
-function shouldLoadMarketingTracking() {
-    return (
-        process.env.NODE_ENV !== 'production' ||
-        getAnalyticsCookieValue(ANALYTICS_COOKIE_NAME) === '1'
-    );
-}
+import { useCookieConsent } from "@/hooks/useCookieConsent";
 
 export default function Initializer() {
     // Get the current path for route change detection
     const pathname = usePathname();
+    const { accepted, eligible } = useCookieConsent();
     
     // Always call hooks in the same order - never conditionally
     const { setVw, setVh, isDesktop, isTablet, isMobile } = dimensionsStore();
@@ -45,6 +28,7 @@ export default function Initializer() {
     // Ref to track initialization attempts for current page
     const initAttemptsRef = useRef(0);
     const currentPathRef = useRef(pathname || "");
+    const marketingTrackingInitializedRef = useRef(false);
 
     const initializePageAnimations = useCallback((isRetry = false) => {
         if (pathname === "/" || pathname.includes("/home")) {
@@ -65,17 +49,24 @@ export default function Initializer() {
     }, [pathname])
   
     useEffect(() => {
-        // Capture and store UTM parameters on initial load
+        if (!(accepted && eligible)) {
+            marketingTrackingInitializedRef.current = false;
+            return;
+        }
+
         storeUTMParameters();
-        
-        // Initialize Facebook Pixel if ID is present
+
+        if (marketingTrackingInitializedRef.current) {
+            return;
+        }
+
+        marketingTrackingInitializedRef.current = true;
+
         try {
-            if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID && shouldLoadMarketingTracking()) {
+            if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID) {
                 initFacebookPixel();
-                // Wait a bit for pixel to load, then initialize tracking
                 setTimeout(() => {
                     initializeFacebookPixelTracking();
-                    // Debug pixel status in development only
                     if (process.env.NODE_ENV === 'development') {
                         setTimeout(() => debugFacebookPixel(), 2000);
                     }
@@ -84,7 +75,13 @@ export default function Initializer() {
         } catch (e) {
             // fail silently if pixel init errors
         }
-    }, []);
+    }, [accepted, eligible]);
+
+    useEffect(() => {
+        if (accepted && eligible) {
+            storeUTMParameters();
+        }
+    }, [accepted, eligible, pathname]);
 
     useEffect(() => {
         const handleTrackedLinkClick = (event) => {

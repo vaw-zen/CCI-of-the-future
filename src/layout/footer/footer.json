@@ -50,5 +50,19 @@
             "name": "entreprises",
             "link": "/entreprises"
         }
+    ],
+    "legalLinks": [
+        {
+            "name": "politique de confidentialité",
+            "link": "/confidentialite"
+        },
+        {
+            "name": "cookies",
+            "link": "/confidentialite#cookies"
+        },
+        {
+            "name": "gérer mes cookies",
+            "link": "/confidentialite#gerer-mes-cookies"
+        }
     ]
 }

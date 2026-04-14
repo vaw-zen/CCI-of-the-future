@@ -1,0 +1,27 @@
+.card { display: flex; flex-direction: column; gap: 1.25vw; padding: 1.45vw; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1.2vw; background: linear-gradient(180deg, rgba(26, 26, 28, 0.94), rgba(20, 20, 22, 0.98)); }
+.header { display: flex; flex-direction: column; gap: 0.65vw; }
+.eyebrow { font-size: 0.82vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14vw; color: var(--ac-primary); }
+.summary { font-size: 0.92vw; line-height: 1.6; color: var(--t-primary); }
+.note { font-size: 0.82vw; line-height: 1.6; color: var(--t-secondary); }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75vw; }
+.primaryButton { min-height: 2.85vw; padding: 0.82vw 1.2vw; border-radius: 999px; font-size: 0.82vw; font-weight: 700; transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
+.primaryButton { background: var(--ac-primary); color: var(--t-highlight); }
+.primaryButton:hover { transform: translateY(-1px); }
+
+@media (max-width: 1024px) {
+  .card { gap: 2.4vw; padding: 3vw; border-radius: 2.8vw; }
+  .eyebrow { font-size: 1.95vw; letter-spacing: 0.26vw; }
+  .summary { font-size: 2.1vw; }
+  .note { font-size: 1.9vw; }
+  .actions { gap: 1.6vw; }
+  .primaryButton { min-height: 6vw; padding: 1.8vw 3vw; font-size: 1.95vw; }
+}
+
+@media (max-width: 480px) {
+  .card { gap: 4vw; padding: 4.75vw; border-radius: 5vw; }
+  .eyebrow { font-size: 3.5vw; letter-spacing: 0.4vw; }
+  .summary { font-size: 4vw; }
+  .note { font-size: 3.7vw; }
+  .actions { flex-direction: column; }
+  .primaryButton { width: 100%; min-height: 12vw; padding: 3vw 5vw; font-size: 3.85vw; }
+}

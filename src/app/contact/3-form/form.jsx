@@ -459,7 +459,9 @@ export default function DevisForm() {
             onChange={handleInputChange}
             required 
           /> 
-          J&apos;accepte les conditions générales et la politique de confidentialité *
+          <span>
+            J&apos;accepte les <a href="/confidentialite#conditions-generales" target="_blank" rel="noopener noreferrer">conditions générales</a> et la <a href="/confidentialite#donnees-personnelles" target="_blank" rel="noopener noreferrer">politique de confidentialité</a> *
+          </span>
         </label>
 
         <SharedButton

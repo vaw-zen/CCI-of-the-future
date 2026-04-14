@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
-import GreenBand from '@/utils/components/GreenBand/GreenBand';
 import CookiePreferencesCard from './components/CookiePreferencesCard/CookiePreferencesCard';
 import content from './confidentialite.json';
 import styles from './page.module.css';
@@ -88,8 +87,6 @@ export default function ConfidentialitePage() {
           </div>
         </div>
       </section>
-
-      <GreenBand className={styles.greenBand} />
     </main>
   );
 }

@@ -21,7 +21,6 @@
 .listTitle { font-size: 0.95vw; font-weight: 700; color: var(--t-primary); margin-top: 0.2vw; }
 .sectionList { display: flex; flex-direction: column; gap: 0.55vw; padding-left: 1.3vw; }
 .sectionItem { font-size: 0.92vw; line-height: 1.65; color: var(--t-secondary); }
-.greenBand { margin: 5.8vw 0 4vw !important; }
 
 @media (max-width: 1024px) {
   .section { padding: 8vw 1.953125vw 0; gap: 4vw; }
@@ -43,7 +42,6 @@
   .sectionTitle { font-size: 3.3vw; }
   .sectionText, .listTitle, .sectionItem { font-size: 2vw; }
   .sectionList { gap: 1vw; padding-left: 2.8vw; }
-  .greenBand { margin: 9vw 0 11vw !important; }
 }
 
 @media (max-width: 480px) {
@@ -66,5 +64,4 @@
   .sectionTitle { font-size: 5.9vw; }
   .sectionText, .listTitle, .sectionItem { font-size: 3.9vw; }
   .sectionList { gap: 1.8vw; padding-left: 5vw; }
-  .greenBand { margin: 13vw 0 17vw !important; }
 }

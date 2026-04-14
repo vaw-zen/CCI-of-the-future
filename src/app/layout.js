@@ -150,7 +150,7 @@ export default function RootLayout({ children }) {
         <meta name="ICBM" content="36.8527438, 10.254949" />
 
 {/* Icons & Manifest for PWA */}
-<link rel="icon" href="/favicon.ico" />
+<link rel="icon" href="/logo.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
 <link rel="manifest" href="/site.webmanifest" />

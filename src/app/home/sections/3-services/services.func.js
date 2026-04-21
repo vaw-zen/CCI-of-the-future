@@ -34,20 +34,21 @@ let isInitializing = false;
 export function useServicesSI() {
     const pathname = usePathname();
     const { isMobile, vw } = dimensionsStore();
+    const isMobileView = isMobile();
 
     useEffect(() => {
         // Clean up existing animations before reinitializing
         cleanupServiceAnimations();
         
         // Initialize animations with current state
-        initServiceAnimations(pathname, isMobile());
+        initServiceAnimations(pathname, isMobileView);
 
         // Return cleanup function
         return () => {
             if (typeof window === 'undefined') return;
             cleanupServiceAnimations();
         };
-    }, [pathname, vw]);
+    }, [pathname, vw, isMobileView]);
 }
 
 // Exported function that can be called from initializers

@@ -1,4 +1,4 @@
-import { useEffect, useRef, createRef } from 'react'
+import { useCallback, useEffect, useRef, createRef } from 'react'
 import content from './testimonials.json'
 
 const slideAncor = Math.floor((content.testimonials.length * 3) / 2)
@@ -42,7 +42,7 @@ export function useSliderLogic() {
     const dragStartRef = useRef(null);
     const isDraggingRef = useRef(false);
 
-    const animate = () => {
+    const animate = useCallback(() => {
         if (!sliderContainer.current) return
         if (intervalRef.current) {
             clearInterval(intervalRef.current)
@@ -53,13 +53,13 @@ export function useSliderLogic() {
                 moveRight()
             // })
         }, 3000);
-    }
+    }, [])
 
-    const pauseAnimation = () => {
+    const pauseAnimation = useCallback(() => {
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
         }
-    }
+    }, [])
 
     useEffect(() => {
         animate();
@@ -68,9 +68,9 @@ export function useSliderLogic() {
                 clearInterval(intervalRef.current)
             }
         };
-    }, []);
+    }, [animate]);
 
-    const handleInteractionStart = (clientX, clientY) => {
+    const handleInteractionStart = useCallback((clientX, clientY) => {
         if (sliderContainer.current) {
             isDraggingRef.current = true;
             const slider = sliderContainer.current?.children[0]
@@ -82,9 +82,9 @@ export function useSliderLogic() {
             }
             slider.style.transition = 'none'
         }
-    }
+    }, [])
 
-    const handleInteractionMove = (clientX, clientY) => {
+    const handleInteractionMove = useCallback((clientX, clientY, interactionEvent) => {
         if (dragStartRef.current && sliderContainer.current && isDraggingRef.current) {
             const deltaX = clientX - dragStartRef.current?.startX;
             const deltaY = clientY - dragStartRef.current?.startY;
@@ -97,7 +97,7 @@ export function useSliderLogic() {
                 return;
             }
 
-            event.preventDefault();
+            interactionEvent?.preventDefault?.();
 
             const slider = sliderContainer.current?.children[0]
             // Batch layout reads with RAF to prevent forced reflow
@@ -107,9 +107,9 @@ export function useSliderLogic() {
                 slider.style.transform = `translatex(-${newTransform}00%)`
             })
         }
-    }
+    }, [])
 
-    const handleInteractionEnd = (clientX) => {
+    const handleInteractionEnd = useCallback((clientX) => {
         if (dragStartRef.current && sliderContainer.current && isDraggingRef.current) {
             if (dragStartRef.current?.isScrolling) {
                 isDraggingRef.current = false;
@@ -141,42 +141,42 @@ export function useSliderLogic() {
 
             dragStartRef.current = null
         }
-    }
+    }, [])
 
-    const handleMouseDown = (e) => {
+    const handleMouseDown = useCallback((e) => {
         handleInteractionStart(e.clientX, e.clientY)
-    }
+    }, [handleInteractionStart])
 
-    const handleMouseMove = (e) => {
-        handleInteractionMove(e.clientX, e.clientY)
-    }
+    const handleMouseMove = useCallback((e) => {
+        handleInteractionMove(e.clientX, e.clientY, e)
+    }, [handleInteractionMove])
 
-    const handleMouseUp = (e) => {
+    const handleMouseUp = useCallback((e) => {
         handleInteractionEnd(e.clientX)
-    }
+    }, [handleInteractionEnd])
 
-    const handleTouchStart = (e) => {
+    const handleTouchStart = useCallback((e) => {
         pauseAnimation(); 
         const touch = e.touches[0]
         handleInteractionStart(touch.clientX, touch.clientY)
-    }
+    }, [handleInteractionStart, pauseAnimation])
 
-    const handleTouchMove = (e) => {
+    const handleTouchMove = useCallback((e) => {
         const touch = e.touches[0]
-        handleInteractionMove(touch.clientX, touch.clientY)
-    }
+        handleInteractionMove(touch.clientX, touch.clientY, e)
+    }, [handleInteractionMove])
 
-    const handleTouchEnd = (e) => {
+    const handleTouchEnd = useCallback((e) => {
         animate();
         const touch = e.changedTouches[0]
         handleInteractionEnd(touch.clientX)
-    }
+    }, [animate, handleInteractionEnd])
 
-    const handleMouseEnter = () => {
+    const handleMouseEnter = useCallback(() => {
         pauseAnimation();
-    }
+    }, [pauseAnimation])
 
-    const MI = (e) => {
+    const MI = useCallback((e) => {
         const eventHandlers = {
             'mouseenter': handleMouseEnter,
             'mouseleave': animate,
@@ -194,7 +194,7 @@ export function useSliderLogic() {
     
         const handler = eventHandlers[e.type];
         if (handler) handler(e);
-    }
+    }, [animate, handleMouseDown, handleMouseEnter, handleMouseMove, handleMouseUp, handleTouchEnd, handleTouchMove, handleTouchStart])
 
     useEffect(() => {
         return () => {
@@ -203,7 +203,7 @@ export function useSliderLogic() {
             document.removeEventListener('touchmove', handleTouchMove);
             document.removeEventListener('touchend', handleTouchEnd);
         };
-    }, []);
+    }, [handleMouseMove, handleMouseUp, handleTouchEnd, handleTouchMove]);
 
     return {
         ref: sliderContainer,

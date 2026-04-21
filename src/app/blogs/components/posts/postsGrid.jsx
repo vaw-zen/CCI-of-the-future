@@ -2,11 +2,12 @@
 import PostCard from "./postCard.jsx";
 import PostCardSkeleton from "./postCardSkeleton.jsx";
 import styles from './postsGrid.module.css';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { dimensionsStore } from '@/utils/store/store';
 
+const PAGE_SIZE = 6;
+
 const PostsGrid = ({ initialPosts = null, initialPostsPaging = null }) => {
-  const PAGE_SIZE = 6; // 3 desktop cols x 2 rows
   const [posts, setPosts] = useState(initialPosts || []);
   const [loading, setLoading] = useState(!initialPosts);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -47,7 +48,7 @@ const PostsGrid = ({ initialPosts = null, initialPostsPaging = null }) => {
   // In-memory cache for paginated results
   const cacheRef = useRef({});
 
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     if (loadingMore || !hasMore) return;
     const after = postsPaging?.cursors?.after || null;
     if (!after) return;
@@ -78,7 +79,7 @@ const PostsGrid = ({ initialPosts = null, initialPostsPaging = null }) => {
     } finally {
       setLoadingMore(false);
     }
-  };
+  }, [hasMore, loadingMore, postsPaging]);
 
   useEffect(() => {
     if (!sentinelRef.current) return;
@@ -95,8 +96,8 @@ const PostsGrid = ({ initialPosts = null, initialPostsPaging = null }) => {
       threshold: 0.01,
     });
     observer.observe(el);
-    return () => observer.unobserve(el);
-  }, [sentinelRef, hasMore, postsPaging, loadingMore]);
+    return () => observer.disconnect();
+  }, [hasMore, loadMore]);
 
   return (
     <section className={styles['posts-section']}>

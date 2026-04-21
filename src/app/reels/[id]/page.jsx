@@ -223,6 +223,7 @@ export default async function ReelPage({ params }) {
           reel.message.replace(/[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g, '').slice(0, 100) : 
           "Reel vidéo CCI Services"}</h1>
         <p itemProp="description">{cleanDescription}</p>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img itemProp="thumbnailUrl" src={thumbnailUrl} alt="Video thumbnail" />
         <time itemProp="uploadDate" dateTime={reel.created_time || new Date().toISOString()}>
           {new Date(reel.created_time || new Date()).toLocaleDateString()}

@@ -523,6 +523,7 @@ const ReelsSection = ({ initialReels = null, initialReelsPaging = null }) => {
                         onTimeUpdate={() => handleVideoTimeUpdate(reel.id)}
                       />
                       
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img 
                         src={reelThumbnailUrl}
                         alt="Aperçu vidéo"

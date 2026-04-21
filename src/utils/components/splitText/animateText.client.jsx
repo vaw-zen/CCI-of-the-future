@@ -1,14 +1,10 @@
 'use client'
 import { useEffect } from "react";
 import styles from './animatedText.module.css'
-import { dimensionsStore } from "@/utils/store/store";
 
 export default function AnimateTextCRS({ selector, threshold = 0.1, rootMargin = "50px", delay = 0 }) {
-
-    const { isDesktop, vw } = dimensionsStore()
     useEffect(() => {
         if (selector &&
-            // isDesktop()
             true
         ) {
             const element = document.querySelector('.' + selector);
@@ -45,10 +41,11 @@ export default function AnimateTextCRS({ selector, threshold = 0.1, rootMargin =
                     if (element) {
                         observer.unobserve(element);
                     }
+                    observer.disconnect();
                 };
             }
         }
-    }, [selector, threshold, rootMargin, vw]);
+    }, [delay, rootMargin, selector, threshold]);
 
     return null;
 }

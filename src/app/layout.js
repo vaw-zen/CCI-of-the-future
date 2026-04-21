@@ -200,8 +200,8 @@ export default function RootLayout({ children }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJSONLD) }} />
       </head>
-      <Initializer />
       <body suppressHydrationWarning>
+        <Initializer />
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>

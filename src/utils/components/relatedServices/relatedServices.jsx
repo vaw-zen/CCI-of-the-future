@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { trackRelatedServiceClick } from '@/utils/analytics';
 import styles from './relatedServices.module.css'
 
@@ -34,7 +35,13 @@ export default function RelatedServices({ services, sectionTitle = "Services li√
                                 <div className={styles.cardContent}>
                                     <div className={styles.serviceIcon}>
                                         {service.icon && (
-                                            <img src={service.icon} alt="" className={styles.icon} />
+                                            <Image
+                                                src={service.icon}
+                                                alt=""
+                                                fill
+                                                sizes="(max-width: 480px) 6.07vw, (max-width: 1024px) 6.07vw, 1.56vw"
+                                                className={styles.icon}
+                                            />
                                         )}
                                     </div>
                                     

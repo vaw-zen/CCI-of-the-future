@@ -2,17 +2,21 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "./strokeEffect.module.css";
 
-export default function StrokeEffect() {
-  const counters = [
-    { value: 10, label: "Projects  completed", suffix: "K" },
-    { value: 120, label: "Worked  employees" },
-    { value: 15, label: "years of  experience", suffix: "+" },
-    { value: 18, label: "Skilled  professionals", suffix: "+" },
-  ];
+const counters = [
+  { value: 10, label: "Projects  completed", suffix: "K" },
+  { value: 120, label: "Worked  employees" },
+  { value: 15, label: "years of  experience", suffix: "+" },
+  { value: 18, label: "Skilled  professionals", suffix: "+" },
+];
 
+const durations = [2000, 1500, 1500, 1500];
+
+export default function StrokeEffect() {
   const [counts, setCounts] = useState(counters.map(() => 0));
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef(null);
+  const frameRef = useRef(null);
+  const startTimesRef = useRef(counters.map(() => null));
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -35,28 +39,48 @@ export default function StrokeEffect() {
   useEffect(() => {
     if (!isVisible) return;
 
-    let startTimes = counters.map(() => null);
-    const durations = [2000, 1500, 1500, 1500];
+    let isCancelled = false;
+    startTimesRef.current = counters.map(() => null);
 
     function animateCounter(timestamp) {
-      setCounts((prevCounts) => {
-        return prevCounts.map((count, index) => {
+      if (isCancelled) return;
+
+      let hasRemaining = false;
+
+      setCounts((prevCounts) =>
+        prevCounts.map((count, index) => {
           if (count >= counters[index].value) return count;
 
-          if (!startTimes[index]) startTimes[index] = timestamp;
-          const elapsed = timestamp - startTimes[index];
+          if (!startTimesRef.current[index]) {
+            startTimesRef.current[index] = timestamp;
+          }
+
+          const elapsed = timestamp - startTimesRef.current[index];
           const progress = Math.min(elapsed / durations[index], 1);
+          const nextValue = Math.floor(progress * counters[index].value);
 
-          return Math.floor(progress * counters[index].value);
-        });
-      });
+          if (nextValue < counters[index].value) {
+            hasRemaining = true;
+          }
 
-      if (counts.some((count, i) => count < counters[i].value)) {
-        requestAnimationFrame(animateCounter);
+          return nextValue;
+        })
+      );
+
+      if (hasRemaining) {
+        frameRef.current = requestAnimationFrame(animateCounter);
       }
     }
 
-    requestAnimationFrame(animateCounter);
+    frameRef.current = requestAnimationFrame(animateCounter);
+
+    return () => {
+      isCancelled = true;
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+    };
   }, [isVisible]);
 
   return (

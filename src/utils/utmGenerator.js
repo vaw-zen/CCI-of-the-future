@@ -352,7 +352,7 @@ export const QuickLinks = {
 };
 
 // Default export for convenience
-export default {
+const utmGenerator = {
   generateUTMUrl,
   generateCampaignURLs,
   extractUTMParameters,
@@ -365,3 +365,5 @@ export default {
   UTM_PRESETS,
   QuickLinks
 };
+
+export default utmGenerator;

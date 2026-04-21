@@ -354,7 +354,7 @@ export function isEnhancedSystemAvailable() {
   return true; // Always true on client-side since we have fallback
 }
 
-export default {
+const tuningLoader = {
   getTuningConfig,
   getSystemPrompt,
   getChatMessages,
@@ -365,3 +365,5 @@ export default {
   detectClientLanguage,
   isEnhancedSystemAvailable
 };
+
+export default tuningLoader;

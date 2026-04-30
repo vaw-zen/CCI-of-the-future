@@ -7,6 +7,13 @@ import {
   sendLifecycleMeasurementEvent
 } from '@/libs/analyticsLifecycle';
 import { LEAD_STATUSES } from '@/utils/leadLifecycle';
+import { guardMutationRequest } from '@/libs/security';
+
+const DEVIS_RATE_LIMIT = {
+  scope: 'devis-submit',
+  limit: 20,
+  windowMs: 10 * 60 * 1000
+};
 
 async function sendDevisFailureMeasurement(analyticsContext, failureType, serviceType = '') {
   return sendLifecycleMeasurementEvent({
@@ -27,6 +34,11 @@ async function sendDevisFailureMeasurement(analyticsContext, failureType, servic
 }
 
 export async function POST(request) {
+  const guardResponse = guardMutationRequest(request, DEVIS_RATE_LIMIT);
+  if (guardResponse) {
+    return guardResponse;
+  }
+
   let analyticsContext = {};
   let requestedServiceType = '';
 
@@ -37,7 +49,9 @@ export async function POST(request) {
     } catch (error) {
       return NextResponse.json({ 
         status: 'config_error', 
-        message: 'Service de base de données non configuré.' 
+        message: 'Service de base de données non configuré.',
+        data: null,
+        details: { failureType: 'config_error' }
       }, { status: 500 });
     }
 
@@ -68,7 +82,9 @@ export async function POST(request) {
       await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
       return NextResponse.json({ 
         status: 'validation_failed', 
-        message: 'Tous les champs obligatoires doivent être remplis.' 
+        message: 'Tous les champs obligatoires doivent être remplis.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -77,7 +93,9 @@ export async function POST(request) {
       await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
       return NextResponse.json({ 
         status: 'validation_failed', 
-        message: 'Veuillez fournir une adresse email valide.' 
+        message: 'Veuillez fournir une adresse email valide.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -85,7 +103,9 @@ export async function POST(request) {
       await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
       return NextResponse.json({ 
         status: 'validation_failed', 
-        message: 'Vous devez accepter les conditions générales.' 
+        message: 'Vous devez accepter les conditions générales.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -138,7 +158,9 @@ export async function POST(request) {
       await sendDevisFailureMeasurement(analyticsContext, 'database_error', typeService);
       return NextResponse.json({ 
         status: 'database_error', 
-        message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.' 
+        message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.',
+        data: null,
+        details: { failureType: 'database_error' }
       }, { status: 500 });
     }
 
@@ -152,29 +174,29 @@ export async function POST(request) {
       })
     });
 
-    // Check Gmail credentials
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
-      await sendDevisFailureMeasurement(analyticsContext, 'config_error', typeService);
-      return NextResponse.json({ 
-        status: 'config_error', 
-        message: 'Service email non configuré.' 
-      }, { status: 500 });
-    }
+    let emailSent = false;
+    let emailError = null;
 
-    const { default: nodemailer } = await import('nodemailer');
+    try {
+      // Email delivery is non-blocking after the lead has been saved.
+      if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
+        throw new Error('GMAIL_USER or GMAIL_PASS not configured');
+      }
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-      },
-    });
+      const { default: nodemailer } = await import('nodemailer');
 
-    await transporter.verify();
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
 
-    const now = new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' });
-    const adminRecipient = 'chaaben.fares94@gmail.com';
+      await transporter.verify();
+
+      const now = new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' });
+      const adminRecipient = 'chaaben.fares94@gmail.com';
 
     const colors = {
       bgBase: '#141416',
@@ -358,10 +380,16 @@ export async function POST(request) {
     };
 
     // Send emails
-    await Promise.all([
-      transporter.sendMail(adminMail),
-      transporter.sendMail(userMail)
-    ]);
+      await Promise.all([
+        transporter.sendMail(adminMail),
+        transporter.sendMail(userMail)
+      ]);
+      emailSent = true;
+    } catch (mailError) {
+      console.error('[devis] Email sending failed (DB insert succeeded):', mailError?.message || mailError);
+      emailError = mailError?.message || 'email_error';
+      await sendDevisFailureMeasurement(analyticsContext, 'email_error', typeService);
+    }
 
     // If user opted for newsletter, subscribe them automatically
     let newsletterResult = null;
@@ -392,23 +420,31 @@ export async function POST(request) {
 
     return NextResponse.json({
       status: 'success',
-      message: 'Votre demande de devis a été envoyée avec succès ! Un email de confirmation vous a été envoyé.',
+      message: emailSent
+        ? 'Votre demande de devis a été envoyée avec succès ! Un email de confirmation vous a été envoyé.'
+        : 'Votre demande de devis a été enregistrée avec succès ! La notification email sera traitée dès que possible.',
       data: supabaseData,
       details: {
         devisConfirmed: true,
         devisSaved: true,
         devisId: supabaseData.id,
+        emailSent,
+        ...(emailError && { emailNote: 'Demande enregistrée, notification email en attente.' }),
         newsletterSubscribed: newsletter ? (newsletterResult?.success || false) : false
       },
     });
 
   } catch (error) {
     console.error('Devis submission error:', error);
-    await sendDevisFailureMeasurement(analyticsContext, 'error', requestedServiceType);
+    await sendDevisFailureMeasurement(analyticsContext, 'unexpected_error', requestedServiceType);
     return NextResponse.json({ 
-      status: 'error', 
+      status: 'unexpected_error',
       message: 'Erreur lors de l\'envoi de votre demande. Veuillez réessayer.', 
-      details: error?.message 
+      data: null,
+      details: {
+        failureType: 'unexpected_error',
+        error: error?.message
+      }
     }, { status: 500 });
   }
 }

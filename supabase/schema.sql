@@ -71,7 +71,9 @@ CREATE INDEX IF NOT EXISTS idx_devis_requests_created_at ON devis_requests(creat
 CREATE INDEX IF NOT EXISTS idx_devis_requests_email ON devis_requests(email);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_type_service ON devis_requests(type_service);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_lead_status ON devis_requests(lead_status);
+CREATE INDEX IF NOT EXISTS idx_devis_requests_lead_status_created_at ON devis_requests(lead_status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_session_source ON devis_requests(session_source);
+CREATE INDEX IF NOT EXISTS idx_devis_requests_session_medium ON devis_requests(session_medium);
 
 -- Enable Row Level Security
 ALTER TABLE devis_requests ENABLE ROW LEVEL SECURITY;
@@ -133,3 +135,34 @@ COMMENT ON COLUMN devis_requests.matricule_fiscale IS 'Tax ID number, required f
 COMMENT ON COLUMN devis_requests.type_service IS 'Type of service requested: salon, tapis, tapisserie, marbre, or tfc';
 COMMENT ON COLUMN devis_requests.nombre_places IS 'Number of seats/places, required for salon service';
 COMMENT ON COLUMN devis_requests.surface_service IS 'Surface area to be treated, required for tapis/marbre/tfc services';
+
+-- Admin lead status audit log
+CREATE TABLE IF NOT EXISTS admin_lead_status_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  lead_kind TEXT NOT NULL CHECK (lead_kind IN ('devis', 'convention', 'unknown')),
+  lead_table TEXT,
+  lead_id UUID,
+  previous_status TEXT,
+  next_status TEXT,
+  previous_operational_status TEXT,
+  next_operational_status TEXT,
+  admin_email TEXT,
+  admin_user_id UUID,
+  action_result TEXT NOT NULL CHECK (action_result IN ('success', 'rejected')),
+  rejection_reason TEXT,
+  request_ip TEXT,
+  user_agent_hash TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_admin_lead_status_events_created_at ON admin_lead_status_events(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_admin_lead_status_events_lead ON admin_lead_status_events(lead_kind, lead_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_admin_lead_status_events_admin_email ON admin_lead_status_events(admin_email, created_at DESC);
+
+ALTER TABLE admin_lead_status_events ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow admin users to read lead status audit events" ON admin_lead_status_events;
+CREATE POLICY "Allow admin users to read lead status audit events" ON admin_lead_status_events
+  FOR SELECT
+  TO authenticated
+  USING ((SELECT public.is_admin(auth.jwt() ->> 'email')));

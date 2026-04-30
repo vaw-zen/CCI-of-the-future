@@ -2,7 +2,7 @@
 
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getDevisRequests } from '@/services/devisService';
@@ -27,6 +27,14 @@ export default function AdminDevisPage() {
   const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
   const [isSavingStatus, setIsSavingStatus] = useState(false);
   const [statusError, setStatusError] = useState('');
+  const [filters, setFilters] = useState({
+    leadStatus: 'all',
+    serviceType: 'all',
+    sessionSource: '',
+    sessionMedium: '',
+    dateFrom: '',
+    dateTo: ''
+  });
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -123,7 +131,57 @@ export default function AdminDevisPage() {
     return services[service] || service;
   };
 
-  const getLeadStatus = (request) => request.lead_status || LEAD_STATUSES.SUBMITTED;
+  const getLeadStatus = useCallback((request) => request.lead_status || LEAD_STATUSES.SUBMITTED, []);
+
+  const updateFilter = (key, value) => {
+    setFilters((currentFilters) => ({
+      ...currentFilters,
+      [key]: value
+    }));
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      leadStatus: 'all',
+      serviceType: 'all',
+      sessionSource: '',
+      sessionMedium: '',
+      dateFrom: '',
+      dateTo: ''
+    });
+  };
+
+  const filteredRequests = useMemo(() => requests.filter((request) => {
+    const requestDate = request.created_at ? new Date(request.created_at) : null;
+    const dateFrom = filters.dateFrom ? new Date(`${filters.dateFrom}T00:00:00`) : null;
+    const dateTo = filters.dateTo ? new Date(`${filters.dateTo}T23:59:59`) : null;
+
+    if (filters.leadStatus !== 'all' && getLeadStatus(request) !== filters.leadStatus) {
+      return false;
+    }
+
+    if (filters.serviceType !== 'all' && request.type_service !== filters.serviceType) {
+      return false;
+    }
+
+    if (filters.sessionSource && !String(request.session_source || 'direct').toLowerCase().includes(filters.sessionSource.toLowerCase())) {
+      return false;
+    }
+
+    if (filters.sessionMedium && !String(request.session_medium || '(none)').toLowerCase().includes(filters.sessionMedium.toLowerCase())) {
+      return false;
+    }
+
+    if (dateFrom && (!requestDate || requestDate < dateFrom)) {
+      return false;
+    }
+
+    if (dateTo && (!requestDate || requestDate > dateTo)) {
+      return false;
+    }
+
+    return true;
+  }), [requests, filters, getLeadStatus]);
 
   if (authLoading || !user || !isAdmin) {
     return (
@@ -210,8 +268,92 @@ export default function AdminDevisPage() {
           </div>
         </div>
 
+        <div className={styles.filtersPanel}>
+          <div className={styles.filterField}>
+            <label htmlFor="devis-lead-status">Statut</label>
+            <select
+              id="devis-lead-status"
+              value={filters.leadStatus}
+              onChange={(event) => updateFilter('leadStatus', event.target.value)}
+            >
+              <option value="all">Tous les statuts</option>
+              {LEAD_STATUS_OPTIONS.map((status) => (
+                <option key={status} value={status}>
+                  {LEAD_STATUS_LABELS[status]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="devis-service-type">Service</label>
+            <select
+              id="devis-service-type"
+              value={filters.serviceType}
+              onChange={(event) => updateFilter('serviceType', event.target.value)}
+            >
+              <option value="all">Tous les services</option>
+              <option value="salon">Nettoyage de salon</option>
+              <option value="tapis">Tapis / moquette</option>
+              <option value="tapisserie">Tapisserie</option>
+              <option value="marbre">Marbre</option>
+              <option value="tfc">TFC</option>
+            </select>
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="devis-session-source">Source</label>
+            <input
+              id="devis-session-source"
+              type="search"
+              value={filters.sessionSource}
+              onChange={(event) => updateFilter('sessionSource', event.target.value)}
+              placeholder="google, facebook, direct..."
+            />
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="devis-session-medium">Medium</label>
+            <input
+              id="devis-session-medium"
+              type="search"
+              value={filters.sessionMedium}
+              onChange={(event) => updateFilter('sessionMedium', event.target.value)}
+              placeholder="organic, cpc, social..."
+            />
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="devis-date-from">Depuis</label>
+            <input
+              id="devis-date-from"
+              type="date"
+              value={filters.dateFrom}
+              onChange={(event) => updateFilter('dateFrom', event.target.value)}
+            />
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="devis-date-to">Jusqu&apos;au</label>
+            <input
+              id="devis-date-to"
+              type="date"
+              value={filters.dateTo}
+              onChange={(event) => updateFilter('dateTo', event.target.value)}
+            />
+          </div>
+
+          <button type="button" className={styles.clearFiltersButton} onClick={resetFilters}>
+            Réinitialiser
+          </button>
+        </div>
+
+        <div className={styles.resultsMeta}>
+          {filteredRequests.length} demande{filteredRequests.length > 1 ? 's' : ''} affichée{filteredRequests.length > 1 ? 's' : ''}
+        </div>
+
         <div className={styles.requestsList}>
-          {requests.map((request) => (
+          {filteredRequests.map((request) => (
             <div
               key={request.id}
               className={styles.requestCard}
@@ -246,6 +388,9 @@ export default function AdminDevisPage() {
               </div>
             </div>
           ))}
+          {filteredRequests.length === 0 && (
+            <div className={styles.emptyState}>Aucune demande ne correspond aux filtres.</div>
+          )}
         </div>
 
         {selectedRequest && (

@@ -2,7 +2,7 @@
 
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getConventionRequests } from '@/services/conventionService';
@@ -40,6 +40,15 @@ export default function AdminConventionsPage() {
   const [operationalStatusDraft, setOperationalStatusDraft] = useState('nouveau');
   const [isSavingStatus, setIsSavingStatus] = useState(false);
   const [statusError, setStatusError] = useState('');
+  const [filters, setFilters] = useState({
+    leadStatus: 'all',
+    operationalStatus: 'all',
+    sector: 'all',
+    sessionSource: '',
+    sessionMedium: '',
+    dateFrom: '',
+    dateTo: ''
+  });
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -127,7 +136,62 @@ export default function AdminConventionsPage() {
     });
   };
 
-  const getLeadStatus = (request) => request.lead_status || deriveLeadStatusFromConventionStatus(request.statut);
+  const getLeadStatus = useCallback((request) => request.lead_status || deriveLeadStatusFromConventionStatus(request.statut), []);
+
+  const updateFilter = (key, value) => {
+    setFilters((currentFilters) => ({
+      ...currentFilters,
+      [key]: value
+    }));
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      leadStatus: 'all',
+      operationalStatus: 'all',
+      sector: 'all',
+      sessionSource: '',
+      sessionMedium: '',
+      dateFrom: '',
+      dateTo: ''
+    });
+  };
+
+  const filteredRequests = useMemo(() => requests.filter((request) => {
+    const requestDate = request.created_at ? new Date(request.created_at) : null;
+    const dateFrom = filters.dateFrom ? new Date(`${filters.dateFrom}T00:00:00`) : null;
+    const dateTo = filters.dateTo ? new Date(`${filters.dateTo}T23:59:59`) : null;
+
+    if (filters.leadStatus !== 'all' && getLeadStatus(request) !== filters.leadStatus) {
+      return false;
+    }
+
+    if (filters.operationalStatus !== 'all' && request.statut !== filters.operationalStatus) {
+      return false;
+    }
+
+    if (filters.sector !== 'all' && request.secteur_activite !== filters.sector) {
+      return false;
+    }
+
+    if (filters.sessionSource && !String(request.session_source || 'direct').toLowerCase().includes(filters.sessionSource.toLowerCase())) {
+      return false;
+    }
+
+    if (filters.sessionMedium && !String(request.session_medium || '(none)').toLowerCase().includes(filters.sessionMedium.toLowerCase())) {
+      return false;
+    }
+
+    if (dateFrom && (!requestDate || requestDate < dateFrom)) {
+      return false;
+    }
+
+    if (dateTo && (!requestDate || requestDate > dateTo)) {
+      return false;
+    }
+
+    return true;
+  }), [requests, filters, getLeadStatus]);
 
   if (authLoading || !user || !isAdmin) {
     return (
@@ -214,8 +278,110 @@ export default function AdminConventionsPage() {
           </div>
         </div>
 
+        <div className={styles.filtersPanel}>
+          <div className={styles.filterField}>
+            <label htmlFor="convention-lead-status">Statut lead</label>
+            <select
+              id="convention-lead-status"
+              value={filters.leadStatus}
+              onChange={(event) => updateFilter('leadStatus', event.target.value)}
+            >
+              <option value="all">Tous les statuts</option>
+              {Object.values(LEAD_STATUSES).map((status) => (
+                <option key={status} value={status}>
+                  {LEAD_STATUS_LABELS[status]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="convention-operational-status">Statut opérationnel</label>
+            <select
+              id="convention-operational-status"
+              value={filters.operationalStatus}
+              onChange={(event) => updateFilter('operationalStatus', event.target.value)}
+            >
+              <option value="all">Tous les statuts</option>
+              {CONVENTION_OPERATIONAL_STATUSES.map((status) => (
+                <option key={status} value={status}>
+                  {OPERATIONAL_STATUS_LABELS[status]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="convention-sector">Secteur</label>
+            <select
+              id="convention-sector"
+              value={filters.sector}
+              onChange={(event) => updateFilter('sector', event.target.value)}
+            >
+              <option value="all">Tous les secteurs</option>
+              <option value="banque">Banque</option>
+              <option value="assurance">Assurance</option>
+              <option value="clinique">Clinique</option>
+              <option value="hotel">Hôtel</option>
+              <option value="bureau">Bureau</option>
+              <option value="commerce">Commerce</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="convention-session-source">Source</label>
+            <input
+              id="convention-session-source"
+              type="search"
+              value={filters.sessionSource}
+              onChange={(event) => updateFilter('sessionSource', event.target.value)}
+              placeholder="google, facebook, direct..."
+            />
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="convention-session-medium">Medium</label>
+            <input
+              id="convention-session-medium"
+              type="search"
+              value={filters.sessionMedium}
+              onChange={(event) => updateFilter('sessionMedium', event.target.value)}
+              placeholder="organic, cpc, social..."
+            />
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="convention-date-from">Depuis</label>
+            <input
+              id="convention-date-from"
+              type="date"
+              value={filters.dateFrom}
+              onChange={(event) => updateFilter('dateFrom', event.target.value)}
+            />
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="convention-date-to">Jusqu&apos;au</label>
+            <input
+              id="convention-date-to"
+              type="date"
+              value={filters.dateTo}
+              onChange={(event) => updateFilter('dateTo', event.target.value)}
+            />
+          </div>
+
+          <button type="button" className={styles.clearFiltersButton} onClick={resetFilters}>
+            Réinitialiser
+          </button>
+        </div>
+
+        <div className={styles.resultsMeta}>
+          {filteredRequests.length} convention{filteredRequests.length > 1 ? 's' : ''} affichée{filteredRequests.length > 1 ? 's' : ''}
+        </div>
+
         <div className={styles.requestsList}>
-          {requests.map((request) => (
+          {filteredRequests.map((request) => (
             <div
               key={request.id}
               className={styles.requestCard}
@@ -250,6 +416,9 @@ export default function AdminConventionsPage() {
               </div>
             </div>
           ))}
+          {filteredRequests.length === 0 && (
+            <div className={styles.emptyState}>Aucune convention ne correspond aux filtres.</div>
+          )}
         </div>
 
         {selectedRequest && (

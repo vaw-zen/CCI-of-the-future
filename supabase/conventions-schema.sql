@@ -54,10 +54,13 @@ CREATE TABLE IF NOT EXISTS convention_requests (
 
 -- Index for admin queries
 CREATE INDEX IF NOT EXISTS idx_convention_requests_statut ON convention_requests(statut);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_statut_created_at ON convention_requests(statut, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_created ON convention_requests(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_secteur ON convention_requests(secteur_activite);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_status ON convention_requests(lead_status);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_status_created_at ON convention_requests(lead_status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_session_source ON convention_requests(session_source);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_session_medium ON convention_requests(session_medium);
 
 -- Enable RLS
 ALTER TABLE convention_requests ENABLE ROW LEVEL SECURITY;
@@ -69,19 +72,14 @@ DROP POLICY IF EXISTS "Allow authenticated update on convention_requests" ON con
 DROP POLICY IF EXISTS "Allow admin users to read convention requests" ON convention_requests;
 DROP POLICY IF EXISTS "Allow admin users to update convention requests" ON convention_requests;
 
--- Allow authenticated admin users to review and manage convention requests.
+-- Allow authenticated admin users to review convention requests.
+-- Status mutations go through /api/admin/leads/[kind]/[id]/status using the
+-- server-side service role so all changes can be validated and audited.
 CREATE POLICY "Allow admin users to read convention requests"
   ON convention_requests
   FOR SELECT
   TO authenticated
   USING ((SELECT public.is_admin(auth.jwt() ->> 'email')));
-
-CREATE POLICY "Allow admin users to update convention requests"
-  ON convention_requests
-  FOR UPDATE
-  TO authenticated
-  USING ((SELECT public.is_admin(auth.jwt() ->> 'email')))
-  WITH CHECK ((SELECT public.is_admin(auth.jwt() ->> 'email')));
 
 -- Auto-update updated_at on changes
 CREATE OR REPLACE FUNCTION update_convention_updated_at()

@@ -12,6 +12,90 @@ import {
   LEAD_STATUS_OPTIONS,
   LEAD_STATUSES
 } from '@/utils/leadLifecycle';
+import {
+  getClientIp,
+  guardMutationRequest,
+  hashRequestValue
+} from '@/libs/security';
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const ADMIN_STATUS_RATE_LIMIT = {
+  scope: 'admin-status',
+  limit: 30,
+  windowMs: 60 * 1000
+};
+
+const LEAD_SELECT_FIELDS = {
+  devis: [
+    'id',
+    'created_at',
+    'type_personne',
+    'matricule_fiscale',
+    'nom',
+    'prenom',
+    'email',
+    'telephone',
+    'adresse',
+    'ville',
+    'code_postal',
+    'type_logement',
+    'surface',
+    'type_service',
+    'nombre_places',
+    'surface_service',
+    'date_preferee',
+    'heure_preferee',
+    'message',
+    'newsletter',
+    'lead_status',
+    'submitted_at',
+    'qualified_at',
+    'closed_at',
+    'ga_client_id',
+    'landing_page',
+    'session_source',
+    'session_medium',
+    'session_campaign',
+    'referrer_host',
+    'entry_path',
+    'calculator_estimate',
+    'selected_services'
+  ].join(','),
+  convention: [
+    'id',
+    'created_at',
+    'raison_sociale',
+    'matricule_fiscale',
+    'secteur_activite',
+    'contact_nom',
+    'contact_prenom',
+    'contact_fonction',
+    'email',
+    'telephone',
+    'nombre_sites',
+    'surface_totale',
+    'services_souhaites',
+    'frequence',
+    'duree_contrat',
+    'date_debut_souhaitee',
+    'message',
+    'statut',
+    'updated_at',
+    'lead_status',
+    'submitted_at',
+    'qualified_at',
+    'closed_at',
+    'ga_client_id',
+    'landing_page',
+    'session_source',
+    'session_medium',
+    'session_campaign',
+    'referrer_host',
+    'entry_path',
+    'calculator_estimate',
+    'selected_services'
+  ].join(',')
+};
 
 async function authenticateAdmin(request, supabase) {
   const authorizationHeader = request.headers.get('authorization') || '';
@@ -36,7 +120,11 @@ async function authenticateAdmin(request, supabase) {
     .single();
 
   if (adminError || !adminData) {
-    return { error: 'forbidden', status: 403 };
+    return {
+      error: 'forbidden',
+      status: 403,
+      user: authData.user
+    };
   }
 
   return { user: authData.user };
@@ -47,7 +135,8 @@ function getLeadConfig(kind) {
     return {
       table: 'devis_requests',
       leadType: 'devis',
-      businessLine: 'b2c'
+      businessLine: 'b2c',
+      select: LEAD_SELECT_FIELDS.devis
     };
   }
 
@@ -55,49 +144,186 @@ function getLeadConfig(kind) {
     return {
       table: 'convention_requests',
       leadType: 'convention',
-      businessLine: 'b2b'
+      businessLine: 'b2b',
+      select: LEAD_SELECT_FIELDS.convention
     };
   }
 
   return null;
 }
 
-export async function PATCH(request, { params }) {
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function validateStatusPayload(kind, body) {
+  if (!isPlainObject(body)) {
+    return { error: 'invalid_payload', message: 'Payload invalide.' };
+  }
+
+  const keys = Object.keys(body);
+
+  if (kind === 'devis') {
+    if (keys.length !== 1 || keys[0] !== 'leadStatus') {
+      return { error: 'invalid_payload', message: 'Payload devis invalide.' };
+    }
+
+    if (!LEAD_STATUS_OPTIONS.includes(body.leadStatus)) {
+      return { error: 'invalid_status', message: 'Statut lead invalide.' };
+    }
+  }
+
+  if (kind === 'convention') {
+    const allowedKeys = new Set(['operationalStatus', 'leadStatus']);
+    const hasOnlyAllowedKeys = keys.every((key) => allowedKeys.has(key));
+
+    if (!hasOnlyAllowedKeys || !body.operationalStatus) {
+      return { error: 'invalid_payload', message: 'Payload convention invalide.' };
+    }
+
+    if (!CONVENTION_OPERATIONAL_STATUSES.includes(body.operationalStatus)) {
+      return { error: 'invalid_status', message: 'Statut opérationnel invalide.' };
+    }
+
+    if (body.leadStatus && !LEAD_STATUS_OPTIONS.includes(body.leadStatus)) {
+      return { error: 'invalid_status', message: 'Statut lead invalide.' };
+    }
+  }
+
+  return { ok: true };
+}
+
+async function writeStatusAuditEvent(supabase, {
+  kind = 'unknown',
+  table = null,
+  leadId = null,
+  previousStatus = null,
+  nextStatus = null,
+  previousOperationalStatus = null,
+  nextOperationalStatus = null,
+  adminUser = null,
+  actionResult = 'rejected',
+  rejectionReason = null,
+  request
+} = {}) {
   try {
-    const { kind, id } = params;
-    const config = getLeadConfig(kind);
+    const userAgent = request.headers.get('user-agent') || '';
 
-    if (!config || !id) {
-      return NextResponse.json({
-        status: 'invalid_request',
-        message: 'Type de lead invalide.'
-      }, { status: 400 });
+    await supabase
+      .from('admin_lead_status_events')
+      .insert({
+        lead_kind: kind,
+        lead_table: table,
+        lead_id: UUID_PATTERN.test(leadId || '') ? leadId : null,
+        previous_status: previousStatus,
+        next_status: nextStatus,
+        previous_operational_status: previousOperationalStatus,
+        next_operational_status: nextOperationalStatus,
+        admin_email: adminUser?.email || null,
+        admin_user_id: adminUser?.id || null,
+        action_result: actionResult,
+        rejection_reason: rejectionReason,
+        request_ip: getClientIp(request),
+        user_agent_hash: hashRequestValue(userAgent)
+      });
+  } catch (auditError) {
+    console.warn('[admin][lead-status] audit write failed:', auditError?.message || auditError);
+  }
+}
+
+function getErrorResponse(status, message, httpStatus) {
+  return NextResponse.json({
+    status,
+    message,
+    data: null,
+    details: {
+      failureType: status
     }
+  }, { status: httpStatus });
+}
 
-    const supabase = createServiceClient();
-    const authResult = await authenticateAdmin(request, supabase);
+export async function PATCH(request, { params }) {
+  const guardResponse = guardMutationRequest(request, ADMIN_STATUS_RATE_LIMIT);
+  if (guardResponse) {
+    console.warn('[admin][lead-status] request blocked by guard:', {
+      path: request.nextUrl?.pathname,
+      ip: getClientIp(request),
+      status: guardResponse.status
+    });
+    return guardResponse;
+  }
 
-    if (authResult.error) {
-      return NextResponse.json({
-        status: authResult.error,
-        message: 'Accès administrateur requis.'
-      }, { status: authResult.status });
-    }
+  let supabase;
+  try {
+    supabase = createServiceClient();
+  } catch (error) {
+    return getErrorResponse('config_error', 'Service de base de données non configuré.', 500);
+  }
 
-    const body = await request.json().catch(() => ({}));
-    let { leadStatus, operationalStatus } = body;
+  const { kind, id } = params;
+  const config = getLeadConfig(kind);
 
+  if (!config || !UUID_PATTERN.test(id || '')) {
+    await writeStatusAuditEvent(supabase, {
+      kind: config ? kind : 'unknown',
+      table: config?.table || null,
+      leadId: id,
+      actionResult: 'rejected',
+      rejectionReason: !config ? 'invalid_kind' : 'invalid_id',
+      request
+    });
+    return getErrorResponse('invalid_request', 'Type de lead ou identifiant invalide.', 400);
+  }
+
+  const authResult = await authenticateAdmin(request, supabase);
+  if (authResult.error) {
+    await writeStatusAuditEvent(supabase, {
+      kind,
+      table: config.table,
+      leadId: id,
+      adminUser: authResult.user,
+      actionResult: 'rejected',
+      rejectionReason: authResult.error,
+      request
+    });
+    return getErrorResponse(authResult.error, 'Accès administrateur requis.', authResult.status);
+  }
+
+  const body = await request.json().catch(() => null);
+  const payloadValidation = validateStatusPayload(kind, body);
+  if (!payloadValidation.ok) {
+    await writeStatusAuditEvent(supabase, {
+      kind,
+      table: config.table,
+      leadId: id,
+      adminUser: authResult.user,
+      actionResult: 'rejected',
+      rejectionReason: payloadValidation.error,
+      request
+    });
+    return getErrorResponse(payloadValidation.error, payloadValidation.message, 400);
+  }
+
+  let { leadStatus, operationalStatus } = body;
+
+  try {
     const { data: currentLead, error: fetchError } = await supabase
       .from(config.table)
-      .select('*')
+      .select(config.select)
       .eq('id', id)
       .single();
 
     if (fetchError || !currentLead) {
-      return NextResponse.json({
-        status: 'not_found',
-        message: 'Lead introuvable.'
-      }, { status: 404 });
+      await writeStatusAuditEvent(supabase, {
+        kind,
+        table: config.table,
+        leadId: id,
+        adminUser: authResult.user,
+        actionResult: 'rejected',
+        rejectionReason: 'not_found',
+        request
+      });
+      return getErrorResponse('not_found', 'Lead introuvable.', 404);
     }
 
     const previousLeadStatus = currentLead.lead_status
@@ -106,41 +332,48 @@ export async function PATCH(request, { params }) {
         : LEAD_STATUSES.SUBMITTED);
 
     const patch = {};
+    let nextOperationalStatus = null;
 
     if (kind === 'convention') {
-      const nextOperationalStatus = operationalStatus || currentLead.statut || 'nouveau';
-
-      if (!CONVENTION_OPERATIONAL_STATUSES.includes(nextOperationalStatus)) {
-        return NextResponse.json({
-          status: 'invalid_status',
-          message: 'Statut opérationnel invalide.'
-        }, { status: 400 });
-      }
-
+      nextOperationalStatus = operationalStatus || currentLead.statut || 'nouveau';
       const derivedLeadStatus = deriveLeadStatusFromConventionStatus(nextOperationalStatus);
+
       if (leadStatus && leadStatus !== derivedLeadStatus) {
-        return NextResponse.json({
-          status: 'status_mismatch',
-          message: 'Le statut lead ne correspond pas au statut opérationnel.'
-        }, { status: 400 });
+        await writeStatusAuditEvent(supabase, {
+          kind,
+          table: config.table,
+          leadId: id,
+          previousStatus: previousLeadStatus,
+          nextStatus: leadStatus,
+          previousOperationalStatus: currentLead.statut,
+          nextOperationalStatus,
+          adminUser: authResult.user,
+          actionResult: 'rejected',
+          rejectionReason: 'status_mismatch',
+          request
+        });
+        return getErrorResponse('status_mismatch', 'Le statut lead ne correspond pas au statut opérationnel.', 400);
       }
 
       leadStatus = derivedLeadStatus;
       patch.statut = nextOperationalStatus;
     }
 
-    if (!LEAD_STATUS_OPTIONS.includes(leadStatus)) {
-      return NextResponse.json({
-        status: 'invalid_status',
-        message: 'Statut lead invalide.'
-      }, { status: 400 });
-    }
-
     if (!isLeadStatusTransitionAllowed(previousLeadStatus, leadStatus)) {
-      return NextResponse.json({
-        status: 'transition_not_allowed',
-        message: 'Transition de statut non autorisée.'
-      }, { status: 409 });
+      await writeStatusAuditEvent(supabase, {
+        kind,
+        table: config.table,
+        leadId: id,
+        previousStatus: previousLeadStatus,
+        nextStatus: leadStatus,
+        previousOperationalStatus: currentLead.statut || null,
+        nextOperationalStatus,
+        adminUser: authResult.user,
+        actionResult: 'rejected',
+        rejectionReason: 'transition_not_allowed',
+        request
+      });
+      return getErrorResponse('transition_not_allowed', 'Transition de statut non autorisée.', 409);
     }
 
     Object.assign(
@@ -155,15 +388,38 @@ export async function PATCH(request, { params }) {
       .from(config.table)
       .update(patch)
       .eq('id', id)
-      .select('*')
+      .select(config.select)
       .single();
 
     if (updateError || !updatedLead) {
-      return NextResponse.json({
-        status: 'update_failed',
-        message: 'Impossible de mettre à jour le lead.'
-      }, { status: 500 });
+      await writeStatusAuditEvent(supabase, {
+        kind,
+        table: config.table,
+        leadId: id,
+        previousStatus: previousLeadStatus,
+        nextStatus: leadStatus,
+        previousOperationalStatus: currentLead.statut || null,
+        nextOperationalStatus,
+        adminUser: authResult.user,
+        actionResult: 'rejected',
+        rejectionReason: 'update_failed',
+        request
+      });
+      return getErrorResponse('update_failed', 'Impossible de mettre à jour le lead.', 500);
     }
+
+    await writeStatusAuditEvent(supabase, {
+      kind,
+      table: config.table,
+      leadId: id,
+      previousStatus: previousLeadStatus,
+      nextStatus: leadStatus,
+      previousOperationalStatus: currentLead.statut || null,
+      nextOperationalStatus: updatedLead.statut || null,
+      adminUser: authResult.user,
+      actionResult: 'success',
+      request
+    });
 
     if (leadStatus !== previousLeadStatus) {
       const lifecycleEventName = {
@@ -188,14 +444,22 @@ export async function PATCH(request, { params }) {
 
     return NextResponse.json({
       status: 'success',
-      data: updatedLead
+      data: updatedLead,
+      details: {
+        auditLogged: true
+      }
     });
   } catch (error) {
     console.error('[admin][lead-status] update failed:', error);
-    return NextResponse.json({
-      status: 'error',
-      message: 'Erreur lors de la mise à jour du lead.',
-      details: error?.message
-    }, { status: 500 });
+    await writeStatusAuditEvent(supabase, {
+      kind,
+      table: config.table,
+      leadId: id,
+      adminUser: authResult.user,
+      actionResult: 'rejected',
+      rejectionReason: 'unexpected_error',
+      request
+    });
+    return getErrorResponse('unexpected_error', 'Erreur lors de la mise à jour du lead.', 500);
   }
 }

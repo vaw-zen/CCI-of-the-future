@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { createServiceClient } from '@/libs/supabase';
 import { extractAnalyticsContext, sendLifecycleMeasurementEvent } from '@/libs/analyticsLifecycle';
+import { guardMutationRequest } from '@/libs/security';
+
+const NEWSLETTER_RATE_LIMIT = {
+  scope: 'newsletter-submit',
+  limit: 15,
+  windowMs: 10 * 60 * 1000
+};
 
 async function sendNewsletterMeasurement(analyticsContext, eventName, eventParams = {}) {
   return sendLifecycleMeasurementEvent({
@@ -19,6 +26,11 @@ async function sendNewsletterMeasurement(analyticsContext, eventName, eventParam
 }
 
 export async function POST(request) {
+  const guardResponse = guardMutationRequest(request, NEWSLETTER_RATE_LIMIT);
+  if (guardResponse) {
+    return guardResponse;
+  }
+
   let analyticsContext = {};
   let placement = 'unknown';
 
@@ -34,6 +46,8 @@ export async function POST(request) {
       return NextResponse.json({
         status: 'success',
         message: 'Inscription réussie ! Vérifiez votre boîte mail.',
+        data: null,
+        details: { honeypot: true }
       });
     }
 
@@ -45,7 +59,9 @@ export async function POST(request) {
       });
       return NextResponse.json({
         status: 'validation_failed',
-        message: 'L\'adresse email est requise.'
+        message: 'L\'adresse email est requise.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -57,7 +73,9 @@ export async function POST(request) {
       });
       return NextResponse.json({
         status: 'validation_failed',
-        message: 'Veuillez fournir une adresse email valide.'
+        message: 'Veuillez fournir une adresse email valide.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -68,20 +86,10 @@ export async function POST(request) {
       });
       return NextResponse.json({
         status: 'validation_failed',
-        message: 'Vous devez accepter la politique de confidentialité.'
+        message: 'Vous devez accepter la politique de confidentialité.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
-    }
-
-    // Check Gmail credentials
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
-      await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
-        placement,
-        failure_type: 'config_error'
-      });
-      return NextResponse.json({
-        status: 'config_error',
-        message: 'Service email non configuré.'
-      }, { status: 500 });
     }
 
     const supabase = createServiceClient();
@@ -105,6 +113,8 @@ export async function POST(request) {
         return NextResponse.json({
           status: 'already_subscribed',
           message: 'Vous êtes déjà inscrit(e) à notre newsletter.',
+          data: null,
+          details: { failureType: 'already_subscribed' }
         });
       }
 
@@ -133,8 +143,10 @@ export async function POST(request) {
           failure_type: 'database_error'
         });
         return NextResponse.json({
-          status: 'error',
+          status: 'database_error',
           message: 'Erreur lors de l\'inscription. Veuillez réessayer.',
+          data: null,
+          details: { failureType: 'database_error' }
         }, { status: 500 });
       }
     } else {
@@ -163,8 +175,10 @@ export async function POST(request) {
           failure_type: 'database_error'
         });
         return NextResponse.json({
-          status: 'error',
+          status: 'database_error',
           message: 'Erreur lors de l\'inscription. Veuillez réessayer.',
+          data: null,
+          details: { failureType: 'database_error' }
         }, { status: 500 });
       }
     }
@@ -173,20 +187,27 @@ export async function POST(request) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
     const verificationUrl = `${baseUrl}/api/newsletter/verify?token=${verificationToken}`;
 
-    // Send verification email
-    const { default: nodemailer } = await import('nodemailer');
+    let emailSent = false;
+    let emailError = null;
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-      },
-    });
+    try {
+      if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
+        throw new Error('GMAIL_USER or GMAIL_PASS not configured');
+      }
 
-    await transporter.verify().catch(() => {
-      throw new Error('SMTP verification failed');
-    });
+      const { default: nodemailer } = await import('nodemailer');
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+
+      await transporter.verify().catch(() => {
+        throw new Error('SMTP verification failed');
+      });
 
     const colors = {
       bgBase: '#141416',
@@ -252,7 +273,16 @@ export async function POST(request) {
       `,
     };
 
-    await transporter.sendMail(verificationMail);
+      await transporter.sendMail(verificationMail);
+      emailSent = true;
+    } catch (mailError) {
+      console.error('[newsletter] Verification email failed (subscriber saved):', mailError?.message || mailError);
+      emailError = mailError?.message || 'email_error';
+      await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+        placement,
+        failure_type: 'email_error'
+      });
+    }
 
     await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_submitted', {
       placement
@@ -260,19 +290,31 @@ export async function POST(request) {
 
     return NextResponse.json({
       status: 'success',
-      message: 'Vérifiez votre boîte mail pour confirmer votre inscription.',
+      message: emailSent
+        ? 'Vérifiez votre boîte mail pour confirmer votre inscription.'
+        : 'Inscription enregistrée. L\'email de confirmation sera renvoyé dès que possible.',
+      data: null,
+      details: {
+        newsletterSaved: true,
+        emailSent,
+        ...(emailError && { emailNote: 'Inscription enregistrée, email de confirmation en attente.' })
+      }
     });
 
   } catch (error) {
     console.error('Newsletter subscription error:', error);
     await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
       placement,
-      failure_type: 'error'
+      failure_type: 'unexpected_error'
     });
     return NextResponse.json({
-      status: 'error',
+      status: 'unexpected_error',
       message: 'Erreur lors de l\'inscription. Veuillez réessayer.',
-      details: error?.message
+      data: null,
+      details: {
+        failureType: 'unexpected_error',
+        error: error?.message
+      }
     }, { status: 500 });
   }
 }

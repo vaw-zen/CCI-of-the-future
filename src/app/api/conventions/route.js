@@ -7,6 +7,13 @@ import {
   sendLifecycleMeasurementEvent
 } from '@/libs/analyticsLifecycle';
 import { LEAD_STATUSES } from '@/utils/leadLifecycle';
+import { guardMutationRequest } from '@/libs/security';
+
+const CONVENTIONS_RATE_LIMIT = {
+  scope: 'convention-submit',
+  limit: 20,
+  windowMs: 10 * 60 * 1000
+};
 
 async function sendConventionFailureMeasurement(analyticsContext, failureType, servicesCount = 0) {
   return sendLifecycleMeasurementEvent({
@@ -27,6 +34,11 @@ async function sendConventionFailureMeasurement(analyticsContext, failureType, s
 }
 
 export async function POST(request) {
+  const guardResponse = guardMutationRequest(request, CONVENTIONS_RATE_LIMIT);
+  if (guardResponse) {
+    return guardResponse;
+  }
+
   let analyticsContext = {};
   let requestedServices = [];
 
@@ -38,7 +50,9 @@ export async function POST(request) {
       console.error('[conventions] Supabase not configured — missing URL or key');
       return NextResponse.json({
         status: 'config_error',
-        message: 'Service de base de données non configuré.'
+        message: 'Service de base de données non configuré.',
+        data: null,
+        details: { failureType: 'config_error' }
       }, { status: 500 });
     }
 
@@ -71,7 +85,9 @@ export async function POST(request) {
       await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
       return NextResponse.json({
         status: 'validation_failed',
-        message: 'Tous les champs obligatoires doivent être remplis.'
+        message: 'Tous les champs obligatoires doivent être remplis.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -80,7 +96,9 @@ export async function POST(request) {
       await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
       return NextResponse.json({
         status: 'validation_failed',
-        message: 'Veuillez fournir une adresse email valide.'
+        message: 'Veuillez fournir une adresse email valide.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -88,7 +106,9 @@ export async function POST(request) {
       await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
       return NextResponse.json({
         status: 'validation_failed',
-        message: 'Veuillez sélectionner au moins un service.'
+        message: 'Veuillez sélectionner au moins un service.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -96,7 +116,9 @@ export async function POST(request) {
       await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
       return NextResponse.json({
         status: 'validation_failed',
-        message: 'Vous devez accepter les conditions générales.'
+        message: 'Vous devez accepter les conditions générales.',
+        data: null,
+        details: { failureType: 'validation_failed' }
       }, { status: 400 });
     }
 
@@ -140,7 +162,9 @@ export async function POST(request) {
       await sendConventionFailureMeasurement(analyticsContext, 'database_error', requestedServices.length);
       return NextResponse.json({
         status: 'database_error',
-        message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.'
+        message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.',
+        data: null,
+        details: { failureType: 'database_error' }
       }, { status: 500 });
     }
 
@@ -400,11 +424,14 @@ export async function POST(request) {
       } catch (mailErr) {
         console.error('[conventions] Email sending failed (DB insert succeeded):', mailErr?.message || mailErr);
         emailError = mailErr?.message;
+        await sendConventionFailureMeasurement(analyticsContext, 'email_error', requestedServices.length);
       }
 
     return NextResponse.json({
       status: 'success',
-      message: 'Votre demande de convention a été envoyée avec succès !',
+      message: emailSent
+        ? 'Votre demande de convention a été envoyée avec succès !'
+        : 'Votre demande de convention a été enregistrée avec succès ! La notification email sera traitée dès que possible.',
       data: supabaseData,
       details: {
         conventionConfirmed: true,
@@ -421,11 +448,15 @@ export async function POST(request) {
       code: error?.code,
       stack: error?.stack?.split('\n').slice(0, 3).join('\n')
     });
-    await sendConventionFailureMeasurement(analyticsContext, 'error', requestedServices.length);
+    await sendConventionFailureMeasurement(analyticsContext, 'unexpected_error', requestedServices.length);
     return NextResponse.json({
-      status: 'error',
+      status: 'unexpected_error',
       message: 'Erreur lors de l\'envoi de votre demande. Veuillez réessayer.',
-      details: error?.message
+      data: null,
+      details: {
+        failureType: 'unexpected_error',
+        error: error?.message
+      }
     }, { status: 500 });
   }
 }

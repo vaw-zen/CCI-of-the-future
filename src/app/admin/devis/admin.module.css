@@ -89,6 +89,72 @@
   margin-bottom: 30px;
 }
 
+.filtersPanel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  align-items: end;
+  padding: 18px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(203, 251, 66, 0.12);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+}
+
+.filterField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterField label {
+  color: var(--t-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.filterField input,
+.filterField select {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 10px;
+  border: 1px solid rgba(203, 251, 66, 0.2);
+  border-radius: 6px;
+  background: var(--bg-base);
+  color: var(--t-primary);
+}
+
+.clearFiltersButton {
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid rgba(203, 251, 66, 0.25);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--t-primary);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.clearFiltersButton:hover {
+  border-color: var(--ac-primary);
+  color: var(--ac-primary);
+}
+
+.resultsMeta {
+  margin-bottom: 16px;
+  color: var(--t-secondary);
+  font-size: 13px;
+}
+
+.emptyState {
+  padding: 28px;
+  border: 1px dashed rgba(203, 251, 66, 0.24);
+  border-radius: 8px;
+  color: var(--t-secondary);
+  text-align: center;
+}
+
 .statCard {
   background: var(--bg-elevated);
   padding: 20px;

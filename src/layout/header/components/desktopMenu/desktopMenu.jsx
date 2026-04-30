@@ -97,7 +97,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
 
             if (response.ok && data.status === 'success') {
                 trackNewsletterSignupSubmitted('desktop_menu');
-                setSubmitMessage('Vérifiez votre boîte mail pour confirmer votre inscription.');
+                setSubmitMessage(data.message || 'Vérifiez votre boîte mail pour confirmer votre inscription.');
                 setSubmitStatus('success');
                 setEmail('');
                 setWebsite('');

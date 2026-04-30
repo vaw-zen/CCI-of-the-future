@@ -19,7 +19,6 @@
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.58.0",
-    "cheerio": "^1.1.2",
     "csv-parser": "^3.2.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^17.2.3",
@@ -28,10 +27,9 @@
     "franc-min": "^6.2.0",
     "google-auth-library": "^10.4.1",
     "google-search-results-nodejs": "^2.1.0",
-    "next": "15.5.10",
-    "nodemailer": "^7.0.11",
+    "next": "^15.5.15",
+    "nodemailer": "^8.0.7",
     "prop-types": "^15.8.1",
-    "puppeteer": "^24.24.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
@@ -42,5 +40,8 @@
     "eslint-config-next": "16.1.6",
     "googleapis": "^162.0.0",
     "ignore-loader": "^0.1.2"
+  },
+  "overrides": {
+    "postcss": "8.5.10"
   }
 }

@@ -8,8 +8,6 @@ import { servicesScrollTriggers } from "@/app/services/services.func";
 import { headerSI } from "@/layout/header/header.func";
 import { usePathname } from "next/navigation";
 import { storeUTMParameters } from "../utmGenerator";
-import { initFacebookPixel } from "@/utils/facebookTracking";
-import { initializeFacebookPixelTracking, debugFacebookPixel } from "@/utils/facebook-pixel-helper";
 import { trackContactLinkClick } from "@/utils/analytics";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
 
@@ -28,7 +26,6 @@ export default function Initializer() {
     // Ref to track initialization attempts for current page
     const initAttemptsRef = useRef(0);
     const currentPathRef = useRef(pathname || "");
-    const marketingTrackingInitializedRef = useRef(false);
 
     const initializePageAnimations = useCallback((isRetry = false) => {
         if (pathname === "/" || pathname.includes("/home")) {
@@ -48,35 +45,6 @@ export default function Initializer() {
         }
     }, [pathname])
   
-    useEffect(() => {
-        if (!(accepted && eligible)) {
-            marketingTrackingInitializedRef.current = false;
-            return;
-        }
-
-        storeUTMParameters();
-
-        if (marketingTrackingInitializedRef.current) {
-            return;
-        }
-
-        marketingTrackingInitializedRef.current = true;
-
-        try {
-            if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID) {
-                initFacebookPixel();
-                setTimeout(() => {
-                    initializeFacebookPixelTracking();
-                    if (process.env.NODE_ENV === 'development') {
-                        setTimeout(() => debugFacebookPixel(), 2000);
-                    }
-                }, 1500);
-            }
-        } catch (e) {
-            // fail silently if pixel init errors
-        }
-    }, [accepted, eligible]);
-
     useEffect(() => {
         if (accepted && eligible) {
             storeUTMParameters();

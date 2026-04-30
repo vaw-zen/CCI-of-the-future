@@ -7,7 +7,10 @@ import {
   trackFormAbandonment,
   trackConventionSubmission,
   trackServiceInteraction,
-  SERVICE_TYPES
+  SERVICE_TYPES,
+  trackFormSubmitFailed,
+  trackFormValidationFailed,
+  trackPerformance
 } from '@/utils/analytics';
 
 const initialFormData = {
@@ -96,62 +99,74 @@ export function useConventionFormLogic() {
   };
 
   const validateForm = () => {
+    const failValidation = (message, fields = [], failureType = 'client_validation') => {
+      setSubmitStatus({
+        type: 'error',
+        message
+      });
+      trackFormValidationFailed('convention_form', fields, failureType, {
+        company_sector: formData.secteurActivite,
+        services_count: formData.servicesSouhaites.length
+      });
+      return false;
+    };
+
     const required = ['raisonSociale', 'matriculeFiscale', 'secteurActivite', 'contactNom', 'contactPrenom', 'email', 'telephone', 'frequence', 'dureeContrat'];
     const missing = required.filter(field => !formData[field] || (typeof formData[field] === 'string' && !formData[field].trim()));
 
     if (missing.length > 0) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Veuillez remplir tous les champs obligatoires.'
-      });
-      return false;
+      return failValidation(
+        'Veuillez remplir tous les champs obligatoires.',
+        missing,
+        'required_fields_missing'
+      );
     }
 
     // Validate matricule fiscale
     const matriculeRegex = /^[0-9]{7}[A-Z]$|^[0-9]{8}$/;
     if (!matriculeRegex.test(formData.matriculeFiscale.replace(/\s/g, ''))) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres).'
-      });
-      return false;
+      return failValidation(
+        'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres).',
+        ['matriculeFiscale'],
+        'invalid_tax_id'
+      );
     }
 
     // Validate at least one service
     if (formData.servicesSouhaites.length === 0) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Veuillez sélectionner au moins un service.'
-      });
-      return false;
+      return failValidation(
+        'Veuillez sélectionner au moins un service.',
+        ['servicesSouhaites'],
+        'missing_services'
+      );
     }
 
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Veuillez saisir une adresse email valide.'
-      });
-      return false;
+      return failValidation(
+        'Veuillez saisir une adresse email valide.',
+        ['email'],
+        'invalid_email'
+      );
     }
 
     // Validate phone
     const phoneRegex = /^[0-9\s\-\+\(\)]{8,}$/;
     if (!phoneRegex.test(formData.telephone)) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Veuillez saisir un numéro de téléphone valide.'
-      });
-      return false;
+      return failValidation(
+        'Veuillez saisir un numéro de téléphone valide.',
+        ['telephone'],
+        'invalid_phone'
+      );
     }
 
     if (!formData.conditions) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Vous devez accepter les conditions générales.'
-      });
-      return false;
+      return failValidation(
+        'Vous devez accepter les conditions générales.',
+        ['conditions'],
+        'terms_not_accepted'
+      );
     }
 
     return true;
@@ -192,17 +207,15 @@ export function useConventionFormLogic() {
         trackFunnelComplete('convention_form', 'form_submitted', 3);
 
         const timeToComplete = Math.round((Date.now() - formStartTime.current) / 1000);
-        if (typeof window !== 'undefined' && window.gtag) {
-          window.gtag('event', 'timing_complete', {
-            event_category: 'form_completion',
-            name: 'convention_form_time',
-            value: timeToComplete
-          });
-        }
+        trackPerformance('convention_form_time', timeToComplete, 'seconds');
 
         setFormData(initialFormData);
         completedFields.current.clear();
       } else {
+        trackFormSubmitFailed('convention_form', result.failureType || result.status || 'submit_failed', {
+          company_sector: formData.secteurActivite,
+          services_count: formData.servicesSouhaites.length
+        });
         setSubmitStatus({
           type: 'error',
           message: result.error || 'Une erreur est survenue. Veuillez réessayer.'
@@ -210,6 +223,10 @@ export function useConventionFormLogic() {
       }
     } catch (error) {
       console.error('Convention form submission error:', error);
+      trackFormSubmitFailed('convention_form', 'network_error', {
+        company_sector: formData.secteurActivite,
+        services_count: formData.servicesSouhaites.length
+      });
       setSubmitStatus({
         type: 'error',
         message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'

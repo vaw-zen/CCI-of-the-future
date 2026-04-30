@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/libs/supabase';
+import { sendLifecycleMeasurementEvent } from '@/libs/analyticsLifecycle';
 
 export async function GET(request) {
   try {
@@ -47,6 +48,14 @@ export async function GET(request) {
       console.error('Verification update error:', updateError);
       return NextResponse.redirect(new URL('/newsletter/confirmed?status=error', request.url));
     }
+
+    await sendLifecycleMeasurementEvent({
+      clientId: subscriber.ga_client_id || '',
+      eventName: 'newsletter_signup_verified',
+      eventParams: {
+        placement: subscriber.source || 'unknown'
+      }
+    });
 
     // Send welcome email + admin notification now that verification is confirmed
     try {

@@ -12,9 +12,7 @@ export const UTM_SESSION_KEY = 'utm_data';
 export const UTM_HISTORY_KEY = 'utm_history';
 export const FACEBOOK_REFERRALS_KEY = 'fb_referrals';
 
-export const GA_MEASUREMENT_ID = 'G-0RDH6DH7TS';
-export const GOOGLE_ADS_ID = 'AW-17696563349';
-export const GTM_CONTAINER_ID = 'GTM-MT495L62';
+export const GTM_CONTAINER_ID = process.env.NEXT_PUBLIC_GTM_ID || '';
 
 export const GTAG_LOADER_ID = 'gtag-loader';
 export const GTAG_INIT_ID = 'gtag-init';

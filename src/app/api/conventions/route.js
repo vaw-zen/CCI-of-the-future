@@ -1,7 +1,35 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/libs/supabase';
+import {
+  buildAttributionColumns,
+  buildLeadMeasurementParams,
+  extractAnalyticsContext,
+  sendLifecycleMeasurementEvent
+} from '@/libs/analyticsLifecycle';
+import { LEAD_STATUSES } from '@/utils/leadLifecycle';
+
+async function sendConventionFailureMeasurement(analyticsContext, failureType, servicesCount = 0) {
+  return sendLifecycleMeasurementEvent({
+    clientId: analyticsContext.ga_client_id,
+    eventName: 'form_submit_failed',
+    eventParams: {
+      form_name: 'convention_request',
+      failure_type: failureType,
+      lead_type: 'convention_request',
+      business_line: 'b2b',
+      services_count: servicesCount || undefined,
+      session_source: analyticsContext.session_source,
+      session_medium: analyticsContext.session_medium,
+      session_campaign: analyticsContext.session_campaign,
+      landing_page: analyticsContext.landing_page
+    }
+  });
+}
 
 export async function POST(request) {
+  let analyticsContext = {};
+  let requestedServices = [];
+
   try {
     let supabase;
     try {
@@ -15,7 +43,9 @@ export async function POST(request) {
     }
 
     const body = await request.json().catch(() => ({}));
+    analyticsContext = extractAnalyticsContext(body?.analyticsContext || {});
     const formData = body?.formData || body || {};
+    const attributionColumns = buildAttributionColumns(analyticsContext);
 
     // Honeypot check
     if (formData.honeypotWebsite) {
@@ -34,9 +64,11 @@ export async function POST(request) {
       servicesSouhaites, frequence, dureeContrat,
       dateDebutSouhaitee, message, conditions
     } = formData;
+    requestedServices = Array.isArray(servicesSouhaites) ? servicesSouhaites : [];
 
     // Validation
     if (!raisonSociale || !matriculeFiscale || !secteurActivite || !contactNom || !contactPrenom || !email || !telephone || !frequence || !dureeContrat) {
+      await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Tous les champs obligatoires doivent être remplis.'
@@ -45,6 +77,7 @@ export async function POST(request) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Veuillez fournir une adresse email valide.'
@@ -52,6 +85,7 @@ export async function POST(request) {
     }
 
     if (!servicesSouhaites || servicesSouhaites.length === 0) {
+      await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Veuillez sélectionner au moins un service.'
@@ -59,6 +93,7 @@ export async function POST(request) {
     }
 
     if (!conditions) {
+      await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Vous devez accepter les conditions générales.'
@@ -82,7 +117,10 @@ export async function POST(request) {
       duree_contrat: dureeContrat,
       date_debut_souhaitee: dateDebutSouhaitee || null,
       message: message || null,
-      statut: 'nouveau'
+      statut: 'nouveau',
+      lead_status: LEAD_STATUSES.SUBMITTED,
+      submitted_at: new Date().toISOString(),
+      ...attributionColumns
     };
 
     // Save to Supabase
@@ -99,11 +137,25 @@ export async function POST(request) {
         details: supabaseError.details,
         hint: supabaseError.hint
       });
+      await sendConventionFailureMeasurement(analyticsContext, 'database_error', requestedServices.length);
       return NextResponse.json({
         status: 'database_error',
         message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.'
       }, { status: 500 });
     }
+
+    await sendLifecycleMeasurementEvent({
+      clientId: analyticsContext.ga_client_id,
+      eventName: 'lead_submitted',
+      eventParams: buildLeadMeasurementParams({
+        leadRecord: supabaseData,
+        leadType: 'convention',
+        businessLine: 'b2b',
+        additionalParams: {
+          services_count: Array.isArray(supabaseData?.services_souhaites) ? supabaseData.services_souhaites.length : requestedServices.length
+        }
+      })
+    });
 
     // === Email sending (non-blocking — DB insert already succeeded) ===
     let emailSent = false;
@@ -369,6 +421,7 @@ export async function POST(request) {
       code: error?.code,
       stack: error?.stack?.split('\n').slice(0, 3).join('\n')
     });
+    await sendConventionFailureMeasurement(analyticsContext, 'error', requestedServices.length);
     return NextResponse.json({
       status: 'error',
       message: 'Erreur lors de l\'envoi de votre demande. Veuillez réessayer.',

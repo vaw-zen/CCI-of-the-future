@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
+import { trackReelView } from '@/utils/analytics';
 
 /**
  * Client wrapper for reel page analytics tracking
@@ -14,15 +15,7 @@ export default function ReelAnalyticsWrapper({ children, reelId, reelTitle }) {
   useTimeTracking('reel_page');
 
   useEffect(() => {
-    // Track reel page view
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'view_reel', {
-        event_category: 'content_engagement',
-        reel_id: reelId,
-        reel_title: reelTitle || 'Untitled reel',
-        page_location: window.location.href
-      });
-    }
+    trackReelView(reelId, reelTitle || 'Untitled reel');
   }, [reelId, reelTitle]);
 
   return <>{children}</>;

@@ -1,3 +1,5 @@
+import { getAnalyticsContext } from '@/utils/analyticsGateway';
+
 /**
  * Submit a convention request to the API
  * @param {Object} formData - The form data from the convention form
@@ -9,19 +11,28 @@ export async function submitConventionRequest(formData) {
     if (!validation.isValid) {
       return {
         success: false,
-        error: validation.error
+        error: validation.error,
+        status: 'validation_failed',
+        failureType: validation.failureType || 'validation_failed'
       };
     }
+
+    const analyticsContext = getAnalyticsContext({
+      lead_type: 'convention_request',
+      business_line: 'b2b'
+    });
 
     const response = await fetch('/api/conventions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ formData }),
+      body: JSON.stringify({ formData, analyticsContext }),
     }).catch(error => {
       console.error('Network error:', error);
-      throw new Error('Erreur de connexion. Vérifiez votre connexion internet.');
+      const networkError = new Error('Erreur de connexion. Vérifiez votre connexion internet.');
+      networkError.failureType = 'network_error';
+      throw networkError;
     });
 
     if (!response) {
@@ -33,7 +44,9 @@ export async function submitConventionRequest(formData) {
     if (!response.ok) {
       return {
         success: false,
-        error: result.message || 'Une erreur est survenue lors de l\'envoi de votre demande.'
+        error: result.message || 'Une erreur est survenue lors de l\'envoi de votre demande.',
+        status: result.status || 'submit_failed',
+        failureType: result.status || 'submit_failed'
       };
     }
 
@@ -47,7 +60,9 @@ export async function submitConventionRequest(formData) {
     console.error('Convention submission error:', error);
     return {
       success: false,
-      error: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'
+      error: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.',
+      status: error.failureType || 'network_error',
+      failureType: error.failureType || 'network_error'
     };
   }
 }
@@ -64,7 +79,8 @@ function validateConventionData(formData) {
     if (!formData[field] || (typeof formData[field] === 'string' && formData[field].trim() === '')) {
       return {
         isValid: false,
-        error: `Le champ ${field} est obligatoire.`
+        error: `Le champ ${field} est obligatoire.`,
+        failureType: 'required_fields_missing'
       };
     }
   }
@@ -74,7 +90,8 @@ function validateConventionData(formData) {
   if (!matriculeRegex.test(formData.matriculeFiscale.replace(/\s/g, ''))) {
     return {
       isValid: false,
-      error: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres).'
+      error: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres).',
+      failureType: 'invalid_tax_id'
     };
   }
 
@@ -82,7 +99,8 @@ function validateConventionData(formData) {
   if (!formData.servicesSouhaites || formData.servicesSouhaites.length === 0) {
     return {
       isValid: false,
-      error: 'Veuillez sélectionner au moins un service.'
+      error: 'Veuillez sélectionner au moins un service.',
+      failureType: 'missing_services'
     };
   }
 
@@ -91,7 +109,8 @@ function validateConventionData(formData) {
   if (!emailRegex.test(formData.email)) {
     return {
       isValid: false,
-      error: 'Veuillez saisir une adresse email valide.'
+      error: 'Veuillez saisir une adresse email valide.',
+      failureType: 'invalid_email'
     };
   }
 
@@ -100,7 +119,8 @@ function validateConventionData(formData) {
   if (!phoneRegex.test(formData.telephone)) {
     return {
       isValid: false,
-      error: 'Veuillez saisir un numéro de téléphone valide.'
+      error: 'Veuillez saisir un numéro de téléphone valide.',
+      failureType: 'invalid_phone'
     };
   }
 
@@ -108,9 +128,50 @@ function validateConventionData(formData) {
   if (!formData.conditions) {
     return {
       isValid: false,
-      error: 'Vous devez accepter les conditions générales.'
+      error: 'Vous devez accepter les conditions générales.',
+      failureType: 'terms_not_accepted'
     };
   }
 
   return { isValid: true };
+}
+
+async function getSupabaseClient() {
+  const { supabase } = await import('@/libs/supabase');
+
+  if (!supabase) {
+    throw new Error('Supabase client not available');
+  }
+
+  return supabase;
+}
+
+export async function getConventionRequests(options = {}) {
+  try {
+    const supabase = await getSupabaseClient();
+
+    let query = supabase
+      .from('convention_requests')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (options.limit) {
+      query = query.limit(options.limit);
+    }
+
+    if (options.offset) {
+      query = query.range(options.offset, options.offset + (options.limit || 10) - 1);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching convention requests:', error);
+    throw error;
+  }
 }

@@ -26,21 +26,43 @@
   },
   "heroTitle": "Conventions de Nettoyage pour Entreprises",
   "heroSubtitle": "Des contrats annuels sur mesure pour banques, assurances, cliniques et entreprises à Tunis",
+  "images": [
+    {
+      "src": "/gallery/conventions.jpg",
+      "title": "Conventions de nettoyage entreprises Tunis",
+      "description": "Contrats annuels de nettoyage professionnel pour entreprises, banques, cliniques et hôtels à Tunis."
+    }
+  ],
   "tabData": [
     {
       "id": "approche",
       "title": "Notre approche",
-      "content": "CCI Services accompagne les entreprises avec des conventions de nettoyage annuelles adaptées à chaque secteur d'activité. Notre approche repose sur un audit préalable gratuit de vos locaux, suivi d'une proposition personnalisée intégrant planning, fréquences et protocoles spécifiques à votre environnement professionnel."
+      "content": "CCI Services accompagne les entreprises avec des conventions de nettoyage annuelles adaptées à chaque secteur d'activité. Notre approche repose sur un audit préalable gratuit de vos locaux, suivi d'une proposition personnalisée intégrant planning, fréquences et protocoles spécifiques à votre environnement professionnel.",
+      "image": {
+        "src": "/mission.jpg",
+        "alt": "Audit et organisation des conventions de nettoyage entreprises",
+        "title": "Notre approche"
+      }
     },
     {
       "id": "engagements",
       "title": "Nos engagements",
-      "content": "Interlocuteur dédié disponible 7j/7, rapports qualité mensuels, équipes formées aux normes d'hygiène sectorielles, produits certifiés et traçabilité complète des interventions. Nous garantissons une continuité de service sans interruption et une réactivité sous 24h pour toute demande exceptionnelle."
+      "content": "Interlocuteur dédié disponible 7j/7, rapports qualité mensuels, équipes formées aux normes d'hygiène sectorielles, produits certifiés et traçabilité complète des interventions. Nous garantissons une continuité de service sans interruption et une réactivité sous 24h pour toute demande exceptionnelle.",
+      "image": {
+        "src": "/vision.jpg",
+        "alt": "Suivi qualité et engagement de service pour entreprises",
+        "title": "Nos engagements"
+      }
     },
     {
       "id": "pourquoi",
       "title": "Pourquoi CCI",
-      "content": "Plus de 10 ans d'expérience dans le nettoyage professionnel en Tunisie, des références solides dans le secteur bancaire et hôtelier, des équipements professionnels de dernière génération et une flexibilité tarifaire adaptée à la taille de votre structure. CCI est votre partenaire de confiance pour l'entretien de vos espaces professionnels."
+      "content": "Plus de 10 ans d'expérience dans le nettoyage professionnel en Tunisie, des références solides dans le secteur bancaire et hôtelier, des équipements professionnels de dernière génération et une flexibilité tarifaire adaptée à la taille de votre structure. CCI est votre partenaire de confiance pour l'entretien de vos espaces professionnels.",
+      "image": {
+        "src": "/philosophy.jpg",
+        "alt": "Equipe de nettoyage professionnel pour conventions entreprises",
+        "title": "Pourquoi CCI"
+      }
     }
   ],
   "secteurs": [
@@ -220,11 +242,21 @@
   "sections": {
     "mainService": {
       "title": "Conventions de nettoyage annuelles pour professionnels",
-      "text": "CCI Services propose des conventions de nettoyage sur mesure aux entreprises, banques, compagnies d'assurances, cliniques, hôtels et grandes surfaces à Tunis et dans le Grand Tunis. Nos contrats annuels couvrent l'ensemble de vos besoins d'entretien : nettoyage quotidien des locaux, entretien du mobilier textile, shampooing des moquettes, polissage des sols en marbre et nettoyage des vitres et façades. Chaque convention est précédée d'un audit gratuit pour garantir une prestation parfaitement adaptée à votre environnement professionnel."
+      "text": "CCI Services propose des conventions de nettoyage sur mesure aux entreprises, banques, compagnies d'assurances, cliniques, hôtels et grandes surfaces à Tunis et dans le Grand Tunis. Nos contrats annuels couvrent l'ensemble de vos besoins d'entretien : nettoyage quotidien des locaux, entretien du mobilier textile, shampooing des moquettes, polissage des sols en marbre et nettoyage des vitres et façades. Chaque convention est précédée d'un audit gratuit pour garantir une prestation parfaitement adaptée à votre environnement professionnel.",
+      "image": {
+        "src": "/gallery/conventions.jpg",
+        "alt": "Convention de nettoyage professionnel pour entreprises à Tunis",
+        "title": "Conventions de nettoyage annuelles pour professionnels"
+      }
     },
     "whyChooseUs": {
       "title": "Un partenaire de confiance pour l'entretien de vos locaux",
-      "text": "Fort de plus de 10 ans d'expérience dans le nettoyage professionnel en Tunisie, CCI Services s'est imposé comme le partenaire privilégié des entreprises exigeantes. Nos conventions annuelles offrent une qualité constante grâce à des équipes dédiées formées à vos protocoles, des équipements professionnels de pointe et un suivi qualité rigoureux. Nous intervenons dans tout le Grand Tunis (Tunis, Ariana, Ben Arous, Manouba) avec des horaires flexibles adaptés à votre activité."
+      "text": "Fort de plus de 10 ans d'expérience dans le nettoyage professionnel en Tunisie, CCI Services s'est imposé comme le partenaire privilégié des entreprises exigeantes. Nos conventions annuelles offrent une qualité constante grâce à des équipes dédiées formées à vos protocoles, des équipements professionnels de pointe et un suivi qualité rigoureux. Nous intervenons dans tout le Grand Tunis (Tunis, Ariana, Ben Arous, Manouba) avec des horaires flexibles adaptés à votre activité.",
+      "image": {
+        "src": "/gallery/conventions.jpg",
+        "alt": "Prestataire de nettoyage B2B pour bureaux et locaux professionnels",
+        "title": "Un partenaire de confiance pour l'entretien de vos locaux"
+      }
     }
   },
   "localBusinessJSONLD": {

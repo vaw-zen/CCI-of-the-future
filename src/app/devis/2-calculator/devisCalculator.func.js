@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { trackDevisCalculation, trackQuoteCalculatorStarted } from '@/utils/analytics';
 
 const services = {
   salon: {
@@ -116,6 +117,9 @@ export function useDevisCalculatorLogic() {
   const cardRef = useRef(null);
   const isCardVisibleRef = useRef(false); // Start as not visible so ticker shows initially
   const totalRef = useRef(0);
+  const quoteCalculatorStartedRef = useRef(false);
+  const lastTrackedTotalRef = useRef(0);
+  const calculationDebounceRef = useRef(null);
   const selectedServiceCount = Object.keys(selectedServices).length;
 
   const triggerAddAnimation = useCallback((newTotal) => {
@@ -161,6 +165,12 @@ export function useDevisCalculatorLogic() {
         // add - select the first option available for this service
         const firstOptionKey = Object.keys(services[serviceId].options)[0];
         newSelected[serviceId] = firstOptionKey;
+        if (!quoteCalculatorStartedRef.current) {
+          quoteCalculatorStartedRef.current = true;
+          trackQuoteCalculatorStarted(serviceId, {
+            calculator_surface: 'devis_page'
+          });
+        }
       }
       return newSelected;
     });
@@ -204,6 +214,32 @@ export function useDevisCalculatorLogic() {
   const total = useMemo(() => (
     calculateEstimateTotal({ selectedServices, quantities, urgency, area, surfaceArea })
   ), [selectedServices, quantities, urgency, area, surfaceArea]);
+
+  useEffect(() => {
+    if (calculationDebounceRef.current) {
+      clearTimeout(calculationDebounceRef.current);
+      calculationDebounceRef.current = null;
+    }
+
+    if (selectedServiceCount === 0 || total <= 0 || total === lastTrackedTotalRef.current) {
+      return undefined;
+    }
+
+    const selectedServiceIds = Object.keys(selectedServices);
+    const primaryService = selectedServiceIds[0] || '';
+
+    calculationDebounceRef.current = setTimeout(() => {
+      trackDevisCalculation(primaryService, total, selectedServiceIds);
+      lastTrackedTotalRef.current = total;
+    }, 400);
+
+    return () => {
+      if (calculationDebounceRef.current) {
+        clearTimeout(calculationDebounceRef.current);
+        calculationDebounceRef.current = null;
+      }
+    };
+  }, [selectedServiceCount, selectedServices, total]);
 
   useEffect(() => {
     if (total === totalRef.current) {

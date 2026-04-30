@@ -33,6 +33,23 @@ CREATE TABLE IF NOT EXISTS devis_requests (
   message TEXT,
   newsletter BOOLEAN DEFAULT FALSE,
   conditions BOOLEAN NOT NULL DEFAULT TRUE,
+
+  -- Lead Lifecycle
+  lead_status TEXT NOT NULL DEFAULT 'submitted' CHECK (lead_status IN ('submitted', 'qualified', 'closed_won', 'closed_lost')),
+  submitted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  qualified_at TIMESTAMP WITH TIME ZONE,
+  closed_at TIMESTAMP WITH TIME ZONE,
+
+  -- Attribution
+  ga_client_id TEXT,
+  landing_page TEXT,
+  session_source TEXT,
+  session_medium TEXT,
+  session_campaign TEXT,
+  referrer_host TEXT,
+  entry_path TEXT,
+  calculator_estimate DECIMAL,
+  selected_services TEXT[],
   
   -- Constraints
   CONSTRAINT valid_matricule_when_morale CHECK (
@@ -53,6 +70,8 @@ CREATE TABLE IF NOT EXISTS devis_requests (
 CREATE INDEX IF NOT EXISTS idx_devis_requests_created_at ON devis_requests(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_email ON devis_requests(email);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_type_service ON devis_requests(type_service);
+CREATE INDEX IF NOT EXISTS idx_devis_requests_lead_status ON devis_requests(lead_status);
+CREATE INDEX IF NOT EXISTS idx_devis_requests_session_source ON devis_requests(session_source);
 
 -- Enable Row Level Security
 ALTER TABLE devis_requests ENABLE ROW LEVEL SECURITY;

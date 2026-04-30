@@ -1,3 +1,5 @@
+import { getAnalyticsContext, getQuoteCalculatorContext } from '@/utils/analyticsGateway';
+
 /**
  * Submit a devis request to Supabase
  * @param {Object} formData - The form data from the devis form
@@ -10,9 +12,19 @@ export async function submitDevisRequest(formData) {
     if (!validation.isValid) {
       return {
         success: false,
-        error: validation.error
+        error: validation.error,
+        status: 'validation_failed',
+        failureType: validation.failureType || 'validation_failed'
       };
     }
+
+    const quoteCalculatorContext = getQuoteCalculatorContext() || {};
+    const analyticsContext = getAnalyticsContext({
+      lead_type: 'quote_request',
+      business_line: 'b2c',
+      calculator_estimate: quoteCalculatorContext.calculator_estimate,
+      selected_services: quoteCalculatorContext.selected_services
+    });
 
     // Submit to our comprehensive API route that handles both DB save and emails
     const response = await fetch('/api/devis', {
@@ -20,10 +32,12 @@ export async function submitDevisRequest(formData) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ formData }),
+      body: JSON.stringify({ formData, analyticsContext }),
     }).catch(error => {
       console.error('Network error:', error);
-      throw new Error('Erreur de connexion. Vérifiez votre connexion internet.');
+      const networkError = new Error('Erreur de connexion. Vérifiez votre connexion internet.');
+      networkError.failureType = 'network_error';
+      throw networkError;
     });
 
     if (!response) {
@@ -35,7 +49,9 @@ export async function submitDevisRequest(formData) {
     if (!response.ok) {
       return {
         success: false,
-        error: result.message || 'Une erreur est survenue lors de l\'envoi de votre demande.'
+        error: result.message || 'Une erreur est survenue lors de l\'envoi de votre demande.',
+        status: result.status || 'submit_failed',
+        failureType: result.status || 'submit_failed'
       };
     }
 
@@ -54,7 +70,9 @@ export async function submitDevisRequest(formData) {
     console.error('Submission error:', error);
     return {
       success: false,
-      error: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'
+      error: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.',
+      status: error.failureType || 'network_error',
+      failureType: error.failureType || 'network_error'
     };
   }
 }
@@ -72,7 +90,8 @@ function validateFormData(formData) {
     if (!formData[field] || (typeof formData[field] === 'string' && formData[field].trim() === '')) {
       return {
         isValid: false,
-        error: `Le champ ${field} est obligatoire.`
+        error: `Le champ ${field} est obligatoire.`,
+        failureType: 'required_fields_missing'
       };
     }
   }
@@ -82,7 +101,8 @@ function validateFormData(formData) {
     if (!formData.matriculeFiscale || formData.matriculeFiscale.trim() === '') {
       return {
         isValid: false,
-        error: 'La matricule fiscale est obligatoire pour une personne morale.'
+        error: 'La matricule fiscale est obligatoire pour une personne morale.',
+        failureType: 'missing_tax_id'
       };
     }
     
@@ -91,7 +111,8 @@ function validateFormData(formData) {
     if (!matriculeRegex.test(formData.matriculeFiscale.replace(/\s/g, ''))) {
       return {
         isValid: false,
-        error: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres).'
+        error: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres).',
+        failureType: 'invalid_tax_id'
       };
     }
   }
@@ -101,7 +122,8 @@ function validateFormData(formData) {
     if (!formData.nombrePlaces || formData.nombrePlaces <= 0) {
       return {
         isValid: false,
-        error: 'Le nombre de places est obligatoire pour le nettoyage de salon.'
+        error: 'Le nombre de places est obligatoire pour le nettoyage de salon.',
+        failureType: 'missing_quantity'
       };
     }
   }
@@ -111,7 +133,8 @@ function validateFormData(formData) {
     if (!formData.surfaceService || formData.surfaceService <= 0) {
       return {
         isValid: false,
-        error: `La surface à traiter est obligatoire pour le service ${formData.typeService}.`
+        error: `La surface à traiter est obligatoire pour le service ${formData.typeService}.`,
+        failureType: 'missing_surface'
       };
     }
   }
@@ -121,7 +144,8 @@ function validateFormData(formData) {
   if (!emailRegex.test(formData.email)) {
     return {
       isValid: false,
-      error: 'Veuillez saisir une adresse email valide.'
+      error: 'Veuillez saisir une adresse email valide.',
+      failureType: 'invalid_email'
     };
   }
 
@@ -130,7 +154,8 @@ function validateFormData(formData) {
   if (!phoneRegex.test(formData.telephone)) {
     return {
       isValid: false,
-      error: 'Veuillez saisir un numéro de téléphone valide.'
+      error: 'Veuillez saisir un numéro de téléphone valide.',
+      failureType: 'invalid_phone'
     };
   }
 
@@ -138,7 +163,8 @@ function validateFormData(formData) {
   if (!formData.conditions) {
     return {
       isValid: false,
-      error: 'Vous devez accepter les conditions générales.'
+      error: 'Vous devez accepter les conditions générales.',
+      failureType: 'terms_not_accepted'
     };
   }
 

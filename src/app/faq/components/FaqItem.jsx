@@ -2,6 +2,7 @@
 import { memo, useRef, useState, useEffect } from 'react'
 import { LineMdPlus } from '@/utils/components/icons'
 import styles from '../page.module.css'
+import { trackFAQInteraction } from '@/utils/analytics';
 
 const FaqItem = memo(({ faq, index, isActive, onToggle }) => {
     const contentRef = useRef(null);
@@ -14,10 +15,21 @@ const FaqItem = memo(({ faq, index, isActive, onToggle }) => {
         }
     }, [isActive]);
 
+    const handleToggle = () => {
+        if (!isActive) {
+            trackFAQInteraction(faq.question, null, {
+                faq_index: index,
+                faq_page: typeof window !== 'undefined' ? window.location.pathname : ''
+            });
+        }
+
+        onToggle(index);
+    };
+
     return (
         <div className={styles.faqItem}>
             <div
-                onClick={() => onToggle(index)}
+                onClick={handleToggle}
                 className={`${styles.faqHeader} ${isActive ? styles.faqHeaderActive : ''}`}
             >
                 <span className={`${styles.question} ${isActive ? styles.activeText : ''}`}>

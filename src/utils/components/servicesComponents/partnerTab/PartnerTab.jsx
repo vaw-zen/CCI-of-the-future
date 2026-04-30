@@ -30,32 +30,38 @@ export default function PartnerTab({ tabData }) {
       />
       
       <div className={styles.tabContent}>
-        {tabData.map((tab,i) => (
-          activeTab === tab.id && (
-            <div 
-              key={tab.id} 
-              className={`${styles.tabPanel} ${i % 2 === 1 ? '' :styles.evenPanel}`}
-            >
-              <div className={styles.tabDesc}>
-                <h2 className={styles.tabTitle}>{tab.title}</h2>
-                <div className={styles.tabText}>
-                  <p>{tab.content}</p>
+        {tabData.map((tab, i) => {
+          const imageSrc = typeof tab.image === 'string' ? tab.image : tab.image?.src || tabImages[tab.id]
+          const imageAlt = typeof tab.image === 'object' ? (tab.image.alt || tab.image.title || tab.title) : tab.title
+          const imageTitle = typeof tab.image === 'object' ? (tab.image.title || tab.title) : tab.title
+
+          return (
+            activeTab === tab.id && (
+              <div
+                key={tab.id}
+                className={`${styles.tabPanel} ${i % 2 === 1 ? '' : styles.evenPanel}`}
+              >
+                <div className={styles.tabDesc}>
+                  <h2 className={styles.tabTitle}>{tab.title}</h2>
+                  <div className={styles.tabText}>
+                    <p>{tab.content}</p>
+                  </div>
+                </div>
+                <div className={styles.tabImage}>
+                  {imageSrc && (
+                    <ResponsiveImage
+                      src={imageSrc}
+                      alt={imageAlt}
+                      title={imageTitle}
+                      sizes={['19.17vw', '100vw', '100vw']}
+                      className={styles.tabImageMedia}
+                    />
+                  )}
                 </div>
               </div>
-              <div className={styles.tabImage}>
-                {tabImages[tab.id] && (
-                  <ResponsiveImage
-                    src={tabImages[tab.id]}
-                    alt={tab.title}
-                    title={tab.title}
-                    sizes={['19.17vw', '100vw', '100vw']}
-                    className={styles.tabImageMedia}
-                  />
-                )}
-              </div>
-            </div>
+            )
           )
-        ))}
+        })}
       </div>
     </div>
   )

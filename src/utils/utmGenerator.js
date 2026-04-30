@@ -3,6 +3,8 @@
  * Ensures consistent UTM tracking across all marketing channels
  */
 
+import { pushAnalyticsEvent } from './analyticsGateway';
+
 /**
  * Generate a URL with UTM parameters
  * @param {string} baseUrl - The base URL (e.g., 'https://cciservices.online/services')
@@ -211,16 +213,14 @@ export function storeUTMParameters() {
     localStorage.setItem('utm_history', JSON.stringify(historicalUTM));
     
     // Send to analytics
-    if (window.gtag) {
-      window.gtag('event', 'utm_captured', {
-        event_category: 'attribution',
-        utm_source: utmData.source,
-        utm_medium: utmData.medium,
-        utm_campaign: utmData.campaign,
-        utm_content: utmData.content || 'none',
-        utm_term: utmData.term || 'none'
-      });
-    }
+    pushAnalyticsEvent('utm_captured', {
+      event_category: 'attribution',
+      utm_source: utmData.source,
+      utm_medium: utmData.medium,
+      utm_campaign: utmData.campaign,
+      utm_content: utmData.content || 'none',
+      utm_term: utmData.term || 'none'
+    });
   }
 }
 

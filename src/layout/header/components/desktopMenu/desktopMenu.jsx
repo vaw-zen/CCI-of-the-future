@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './desktopMenu.module.css';
 import { EpCloseBold, LineMdPhoneTwotone, SiMailDuotone, UilArrowRight } from '@/utils/components/icons';
 import Link from 'next/link';
@@ -7,6 +7,12 @@ import contact from '@/app/contact/data.json';
 import ResponsiveImage from '@/utils/components/Image/Image';
 import {AnalyticsLink } from '@/utils/components/analytics/AnalyticsComponents';
 import { useEmailClick } from '@/hooks/useEmailClick';
+import { getAnalyticsContext } from '@/utils/analyticsGateway';
+import {
+    trackNewsletterSignupFailed,
+    trackNewsletterSignupStarted,
+    trackNewsletterSignupSubmitted
+} from '@/utils/analytics';
 
 export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMenuOpen }) {
     const mail = `mailto:${contact.mail.link}?subject=${encodeURIComponent(contact.mail.subject)}&body=${encodeURIComponent(contact.mail.body)}`;
@@ -29,6 +35,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState('');
     const [submitStatus, setSubmitStatus] = useState(''); // 'success', 'error', ''
+    const newsletterStartedRef = useRef(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -38,18 +45,30 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
         setCheckboxChecked(e.target.checked);
     };
 
+    const markNewsletterStarted = () => {
+        if (newsletterStartedRef.current) {
+            return;
+        }
+
+        newsletterStartedRef.current = true;
+        trackNewsletterSignupStarted('desktop_menu');
+    };
+
     const handleNewsletterSubmit = async (e) => {
         e.preventDefault();
+        markNewsletterStarted();
         
         if (!email.trim()) {
             setSubmitMessage('Veuillez saisir votre adresse email.');
             setSubmitStatus('error');
+            trackNewsletterSignupFailed('desktop_menu', 'missing_email');
             return;
         }
 
         if (!checkboxChecked) {
             setSubmitMessage('Vous devez accepter la politique de confidentialité.');
             setSubmitStatus('error');
+            trackNewsletterSignupFailed('desktop_menu', 'privacy_required');
             return;
         }
 
@@ -58,6 +77,7 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
         setSubmitStatus('');
 
         try {
+            const analyticsContext = getAnalyticsContext({ placement: 'desktop_menu' });
             const response = await fetch('/api/newsletter', {
                 method: 'POST',
                 headers: {
@@ -67,22 +87,28 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
                     email: email.trim(),
                     acceptedPrivacy: checkboxChecked,
                     website: website,
+                    source: analyticsContext.session_source || 'direct',
+                    placement: 'desktop_menu',
+                    analyticsContext,
                 }),
             });
 
             const data = await response.json();
 
             if (response.ok && data.status === 'success') {
+                trackNewsletterSignupSubmitted('desktop_menu');
                 setSubmitMessage('Vérifiez votre boîte mail pour confirmer votre inscription.');
                 setSubmitStatus('success');
                 setEmail('');
                 setWebsite('');
                 setCheckboxChecked(false);
             } else {
+                trackNewsletterSignupFailed('desktop_menu', data.status || 'unknown_error');
                 setSubmitMessage(data.message || 'Erreur lors de l\'inscription.');
                 setSubmitStatus('error');
             }
         } catch (error) {
+            trackNewsletterSignupFailed('desktop_menu', 'network_error');
             setSubmitMessage('Erreur de connexion. Veuillez réessayer.');
             setSubmitStatus('error');
         } finally {
@@ -151,7 +177,11 @@ export default function DesktopMenu({ desktopMenuStyles, handleMenuButton, isMen
                                         placeholder='Adresse Email' 
                                         className={styles.emailInput}
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onFocus={markNewsletterStarted}
+                                        onChange={(e) => {
+                                            markNewsletterStarted();
+                                            setEmail(e.target.value);
+                                        }}
                                         disabled={isSubmitting}
                                         required
                                     />

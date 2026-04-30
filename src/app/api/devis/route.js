@@ -1,7 +1,35 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/libs/supabase';
+import {
+  buildAttributionColumns,
+  buildLeadMeasurementParams,
+  extractAnalyticsContext,
+  sendLifecycleMeasurementEvent
+} from '@/libs/analyticsLifecycle';
+import { LEAD_STATUSES } from '@/utils/leadLifecycle';
+
+async function sendDevisFailureMeasurement(analyticsContext, failureType, serviceType = '') {
+  return sendLifecycleMeasurementEvent({
+    clientId: analyticsContext.ga_client_id,
+    eventName: 'form_submit_failed',
+    eventParams: {
+      form_name: 'devis_request',
+      failure_type: failureType,
+      lead_type: 'quote_request',
+      business_line: 'b2c',
+      service_type: serviceType || undefined,
+      session_source: analyticsContext.session_source,
+      session_medium: analyticsContext.session_medium,
+      session_campaign: analyticsContext.session_campaign,
+      landing_page: analyticsContext.landing_page
+    }
+  });
+}
 
 export async function POST(request) {
+  let analyticsContext = {};
+  let requestedServiceType = '';
+
   try {
     let supabase;
     try {
@@ -14,7 +42,9 @@ export async function POST(request) {
     }
 
     const body = await request.json().catch(() => ({}));
+    analyticsContext = extractAnalyticsContext(body?.analyticsContext || {});
     const formData = body?.formData || body || {};
+    const attributionColumns = buildAttributionColumns(analyticsContext);
 
     // Honeypot check — bots fill this hidden field, real users never see it
     if (formData.honeypotWebsite) {
@@ -31,9 +61,11 @@ export async function POST(request) {
       nom, prenom, email, telephone, adresse, ville,
       typeService, newsletter, conditions
     } = formData;
+    requestedServiceType = typeService || '';
 
     // Basic validation
     if (!nom || !prenom || !email || !telephone || !adresse || !ville || !typeService) {
+      await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
       return NextResponse.json({ 
         status: 'validation_failed', 
         message: 'Tous les champs obligatoires doivent être remplis.' 
@@ -42,6 +74,7 @@ export async function POST(request) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
       return NextResponse.json({ 
         status: 'validation_failed', 
         message: 'Veuillez fournir une adresse email valide.' 
@@ -49,6 +82,7 @@ export async function POST(request) {
     }
 
     if (!conditions) {
+      await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
       return NextResponse.json({ 
         status: 'validation_failed', 
         message: 'Vous devez accepter les conditions générales.' 
@@ -84,7 +118,12 @@ export async function POST(request) {
       // Additional Information
       message: formData.message || null,
       newsletter: newsletter || false,
-      conditions: conditions
+      conditions: conditions,
+
+      // Lifecycle and attribution
+      lead_status: LEAD_STATUSES.SUBMITTED,
+      submitted_at: new Date().toISOString(),
+      ...attributionColumns
     };
 
     // Save to Supabase first
@@ -96,14 +135,26 @@ export async function POST(request) {
 
     if (supabaseError) {
       console.error('Supabase error:', supabaseError);
+      await sendDevisFailureMeasurement(analyticsContext, 'database_error', typeService);
       return NextResponse.json({ 
         status: 'database_error', 
         message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.' 
       }, { status: 500 });
     }
 
+    await sendLifecycleMeasurementEvent({
+      clientId: analyticsContext.ga_client_id,
+      eventName: 'lead_submitted',
+      eventParams: buildLeadMeasurementParams({
+        leadRecord: supabaseData,
+        leadType: 'devis',
+        businessLine: 'b2c'
+      })
+    });
+
     // Check Gmail credentials
     if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
+      await sendDevisFailureMeasurement(analyticsContext, 'config_error', typeService);
       return NextResponse.json({ 
         status: 'config_error', 
         message: 'Service email non configuré.' 
@@ -326,6 +377,7 @@ export async function POST(request) {
             acceptedPrivacy: true,
             website: '',
             source: 'devis_form',
+            analyticsContext,
           }),
         });
         
@@ -352,6 +404,7 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('Devis submission error:', error);
+    await sendDevisFailureMeasurement(analyticsContext, 'error', requestedServiceType);
     return NextResponse.json({ 
       status: 'error', 
       message: 'Erreur lors de l\'envoi de votre demande. Veuillez réessayer.', 

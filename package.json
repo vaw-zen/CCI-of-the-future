@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "analytics:validate": "node scripts/validate-analytics-events.mjs",
     "setup-supabase": "node setup-supabase.js",
     "gsc:prepare-indexing": "node scripts/gsc/prepare-indexing-batch.cjs",
     "gsc:submit-sitemap": "node scripts/gsc/submit-sitemap.cjs",

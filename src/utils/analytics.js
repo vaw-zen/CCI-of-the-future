@@ -1,17 +1,15 @@
-/**
- * Enhanced Google Analytics utilities for CCI Services
- * Business-specific tracking functions for cleaning services
- */
-
-import { trackLead, trackViewContent, trackInitiateCheckout, trackCustomEvent } from './facebook-pixel-helper';
+import {
+  clearQuoteCalculatorContext,
+  getAnalyticsContext,
+  getQuoteCalculatorContext,
+  pushAnalyticsEvent,
+  setQuoteCalculatorContext
+} from './analyticsGateway';
 import { getStoredUTMParameters } from './utmGenerator';
 
-const SESSION_ATTRIBUTION_KEY = 'cci_session_attribution';
-
-// Service types mapping for consistent tracking
 export const SERVICE_TYPES = {
   MARBRE: 'marbre',
-  TAPIS: 'tapis', 
+  TAPIS: 'tapis',
   MOQUETTE: 'moquette',
   SALON: 'salon',
   TAPISSERIE: 'tapisserie',
@@ -20,7 +18,6 @@ export const SERVICE_TYPES = {
   CONVENTION: 'convention'
 };
 
-// Article categories for blog tracking
 export const ARTICLE_CATEGORIES = {
   TAPIS: 'tapis',
   MARBRE: 'marbre',
@@ -30,198 +27,107 @@ export const ARTICLE_CATEGORIES = {
   ALL: 'all'
 };
 
-const removeEmptyValues = (payload = {}) => Object.fromEntries(
-  Object.entries(payload).filter(([, value]) => value !== undefined && value !== null && value !== '')
-);
+function emitEvent(name, payload = {}) {
+  return pushAnalyticsEvent(name, payload);
+}
 
-const getReferrerHost = (referrer = '') => {
-  if (!referrer) {
-    return '';
-  }
+function removeEmptyValues(payload = {}) {
+  return Object.fromEntries(
+    Object.entries(payload).filter(([, value]) => value !== undefined && value !== null && value !== '')
+  );
+}
 
-  try {
-    return new URL(referrer).hostname.replace(/^www\./, '');
-  } catch (error) {
-    return '';
-  }
-};
-
-const getSessionAttribution = () => {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  const stored = window.sessionStorage.getItem(SESSION_ATTRIBUTION_KEY);
-  if (!stored) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(stored);
-  } catch (error) {
-    window.sessionStorage.removeItem(SESSION_ATTRIBUTION_KEY);
-    return null;
-  }
-};
-
-const getLeadContext = (additionalData = {}) => {
-  if (typeof window === 'undefined') {
-    return additionalData;
-  }
-
-  const storedUtm = getStoredUTMParameters() || {};
-  const sessionAttribution = getSessionAttribution() || {};
-  const searchParams = new URLSearchParams(window.location.search);
-
-  return removeEmptyValues({
-    page_location: window.location.href,
-    page_path: window.location.pathname,
-    page_title: document.title,
-    landing_page: sessionAttribution.landingPage || window.location.pathname,
-    landing_location: sessionAttribution.landingLocation,
-    session_source: searchParams.get('utm_source') || storedUtm.source || sessionAttribution.source,
-    session_medium: searchParams.get('utm_medium') || storedUtm.medium || sessionAttribution.medium,
-    session_campaign: searchParams.get('utm_campaign') || storedUtm.campaign || sessionAttribution.campaign,
-    referrer_host: sessionAttribution.referrerHost || getReferrerHost(document.referrer),
-    ...additionalData
-  });
-};
-
-// Track service-specific interactions
-export const trackServiceInteraction = (serviceType, action, additionalData = {}) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', action, {
-      event_category: 'service_interaction',
-      service_type: serviceType,
-      page_location: window.location.href,
-      timestamp: new Date().toISOString(),
-      ...additionalData
-    });
-  }
-  // Forward to Facebook Pixel when available
-  try {
-    if (typeof window !== 'undefined' && typeof window.fbq !== 'undefined') {
-      const payload = { service_type: serviceType, page_location: typeof window !== 'undefined' ? window.location.href : undefined, ...additionalData };
-      // Use a custom event name for service interactions
-      window.fbq('trackCustom', action, payload);
-    }
-  } catch (e) {
-    // swallow
-  }
-};
-
-// Track quote form progression
-export const trackQuoteProgress = (step, serviceType, formData = {}) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'form_progress', {
-      event_category: 'conversion_funnel',
-      form_step: step,
-      service_type: serviceType,
-      form_data: JSON.stringify(formData),
-      progress_percentage: getProgressPercentage(step)
-    });
-  }
-};
-
-// Track phone contact clicks with Google Ads conversion
-export const trackPhoneReveal = (location = 'header', additionalData = {}) => {
-  const payload = getLeadContext(additionalData);
-
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'phone_click', {
-      event_category: 'lead_generation',
-      event_label: location,
-      value: 5,
-      ...payload
-    });
-    
-    // Trigger Google Ads conversion for phone clicks
-    if (typeof window.gtag_report_conversion === 'function') {
-      window.gtag_report_conversion();
-    }
-  }
-  
-  // Enhanced Facebook Pixel tracking
-  trackLead('phone', location, { action: 'phone_click', ...payload });
-};
-
-// Track email link clicks with Google Ads conversion
-export const trackEmailClick = (location = 'general', emailAddress = '', additionalData = {}) => {
-  const payload = getLeadContext(additionalData);
-
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'email_click', {
-      event_category: 'lead_generation',
-      event_label: location,
-      value: 5, // Assign value to email clicks
-      ...payload
-    });
-    
-    // Trigger Google Ads conversion for email clicks
-    if (typeof window.gtag_report_conversion === 'function') {
-      window.gtag_report_conversion();
-    }
-  }
-  
-  // Enhanced Facebook Pixel tracking
-  trackLead('email', location, { action: 'email_click', ...payload });
-};
-
-// Track WhatsApp link clicks with Google Ads conversion
-export const trackWhatsAppClick = (location = 'general', phoneNumber = '', additionalData = {}) => {
-  const payload = getLeadContext(additionalData);
-
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'whatsapp_click', {
-      event_category: 'lead_generation',
-      event_label: location,
-      value: 5, // Assign value to WhatsApp clicks
-      ...payload
-    });
-    
-    // Trigger Google Ads conversion for WhatsApp clicks
-    if (typeof window.gtag_report_conversion === 'function') {
-      window.gtag_report_conversion();
-    }
-  }
-  
-  // Enhanced Facebook Pixel tracking
-  trackLead('whatsapp', location, { action: 'whatsapp_click', ...payload });
-};
+const getLeadContext = (additionalData = {}) => removeEmptyValues(getAnalyticsContext(additionalData));
 
 const getContactLinkDetails = (href = '') => {
-  if (!href) return null;
+  if (!href) {
+    return null;
+  }
 
   if (href.startsWith('mailto:')) {
-    const emailMatch = href.match(/mailto:([^?]+)/i);
     return {
       method: 'email',
-      value: emailMatch ? emailMatch[1] : ''
+      value: (href.match(/mailto:([^?]+)/i) || [])[1] || ''
     };
   }
 
   if (href.startsWith('tel:')) {
-    const phoneValue = href.replace(/^tel:/i, '').trim();
     return {
       method: 'phone',
-      value: phoneValue
+      value: href.replace(/^tel:/i, '').trim()
     };
   }
 
   if (href.includes('wa.me') || href.includes('api.whatsapp.com') || href.includes('whatsapp')) {
-    const phoneMatch = href.match(/(?:wa\.me\/|phone=)(\d+)/i);
     return {
       method: 'whatsapp',
-      value: phoneMatch ? phoneMatch[1] : ''
+      value: (href.match(/(?:wa\.me\/|phone=)(\d+)/i) || [])[1] || ''
     };
   }
 
   return null;
 };
 
+const getProgressPercentage = (step) => {
+  const stepMap = {
+    start: 0,
+    service_selection: 25,
+    contact_info: 50,
+    details: 75,
+    submit: 100
+  };
+
+  return stepMap[step] || 0;
+};
+
+export const trackServiceInteraction = (serviceType, action, additionalData = {}) => {
+  emitEvent('service_interaction', {
+    event_category: 'service_interaction',
+    service_type: serviceType,
+    action_name: action,
+    ...getAnalyticsContext(additionalData)
+  });
+};
+
+export const trackQuoteProgress = (step, serviceType, formData = {}) => {
+  emitEvent('form_progress', {
+    event_category: 'conversion_funnel',
+    form_step: step,
+    service_type: serviceType,
+    progress_percentage: getProgressPercentage(step),
+    ...formData
+  });
+};
+
+export const trackPhoneReveal = (location = 'header', additionalData = {}) => {
+  emitEvent('phone_click', {
+    event_category: 'lead_generation',
+    event_label: location,
+    value: 5,
+    ...getLeadContext(additionalData)
+  });
+};
+
+export const trackEmailClick = (location = 'general', emailAddress = '', additionalData = {}) => {
+  emitEvent('email_click', {
+    event_category: 'lead_generation',
+    event_label: location,
+    value: 5,
+    ...getLeadContext(additionalData)
+  });
+};
+
+export const trackWhatsAppClick = (location = 'general', phoneNumber = '', additionalData = {}) => {
+  emitEvent('whatsapp_click', {
+    event_category: 'lead_generation',
+    event_label: location,
+    value: 5,
+    ...getLeadContext(additionalData)
+  });
+};
+
 export const trackContactLinkClick = (href, location = 'contact_link', additionalData = {}) => {
   const contactDetails = getContactLinkDetails(href);
-
   if (!contactDetails) {
     return false;
   }
@@ -229,7 +135,6 @@ export const trackContactLinkClick = (href, location = 'contact_link', additiona
   const payload = {
     contact_method: contactDetails.method,
     link_destination: href,
-    page_location: typeof window !== 'undefined' ? window.location.href : '',
     ...additionalData
   };
 
@@ -244,242 +149,239 @@ export const trackContactLinkClick = (href, location = 'contact_link', additiona
   return true;
 };
 
-// ============================================================================
-// VISIBILITY & REACH TRACKING
-// ============================================================================
-
-// Track when key sections become visible (scroll depth/viewport entry)
 export const trackSectionView = (sectionName, sectionType = 'content', pageContext = '') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'view_section', {
-      event_category: 'visibility',
-      section_name: sectionName,
-      section_type: sectionType,
-      page_context: pageContext,
-      scroll_depth: Math.round((window.scrollY / document.documentElement.scrollHeight) * 100)
-    });
-  }
+  emitEvent('view_section', {
+    event_category: 'visibility',
+    section_name: sectionName,
+    section_type: sectionType,
+    page_context: pageContext,
+    scroll_depth: typeof window !== 'undefined'
+      ? Math.round((window.scrollY / document.documentElement.scrollHeight) * 100)
+      : 0
+  });
 };
 
-// Track scroll depth milestones
 export const trackScrollDepth = (percentage, pageName = '') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'scroll_depth', {
-      event_category: 'engagement',
-      event_label: `${percentage}%`,
-      page_name: pageName,
-      scroll_percentage: percentage
-    });
-  }
+  emitEvent('scroll_depth', {
+    event_category: 'engagement',
+    event_label: `${percentage}%`,
+    page_name: pageName,
+    scroll_percentage: percentage
+  });
 };
 
-// Track CTA button visibility and impressions
 export const trackCTAImpression = (ctaText, ctaLocation, ctaType = 'primary') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'view_promotion', {
-      event_category: 'visibility',
-      promotion_name: ctaText,
-      creative_slot: ctaLocation,
-      promotion_type: ctaType
-    });
-  }
+  emitEvent('view_promotion', {
+    event_category: 'visibility',
+    promotion_name: ctaText,
+    creative_slot: ctaLocation,
+    promotion_type: ctaType
+  });
 };
 
-// Track CTA button clicks
 export const trackCTAClick = (ctaText, ctaLocation, ctaDestination = '', value = 0) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'select_promotion', {
-      event_category: 'engagement',
-      promotion_name: ctaText,
-      creative_slot: ctaLocation,
-      cta_destination: ctaDestination,
-      value: value
-    });
-  }
+  emitEvent('select_promotion', {
+    event_category: 'engagement',
+    promotion_name: ctaText,
+    creative_slot: ctaLocation,
+    cta_destination: ctaDestination,
+    value
+  });
 };
 
-// ============================================================================
-// ENGAGEMENT TRACKING
-// ============================================================================
-
-// Track hero section interactions
 export const trackHeroInteraction = (actionType, actionValue = '') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'hero_interaction', {
-      event_category: 'engagement',
-      interaction_type: actionType,
-      interaction_value: actionValue,
-      page_location: window.location.pathname
-    });
-  }
+  emitEvent('hero_interaction', {
+    event_category: 'engagement',
+    interaction_type: actionType,
+    interaction_value: actionValue,
+    ...getAnalyticsContext()
+  });
 };
 
-// Track service card clicks/views
 export const trackServiceCardClick = (serviceName, serviceUrl, cardPosition = 0) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'select_content', {
-      event_category: 'engagement',
-      content_type: 'service_card',
-      item_id: serviceName.toLowerCase().replace(/\s+/g, '_'),
-      item_name: serviceName,
-      item_list_name: 'services_grid',
-      index: cardPosition
-    });
-  }
-  
-  // Track service page view in Facebook Pixel
-  trackViewContent('service', serviceName, serviceName.toLowerCase().replace(/\s+/g, '_'));
+  emitEvent('select_content', {
+    event_category: 'engagement',
+    content_type: 'service_card',
+    item_id: serviceName.toLowerCase().replace(/\s+/g, '_'),
+    item_name: serviceName,
+    item_list_name: 'services_grid',
+    index: cardPosition
+  });
 };
 
-// Track gallery interactions
 export const trackGalleryInteraction = (galleryType, imageIndex, action = 'view') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'gallery_interaction', {
-      event_category: 'engagement',
-      gallery_type: galleryType,
-      image_index: imageIndex,
-      action_type: action
-    });
-  }
+  emitEvent('gallery_interaction', {
+    event_category: 'engagement',
+    gallery_type: galleryType,
+    image_index: imageIndex,
+    action_type: action
+  });
 };
 
-// Track video interactions (play, pause, complete)
 export const trackVideoEngagement = (videoTitle, action, progress = 0) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', `video_${action}`, {
-      event_category: 'engagement',
-      video_title: videoTitle,
-      video_progress: progress,
-      page_location: window.location.pathname
-    });
-  }
+  emitEvent('video_engagement', {
+    event_category: 'engagement',
+    video_title: videoTitle,
+    action_name: action,
+    video_progress: progress,
+    ...getAnalyticsContext()
+  });
 };
 
-// Track time on page milestones
 export const trackTimeOnPage = (duration, pageName = '') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'timing_complete', {
-      event_category: 'engagement',
-      name: 'time_on_page',
-      value: duration,
-      event_label: pageName
-    });
-  }
+  emitEvent('timing_complete', {
+    event_category: 'engagement',
+    name: 'time_on_page',
+    value: duration,
+    event_label: pageName
+  });
 };
 
-// ============================================================================
-// CONVERSION FUNNEL TRACKING
-// ============================================================================
-
-// Track funnel step entry
 export const trackFunnelStep = (funnelName, stepName, stepNumber, stepData = {}) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'begin_checkout', {
-      event_category: 'conversion_funnel',
-      funnel_name: funnelName,
-      step_name: stepName,
-      step_number: stepNumber,
-      ...stepData
-    });
-  }
+  emitEvent('begin_checkout', {
+    event_category: 'conversion_funnel',
+    funnel_name: funnelName,
+    step_name: stepName,
+    step_number: stepNumber,
+    ...stepData
+  });
 };
 
-// Track funnel step completion
 export const trackFunnelComplete = (funnelName, stepName, stepNumber) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'checkout_progress', {
-      event_category: 'conversion_funnel',
-      funnel_name: funnelName,
-      step_name: stepName,
-      step_number: stepNumber
-    });
-  }
+  emitEvent('checkout_progress', {
+    event_category: 'conversion_funnel',
+    funnel_name: funnelName,
+    step_name: stepName,
+    step_number: stepNumber
+  });
 };
 
-// Track form field interactions
 export const trackFormFieldFocus = (formName, fieldName, fieldType = 'text') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'form_field_focus', {
-      event_category: 'form_interaction',
-      form_name: formName,
-      field_name: fieldName,
-      field_type: fieldType
-    });
-  }
+  emitEvent('form_field_focus', {
+    event_category: 'form_interaction',
+    form_name: formName,
+    field_name: fieldName,
+    field_type: fieldType
+  });
 };
 
-// Track form field completion
 export const trackFormFieldComplete = (formName, fieldName) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'form_field_complete', {
-      event_category: 'form_interaction',
-      form_name: formName,
-      field_name: fieldName
-    });
-  }
+  emitEvent('form_field_complete', {
+    event_category: 'form_interaction',
+    form_name: formName,
+    field_name: fieldName
+  });
 };
 
-// Track form abandonment
 export const trackFormAbandonment = (formName, lastCompletedField, completionPercentage) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'form_abandonment', {
-      event_category: 'conversion_funnel',
-      form_name: formName,
-      last_field: lastCompletedField,
-      completion_rate: completionPercentage
-    });
-  }
+  emitEvent('form_abandonment', {
+    event_category: 'conversion_funnel',
+    form_name: formName,
+    last_field: lastCompletedField,
+    completion_rate: completionPercentage
+  });
 };
 
-// Track devis/quote calculator interactions
+export const trackFormValidationFailed = (formName, fieldNames = [], failureType = 'client_validation', additionalData = {}) => {
+  emitEvent('form_validation_failed', {
+    event_category: 'form_interaction',
+    form_name: formName,
+    failure_type: failureType,
+    field_names: fieldNames,
+    ...getAnalyticsContext(additionalData)
+  });
+};
+
+export const trackFormSubmitFailed = (formName, failureType = 'unknown_error', additionalData = {}) => {
+  emitEvent('form_submit_failed', {
+    event_category: 'conversion',
+    form_name: formName,
+    failure_type: failureType,
+    ...getAnalyticsContext(additionalData)
+  });
+};
+
+export const trackNewsletterSignupStarted = (placement = 'unknown', additionalData = {}) => {
+  emitEvent('newsletter_signup_started', {
+    placement,
+    ...getAnalyticsContext(additionalData)
+  });
+};
+
+export const trackNewsletterSignupSubmitted = (placement = 'unknown', additionalData = {}) => {
+  emitEvent('newsletter_signup_submitted', {
+    placement,
+    ...getAnalyticsContext(additionalData)
+  });
+};
+
+export const trackNewsletterSignupFailed = (placement = 'unknown', failureType = 'unknown_error', additionalData = {}) => {
+  emitEvent('newsletter_signup_failed', {
+    placement,
+    failure_type: failureType,
+    ...getAnalyticsContext(additionalData)
+  });
+};
+
+export const trackQuoteCalculatorStarted = (serviceType = '', additionalData = {}) => {
+  emitEvent('quote_calculator_started', {
+    service_type: serviceType,
+    ...getAnalyticsContext(additionalData)
+  });
+};
+
 export const trackDevisCalculation = (serviceType, calculatedValue, optionsSelected = []) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'devis_calculated', {
-      event_category: 'conversion',
-      service_type: serviceType,
-      estimated_value: calculatedValue,
-      options: optionsSelected.join(','),
-      value: calculatedValue * 0.1 // Assign conversion value (10% of quote)
-    });
-  }
-};
+  const selectedServices = Array.isArray(optionsSelected) ? optionsSelected : [];
+  const normalizedValue = Number(calculatedValue) || 0;
 
-// Track devis submission
-export const trackDevisSubmission = (serviceType, estimatedValue, contactMethod = 'form') => {
-  const normalizedValue = Number(estimatedValue) || 0;
-  const payload = getLeadContext({
-    lead_type: 'quote_request',
-    business_line: 'b2c'
+  if (normalizedValue <= 0) {
+    clearQuoteCalculatorContext();
+    return;
+  }
+
+  setQuoteCalculatorContext({
+    calculator_estimate: Math.round(normalizedValue),
+    selected_services: selectedServices,
+    primary_service: serviceType || selectedServices[0] || ''
   });
 
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'generate_lead', {
-      event_category: 'conversion',
-      event_label: 'devis_submission',
-      service_type: serviceType,
-      estimated_value: normalizedValue,
-      contact_method: contactMethod,
-      value: normalizedValue > 0 ? normalizedValue * 0.2 : 1,
-      ...payload
-    });
+  emitEvent('quote_calculator_calculated', {
+    event_category: 'conversion',
+    service_type: serviceType,
+    estimated_value: normalizedValue,
+    selected_services: selectedServices,
+    value: normalizedValue * 0.1,
+    ...getAnalyticsContext()
+  });
+};
 
-    // Preserve the existing GA event used in reports while standardizing around generate_lead.
-    window.gtag('event', 'conversion_event_contact', {
-      event_category: 'Contact',
-      event_label: 'Devis Request',
-      service_type: serviceType,
-      contact_method: contactMethod,
-      value: 1,
-      ...payload
-    });
-  }
-  
-  // Enhanced Facebook Pixel tracking for quote submissions
-  trackInitiateCheckout(serviceType, normalizedValue);
-  trackLead('form', 'devis_submission', { 
-    service_type: serviceType, 
-    estimated_value: normalizedValue, 
+export const trackDevisSubmission = (serviceType, estimatedValue, contactMethod = 'form', additionalData = {}) => {
+  const normalizedValue = Number(estimatedValue) || 0;
+  const calculatorContext = getQuoteCalculatorContext() || {};
+  const payload = getLeadContext({
+    lead_type: 'quote_request',
+    business_line: 'b2c',
+    calculator_estimate: calculatorContext.calculator_estimate,
+    selected_services: calculatorContext.selected_services,
+    ...additionalData
+  });
+
+  emitEvent('generate_lead', {
+    event_category: 'conversion',
+    event_label: 'devis_submission',
+    service_type: serviceType,
+    estimated_value: normalizedValue,
     contact_method: contactMethod,
+    value: normalizedValue > 0 ? normalizedValue * 0.2 : 1,
+    ...payload
+  });
+
+  emitEvent('conversion_event_contact', {
+    event_category: 'contact',
+    event_label: 'devis_request',
+    service_type: serviceType,
+    contact_method: contactMethod,
+    value: 1,
     ...payload
   });
 };
@@ -506,461 +408,315 @@ export const trackConventionSubmission = ({
     surface_total: normalizedSurface || undefined
   });
 
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'generate_lead', {
-      event_category: 'conversion',
-      event_label: 'convention_submission',
-      service_type: SERVICE_TYPES.CONVENTION,
-      contact_method: 'form',
-      value: leadValue,
-      ...payload
-    });
-  }
-
-  trackLead('form', 'convention_submission', {
+  emitEvent('generate_lead', {
+    event_category: 'conversion',
+    event_label: 'convention_submission',
     service_type: SERVICE_TYPES.CONVENTION,
     contact_method: 'form',
+    value: leadValue,
     ...payload
   });
 };
 
-// ============================================================================
-// CONTENT ENGAGEMENT TRACKING
-// ============================================================================
-
-// Track blog article read progress
 export const trackArticleReadProgress = (articleTitle, progressPercentage) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'article_read_progress', {
-      event_category: 'content_engagement',
-      article_title: articleTitle,
-      read_progress: progressPercentage
-    });
-  }
+  emitEvent('article_read_progress', {
+    event_category: 'content_engagement',
+    article_title: articleTitle,
+    read_progress: progressPercentage
+  });
 };
 
-// Track blog article complete read
 export const trackArticleComplete = (articleTitle, timeSpent) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'article_complete', {
-      event_category: 'content_engagement',
-      article_title: articleTitle,
-      time_spent: timeSpent,
-      value: 2 // Assign value to complete article reads
-    });
-  }
+  emitEvent('article_complete', {
+    event_category: 'content_engagement',
+    article_title: articleTitle,
+    time_spent: timeSpent,
+    value: 2
+  });
 };
 
-// Track FAQ interaction
-export const trackFAQInteraction = (question, wasHelpful = null) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'faq_interaction', {
-      event_category: 'content_engagement',
-      question: question,
-      helpful: wasHelpful
-    });
-  }
+export const trackFAQInteraction = (question, wasHelpful = null, additionalData = {}) => {
+  emitEvent('faq_expanded', {
+    faq_question: question,
+    helpful: wasHelpful,
+    ...getAnalyticsContext(additionalData)
+  });
 };
 
-// ============================================================================
-// SEARCH & NAVIGATION TRACKING
-// ============================================================================
-
-// Track internal search
 export const trackInternalSearch = (searchTerm, resultsCount, searchLocation = '') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'search', {
-      search_term: searchTerm,
-      results_count: resultsCount,
-      search_location: searchLocation
-    });
-  }
+  emitEvent('search', {
+    search_term: searchTerm,
+    results_count: resultsCount,
+    search_location: searchLocation
+  });
 };
 
-// Track navigation clicks
 export const trackNavigationClick = (linkText, linkDestination, navLocation = 'header') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'navigation_click', {
-      event_category: 'navigation',
-      link_text: linkText,
-      link_destination: linkDestination,
-      nav_location: navLocation
-    });
-  }
+  emitEvent('navigation_click', {
+    event_category: 'navigation',
+    link_text: linkText,
+    link_destination: linkDestination,
+    nav_location: navLocation
+  });
 };
 
-// Track social media interactions
 export const trackSocialClick = (platform, action = 'click') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'social_interaction', {
-      event_category: 'social',
-      social_platform: platform,
-      social_action: action,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('social_interaction', {
+    event_category: 'social',
+    social_platform: platform,
+    social_action: action,
+    ...getAnalyticsContext()
+  });
 };
 
-// Track file downloads (PDFs, images, etc.)
 export const trackFileDownload = (fileName, fileType, fileSize = null) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'file_download', {
-      event_category: 'engagement',
-      file_name: fileName,
-      file_type: fileType,
-      file_size: fileSize,
-      download_url: window.location.href
-    });
-  }
+  emitEvent('file_download', {
+    event_category: 'engagement',
+    file_name: fileName,
+    file_type: fileType,
+    file_size: fileSize,
+    ...getAnalyticsContext()
+  });
 };
 
-// Track gallery image views
 export const trackGalleryView = (galleryType, imageIndex, totalImages) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'gallery_view', {
-      event_category: 'engagement',
-      gallery_type: galleryType,
-      image_index: imageIndex,
-      total_images: totalImages,
-      engagement_depth: Math.round((imageIndex / totalImages) * 100)
-    });
-  }
+  emitEvent('gallery_view', {
+    event_category: 'engagement',
+    gallery_type: galleryType,
+    image_index: imageIndex,
+    total_images: totalImages,
+    engagement_depth: Math.round((imageIndex / totalImages) * 100)
+  });
 };
 
-// Track video interactions
 export const trackVideoInteraction = (videoTitle, action, currentTime = 0) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', `video_${action}`, {
-      event_category: 'video',
-      video_title: videoTitle,
-      video_current_time: currentTime,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('video_engagement', {
+    event_category: 'video',
+    video_title: videoTitle,
+    action_name: action,
+    video_current_time: currentTime,
+    ...getAnalyticsContext()
+  });
 };
 
-// Track consultation bookings
 export const trackConsultationBooking = (serviceType, consultationType, timeSlot) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'book_consultation', {
-      event_category: 'conversion',
-      service_type: serviceType,
-      consultation_type: consultationType,
-      time_slot: timeSlot,
-      value: 50 // Assign high value to consultations
-    });
-  }
+  emitEvent('book_consultation', {
+    event_category: 'conversion',
+    service_type: serviceType,
+    consultation_type: consultationType,
+    time_slot: timeSlot,
+    value: 50
+  });
 };
 
-// Track error events
 export const trackError = (errorType, errorMessage, errorLocation) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'exception', {
-      description: `${errorType}: ${errorMessage}`,
-      fatal: false,
-      error_location: errorLocation
-    });
-  }
+  emitEvent('exception', {
+    description: `${errorType}: ${errorMessage}`,
+    fatal: false,
+    error_location: errorLocation
+  });
 };
 
-// Track performance metrics
 export const trackPerformance = (metricName, value, unit = 'ms') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'timing_complete', {
-      name: metricName,
-      value: value,
-      event_category: 'performance',
-      metric_unit: unit
-    });
-  }
+  emitEvent('timing_complete', {
+    name: metricName,
+    value,
+    event_category: 'performance',
+    metric_unit: unit
+  });
 };
 
-// Track user engagement milestones
 export const trackEngagementMilestone = (milestone, value) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'engagement_milestone', {
-      event_category: 'user_engagement',
-      milestone_type: milestone,
-      milestone_value: value,
-      session_duration: Date.now() - (window.sessionStartTime || Date.now())
-    });
-  }
+  emitEvent('engagement_milestone', {
+    event_category: 'user_engagement',
+    milestone_type: milestone,
+    milestone_value: value,
+    session_duration: typeof window !== 'undefined'
+      ? Date.now() - (window.sessionStartTime || Date.now())
+      : 0
+  });
 };
 
-// Enhanced ecommerce tracking for service packages
 export const trackServicePackageView = (packageName, packagePrice, packageServices = []) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'view_item', {
-      currency: 'TND',
-      value: packagePrice,
-      items: [{
-        item_id: packageName.toLowerCase().replace(/\s+/g, '_'),
-        item_name: packageName,
-        item_category: 'service_package',
-        price: packagePrice,
-        quantity: 1,
-        item_variant: packageServices.join(', ')
-      }]
-    });
-  }
+  emitEvent('view_item', {
+    currency: 'TND',
+    value: packagePrice,
+    items: [{
+      item_id: packageName.toLowerCase().replace(/\s+/g, '_'),
+      item_name: packageName,
+      item_category: 'service_package',
+      price: packagePrice,
+      quantity: 1,
+      item_variant: packageServices.join(', ')
+    }]
+  });
 };
 
-// Track service package selection/interest
 export const trackServicePackageInterest = (packageName, packagePrice, contactMethod) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'add_to_cart', {
-      currency: 'TND',
-      value: packagePrice,
-      items: [{
-        item_id: packageName.toLowerCase().replace(/\s+/g, '_'),
-        item_name: packageName,
-        item_category: 'service_package',
-        price: packagePrice,
-        quantity: 1
-      }],
-      contact_method: contactMethod
-    });
-  }
+  emitEvent('add_to_cart', {
+    currency: 'TND',
+    value: packagePrice,
+    items: [{
+      item_id: packageName.toLowerCase().replace(/\s+/g, '_'),
+      item_name: packageName,
+      item_category: 'service_package',
+      price: packagePrice,
+      quantity: 1
+    }],
+    contact_method: contactMethod
+  });
 };
 
-// Helper function to calculate form progress percentage
-const getProgressPercentage = (step) => {
-  const stepMap = {
-    'start': 0,
-    'service_selection': 25,
-    'contact_info': 50,
-    'details': 75,
-    'submit': 100
-  };
-  return stepMap[step] || 0;
-};
-
-// Initialize session tracking
 export const initializeAnalyticsSession = () => {
-  if (typeof window !== 'undefined') {
-    window.sessionStartTime = Date.now();
-    
-    // Track initial page load performance
-    if (window.performance && window.performance.timing) {
-      const loadTime = window.performance.timing.loadEventEnd - window.performance.timing.navigationStart;
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.sessionStartTime = Date.now();
+
+  if (window.performance?.timing) {
+    const loadTime = window.performance.timing.loadEventEnd - window.performance.timing.navigationStart;
+    if (loadTime > 0) {
       trackPerformance('page_load_time', loadTime);
     }
-
-    // Track device and browser info
-    window.gtag('event', 'session_start', {
-      event_category: 'engagement',
-      user_agent: navigator.userAgent,
-      screen_resolution: `${screen.width}x${screen.height}`,
-      viewport_size: `${window.innerWidth}x${window.innerHeight}`,
-      connection_type: navigator.connection ? navigator.connection.effectiveType : 'unknown'
-    });
   }
+
+  emitEvent('session_start', {
+    event_category: 'engagement',
+    screen_resolution: `${screen.width}x${screen.height}`,
+    viewport_size: `${window.innerWidth}x${window.innerHeight}`,
+    connection_type: navigator.connection ? navigator.connection.effectiveType : 'unknown'
+  });
 };
 
-// ============================================================================
-// CONSEILS/BLOG TRACKING FUNCTIONS
-// ============================================================================
-
-/**
- * Track conseils page view with filters applied
- */
 export const trackConseilsView = (activeFilter = 'all', articleCount = 0) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'view_conseils_page', {
-      event_category: 'content_visibility',
-      active_filter: activeFilter,
-      article_count: articleCount,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('view_conseils_page', {
+    event_category: 'content_visibility',
+    active_filter: activeFilter,
+    article_count: articleCount,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track article card click from conseils listing
- */
 export const trackArticleClick = (articleData = {}) => {
   const { title, slug, category, categoryLabel, featured = false, position = null } = articleData;
-  
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'select_article', {
-      event_category: 'content_engagement',
-      article_title: title,
-      article_slug: slug,
-      article_category: category,
-      category_label: categoryLabel,
-      is_featured: featured,
-      article_position: position,
-      page_location: window.location.href
-    });
-  }
-  
-  // Track article view in Facebook Pixel
-  trackViewContent('article', title, slug);
+
+  emitEvent('select_article', {
+    event_category: 'content_engagement',
+    article_title: title,
+    article_slug: slug,
+    article_category: category,
+    category_label: categoryLabel,
+    is_featured: featured,
+    article_position: position,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track category filter change
- */
 export const trackCategoryFilter = (category, categoryLabel, resultCount = 0) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'filter_category', {
-      event_category: 'content_discovery',
-      filter_category: category,
-      filter_label: categoryLabel,
-      result_count: resultCount,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('filter_category', {
+    event_category: 'content_discovery',
+    filter_category: category,
+    filter_label: categoryLabel,
+    result_count: resultCount,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track table of contents link click in article
- */
 export const trackTableOfContentsClick = (sectionId, sectionTitle, articleTitle) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'toc_navigation', {
-      event_category: 'content_navigation',
-      section_id: sectionId,
-      section_title: sectionTitle,
-      article_title: articleTitle,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('toc_navigation', {
+    event_category: 'content_navigation',
+    section_id: sectionId,
+    section_title: sectionTitle,
+    article_title: articleTitle,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track article navigation (prev/next)
- */
 export const trackArticleNavigation = (direction, targetArticle) => {
   const { title, slug, category } = targetArticle;
-  
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'navigate_article', {
-      event_category: 'content_navigation',
-      navigation_direction: direction, // 'previous' or 'next'
-      target_article_title: title,
-      target_article_slug: slug,
-      target_article_category: category,
-      page_location: window.location.href
-    });
-  }
+
+  emitEvent('navigate_article', {
+    event_category: 'content_navigation',
+    navigation_direction: direction,
+    target_article_title: title,
+    target_article_slug: slug,
+    target_article_category: category,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track breadcrumb navigation click
- */
 export const trackBreadcrumbClick = (linkText, linkHref, position) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'breadcrumb_click', {
-      event_category: 'content_navigation',
-      link_text: linkText,
-      link_href: linkHref,
-      breadcrumb_position: position,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('breadcrumb_click', {
+    event_category: 'content_navigation',
+    link_text: linkText,
+    link_href: linkHref,
+    breadcrumb_position: position,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track related service click from article page
- */
 export const trackRelatedServiceClick = (serviceTitle, serviceLink, articleTitle) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'select_related_service', {
-      event_category: 'conversion_opportunity',
-      service_title: serviceTitle,
-      service_link: serviceLink,
-      source_article: articleTitle,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('select_related_service', {
+    event_category: 'conversion_opportunity',
+    service_title: serviceTitle,
+    service_link: serviceLink,
+    source_article: articleTitle,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track "back to conseils" CTA click
- */
 export const trackBackToConseilsClick = (articleTitle, articleCategory) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'back_to_conseils', {
-      event_category: 'content_navigation',
-      source_article: articleTitle,
-      source_category: articleCategory,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('back_to_conseils', {
+    event_category: 'content_navigation',
+    source_article: articleTitle,
+    source_category: articleCategory,
+    ...getAnalyticsContext()
+  });
 };
 
-// ============================================================================
-// REELS/VIDEO TRACKING FUNCTIONS
-// ============================================================================
-
-/**
- * Track reel/video view
- */
 export const trackReelView = (reelId, reelTitle = '') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'view_reel', {
-      event_category: 'content_engagement',
-      reel_id: reelId,
-      reel_title: reelTitle,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('view_reel', {
+    event_category: 'content_engagement',
+    reel_id: reelId,
+    reel_title: reelTitle,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track video play interaction
- */
 export const trackVideoPlay = (reelId, reelTitle = '') => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'play_video', {
-      event_category: 'video_engagement',
-      reel_id: reelId,
-      reel_title: reelTitle,
-      page_location: window.location.href
-    });
-  }
+  emitEvent('reel_video_started', {
+    reel_id: reelId,
+    reel_title: reelTitle,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track video pause interaction
- */
 export const trackVideoPause = (reelId, currentTime = 0) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'pause_video', {
-      event_category: 'video_engagement',
-      reel_id: reelId,
-      video_time: Math.round(currentTime),
-      page_location: window.location.href
-    });
-  }
+  emitEvent('reel_video_paused', {
+    reel_id: reelId,
+    watch_time_seconds: Math.round(currentTime),
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track video completion
- */
 export const trackVideoComplete = (reelId, reelTitle = '', watchTime = 0) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'complete_video', {
-      event_category: 'video_engagement',
-      reel_id: reelId,
-      reel_title: reelTitle,
-      watch_time: Math.round(watchTime),
-      page_location: window.location.href
-    });
-  }
+  emitEvent('reel_video_completed', {
+    reel_id: reelId,
+    reel_title: reelTitle,
+    watch_time_seconds: Math.round(watchTime),
+    progress_percent: 100,
+    ...getAnalyticsContext()
+  });
 };
 
-/**
- * Track video progress milestones (25%, 50%, 75%)
- */
-export const trackVideoProgress = (reelId, percentage) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', `video_progress_${percentage}`, {
-      event_category: 'video_engagement',
-      reel_id: reelId,
-      progress_percentage: percentage,
-      page_location: window.location.href
-    });
-  }
+export const trackVideoProgress = (reelId, percentage, watchTime = 0) => {
+  emitEvent('reel_video_progress', {
+    reel_id: reelId,
+    progress_percent: percentage,
+    watch_time_seconds: Math.round(watchTime),
+    ...getAnalyticsContext()
+  });
 };
+
+export { getQuoteCalculatorContext };

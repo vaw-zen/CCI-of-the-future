@@ -8,7 +8,6 @@ import ClientHeader from '@/layout/header/ClientHeader';
 import HydrationSuppressor from '@/utils/HydrationSuppressor';
 import Footer from '@/layout/footer/footer';
 import CookieBanner from '@/utils/components/cookieBanner/cookieBanner';
-import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID } from '@/utils/consent/consent.constants';
 
 
 const dmSans = DM_Sans({
@@ -155,8 +154,6 @@ export default function RootLayout({ children }) {
                   window.dataLayer.push(args);
                 }
               };
-              window['ga-disable-${GA_MEASUREMENT_ID}'] = true;
-              window['ga-disable-${GOOGLE_ADS_ID}'] = true;
               window.gtag('consent', 'default', {
                 analytics_storage: 'denied',
                 ad_storage: 'denied',

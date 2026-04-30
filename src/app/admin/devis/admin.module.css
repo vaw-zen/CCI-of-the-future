@@ -24,6 +24,31 @@
   gap: 10px;
 }
 
+.navTabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(203, 251, 66, 0.2);
+  color: var(--t-secondary);
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.navLink:hover,
+.navLinkActive {
+  border-color: var(--ac-primary);
+  color: var(--bg-base);
+  background: var(--ac-primary);
+}
+
 .refreshButton {
   background: var(--ac-primary);
   color: BLACK;
@@ -155,6 +180,34 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
   background: var(--ac-primary);
 
   color: var(--bg-elevated);
+}
+
+.statusBadge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status_submitted {
+  background: rgba(203, 251, 66, 0.14);
+  color: var(--ac-primary);
+}
+
+.status_qualified {
+  background: rgba(0, 123, 255, 0.18);
+  color: #74b9ff;
+}
+
+.status_closed_won {
+  background: rgba(40, 167, 69, 0.18);
+  color: #7ee787;
+}
+
+.status_closed_lost {
+  background: rgba(220, 53, 69, 0.18);
+  color: #ff8a8a;
 }
 
 .requestDetails {
@@ -320,6 +373,42 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
   text-decoration: underline;
 }
 
+.lifecycleControls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.statusSelect {
+  min-width: 220px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(203, 251, 66, 0.2);
+  background: var(--bg-elevated);
+  color: var(--t-primary);
+}
+
+.saveButton {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  background: var(--ac-primary);
+  color: var(--bg-base);
+  font-weight: 600;
+}
+
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.statusError {
+  color: #ff8a8a;
+  margin: 8px 0 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
@@ -356,6 +445,12 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
   
   .modalBody {
     padding: 20px;
+  }
+
+  .navTabs,
+  .lifecycleControls {
+    flex-direction: column;
+    align-items: stretch;
   }
   
   .section p strong {

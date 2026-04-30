@@ -32,13 +32,32 @@ CREATE TABLE IF NOT EXISTS convention_requests (
   -- Admin Tracking
   statut TEXT DEFAULT 'nouveau' CHECK (statut IN ('nouveau', 'contacte', 'audit_planifie', 'devis_envoye', 'signe', 'refuse')),
   notes_admin TEXT,
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+  -- Lead Lifecycle
+  lead_status TEXT NOT NULL DEFAULT 'submitted' CHECK (lead_status IN ('submitted', 'qualified', 'closed_won', 'closed_lost')),
+  submitted_at TIMESTAMPTZ DEFAULT NOW(),
+  qualified_at TIMESTAMPTZ,
+  closed_at TIMESTAMPTZ,
+
+  -- Attribution
+  ga_client_id TEXT,
+  landing_page TEXT,
+  session_source TEXT,
+  session_medium TEXT,
+  session_campaign TEXT,
+  referrer_host TEXT,
+  entry_path TEXT,
+  calculator_estimate DECIMAL,
+  selected_services TEXT[]
 );
 
 -- Index for admin queries
 CREATE INDEX IF NOT EXISTS idx_convention_requests_statut ON convention_requests(statut);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_created ON convention_requests(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_secteur ON convention_requests(secteur_activite);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_status ON convention_requests(lead_status);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_session_source ON convention_requests(session_source);
 
 -- Enable RLS
 ALTER TABLE convention_requests ENABLE ROW LEVEL SECURITY;

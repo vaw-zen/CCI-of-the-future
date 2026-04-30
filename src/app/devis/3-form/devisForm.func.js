@@ -6,7 +6,10 @@ import {
   trackFormFieldFocus, 
   trackFormFieldComplete,
   trackFormAbandonment,
-  trackDevisSubmission 
+  trackDevisSubmission,
+  trackFormSubmitFailed,
+  trackFormValidationFailed,
+  trackPerformance
 } from '@/utils/analytics';
 
 const initialFormData = {
@@ -81,79 +84,90 @@ export function useDevisFormLogic() {
   };
 
   const validateForm = () => {
+    const failValidation = (message, fields = [], failureType = 'client_validation') => {
+      setSubmitStatus({
+        type: 'error',
+        message
+      });
+      trackFormValidationFailed('devis_form', fields, failureType, {
+        service_type: formData.typeService
+      });
+      return false;
+    };
+
     const required = ['nom', 'prenom', 'email', 'telephone', 'adresse', 'ville', 'typeService'];
     const missing = required.filter(field => !formData[field].trim());
 
     if (missing.length > 0) {
-      setSubmitStatus({
-        type: 'error',
-        message: `Veuillez remplir les champs obligatoires: ${missing.join(', ')}`
-      });
-      return false;
+      return failValidation(
+        `Veuillez remplir les champs obligatoires: ${missing.join(', ')}`,
+        missing,
+        'required_fields_missing'
+      );
     }
 
     // Validation matricule fiscale pour personne morale
     if (formData.typePersonne === 'morale') {
       if (!formData.matriculeFiscale.trim()) {
-        setSubmitStatus({
-          type: 'error',
-          message: 'La matricule fiscale est obligatoire pour une personne morale'
-        });
-        return false;
+        return failValidation(
+          'La matricule fiscale est obligatoire pour une personne morale',
+          ['matriculeFiscale'],
+          'missing_tax_id'
+        );
       }
 
       // Validation format matricule fiscale tunisienne (7 chiffres + lettre ou 8 chiffres)
       const matriculeRegex = /^[0-9]{7}[A-Z]|[0-9]{8}$/;
       if (!matriculeRegex.test(formData.matriculeFiscale.replace(/\s/g, ''))) {
-        setSubmitStatus({
-          type: 'error',
-          message: 'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres)'
-        });
-        return false;
+        return failValidation(
+          'Format de matricule fiscale invalide (7 chiffres + lettre ou 8 chiffres)',
+          ['matriculeFiscale'],
+          'invalid_tax_id'
+        );
       }
     }
 
     // Validation des quantités selon le type de service
     if (formData.typeService === 'salon' && !formData.nombrePlaces) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Veuillez indiquer le nombre de places pour le nettoyage de salon'
-      });
-      return false;
+      return failValidation(
+        'Veuillez indiquer le nombre de places pour le nettoyage de salon',
+        ['nombrePlaces'],
+        'missing_quantity'
+      );
     }
 
     if (['tapis', 'marbre', 'tfc'].includes(formData.typeService) && !formData.surfaceService) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Veuillez indiquer la surface à traiter'
-      });
-      return false;
+      return failValidation(
+        'Veuillez indiquer la surface à traiter',
+        ['surfaceService'],
+        'missing_surface'
+      );
     }
 
     if (!formData.conditions) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Vous devez accepter les conditions générales'
-      });
-      return false;
+      return failValidation(
+        'Vous devez accepter les conditions générales',
+        ['conditions'],
+        'terms_not_accepted'
+      );
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Veuillez saisir une adresse email valide'
-      });
-      return false;
+      return failValidation(
+        'Veuillez saisir une adresse email valide',
+        ['email'],
+        'invalid_email'
+      );
     }
 
     const phoneRegex = /^[0-9\s\-\+\(\)]{8,}$/;
     if (!phoneRegex.test(formData.telephone)) {
-      setSubmitStatus({
-        type: 'error',
-        message: 'Veuillez saisir un numéro de téléphone valide'
-      });
-      return false;
+      return failValidation(
+        'Veuillez saisir un numéro de téléphone valide',
+        ['telephone'],
+        'invalid_phone'
+      );
     }
 
     return true;
@@ -189,18 +203,15 @@ export function useDevisFormLogic() {
 
         // Track time to complete
         const timeToComplete = Math.round((Date.now() - formStartTime.current) / 1000);
-        if (typeof window !== 'undefined' && window.gtag) {
-          window.gtag('event', 'timing_complete', {
-            event_category: 'form_completion',
-            name: 'devis_form_time',
-            value: timeToComplete
-          });
-        }
+        trackPerformance('devis_form_time', timeToComplete, 'seconds');
 
         // Reset form
         setFormData(initialFormData);
         completedFields.current.clear();
       } else {
+        trackFormSubmitFailed('devis_form', result.failureType || result.status || 'submit_failed', {
+          service_type: formData.typeService
+        });
         setSubmitStatus({
           type: 'error',
           message: result.error || 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
@@ -209,6 +220,9 @@ export function useDevisFormLogic() {
 
     } catch (error) {
       console.error('Form submission error:', error);
+      trackFormSubmitFailed('devis_form', 'network_error', {
+        service_type: formData.typeService
+      });
       setSubmitStatus({
         type: 'error',
         message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'

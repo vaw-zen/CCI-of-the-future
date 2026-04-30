@@ -8,8 +8,6 @@ import {
   COOKIE_CONSENT_REJECTED,
   FACEBOOK_PIXEL_SCRIPT_ID,
   FACEBOOK_REFERRALS_KEY,
-  GA_MEASUREMENT_ID,
-  GOOGLE_ADS_ID,
   GTAG_CONVERSION_ID,
   GTAG_INIT_ID,
   GTAG_LOADER_ID,
@@ -86,8 +84,6 @@ function removeOptionalTrackingArtifacts() {
     .querySelectorAll('script[src*="googletagmanager.com"], script[src*="facebook.net"], iframe[src*="googletagmanager.com"]')
     .forEach((element) => element.remove());
 
-  window[`ga-disable-${GA_MEASUREMENT_ID}`] = true;
-  window[`ga-disable-${GOOGLE_ADS_ID}`] = true;
   window.__cciConsentGranted = false;
   window.gtag_report_conversion = undefined;
   window.fbq = undefined;
@@ -183,8 +179,6 @@ export function applyGoogleConsentStatus(status) {
     window.dataLayer.push(arguments);
   };
 
-  window[`ga-disable-${GA_MEASUREMENT_ID}`] = !isGranted;
-  window[`ga-disable-${GOOGLE_ADS_ID}`] = !isGranted;
   window.__cciConsentGranted = isGranted;
 
   window.gtag('consent', 'update', getConsentPayload(isGranted));

@@ -5,10 +5,14 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
-import { getDevisRequests } from '@/services/devisService';
+import { getConventionRequests } from '@/services/conventionService';
 import { updateLeadStatus } from '@/services/adminLeadService';
-import { LEAD_STATUS_OPTIONS, LEAD_STATUSES } from '@/utils/leadLifecycle';
-import styles from './admin.module.css';
+import {
+  CONVENTION_OPERATIONAL_STATUSES,
+  deriveLeadStatusFromConventionStatus,
+  LEAD_STATUSES
+} from '@/utils/leadLifecycle';
+import styles from '../devis/admin.module.css';
 
 const LEAD_STATUS_LABELS = {
   [LEAD_STATUSES.SUBMITTED]: 'Soumis',
@@ -17,14 +21,23 @@ const LEAD_STATUS_LABELS = {
   [LEAD_STATUSES.CLOSED_LOST]: 'Perdu'
 };
 
-export default function AdminDevisPage() {
+const OPERATIONAL_STATUS_LABELS = {
+  nouveau: 'Nouveau',
+  contacte: 'Contacté',
+  audit_planifie: 'Audit planifié',
+  devis_envoye: 'Devis envoyé',
+  signe: 'Signé',
+  refuse: 'Refusé'
+};
+
+export default function AdminConventionsPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
+  const [operationalStatusDraft, setOperationalStatusDraft] = useState('nouveau');
   const [isSavingStatus, setIsSavingStatus] = useState(false);
   const [statusError, setStatusError] = useState('');
 
@@ -51,11 +64,11 @@ export default function AdminDevisPage() {
     try {
       setLoading(true);
       setError(null);
-      const data = await getDevisRequests({ limit: 50 });
+      const data = await getConventionRequests({ limit: 50 });
       setRequests(data);
     } catch (err) {
       console.error(err);
-      setError('Erreur lors du chargement des demandes');
+      setError('Erreur lors du chargement des conventions');
     } finally {
       setLoading(false);
     }
@@ -70,20 +83,22 @@ export default function AdminDevisPage() {
 
   const openRequest = (request) => {
     setSelectedRequest(request);
-    setLeadStatusDraft(request.lead_status || LEAD_STATUSES.SUBMITTED);
+    setOperationalStatusDraft(request.statut || 'nouveau');
     setStatusError('');
   };
 
   const handleStatusSave = async () => {
-    if (!selectedRequest || !leadStatusDraft) {
+    if (!selectedRequest) {
       return;
     }
 
     try {
       setIsSavingStatus(true);
       setStatusError('');
-      const updatedLead = await updateLeadStatus('devis', selectedRequest.id, {
-        leadStatus: leadStatusDraft
+
+      const updatedLead = await updateLeadStatus('convention', selectedRequest.id, {
+        operationalStatus: operationalStatusDraft,
+        leadStatus: deriveLeadStatusFromConventionStatus(operationalStatusDraft)
       });
 
       setRequests((currentRequests) => currentRequests.map((request) => (
@@ -112,18 +127,7 @@ export default function AdminDevisPage() {
     });
   };
 
-  const formatService = (service) => {
-    const services = {
-      salon: 'Nettoyage de salon',
-      tapis: 'Nettoyage de tapis/moquettes',
-      tapisserie: 'Tapisserie',
-      marbre: 'Polissage de marbre',
-      tfc: 'Nettoyage TFC'
-    };
-    return services[service] || service;
-  };
-
-  const getLeadStatus = (request) => request.lead_status || LEAD_STATUSES.SUBMITTED;
+  const getLeadStatus = (request) => request.lead_status || deriveLeadStatusFromConventionStatus(request.statut);
 
   if (authLoading || !user || !isAdmin) {
     return (
@@ -150,7 +154,7 @@ export default function AdminDevisPage() {
   if (loading) {
     return (
       <div className={styles.container}>
-        <div className={styles.loading}>Chargement des demandes...</div>
+        <div className={styles.loading}>Chargement des conventions...</div>
       </div>
     );
   }
@@ -168,10 +172,10 @@ export default function AdminDevisPage() {
 
   return (
     <>
-      <HeroHeader title={"Administration - Demandes de Devis"} />
+      <HeroHeader title={"Administration - Conventions"} />
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1>Administration - Demandes de Devis</h1>
+          <h1>Administration - Conventions</h1>
           <div className={styles.headerActions}>
             <button onClick={loadRequests} className={styles.refreshButton}>
               Actualiser
@@ -183,10 +187,10 @@ export default function AdminDevisPage() {
         </div>
 
         <div className={styles.navTabs}>
-          <Link href="/admin/devis" className={`${styles.navLink} ${styles.navLinkActive}`}>
+          <Link href="/admin/devis" className={styles.navLink}>
             Devis
           </Link>
-          <Link href="/admin/conventions" className={styles.navLink}>
+          <Link href="/admin/conventions" className={`${styles.navLink} ${styles.navLinkActive}`}>
             Conventions
           </Link>
         </div>
@@ -219,8 +223,8 @@ export default function AdminDevisPage() {
             >
               <div className={styles.requestHeader}>
                 <div className={styles.requestInfo}>
-                  <h3>{request.nom} {request.prenom}</h3>
-                  <p className={styles.service}>{formatService(request.type_service)}</p>
+                  <h3>{request.raison_sociale}</h3>
+                  <p className={styles.service}>{request.secteur_activite}</p>
                 </div>
                 <div className={styles.requestMeta}>
                   <span className={styles.date}>{formatDate(request.created_at)}</span>
@@ -232,13 +236,13 @@ export default function AdminDevisPage() {
 
               <div className={styles.requestDetails}>
                 <div className={styles.detail}>
+                  <strong>👤</strong> {request.contact_nom} {request.contact_prenom}
+                </div>
+                <div className={styles.detail}>
                   <strong>📧</strong> {request.email}
                 </div>
                 <div className={styles.detail}>
                   <strong>📞</strong> {request.telephone}
-                </div>
-                <div className={styles.detail}>
-                  <strong>📍</strong> {request.ville}
                 </div>
                 <div className={styles.detail}>
                   <strong>📈</strong> {request.session_source || 'direct'} / {request.session_medium || '(none)'}
@@ -252,7 +256,7 @@ export default function AdminDevisPage() {
           <div className={styles.modal} onClick={() => setSelectedRequest(null)}>
             <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
               <div className={styles.modalHeader}>
-                <h2>Détails de la demande</h2>
+                <h2>Détails de la convention</h2>
                 <button className={styles.closeButton} onClick={() => setSelectedRequest(null)}>
                   ×
                 </button>
@@ -260,17 +264,17 @@ export default function AdminDevisPage() {
 
               <div className={styles.modalBody}>
                 <div className={styles.section}>
-                  <h3>Statut du lead</h3>
+                  <h3>Statuts</h3>
                   <div className={styles.lifecycleControls}>
                     <select
                       className={styles.statusSelect}
-                      value={leadStatusDraft}
-                      onChange={(event) => setLeadStatusDraft(event.target.value)}
+                      value={operationalStatusDraft}
+                      onChange={(event) => setOperationalStatusDraft(event.target.value)}
                       disabled={isSavingStatus}
                     >
-                      {LEAD_STATUS_OPTIONS.map((status) => (
+                      {CONVENTION_OPERATIONAL_STATUSES.map((status) => (
                         <option key={status} value={status}>
-                          {LEAD_STATUS_LABELS[status]}
+                          {OPERATIONAL_STATUS_LABELS[status]}
                         </option>
                       ))}
                     </select>
@@ -278,57 +282,43 @@ export default function AdminDevisPage() {
                       type="button"
                       className={styles.saveButton}
                       onClick={handleStatusSave}
-                      disabled={isSavingStatus || leadStatusDraft === getLeadStatus(selectedRequest)}
+                      disabled={isSavingStatus || operationalStatusDraft === selectedRequest.statut}
                     >
                       {isSavingStatus ? 'Enregistrement...' : 'Enregistrer'}
                     </button>
                   </div>
                   {statusError && <p className={styles.statusError}>{statusError}</p>}
+                  <p><strong>Lead status :</strong> {LEAD_STATUS_LABELS[deriveLeadStatusFromConventionStatus(operationalStatusDraft)]}</p>
                   <p><strong>Soumis le :</strong> {formatDate(selectedRequest.submitted_at || selectedRequest.created_at)}</p>
                   <p><strong>Qualifié le :</strong> {formatDate(selectedRequest.qualified_at)}</p>
                   <p><strong>Clôturé le :</strong> {formatDate(selectedRequest.closed_at)}</p>
                 </div>
 
                 <div className={styles.section}>
-                  <h3>Informations personnelles</h3>
-                  <p><strong>Type :</strong> {selectedRequest.type_personne === 'physique' ? 'Particulier' : 'Entreprise'}</p>
-                  {selectedRequest.matricule_fiscale && (
-                    <p><strong>Matricule fiscale :</strong> {selectedRequest.matricule_fiscale}</p>
+                  <h3>Entreprise</h3>
+                  <p><strong>Raison sociale :</strong> {selectedRequest.raison_sociale}</p>
+                  <p><strong>Matricule fiscale :</strong> {selectedRequest.matricule_fiscale}</p>
+                  <p><strong>Secteur :</strong> {selectedRequest.secteur_activite}</p>
+                  <p><strong>Statut opérationnel :</strong> {OPERATIONAL_STATUS_LABELS[selectedRequest.statut] || selectedRequest.statut}</p>
+                </div>
+
+                <div className={styles.section}>
+                  <h3>Contact</h3>
+                  <p><strong>Nom :</strong> {selectedRequest.contact_nom} {selectedRequest.contact_prenom}</p>
+                  {selectedRequest.contact_fonction && (
+                    <p><strong>Fonction :</strong> {selectedRequest.contact_fonction}</p>
                   )}
-                  <p><strong>Nom :</strong> {selectedRequest.nom}</p>
-                  <p><strong>Prénom :</strong> {selectedRequest.prenom}</p>
                   <p><strong>Email :</strong> <a href={`mailto:${selectedRequest.email}`}>{selectedRequest.email}</a></p>
                   <p><strong>Téléphone :</strong> <a href={`tel:${selectedRequest.telephone}`}>{selectedRequest.telephone}</a></p>
                 </div>
 
                 <div className={styles.section}>
-                  <h3>Adresse</h3>
-                  <p><strong>Adresse :</strong> {selectedRequest.adresse}</p>
-                  <p><strong>Ville :</strong> {selectedRequest.ville}</p>
-                  {selectedRequest.code_postal && (
-                    <p><strong>Code postal :</strong> {selectedRequest.code_postal}</p>
-                  )}
-                  <p><strong>Type de logement :</strong> {selectedRequest.type_logement}</p>
-                  {selectedRequest.surface && (
-                    <p><strong>Surface :</strong> {selectedRequest.surface} m²</p>
-                  )}
-                </div>
-
-                <div className={styles.section}>
-                  <h3>Service</h3>
-                  <p><strong>Service :</strong> {formatService(selectedRequest.type_service)}</p>
-                  {selectedRequest.nombre_places && (
-                    <p><strong>Nombre de places :</strong> {selectedRequest.nombre_places}</p>
-                  )}
-                  {selectedRequest.surface_service && (
-                    <p><strong>Surface à traiter :</strong> {selectedRequest.surface_service} m²</p>
-                  )}
-                  {Array.isArray(selectedRequest.selected_services) && selectedRequest.selected_services.length > 0 && (
-                    <p><strong>Services simulés :</strong> {selectedRequest.selected_services.join(', ')}</p>
-                  )}
-                  {selectedRequest.calculator_estimate && (
-                    <p><strong>Estimation calculateur :</strong> {selectedRequest.calculator_estimate} DT</p>
-                  )}
+                  <h3>Convention</h3>
+                  <p><strong>Nombre de sites :</strong> {selectedRequest.nombre_sites || 1}</p>
+                  <p><strong>Surface totale :</strong> {selectedRequest.surface_totale || 'Non renseignée'}</p>
+                  <p><strong>Fréquence :</strong> {selectedRequest.frequence}</p>
+                  <p><strong>Durée contrat :</strong> {selectedRequest.duree_contrat}</p>
+                  <p><strong>Services :</strong> {Array.isArray(selectedRequest.services_souhaites) ? selectedRequest.services_souhaites.join(', ') : 'Non renseignés'}</p>
                 </div>
 
                 <div className={styles.section}>
@@ -346,13 +336,6 @@ export default function AdminDevisPage() {
                     <p>{selectedRequest.message}</p>
                   </div>
                 )}
-
-                <div className={styles.section}>
-                  <h3>Informations système</h3>
-                  <p><strong>Date de création :</strong> {formatDate(selectedRequest.created_at)}</p>
-                  <p><strong>Newsletter :</strong> {selectedRequest.newsletter ? 'Oui' : 'Non'}</p>
-                  <p><strong>ID :</strong> {selectedRequest.id}</p>
-                </div>
               </div>
             </div>
           </div>

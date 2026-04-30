@@ -41,6 +41,7 @@ export default function Page() {
         <ServiceDetails
           title={entreprisesData.sections.mainService.title}
           text={entreprisesData.sections.mainService.text}
+          image={entreprisesData.sections.mainService.image}
         />
 
         <Secteurs secteurs={entreprisesData.secteurs} />
@@ -56,6 +57,7 @@ export default function Page() {
         <ServiceDetails
           title={entreprisesData.sections.whyChooseUs.title}
           text={entreprisesData.sections.whyChooseUs.text}
+          image={entreprisesData.sections.whyChooseUs.image}
         />
 
         <ConventionForm />

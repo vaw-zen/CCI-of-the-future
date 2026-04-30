@@ -1,11 +1,32 @@
 import { NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { createServiceClient } from '@/libs/supabase';
+import { extractAnalyticsContext, sendLifecycleMeasurementEvent } from '@/libs/analyticsLifecycle';
+
+async function sendNewsletterMeasurement(analyticsContext, eventName, eventParams = {}) {
+  return sendLifecycleMeasurementEvent({
+    clientId: analyticsContext.ga_client_id,
+    eventName,
+    eventParams: {
+      placement: eventParams.placement || 'unknown',
+      failure_type: eventParams.failure_type,
+      session_source: analyticsContext.session_source,
+      session_medium: analyticsContext.session_medium,
+      session_campaign: analyticsContext.session_campaign,
+      landing_page: analyticsContext.landing_page
+    }
+  });
+}
 
 export async function POST(request) {
+  let analyticsContext = {};
+  let placement = 'unknown';
+
   try {
     const body = await request.json().catch(() => ({}));
+    analyticsContext = extractAnalyticsContext(body?.analyticsContext || {});
     const { email, acceptedPrivacy, website, source } = body;
+    placement = body?.placement || 'unknown';
 
     // Honeypot check — bots fill this hidden field, real users never see it
     if (website) {
@@ -18,6 +39,10 @@ export async function POST(request) {
 
     // Validation
     if (!email || !email.trim()) {
+      await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+        placement,
+        failure_type: 'validation_failed'
+      });
       return NextResponse.json({
         status: 'validation_failed',
         message: 'L\'adresse email est requise.'
@@ -26,6 +51,10 @@ export async function POST(request) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
+      await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+        placement,
+        failure_type: 'validation_failed'
+      });
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Veuillez fournir une adresse email valide.'
@@ -33,6 +62,10 @@ export async function POST(request) {
     }
 
     if (!acceptedPrivacy) {
+      await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+        placement,
+        failure_type: 'validation_failed'
+      });
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Vous devez accepter la politique de confidentialité.'
@@ -41,6 +74,10 @@ export async function POST(request) {
 
     // Check Gmail credentials
     if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
+      await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+        placement,
+        failure_type: 'config_error'
+      });
       return NextResponse.json({
         status: 'config_error',
         message: 'Service email non configuré.'
@@ -61,6 +98,10 @@ export async function POST(request) {
 
     if (existing) {
       if (existing.is_verified) {
+        await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+          placement,
+          failure_type: 'already_subscribed'
+        });
         return NextResponse.json({
           status: 'already_subscribed',
           message: 'Vous êtes déjà inscrit(e) à notre newsletter.',
@@ -74,12 +115,23 @@ export async function POST(request) {
         .update({
           verification_token: verificationToken,
           created_at: new Date().toISOString(),
-          source: source || 'direct',
+          source: source || analyticsContext.session_source || 'direct',
+          ga_client_id: analyticsContext.ga_client_id || null,
+          landing_page: analyticsContext.landing_page || null,
+          session_source: analyticsContext.session_source || null,
+          session_medium: analyticsContext.session_medium || null,
+          session_campaign: analyticsContext.session_campaign || null,
+          referrer_host: analyticsContext.referrer_host || null,
+          entry_path: analyticsContext.entry_path || null,
         })
         .eq('id', existing.id);
 
       if (updateError) {
         console.error('Supabase update error:', updateError);
+        await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+          placement,
+          failure_type: 'database_error'
+        });
         return NextResponse.json({
           status: 'error',
           message: 'Erreur lors de l\'inscription. Veuillez réessayer.',
@@ -93,12 +145,23 @@ export async function POST(request) {
         .insert({
           email: trimmedEmail,
           verification_token: verificationToken,
-          source: source || 'direct',
+          source: source || analyticsContext.session_source || 'direct',
           accepted_privacy: true,
+          ga_client_id: analyticsContext.ga_client_id || null,
+          landing_page: analyticsContext.landing_page || null,
+          session_source: analyticsContext.session_source || null,
+          session_medium: analyticsContext.session_medium || null,
+          session_campaign: analyticsContext.session_campaign || null,
+          referrer_host: analyticsContext.referrer_host || null,
+          entry_path: analyticsContext.entry_path || null,
         });
 
       if (insertError) {
         console.error('Supabase insert error:', insertError);
+        await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+          placement,
+          failure_type: 'database_error'
+        });
         return NextResponse.json({
           status: 'error',
           message: 'Erreur lors de l\'inscription. Veuillez réessayer.',
@@ -191,6 +254,10 @@ export async function POST(request) {
 
     await transporter.sendMail(verificationMail);
 
+    await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_submitted', {
+      placement
+    });
+
     return NextResponse.json({
       status: 'success',
       message: 'Vérifiez votre boîte mail pour confirmer votre inscription.',
@@ -198,6 +265,10 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('Newsletter subscription error:', error);
+    await sendNewsletterMeasurement(analyticsContext, 'newsletter_signup_failed', {
+      placement,
+      failure_type: 'error'
+    });
     return NextResponse.json({
       status: 'error',
       message: 'Erreur lors de l\'inscription. Veuillez réessayer.',

@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import styles from './ReelPlayer.module.css';
+import { trackVideoComplete, trackVideoPause, trackVideoPlay, trackVideoProgress } from '@/utils/analytics';
 
 export function useReelPlayerLogic(reel) {
   const videoRef = useRef(null);
@@ -15,6 +16,10 @@ export function useReelPlayerLogic(reel) {
   });
 
   const controlTimeoutRef = useRef(null);
+  const playTrackedRef = useRef(false);
+  const completeTrackedRef = useRef(false);
+  const progressTrackedRef = useRef(new Set());
+  const reelTitle = reel?.message || reel?.title || 'Reel CCI Services';
 
   // Initialize video
   useEffect(() => {
@@ -23,6 +28,10 @@ export function useReelPlayerLogic(reel) {
       video.src = reel.video_url;
       video.load();
     }
+
+    playTrackedRef.current = false;
+    completeTrackedRef.current = false;
+    progressTrackedRef.current = new Set();
   }, [reel.video_url]);
 
   // Auto-hide controls after inactivity
@@ -55,6 +64,11 @@ export function useReelPlayerLogic(reel) {
   const handlePlay = () => {
     setVideoState(prev => ({ ...prev, isPlaying: true }));
     showControlsTemporarily();
+
+    if (!playTrackedRef.current) {
+      playTrackedRef.current = true;
+      trackVideoPlay(reel.id, reelTitle);
+    }
   };
 
   const handlePause = () => {
@@ -62,19 +76,41 @@ export function useReelPlayerLogic(reel) {
     if (controlTimeoutRef.current) {
       clearTimeout(controlTimeoutRef.current);
     }
+
+    if (videoRef.current) {
+      trackVideoPause(reel.id, videoRef.current.currentTime || 0);
+    }
   };
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (video) {
+      const duration = video.duration || 0;
+      const watchTime = video.currentTime || 0;
+      const progressPercent = duration > 0 ? Math.round((watchTime / duration) * 100) : 0;
+
+      [25, 50, 75].forEach((threshold) => {
+        if (progressPercent >= threshold && !progressTrackedRef.current.has(threshold)) {
+          progressTrackedRef.current.add(threshold);
+          trackVideoProgress(reel.id, threshold, watchTime);
+        }
+      });
+
       setVideoState(prev => ({
         ...prev,
-        currentTime: video.currentTime,
+        currentTime: watchTime,
       }));
     }
   };
 
   const handleEnded = () => {
+    const watchTime = videoRef.current?.duration || videoRef.current?.currentTime || 0;
+
+    if (!completeTrackedRef.current) {
+      completeTrackedRef.current = true;
+      trackVideoComplete(reel.id, reelTitle, watchTime);
+    }
+
     setVideoState(prev => ({
       ...prev,
       isPlaying: false,

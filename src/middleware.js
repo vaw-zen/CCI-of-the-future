@@ -226,6 +226,7 @@ export const config = {
     '/_next/static/css/:path*',
     '/api/articles/:path*',
     '/api/rebuild',
+    '/api/admin/dashboard',
     '/api/admin/leads/:path*',
     '/api/devis',
     '/api/conventions',

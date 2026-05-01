@@ -37,3 +37,29 @@ export async function updateLeadStatus(kind, id, payload) {
 
   return result.data;
 }
+
+export async function getAdminDashboardData({ from, to } = {}) {
+  const accessToken = await getAccessToken();
+  const params = new URLSearchParams();
+
+  if (from) {
+    params.set('from', from);
+  }
+
+  if (to) {
+    params.set('to', to);
+  }
+
+  const response = await fetch(`/api/admin/dashboard${params.toString() ? `?${params.toString()}` : ''}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.message || 'Dashboard load failed');
+  }
+
+  return result.data;
+}

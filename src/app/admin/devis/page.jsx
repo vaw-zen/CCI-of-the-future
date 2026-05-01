@@ -241,6 +241,9 @@ export default function AdminDevisPage() {
         </div>
 
         <div className={styles.navTabs}>
+          <Link href="/admin/dashboard" className={styles.navLink}>
+            Dashboard
+          </Link>
           <Link href="/admin/devis" className={`${styles.navLink} ${styles.navLinkActive}`}>
             Devis
           </Link>

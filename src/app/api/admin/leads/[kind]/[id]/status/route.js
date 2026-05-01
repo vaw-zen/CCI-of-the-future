@@ -17,6 +17,7 @@ import {
   guardMutationRequest,
   hashRequestValue
 } from '@/libs/security';
+import { authenticateAdminRequest } from '@/libs/adminApiAuth';
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const ADMIN_STATUS_RATE_LIMIT = {
@@ -96,39 +97,6 @@ const LEAD_SELECT_FIELDS = {
     'selected_services'
   ].join(',')
 };
-
-async function authenticateAdmin(request, supabase) {
-  const authorizationHeader = request.headers.get('authorization') || '';
-  const accessToken = authorizationHeader.startsWith('Bearer ')
-    ? authorizationHeader.slice('Bearer '.length).trim()
-    : '';
-
-  if (!accessToken) {
-    return { error: 'missing_token', status: 401 };
-  }
-
-  const { data: authData, error: authError } = await supabase.auth.getUser(accessToken);
-  if (authError || !authData?.user?.email) {
-    return { error: 'invalid_token', status: 401 };
-  }
-
-  const { data: adminData, error: adminError } = await supabase
-    .from('admin_users')
-    .select('email')
-    .eq('email', authData.user.email)
-    .eq('is_active', true)
-    .single();
-
-  if (adminError || !adminData) {
-    return {
-      error: 'forbidden',
-      status: 403,
-      user: authData.user
-    };
-  }
-
-  return { user: authData.user };
-}
 
 function getLeadConfig(kind) {
   if (kind === 'devis') {
@@ -275,7 +243,7 @@ export async function PATCH(request, { params }) {
     return getErrorResponse('invalid_request', 'Type de lead ou identifiant invalide.', 400);
   }
 
-  const authResult = await authenticateAdmin(request, supabase);
+  const authResult = await authenticateAdminRequest(request, supabase);
   if (authResult.error) {
     await writeStatusAuditEvent(supabase, {
       kind,

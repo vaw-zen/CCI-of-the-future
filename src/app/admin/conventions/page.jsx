@@ -251,6 +251,9 @@ export default function AdminConventionsPage() {
         </div>
 
         <div className={styles.navTabs}>
+          <Link href="/admin/dashboard" className={styles.navLink}>
+            Dashboard
+          </Link>
           <Link href="/admin/devis" className={styles.navLink}>
             Devis
           </Link>

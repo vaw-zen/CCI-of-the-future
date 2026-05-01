@@ -19,7 +19,7 @@ export default function AdminLogin() {
   useEffect(() => {
     if (!loading && user && isAdmin && !hasRedirected) {
       setHasRedirected(true);
-      router.replace('/admin/devis');
+      router.replace('/admin/dashboard');
     }
   }, [user, isAdmin, loading, router, hasRedirected]);
 

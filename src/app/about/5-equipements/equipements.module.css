@@ -1,4 +1,4 @@
-.equipements { width: 100%; padding: 3.13vw var(--padding-base) 3.13vw; display: grid; grid-template-columns: 0.88fr 1.12fr; gap: 3.13vw; align-items: start; contain: paint; }
+.equipements { width: 100%; padding: 1.5vw var(--padding-base) 2.25vw; display: grid; grid-template-columns: 0.88fr 1.12fr; gap: 3.13vw; align-items: start; contain: paint; }
 .intro { display: flex; flex-direction: column; min-width: 0; padding-top: 0.52vw; }
 .eyebrow { display: block; margin: 0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 0.83vw; line-height: 1.35vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
 .intro h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 3.33vw; line-height: 3.85vw; font-weight: 700; }
@@ -18,7 +18,7 @@
 .note { margin: 1.04vw 0 0; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.52); font-size: 0.73vw; line-height: 1.15vw; }
 
 @media screen and (max-width: 64em) {
-  .equipements { width: 100%; padding: 7.81vw 2vw 6.25vw; display: grid; grid-template-columns: 1fr; gap: 5.21vw; align-items: start; contain: paint; }
+  .equipements { width: 100%; padding: 4vw 2vw 5vw; display: grid; grid-template-columns: 1fr; gap: 5.21vw; align-items: start; contain: paint; }
   .intro { display: flex; flex-direction: column; min-width: 0; padding-top: 0; }
   .eyebrow { display: block; margin: 0 0 1.3vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 2.08vw; line-height: 3.39vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
   .intro h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 5.86vw; line-height: 7.16vw; font-weight: 700; }
@@ -39,7 +39,7 @@
 }
 
 @media screen and (max-width: 30em) {
-  .equipements { width: 100%; padding: 12.14vw 3vw 9.71vw; display: grid; grid-template-columns: 1fr; gap: 9.71vw; align-items: start; contain: paint; }
+  .equipements { width: 100%; padding: 7vw 3vw 8vw; display: grid; grid-template-columns: 1fr; gap: 9.71vw; align-items: start; contain: paint; }
   .intro { display: flex; flex-direction: column; min-width: 0; padding-top: 0; }
   .eyebrow { display: block; margin: 0 0 2.43vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 3.88vw; line-height: 6.31vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
   .intro h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 8.5vw; line-height: 10.92vw; font-weight: 700; }

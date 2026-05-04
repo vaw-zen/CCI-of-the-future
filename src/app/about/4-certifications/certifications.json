@@ -1,0 +1,23 @@
+{
+  "eyebrow": "Formations certifiées",
+  "heading": "Une expertise formée auprès d’un leader mondial",
+  "body": "Notre équipe dispose de deux certifications de formation délivrées par Prochem, l’un des leaders mondiaux des produits professionnels pour l’entretien des tapis, tissus d’ameublement et sols.",
+  "certificates": [
+    {
+      "title": "Certification tissus d’ameublement",
+      "description": "Formation Prochem aux méthodes professionnelles d’entretien des tissus d’ameublement, finitions textiles et protocoles humides ou à sec.",
+      "previewSrc": "/about/certifications/certificate-1.webp",
+      "pdfSrc": "/about/certifications/certificate-1.pdf",
+      "alt": "Scan de la certification Prochem pour l’entretien professionnel des tissus d’ameublement",
+      "linkLabel": "Ouvrir le scan de la certification tissus d’ameublement"
+    },
+    {
+      "title": "Certification tapis et sols textiles",
+      "description": "Formation Prochem aux méthodes professionnelles de nettoyage et de maintenance des tapis, moquettes, rugs et revêtements de sols textiles.",
+      "previewSrc": "/about/certifications/certificate-2.webp",
+      "pdfSrc": "/about/certifications/certificate-2.pdf",
+      "alt": "Scan de la certification Prochem pour l’entretien professionnel des tapis, moquettes et sols textiles",
+      "linkLabel": "Ouvrir le scan de la certification tapis et sols textiles"
+    }
+  ]
+}

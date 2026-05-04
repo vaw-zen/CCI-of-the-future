@@ -8,6 +8,7 @@ import styles from './page.module.css'
 import Refrences from '../home/sections/7-refrences/refrences';
 import GreenBand from '@/utils/components/GreenBand/GreenBand';
 import aboutData from './about.json';
+import Certifications from './4-certifications/certifications';
 
 export async function generateMetadata() {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
@@ -42,6 +43,7 @@ export default function page() {
     <Showcase className={styles.showCase}  />
     <Refrences className={styles.refrences}/>
     <GreenBand className={styles.greenBandWrapper}/>
+    <Certifications/>
     </main>
   )
 }

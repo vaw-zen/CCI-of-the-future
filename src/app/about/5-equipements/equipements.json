@@ -1,0 +1,25 @@
+{
+  "eyebrow": "Équipements professionnels",
+  "heading": "Des machines de fabricants reconnus",
+  "body": "Nos interventions s’appuient sur des équipements professionnels sélectionnés pour leur fiabilité, leur précision et leur performance sur les surfaces exigeantes.",
+  "proofs": [
+    "Fournisseurs italiens reconnus",
+    "Standards qualité vérifiés",
+    "Résultats réguliers sur chantier"
+  ],
+  "suppliers": [
+    {
+      "name": "Klindex",
+      "website": "https://www.klindex.com",
+      "description": "Machines professionnelles pour le ponçage, le polissage et la restauration des surfaces.",
+      "badge": "Certification UNI EN ISO 9001:2000 mentionnée publiquement"
+    },
+    {
+      "name": "Santoemma",
+      "website": "https://www.santoemma.com/EN/site/Home",
+      "description": "Machines professionnelles pour le nettoyage textile, les moquettes et l’hygiène spécialisée.",
+      "badge": "Fabricant italien depuis 1980"
+    }
+  ],
+  "note": "Les noms des fournisseurs sont cités pour informer sur notre parc matériel. Cela n’implique pas une représentation officielle, une exclusivité ou un partenariat commercial."
+}

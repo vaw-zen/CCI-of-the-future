@@ -1,0 +1,60 @@
+.equipements { width: 100%; padding: 3.13vw var(--padding-base) 3.13vw; display: grid; grid-template-columns: 0.88fr 1.12fr; gap: 3.13vw; align-items: start; contain: paint; }
+.intro { display: flex; flex-direction: column; min-width: 0; padding-top: 0.52vw; }
+.eyebrow { display: block; margin: 0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 0.83vw; line-height: 1.35vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
+.intro h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 3.33vw; line-height: 3.85vw; font-weight: 700; }
+.intro p { max-width: 31.25vw; margin: 2.08vw 0 0; font-family: 'DM Sans', sans-serif; color: var(--t-thri); font-size: 0.83vw; line-height: 1.35vw; }
+.proofs { display: flex; flex-wrap: wrap; gap: 0.63vw; margin-top: 1.56vw; }
+.proof { display: inline-flex; align-items: center; min-height: 2.08vw; padding: 0.52vw 0.78vw; border: 0.05vw solid rgba(203, 251, 66, 0.28); border-radius: 0.42vw; font-family: 'DM Sans', sans-serif; color: var(--t-primary); background: rgba(203, 251, 66, 0.06); font-size: 0.73vw; line-height: 1.04vw; font-weight: 700; }
+.panel { min-width: 0; }
+.suppliers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.04vw; }
+.card { display: flex; flex-direction: column; min-height: 16.15vw; padding: 1.56vw; background: var(--bg-elevated); border: 0.05vw solid rgba(255, 255, 255, 0.1); border-radius: 0.42vw; min-width: 0; }
+.cardHeader { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.04vw; margin-bottom: 1.3vw; }
+.card h3 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 1.56vw; line-height: 1.88vw; font-weight: 700; }
+.link { display: flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 2.5vw; height: 2.5vw; border: 0.05vw solid rgba(203, 251, 66, 0.42); border-radius: 50%; color: var(--ac-primary); transition: border-color 0.3s ease, transform 0.3s ease; }
+.link:hover { border-color: var(--ac-primary); transform: rotate(-45deg); }
+.icon { width: 1.15vw; height: 1.15vw; color: currentColor; }
+.card p { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-thri); font-size: 0.83vw; line-height: 1.35vw; }
+.badge { display: inline-flex; align-items: center; width: fit-content; margin-top: auto; padding-top: 1.56vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 0.73vw; line-height: 1.15vw; font-weight: 700; }
+.note { margin: 1.04vw 0 0; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.52); font-size: 0.73vw; line-height: 1.15vw; }
+
+@media screen and (max-width: 64em) {
+  .equipements { width: 100%; padding: 7.81vw 2vw 6.25vw; display: grid; grid-template-columns: 1fr; gap: 5.21vw; align-items: start; contain: paint; }
+  .intro { display: flex; flex-direction: column; min-width: 0; padding-top: 0; }
+  .eyebrow { display: block; margin: 0 0 1.3vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 2.08vw; line-height: 3.39vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
+  .intro h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 5.86vw; line-height: 7.16vw; font-weight: 700; }
+  .intro p { max-width: 86vw; margin: 3.91vw 0 0; font-family: 'DM Sans', sans-serif; color: var(--t-thri); font-size: 2.08vw; line-height: 3.39vw; }
+  .proofs { display: flex; flex-wrap: wrap; gap: 1.56vw; margin-top: 3.91vw; }
+  .proof { display: inline-flex; align-items: center; min-height: 5.21vw; padding: 1.3vw 1.95vw; border: 0.13vw solid rgba(203, 251, 66, 0.28); border-radius: 1.04vw; font-family: 'DM Sans', sans-serif; color: var(--t-primary); background: rgba(203, 251, 66, 0.06); font-size: 1.82vw; line-height: 2.6vw; font-weight: 700; }
+  .panel { min-width: 0; }
+  .suppliers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.6vw; }
+  .card { display: flex; flex-direction: column; min-height: 31.25vw; padding: 3.13vw; background: var(--bg-elevated); border: 0.13vw solid rgba(255, 255, 255, 0.1); border-radius: 1.04vw; min-width: 0; }
+  .cardHeader { display: flex; justify-content: space-between; align-items: flex-start; gap: 2.6vw; margin-bottom: 2.6vw; }
+  .card h3 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 3.13vw; line-height: 3.91vw; font-weight: 700; }
+  .link { display: flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 6.25vw; height: 6.25vw; border: 0.13vw solid rgba(203, 251, 66, 0.42); border-radius: 50%; color: var(--ac-primary); transition: border-color 0.3s ease, transform 0.3s ease; }
+  .link:hover { border-color: var(--ac-primary); transform: rotate(-45deg); }
+  .icon { width: 2.86vw; height: 2.86vw; color: currentColor; }
+  .card p { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-thri); font-size: 2.08vw; line-height: 3.39vw; }
+  .badge { display: inline-flex; align-items: center; width: fit-content; margin-top: auto; padding-top: 3.91vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 1.82vw; line-height: 2.86vw; font-weight: 700; }
+  .note { margin: 2.6vw 0 0; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.52); font-size: 1.82vw; line-height: 2.86vw; }
+}
+
+@media screen and (max-width: 30em) {
+  .equipements { width: 100%; padding: 12.14vw 3vw 9.71vw; display: grid; grid-template-columns: 1fr; gap: 9.71vw; align-items: start; contain: paint; }
+  .intro { display: flex; flex-direction: column; min-width: 0; padding-top: 0; }
+  .eyebrow { display: block; margin: 0 0 2.43vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 3.88vw; line-height: 6.31vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
+  .intro h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 8.5vw; line-height: 10.92vw; font-weight: 700; }
+  .intro p { max-width: 94vw; margin: 7.28vw 0 0; font-family: 'DM Sans', sans-serif; color: var(--t-thri); font-size: 3.88vw; line-height: 6.31vw; }
+  .proofs { display: flex; flex-wrap: wrap; gap: 2.91vw; margin-top: 7.28vw; }
+  .proof { display: inline-flex; align-items: center; min-height: 9.71vw; padding: 2.43vw 3.64vw; border: 0.24vw solid rgba(203, 251, 66, 0.28); border-radius: 1.94vw; font-family: 'DM Sans', sans-serif; color: var(--t-primary); background: rgba(203, 251, 66, 0.06); font-size: 3.4vw; line-height: 4.85vw; font-weight: 700; }
+  .panel { min-width: 0; }
+  .suppliers { display: grid; grid-template-columns: 1fr; gap: 4.85vw; }
+  .card { display: flex; flex-direction: column; min-height: 58.25vw; padding: 5.83vw; background: var(--bg-elevated); border: 0.24vw solid rgba(255, 255, 255, 0.1); border-radius: 1.94vw; min-width: 0; }
+  .cardHeader { display: flex; justify-content: space-between; align-items: flex-start; gap: 4.85vw; margin-bottom: 4.85vw; }
+  .card h3 { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-primary); font-size: 5.83vw; line-height: 7.28vw; font-weight: 700; }
+  .link { display: flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 11.65vw; height: 11.65vw; border: 0.24vw solid rgba(203, 251, 66, 0.42); border-radius: 50%; color: var(--ac-primary); transition: border-color 0.3s ease, transform 0.3s ease; }
+  .link:hover { border-color: var(--ac-primary); transform: rotate(-45deg); }
+  .icon { width: 5.34vw; height: 5.34vw; color: currentColor; }
+  .card p { margin: 0; font-family: 'DM Sans', sans-serif; color: var(--t-thri); font-size: 3.88vw; line-height: 6.31vw; }
+  .badge { display: inline-flex; align-items: center; width: fit-content; margin-top: auto; padding-top: 7.28vw; font-family: 'DM Sans', sans-serif; color: var(--ac-primary); font-size: 3.4vw; line-height: 5.34vw; font-weight: 700; }
+  .note { margin: 4.85vw 0 0; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.52); font-size: 3.4vw; line-height: 5.34vw; }
+}

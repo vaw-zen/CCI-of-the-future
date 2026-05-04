@@ -1,7 +1,12 @@
 {
   "eyebrow": "Formations certifiées",
   "heading": "Une expertise formée auprès d’un leader mondial",
-  "body": "Notre équipe dispose de deux certifications de formation délivrées par Prochem, l’un des leaders mondiaux des produits professionnels pour l’entretien des tapis, tissus d’ameublement et sols.",
+  "bodyStart": "Notre équipe dispose de deux certifications de formation délivrées par",
+  "issuer": {
+    "name": "Prochem",
+    "website": "https://prochem.co.uk"
+  },
+  "bodyEnd": "l’un des leaders mondiaux des produits professionnels pour l’entretien des tapis, tissus d’ameublement et sols.",
   "certificates": [
     {
       "title": "Certification tissus d’ameublement",

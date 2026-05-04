@@ -11,7 +11,13 @@ export default function Certifications() {
           <span className={styles.eyebrow}>{content.eyebrow}</span>
           <h2 id="about-certifications-title">{content.heading}</h2>
         </div>
-        <p>{content.body}</p>
+        <p>
+          {content.bodyStart}{' '}
+          <a className={styles.issuerLink} href={content.issuer.website} target="_blank" rel="noopener noreferrer">
+            {content.issuer.name}
+          </a>
+          , {content.bodyEnd}
+        </p>
       </div>
       <div className={styles.grid}>
         {content.certificates.map((certificate) => (

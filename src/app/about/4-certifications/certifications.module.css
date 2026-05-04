@@ -4,6 +4,7 @@
 .eyebrow { display: block; margin: 0 0 0.52vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 0.83vw; line-height: 1.35vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
 .copy h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: #fff; font-size: 3.33vw; line-height: 3.85vw; font-weight: 700; }
 .intro p { max-width: 31.25vw; margin: 0 0 0.42vw; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.7); font-size: 0.83vw; line-height: 1.35vw; }
+.issuerLink { color: #cafb42; font-weight: 700; text-decoration: underline; text-decoration-thickness: 0.05vw; text-underline-offset: 0.16vw; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.56vw; }
 .card { display: flex; flex-direction: column; min-width: 0; background: var(--bg-elevated); border: 0.05vw solid rgba(255, 255, 255, 0.1); border-radius: 0.42vw; overflow: hidden; }
 .imageLink { position: relative; display: block; width: 100%; height: 22.92vw; background: rgba(255, 255, 255, 0.03); border-bottom: 0.05vw solid rgba(255, 255, 255, 0.1); }
@@ -19,6 +20,7 @@
   .eyebrow { display: block; margin: 0 0 1.3vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 2.08vw; line-height: 3.39vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
   .copy h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: #fff; font-size: 5.86vw; line-height: 7.16vw; font-weight: 700; }
   .intro p { max-width: 86vw; margin: 0; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.7); font-size: 2.08vw; line-height: 3.39vw; }
+  .issuerLink { color: #cafb42; font-weight: 700; text-decoration: underline; text-decoration-thickness: 0.13vw; text-underline-offset: 0.39vw; }
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.6vw; }
   .card { display: flex; flex-direction: column; min-width: 0; background: var(--bg-elevated); border: 0.13vw solid rgba(255, 255, 255, 0.1); border-radius: 1.04vw; overflow: hidden; }
   .imageLink { position: relative; display: block; width: 100%; height: 34vw; background: rgba(255, 255, 255, 0.03); border-bottom: 0.13vw solid rgba(255, 255, 255, 0.1); }
@@ -35,6 +37,7 @@
   .eyebrow { display: block; margin: 0 0 2.43vw; font-family: 'DM Sans', sans-serif; color: #cafb42; font-size: 3.88vw; line-height: 6.31vw; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
   .copy h2 { margin: 0; font-family: 'DM Sans', sans-serif; color: #fff; font-size: 8.5vw; line-height: 10.92vw; font-weight: 700; }
   .intro p { max-width: 94vw; margin: 0; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.7); font-size: 3.88vw; line-height: 6.31vw; }
+  .issuerLink { color: #cafb42; font-weight: 700; text-decoration: underline; text-decoration-thickness: 0.24vw; text-underline-offset: 0.73vw; }
   .grid { display: grid; grid-template-columns: 1fr; gap: 5.83vw; }
   .card { display: flex; flex-direction: column; min-width: 0; background: var(--bg-elevated); border: 0.24vw solid rgba(255, 255, 255, 0.1); border-radius: 1.94vw; overflow: hidden; }
   .imageLink { position: relative; display: block; width: 100%; height: 72vw; background: rgba(255, 255, 255, 0.03); border-bottom: 0.24vw solid rgba(255, 255, 255, 0.1); }

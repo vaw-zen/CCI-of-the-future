@@ -10,13 +10,15 @@ const counters = [
 ];
 
 const durations = [2000, 1500, 1500, 1500];
+const initialCounts = counters.map(() => 0);
 
 export default function StrokeEffect() {
-  const [counts, setCounts] = useState(counters.map(() => 0));
+  const [counts, setCounts] = useState(initialCounts);
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef(null);
   const frameRef = useRef(null);
-  const startTimesRef = useRef(counters.map(() => null));
+  const startTimeRef = useRef(null);
+  const countsRef = useRef(initialCounts);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -40,35 +42,39 @@ export default function StrokeEffect() {
     if (!isVisible) return;
 
     let isCancelled = false;
-    startTimesRef.current = counters.map(() => null);
+    startTimeRef.current = null;
+    countsRef.current = initialCounts;
 
     function animateCounter(timestamp) {
       if (isCancelled) return;
 
-      let hasRemaining = false;
+      if (startTimeRef.current === null) {
+        startTimeRef.current = timestamp;
+      }
 
-      setCounts((prevCounts) =>
-        prevCounts.map((count, index) => {
-          if (count >= counters[index].value) return count;
+      const elapsed = timestamp - startTimeRef.current;
+      const nextCounts = counters.map((counter, index) => {
+        const progress = Math.min(elapsed / durations[index], 1);
+        return Math.min(counter.value, Math.floor(progress * counter.value));
+      });
 
-          if (!startTimesRef.current[index]) {
-            startTimesRef.current[index] = timestamp;
-          }
+      const hasChanged = nextCounts.some(
+        (nextValue, index) => nextValue !== countsRef.current[index]
+      );
 
-          const elapsed = timestamp - startTimesRef.current[index];
-          const progress = Math.min(elapsed / durations[index], 1);
-          const nextValue = Math.floor(progress * counters[index].value);
+      if (hasChanged) {
+        countsRef.current = nextCounts;
+        setCounts(nextCounts);
+      }
 
-          if (nextValue < counters[index].value) {
-            hasRemaining = true;
-          }
-
-          return nextValue;
-        })
+      const hasRemaining = nextCounts.some(
+        (nextValue, index) => nextValue < counters[index].value
       );
 
       if (hasRemaining) {
         frameRef.current = requestAnimationFrame(animateCounter);
+      } else {
+        frameRef.current = null;
       }
     }
 

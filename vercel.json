@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/internal/growth-reporting/refresh",
+      "schedule": "0 5 * * *"
+    },
+    {
       "path": "/api/keep-alive",
       "schedule": "0 9 * * *"
     }

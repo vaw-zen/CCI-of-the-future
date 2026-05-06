@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 
 # Block admin and test routes
+Disallow: /admin
 Disallow: /admin/
 Disallow: /api-test/
 Disallow: /api/

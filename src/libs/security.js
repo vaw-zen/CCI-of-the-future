@@ -72,24 +72,91 @@ export function rateLimitRequest(request, {
   });
 }
 
+function normalizeHostname(hostname = '') {
+  return String(hostname)
+    .trim()
+    .toLowerCase()
+    .replace(/^\[|\]$/g, '')
+    .replace(/\.$/, '');
+}
+
+function extractHostname(value = '') {
+  const rawValue = String(value || '').trim();
+  if (!rawValue) {
+    return '';
+  }
+
+  try {
+    return normalizeHostname(new URL(rawValue).hostname);
+  } catch (error) {
+    try {
+      return normalizeHostname(new URL(`https://${rawValue}`).hostname);
+    } catch (fallbackError) {
+      return '';
+    }
+  }
+}
+
+function addAllowedHost(hosts, hostname, { includeWwwVariant = false } = {}) {
+  const normalizedHostname = normalizeHostname(hostname);
+  if (!normalizedHostname) {
+    return;
+  }
+
+  hosts.add(normalizedHostname);
+
+  if (
+    includeWwwVariant
+    && normalizedHostname !== 'localhost'
+    && normalizedHostname !== '127.0.0.1'
+    && normalizedHostname !== '::1'
+    && !/^\d+\.\d+\.\d+\.\d+$/.test(normalizedHostname)
+  ) {
+    hosts.add(normalizedHostname.startsWith('www.')
+      ? normalizedHostname.slice(4)
+      : `www.${normalizedHostname}`);
+  }
+}
+
+function addAllowedOriginList(hosts, value = '') {
+  String(value || '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .forEach((entry) => {
+      addAllowedHost(hosts, extractHostname(entry));
+    });
+}
+
 function getAllowedHosts() {
-  const hosts = new Set(['localhost', '127.0.0.1', '::1']);
+  const hosts = new Set();
+
+  ['localhost', '127.0.0.1', '::1'].forEach((hostname) => {
+    addAllowedHost(hosts, hostname);
+  });
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   if (siteUrl) {
-    try {
-      hosts.add(new URL(siteUrl).hostname);
-    } catch (error) {
-      // Ignore invalid configuration here; route handlers still validate envs.
-    }
+    addAllowedHost(hosts, extractHostname(siteUrl), { includeWwwVariant: true });
   }
 
   const vercelUrl = process.env.VERCEL_URL;
   if (vercelUrl) {
-    hosts.add(vercelUrl.replace(/^https?:\/\//, '').split('/')[0]);
+    addAllowedHost(hosts, extractHostname(vercelUrl));
   }
 
+  addAllowedOriginList(hosts, process.env.ADMIN_ALLOWED_ORIGINS);
+
   return hosts;
+}
+
+function logRejectedOrigin(request, originHostname, allowedHosts) {
+  console.warn('[security] mutation origin rejected:', {
+    path: request.nextUrl?.pathname,
+    originHostname,
+    allowedHosts: Array.from(allowedHosts).sort(),
+    ip: getClientIp(request)
+  });
 }
 
 export function validateMutationOrigin(request) {
@@ -102,6 +169,12 @@ export function validateMutationOrigin(request) {
   try {
     originHostname = new URL(origin).hostname;
   } catch (error) {
+    console.warn('[security] invalid mutation origin header:', {
+      path: request.nextUrl?.pathname,
+      originHeaderLength: origin.length,
+      ip: getClientIp(request)
+    });
+
     return NextResponse.json({
       status: 'invalid_origin',
       message: 'Origine de requête invalide.',
@@ -112,9 +185,13 @@ export function validateMutationOrigin(request) {
     }, { status: 403 });
   }
 
-  if (getAllowedHosts().has(originHostname)) {
+  const allowedHosts = getAllowedHosts();
+  const normalizedOriginHostname = normalizeHostname(originHostname);
+  if (allowedHosts.has(normalizedOriginHostname)) {
     return null;
   }
+
+  logRejectedOrigin(request, normalizedOriginHostname, allowedHosts);
 
   return NextResponse.json({
     status: 'invalid_origin',

@@ -42,8 +42,8 @@ export default function page() {
     <Vision/>
     <StrokeEffect/>
     <Showcase className={styles.showCase}  />
-    <Equipements/>
     <GreenBand className={styles.greenBandWrapper}/>
+    <Equipements/>
     <Refrences className={styles.refrences}/>
     <Certifications/>
     </main>

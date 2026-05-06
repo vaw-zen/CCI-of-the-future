@@ -228,7 +228,7 @@ export async function PATCH(request, { params }) {
     return getErrorResponse('config_error', 'Service de base de données non configuré.', 500);
   }
 
-  const { kind, id } = params;
+  const { kind, id } = await params;
   const config = getLeadConfig(kind);
 
   if (!config || !UUID_PATTERN.test(id || '')) {

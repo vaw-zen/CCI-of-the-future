@@ -1,85 +1,154 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/libs/supabase';
 
+const AUTH_CHECK_TIMEOUT_MS = 8000;
+
+function withTimeout(promise, timeoutMessage) {
+  let timeoutId;
+
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      timeoutId = setTimeout(() => {
+        reject(new Error(timeoutMessage));
+      }, AUTH_CHECK_TIMEOUT_MS);
+    })
+  ]).finally(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  });
+}
+
 export function useAdminAuth() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const isAuthCheckingRef = useRef(false);
+  const authStateRef = useRef({
+    user: null,
+    isAdmin: false,
+    initialized: false
+  });
 
-  const checkUserAuth = useCallback(async (session = null) => {
+  const setAccessState = useCallback((nextUser, nextIsAdmin) => {
+    authStateRef.current.user = nextUser;
+    authStateRef.current.isAdmin = nextIsAdmin;
+    setUser(nextUser);
+    setIsAdmin(nextIsAdmin);
+  }, []);
+
+  const clearAccessState = useCallback(() => {
+    setAccessState(null, false);
+  }, [setAccessState]);
+
+  const checkUserAuth = useCallback(async (session = null, options = {}) => {
     // Prevent multiple simultaneous auth checks
     if (isAuthCheckingRef.current) {
       return;
     }
 
+    const shouldBlockUi = options.blocking ?? !authStateRef.current.initialized;
+    const hasKnownAccess = Boolean(authStateRef.current.user && authStateRef.current.isAdmin);
+
     try {
       isAuthCheckingRef.current = true;
-      setLoading(true);
+
+      if (shouldBlockUi) {
+        setLoading(true);
+      } else {
+        setRefreshing(true);
+      }
+
       setError(null);
 
       // Check if supabase client is available
       if (!supabase) {
         setError('Configuration error: Supabase client not available');
-        setUser(null);
-        setIsAdmin(false);
+        if (!hasKnownAccess) {
+          clearAccessState();
+        }
         return;
       }
 
       // Get session if not provided
       if (!session) {
-        const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
+        const { data: { session: currentSession }, error: sessionError } = await withTimeout(
+          supabase.auth.getSession(),
+          'Session check timed out'
+        );
+
         if (sessionError) {
-          setError('Session error: ' + sessionError.message);
-          setUser(null);
-          setIsAdmin(false);
-          return;
+          throw new Error('Session error: ' + sessionError.message);
         }
+
         session = currentSession;
       }
 
       if (!session || !session.user) {
-        setUser(null);
-        setIsAdmin(false);
+        clearAccessState();
         return;
       }
 
-      // Set user
-      setUser(session.user);
+      const isSameUser = authStateRef.current.user?.id === session.user.id;
+
+      // Keep the current page usable during background revalidation.
+      if (!isSameUser || !authStateRef.current.user) {
+        setAccessState(session.user, isSameUser ? authStateRef.current.isAdmin : false);
+      }
 
       // Check if user is admin by querying admin_users table directly
-      const { data: adminData, error: adminError } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('email', session.user.email)
-        .eq('is_active', true)
-        .single();
+      const { data: adminData, error: adminError } = await withTimeout(
+        supabase
+          .from('admin_users')
+          .select('email')
+          .eq('email', session.user.email)
+          .eq('is_active', true)
+          .single(),
+        'Admin privilege check timed out'
+      );
 
       if (adminError && adminError.code !== 'PGRST116') { // PGRST116 = no rows returned
-        setError('Erreur lors de la vérification des privilèges admin: ' + adminError.message);
-        setIsAdmin(false);
-      } else {
-        const hasAdminRecord = !!adminData;
-        setIsAdmin(hasAdminRecord);
-        
-        // Update last login if admin
-        if (hasAdminRecord) {
-          await supabase
-            .from('admin_users')
-            .update({ last_login: new Date().toISOString() })
-            .eq('email', session.user.email);
+        if (!shouldBlockUi && isSameUser && hasKnownAccess) {
+          setError('Erreur lors de la vérification des privilèges admin: ' + adminError.message);
+          return;
         }
+
+        setError('Erreur lors de la vérification des privilèges admin: ' + adminError.message);
+        setAccessState(session.user, false);
+        return;
+      }
+
+      const hasAdminRecord = !!adminData;
+      setAccessState(session.user, hasAdminRecord);
+
+      // Record logins without blocking the auth flow on refresh events.
+      if (hasAdminRecord && options.recordLastLogin) {
+        void supabase
+          .from('admin_users')
+          .update({ last_login: new Date().toISOString() })
+          .eq('email', session.user.email);
       }
     } catch (err) {
-      setError('Erreur d\'authentification: ' + err.message);
-      setUser(null);
-      setIsAdmin(false);
+      const message = err instanceof Error ? err.message : String(err);
+      const currentUser = authStateRef.current.user;
+      const isSameUser = Boolean(session?.user && currentUser?.id === session.user.id);
+      const shouldPreserveAccess = !shouldBlockUi && hasKnownAccess && (!session?.user || isSameUser);
+
+      setError(`Erreur d'authentification: ${message}`);
+
+      if (!shouldPreserveAccess) {
+        clearAccessState();
+      }
     } finally {
+      authStateRef.current.initialized = true;
       isAuthCheckingRef.current = false;
       setLoading(false);
+      setRefreshing(false);
     }
-  }, []);
+  }, [clearAccessState, setAccessState]);
 
   useEffect(() => {
     // Check if supabase client is available
@@ -89,46 +158,43 @@ export function useAdminAuth() {
       return;
     }
 
-    let mounted = true;
-    let timeoutId;
-
-    // Set a timeout to prevent infinite loading
-    timeoutId = setTimeout(() => {
-      if (mounted) {
-        setLoading(false);
-        setError('Authentication check timed out');
-      }
-    }, 10000);
-
     // Get initial session
-    checkUserAuth().finally(() => {
-      if (timeoutId) clearTimeout(timeoutId);
+    void checkUserAuth(null, {
+      blocking: true,
+      recordLastLogin: true
     });
 
-    // Listen for auth changes with debouncing
+    // Keep auth fresh without blanking the page during background refreshes.
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       // Prevent multiple simultaneous auth checks
       if (isAuthCheckingRef.current) {
         return;
       }
 
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        await checkUserAuth(session);
+      if (event === 'SIGNED_IN') {
+        void checkUserAuth(session, {
+          blocking: false,
+          recordLastLogin: true
+        });
+      } else if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        void checkUserAuth(session, {
+          blocking: false,
+          recordLastLogin: false
+        });
       } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        setIsAdmin(false);
+        clearAccessState();
+        authStateRef.current.initialized = true;
         setLoading(false);
+        setRefreshing(false);
       }
     });
 
     return () => {
-      mounted = false;
-      if (timeoutId) clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
-  }, [checkUserAuth]);
+  }, [checkUserAuth, clearAccessState]);
 
   const signInWithEmail = async (email, password) => {
     try {
@@ -167,8 +233,10 @@ export function useAdminAuth() {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       
-      setUser(null);
-      setIsAdmin(false);
+      clearAccessState();
+      authStateRef.current.initialized = true;
+      setLoading(false);
+      setRefreshing(false);
       return { success: true };
     } catch (error) {
       console.error('Sign out error:', error);
@@ -181,6 +249,7 @@ export function useAdminAuth() {
     user,
     isAdmin,
     loading,
+    refreshing,
     error,
     signInWithEmail,
     signOut,

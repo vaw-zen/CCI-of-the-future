@@ -2,25 +2,14 @@
 
 import {
   CONSENT_CHANGE_EVENT,
-  COOKIE_CONSENT_ACCEPTED,
   COOKIE_CONSENT_COOKIE_NAME,
   COOKIE_CONSENT_MAX_AGE,
-  COOKIE_CONSENT_REJECTED,
-  FACEBOOK_PIXEL_SCRIPT_ID,
-  FACEBOOK_REFERRALS_KEY,
-  GTAG_CONVERSION_ID,
-  GTAG_INIT_ID,
-  GTAG_LOADER_ID,
-  GTM_LOADER_ID,
-  OPEN_COOKIE_PREFERENCES_EVENT,
-  SESSION_ATTRIBUTION_KEY,
-  TRACKING_ELIGIBLE_COOKIE_NAME,
-  UTM_HISTORY_KEY,
-  UTM_SESSION_KEY
+  COOKIE_NOTICE_ACKNOWLEDGED,
+  OPEN_COOKIE_PREFERENCES_EVENT
 } from './consent.constants';
 
-const ALLOWED_CONSENT_VALUES = new Set([COOKIE_CONSENT_ACCEPTED, COOKIE_CONSENT_REJECTED]);
-const OPTIONAL_COOKIE_PATTERNS = [/^_ga/, /^_gid$/, /^_gat/, /^_gcl_/, /^_fbp$/, /^_fbc$/];
+const LEGACY_NOTICE_VALUES = new Set(['accepted', 'rejected']);
+const ALLOWED_NOTICE_VALUES = new Set([COOKIE_NOTICE_ACKNOWLEDGED, ...LEGACY_NOTICE_VALUES]);
 
 function getCookieValue(name) {
   if (typeof document === 'undefined') {
@@ -41,87 +30,12 @@ function setCookieValue(name, value, maxAge) {
   document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; samesite=lax`;
 }
 
-function getDomainVariants(hostname) {
-  if (!hostname || hostname === 'localhost' || hostname.includes(':')) {
-    return [''];
-  }
-
-  const segments = hostname.split('.');
-  const domains = new Set(['', hostname, `.${hostname}`]);
-
-  for (let index = 1; index < segments.length - 1; index += 1) {
-    const domain = segments.slice(index).join('.');
-    domains.add(domain);
-    domains.add(`.${domain}`);
-  }
-
-  return Array.from(domains);
-}
-
-function deleteCookie(name) {
-  if (typeof document === 'undefined' || typeof window === 'undefined') {
-    return;
-  }
-
-  const domains = getDomainVariants(window.location.hostname);
-
-  domains.forEach((domain) => {
-    const domainPart = domain ? `; domain=${domain}` : '';
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domainPart}; samesite=lax`;
-  });
-}
-
-function removeOptionalTrackingArtifacts() {
-  if (typeof document === 'undefined' || typeof window === 'undefined') {
-    return;
-  }
-
-  [GTAG_LOADER_ID, GTAG_INIT_ID, GTAG_CONVERSION_ID, GTM_LOADER_ID, FACEBOOK_PIXEL_SCRIPT_ID].forEach((id) => {
-    document.getElementById(id)?.remove();
-  });
-
-  document
-    .querySelectorAll('script[src*="googletagmanager.com"], script[src*="facebook.net"], iframe[src*="googletagmanager.com"]')
-    .forEach((element) => element.remove());
-
-  window.__cciConsentGranted = false;
-  window.gtag_report_conversion = undefined;
-  window.fbq = undefined;
-  window._fbq = undefined;
-}
-
-export function clearOptionalTrackingCookies() {
-  if (typeof document === 'undefined' || typeof window === 'undefined') {
-    return;
-  }
-
-  const cookieNames = document.cookie
-    .split('; ')
-    .map((entry) => entry.split('=')[0])
-    .filter(Boolean);
-
-  cookieNames.forEach((name) => {
-    if (OPTIONAL_COOKIE_PATTERNS.some((pattern) => pattern.test(name))) {
-      deleteCookie(name);
-    }
-  });
-
-  deleteCookie('cci_analytics');
-
-  window.sessionStorage.removeItem(SESSION_ATTRIBUTION_KEY);
-  window.sessionStorage.removeItem(UTM_SESSION_KEY);
-  window.localStorage.removeItem(UTM_HISTORY_KEY);
-  window.localStorage.removeItem(FACEBOOK_REFERRALS_KEY);
-
-  removeOptionalTrackingArtifacts();
-}
-
-function getConsentPayload(isGranted) {
+function getGrantedConsentPayload() {
   return {
-    analytics_storage: isGranted ? 'granted' : 'denied',
-    ad_storage: isGranted ? 'granted' : 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied'
+    analytics_storage: 'granted',
+    ad_storage: 'granted',
+    ad_user_data: 'granted',
+    ad_personalization: 'granted'
   };
 }
 
@@ -137,13 +51,9 @@ function dispatchConsentChange() {
   );
 }
 
-export function getTrackingEligibility() {
-  return getCookieValue(TRACKING_ELIGIBLE_COOKIE_NAME) === '1';
-}
-
 export function getCookieConsentStatus() {
   const status = getCookieValue(COOKIE_CONSENT_COOKIE_NAME);
-  return ALLOWED_CONSENT_VALUES.has(status) ? status : '';
+  return ALLOWED_NOTICE_VALUES.has(status) ? status : '';
 }
 
 export function hasCookieConsentChoice() {
@@ -151,68 +61,55 @@ export function hasCookieConsentChoice() {
 }
 
 export function isCookieConsentAccepted() {
-  return getCookieConsentStatus() === COOKIE_CONSENT_ACCEPTED;
+  return hasCookieConsentChoice();
 }
 
 export function getCookieConsentState() {
   const status = getCookieConsentStatus();
-  const eligible = getTrackingEligibility();
+  const hasAcknowledged = Boolean(status);
 
   return {
-    eligible,
     status,
-    hasChoice: Boolean(status),
-    accepted: status === COOKIE_CONSENT_ACCEPTED,
-    rejected: status === COOKIE_CONSENT_REJECTED
+    hasChoice: hasAcknowledged,
+    hasAcknowledged,
+    acknowledged: hasAcknowledged
   };
 }
 
-export function applyGoogleConsentStatus(status) {
+export function applyGoogleConsentStatus() {
   if (typeof window === 'undefined') {
     return;
   }
-
-  const isGranted = status === COOKIE_CONSENT_ACCEPTED && getTrackingEligibility();
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function gtag() {
     window.dataLayer.push(arguments);
   };
 
-  window.__cciConsentGranted = isGranted;
-
-  window.gtag('consent', 'update', getConsentPayload(isGranted));
+  window.gtag('consent', 'update', getGrantedConsentPayload());
 }
 
-export function setCookieConsent(status) {
-  if (!ALLOWED_CONSENT_VALUES.has(status)) {
+export function setCookieConsent(status = COOKIE_NOTICE_ACKNOWLEDGED) {
+  const normalizedStatus = ALLOWED_NOTICE_VALUES.has(status) ? COOKIE_NOTICE_ACKNOWLEDGED : '';
+
+  if (!normalizedStatus) {
     return;
   }
 
-  setCookieValue(COOKIE_CONSENT_COOKIE_NAME, status, COOKIE_CONSENT_MAX_AGE);
-  applyGoogleConsentStatus(status);
-
-  if (status === COOKIE_CONSENT_REJECTED) {
-    clearOptionalTrackingCookies();
-  }
-
+  setCookieValue(COOKIE_CONSENT_COOKIE_NAME, normalizedStatus, COOKIE_CONSENT_MAX_AGE);
   dispatchConsentChange();
 }
 
-export function acceptCookieConsent() {
-  setCookieConsent(COOKIE_CONSENT_ACCEPTED);
+export function acknowledgeCookieNotice() {
+  setCookieConsent(COOKIE_NOTICE_ACKNOWLEDGED);
 }
 
-export function rejectCookieConsent(options = {}) {
-  const previousStatus = getCookieConsentStatus();
+export function acceptCookieConsent() {
+  acknowledgeCookieNotice();
+}
 
-  setCookieConsent(COOKIE_CONSENT_REJECTED);
-
-  if (previousStatus === COOKIE_CONSENT_ACCEPTED && options.reload !== false && typeof window !== 'undefined') {
-    window.setTimeout(() => {
-      window.location.reload();
-    }, 120);
-  }
+export function rejectCookieConsent() {
+  acknowledgeCookieNotice();
 }
 
 export function openCookiePreferences() {
@@ -224,5 +121,5 @@ export function openCookiePreferences() {
 }
 
 export function shouldLoadOptionalTracking() {
-  return getTrackingEligibility() && isCookieConsentAccepted();
+  return true;
 }

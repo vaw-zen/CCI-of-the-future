@@ -6,16 +6,19 @@ import { getCookieConsentState } from '@/utils/consent/consent';
 
 export function useCookieConsent() {
   const [consentState, setConsentState] = useState({
-    eligible: false,
+    isReady: false,
     status: '',
     hasChoice: false,
-    accepted: false,
-    rejected: false
+    hasAcknowledged: false,
+    acknowledged: false
   });
 
   useEffect(() => {
     const syncConsentState = () => {
-      setConsentState(getCookieConsentState());
+      setConsentState({
+        isReady: true,
+        ...getCookieConsentState()
+      });
     };
 
     syncConsentState();

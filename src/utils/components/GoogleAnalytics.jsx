@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useCookieConsent } from '@/hooks/useCookieConsent';
 import { applyGoogleConsentStatus } from '@/utils/consent/consent';
 import { GTM_CONTAINER_ID, GTM_LOADER_ID } from '@/utils/consent/consent.constants';
 import { persistSessionAttribution, pushAnalyticsEvent } from '@/utils/analyticsGateway';
@@ -65,33 +64,23 @@ function trackUtmArrival() {
 }
 
 export default function GoogleAnalytics() {
-  const { accepted, eligible } = useCookieConsent();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const lastTrackedPathRef = useRef('');
-  const scriptsLoadedRef = useRef(false);
 
   useEffect(() => {
-    applyGoogleConsentStatus(accepted ? 'accepted' : 'rejected');
-
-    if (!(accepted && eligible)) {
-      scriptsLoadedRef.current = false;
-      lastTrackedPathRef.current = '';
-      return;
-    }
-
+    applyGoogleConsentStatus();
     ensureTagManagerLoaded();
-    scriptsLoadedRef.current = true;
 
     const currentPath = getCurrentPagePath();
     persistSessionAttribution();
     lastTrackedPathRef.current = currentPath;
     trackPageView(currentPath);
     trackUtmArrival();
-  }, [accepted, eligible]);
+  }, []);
 
   useEffect(() => {
-    if (!(accepted && eligible) || !scriptsLoadedRef.current || typeof window === 'undefined') {
+    if (typeof window === 'undefined') {
       return;
     }
 
@@ -117,7 +106,7 @@ export default function GoogleAnalytics() {
     lastTrackedPathRef.current = currentPath;
     trackPageView(currentPath);
     trackUtmArrival();
-  }, [accepted, eligible, pathname, searchParams]);
+  }, [pathname, searchParams]);
 
   return null;
 }

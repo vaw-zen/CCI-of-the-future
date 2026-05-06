@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useCookieConsent } from '@/hooks/useCookieConsent';
-import { acceptCookieConsent, rejectCookieConsent } from '@/utils/consent/consent';
+import { acknowledgeCookieNotice } from '@/utils/consent/consent';
 import { OPEN_COOKIE_PREFERENCES_EVENT } from '@/utils/consent/consent.constants';
 
 export function useCookieBannerLogic() {
@@ -21,20 +21,14 @@ export function useCookieBannerLogic() {
     };
   }, []);
 
-  const handleAccept = () => {
-    acceptCookieConsent();
-    setIsForcedOpen(false);
-  };
-
-  const handleReject = () => {
-    rejectCookieConsent();
+  const handleAcknowledge = () => {
+    acknowledgeCookieNotice();
     setIsForcedOpen(false);
   };
 
   return {
     consentState,
-    isOpen: !consentState.hasChoice || isForcedOpen,
-    handleAccept,
-    handleReject
+    isOpen: isForcedOpen || (consentState.isReady && !consentState.hasAcknowledged),
+    handleAcknowledge
   };
 }

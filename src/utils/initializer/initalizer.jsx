@@ -9,12 +9,10 @@ import { headerSI } from "@/layout/header/header.func";
 import { usePathname } from "next/navigation";
 import { storeUTMParameters } from "../utmGenerator";
 import { trackContactLinkClick } from "@/utils/analytics";
-import { useCookieConsent } from "@/hooks/useCookieConsent";
 
 export default function Initializer() {
     // Get the current path for route change detection
     const pathname = usePathname();
-    const { accepted, eligible } = useCookieConsent();
     
     // Always call hooks in the same order - never conditionally
     const { setVw, setVh, isDesktop, isTablet, isMobile } = dimensionsStore();
@@ -46,10 +44,8 @@ export default function Initializer() {
     }, [pathname])
   
     useEffect(() => {
-        if (accepted && eligible) {
-            storeUTMParameters();
-        }
-    }, [accepted, eligible, pathname]);
+        storeUTMParameters();
+    }, [pathname]);
 
     useEffect(() => {
         const handleTrackedLinkClick = (event) => {

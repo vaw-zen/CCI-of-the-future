@@ -142,24 +142,14 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
-              window.__cciConsentGranted = false;
               window.gtag = window.gtag || function gtag() {
-                var args = Array.prototype.slice.call(arguments);
-                var command = args[0];
-                if (command === 'consent') {
-                  window.dataLayer.push(args);
-                  return;
-                }
-                if (window.__cciConsentGranted) {
-                  window.dataLayer.push(args);
-                }
+                window.dataLayer.push(arguments);
               };
               window.gtag('consent', 'default', {
-                analytics_storage: 'denied',
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied',
-                wait_for_update: 500
+                analytics_storage: 'granted',
+                ad_storage: 'granted',
+                ad_user_data: 'granted',
+                ad_personalization: 'granted'
               });
             `
           }}

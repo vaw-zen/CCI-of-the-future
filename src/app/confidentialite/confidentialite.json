@@ -1,14 +1,14 @@
 {
   "metadata": {
     "title": "Politique de confidentialité et cookies | CCI Services",
-    "description": "Consultez la politique de confidentialité de CCI Services: données collectées, finalités, cookies, outils tiers et gestion du consentement."
+    "description": "Consultez la politique de confidentialité de CCI Services: données collectées, finalités, cookies, outils tiers et information relative à la mesure d’audience."
   },
   "heroTitle": "Politique de confidentialité",
   "updatedAt": "14 avril 2026",
   "intro": {
     "eyebrow": "Confidentialité & cookies",
     "title": "Une information claire sur les données que nous collectons et l’usage des cookies sur le site CCI Services.",
-    "description": "Cette page explique quelles données peuvent être transmises via nos formulaires, comment nous utilisons les outils de mesure d’audience, quels cookies sont déposés, et comment vous pouvez modifier votre choix à tout moment."
+    "description": "Cette page explique quelles données peuvent être transmises via nos formulaires, comment nous utilisons les outils de mesure d’audience, quels cookies peuvent être déposés, et comment nous vous informons de leur utilisation."
   },
   "summaryCards": [
     {
@@ -21,7 +21,7 @@
     },
     {
       "title": "Choix cookies",
-      "description": "Les cookies optionnels de mesure d’audience et de marketing restent bloqués tant que vous n’avez pas choisi de les autoriser."
+      "description": "La bannière cookies informe sur la mesure d’audience en place et permet d’enregistrer un accusé de lecture, sans désactiver les outils de mesure."
     }
   ],
   "sections": [
@@ -47,14 +47,14 @@
       "paragraphs": [
         "Lorsque vous utilisez nos formulaires de contact, de devis ou de convention, nous pouvons collecter les données que vous saisissez volontairement: identité, coordonnées, adresse, informations sur le bien ou le service demandé, préférences de rendez-vous et message libre.",
         "Lorsque vous vous inscrivez à une newsletter ou acceptez de recevoir des communications, nous pouvons aussi conserver la preuve de votre inscription et les informations strictement nécessaires à cet envoi.",
-        "En navigation, certaines données techniques peuvent être traitées pour la sécurité, le fonctionnement du site, la mesure d’audience ou la prévention des abus, selon votre choix de consentement."
+        "En navigation, certaines données techniques peuvent être traitées pour la sécurité, le fonctionnement du site, la mesure d’audience ou la prévention des abus."
       ],
       "listTitle": "Catégories de données concernées:",
       "items": [
         "coordonnées: nom, prénom, email, téléphone, adresse, ville;",
         "données de demande: type de service, surface, nombre de places, date souhaitée, message libre;",
         "données professionnelles: raison sociale ou matricule fiscal lorsque le formulaire l’exige;",
-        "données techniques: pages visitées, provenance de visite, consentement cookies, informations de navigateur lorsque la mesure d’audience est autorisée."
+        "données techniques: pages visitées, provenance de visite, état d’affichage de la notice cookies, informations de navigateur utiles à la mesure d’audience."
       ]
     },
     {
@@ -63,14 +63,14 @@
       "title": "Pourquoi ces données sont utilisées",
       "paragraphs": [
         "Les données sont utilisées pour répondre à vos demandes, préparer un devis, planifier une intervention, assurer un suivi commercial, traiter les inscriptions newsletter, sécuriser le site et améliorer la qualité des parcours proposés.",
-        "Lorsque vous acceptez les cookies optionnels, nous pouvons également utiliser des outils de mesure d’audience et de marketing pour comprendre quelles pages intéressent le plus les visiteurs, mesurer les conversions et améliorer nos contenus."
+        "Nous pouvons également utiliser des outils de mesure d’audience et de marketing pour comprendre quelles pages intéressent le plus les visiteurs, mesurer les conversions et améliorer nos contenus."
       ],
       "listTitle": "Finalités principales:",
       "items": [
         "gestion des demandes de contact, devis et conventions;",
         "suivi de la relation client et réponse commerciale;",
         "envoi d’informations ou d’offres si vous y avez consenti;",
-        "mesure d’audience et analyse marketing si vous l’avez autorisé."
+        "mesure d’audience et analyse marketing pour le pilotage du site et des campagnes."
       ]
     },
     {
@@ -78,25 +78,24 @@
       "eyebrow": "Cookies",
       "title": "Cookies et outils tiers utilisés",
       "paragraphs": [
-        "Le site utilise un cookie technique pour mémoriser votre statut d’éligibilité au chargement de certains outils, ainsi qu’un cookie de consentement pour enregistrer votre choix pendant 180 jours.",
-        "Si vous acceptez les cookies optionnels, le site peut charger Google Analytics, Google Ads, Google Tag Manager et Meta Pixel pour la mesure d’audience, l’attribution de trafic et le suivi marketing. Sans votre accord, ces scripts optionnels ne sont pas activés.",
-        "Les cookies strictement nécessaires au fonctionnement du site ou à la sécurité peuvent être utilisés sans finalité publicitaire ou de profilage."
+        "Le site utilise un cookie d’information pour mémoriser l’affichage de la bannière pendant 180 jours.",
+        "Le site peut charger Google Analytics, Google Ads, Google Tag Manager et Meta Pixel pour la mesure d’audience, l’attribution de trafic et le suivi marketing dès la navigation sur le site.",
+        "Des cookies strictement nécessaires au fonctionnement du site ou à la sécurité peuvent également être utilisés."
       ],
       "listTitle": "Cookies et traceurs concernés:",
       "items": [
-        "cookie de consentement utilisateur: mémorise votre choix d’acceptation ou de refus;",
-        "cookie technique d’éligibilité: aide à conserver la logique interne de chargement des outils optionnels;",
-        "cookies analytiques Google: uniquement après accord explicite;",
-        "traceurs marketing Meta/Google: uniquement après accord explicite."
+        "cookie d’information utilisateur: mémorise l’accusé de lecture de la bannière;",
+        "cookies analytiques Google: utilisés pour la mesure d’audience, l’attribution et le suivi des conversions;",
+        "traceurs marketing Meta/Google: utilisés pour la mesure marketing et l’analyse des performances."
       ]
     },
     {
       "id": "gerer-mes-cookies",
       "eyebrow": "Préférences",
-      "title": "Modifier ou retirer mon consentement",
+      "title": "Relire l’information cookies",
       "paragraphs": [
-        "Vous pouvez changer votre choix à tout moment depuis cette section. En cas de refus après une acceptation précédente, le site tente de supprimer les cookies first-party de mesure d’audience déjà déposés et bloque les futurs chargements optionnels.",
-        "Si vous utilisez les réglages de votre navigateur pour supprimer les cookies, votre choix pourra vous être redemandé lors d’une prochaine visite."
+        "Vous pouvez rouvrir la bannière d’information à tout moment depuis cette section pour relire l’information affichée sur le site.",
+        "Si vous utilisez les réglages de votre navigateur pour supprimer les cookies, la bannière pourra vous être réaffichée lors d’une prochaine visite."
       ]
     }
   ]

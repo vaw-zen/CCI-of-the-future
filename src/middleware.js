@@ -1,16 +1,12 @@
 /**
  * Next.js Middleware — merged from root + src middleware
  * Handles: CSS caching, CORS for API routes, admin auth via Supabase,
- * and analytics gating for Tunisia-only traffic.
+ * and shared security headers.
  */
 
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 
-const TRACKING_ELIGIBLE_COOKIE_NAME = 'cci_tracking_eligible';
-const LEGACY_ANALYTICS_COOKIE_NAME = 'cci_analytics';
-const ANALYTICS_ALLOWED_COUNTRIES = new Set(['TN']);
-const BOT_USER_AGENT_PATTERN = /(bot|crawler|spider|crawling|headless|facebookexternalhit|whatsapp|telegrambot|slackbot|discordbot|linkedinbot|skypeuripreview|google-inspectiontool|adsbot|apis-google|mediapartners-google|lighthouse|pagespeed|pingdom|curl|wget|python-requests|axios|node-fetch|go-http-client)/i;
 const ADMIN_PUBLIC_PATHS = ['/admin/login', '/admin/reset-password'];
 const middlewareRateBuckets = new Map();
 const ADMIN_LOGIN_RATE_LIMIT = {
@@ -77,39 +73,7 @@ function attachSecurityHeaders(response) {
   return response;
 }
 
-function getVisitorCountry(request) {
-  const country =
-    request.headers.get('x-vercel-ip-country') ||
-    request.headers.get('cf-ipcountry') ||
-    request.headers.get('x-country-code') ||
-    '';
-
-  return country.toUpperCase();
-}
-
-function isBotTraffic(request) {
-  const userAgent = request.headers.get('user-agent') || '';
-  return BOT_USER_AGENT_PATTERN.test(userAgent);
-}
-
-function shouldEnableAnalytics(request) {
-  if (process.env.NODE_ENV !== 'production') {
-    return true;
-  }
-
-  return ANALYTICS_ALLOWED_COUNTRIES.has(getVisitorCountry(request)) && !isBotTraffic(request);
-}
-
-function attachAnalyticsCookie(request, response) {
-  response.cookies.set({
-    name: TRACKING_ELIGIBLE_COOKIE_NAME,
-    value: shouldEnableAnalytics(request) ? '1' : '0',
-    path: '/',
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-  });
-  response.cookies.delete(LEGACY_ANALYTICS_COOKIE_NAME);
-
+function finalizeResponse(response) {
   return attachSecurityHeaders(response);
 }
 
@@ -211,14 +175,14 @@ export async function middleware(request) {
         return createLoginRedirect(request, supabaseResponse);
       }
 
-      return attachAnalyticsCookie(request, supabaseResponse);
+      return finalizeResponse(supabaseResponse);
     } catch (error) {
       console.error('Middleware auth error:', error);
       return createLoginRedirect(request, supabaseResponse);
     }
   }
 
-  return attachAnalyticsCookie(request, NextResponse.next());
+  return finalizeResponse(NextResponse.next());
 }
 
 export const config = {

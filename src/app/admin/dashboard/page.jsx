@@ -71,6 +71,115 @@ function formatCurrency(value) {
   }).format(value);
 }
 
+function formatPosition(value) {
+  if (value === null || value === undefined) {
+    return 'Non classé';
+  }
+
+  return `#${Number(value).toLocaleString('fr-FR', {
+    maximumFractionDigits: 1
+  })}`;
+}
+
+function formatPositionChange(value) {
+  if (value === null || value === undefined) {
+    return 'N/A';
+  }
+
+  if (value === 0) {
+    return 'Stable';
+  }
+
+  const prefix = value > 0 ? '+' : '';
+  return `${prefix}${value.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} places`;
+}
+
+function hasReferencePosition(reference = {}) {
+  return reference.position !== null && reference.position !== undefined;
+}
+
+function formatLiveSnapshotValue(deviceRow) {
+  if (!deviceRow || !deviceRow.trackedSnapshots) {
+    return 'Aucun snapshot';
+  }
+
+  return formatPosition(deviceRow.latestPosition);
+}
+
+function formatKeywordDeviceValue(deviceRow, reference = {}, useReferenceFallback = false) {
+  if (deviceRow?.trackedSnapshots) {
+    return formatPosition(deviceRow.latestPosition);
+  }
+
+  if (useReferenceFallback && hasReferencePosition(reference)) {
+    return `Réf. ${formatPosition(reference.position)}`;
+  }
+
+  return 'Non classé';
+}
+
+function formatReferenceSummary(reference = {}) {
+  if (!hasReferencePosition(reference)) {
+    return 'Réf. importée: non classée';
+  }
+
+  const updatedAt = reference.lastUpdated
+    ? ` au ${formatDateShort(reference.lastUpdated)}`
+    : '';
+
+  return `Réf. importée: ${formatPosition(reference.position)}${updatedAt}`;
+}
+
+function formatKeywordDeviceSummary(label, deviceRow, reference = {}, useReferenceFallback = false) {
+  if (deviceRow?.trackedSnapshots) {
+    return `${label}: ${formatPosition(deviceRow.latestPosition)}`;
+  }
+
+  if (useReferenceFallback && hasReferencePosition(reference)) {
+    return `${label}: réf. ${formatPosition(reference.position)}`;
+  }
+
+  return `${label}: non classé`;
+}
+
+function formatKeywordSourceSummary(row, useReferenceFallback = false) {
+  if (useReferenceFallback && hasReferencePosition(row.reference)) {
+    const updatedAt = row.reference.lastUpdated
+      ? ` au ${formatDateShort(row.reference.lastUpdated)}`
+      : '';
+
+    return `Source: référence importée${updatedAt}`;
+  }
+
+  if (hasReferencePosition(row.reference)) {
+    return formatReferenceSummary(row.reference);
+  }
+
+  return 'Réf. importée: non classée';
+}
+
+function formatKeywordSourceValue(row, useReferenceFallback = false) {
+  if (row.hasLiveSnapshots) {
+    return hasReferencePosition(row.reference) ? 'Live + réf.' : 'Live SERP';
+  }
+
+  if (useReferenceFallback && hasReferencePosition(row.reference)) {
+    return row.reference.lastUpdated
+      ? `Catalogue ${formatDateShort(row.reference.lastUpdated)}`
+      : 'Catalogue';
+  }
+
+  if (hasReferencePosition(row.reference)) {
+    return 'Réf. importée';
+  }
+
+  return 'Aucune position';
+}
+
+function formatTagList(tags = []) {
+  return tags.filter(Boolean).join(' · ');
+}
+
 function formatDateTime(value) {
   if (!value) {
     return 'Non renseigné';
@@ -107,6 +216,10 @@ function formatMetricValue(value, type = 'number') {
 
   if (type === 'hours') {
     return formatHours(value);
+  }
+
+  if (type === 'position') {
+    return formatPosition(value);
   }
 
   return formatNumber(value);
@@ -196,9 +309,29 @@ function KpiCard({ card }) {
   );
 }
 
-function MultiSeriesTrendChart({ points = [], series = [], ariaLabel }) {
-  if (!points.length || !series.length) {
-    return <p className={styles.mutedText}>Aucune donnée à afficher.</p>;
+function MultiSeriesTrendChart({
+  points = [],
+  series = [],
+  ariaLabel,
+  mode = 'count',
+  emptyText = 'Aucune donnée à afficher.'
+}) {
+  const isPositionChart = mode === 'position';
+  const getPointValue = (point, seriesKey) => {
+    const value = point[seriesKey];
+
+    if (isPositionChart) {
+      return Number.isFinite(value) ? value : null;
+    }
+
+    return Number.isFinite(value) ? value : 0;
+  };
+  const values = points
+    .flatMap((point) => series.map((item) => getPointValue(point, item.key)))
+    .filter((value) => value !== null);
+
+  if (!points.length || !series.length || values.length === 0) {
+    return <p className={styles.mutedText}>{emptyText}</p>;
   }
 
   const width = 720;
@@ -206,15 +339,33 @@ function MultiSeriesTrendChart({ points = [], series = [], ariaLabel }) {
   const padding = 20;
   const chartWidth = width - (padding * 2);
   const chartHeight = height - (padding * 2);
-  const values = points.flatMap((point) => series.map((item) => point[item.key] || 0));
-  const maxValue = Math.max(...values, 1);
+  const minValue = isPositionChart ? Math.min(...values) : 0;
+  const maxValue = Math.max(...values, isPositionChart ? minValue : 1);
+  const valueRange = Math.max(maxValue - minValue, isPositionChart ? 1 : maxValue);
   const step = points.length > 1 ? chartWidth / (points.length - 1) : chartWidth;
+  const getYCoordinate = (value) => {
+    if (value === null) {
+      return null;
+    }
+
+    if (isPositionChart) {
+      return padding + (((value - minValue) / valueRange) * chartHeight);
+    }
+
+    return padding + chartHeight - ((value / valueRange) * chartHeight);
+  };
 
   const buildPolyline = (seriesKey) => points.map((point, index) => {
+    const value = getPointValue(point, seriesKey);
+    const y = getYCoordinate(value);
+
+    if (y === null) {
+      return null;
+    }
+
     const x = padding + (index * step);
-    const y = padding + chartHeight - (((point[seriesKey] || 0) / maxValue) * chartHeight);
     return `${x},${y}`;
-  }).join(' ');
+  }).filter(Boolean).join(' ');
 
   return (
     <div className={styles.chartFrame}>
@@ -235,7 +386,12 @@ function MultiSeriesTrendChart({ points = [], series = [], ariaLabel }) {
           return (
             <g key={point.date}>
               {series.map((item) => {
-                const y = padding + chartHeight - (((point[item.key] || 0) / maxValue) * chartHeight);
+                const value = getPointValue(point, item.key);
+                const y = getYCoordinate(value);
+
+                if (y === null) {
+                  return null;
+                }
 
                 return (
                   <circle
@@ -268,6 +424,31 @@ function MultiSeriesTrendChart({ points = [], series = [], ariaLabel }) {
         ))}
       </svg>
     </div>
+  );
+}
+
+function PositionTrendPanel({
+  points = [],
+  series = [],
+  ariaLabel,
+  emptyText = 'Aucune position classée sur cette période.',
+  singlePointText = 'Historique insuffisant: il faut au moins 2 snapshots SERP classés sur des dates différentes.'
+}) {
+  if (!points.length) {
+    return <p className={styles.mutedText}>{emptyText}</p>;
+  }
+
+  if (points.length < 2) {
+    return <p className={styles.mutedText}>{singlePointText}</p>;
+  }
+
+  return (
+    <MultiSeriesTrendChart
+      points={points}
+      series={series}
+      ariaLabel={ariaLabel}
+      mode="position"
+    />
   );
 }
 
@@ -324,6 +505,11 @@ function HealthGrid({ dataHealth }) {
               <span>As of: {formatDateTime(item.asOf)}</span>
               <span>Metric date: {item.freshestMetricDate || 'N/A'}</span>
               {Number.isFinite(item.recordCount) && <span>Lignes période: {formatNumber(item.recordCount)}</span>}
+              {item.metadata?.deviceRowCounts && (
+                <span>
+                  Devices: D {formatNumber(item.metadata.deviceRowCounts.desktop || 0)} / M {formatNumber(item.metadata.deviceRowCounts.mobile || 0)}
+                </span>
+              )}
             </div>
             <p className={styles.inlineNote}>{item.message || 'Aucun message.'}</p>
             {item.lastError && <p className={styles.healthError}>{item.lastError}</p>}
@@ -362,10 +548,11 @@ function MetricListPanel({ title, note, rows = [], emptyText, renderRow }) {
   );
 }
 
-function LeadSummaryList({ title, leads = [], emptyText }) {
+function LeadSummaryList({ title, leads = [], emptyText, note }) {
   return (
     <div className={styles.panel}>
       <h2>{title}</h2>
+      {note && <p className={styles.inlineNote}>{note}</p>}
       {leads.length === 0 ? (
         <p className={styles.mutedText}>{emptyText}</p>
       ) : (
@@ -373,19 +560,20 @@ function LeadSummaryList({ title, leads = [], emptyText }) {
           {leads.map((lead) => (
             <Link
               key={`${lead.kind}-${lead.id}`}
-              href={lead.kind === 'devis' ? '/admin/devis' : '/admin/conventions'}
+              href={lead.drilldownHref || (lead.kind === 'devis' ? `/admin/devis?lead=${lead.id}` : `/admin/conventions?lead=${lead.id}`)}
               className={styles.compactItem}
             >
               <div>
                 <strong>{lead.kindLabel} - {lead.serviceLabel}</strong>
-                <span>{lead.source} / {lead.medium}</span>
-                <span>{lead.landingPage}</span>
+                <span>{lead.metaLinePrimary || `${lead.source} / ${lead.medium}`}</span>
+                <span>{lead.metaLineSecondary || lead.landingPage}</span>
+                {lead.metaLineTertiary && <small>{lead.metaLineTertiary}</small>}
               </div>
               <div className={styles.compactMeta}>
                 <span className={`${styles.statusBadge} ${styles[`status_${lead.status}`]}`}>
                   {lead.statusLabel}
                 </span>
-                <small>{formatHours(lead.ageHours)}</small>
+                <small>{lead.metaDateTime ? formatDateTime(lead.metaDateTime) : formatHours(lead.ageHours)}</small>
               </div>
             </Link>
           ))}
@@ -522,6 +710,7 @@ function AcquisitionSection({ dashboardData }) {
     { key: 'cpl', label: 'CPL', value: dashboardData.acquisition.totals.costPerLead, type: 'currency', meta: 'Spend / leads créés' },
     { key: 'cpa', label: 'CPA', value: dashboardData.acquisition.totals.costPerAcquisition, type: 'currency', meta: 'Spend / gains cohorte' }
   ];
+  const whatsappData = dashboardData.acquisition.whatsapp;
 
   return (
     <>
@@ -574,11 +763,109 @@ function AcquisitionSection({ dashboardData }) {
           )}
         />
       </div>
+
+      <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>WhatsApp summary</h2>
+          <p className={styles.inlineNote}>{whatsappData.notes.clickBasis}</p>
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(whatsappData.summary.clicks)}</strong>
+              <span>Clics</span>
+            </div>
+            <div>
+              <strong>{formatNumber(whatsappData.summary.uniqueClickers)}</strong>
+              <span>Navigateurs uniques</span>
+            </div>
+            <div>
+              <strong>{formatNumber(whatsappData.summary.autoAttributedLeads)}</strong>
+              <span>Leads auto-attribués</span>
+            </div>
+            <div>
+              <strong>{formatNumber(whatsappData.summary.manualTaggedLeads)}</strong>
+              <span>Leads taggés manuellement</span>
+            </div>
+            <div>
+              <strong>{formatNumber(whatsappData.summary.totalAttributedLeads)}</strong>
+              <span>Total leads WhatsApp</span>
+            </div>
+          </div>
+          <p className={styles.mutedText}>{whatsappData.notes.autoMatchWindow}</p>
+          <p className={styles.mutedText}>{whatsappData.notes.manualTagExplanation}</p>
+        </div>
+
+        <div className={styles.panel}>
+          <h2>WhatsApp funnel</h2>
+          <p className={styles.inlineNote}>{whatsappData.notes.funnelBasis}</p>
+          <div className={styles.funnelList}>
+            {whatsappData.funnel.map((item) => (
+              <div key={item.key} className={styles.funnelRow}>
+                <div className={styles.funnelMeta}>
+                  <span>{item.label}</span>
+                  <strong>{formatNumber(item.count)}</strong>
+                </div>
+                <div className={styles.barTrack}>
+                  <span className={styles.barFill} style={{ width: `${Math.max(item.rate, item.count > 0 ? 3 : 0)}%` }} />
+                </div>
+                <span className={styles.rateLabel}>{formatPercent(item.rate)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <MetricListPanel
+          title="Top touchpoints WhatsApp"
+          note={whatsappData.notes.clickBasis}
+          rows={whatsappData.touchpoints}
+          emptyText="Aucun touchpoint WhatsApp disponible."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.pagePath}</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Clicks', value: formatNumber(row.clicks) },
+                { label: 'Uniques', value: formatNumber(row.uniqueClickers) },
+                { label: 'Leads auto', value: formatNumber(row.autoAttributedLeads) }
+              ]} />
+            </div>
+          )}
+        />
+
+        <LeadSummaryList
+          title="Leads WhatsApp récents"
+          note={whatsappData.notes.manualTagExplanation}
+          leads={whatsappData.recentLeads}
+          emptyText="Aucun lead WhatsApp sur la période."
+        />
+      </div>
     </>
   );
 }
 
 function SeoSection({ dashboardData }) {
+  const keywordRankings = dashboardData.seoContent.keywordRankings;
+  const usingReferenceFallback = keywordRankings.usingReferenceFallback;
+  const latestReferenceMetricDate = keywordRankings.snapshotDiagnostics?.latestReferenceMetricDate;
+  const referenceDateLabel = latestReferenceMetricDate ? formatDateShort(latestReferenceMetricDate) : '';
+  const positionTrendNote = usingReferenceFallback
+    ? `Position moyenne issue de la référence importée du catalogue actif${referenceDateLabel ? ` (maj ${referenceDateLabel})` : ''} tant que les snapshots live ne correspondent pas encore au catalogue courant.`
+    : 'Position moyenne des mots-clés classés par snapshot SERP du catalogue actif. Plus le chiffre est bas, mieux c&apos;est.';
+  const desktopDistributionNote = usingReferenceFallback
+    ? `Répartition calculée à partir de la référence importée du catalogue actif${referenceDateLabel ? ` (maj ${referenceDateLabel})` : ''}.`
+    : 'Répartition sur le dernier snapshot desktop disponible dans la période.';
+  const mobileDistributionNote = usingReferenceFallback
+    ? `Répartition calculée à partir de la référence importée du catalogue actif${referenceDateLabel ? ` (maj ${referenceDateLabel})` : ''}.`
+    : 'Répartition sur le dernier snapshot mobile disponible dans la période.';
+  const positionTrendEmptyText = usingReferenceFallback
+    ? 'Aucune date de référence importée exploitable pour tracer une tendance sur le catalogue actif.'
+    : 'Aucune position classée sur cette période.';
+  const positionTrendSinglePointText = usingReferenceFallback
+    ? `Une seule date de référence importée est disponible${referenceDateLabel ? ` (${referenceDateLabel})` : ''}. La tendance se remplira après les prochains snapshots live.`
+    : 'Historique insuffisant: il faut au moins 2 snapshots SERP classés sur des dates différentes.';
   const seoCards = [
     { key: 'pages', label: 'Landing pages suivies', value: dashboardData.seoContent.totals.landingPagesTracked, type: 'number' },
     { key: 'clicks', label: 'Clicks organiques', value: dashboardData.seoContent.totals.clicks, type: 'number' },
@@ -586,6 +873,13 @@ function SeoSection({ dashboardData }) {
     { key: 'ctr', label: 'CTR organique', value: dashboardData.seoContent.totals.ctr, type: 'percent' },
     { key: 'leadRate', label: 'Lead rate', value: dashboardData.seoContent.totals.leadRate, type: 'percent', meta: dashboardData.seoContent.notes.leadRateDefinition },
     { key: 'qualifiedLeads', label: 'Qualifiés', value: dashboardData.seoContent.totals.qualifiedLeads, type: 'number' }
+  ];
+  const keywordCards = [
+    { key: 'trackedKeywords', label: 'Keywords suivis', value: keywordRankings.totals.trackedKeywords, type: 'number', meta: dashboardData.seoContent.notes.keywordDefinition },
+    { key: 'desktopRankedKeywords', label: 'Classés desktop', value: keywordRankings.totals.desktopRankedKeywords, type: 'number' },
+    { key: 'mobileRankedKeywords', label: 'Classés mobile', value: keywordRankings.totals.mobileRankedKeywords, type: 'number' },
+    { key: 'avgPosition', label: 'Meilleure position moyenne', value: keywordRankings.totals.averagePosition, type: 'position' },
+    { key: 'top10Count', label: 'Top 10', value: keywordRankings.totals.top10Count, type: 'number' }
   ];
 
   return (
@@ -595,6 +889,99 @@ function SeoSection({ dashboardData }) {
           <KpiCard key={card.key} card={card} />
         ))}
       </div>
+
+      <div className={styles.stats}>
+        {keywordCards.map((card) => (
+          <KpiCard key={card.key} card={card} />
+        ))}
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <div className={`${styles.panel} ${styles.panelWide}`}>
+          <h2>Tendance de visibilité des mots-clés</h2>
+          <p className={styles.inlineNote}>
+            {dashboardData.seoContent.notes.keywordTrendDefinition} Nombre de mots-clés classés et top 10 par snapshot SERP.
+          </p>
+          <MultiSeriesTrendChart
+            points={keywordRankings.visibilityTrend}
+            series={[
+              { key: 'desktopRanked', label: 'Desktop classés', color: 'var(--ac-primary)' },
+              { key: 'mobileRanked', label: 'Mobile classés', color: '#74b9ff' },
+              { key: 'desktopTop10', label: 'Desktop top 10', color: '#7ee787' },
+              { key: 'mobileTop10', label: 'Mobile top 10', color: '#ffb86b' }
+            ]}
+            ariaLabel="Tendance de visibilité des mots-clés"
+          />
+        </div>
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <div className={`${styles.panel} ${styles.panelWide}`}>
+          <h2>Tendance de position moyenne</h2>
+          <p className={styles.inlineNote}>{positionTrendNote}</p>
+          <PositionTrendPanel
+            points={keywordRankings.positionTrend}
+            series={[
+              { key: 'desktopAveragePosition', label: 'Desktop moyenne', color: 'var(--ac-primary)' },
+              { key: 'mobileAveragePosition', label: 'Mobile moyenne', color: '#74b9ff' }
+            ]}
+            ariaLabel="Tendance de position moyenne des mots-clés"
+            emptyText={positionTrendEmptyText}
+            singlePointText={positionTrendSinglePointText}
+          />
+        </div>
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <BreakdownList
+          title="Visibilité desktop"
+          items={keywordRankings.distributionByDevice.desktop}
+          note={desktopDistributionNote}
+        />
+        <BreakdownList
+          title="Visibilité mobile"
+          items={keywordRankings.distributionByDevice.mobile}
+          note={mobileDistributionNote}
+        />
+      </div>
+
+      <MetricListPanel
+        title="Keyword rankings"
+        note={dashboardData.seoContent.notes.keywordRowDefinition}
+        rows={keywordRankings.rows}
+        emptyText="Aucun mot-clé suivi sur cette période."
+        renderRow={(row) => {
+          const useReferenceDisplay = (!row.hasLiveSnapshots && row.hasReferencePosition) || row.usesReferenceFallback;
+          const bestDisplayPosition = row.currentBestPosition ?? (useReferenceDisplay ? row.reference.position : null);
+
+          return (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.targetPath === '/' ? 'Site entier' : row.targetPath}</span>
+                <span>{[
+                  formatTagList(row.categoryTags),
+                  row.priorityTags.length > 0 ? `Priorité: ${formatTagList(row.priorityTags)}` : '',
+                  row.contentTypeTags.length > 0 ? formatTagList(row.contentTypeTags) : ''
+                ].filter(Boolean).join(' • ') || 'Aucune métadonnée catalogue.'}</span>
+                <span>{[
+                  formatKeywordDeviceSummary('Desktop', row.desktop, row.reference, useReferenceDisplay),
+                  formatKeywordDeviceSummary('Mobile', row.mobile, row.reference, useReferenceDisplay),
+                  formatKeywordSourceSummary(row, useReferenceDisplay)
+                ].join(' • ')}</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Desktop', value: formatKeywordDeviceValue(row.desktop, row.reference, useReferenceDisplay) },
+                { label: 'D delta', value: formatPositionChange(row.desktop.positionChange) },
+                { label: 'Mobile', value: formatKeywordDeviceValue(row.mobile, row.reference, useReferenceDisplay) },
+                { label: 'M delta', value: formatPositionChange(row.mobile.positionChange) },
+                { label: 'Best', value: formatPosition(bestDisplayPosition) },
+                { label: 'Source', value: formatKeywordSourceValue(row, useReferenceDisplay) }
+              ]} />
+            </div>
+          );
+        }}
+      />
 
       <MetricListPanel
         title="Landing pages"

@@ -6,6 +6,10 @@ import {
   extractAnalyticsContext,
   sendLifecycleMeasurementEvent
 } from '@/libs/analyticsLifecycle';
+import {
+  buildWhatsAppAttributionColumns,
+  findLatestWhatsAppClickMatch
+} from '@/libs/whatsappAttribution.mjs';
 import { LEAD_STATUSES } from '@/utils/leadLifecycle';
 import { guardMutationRequest } from '@/libs/security';
 
@@ -122,6 +126,13 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
+    const submittedAt = new Date().toISOString();
+    const matchedWhatsAppClick = await findLatestWhatsAppClickMatch(supabase, {
+      gaClientId: analyticsContext.ga_client_id,
+      beforeIso: submittedAt
+    });
+    const whatsappAttributionColumns = buildWhatsAppAttributionColumns(matchedWhatsAppClick);
+
     // Transform data for Supabase
     const conventionData = {
       raison_sociale: raisonSociale,
@@ -141,8 +152,9 @@ export async function POST(request) {
       message: message || null,
       statut: 'nouveau',
       lead_status: LEAD_STATUSES.SUBMITTED,
-      submitted_at: new Date().toISOString(),
-      ...attributionColumns
+      submitted_at: submittedAt,
+      ...attributionColumns,
+      ...whatsappAttributionColumns
     };
 
     // Save to Supabase

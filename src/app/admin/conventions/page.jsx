@@ -6,12 +6,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getConventionRequests } from '@/services/conventionService';
-import { updateLeadStatus } from '@/services/adminLeadService';
+import { updateLeadAttribution, updateLeadStatus } from '@/services/adminLeadService';
 import {
   CONVENTION_OPERATIONAL_STATUSES,
   deriveLeadStatusFromConventionStatus,
   LEAD_STATUSES
 } from '@/utils/leadLifecycle';
+import { getWhatsAppAttributionSummary, matchesWhatsAppFilter } from '@/libs/whatsappAttribution.mjs';
 import styles from '../devis/admin.module.css';
 
 const LEAD_STATUS_LABELS = {
@@ -39,16 +40,20 @@ export default function AdminConventionsPage() {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [operationalStatusDraft, setOperationalStatusDraft] = useState('nouveau');
   const [isSavingStatus, setIsSavingStatus] = useState(false);
+  const [isSavingAttribution, setIsSavingAttribution] = useState(false);
   const [statusError, setStatusError] = useState('');
+  const [attributionError, setAttributionError] = useState('');
   const [filters, setFilters] = useState({
     leadStatus: 'all',
     operationalStatus: 'all',
     sector: 'all',
+    whatsappAttribution: 'all',
     sessionSource: '',
     sessionMedium: '',
     dateFrom: '',
     dateTo: ''
   });
+  const [leadIdParam, setLeadIdParam] = useState('');
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -68,6 +73,24 @@ export default function AdminConventionsPage() {
       document.body.style.overflow = 'unset';
     };
   }, [selectedRequest]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const updateLeadIdFromLocation = () => {
+      const params = new URLSearchParams(window.location.search);
+      setLeadIdParam(params.get('lead') || '');
+    };
+
+    updateLeadIdFromLocation();
+    window.addEventListener('popstate', updateLeadIdFromLocation);
+
+    return () => {
+      window.removeEventListener('popstate', updateLeadIdFromLocation);
+    };
+  }, []);
 
   const loadRequests = async () => {
     try {
@@ -90,11 +113,55 @@ export default function AdminConventionsPage() {
     }
   };
 
-  const openRequest = (request) => {
+  const syncLeadQuery = useCallback((leadId) => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const nextParams = new URLSearchParams(window.location.search);
+    if (leadId) {
+      nextParams.set('lead', leadId);
+    } else {
+      nextParams.delete('lead');
+    }
+
+    const nextQuery = nextParams.toString();
+    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}`;
+    window.history.replaceState(window.history.state, '', nextUrl);
+    setLeadIdParam(leadId || '');
+  }, []);
+
+  const openRequest = useCallback((request, { syncQuery = true } = {}) => {
     setSelectedRequest(request);
     setOperationalStatusDraft(request.statut || 'nouveau');
     setStatusError('');
-  };
+    setAttributionError('');
+
+    if (syncQuery && leadIdParam !== request.id) {
+      syncLeadQuery(request.id);
+    }
+  }, [leadIdParam, syncLeadQuery]);
+
+  const closeRequest = useCallback(() => {
+    setSelectedRequest(null);
+    setStatusError('');
+    setAttributionError('');
+
+    if (leadIdParam) {
+      syncLeadQuery(null);
+    }
+  }, [leadIdParam, syncLeadQuery]);
+
+  useEffect(() => {
+    if (!leadIdParam || requests.length === 0) {
+      return;
+    }
+
+    const matchedRequest = requests.find((request) => request.id === leadIdParam);
+    if (matchedRequest && selectedRequest?.id !== matchedRequest.id) {
+      openRequest(matchedRequest, { syncQuery: false });
+    }
+  }, [leadIdParam, openRequest, requests, selectedRequest?.id]);
 
   const handleStatusSave = async () => {
     if (!selectedRequest) {
@@ -122,6 +189,30 @@ export default function AdminConventionsPage() {
     }
   };
 
+  const handleWhatsAppManualTagToggle = async () => {
+    if (!selectedRequest) {
+      return;
+    }
+
+    try {
+      setIsSavingAttribution(true);
+      setAttributionError('');
+      const updatedLead = await updateLeadAttribution('convention', selectedRequest.id, {
+        whatsappManualTag: !Boolean(selectedRequest.whatsapp_manual_tag)
+      });
+
+      setRequests((currentRequests) => currentRequests.map((request) => (
+        request.id === updatedLead.id ? updatedLead : request
+      )));
+      setSelectedRequest(updatedLead);
+    } catch (saveError) {
+      console.error(saveError);
+      setAttributionError(saveError.message || 'Impossible de mettre à jour l’attribution WhatsApp.');
+    } finally {
+      setIsSavingAttribution(false);
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) {
       return 'Non renseigné';
@@ -137,6 +228,7 @@ export default function AdminConventionsPage() {
   };
 
   const getLeadStatus = useCallback((request) => request.lead_status || deriveLeadStatusFromConventionStatus(request.statut), []);
+  const getWhatsAppSummary = useCallback((request) => getWhatsAppAttributionSummary(request), []);
 
   const updateFilter = (key, value) => {
     setFilters((currentFilters) => ({
@@ -150,6 +242,7 @@ export default function AdminConventionsPage() {
       leadStatus: 'all',
       operationalStatus: 'all',
       sector: 'all',
+      whatsappAttribution: 'all',
       sessionSource: '',
       sessionMedium: '',
       dateFrom: '',
@@ -171,6 +264,10 @@ export default function AdminConventionsPage() {
     }
 
     if (filters.sector !== 'all' && request.secteur_activite !== filters.sector) {
+      return false;
+    }
+
+    if (!matchesWhatsAppFilter(request, filters.whatsappAttribution)) {
       return false;
     }
 
@@ -333,6 +430,22 @@ export default function AdminConventionsPage() {
           </div>
 
           <div className={styles.filterField}>
+            <label htmlFor="convention-whatsapp-attribution">WhatsApp</label>
+            <select
+              id="convention-whatsapp-attribution"
+              value={filters.whatsappAttribution}
+              onChange={(event) => updateFilter('whatsappAttribution', event.target.value)}
+            >
+              <option value="all">Tous les leads</option>
+              <option value="any">Tous les leads WhatsApp</option>
+              <option value="auto">Match auto ou mixte</option>
+              <option value="manual">Tag manuel ou mixte</option>
+              <option value="both">Auto + manuel</option>
+              <option value="none">Sans attribution WhatsApp</option>
+            </select>
+          </div>
+
+          <div className={styles.filterField}>
             <label htmlFor="convention-session-source">Source</label>
             <input
               id="convention-session-source"
@@ -416,6 +529,9 @@ export default function AdminConventionsPage() {
                 <div className={styles.detail}>
                   <strong>📈</strong> {request.session_source || 'direct'} / {request.session_medium || '(none)'}
                 </div>
+                <div className={styles.detail}>
+                  <strong>💬</strong> {getWhatsAppSummary(request).label}
+                </div>
               </div>
             </div>
           ))}
@@ -425,11 +541,11 @@ export default function AdminConventionsPage() {
         </div>
 
         {selectedRequest && (
-          <div className={styles.modal} onClick={() => setSelectedRequest(null)}>
+          <div className={styles.modal} onClick={closeRequest}>
             <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
               <div className={styles.modalHeader}>
                 <h2>Détails de la convention</h2>
-                <button className={styles.closeButton} onClick={() => setSelectedRequest(null)}>
+                <button className={styles.closeButton} onClick={closeRequest}>
                   ×
                 </button>
               </div>
@@ -500,6 +616,34 @@ export default function AdminConventionsPage() {
                   <p><strong>Landing page :</strong> {selectedRequest.landing_page || 'Non renseignée'}</p>
                   <p><strong>Referrer host :</strong> {selectedRequest.referrer_host || 'Direct'}</p>
                   <p><strong>Entry path :</strong> {selectedRequest.entry_path || 'Non renseigné'}</p>
+                  <p><strong>Attribution WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).label}</p>
+                  {getWhatsAppSummary(selectedRequest).clickLabel && (
+                    <p><strong>Touchpoint WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).clickLabel}</p>
+                  )}
+                  {getWhatsAppSummary(selectedRequest).clickPage && (
+                    <p><strong>Page du clic WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).clickPage}</p>
+                  )}
+                  {getWhatsAppSummary(selectedRequest).clickedAt && (
+                    <p><strong>Clic WhatsApp détecté le :</strong> {formatDate(getWhatsAppSummary(selectedRequest).clickedAt)}</p>
+                  )}
+                  {getWhatsAppSummary(selectedRequest).manualTaggedAt && (
+                    <p><strong>Tag manuel le :</strong> {formatDate(getWhatsAppSummary(selectedRequest).manualTaggedAt)}</p>
+                  )}
+                  <div className={styles.lifecycleControls}>
+                    <button
+                      type="button"
+                      className={styles.saveButton}
+                      onClick={handleWhatsAppManualTagToggle}
+                      disabled={isSavingAttribution}
+                    >
+                      {isSavingAttribution
+                        ? 'Enregistrement...'
+                        : selectedRequest.whatsapp_manual_tag
+                          ? 'Retirer le tag WhatsApp'
+                          : 'Marquer comme lead WhatsApp'}
+                    </button>
+                  </div>
+                  {attributionError && <p className={styles.statusError}>{attributionError}</p>}
                 </div>
 
                 {selectedRequest.message && (

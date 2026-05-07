@@ -3,6 +3,7 @@ import { authenticateAdminRequest } from '@/libs/adminApiAuth';
 import { createServiceClient } from '@/libs/supabase';
 import { getClientIp, rateLimitRequest } from '@/libs/security';
 import { buildAdminDashboardData, getDashboardRange } from '@/libs/adminDashboardMetrics.mjs';
+import { fetchGrowthKeywordCatalogRows } from '@/libs/growthKeywordCatalog.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,11 +13,23 @@ const ADMIN_DASHBOARD_RATE_LIMIT = {
   windowMs: 60 * 1000
 };
 
+const OPTIONAL_LEAD_TRACKING_FIELDS = [
+  'whatsapp_click_id',
+  'whatsapp_clicked_at',
+  'whatsapp_click_label',
+  'whatsapp_click_page',
+  'whatsapp_manual_tag',
+  'whatsapp_manual_tagged_at'
+];
+const OPTIONAL_LEAD_TRACKING_FIELD_SET = new Set(OPTIONAL_LEAD_TRACKING_FIELDS);
+const OPTIONAL_LEAD_TRACKING_ERROR_PATTERN = new RegExp(`\\b(?:${OPTIONAL_LEAD_TRACKING_FIELDS.join('|')})\\b`, 'i');
+
 const DASHBOARD_SELECT_FIELDS = {
   devis: [
     'id',
     'created_at',
     'type_service',
+    'calculator_estimate',
     'lead_status',
     'submitted_at',
     'qualified_at',
@@ -27,7 +40,13 @@ const DASHBOARD_SELECT_FIELDS = {
     'session_campaign',
     'referrer_host',
     'entry_path',
-    'selected_services'
+    'selected_services',
+    'whatsapp_click_id',
+    'whatsapp_clicked_at',
+    'whatsapp_click_label',
+    'whatsapp_click_page',
+    'whatsapp_manual_tag',
+    'whatsapp_manual_tagged_at'
   ].join(','),
   convention: [
     'id',
@@ -35,6 +54,7 @@ const DASHBOARD_SELECT_FIELDS = {
     'secteur_activite',
     'services_souhaites',
     'statut',
+    'calculator_estimate',
     'lead_status',
     'submitted_at',
     'qualified_at',
@@ -45,7 +65,13 @@ const DASHBOARD_SELECT_FIELDS = {
     'session_campaign',
     'referrer_host',
     'entry_path',
-    'selected_services'
+    'selected_services',
+    'whatsapp_click_id',
+    'whatsapp_clicked_at',
+    'whatsapp_click_label',
+    'whatsapp_click_page',
+    'whatsapp_manual_tag',
+    'whatsapp_manual_tagged_at'
   ].join(',')
 };
 
@@ -60,20 +86,59 @@ function getErrorResponse(status, message, httpStatus) {
   }, { status: httpStatus });
 }
 
+function withoutOptionalLeadTrackingFields(selectClause = '') {
+  return selectClause
+    .split(',')
+    .map((field) => field.trim())
+    .filter(Boolean)
+    .filter((field) => !OPTIONAL_LEAD_TRACKING_FIELD_SET.has(field))
+    .join(',');
+}
+
+function isMissingOptionalLeadTrackingColumnError(error) {
+  return error?.code === '42703' && OPTIONAL_LEAD_TRACKING_ERROR_PATTERN.test(String(error?.message || ''));
+}
+
+async function runLeadSelectWithFallback({ supabase, table, select, applyQuery }) {
+  const primaryResult = await applyQuery(
+    supabase
+      .from(table)
+      .select(select)
+  );
+
+  if (!isMissingOptionalLeadTrackingColumnError(primaryResult.error)) {
+    return primaryResult;
+  }
+
+  console.warn(`[admin][dashboard] using legacy lead select for ${table}: optional WhatsApp tracking columns are missing.`);
+
+  return applyQuery(
+    supabase
+      .from(table)
+      .select(withoutOptionalLeadTrackingFields(select))
+  );
+}
+
 async function fetchLeadRows(supabase, range) {
   const [devisResult, conventionResult] = await Promise.all([
-    supabase
-      .from('devis_requests')
-      .select(DASHBOARD_SELECT_FIELDS.devis)
-      .gte('created_at', range.fromIso)
-      .lte('created_at', range.toIso)
-      .order('created_at', { ascending: true }),
-    supabase
-      .from('convention_requests')
-      .select(DASHBOARD_SELECT_FIELDS.convention)
-      .gte('created_at', range.fromIso)
-      .lte('created_at', range.toIso)
-      .order('created_at', { ascending: true })
+    runLeadSelectWithFallback({
+      supabase,
+      table: 'devis_requests',
+      select: DASHBOARD_SELECT_FIELDS.devis,
+      applyQuery: (query) => query
+        .gte('created_at', range.fromIso)
+        .lte('created_at', range.toIso)
+        .order('created_at', { ascending: true })
+    }),
+    runLeadSelectWithFallback({
+      supabase,
+      table: 'convention_requests',
+      select: DASHBOARD_SELECT_FIELDS.convention,
+      applyQuery: (query) => query
+        .gte('created_at', range.fromIso)
+        .lte('created_at', range.toIso)
+        .order('created_at', { ascending: true })
+    })
   ]);
 
   if (devisResult.error) {
@@ -92,14 +157,18 @@ async function fetchLeadRows(supabase, range) {
 
 async function fetchAllLeadRows(supabase) {
   const [devisResult, conventionResult] = await Promise.all([
-    supabase
-      .from('devis_requests')
-      .select(DASHBOARD_SELECT_FIELDS.devis)
-      .order('created_at', { ascending: true }),
-    supabase
-      .from('convention_requests')
-      .select(DASHBOARD_SELECT_FIELDS.convention)
-      .order('created_at', { ascending: true })
+    runLeadSelectWithFallback({
+      supabase,
+      table: 'devis_requests',
+      select: DASHBOARD_SELECT_FIELDS.devis,
+      applyQuery: (query) => query.order('created_at', { ascending: true })
+    }),
+    runLeadSelectWithFallback({
+      supabase,
+      table: 'convention_requests',
+      select: DASHBOARD_SELECT_FIELDS.convention,
+      applyQuery: (query) => query.order('created_at', { ascending: true })
+    })
   ]);
 
   if (devisResult.error) {
@@ -161,6 +230,87 @@ async function fetchExternalMetricRows(supabase, range) {
     .gte('metric_date', range.from)
     .lte('metric_date', range.to)
     .order('metric_date', { ascending: true });
+
+  if (error) {
+    return {
+      rows: [],
+      error
+    };
+  }
+
+  return {
+    rows: data || [],
+    error: null
+  };
+}
+
+async function fetchKeywordRankingRows(supabase, range) {
+  const { data, error } = await supabase
+    .from('growth_keyword_rankings_daily')
+    .select([
+      'keyword_catalog_id',
+      'metric_date',
+      'keyword',
+      'keyword_label',
+      'target_domain',
+      'target_path',
+      'matched_domain',
+      'matched_path',
+      'matched_url',
+      'result_title',
+      'result_snippet',
+      'position',
+      'is_ranked',
+      'device',
+      'google_domain',
+      'gl',
+      'hl',
+      'location',
+      'results_count',
+      'metadata'
+    ].join(','))
+    .gte('metric_date', range.from)
+    .lte('metric_date', range.to)
+    .order('metric_date', { ascending: true });
+
+  if (error) {
+    return {
+      rows: [],
+      error
+    };
+  }
+
+  return {
+    rows: data || [],
+    error: null
+  };
+}
+
+async function fetchKeywordCatalogRows(supabase) {
+  return fetchGrowthKeywordCatalogRows(supabase, {
+    activeOnly: true
+  });
+}
+
+async function fetchWhatsAppClickRows(supabase, range) {
+  const { data, error } = await supabase
+    .from('whatsapp_click_events')
+    .select([
+      'id',
+      'created_at',
+      'clicked_at',
+      'ga_client_id',
+      'event_label',
+      'page_path',
+      'landing_page',
+      'session_source',
+      'session_medium',
+      'session_campaign',
+      'referrer_host'
+    ].join(','))
+    .gte('clicked_at', range.fromIso)
+    .lte('clicked_at', range.toIso)
+    .order('clicked_at', { ascending: true });
 
   if (error) {
     return {
@@ -240,12 +390,25 @@ export async function GET(request) {
   }
 
   try {
-    const [currentRows, previousRows, universeRows, auditEvents, externalMetricsResult, sourceHealthResult] = await Promise.all([
+    const [
+      currentRows,
+      previousRows,
+      universeRows,
+      auditEvents,
+      externalMetricsResult,
+      whatsappClickResult,
+      keywordCatalogResult,
+      keywordRankingResult,
+      sourceHealthResult
+    ] = await Promise.all([
       fetchLeadRows(supabase, rangeResult.range),
       fetchLeadRows(supabase, rangeResult.previousRange),
       fetchAllLeadRows(supabase),
       fetchAuditEvents(supabase),
       fetchExternalMetricRows(supabase, rangeResult.range),
+      fetchWhatsAppClickRows(supabase, rangeResult.range),
+      fetchKeywordCatalogRows(supabase),
+      fetchKeywordRankingRows(supabase, rangeResult.range),
       fetchGrowthSourceHealth(supabase)
     ]);
 
@@ -257,6 +420,9 @@ export async function GET(request) {
         previousRows,
         universeRows,
         externalMetricRows: externalMetricsResult.rows,
+        whatsappClickRows: whatsappClickResult.rows,
+        keywordCatalogRows: keywordCatalogResult.rows,
+        keywordRankingRows: keywordRankingResult.rows,
         sourceHealthRows: sourceHealthResult.rows,
         auditEvents,
         range: rangeResult.range,
@@ -266,6 +432,9 @@ export async function GET(request) {
         piiExcluded: true,
         reportingWarnings: [
           externalMetricsResult.error ? 'growth_channel_daily_metrics_unavailable' : null,
+          whatsappClickResult.error ? 'whatsapp_click_events_unavailable' : null,
+          keywordCatalogResult.error ? 'growth_keyword_catalog_unavailable' : null,
+          keywordRankingResult.error ? 'growth_keyword_rankings_daily_unavailable' : null,
           sourceHealthResult.error ? 'growth_reporting_source_health_unavailable' : null
         ].filter(Boolean)
       }

@@ -31,6 +31,42 @@ function emitEvent(name, payload = {}) {
   return pushAnalyticsEvent(name, payload);
 }
 
+function persistWhatsAppClick(location = 'general') {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const context = getAnalyticsContext();
+  const payload = {
+    ga_client_id: context.ga_client_id,
+    event_label: location,
+    page_path: context.entry_path || context.page_path || window.location.pathname,
+    landing_page: context.landing_page || window.location.pathname,
+    session_source: context.session_source,
+    session_medium: context.session_medium,
+    session_campaign: context.session_campaign,
+    referrer_host: context.referrer_host
+  };
+
+  const serializedPayload = JSON.stringify(payload);
+
+  if (navigator.sendBeacon) {
+    const blob = new Blob([serializedPayload], { type: 'application/json' });
+    if (navigator.sendBeacon('/api/analytics/whatsapp-click', blob)) {
+      return;
+    }
+  }
+
+  fetch('/api/analytics/whatsapp-click', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: serializedPayload,
+    keepalive: true
+  }).catch(() => {});
+}
+
 function removeEmptyValues(payload = {}) {
   return Object.fromEntries(
     Object.entries(payload).filter(([, value]) => value !== undefined && value !== null && value !== '')
@@ -118,12 +154,16 @@ export const trackEmailClick = (location = 'general', emailAddress = '', additio
 };
 
 export const trackWhatsAppClick = (location = 'general', phoneNumber = '', additionalData = {}) => {
+  const leadContext = getLeadContext(additionalData);
+
   emitEvent('whatsapp_click', {
     event_category: 'lead_generation',
     event_label: location,
     value: 5,
-    ...getLeadContext(additionalData)
+    ...leadContext
   });
+
+  persistWhatsAppClick(location);
 };
 
 export const trackContactLinkClick = (href, location = 'contact_link', additionalData = {}) => {

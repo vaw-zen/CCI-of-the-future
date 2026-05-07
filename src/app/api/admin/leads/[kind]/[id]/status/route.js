@@ -25,6 +25,16 @@ const ADMIN_STATUS_RATE_LIMIT = {
   limit: 30,
   windowMs: 60 * 1000
 };
+const OPTIONAL_LEAD_TRACKING_FIELDS = [
+  'whatsapp_click_id',
+  'whatsapp_clicked_at',
+  'whatsapp_click_label',
+  'whatsapp_click_page',
+  'whatsapp_manual_tag',
+  'whatsapp_manual_tagged_at'
+];
+const OPTIONAL_LEAD_TRACKING_FIELD_SET = new Set(OPTIONAL_LEAD_TRACKING_FIELDS);
+const OPTIONAL_LEAD_TRACKING_ERROR_PATTERN = new RegExp(`\\b(?:${OPTIONAL_LEAD_TRACKING_FIELDS.join('|')})\\b`, 'i');
 
 const LEAD_SELECT_FIELDS = {
   devis: [
@@ -60,7 +70,13 @@ const LEAD_SELECT_FIELDS = {
     'referrer_host',
     'entry_path',
     'calculator_estimate',
-    'selected_services'
+    'selected_services',
+    'whatsapp_click_id',
+    'whatsapp_clicked_at',
+    'whatsapp_click_label',
+    'whatsapp_click_page',
+    'whatsapp_manual_tag',
+    'whatsapp_manual_tagged_at'
   ].join(','),
   convention: [
     'id',
@@ -94,7 +110,13 @@ const LEAD_SELECT_FIELDS = {
     'referrer_host',
     'entry_path',
     'calculator_estimate',
-    'selected_services'
+    'selected_services',
+    'whatsapp_click_id',
+    'whatsapp_clicked_at',
+    'whatsapp_click_label',
+    'whatsapp_click_page',
+    'whatsapp_manual_tag',
+    'whatsapp_manual_tagged_at'
   ].join(',')
 };
 
@@ -210,6 +232,39 @@ function getErrorResponse(status, message, httpStatus) {
   }, { status: httpStatus });
 }
 
+function withoutOptionalLeadTrackingFields(selectClause = '') {
+  return selectClause
+    .split(',')
+    .map((field) => field.trim())
+    .filter(Boolean)
+    .filter((field) => !OPTIONAL_LEAD_TRACKING_FIELD_SET.has(field))
+    .join(',');
+}
+
+function isMissingOptionalLeadTrackingColumnError(error) {
+  return error?.code === '42703' && OPTIONAL_LEAD_TRACKING_ERROR_PATTERN.test(String(error?.message || ''));
+}
+
+async function runLeadSelectWithFallback({ supabase, table, select, applyQuery }) {
+  const primaryResult = await applyQuery(
+    supabase
+      .from(table)
+      .select(select)
+  );
+
+  if (!isMissingOptionalLeadTrackingColumnError(primaryResult.error)) {
+    return primaryResult;
+  }
+
+  console.warn(`[admin][lead-status] using legacy lead select for ${table}: optional WhatsApp tracking columns are missing.`);
+
+  return applyQuery(
+    supabase
+      .from(table)
+      .select(withoutOptionalLeadTrackingFields(select))
+  );
+}
+
 export async function PATCH(request, { params }) {
   const guardResponse = guardMutationRequest(request, ADMIN_STATUS_RATE_LIMIT);
   if (guardResponse) {
@@ -275,11 +330,14 @@ export async function PATCH(request, { params }) {
   let { leadStatus, operationalStatus } = body;
 
   try {
-    const { data: currentLead, error: fetchError } = await supabase
-      .from(config.table)
-      .select(config.select)
-      .eq('id', id)
-      .single();
+    const { data: currentLead, error: fetchError } = await runLeadSelectWithFallback({
+      supabase,
+      table: config.table,
+      select: config.select,
+      applyQuery: (query) => query
+        .eq('id', id)
+        .single()
+    });
 
     if (fetchError || !currentLead) {
       await writeStatusAuditEvent(supabase, {
@@ -352,14 +410,12 @@ export async function PATCH(request, { params }) {
       getLifecycleTimestampPatch(previousLeadStatus, leadStatus)
     );
 
-    const { data: updatedLead, error: updateError } = await supabase
+    const { error: updateError } = await supabase
       .from(config.table)
       .update(patch)
-      .eq('id', id)
-      .select(config.select)
-      .single();
+      .eq('id', id);
 
-    if (updateError || !updatedLead) {
+    if (updateError) {
       await writeStatusAuditEvent(supabase, {
         kind,
         table: config.table,
@@ -374,6 +430,32 @@ export async function PATCH(request, { params }) {
         request
       });
       return getErrorResponse('update_failed', 'Impossible de mettre à jour le lead.', 500);
+    }
+
+    const { data: updatedLead, error: updatedLeadError } = await runLeadSelectWithFallback({
+      supabase,
+      table: config.table,
+      select: config.select,
+      applyQuery: (query) => query
+        .eq('id', id)
+        .single()
+    });
+
+    if (updatedLeadError || !updatedLead) {
+      await writeStatusAuditEvent(supabase, {
+        kind,
+        table: config.table,
+        leadId: id,
+        previousStatus: previousLeadStatus,
+        nextStatus: leadStatus,
+        previousOperationalStatus: currentLead.statut || null,
+        nextOperationalStatus,
+        adminUser: authResult.user,
+        actionResult: 'rejected',
+        rejectionReason: 'update_failed',
+        request
+      });
+      return getErrorResponse('update_failed', 'Impossible de relire le lead mis à jour.', 500);
     }
 
     await writeStatusAuditEvent(supabase, {

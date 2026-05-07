@@ -49,7 +49,13 @@ CREATE TABLE IF NOT EXISTS convention_requests (
   referrer_host TEXT,
   entry_path TEXT,
   calculator_estimate DECIMAL,
-  selected_services TEXT[]
+  selected_services TEXT[],
+  whatsapp_click_id UUID,
+  whatsapp_clicked_at TIMESTAMPTZ,
+  whatsapp_click_label TEXT,
+  whatsapp_click_page TEXT,
+  whatsapp_manual_tag BOOLEAN NOT NULL DEFAULT FALSE,
+  whatsapp_manual_tagged_at TIMESTAMPTZ
 );
 
 -- Index for admin queries
@@ -61,6 +67,8 @@ CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_status ON convention_req
 CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_status_created_at ON convention_requests(lead_status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_session_source ON convention_requests(session_source);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_session_medium ON convention_requests(session_medium);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_whatsapp_click_id ON convention_requests(whatsapp_click_id);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_whatsapp_manual_tag ON convention_requests(whatsapp_manual_tag);
 
 -- Enable RLS
 ALTER TABLE convention_requests ENABLE ROW LEVEL SECURITY;

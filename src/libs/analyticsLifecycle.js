@@ -106,6 +106,14 @@ export function buildLeadMeasurementParams({
     session_campaign: leadRecord?.session_campaign,
     landing_page: leadRecord?.landing_page,
     referrer_host: leadRecord?.referrer_host,
+    whatsapp_attributed: Boolean(
+      leadRecord?.whatsapp_click_id
+      || leadRecord?.whatsapp_clicked_at
+      || leadRecord?.whatsapp_manual_tag
+    ),
+    whatsapp_manual_tag: leadRecord?.whatsapp_manual_tag,
+    whatsapp_click_label: leadRecord?.whatsapp_click_label,
+    whatsapp_click_page: leadRecord?.whatsapp_click_page,
     ...additionalParams
   });
 }

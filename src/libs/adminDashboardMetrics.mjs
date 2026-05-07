@@ -1,3 +1,20 @@
+import {
+  DEFAULT_KEYWORD_SITE_URL,
+  KEYWORD_TRACKED_DEVICES,
+  buildKeywordCatalogLookupKey,
+  buildKeywordCatalogLookupKeyFromValues,
+  buildKeywordCatalogUrl,
+  normalizeKeywordForKey
+} from './growthKeywordCatalog.mjs';
+import {
+  WHATSAPP_MATCH_WINDOW_DAYS,
+  getWhatsAppAttributionSummary,
+  hasWhatsAppAutoAttribution,
+  hasWhatsAppManualTag,
+  isWhatsAppAttributed,
+  normalizeWhatsAppClickRow
+} from './whatsappAttribution.mjs';
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 export const MAX_RANGE_DAYS = 365;
 export const DEFAULT_RANGE_DAYS = 30;
@@ -62,6 +79,14 @@ const DATA_HEALTH_EXPECTATIONS = [
     connectorType: 'api',
     staleAfterHours: 72,
     metricSources: ['gsc']
+  },
+  {
+    key: 'serp_keyword_rankings',
+    label: 'SERP rankings',
+    connectorType: 'api',
+    staleAfterHours: 48,
+    metricSources: [],
+    keywordRankings: true
   },
   {
     key: 'paid_media',
@@ -252,6 +277,7 @@ export function normalizeLead(row, kind, nowIso) {
   const serviceKey = kind === 'devis'
     ? (row.type_service || services[0] || 'unknown')
     : (services[0] || row.secteur_activite || 'unknown');
+  const whatsappAttribution = getWhatsAppAttributionSummary(row);
 
   const lead = {
     id: row.id,
@@ -277,7 +303,16 @@ export function normalizeLead(row, kind, nowIso) {
     })),
     calculatorEstimate: normalizeNumber(row.calculator_estimate),
     hoursToQualify: getHoursBetween(row.submitted_at || row.created_at, row.qualified_at),
-    hoursToClose: getHoursBetween(row.submitted_at || row.created_at, row.closed_at)
+    hoursToClose: getHoursBetween(row.submitted_at || row.created_at, row.closed_at),
+    whatsappClickId: row.whatsapp_click_id || null,
+    whatsappClickedAt: row.whatsapp_clicked_at || null,
+    whatsappClickLabel: row.whatsapp_click_label || null,
+    whatsappClickPage: row.whatsapp_click_page || null,
+    whatsappManualTag: Boolean(row.whatsapp_manual_tag),
+    whatsappManualTaggedAt: row.whatsapp_manual_tagged_at || null,
+    whatsappAttribution,
+    whatsappAttributionMode: whatsappAttribution.mode,
+    whatsappAttributionLabel: whatsappAttribution.label
   };
 
   lead.ageHours = getHoursBetween(getMostRecentOpenTimestamp(lead), nowIso);
@@ -603,7 +638,15 @@ function summarizeLead(lead) {
     qualifiedAt: lead.qualifiedAt,
     closedAt: lead.closedAt,
     calculatorEstimate: lead.calculatorEstimate,
-    ageHours: lead.ageHours
+    ageHours: lead.ageHours,
+    drilldownHref: lead.kind === 'devis' ? `/admin/devis?lead=${lead.id}` : `/admin/conventions?lead=${lead.id}`,
+    whatsappAttributionMode: lead.whatsappAttributionMode,
+    whatsappAttributionLabel: lead.whatsappAttributionLabel,
+    whatsappClickLabel: lead.whatsappClickLabel,
+    whatsappClickPage: lead.whatsappClickPage,
+    whatsappClickedAt: lead.whatsappClickedAt,
+    whatsappManualTag: lead.whatsappManualTag,
+    whatsappManualTaggedAt: lead.whatsappManualTaggedAt
   };
 }
 
@@ -621,6 +664,676 @@ function normalizeExternalMetricRow(row = {}) {
     impressions: Number(row.impressions || 0),
     spend: Number(row.spend || 0),
     metadata: row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
+  };
+}
+
+function buildWhatsAppTouchpoints(clickRows = [], attributedLeads = []) {
+  const map = new Map();
+
+  clickRows.forEach((row) => {
+    const key = `${row.eventLabel}||${row.pagePath}`;
+    const current = map.get(key) || {
+      key,
+      label: row.eventLabel,
+      pagePath: row.pagePath,
+      clicks: 0,
+      clickerIds: new Set(),
+      autoAttributedLeads: 0,
+      totalAttributedLeads: 0
+    };
+
+    current.clicks += 1;
+    if (row.gaClientId) {
+      current.clickerIds.add(row.gaClientId);
+    }
+    map.set(key, current);
+  });
+
+  attributedLeads
+    .filter(hasWhatsAppAutoAttribution)
+    .forEach((lead) => {
+      const key = `${normalizeText(lead.whatsappClickLabel, 'unknown')}||${normalizeText(lead.whatsappClickPage, '/')}`;
+      const current = map.get(key) || {
+        key,
+        label: normalizeText(lead.whatsappClickLabel, 'unknown'),
+        pagePath: normalizeText(lead.whatsappClickPage, '/'),
+        clicks: 0,
+        clickerIds: new Set(),
+        autoAttributedLeads: 0,
+        totalAttributedLeads: 0
+      };
+
+      current.autoAttributedLeads += 1;
+      current.totalAttributedLeads += 1;
+      map.set(key, current);
+    });
+
+  return Array.from(map.values())
+    .map((row) => ({
+      key: row.key,
+      label: row.label,
+      pagePath: row.pagePath,
+      clicks: row.clicks,
+      uniqueClickers: row.clickerIds.size,
+      autoAttributedLeads: row.autoAttributedLeads,
+      totalAttributedLeads: row.totalAttributedLeads
+    }))
+    .sort((a, b) => (
+      b.autoAttributedLeads - a.autoAttributedLeads
+      || b.clicks - a.clicks
+      || b.uniqueClickers - a.uniqueClickers
+      || a.label.localeCompare(b.label)
+    ))
+    .slice(0, 10);
+}
+
+function buildWhatsAppAcquisition(currentLeads, whatsappClickRows = []) {
+  const normalizedClickRows = (whatsappClickRows || []).map(normalizeWhatsAppClickRow);
+  const attributedLeads = currentLeads
+    .filter(isWhatsAppAttributed)
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+  const uniqueClickers = new Set(
+    normalizedClickRows
+      .map((row) => row.gaClientId)
+      .filter(Boolean)
+  );
+
+  return {
+    summary: {
+      clicks: normalizedClickRows.length,
+      uniqueClickers: uniqueClickers.size,
+      autoAttributedLeads: currentLeads.filter(hasWhatsAppAutoAttribution).length,
+      manualTaggedLeads: currentLeads.filter(hasWhatsAppManualTag).length,
+      totalAttributedLeads: attributedLeads.length
+    },
+    funnel: buildFunnel(attributedLeads),
+    touchpoints: buildWhatsAppTouchpoints(normalizedClickRows, attributedLeads),
+    recentLeads: attributedLeads.slice(0, 8).map((lead) => ({
+      ...summarizeLead(lead),
+      metaLinePrimary: `${lead.whatsappAttributionLabel} • ${lead.source} / ${lead.medium}`,
+      metaLineSecondary: lead.whatsappClickLabel
+        ? `${lead.whatsappClickLabel}${lead.whatsappClickPage ? ` • ${lead.whatsappClickPage}` : ''}`
+        : lead.landingPage,
+      metaLineTertiary: lead.whatsappManualTag
+        ? (hasWhatsAppAutoAttribution(lead) ? 'Match auto + tag manuel' : 'Tag manuel WhatsApp')
+        : 'Match automatique',
+      metaDateTime: lead.createdAt
+    })),
+    notes: {
+      clickBasis: 'Clics WhatsApp enregistrés côté serveur sur la période sélectionnée.',
+      funnelBasis: 'Leads créés sur la période sélectionnée avec attribution WhatsApp auto, manuelle, ou les deux.',
+      manualTagExplanation: 'Le tag manuel permet d’inclure les leads créés hors formulaire après une conversation WhatsApp.',
+      autoMatchWindow: `Matching automatique sur le dernier clic WhatsApp du même navigateur dans les ${WHATSAPP_MATCH_WINDOW_DAYS} derniers jours.`
+    }
+  };
+}
+
+function normalizeTextArray(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => normalizeText(item, ''))
+      .filter(Boolean);
+  }
+
+  if (!value) {
+    return [];
+  }
+
+  return String(value)
+    .split(/\s*\|\s*/)
+    .map((item) => normalizeText(item, ''))
+    .filter(Boolean);
+}
+
+function normalizeKeywordCatalogMetricRow(row = {}) {
+  const normalizedKeyword = normalizeKeywordForKey(row.normalized_keyword || row.display_keyword || '');
+  const canonicalTargetUrl = normalizeText(
+    row.canonical_target_url,
+    buildKeywordCatalogUrl(row.canonical_target_path || '/', process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_KEYWORD_SITE_URL)
+  );
+  const referencePosition = normalizeNumber(row.reference_current_position);
+  const referenceLastUpdated = row.reference_last_updated
+    ? normalizeText(row.reference_last_updated)
+    : null;
+
+  return {
+    id: row.id || null,
+    lookupKey: buildKeywordCatalogLookupKey({
+      normalizedKeyword,
+      canonicalTargetUrl
+    }),
+    normalizedKeyword,
+    label: normalizeText(row.display_keyword || row.normalized_keyword, 'Non renseigné'),
+    targetUrl: canonicalTargetUrl,
+    targetPath: normalizeText(row.canonical_target_path, '/'),
+    targetDomain: normalizeText(row.target_domain, 'Non renseigné'),
+    categoryTags: normalizeTextArray(row.category_tags),
+    searchIntentTags: normalizeTextArray(row.search_intent_tags),
+    contentTypeTags: normalizeTextArray(row.content_type_tags),
+    priorityTags: normalizeTextArray(row.priority_tags),
+    trendTags: normalizeTextArray(row.trend_tags),
+    referenceClicks: normalizeNumber(row.reference_clicks),
+    referenceImpressions: normalizeNumber(row.reference_impressions),
+    referencePosition: referencePosition !== null && referencePosition > 0 ? referencePosition : null,
+    referenceCtr: normalizeNumber(row.reference_ctr),
+    referenceLastUpdated
+  };
+}
+
+function normalizeKeywordRankingMetricRow(row = {}) {
+  const numericPosition = Number(row.position);
+  const targetPath = normalizeText(row.target_path, '/');
+
+  return {
+    keywordCatalogId: row.keyword_catalog_id || null,
+    metricDate: row.metric_date,
+    keyword: normalizeText(row.keyword, 'Non renseigné'),
+    keywordLabel: normalizeText(row.keyword_label || row.keyword, normalizeText(row.keyword, 'Non renseigné')),
+    targetDomain: normalizeText(row.target_domain, 'Non renseigné'),
+    targetPath,
+    matchedDomain: row.matched_domain ? normalizeText(row.matched_domain) : null,
+    matchedPath: row.matched_path ? normalizeText(row.matched_path) : null,
+    matchedUrl: row.matched_url ? normalizeText(row.matched_url) : null,
+    resultTitle: row.result_title ? normalizeText(row.result_title) : null,
+    resultSnippet: row.result_snippet ? normalizeText(row.result_snippet) : null,
+    position: Number.isFinite(numericPosition) ? numericPosition : null,
+    isRanked: Boolean(row.is_ranked ?? Number.isFinite(numericPosition)),
+    device: normalizeText(row.device, 'desktop'),
+    googleDomain: normalizeText(row.google_domain, 'google.com'),
+    gl: normalizeText(row.gl, ''),
+    hl: normalizeText(row.hl, ''),
+    location: normalizeText(row.location, ''),
+    resultsCount: Number(row.results_count || 0),
+    catalogLookupKey: buildKeywordCatalogLookupKeyFromValues({
+      keyword: row.keyword,
+      targetPath,
+      siteUrl: process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_KEYWORD_SITE_URL
+    }),
+    metadata: row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
+  };
+}
+
+function getKeywordPriorityScore(priorityTags = []) {
+  const priorityMap = {
+    high: 3,
+    medium: 2,
+    low: 1
+  };
+
+  return priorityTags.reduce((maxScore, tag) => (
+    Math.max(maxScore, priorityMap[String(tag).toLowerCase()] || 0)
+  ), 0);
+}
+
+function buildDeviceKeywordDistribution(items, deviceKey) {
+  const latestPositions = items.map((item) => item[deviceKey].latestPosition);
+  const buckets = [
+    {
+      key: `${deviceKey}_top_3`,
+      label: 'Top 3',
+      count: latestPositions.filter((value) => value !== null && value <= 3).length
+    },
+    {
+      key: `${deviceKey}_top_10`,
+      label: '4-10',
+      count: latestPositions.filter((value) => value !== null && value >= 4 && value <= 10).length
+    },
+    {
+      key: `${deviceKey}_top_20`,
+      label: '11-20',
+      count: latestPositions.filter((value) => value !== null && value >= 11 && value <= 20).length
+    },
+    {
+      key: `${deviceKey}_not_ranked`,
+      label: 'Non classés',
+      count: latestPositions.filter((value) => value === null).length
+    }
+  ];
+
+  return buckets.map((bucket) => ({
+    ...bucket,
+    rate: getPercent(bucket.count, items.length)
+  }));
+}
+
+function buildReferenceKeywordDistribution(items = [], deviceKey) {
+  const referencePositions = items.map((item) => item.reference?.position ?? null);
+  const buckets = [
+    {
+      key: `${deviceKey}_top_3`,
+      label: 'Top 3',
+      count: referencePositions.filter((value) => value !== null && value <= 3).length
+    },
+    {
+      key: `${deviceKey}_top_10`,
+      label: '4-10',
+      count: referencePositions.filter((value) => value !== null && value >= 4 && value <= 10).length
+    },
+    {
+      key: `${deviceKey}_top_20`,
+      label: '11-20',
+      count: referencePositions.filter((value) => value !== null && value >= 11 && value <= 20).length
+    },
+    {
+      key: `${deviceKey}_not_ranked`,
+      label: 'Non classés',
+      count: referencePositions.filter((value) => value === null).length
+    }
+  ];
+
+  return buckets.map((bucket) => ({
+    ...bucket,
+    rate: getPercent(bucket.count, items.length)
+  }));
+}
+
+function buildKeywordVisibilityTrend(rows) {
+  const byDate = new Map();
+
+  rows.forEach((row) => {
+    const bucket = byDate.get(row.metricDate) || {
+      date: row.metricDate,
+      desktopRanked: 0,
+      mobileRanked: 0,
+      desktopTop10: 0,
+      mobileTop10: 0
+    };
+    const rankedKey = row.device === 'mobile' ? 'mobileRanked' : 'desktopRanked';
+    const top10Key = row.device === 'mobile' ? 'mobileTop10' : 'desktopTop10';
+
+    if (row.isRanked && row.position !== null) {
+      bucket[rankedKey] += 1;
+      if (row.position <= 10) {
+        bucket[top10Key] += 1;
+      }
+    }
+
+    byDate.set(row.metricDate, bucket);
+  });
+
+  return Array.from(byDate.values())
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function buildKeywordPositionTrend(rows) {
+  const byDate = new Map();
+
+  rows.forEach((row) => {
+    const bucket = byDate.get(row.metricDate) || {
+      date: row.metricDate,
+      desktopPositions: [],
+      mobilePositions: []
+    };
+    const positionsKey = row.device === 'mobile' ? 'mobilePositions' : 'desktopPositions';
+
+    if (row.isRanked && row.position !== null) {
+      bucket[positionsKey].push(row.position);
+    }
+
+    byDate.set(row.metricDate, bucket);
+  });
+
+  return Array.from(byDate.values())
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((bucket) => ({
+      date: bucket.date,
+      desktopAveragePosition: getAverage(bucket.desktopPositions),
+      mobileAveragePosition: getAverage(bucket.mobilePositions),
+      desktopBestPosition: bucket.desktopPositions.length > 0 ? Math.min(...bucket.desktopPositions) : null,
+      mobileBestPosition: bucket.mobilePositions.length > 0 ? Math.min(...bucket.mobilePositions) : null,
+      desktopRanked: bucket.desktopPositions.length,
+      mobileRanked: bucket.mobilePositions.length
+    }))
+    .filter((bucket) => bucket.desktopAveragePosition !== null || bucket.mobileAveragePosition !== null);
+}
+
+function buildReferenceKeywordVisibilityTrend(items = []) {
+  const byDate = new Map();
+
+  items.forEach((item) => {
+    const metricDate = item.reference?.lastUpdated;
+
+    if (!metricDate) {
+      return;
+    }
+
+    const bucket = byDate.get(metricDate) || {
+      date: metricDate,
+      desktopRanked: 0,
+      mobileRanked: 0,
+      desktopTop10: 0,
+      mobileTop10: 0
+    };
+
+    if (item.reference.position !== null && item.reference.position !== undefined) {
+      bucket.desktopRanked += 1;
+      bucket.mobileRanked += 1;
+
+      if (item.reference.position <= 10) {
+        bucket.desktopTop10 += 1;
+        bucket.mobileTop10 += 1;
+      }
+    }
+
+    byDate.set(metricDate, bucket);
+  });
+
+  return Array.from(byDate.values())
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function buildReferenceKeywordPositionTrend(items = []) {
+  const byDate = new Map();
+
+  items.forEach((item) => {
+    const metricDate = item.reference?.lastUpdated;
+
+    if (!metricDate || item.reference.position === null || item.reference.position === undefined) {
+      return;
+    }
+
+    const bucket = byDate.get(metricDate) || {
+      date: metricDate,
+      positions: []
+    };
+
+    bucket.positions.push(item.reference.position);
+    byDate.set(metricDate, bucket);
+  });
+
+  return Array.from(byDate.values())
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((bucket) => ({
+      date: bucket.date,
+      desktopAveragePosition: getAverage(bucket.positions),
+      mobileAveragePosition: getAverage(bucket.positions),
+      desktopBestPosition: bucket.positions.length > 0 ? Math.min(...bucket.positions) : null,
+      mobileBestPosition: bucket.positions.length > 0 ? Math.min(...bucket.positions) : null,
+      desktopRanked: bucket.positions.length,
+      mobileRanked: bucket.positions.length
+    }))
+    .filter((bucket) => bucket.desktopAveragePosition !== null || bucket.mobileAveragePosition !== null);
+}
+
+function summarizeKeywordDeviceRows(rows = []) {
+  if (rows.length === 0) {
+    return {
+      earliestMetricDate: null,
+      latestMetricDate: null,
+      latestPosition: null,
+      previousPosition: null,
+      positionChange: null,
+      bestPosition: null,
+      trackedSnapshots: 0,
+      rankedSnapshots: 0,
+      isRanked: false,
+      matchedPath: null,
+      matchedUrl: null,
+      resultTitle: null
+    };
+  }
+
+  const sortedRows = [...rows].sort((a, b) => a.metricDate.localeCompare(b.metricDate));
+  const latestRow = sortedRows.at(-1);
+  const previousRow = sortedRows.length > 1 ? sortedRows.at(-2) : null;
+  const rankedPositions = sortedRows
+    .filter((row) => row.isRanked && row.position !== null)
+    .map((row) => row.position);
+
+  return {
+    earliestMetricDate: sortedRows[0]?.metricDate || null,
+    latestMetricDate: latestRow.metricDate,
+    latestPosition: latestRow.isRanked ? latestRow.position : null,
+    previousPosition: previousRow?.isRanked ? previousRow.position : null,
+    positionChange: latestRow.isRanked && previousRow?.isRanked
+      ? Math.round((previousRow.position - latestRow.position) * 10) / 10
+      : null,
+    bestPosition: rankedPositions.length > 0 ? Math.min(...rankedPositions) : null,
+    trackedSnapshots: sortedRows.length,
+    rankedSnapshots: rankedPositions.length,
+    isRanked: Boolean(latestRow.isRanked && latestRow.position !== null),
+    matchedPath: latestRow.matchedPath,
+    matchedUrl: latestRow.matchedUrl,
+    resultTitle: latestRow.resultTitle
+  };
+}
+
+function getBestCurrentKeywordPosition(keywordRow) {
+  const candidates = [
+    keywordRow.desktop.latestPosition,
+    keywordRow.mobile.latestPosition
+  ].filter((value) => value !== null);
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  return Math.min(...candidates);
+}
+
+function resolveCatalogRowForRanking(row, catalogById, catalogByLookupKey) {
+  if (row.keywordCatalogId && catalogById.has(row.keywordCatalogId)) {
+    return catalogById.get(row.keywordCatalogId);
+  }
+
+  if (row.catalogLookupKey && catalogByLookupKey.has(row.catalogLookupKey)) {
+    return catalogByLookupKey.get(row.catalogLookupKey);
+  }
+
+  return null;
+}
+
+function buildKeywordRankings(keywordCatalogRows = [], keywordRankingRows = []) {
+  const normalizedCatalogRows = keywordCatalogRows
+    .map(normalizeKeywordCatalogMetricRow)
+    .filter((row) => row.normalizedKeyword && row.targetUrl);
+  const catalogById = new Map(
+    normalizedCatalogRows
+      .filter((row) => row.id)
+      .map((row) => [row.id, row])
+  );
+  const catalogByLookupKey = new Map(
+    normalizedCatalogRows.map((row) => [row.lookupKey, row])
+  );
+  const normalizedRankingRows = keywordRankingRows
+    .map(normalizeKeywordRankingMetricRow)
+    .filter((row) => row.metricDate && row.keyword);
+  const resolvedRankingRows = normalizedRankingRows.map((row) => ({
+    row,
+    catalogRow: resolveCatalogRowForRanking(row, catalogById, catalogByLookupKey)
+  }));
+  const matchedRankingRows = resolvedRankingRows
+    .filter(({ catalogRow }) => Boolean(catalogRow))
+    .map(({ row }) => row);
+  const rawMetricDates = normalizedRankingRows.map((row) => row.metricDate).sort();
+  const matchedMetricDates = matchedRankingRows.map((row) => row.metricDate).sort();
+  const snapshotDiagnostics = {
+    rawSnapshotCount: normalizedRankingRows.length,
+    matchedSnapshotCount: matchedRankingRows.length,
+    unmatchedSnapshotCount: Math.max(normalizedRankingRows.length - matchedRankingRows.length, 0),
+    earliestRawMetricDate: rawMetricDates[0] || null,
+    latestRawMetricDate: rawMetricDates.at(-1) || null,
+    earliestMatchedMetricDate: matchedMetricDates[0] || null,
+    latestMatchedMetricDate: matchedMetricDates.at(-1) || null,
+    referenceRankedCount: 0,
+    earliestReferenceMetricDate: null,
+    latestReferenceMetricDate: null,
+    usingReferenceFallback: false
+  };
+
+  if (normalizedCatalogRows.length === 0) {
+    return {
+      latestMetricDate: null,
+      earliestMetricDate: null,
+      totals: {
+        trackedKeywords: 0,
+        rankedKeywords: 0,
+        desktopRankedKeywords: 0,
+        mobileRankedKeywords: 0,
+        averagePosition: null,
+        top10Count: 0
+      },
+      rows: [],
+      distributionByDevice: {
+        desktop: [],
+        mobile: []
+      },
+      visibilityTrend: [],
+      positionTrend: [],
+      trend: [],
+      snapshotDiagnostics,
+      devices: {
+        desktop: { latestMetricDate: null, earliestMetricDate: null },
+        mobile: { latestMetricDate: null, earliestMetricDate: null }
+      },
+      usingReferenceFallback: false
+    };
+  }
+
+  const rowsByCatalogAndDevice = new Map();
+  resolvedRankingRows.forEach(({ row, catalogRow }) => {
+    if (!catalogRow) {
+      return;
+    }
+
+    const groupKey = `${catalogRow.lookupKey}||${row.device}`;
+    const current = rowsByCatalogAndDevice.get(groupKey) || [];
+    current.push(row);
+    rowsByCatalogAndDevice.set(groupKey, current);
+  });
+
+  const keywordRowsBase = normalizedCatalogRows.map((catalogRow) => {
+    const desktop = summarizeKeywordDeviceRows(rowsByCatalogAndDevice.get(`${catalogRow.lookupKey}||desktop`) || []);
+    const mobile = summarizeKeywordDeviceRows(rowsByCatalogAndDevice.get(`${catalogRow.lookupKey}||mobile`) || []);
+    const currentBestPosition = getBestCurrentKeywordPosition({
+      desktop,
+      mobile
+    });
+
+    return {
+      key: catalogRow.lookupKey,
+      id: catalogRow.id,
+      label: catalogRow.label,
+      keyword: catalogRow.normalizedKeyword,
+      targetPath: catalogRow.targetPath,
+      targetUrl: catalogRow.targetUrl,
+      categoryTags: catalogRow.categoryTags,
+      searchIntentTags: catalogRow.searchIntentTags,
+      contentTypeTags: catalogRow.contentTypeTags,
+      priorityTags: catalogRow.priorityTags,
+      trendTags: catalogRow.trendTags,
+      reference: {
+        clicks: catalogRow.referenceClicks,
+        impressions: catalogRow.referenceImpressions,
+        position: catalogRow.referencePosition,
+        ctr: catalogRow.referenceCtr,
+        lastUpdated: catalogRow.referenceLastUpdated
+      },
+      desktop,
+      mobile,
+      currentBestPosition,
+      hasLiveSnapshots: desktop.trackedSnapshots > 0 || mobile.trackedSnapshots > 0
+    };
+  });
+
+  const referenceRows = keywordRowsBase.filter((row) => row.reference.position !== null);
+  const referenceMetricDates = referenceRows
+    .map((row) => row.reference.lastUpdated)
+    .filter(Boolean)
+    .sort();
+  const usingReferenceFallback = matchedRankingRows.length === 0 && referenceRows.length > 0;
+  snapshotDiagnostics.referenceRankedCount = referenceRows.length;
+  snapshotDiagnostics.earliestReferenceMetricDate = referenceMetricDates[0] || null;
+  snapshotDiagnostics.latestReferenceMetricDate = referenceMetricDates.at(-1) || null;
+  snapshotDiagnostics.usingReferenceFallback = usingReferenceFallback;
+
+  const keywordRows = keywordRowsBase.map((row) => {
+    const effectiveBestPosition = row.currentBestPosition ?? (usingReferenceFallback ? row.reference.position : null);
+
+    return {
+      ...row,
+      effectiveBestPosition,
+      hasReferencePosition: row.reference.position !== null,
+      usesReferenceFallback: usingReferenceFallback && row.reference.position !== null && !row.hasLiveSnapshots
+    };
+  });
+
+  keywordRows.sort((a, b) => (
+    getKeywordPriorityScore(b.priorityTags) - getKeywordPriorityScore(a.priorityTags)
+    || (a.effectiveBestPosition === null ? 1 : 0) - (b.effectiveBestPosition === null ? 1 : 0)
+    || (a.effectiveBestPosition ?? Number.MAX_SAFE_INTEGER) - (b.effectiveBestPosition ?? Number.MAX_SAFE_INTEGER)
+    || a.label.localeCompare(b.label)
+  ));
+
+  const rankedRows = keywordRows.filter((row) => row.effectiveBestPosition !== null);
+  const desktopRows = keywordRows.filter((row) => (
+    usingReferenceFallback
+      ? row.reference.position !== null
+      : row.desktop.latestPosition !== null
+  ));
+  const mobileRows = keywordRows.filter((row) => (
+    usingReferenceFallback
+      ? row.reference.position !== null
+      : row.mobile.latestPosition !== null
+  ));
+  const visibilityTrend = usingReferenceFallback
+    ? buildReferenceKeywordVisibilityTrend(keywordRows)
+    : buildKeywordVisibilityTrend(matchedRankingRows);
+  const positionTrend = usingReferenceFallback
+    ? buildReferenceKeywordPositionTrend(keywordRows)
+    : buildKeywordPositionTrend(matchedRankingRows);
+  const deviceDates = KEYWORD_TRACKED_DEVICES.reduce((accumulator, device) => {
+    if (usingReferenceFallback) {
+      accumulator[device] = {
+        earliestMetricDate: referenceMetricDates[0] || null,
+        latestMetricDate: referenceMetricDates.at(-1) || null
+      };
+      return accumulator;
+    }
+
+    const metricDates = matchedRankingRows
+      .filter((row) => row.device === device)
+      .map((row) => row.metricDate)
+      .sort();
+
+    accumulator[device] = {
+      earliestMetricDate: metricDates[0] || null,
+      latestMetricDate: metricDates.at(-1) || null
+    };
+    return accumulator;
+  }, {});
+
+  return {
+    latestMetricDate: usingReferenceFallback
+      ? referenceMetricDates.at(-1) || null
+      : matchedRankingRows.map((row) => row.metricDate).sort().at(-1) || null,
+    earliestMetricDate: usingReferenceFallback
+      ? referenceMetricDates[0] || null
+      : matchedRankingRows.map((row) => row.metricDate).sort()[0] || null,
+    totals: {
+      trackedKeywords: keywordRows.length,
+      rankedKeywords: rankedRows.length,
+      desktopRankedKeywords: desktopRows.length,
+      mobileRankedKeywords: mobileRows.length,
+      averagePosition: getAverage(rankedRows.map((row) => row.effectiveBestPosition)),
+      top10Count: rankedRows.filter((row) => row.effectiveBestPosition <= 10).length
+    },
+    rows: keywordRows.slice(0, 12),
+    distributionByDevice: {
+      desktop: usingReferenceFallback
+        ? buildReferenceKeywordDistribution(keywordRows, 'desktop')
+        : buildDeviceKeywordDistribution(keywordRows, 'desktop'),
+      mobile: usingReferenceFallback
+        ? buildReferenceKeywordDistribution(keywordRows, 'mobile')
+        : buildDeviceKeywordDistribution(keywordRows, 'mobile')
+    },
+    visibilityTrend,
+    positionTrend,
+    trend: visibilityTrend,
+    snapshotDiagnostics,
+    devices: deviceDates,
+    usingReferenceFallback
   };
 }
 
@@ -791,7 +1504,7 @@ function aggregateCombinedRows(rows, keyGetter, labelGetter, { limit = 8 } = {})
     .slice(0, limit);
 }
 
-function buildAcquisition(currentLeads, externalMetricRows) {
+function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = []) {
   const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
   const totals = combinedRows.reduce((accumulator, row) => ({
     sessions: accumulator.sessions + row.sessions,
@@ -832,6 +1545,7 @@ function buildAcquisition(currentLeads, externalMetricRows) {
       (row) => `${row.source} / ${row.medium} / ${row.campaign}`,
       { limit: 10 }
     ),
+    whatsapp: buildWhatsAppAcquisition(currentLeads, whatsappClickRows),
     notes: {
       leadBasis: 'Leads créés sur la période',
       externalMetricBasis: 'Sessions, clics, impressions et spend issus des snapshots externes journaliers'
@@ -839,7 +1553,7 @@ function buildAcquisition(currentLeads, externalMetricRows) {
   };
 }
 
-function buildSeoContent(currentLeads, externalMetricRows) {
+function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, keywordRankingRows) {
   const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
   const pageRows = aggregateCombinedRows(
     combinedRows,
@@ -847,6 +1561,7 @@ function buildSeoContent(currentLeads, externalMetricRows) {
     (row) => row.landingPage,
     { limit: 12 }
   );
+  const keywordRankings = buildKeywordRankings(keywordCatalogRows, keywordRankingRows);
 
   const organicRows = combinedRows.filter((row) => (
     row.source.toLowerCase() === 'google'
@@ -866,6 +1581,40 @@ function buildSeoContent(currentLeads, externalMetricRows) {
     leads: 0,
     qualifiedLeads: 0
   });
+  const keywordSnapshotDiagnostics = keywordRankings.snapshotDiagnostics;
+  const hasLiveKeywordSnapshots = keywordSnapshotDiagnostics.matchedSnapshotCount > 0;
+  const hasRawKeywordSnapshots = keywordSnapshotDiagnostics.rawSnapshotCount > 0;
+  const usingReferenceKeywordFallback = keywordRankings.usingReferenceFallback;
+  const latestReferenceMetricDate = keywordSnapshotDiagnostics.latestReferenceMetricDate;
+  const referenceFallbackSuffix = latestReferenceMetricDate
+    ? ` (référence importée du ${latestReferenceMetricDate})`
+    : ' (référence importée du catalogue actif)';
+
+  const keywordDefinition = hasLiveKeywordSnapshots
+    ? `Snapshots SERP live catalogués jusqu'au ${keywordRankings.latestMetricDate}.`
+    : usingReferenceKeywordFallback
+      ? hasRawKeywordSnapshots
+        ? `Des snapshots SERP existent sur la période (${keywordSnapshotDiagnostics.rawSnapshotCount} lignes brutes), mais aucun ne correspond encore au catalogue actif. Le dashboard bascule temporairement sur le catalogue Supabase actif${referenceFallbackSuffix}.`
+        : `Aucun snapshot SERP live catalogué sur la période. Le dashboard bascule temporairement sur le catalogue Supabase actif${referenceFallbackSuffix}.`
+      : hasRawKeywordSnapshots
+        ? `Des snapshots SERP existent sur la période (${keywordSnapshotDiagnostics.rawSnapshotCount} lignes brutes), mais aucun ne correspond encore au catalogue actif.`
+        : 'Aucun snapshot SERP live catalogué sur la période.';
+  const keywordTrendDefinition = hasLiveKeywordSnapshots
+    ? `${keywordDefinition} Les KPI keywords utilisent la meilleure position courante entre desktop et mobile.`
+    : usingReferenceKeywordFallback
+      ? hasRawKeywordSnapshots
+        ? `${keywordDefinition} Cela arrive après un remap ou une réimportation du catalogue tant que de nouveaux snapshots live ne sont pas resynchronisés sur le catalogue courant.`
+        : `${keywordDefinition} Les panneaux de tendance utilisent la référence importée jusqu'à la première synchronisation SERP correspondante.`
+      : hasRawKeywordSnapshots
+        ? `${keywordDefinition} Cela arrive après un remap ou une réimportation du catalogue tant que de nouveaux snapshots ne sont pas resynchronisés.`
+        : `${keywordDefinition} Les panneaux de tendance resteront vides jusqu'à la première synchronisation SERP.`;
+  const keywordRowDefinition = hasLiveKeywordSnapshots
+    ? 'Chaque ligne regroupe desktop et mobile à partir du catalogue Supabase actif. Les badges affichent le live puis la référence importée quand elle existe.'
+    : usingReferenceKeywordFallback
+      ? 'Chaque ligne reste basée sur le catalogue Supabase actif. Quand aucun snapshot live correspondant n’est disponible, desktop et mobile reprennent la référence importée jusqu’à la prochaine resynchronisation device.'
+      : hasRawKeywordSnapshots
+        ? 'Chaque ligne reste basée sur le catalogue Supabase actif. Les positions live sont absentes tant que les snapshots SERP ne correspondent pas encore au catalogue courant; la référence importée reste affichée quand elle existe.'
+        : 'Chaque ligne reste basée sur le catalogue Supabase actif. Les positions de référence importées restent visibles quand elles existent.';
 
   return {
     totals: {
@@ -878,9 +1627,13 @@ function buildSeoContent(currentLeads, externalMetricRows) {
       qualifiedLeads: organicTotals.qualifiedLeads
     },
     landingPages: pageRows,
+    keywordRankings,
     notes: {
       leadRateDefinition: 'Leads / sessions lorsque disponibles, sinon leads / clicks',
-      organicDefinition: 'Source google ou medium organic'
+      organicDefinition: 'Source google ou medium organic',
+      keywordDefinition,
+      keywordTrendDefinition,
+      keywordRowDefinition
     }
   };
 }
@@ -948,7 +1701,7 @@ function getFreshnessStatus({
   return explicitStatus || 'fresh';
 }
 
-function buildDataHealth(sourceHealthRows, externalMetricRows, nowIso) {
+function buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRows, keywordRankingRows, nowIso) {
   const rowByKey = new Map(
     (sourceHealthRows || []).map((row) => [row.source_key, row])
   );
@@ -968,7 +1721,12 @@ function buildDataHealth(sourceHealthRows, externalMetricRows, nowIso) {
     }
 
     const healthRow = rowByKey.get(expectation.key);
-    const matchingRows = (externalMetricRows || []).filter((row) => expectation.metricSources.includes(row.metric_source));
+    const matchingRows = expectation.keywordRankings
+      ? (keywordRankingRows || [])
+      : (externalMetricRows || []).filter((row) => expectation.metricSources.includes(row.metric_source));
+    const fallbackMessage = expectation.keywordRankings && (keywordCatalogRows || []).length > 0
+      ? `${keywordCatalogRows.length} keywords actifs dans le catalogue, aucun snapshot sur la période`
+      : 'Aucune synchronisation disponible';
     const freshestMetricDate = healthRow?.freshest_metric_date
       || matchingRows.map((row) => row.metric_date).sort().at(-1)
       || null;
@@ -989,9 +1747,10 @@ function buildDataHealth(sourceHealthRows, externalMetricRows, nowIso) {
       freshestMetricDate,
       message: healthRow?.message || (matchingRows.length > 0
         ? `${matchingRows.length} lignes disponibles sur la période`
-        : 'Aucune synchronisation disponible'),
+        : fallbackMessage),
       lastError: healthRow?.last_error || null,
-      recordCount: matchingRows.length
+      recordCount: matchingRows.length,
+      metadata: healthRow?.metadata || {}
     };
   });
 
@@ -1039,6 +1798,9 @@ export function buildAdminDashboardData({
   previousRows,
   universeRows,
   externalMetricRows = [],
+  whatsappClickRows = [],
+  keywordCatalogRows = [],
+  keywordRankingRows = [],
   sourceHealthRows = [],
   auditEvents = [],
   range,
@@ -1065,9 +1827,9 @@ export function buildAdminDashboardData({
       }
     },
     pipeline: buildPipeline(currentLeads, range),
-    acquisition: buildAcquisition(currentLeads, externalMetricRows),
-    seoContent: buildSeoContent(currentLeads, externalMetricRows),
+    acquisition: buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows),
+    seoContent: buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, keywordRankingRows),
     operations: buildOperations(universeLeads, auditEvents, range, nowIso),
-    dataHealth: buildDataHealth(sourceHealthRows, externalMetricRows, nowIso)
+    dataHealth: buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRows, keywordRankingRows, nowIso)
   };
 }

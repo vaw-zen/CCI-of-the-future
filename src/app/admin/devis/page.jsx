@@ -6,8 +6,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getDevisRequests } from '@/services/devisService';
-import { updateLeadStatus } from '@/services/adminLeadService';
+import { updateLeadAttribution, updateLeadStatus } from '@/services/adminLeadService';
 import { LEAD_STATUS_OPTIONS, LEAD_STATUSES } from '@/utils/leadLifecycle';
+import { getWhatsAppAttributionSummary, matchesWhatsAppFilter } from '@/libs/whatsappAttribution.mjs';
 import styles from './admin.module.css';
 
 const LEAD_STATUS_LABELS = {
@@ -26,15 +27,19 @@ export default function AdminDevisPage() {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
   const [isSavingStatus, setIsSavingStatus] = useState(false);
+  const [isSavingAttribution, setIsSavingAttribution] = useState(false);
   const [statusError, setStatusError] = useState('');
+  const [attributionError, setAttributionError] = useState('');
   const [filters, setFilters] = useState({
     leadStatus: 'all',
     serviceType: 'all',
+    whatsappAttribution: 'all',
     sessionSource: '',
     sessionMedium: '',
     dateFrom: '',
     dateTo: ''
   });
+  const [leadIdParam, setLeadIdParam] = useState('');
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -54,6 +59,24 @@ export default function AdminDevisPage() {
       document.body.style.overflow = 'unset';
     };
   }, [selectedRequest]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const updateLeadIdFromLocation = () => {
+      const params = new URLSearchParams(window.location.search);
+      setLeadIdParam(params.get('lead') || '');
+    };
+
+    updateLeadIdFromLocation();
+    window.addEventListener('popstate', updateLeadIdFromLocation);
+
+    return () => {
+      window.removeEventListener('popstate', updateLeadIdFromLocation);
+    };
+  }, []);
 
   const loadRequests = async () => {
     try {
@@ -76,11 +99,55 @@ export default function AdminDevisPage() {
     }
   };
 
-  const openRequest = (request) => {
+  const syncLeadQuery = useCallback((leadId) => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const nextParams = new URLSearchParams(window.location.search);
+    if (leadId) {
+      nextParams.set('lead', leadId);
+    } else {
+      nextParams.delete('lead');
+    }
+
+    const nextQuery = nextParams.toString();
+    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}`;
+    window.history.replaceState(window.history.state, '', nextUrl);
+    setLeadIdParam(leadId || '');
+  }, []);
+
+  const openRequest = useCallback((request, { syncQuery = true } = {}) => {
     setSelectedRequest(request);
     setLeadStatusDraft(request.lead_status || LEAD_STATUSES.SUBMITTED);
     setStatusError('');
-  };
+    setAttributionError('');
+
+    if (syncQuery && leadIdParam !== request.id) {
+      syncLeadQuery(request.id);
+    }
+  }, [leadIdParam, syncLeadQuery]);
+
+  const closeRequest = useCallback(() => {
+    setSelectedRequest(null);
+    setStatusError('');
+    setAttributionError('');
+
+    if (leadIdParam) {
+      syncLeadQuery(null);
+    }
+  }, [leadIdParam, syncLeadQuery]);
+
+  useEffect(() => {
+    if (!leadIdParam || requests.length === 0) {
+      return;
+    }
+
+    const matchedRequest = requests.find((request) => request.id === leadIdParam);
+    if (matchedRequest && selectedRequest?.id !== matchedRequest.id) {
+      openRequest(matchedRequest, { syncQuery: false });
+    }
+  }, [leadIdParam, openRequest, requests, selectedRequest?.id]);
 
   const handleStatusSave = async () => {
     if (!selectedRequest || !leadStatusDraft) {
@@ -103,6 +170,30 @@ export default function AdminDevisPage() {
       setStatusError(saveError.message || 'Impossible de mettre à jour le statut.');
     } finally {
       setIsSavingStatus(false);
+    }
+  };
+
+  const handleWhatsAppManualTagToggle = async () => {
+    if (!selectedRequest) {
+      return;
+    }
+
+    try {
+      setIsSavingAttribution(true);
+      setAttributionError('');
+      const updatedLead = await updateLeadAttribution('devis', selectedRequest.id, {
+        whatsappManualTag: !Boolean(selectedRequest.whatsapp_manual_tag)
+      });
+
+      setRequests((currentRequests) => currentRequests.map((request) => (
+        request.id === updatedLead.id ? updatedLead : request
+      )));
+      setSelectedRequest(updatedLead);
+    } catch (saveError) {
+      console.error(saveError);
+      setAttributionError(saveError.message || 'Impossible de mettre à jour l’attribution WhatsApp.');
+    } finally {
+      setIsSavingAttribution(false);
     }
   };
 
@@ -132,6 +223,7 @@ export default function AdminDevisPage() {
   };
 
   const getLeadStatus = useCallback((request) => request.lead_status || LEAD_STATUSES.SUBMITTED, []);
+  const getWhatsAppSummary = useCallback((request) => getWhatsAppAttributionSummary(request), []);
 
   const updateFilter = (key, value) => {
     setFilters((currentFilters) => ({
@@ -144,6 +236,7 @@ export default function AdminDevisPage() {
     setFilters({
       leadStatus: 'all',
       serviceType: 'all',
+      whatsappAttribution: 'all',
       sessionSource: '',
       sessionMedium: '',
       dateFrom: '',
@@ -161,6 +254,10 @@ export default function AdminDevisPage() {
     }
 
     if (filters.serviceType !== 'all' && request.type_service !== filters.serviceType) {
+      return false;
+    }
+
+    if (!matchesWhatsAppFilter(request, filters.whatsappAttribution)) {
       return false;
     }
 
@@ -305,6 +402,22 @@ export default function AdminDevisPage() {
           </div>
 
           <div className={styles.filterField}>
+            <label htmlFor="devis-whatsapp-attribution">WhatsApp</label>
+            <select
+              id="devis-whatsapp-attribution"
+              value={filters.whatsappAttribution}
+              onChange={(event) => updateFilter('whatsappAttribution', event.target.value)}
+            >
+              <option value="all">Tous les leads</option>
+              <option value="any">Tous les leads WhatsApp</option>
+              <option value="auto">Match auto ou mixte</option>
+              <option value="manual">Tag manuel ou mixte</option>
+              <option value="both">Auto + manuel</option>
+              <option value="none">Sans attribution WhatsApp</option>
+            </select>
+          </div>
+
+          <div className={styles.filterField}>
             <label htmlFor="devis-session-source">Source</label>
             <input
               id="devis-session-source"
@@ -388,6 +501,9 @@ export default function AdminDevisPage() {
                 <div className={styles.detail}>
                   <strong>📈</strong> {request.session_source || 'direct'} / {request.session_medium || '(none)'}
                 </div>
+                <div className={styles.detail}>
+                  <strong>💬</strong> {getWhatsAppSummary(request).label}
+                </div>
               </div>
             </div>
           ))}
@@ -397,11 +513,11 @@ export default function AdminDevisPage() {
         </div>
 
         {selectedRequest && (
-          <div className={styles.modal} onClick={() => setSelectedRequest(null)}>
+          <div className={styles.modal} onClick={closeRequest}>
             <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
               <div className={styles.modalHeader}>
                 <h2>Détails de la demande</h2>
-                <button className={styles.closeButton} onClick={() => setSelectedRequest(null)}>
+                <button className={styles.closeButton} onClick={closeRequest}>
                   ×
                 </button>
               </div>
@@ -486,6 +602,34 @@ export default function AdminDevisPage() {
                   <p><strong>Landing page :</strong> {selectedRequest.landing_page || 'Non renseignée'}</p>
                   <p><strong>Referrer host :</strong> {selectedRequest.referrer_host || 'Direct'}</p>
                   <p><strong>Entry path :</strong> {selectedRequest.entry_path || 'Non renseigné'}</p>
+                  <p><strong>Attribution WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).label}</p>
+                  {getWhatsAppSummary(selectedRequest).clickLabel && (
+                    <p><strong>Touchpoint WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).clickLabel}</p>
+                  )}
+                  {getWhatsAppSummary(selectedRequest).clickPage && (
+                    <p><strong>Page du clic WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).clickPage}</p>
+                  )}
+                  {getWhatsAppSummary(selectedRequest).clickedAt && (
+                    <p><strong>Clic WhatsApp détecté le :</strong> {formatDate(getWhatsAppSummary(selectedRequest).clickedAt)}</p>
+                  )}
+                  {getWhatsAppSummary(selectedRequest).manualTaggedAt && (
+                    <p><strong>Tag manuel le :</strong> {formatDate(getWhatsAppSummary(selectedRequest).manualTaggedAt)}</p>
+                  )}
+                  <div className={styles.lifecycleControls}>
+                    <button
+                      type="button"
+                      className={styles.saveButton}
+                      onClick={handleWhatsAppManualTagToggle}
+                      disabled={isSavingAttribution}
+                    >
+                      {isSavingAttribution
+                        ? 'Enregistrement...'
+                        : selectedRequest.whatsapp_manual_tag
+                          ? 'Retirer le tag WhatsApp'
+                          : 'Marquer comme lead WhatsApp'}
+                    </button>
+                  </div>
+                  {attributionError && <p className={styles.statusError}>{attributionError}</p>}
                 </div>
 
                 {selectedRequest.message && (

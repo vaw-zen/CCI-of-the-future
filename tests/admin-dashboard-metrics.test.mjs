@@ -23,7 +23,13 @@ function buildDevisRow(overrides = {}) {
     referrer_host: overrides.referrer_host || null,
     entry_path: overrides.entry_path || '/salon',
     selected_services: overrides.selected_services || null,
-    calculator_estimate: overrides.calculator_estimate || null
+    calculator_estimate: overrides.calculator_estimate || null,
+    whatsapp_click_id: overrides.whatsapp_click_id || null,
+    whatsapp_clicked_at: overrides.whatsapp_clicked_at || null,
+    whatsapp_click_label: overrides.whatsapp_click_label || null,
+    whatsapp_click_page: overrides.whatsapp_click_page || null,
+    whatsapp_manual_tag: overrides.whatsapp_manual_tag || false,
+    whatsapp_manual_tagged_at: overrides.whatsapp_manual_tagged_at || null
   };
 }
 
@@ -45,7 +51,34 @@ function buildConventionRow(overrides = {}) {
     referrer_host: overrides.referrer_host || 'google.com',
     entry_path: overrides.entry_path || '/entreprises',
     selected_services: overrides.selected_services || null,
-    calculator_estimate: overrides.calculator_estimate || null
+    calculator_estimate: overrides.calculator_estimate || null,
+    whatsapp_click_id: overrides.whatsapp_click_id || null,
+    whatsapp_clicked_at: overrides.whatsapp_clicked_at || null,
+    whatsapp_click_label: overrides.whatsapp_click_label || null,
+    whatsapp_click_page: overrides.whatsapp_click_page || null,
+    whatsapp_manual_tag: overrides.whatsapp_manual_tag || false,
+    whatsapp_manual_tagged_at: overrides.whatsapp_manual_tagged_at || null
+  };
+}
+
+function buildKeywordCatalogRow(overrides = {}) {
+  return {
+    id: overrides.id || 'keyword-1',
+    normalized_keyword: overrides.normalized_keyword || 'nettoyage salon tunis',
+    display_keyword: overrides.display_keyword || 'Nettoyage salon Tunis',
+    canonical_target_url: overrides.canonical_target_url || 'https://cciservices.online/salon',
+    canonical_target_path: overrides.canonical_target_path || '/salon',
+    target_domain: overrides.target_domain || 'cciservices.online',
+    category_tags: overrides.category_tags || ['Salon & Canapé'],
+    search_intent_tags: overrides.search_intent_tags || ['Commercial'],
+    content_type_tags: overrides.content_type_tags || ['Article'],
+    priority_tags: overrides.priority_tags || ['High'],
+    trend_tags: overrides.trend_tags || ['Improving'],
+    reference_clicks: overrides.reference_clicks || 24,
+    reference_impressions: overrides.reference_impressions || 520,
+    reference_current_position: overrides.reference_current_position || 7,
+    reference_ctr: overrides.reference_ctr || 4.6,
+    reference_last_updated: overrides.reference_last_updated || null
   };
 }
 
@@ -172,6 +205,108 @@ test('combined channel performance merges external metrics with current lead coh
   assert.equal(rows[0].leadRate, 5);
 });
 
+test('whatsapp acquisition summarizes clicks, attributed leads, and drilldown rows', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-wa-auto',
+          created_at: '2026-05-02T10:00:00.000Z',
+          whatsapp_click_id: 'wa-1',
+          whatsapp_clicked_at: '2026-05-01T09:00:00.000Z',
+          whatsapp_click_label: 'home_hero_whatsapp_main',
+          whatsapp_click_page: '/',
+          session_source: 'google',
+          session_medium: 'organic'
+        }),
+        buildDevisRow({
+          id: 'devis-wa-manual',
+          created_at: '2026-05-03T11:00:00.000Z',
+          whatsapp_manual_tag: true,
+          whatsapp_manual_tagged_at: '2026-05-03T12:00:00.000Z'
+        })
+      ],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-wa-auto',
+          created_at: '2026-05-02T10:00:00.000Z',
+          whatsapp_click_id: 'wa-1',
+          whatsapp_clicked_at: '2026-05-01T09:00:00.000Z',
+          whatsapp_click_label: 'home_hero_whatsapp_main',
+          whatsapp_click_page: '/',
+          session_source: 'google',
+          session_medium: 'organic'
+        }),
+        buildDevisRow({
+          id: 'devis-wa-manual',
+          created_at: '2026-05-03T11:00:00.000Z',
+          whatsapp_manual_tag: true,
+          whatsapp_manual_tagged_at: '2026-05-03T12:00:00.000Z'
+        })
+      ],
+      conventions: []
+    },
+    externalMetricRows: [],
+    whatsappClickRows: [
+      {
+        id: 'wa-1',
+        clicked_at: '2026-05-01T09:00:00.000Z',
+        ga_client_id: '111.222',
+        event_label: 'home_hero_whatsapp_main',
+        page_path: '/',
+        landing_page: '/',
+        session_source: 'google',
+        session_medium: 'organic',
+        session_campaign: '(not set)',
+        referrer_host: 'google.com'
+      },
+      {
+        id: 'wa-2',
+        clicked_at: '2026-05-03T09:00:00.000Z',
+        ga_client_id: '111.222',
+        event_label: 'sticky_header_whatsapp',
+        page_path: '/contact',
+        landing_page: '/contact',
+        session_source: 'direct',
+        session_medium: '(none)',
+        session_campaign: '(not set)',
+        referrer_host: null
+      },
+      {
+        id: 'wa-3',
+        clicked_at: '2026-05-04T09:00:00.000Z',
+        ga_client_id: '333.444',
+        event_label: 'home_hero_whatsapp_main',
+        page_path: '/',
+        landing_page: '/',
+        session_source: 'instagram',
+        session_medium: 'social',
+        session_campaign: 'bio_link',
+        referrer_host: 'instagram.com'
+      }
+    ],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  });
+
+  assert.equal(data.acquisition.whatsapp.summary.clicks, 3);
+  assert.equal(data.acquisition.whatsapp.summary.uniqueClickers, 2);
+  assert.equal(data.acquisition.whatsapp.summary.autoAttributedLeads, 1);
+  assert.equal(data.acquisition.whatsapp.summary.manualTaggedLeads, 1);
+  assert.equal(data.acquisition.whatsapp.summary.totalAttributedLeads, 2);
+  assert.equal(data.acquisition.whatsapp.funnel.find((item) => item.key === 'created')?.count, 2);
+  assert.equal(data.acquisition.whatsapp.touchpoints[0]?.label, 'home_hero_whatsapp_main');
+  assert.equal(data.acquisition.whatsapp.recentLeads[0]?.drilldownHref, '/admin/devis?lead=devis-wa-manual');
+});
+
 test('lifecycle trend counts created, qualified, won, and lost activity independently', () => {
   const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-03' });
   const trend = buildLifecycleTrend([
@@ -194,4 +329,405 @@ test('lifecycle trend counts created, qualified, won, and lost activity independ
     { date: '2026-05-02', created: 1, qualified: 1, won: 0, lost: 0 },
     { date: '2026-05-03', created: 0, qualified: 1, won: 1, lost: 1 }
   ]);
+});
+
+test('seo content summarizes latest keyword rankings and ranking changes', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  assert.equal(rangeResult.ok, true);
+
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: []
+    },
+    externalMetricRows: [],
+    keywordCatalogRows: [
+      buildKeywordCatalogRow(),
+      buildKeywordCatalogRow({
+        id: 'keyword-2',
+        normalized_keyword: 'nettoyage tapis tunis',
+        display_keyword: 'Nettoyage tapis Tunis',
+        canonical_target_url: 'https://cciservices.online/tapis',
+        canonical_target_path: '/tapis',
+        category_tags: ['Tapis & Moquette'],
+        priority_tags: ['Medium']
+      })
+    ],
+    keywordRankingRows: [
+      {
+        keyword_catalog_id: 'keyword-1',
+        metric_date: '2026-05-01',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/salon',
+        matched_path: '/salon',
+        matched_url: 'https://cciservices.online/salon',
+        result_title: 'Nettoyage salon',
+        position: 8,
+        is_ranked: true,
+        device: 'desktop',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      },
+      {
+        keyword_catalog_id: 'keyword-1',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/salon',
+        matched_path: '/salon',
+        matched_url: 'https://cciservices.online/salon',
+        result_title: 'Nettoyage salon',
+        position: 3,
+        is_ranked: true,
+        device: 'desktop',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      },
+      {
+        keyword_catalog_id: 'keyword-1',
+        metric_date: '2026-05-01',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/salon',
+        matched_path: '/salon',
+        matched_url: 'https://cciservices.online/salon',
+        result_title: 'Nettoyage salon mobile',
+        position: 6,
+        is_ranked: true,
+        device: 'mobile',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      },
+      {
+        keyword_catalog_id: 'keyword-1',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/salon',
+        matched_path: '/salon',
+        matched_url: 'https://cciservices.online/salon',
+        result_title: 'Nettoyage salon mobile',
+        position: 4,
+        is_ranked: true,
+        device: 'mobile',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      },
+      {
+        keyword_catalog_id: 'keyword-2',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage tapis tunis',
+        keyword_label: 'Nettoyage tapis Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/tapis',
+        matched_path: null,
+        matched_url: null,
+        result_title: null,
+        position: null,
+        is_ranked: false,
+        device: 'desktop',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      }
+    ],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T06:00:00.000Z'
+  });
+
+  assert.equal(data.seoContent.keywordRankings.totals.trackedKeywords, 2);
+  assert.equal(data.seoContent.keywordRankings.totals.rankedKeywords, 1);
+  assert.equal(data.seoContent.keywordRankings.totals.desktopRankedKeywords, 1);
+  assert.equal(data.seoContent.keywordRankings.totals.mobileRankedKeywords, 1);
+  assert.equal(data.seoContent.keywordRankings.totals.averagePosition, 3);
+  assert.equal(data.seoContent.keywordRankings.totals.top10Count, 1);
+  assert.equal(data.seoContent.keywordRankings.rows[0].desktop.positionChange, 5);
+  assert.equal(data.seoContent.keywordRankings.rows[0].mobile.positionChange, 2);
+  assert.equal(data.seoContent.keywordRankings.rows[0].currentBestPosition, 3);
+  assert.equal(data.seoContent.keywordRankings.rows[0].categoryTags[0], 'Salon & Canapé');
+  assert.equal(data.seoContent.keywordRankings.distributionByDevice.desktop.find((item) => item.key === 'desktop_not_ranked')?.count, 1);
+  assert.deepEqual(data.seoContent.keywordRankings.visibilityTrend, [
+    {
+      date: '2026-05-01',
+      desktopRanked: 1,
+      mobileRanked: 1,
+      desktopTop10: 1,
+      mobileTop10: 1
+    },
+    {
+      date: '2026-05-07',
+      desktopRanked: 1,
+      mobileRanked: 1,
+      desktopTop10: 1,
+      mobileTop10: 1
+    }
+  ]);
+  assert.deepEqual(data.seoContent.keywordRankings.positionTrend, [
+    {
+      date: '2026-05-01',
+      desktopAveragePosition: 8,
+      mobileAveragePosition: 6,
+      desktopBestPosition: 8,
+      mobileBestPosition: 6,
+      desktopRanked: 1,
+      mobileRanked: 1
+    },
+    {
+      date: '2026-05-07',
+      desktopAveragePosition: 3,
+      mobileAveragePosition: 4,
+      desktopBestPosition: 3,
+      mobileBestPosition: 4,
+      desktopRanked: 1,
+      mobileRanked: 1
+    }
+  ]);
+  assert.deepEqual(
+    data.seoContent.keywordRankings.trend,
+    data.seoContent.keywordRankings.visibilityTrend
+  );
+  assert.deepEqual(data.seoContent.keywordRankings.snapshotDiagnostics, {
+    rawSnapshotCount: 5,
+    matchedSnapshotCount: 5,
+    unmatchedSnapshotCount: 0,
+    earliestRawMetricDate: '2026-05-01',
+    latestRawMetricDate: '2026-05-07',
+    earliestMatchedMetricDate: '2026-05-01',
+    latestMatchedMetricDate: '2026-05-07',
+    referenceRankedCount: 2,
+    earliestReferenceMetricDate: null,
+    latestReferenceMetricDate: null,
+    usingReferenceFallback: false
+  });
+  assert.match(data.seoContent.notes.keywordDefinition, /Snapshots SERP live catalogués/);
+  assert.equal(data.seoContent.keywordRankings.rows[0].reference.position, 7);
+  assert.equal(data.seoContent.keywordRankings.rows[0].reference.lastUpdated, null);
+});
+
+test('keyword rankings fall back to lookup matching when keyword_catalog_id is stale', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  assert.equal(rangeResult.ok, true);
+
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: []
+    },
+    externalMetricRows: [],
+    keywordCatalogRows: [
+      buildKeywordCatalogRow({
+        id: 'keyword-active',
+        reference_last_updated: '2025-10-15'
+      })
+    ],
+    keywordRankingRows: [
+      {
+        keyword_catalog_id: 'keyword-stale-id',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/salon',
+        matched_path: '/salon',
+        matched_url: 'https://cciservices.online/salon',
+        result_title: 'Nettoyage salon',
+        position: 4,
+        is_ranked: true,
+        device: 'desktop',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      },
+      {
+        keyword_catalog_id: 'keyword-stale-id',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/salon',
+        matched_path: '/salon',
+        matched_url: 'https://cciservices.online/salon',
+        result_title: 'Nettoyage salon mobile',
+        position: 6,
+        is_ranked: true,
+        device: 'mobile',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      },
+      {
+        keyword_catalog_id: 'keyword-unmatched',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/old-salon',
+        matched_path: '/old-salon',
+        matched_url: 'https://cciservices.online/old-salon',
+        result_title: 'Old salon page',
+        position: 12,
+        is_ranked: true,
+        device: 'desktop',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      }
+    ],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T06:00:00.000Z'
+  });
+
+  assert.equal(data.seoContent.keywordRankings.totals.trackedKeywords, 1);
+  assert.equal(data.seoContent.keywordRankings.totals.rankedKeywords, 1);
+  assert.equal(data.seoContent.keywordRankings.rows[0].desktop.latestPosition, 4);
+  assert.equal(data.seoContent.keywordRankings.rows[0].mobile.latestPosition, 6);
+  assert.equal(data.seoContent.keywordRankings.rows[0].hasLiveSnapshots, true);
+  assert.equal(data.seoContent.keywordRankings.rows[0].reference.lastUpdated, '2025-10-15');
+  assert.deepEqual(data.seoContent.keywordRankings.snapshotDiagnostics, {
+    rawSnapshotCount: 3,
+    matchedSnapshotCount: 2,
+    unmatchedSnapshotCount: 1,
+    earliestRawMetricDate: '2026-05-07',
+    latestRawMetricDate: '2026-05-07',
+    earliestMatchedMetricDate: '2026-05-07',
+    latestMatchedMetricDate: '2026-05-07',
+    referenceRankedCount: 1,
+    earliestReferenceMetricDate: '2025-10-15',
+    latestReferenceMetricDate: '2025-10-15',
+    usingReferenceFallback: false
+  });
+});
+
+test('seo notes and trends fall back to imported references when live snapshots do not match the active catalog', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  assert.equal(rangeResult.ok, true);
+
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: []
+    },
+    externalMetricRows: [],
+    keywordCatalogRows: [
+      buildKeywordCatalogRow({
+        id: 'keyword-active',
+        reference_last_updated: '2025-10-15'
+      })
+    ],
+    keywordRankingRows: [
+      {
+        keyword_catalog_id: 'keyword-stale-id',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/old-salon',
+        matched_path: '/old-salon',
+        matched_url: 'https://cciservices.online/old-salon',
+        result_title: 'Old salon page',
+        position: 12,
+        is_ranked: true,
+        device: 'desktop',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      }
+    ],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T06:00:00.000Z'
+  });
+
+  assert.deepEqual(data.seoContent.keywordRankings.snapshotDiagnostics, {
+    rawSnapshotCount: 1,
+    matchedSnapshotCount: 0,
+    unmatchedSnapshotCount: 1,
+    earliestRawMetricDate: '2026-05-07',
+    latestRawMetricDate: '2026-05-07',
+    earliestMatchedMetricDate: null,
+    latestMatchedMetricDate: null,
+    referenceRankedCount: 1,
+    earliestReferenceMetricDate: '2025-10-15',
+    latestReferenceMetricDate: '2025-10-15',
+    usingReferenceFallback: true
+  });
+  assert.equal(data.seoContent.keywordRankings.rows[0].hasLiveSnapshots, false);
+  assert.equal(data.seoContent.keywordRankings.rows[0].reference.position, 7);
+  assert.equal(data.seoContent.keywordRankings.rows[0].effectiveBestPosition, 7);
+  assert.equal(data.seoContent.keywordRankings.rows[0].usesReferenceFallback, true);
+  assert.deepEqual(data.seoContent.keywordRankings.visibilityTrend, [
+    {
+      date: '2025-10-15',
+      desktopRanked: 1,
+      mobileRanked: 1,
+      desktopTop10: 1,
+      mobileTop10: 1
+    }
+  ]);
+  assert.deepEqual(data.seoContent.keywordRankings.positionTrend, [
+    {
+      date: '2025-10-15',
+      desktopAveragePosition: 7,
+      mobileAveragePosition: 7,
+      desktopBestPosition: 7,
+      mobileBestPosition: 7,
+      desktopRanked: 1,
+      mobileRanked: 1
+    }
+  ]);
+  assert.equal(data.seoContent.keywordRankings.distributionByDevice.desktop.find((item) => item.key === 'desktop_top_10')?.count, 1);
+  assert.equal(data.seoContent.keywordRankings.distributionByDevice.mobile.find((item) => item.key === 'mobile_top_10')?.count, 1);
+  assert.match(data.seoContent.notes.keywordDefinition, /bascule temporairement sur le catalogue Supabase actif/);
+  assert.match(data.seoContent.notes.keywordTrendDefinition, /remap ou une réimportation du catalogue/);
+  assert.match(data.seoContent.notes.keywordRowDefinition, /desktop et mobile reprennent la référence importée/);
 });

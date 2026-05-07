@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   WHATSAPP_MATCH_WINDOW_DAYS,
   buildWhatsAppManualTagPatch,
@@ -9,6 +12,15 @@ import {
   normalizeWhatsAppClickPayload,
   pickLatestEligibleWhatsAppClick
 } from '../src/libs/whatsappAttribution.mjs';
+import {
+  buildTrackedWhatsAppHref,
+  extractGaClientIdFromGaCookie,
+  parseSessionAttributionCookie,
+  serializeSessionAttributionCookie
+} from '../src/libs/whatsappTracking.mjs';
+
+const testDirectory = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(testDirectory, '..');
 
 test('normalizeWhatsAppClickPayload keeps only safe WhatsApp attribution fields', () => {
   const payload = normalizeWhatsAppClickPayload({
@@ -89,4 +101,52 @@ test('manual tag patch and filter matching distinguish auto, manual, both, and n
   assert.equal(matchesWhatsAppFilter(manualLead, 'auto'), false);
   assert.equal(matchesWhatsAppFilter(bothLead, 'manual'), true);
   assert.equal(matchesWhatsAppFilter(noneLead, 'none'), true);
+});
+
+test('buildTrackedWhatsAppHref converts a WhatsApp destination into an internal logging redirect', () => {
+  const trackedHref = buildTrackedWhatsAppHref({
+    href: 'https://wa.me/21698557766?text=Bonjour%20CCI',
+    eventLabel: 'home_hero_whatsapp_main'
+  });
+  const trackedUrl = new URL(trackedHref, 'https://cciservices.online');
+
+  assert.equal(trackedUrl.pathname, '/out/whatsapp');
+  assert.equal(trackedUrl.searchParams.get('phone'), '21698557766');
+  assert.equal(trackedUrl.searchParams.get('text'), 'Bonjour CCI');
+  assert.equal(trackedUrl.searchParams.get('label'), 'home_hero_whatsapp_main');
+  assert.equal(extractGaClientIdFromGaCookie('GA1.1.123456789.987654321'), '123456789.987654321');
+});
+
+test('session attribution cookie serializer keeps only the non-PII fields needed for server-side redirect logging', () => {
+  const serialized = serializeSessionAttributionCookie({
+    source: 'instagram',
+    medium: 'social',
+    campaign: 'bio_link',
+    landing_page: '/services',
+    referrer_host: 'instagram.com',
+    email: 'sensitive@example.com'
+  });
+
+  assert.deepEqual(parseSessionAttributionCookie(serialized), {
+    source: 'instagram',
+    medium: 'social',
+    campaign: 'bio_link',
+    landing_page: '/services',
+    referrer_host: 'instagram.com'
+  });
+});
+
+test('main WhatsApp CTA surfaces use analytics-aware links instead of raw wa.me anchors', async () => {
+  const auditedFiles = [
+    'src/layout/header/header.jsx',
+    'src/app/home/sections/1-hero/hero.jsx',
+    'src/app/contact/1-actions/actions.jsx',
+    'src/app/conseils/components/CTAButton/CTAButtons.jsx'
+  ];
+
+  for (const relativePath of auditedFiles) {
+    const contents = await readFile(path.join(repoRoot, relativePath), 'utf8');
+    assert.match(contents, /AnalyticsLink/);
+    assert.doesNotMatch(contents, /<a\s+[^>]*href=["']https:\/\/wa\.me/i);
+  }
 });

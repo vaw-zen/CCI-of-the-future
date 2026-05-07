@@ -2,6 +2,7 @@
 
 import { useAnalytics } from '../../../hooks/useAnalytics';
 import { trackServiceInteraction, trackPhoneReveal, trackEmailClick, trackWhatsAppClick, trackSocialClick, SERVICE_TYPES } from '../../analytics';
+import { buildTrackedWhatsAppHref, parseWhatsAppHref } from '@/libs/whatsappTracking.mjs';
 import ResponsiveImage from '@/utils/components/Image/Image';
 
 /**
@@ -69,28 +70,30 @@ export function AnalyticsLink({
   ...props 
 }) {
   const { trackEvent } = useAnalytics();
+  const originalHref = href || '';
 
   const handleClick = (e) => {
     // Only track on client-side
     if (typeof window === 'undefined') return;
     
     // Determine link type (safe for client-side only)
-    const isExternal = href && (
-      href.startsWith('http') && 
-      !href.includes(window.location.hostname)
+    const isExternal = originalHref && (
+      originalHref.startsWith('http') && 
+      !originalHref.includes(window.location.hostname)
     );
-    const isMailto = href && href.startsWith('mailto:');
-    const isTel = href && href.startsWith('tel:');
-    const isWhatsApp = href && (href.includes('wa.me') || href.includes('whatsapp'));
+    const isMailto = originalHref && originalHref.startsWith('mailto:');
+    const isTel = originalHref && originalHref.startsWith('tel:');
+    const isWhatsApp = originalHref && (originalHref.includes('wa.me') || originalHref.includes('api.whatsapp.com'));
+    const whatsappLink = isWhatsApp ? parseWhatsAppHref(originalHref) : null;
 
     // Use requestIdleCallback for non-critical tracking (better performance)
     const performTracking = () => {
       // Track the analytics event
       trackEvent(eventName, {
         event_category: isExternal ? 'outbound' : eventCategory,
-        event_label: eventLabel || href,
-        link_text: typeof children === 'string' ? children : href,
-        link_destination: href,
+        event_label: eventLabel || originalHref,
+        link_text: typeof children === 'string' ? children : originalHref,
+        link_destination: originalHref,
         is_external: isExternal,
         is_mailto: isMailto,
         is_tel: isTel,
@@ -103,7 +106,11 @@ export function AnalyticsLink({
       } else if (isTel) {
         trackPhoneReveal(eventLabel || 'link_click');
       } else if (isWhatsApp) {
-        trackWhatsAppClick(eventLabel || 'link_click');
+        trackWhatsAppClick(eventLabel || 'link_click', whatsappLink?.phoneNumber || '', {
+          link_destination: originalHref
+        }, {
+          persistServerClick: false
+        });
       }
     };
 
@@ -123,8 +130,14 @@ export function AnalyticsLink({
   };
 
   // Determine additional props based on link type
+  const renderedHref = originalHref && (originalHref.includes('wa.me') || originalHref.includes('api.whatsapp.com'))
+    ? buildTrackedWhatsAppHref({
+        href: originalHref,
+        eventLabel: eventLabel || 'link_click'
+      })
+    : originalHref;
   const linkProps = {
-    href,
+    href: renderedHref,
     className,
     onClick: handleClick,
     'data-analytics-handled': 'true',
@@ -133,7 +146,7 @@ export function AnalyticsLink({
   };
 
   // For external links, add target and rel attributes (check for window to avoid SSR error)
-  if (href && href.startsWith('http') && typeof window !== 'undefined' && !href.includes(window.location.hostname)) {
+  if (originalHref && originalHref.startsWith('http') && typeof window !== 'undefined' && !originalHref.includes(window.location.hostname)) {
     linkProps.target = '_blank';
     linkProps.rel = 'noopener noreferrer';
   }

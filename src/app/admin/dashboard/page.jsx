@@ -711,6 +711,7 @@ function AcquisitionSection({ dashboardData }) {
     { key: 'cpa', label: 'CPA', value: dashboardData.acquisition.totals.costPerAcquisition, type: 'currency', meta: 'Spend / gains cohorte' }
   ];
   const whatsappData = dashboardData.acquisition.whatsapp;
+  const whatsappSourceUnavailable = dashboardData.diagnostics?.reportingWarnings?.includes('whatsapp_click_events_unavailable');
 
   return (
     <>
@@ -767,6 +768,11 @@ function AcquisitionSection({ dashboardData }) {
       <div className={styles.dashboardGrid}>
         <div className={styles.panel}>
           <h2>WhatsApp summary</h2>
+          {whatsappSourceUnavailable && (
+            <p className={styles.healthError}>
+              Le tracking serveur des clics WhatsApp est actuellement indisponible. Les zéros affichés ici ne sont pas fiables tant que cette source n&apos;est pas rétablie.
+            </p>
+          )}
           <p className={styles.inlineNote}>{whatsappData.notes.clickBasis}</p>
           <div className={styles.miniStats}>
             <div>

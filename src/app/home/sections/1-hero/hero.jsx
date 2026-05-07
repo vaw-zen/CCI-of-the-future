@@ -9,6 +9,7 @@ import {
   SiMailDuotone,
   LineMdYoutubeTwotone,
 } from "@/utils/components/icons";
+import { AnalyticsLink } from "@/utils/components/analytics/AnalyticsComponents";
 import ResponsiveImage from "@/utils/components/Image/Image";
 
 export default function Hero() {
@@ -79,17 +80,17 @@ export default function Hero() {
               contact@cciservices.online
             </a>
             <br />
-            <a
+            <AnalyticsLink
               href="https://wa.me/21698557766"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.phoneLink}
               itemProp="telephone"
               title="Appelez CCI Services - Devis gratuit"
-              data-analytics-label="home_hero_whatsapp_main"
+              eventLabel="home_hero_whatsapp_main"
             >
                +216 98 557 766
-            </a>
+            </AnalyticsLink>
           </div>
           <div className={styles.addressAndSocial}>
             <address itemScope itemType="https://schema.org/PostalAddress">
@@ -104,15 +105,15 @@ export default function Hero() {
             </address>
 
             <div className={styles.socialIcons}>
-              <a
+              <AnalyticsLink
                 href="https://wa.me/21698557766"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Contacter via WhatsApp"
-                data-analytics-label="home_hero_whatsapp_icon"
+                eventLabel="home_hero_whatsapp_icon"
               >
                 <LineMdPhoneTwotone className={styles.icon} />
-              </a>
+              </AnalyticsLink>
               <a 
                 href="mailto:contact@cciservices.online" 
                 aria-label="Envoyer un email"

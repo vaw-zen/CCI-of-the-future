@@ -153,7 +153,8 @@ export const trackEmailClick = (location = 'general', emailAddress = '', additio
   });
 };
 
-export const trackWhatsAppClick = (location = 'general', phoneNumber = '', additionalData = {}) => {
+export const trackWhatsAppClick = (location = 'general', phoneNumber = '', additionalData = {}, options = {}) => {
+  const { persistServerClick = true } = options;
   const leadContext = getLeadContext(additionalData);
 
   emitEvent('whatsapp_click', {
@@ -163,7 +164,9 @@ export const trackWhatsAppClick = (location = 'general', phoneNumber = '', addit
     ...leadContext
   });
 
-  persistWhatsAppClick(location);
+  if (persistServerClick) {
+    persistWhatsAppClick(location);
+  }
 };
 
 export const trackContactLinkClick = (href, location = 'contact_link', additionalData = {}) => {

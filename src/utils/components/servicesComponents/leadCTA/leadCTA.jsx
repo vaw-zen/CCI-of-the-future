@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import styles from './leadCTA.module.css';
 import { trackCTAClick, trackWhatsAppClick, trackPhoneReveal, trackCTAImpression } from '@/utils/analytics';
+import { buildTrackedWhatsAppHref } from '@/libs/whatsappTracking.mjs';
 
 const WhatsAppIcon = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -63,10 +64,17 @@ export default function LeadCTA({
   }, [serviceName, serviceType]);
 
   const whatsappUrl = `https://wa.me/21698557766?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappEventLabel = `${serviceType}_page_cta_block`;
+  const trackedWhatsAppUrl = buildTrackedWhatsAppHref({
+    href: whatsappUrl,
+    eventLabel: whatsappEventLabel
+  });
   const phoneUrl = 'tel:+21698557766';
 
   const handleWhatsAppClick = (location) => {
-    trackWhatsAppClick(`${serviceType}_page_${location}`, '+21698557766');
+    trackWhatsAppClick(`${serviceType}_page_${location}`, '+21698557766', {}, {
+      persistServerClick: false
+    });
     trackCTAClick('WhatsApp', `service_page_${serviceType}`, whatsappUrl, 5);
   };
 
@@ -97,13 +105,13 @@ export default function LeadCTA({
 
         <div className={styles.ctaButtons}>
           <a 
-            href={whatsappUrl}
+            href={trackedWhatsAppUrl}
             target="_blank" 
             rel="noopener noreferrer"
             className={`${styles.ctaBtn} ${styles.ctaBtnWhatsapp}`}
             onClick={() => handleWhatsAppClick('cta_block')}
             data-analytics-handled="true"
-            data-analytics-label={`${serviceType}_cta_whatsapp`}
+            data-analytics-label={whatsappEventLabel}
             title={`Demander un devis ${serviceName} via WhatsApp`}
           >
             <WhatsAppIcon className={styles.ctaBtnIcon} />

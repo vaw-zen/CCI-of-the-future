@@ -411,32 +411,39 @@ export async function GET(request) {
       fetchKeywordRankingRows(supabase, rangeResult.range),
       fetchGrowthSourceHealth(supabase)
     ]);
+    const reportingWarnings = [
+      externalMetricsResult.error ? 'growth_channel_daily_metrics_unavailable' : null,
+      whatsappClickResult.error ? 'whatsapp_click_events_unavailable' : null,
+      keywordCatalogResult.error ? 'growth_keyword_catalog_unavailable' : null,
+      keywordRankingResult.error ? 'growth_keyword_rankings_daily_unavailable' : null,
+      sourceHealthResult.error ? 'growth_reporting_source_health_unavailable' : null
+    ].filter(Boolean);
+    const dashboardData = buildAdminDashboardData({
+      currentRows,
+      previousRows,
+      universeRows,
+      externalMetricRows: externalMetricsResult.rows,
+      whatsappClickRows: whatsappClickResult.rows,
+      keywordCatalogRows: keywordCatalogResult.rows,
+      keywordRankingRows: keywordRankingResult.rows,
+      sourceHealthRows: sourceHealthResult.rows,
+      auditEvents,
+      range: rangeResult.range,
+      nowIso: new Date().toISOString()
+    });
 
     return NextResponse.json({
       status: 'success',
       message: 'Dashboard KPI chargé.',
-      data: buildAdminDashboardData({
-        currentRows,
-        previousRows,
-        universeRows,
-        externalMetricRows: externalMetricsResult.rows,
-        whatsappClickRows: whatsappClickResult.rows,
-        keywordCatalogRows: keywordCatalogResult.rows,
-        keywordRankingRows: keywordRankingResult.rows,
-        sourceHealthRows: sourceHealthResult.rows,
-        auditEvents,
-        range: rangeResult.range,
-        nowIso: new Date().toISOString()
-      }),
+      data: {
+        ...dashboardData,
+        diagnostics: {
+          reportingWarnings
+        }
+      },
       details: {
         piiExcluded: true,
-        reportingWarnings: [
-          externalMetricsResult.error ? 'growth_channel_daily_metrics_unavailable' : null,
-          whatsappClickResult.error ? 'whatsapp_click_events_unavailable' : null,
-          keywordCatalogResult.error ? 'growth_keyword_catalog_unavailable' : null,
-          keywordRankingResult.error ? 'growth_keyword_rankings_daily_unavailable' : null,
-          sourceHealthResult.error ? 'growth_reporting_source_health_unavailable' : null
-        ].filter(Boolean)
+        reportingWarnings
       }
     });
   } catch (error) {

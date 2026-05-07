@@ -1,3 +1,8 @@
+import {
+  SESSION_ATTRIBUTION_COOKIE_KEY,
+  serializeSessionAttributionCookie
+} from '../libs/whatsappTracking.mjs';
+
 const SESSION_ATTRIBUTION_KEY = 'cci_session_attribution';
 const QUOTE_CALCULATOR_CONTEXT_KEY = 'cci_quote_calculator_context';
 const FORBIDDEN_PARAM_KEYS = new Set([
@@ -253,6 +258,20 @@ export function inferSessionAttribution() {
   });
 }
 
+function persistSessionAttributionCookie(value = {}) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const serializedValue = serializeSessionAttributionCookie(value);
+  if (!serializedValue) {
+    document.cookie = `${SESSION_ATTRIBUTION_COOKIE_KEY}=; Max-Age=0; Path=/; SameSite=Lax`;
+    return;
+  }
+
+  document.cookie = `${SESSION_ATTRIBUTION_COOKIE_KEY}=${serializedValue}; Path=/; SameSite=Lax`;
+}
+
 export function persistSessionAttribution() {
   if (typeof window === 'undefined') {
     return null;
@@ -260,12 +279,14 @@ export function persistSessionAttribution() {
 
   const existing = readSessionAttribution();
   if (existing) {
+    persistSessionAttributionCookie(existing);
     return existing;
   }
 
   const inferred = inferSessionAttribution();
   if (inferred) {
     window.sessionStorage.setItem(SESSION_ATTRIBUTION_KEY, JSON.stringify(inferred));
+    persistSessionAttributionCookie(inferred);
   }
 
   return inferred;

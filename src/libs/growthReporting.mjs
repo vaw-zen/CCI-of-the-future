@@ -4,9 +4,11 @@ import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { google } from 'googleapis';
 import {
+  buildKeywordCatalogLookupKeyFromValues,
   DEFAULT_KEYWORD_SITE_URL,
   KEYWORD_TRACKED_DEVICES,
-  fetchGrowthKeywordCatalogRows
+  fetchGrowthKeywordCatalogRows,
+  normalizeKeywordForKey
 } from './growthKeywordCatalog.mjs';
 
 export const GROWTH_METRIC_SOURCES = {
@@ -24,6 +26,15 @@ export const GROWTH_SOURCE_HEALTH_KEYS = {
   PAID_MEDIA: 'paid_media',
   SOCIAL_MEDIA: 'social_media'
 };
+
+const SEARCH_CONSOLE_ROW_LIMIT = 25000;
+const BRAND_QUERY_PATTERNS = [
+  'cci',
+  'cci services',
+  'cciservices',
+  'cci services online',
+  'chaabane'
+];
 
 const GROWTH_SOURCE_STATUS_VALUES = new Set(['fresh', 'stale', 'missing', 'error']);
 const DEFAULT_ENV_PATH = path.resolve('.env.local');
@@ -153,6 +164,128 @@ function doesPathMatch(resultPath, targetPath) {
   }
 
   return resultPath === targetPath || resultPath.startsWith(`${targetPath}/`);
+}
+
+function getPageTypeForPath(pathname = '') {
+  const normalizedPath = normalizePathname(pathname, '/');
+
+  if (normalizedPath === '/') {
+    return 'home';
+  }
+
+  if (
+    normalizedPath === '/services'
+    || normalizedPath === '/entreprises'
+    || normalizedPath === '/salon'
+    || normalizedPath === '/tapis'
+    || normalizedPath === '/tapisserie'
+    || normalizedPath === '/marbre'
+    || normalizedPath === '/tfc'
+  ) {
+    return 'service';
+  }
+
+  if (normalizedPath === '/contact') {
+    return 'contact';
+  }
+
+  if (normalizedPath === '/devis') {
+    return 'quote';
+  }
+
+  if (normalizedPath.startsWith('/faq')) {
+    return 'faq';
+  }
+
+  if (normalizedPath.startsWith('/about')) {
+    return 'about';
+  }
+
+  if (normalizedPath.startsWith('/newsletter')) {
+    return 'newsletter';
+  }
+
+  if (normalizedPath.startsWith('/admin')) {
+    return 'admin';
+  }
+
+  if (normalizedPath.startsWith('/conseils/')) {
+    return 'article';
+  }
+
+  return 'other';
+}
+
+function getServiceKeyForPath(pathname = '') {
+  const normalizedPath = normalizePathname(pathname, '/').toLowerCase();
+  const servicePatterns = [
+    ['tapisserie', 'tapisserie'],
+    ['salon', 'salon'],
+    ['tapis', 'tapis'],
+    ['marbre', 'marbre'],
+    ['tfc', 'tfc'],
+    ['hotel', 'hotel'],
+    ['banque', 'banque'],
+    ['assurance', 'assurance'],
+    ['clinique', 'clinique'],
+    ['bureau', 'bureau'],
+    ['commerce', 'commerce']
+  ];
+
+  for (const [pattern, serviceKey] of servicePatterns) {
+    if (
+      normalizedPath === `/${pattern}`
+      || normalizedPath.startsWith(`/${pattern}/`)
+      || normalizedPath.includes(`/${pattern}-`)
+      || normalizedPath.includes(`-${pattern}`)
+      || normalizedPath.includes(pattern)
+    ) {
+      return serviceKey;
+    }
+  }
+
+  return null;
+}
+
+function getBusinessLineForPath(pathname = '') {
+  const normalizedPath = normalizePathname(pathname, '/').toLowerCase();
+
+  if (normalizedPath === '/entreprises' || normalizedPath.startsWith('/entreprises/')) {
+    return 'b2b';
+  }
+
+  const serviceKey = getServiceKeyForPath(normalizedPath);
+  if (['hotel', 'banque', 'assurance', 'clinique', 'bureau', 'commerce'].includes(serviceKey)) {
+    return 'b2b';
+  }
+
+  if (['salon', 'tapis', 'tapisserie', 'marbre', 'tfc'].includes(serviceKey)) {
+    return 'b2c';
+  }
+
+  return 'unknown';
+}
+
+function isBrandedGrowthQuery(query = '') {
+  const normalizedQuery = normalizeKeywordForKey(query);
+  return BRAND_QUERY_PATTERNS.some((pattern) => normalizedQuery.includes(pattern));
+}
+
+function buildQueryClusterMetadata(catalogRow = null, landingPage = '/') {
+  const normalizedLandingPage = normalizePathname(landingPage, '/');
+  const serviceKey = catalogRow?.service_key || getServiceKeyForPath(normalizedLandingPage);
+  const pageType = catalogRow?.page_type || getPageTypeForPath(normalizedLandingPage);
+  const businessLine = catalogRow?.business_line || getBusinessLineForPath(normalizedLandingPage);
+  const clusterLabel = catalogRow?.cluster_label || (serviceKey || pageType || 'other');
+  const clusterKey = catalogRow?.cluster_key || normalizeText(clusterLabel, 'other').toLowerCase().replace(/\s+/g, '_');
+
+  return {
+    businessLine,
+    serviceKey,
+    pageType,
+    clusterKey,
+    clusterLabel
+  };
 }
 
 function resolveSourceHealthStatus(status = '') {
@@ -327,6 +460,30 @@ export function normalizeGrowthMetricRow(row = {}) {
   };
 }
 
+export function normalizeGrowthQueryMetricRow(row = {}) {
+  return {
+    metric_date: toDateString(row.metric_date),
+    query: normalizeText(row.query),
+    normalized_query: normalizeKeywordForKey(row.normalized_query || row.query),
+    landing_page: normalizePathname(row.landing_page, '/'),
+    normalized_landing_page: normalizePathname(row.normalized_landing_page || row.landing_page, '/'),
+    keyword_catalog_id: normalizeNullableText(row.keyword_catalog_id),
+    cluster_key: normalizeNullableText(row.cluster_key),
+    cluster_label: normalizeNullableText(row.cluster_label),
+    business_line: normalizeText(row.business_line, 'unknown'),
+    service_key: normalizeNullableText(row.service_key),
+    page_type: normalizeText(row.page_type, 'other'),
+    clicks: normalizeInteger(row.clicks),
+    impressions: normalizeInteger(row.impressions),
+    ctr: row.ctr === null || row.ctr === undefined ? null : normalizeNumeric(row.ctr),
+    position: row.position === null || row.position === undefined ? null : normalizeNumeric(row.position),
+    is_branded: Boolean(row.is_branded),
+    metadata: row.metadata && typeof row.metadata === 'object' && !Array.isArray(row.metadata)
+      ? row.metadata
+      : {}
+  };
+}
+
 export function normalizeGrowthKeywordRankingRow(row = {}) {
   return {
     metric_date: toDateString(row.metric_date),
@@ -367,6 +524,31 @@ export async function upsertGrowthMetricRows(supabase, rows = []) {
     .from('growth_channel_daily_metrics')
     .upsert(sanitizedRows, {
       onConflict: 'metric_date,metric_source,source,medium,campaign,landing_page'
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  return {
+    count: sanitizedRows.length,
+    freshestMetricDate: getMaxMetricDate(sanitizedRows)
+  };
+}
+
+export async function upsertGrowthQueryMetricRows(supabase, rows = []) {
+  const sanitizedRows = rows
+    .map((row) => normalizeGrowthQueryMetricRow(row))
+    .filter((row) => row.metric_date && row.normalized_query && row.normalized_landing_page);
+
+  if (sanitizedRows.length === 0) {
+    return { count: 0 };
+  }
+
+  const { error } = await supabase
+    .from('growth_query_daily_metrics')
+    .upsert(sanitizedRows, {
+      onConflict: 'metric_date,normalized_query,normalized_landing_page'
     });
 
   if (error) {
@@ -493,7 +675,11 @@ export async function fetchGa4SnapshotRows({ startDate, endDate }) {
   return (response.data.rows || []).map(parseGa4Row);
 }
 
-export async function fetchSearchConsoleSnapshotRows({ startDate, endDate }) {
+async function fetchSearchConsoleRows({
+  startDate,
+  endDate,
+  dimensions = []
+} = {}) {
   const property = getSearchConsoleProperty();
   const auth = createGrowthGoogleAuth(['https://www.googleapis.com/auth/webmasters.readonly']);
   const authClient = await auth.getClient();
@@ -501,19 +687,104 @@ export async function fetchSearchConsoleSnapshotRows({ startDate, endDate }) {
     version: 'v1',
     auth: authClient
   });
+  const rows = [];
+  let startRow = 0;
 
-  const response = await searchconsole.searchanalytics.query({
-    siteUrl: property,
-    requestBody: {
-      startDate,
-      endDate,
-      dimensions: ['date', 'page'],
-      rowLimit: 25000,
-      type: 'web'
+  while (true) {
+    const response = await searchconsole.searchanalytics.query({
+      siteUrl: property,
+      requestBody: {
+        startDate,
+        endDate,
+        dimensions,
+        rowLimit: SEARCH_CONSOLE_ROW_LIMIT,
+        startRow,
+        type: 'web'
+      }
+    });
+
+    const batchRows = response.data.rows || [];
+    rows.push(...batchRows);
+
+    if (batchRows.length < SEARCH_CONSOLE_ROW_LIMIT) {
+      break;
     }
+
+    startRow += batchRows.length;
+  }
+
+  return rows;
+}
+
+function getKeywordClusterLabelFromCatalogRow(catalogRow = {}) {
+  const primaryCategory = Array.isArray(catalogRow.category_tags) ? catalogRow.category_tags[0] : null;
+  return normalizeNullableText(primaryCategory);
+}
+
+function getKeywordClusterKeyFromLabel(label = '') {
+  const normalizedLabel = normalizeText(label, '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, '_')
+    .replace(/^_+|_+$/g, '');
+
+  return normalizedLabel || null;
+}
+
+function buildKeywordCatalogLookup(rows = []) {
+  const lookup = new Map();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_KEYWORD_SITE_URL;
+
+  rows.forEach((row) => {
+    const clusterLabel = getKeywordClusterLabelFromCatalogRow(row);
+    const clusterKey = getKeywordClusterKeyFromLabel(clusterLabel || '');
+    const clusterMetadata = buildQueryClusterMetadata({
+      cluster_key: clusterKey,
+      cluster_label: clusterLabel,
+      business_line: getBusinessLineForPath(row.canonical_target_path),
+      service_key: getServiceKeyForPath(row.canonical_target_path),
+      page_type: getPageTypeForPath(row.canonical_target_path)
+    }, row.canonical_target_path);
+    const lookupKey = buildKeywordCatalogLookupKeyFromValues({
+      keyword: row.display_keyword || row.normalized_keyword,
+      targetPath: row.canonical_target_path,
+      siteUrl
+    });
+
+    lookup.set(lookupKey, {
+      id: row.id || null,
+      clusterKey: clusterMetadata.clusterKey,
+      clusterLabel: clusterMetadata.clusterLabel,
+      businessLine: clusterMetadata.businessLine,
+      serviceKey: clusterMetadata.serviceKey,
+      pageType: clusterMetadata.pageType
+    });
   });
 
-  return (response.data.rows || []).map((row) => {
+  return lookup;
+}
+
+function resolveQueryCatalogRow(query, landingPage, catalogLookup) {
+  if (!catalogLookup || catalogLookup.size === 0) {
+    return null;
+  }
+
+  const lookupKey = buildKeywordCatalogLookupKeyFromValues({
+    keyword: query,
+    targetPath: landingPage,
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_KEYWORD_SITE_URL
+  });
+
+  return catalogLookup.get(lookupKey) || null;
+}
+
+export async function fetchSearchConsoleSnapshotRows({ startDate, endDate }) {
+  const rows = await fetchSearchConsoleRows({
+    startDate,
+    endDate,
+    dimensions: ['date', 'page']
+  });
+
+  return rows.map((row) => {
     const [metricDate, pageUrl] = row.keys || [];
 
     return normalizeGrowthMetricRow({
@@ -533,6 +804,63 @@ export async function fetchSearchConsoleSnapshotRows({ startDate, endDate }) {
           ? Math.round(row.position * 100) / 100
           : null,
         source_connector: 'search_console'
+      }
+    });
+  });
+}
+
+export async function fetchSearchConsoleQuerySnapshotRows({
+  startDate,
+  endDate,
+  supabase,
+  keywordCatalogRows
+} = {}) {
+  const rows = await fetchSearchConsoleRows({
+    startDate,
+    endDate,
+    dimensions: ['date', 'page', 'query']
+  });
+  const resolvedCatalogRows = Array.isArray(keywordCatalogRows)
+    ? keywordCatalogRows
+    : await loadKeywordCatalogRowsOrEmpty(supabase);
+  const catalogLookup = buildKeywordCatalogLookup(resolvedCatalogRows);
+
+  return rows.map((row) => {
+    const [metricDate, pageUrl, query] = row.keys || [];
+    const normalizedLandingPage = normalizePathname(pageUrl, '/');
+    const matchedCatalogRow = resolveQueryCatalogRow(query, normalizedLandingPage, catalogLookup);
+    const clusterMetadata = buildQueryClusterMetadata({
+      cluster_key: matchedCatalogRow?.clusterKey,
+      cluster_label: matchedCatalogRow?.clusterLabel,
+      business_line: matchedCatalogRow?.businessLine,
+      service_key: matchedCatalogRow?.serviceKey,
+      page_type: matchedCatalogRow?.pageType
+    }, normalizedLandingPage);
+
+    return normalizeGrowthQueryMetricRow({
+      metric_date: metricDate,
+      query,
+      normalized_query: normalizeKeywordForKey(query),
+      landing_page: pageUrl,
+      normalized_landing_page: normalizedLandingPage,
+      keyword_catalog_id: matchedCatalogRow?.id || null,
+      cluster_key: matchedCatalogRow?.clusterKey || clusterMetadata.clusterKey,
+      cluster_label: matchedCatalogRow?.clusterLabel || clusterMetadata.clusterLabel,
+      business_line: matchedCatalogRow?.businessLine || clusterMetadata.businessLine,
+      service_key: matchedCatalogRow?.serviceKey || clusterMetadata.serviceKey,
+      page_type: matchedCatalogRow?.pageType || clusterMetadata.pageType,
+      clicks: row.clicks,
+      impressions: row.impressions,
+      ctr: typeof row.ctr === 'number'
+        ? Math.round(row.ctr * 10000) / 100
+        : null,
+      position: typeof row.position === 'number'
+        ? Math.round(row.position * 100) / 100
+        : null,
+      is_branded: isBrandedGrowthQuery(query),
+      metadata: {
+        source_connector: 'search_console',
+        matched_catalog: Boolean(matchedCatalogRow)
       }
     });
   });
@@ -601,6 +929,18 @@ async function loadActiveKeywordCatalogRows(supabase) {
   }
 
   return rows;
+}
+
+async function loadKeywordCatalogRowsOrEmpty(supabase) {
+  try {
+    return await loadActiveKeywordCatalogRows(supabase);
+  } catch (error) {
+    if (error?.code === 'missing_serp_keyword_catalog') {
+      return [];
+    }
+
+    throw error;
+  }
 }
 
 async function fetchSerpApiJson(query = {}) {
@@ -737,6 +1077,53 @@ export async function fetchSerpKeywordRankingRows({
   return rows;
 }
 
+export async function syncSearchConsoleGrowthReporting({
+  startDate,
+  endDate,
+  supabase,
+  keywordCatalogRows
+} = {}) {
+  const client = supabase || createGrowthServiceClient();
+  const resolvedCatalogRows = Array.isArray(keywordCatalogRows)
+    ? keywordCatalogRows
+    : await loadKeywordCatalogRowsOrEmpty(client);
+  const [pageRows, queryRows] = await Promise.all([
+    fetchSearchConsoleSnapshotRows({
+      startDate,
+      endDate
+    }),
+    fetchSearchConsoleQuerySnapshotRows({
+      startDate,
+      endDate,
+      supabase: client,
+      keywordCatalogRows: resolvedCatalogRows
+    })
+  ]);
+  const [pageUpsertResult, queryUpsertResult] = await Promise.all([
+    upsertGrowthMetricRows(client, pageRows),
+    upsertGrowthQueryMetricRows(client, queryRows)
+  ]);
+  const freshestMetricDate = [
+    pageUpsertResult.freshestMetricDate,
+    queryUpsertResult.freshestMetricDate,
+    toDateString(endDate)
+  ]
+    .filter(Boolean)
+    .sort()
+    .at(-1) || null;
+
+  return {
+    count: pageUpsertResult.count + queryUpsertResult.count,
+    freshestMetricDate,
+    pageRows,
+    queryRows,
+    pageRowCount: pageRows.length,
+    queryRowCount: queryRows.length,
+    matchedCatalogQueryCount: queryRows.filter((row) => row.keyword_catalog_id).length,
+    keywordCatalogRowCount: resolvedCatalogRows.length
+  };
+}
+
 function buildSuccessHealthRecord({
   sourceKey,
   sourceLabel,
@@ -814,16 +1201,22 @@ export async function refreshGrowthReporting({
       sourceKey: GROWTH_SOURCE_HEALTH_KEYS.SEARCH_CONSOLE,
       sourceLabel: 'Search Console',
       connectorType: 'api',
-      fetchRows: () => fetchSearchConsoleSnapshotRows({
+      run: () => syncSearchConsoleGrowthReporting({
         startDate: resolvedStartDate,
-        endDate: resolvedEndDate
+        endDate: resolvedEndDate,
+        supabase: client
       }),
-      upsertRows: upsertGrowthMetricRows,
       freshestMetricDate: resolvedEndDate,
       metadata: {
         startDate: resolvedStartDate,
         endDate: resolvedEndDate
-      }
+      },
+      buildSuccessMetadata: (_rows, executionResult) => ({
+        pageRowCount: executionResult.pageRowCount,
+        queryRowCount: executionResult.queryRowCount,
+        matchedCatalogQueryCount: executionResult.matchedCatalogQueryCount,
+        keywordCatalogRowCount: executionResult.keywordCatalogRowCount
+      })
     },
     {
       sourceKey: GROWTH_SOURCE_HEALTH_KEYS.SERP_KEYWORD_RANKINGS,
@@ -852,19 +1245,32 @@ export async function refreshGrowthReporting({
     const startedAt = new Date().toISOString();
 
     try {
-      const rows = await task.fetchRows();
-      const upsertResult = await task.upsertRows(client, rows);
+      const executionResult = task.run
+        ? await task.run()
+        : await (async () => {
+          const rows = await task.fetchRows();
+          const upsertResult = await task.upsertRows(client, rows);
+
+          return {
+            rows,
+            ...upsertResult
+          };
+        })();
       const successMetadata = task.buildSuccessMetadata
-        ? task.buildSuccessMetadata(rows, upsertResult)
-        : { rowCount: rows.length };
+        ? task.buildSuccessMetadata(executionResult.rows || [], executionResult)
+        : {
+          rowCount: Array.isArray(executionResult.rows)
+            ? executionResult.rows.length
+            : executionResult.count
+        };
 
       await upsertGrowthSourceHealth(client, [
         buildSuccessHealthRecord({
           sourceKey: task.sourceKey,
           sourceLabel: task.sourceLabel,
           connectorType: task.connectorType,
-          metricCount: upsertResult.count,
-          freshestMetricDate: upsertResult.freshestMetricDate || task.freshestMetricDate,
+          metricCount: executionResult.count,
+          freshestMetricDate: executionResult.freshestMetricDate || task.freshestMetricDate,
           startedAt,
           metadata: {
             ...task.metadata,
@@ -876,8 +1282,8 @@ export async function refreshGrowthReporting({
       results.push({
         sourceKey: task.sourceKey,
         status: 'success',
-        metricCount: upsertResult.count,
-        freshestMetricDate: upsertResult.freshestMetricDate || task.freshestMetricDate
+        metricCount: executionResult.count,
+        freshestMetricDate: executionResult.freshestMetricDate || task.freshestMetricDate
       });
     } catch (error) {
       await upsertGrowthSourceHealth(client, [

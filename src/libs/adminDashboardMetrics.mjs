@@ -1196,6 +1196,26 @@ function matchesKeywordRankingFilters(row = {}, filters = {}) {
   return true;
 }
 
+function matchesQueryMetricFilters(row = {}, filters = {}) {
+  if (filters.sourceClass && filters.sourceClass !== 'organic_search') {
+    return false;
+  }
+
+  if (filters.businessLine && row.businessLine !== filters.businessLine) {
+    return false;
+  }
+
+  if (filters.service && row.serviceKey !== filters.service) {
+    return false;
+  }
+
+  if (filters.pageType && row.pageType !== filters.pageType) {
+    return false;
+  }
+
+  return true;
+}
+
 function matchesWhatsAppClickFilters(row = {}, filters = {}) {
   const source = normalizeText(row.session_source, 'direct');
   const medium = normalizeText(row.session_medium, '(none)');
@@ -2284,6 +2304,644 @@ function buildKeywordRankings(keywordCatalogRows = [], keywordRankingRows = [], 
   };
 }
 
+function roundMetric(value, digits = 1) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return null;
+  }
+
+  const factor = 10 ** digits;
+  return Math.round(numericValue * factor) / factor;
+}
+
+function normalizeQueryMetricDashboardRow(row = {}) {
+  const query = String(row.query || '').trim();
+  const landingPage = normalizeText(row.normalized_landing_page || row.landing_page, '/');
+  const serviceKey = String(row.service_key || getServiceKeyForPath(landingPage) || '').trim() || null;
+  const pageType = normalizeText(row.page_type, getPageTypeForPath(landingPage));
+  const businessLine = normalizeText(row.business_line, getBusinessLineForPath(landingPage));
+  const clusterLabel = String(
+    row.cluster_label
+      || (serviceKey ? getServiceLabel(serviceKey) : getPageTypeLabel(pageType))
+      || 'Other'
+  ).trim();
+  const impressions = Number(row.impressions || 0);
+  const clicks = Number(row.clicks || 0);
+
+  return {
+    metricDate: row.metric_date,
+    query: query || 'Query non définie',
+    normalizedQuery: normalizeKeywordForKey(row.normalized_query || query),
+    landingPage,
+    keywordCatalogId: row.keyword_catalog_id || null,
+    clusterKey: String(row.cluster_key || normalizeKeywordForKey(clusterLabel || 'other')).trim() || 'other',
+    clusterLabel: clusterLabel || 'Other',
+    businessLine,
+    businessLineLabel: getBusinessLineLabel(businessLine),
+    serviceKey,
+    serviceLabel: serviceKey ? getServiceLabel(serviceKey) : 'Autre',
+    pageType,
+    pageTypeLabel: getPageTypeLabel(pageType),
+    sourceClass: 'organic_search',
+    sourceClassLabel: getSourceClassLabel('organic_search'),
+    clicks,
+    impressions,
+    ctr: normalizeNumber(row.ctr) ?? getPercent(clicks, impressions),
+    position: normalizeNumber(row.position),
+    isBranded: Boolean(row.is_branded),
+    matchedCatalog: Boolean(row.keyword_catalog_id || row.metadata?.matched_catalog),
+    metadata: row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
+  };
+}
+
+function buildQueryAggregateRows(queryMetricRows = []) {
+  const byQuery = new Map();
+  const byCluster = new Map();
+
+  queryMetricRows.forEach((row) => {
+    const queryKey = row.normalizedQuery;
+    const currentQuery = byQuery.get(queryKey) || {
+      key: queryKey,
+      label: row.query,
+      normalizedQuery: row.normalizedQuery,
+      clicks: 0,
+      impressions: 0,
+      weightedPosition: 0,
+      positionWeight: 0,
+      landingPages: new Map(),
+      clusterCounts: new Map(),
+      businessLineCounts: new Map(),
+      serviceCounts: new Map(),
+      pageTypeCounts: new Map(),
+      isBranded: false,
+      matchedCatalogCount: 0
+    };
+
+    currentQuery.clicks += row.clicks;
+    currentQuery.impressions += row.impressions;
+    currentQuery.isBranded = currentQuery.isBranded || row.isBranded;
+    currentQuery.matchedCatalogCount += row.matchedCatalog ? 1 : 0;
+
+    if (row.position !== null) {
+      const weight = Math.max(row.impressions, 1);
+      currentQuery.weightedPosition += row.position * weight;
+      currentQuery.positionWeight += weight;
+    }
+
+    const landingPageEntry = currentQuery.landingPages.get(row.landingPage) || {
+      landingPage: row.landingPage,
+      clicks: 0,
+      impressions: 0
+    };
+    landingPageEntry.clicks += row.clicks;
+    landingPageEntry.impressions += row.impressions;
+    currentQuery.landingPages.set(row.landingPage, landingPageEntry);
+
+    currentQuery.clusterCounts.set(
+      row.clusterKey,
+      {
+        key: row.clusterKey,
+        label: row.clusterLabel,
+        count: (currentQuery.clusterCounts.get(row.clusterKey)?.count || 0) + 1
+      }
+    );
+    currentQuery.businessLineCounts.set(
+      row.businessLine,
+      {
+        key: row.businessLine,
+        label: row.businessLineLabel,
+        count: (currentQuery.businessLineCounts.get(row.businessLine)?.count || 0) + 1
+      }
+    );
+    if (row.serviceKey) {
+      currentQuery.serviceCounts.set(
+        row.serviceKey,
+        {
+          key: row.serviceKey,
+          label: row.serviceLabel,
+          count: (currentQuery.serviceCounts.get(row.serviceKey)?.count || 0) + 1
+        }
+      );
+    }
+    currentQuery.pageTypeCounts.set(
+      row.pageType,
+      {
+        key: row.pageType,
+        label: row.pageTypeLabel,
+        count: (currentQuery.pageTypeCounts.get(row.pageType)?.count || 0) + 1
+      }
+    );
+    byQuery.set(queryKey, currentQuery);
+
+    const currentCluster = byCluster.get(row.clusterKey) || {
+      key: row.clusterKey,
+      label: row.clusterLabel,
+      clicks: 0,
+      impressions: 0,
+      weightedPosition: 0,
+      positionWeight: 0,
+      queryKeys: new Set(),
+      landingPages: new Set(),
+      nonBrandedClicks: 0
+    };
+
+    currentCluster.clicks += row.clicks;
+    currentCluster.impressions += row.impressions;
+    currentCluster.queryKeys.add(queryKey);
+    currentCluster.landingPages.add(row.landingPage);
+    if (!row.isBranded) {
+      currentCluster.nonBrandedClicks += row.clicks;
+    }
+    if (row.position !== null) {
+      const weight = Math.max(row.impressions, 1);
+      currentCluster.weightedPosition += row.position * weight;
+      currentCluster.positionWeight += weight;
+    }
+    byCluster.set(row.clusterKey, currentCluster);
+  });
+
+  const queryRows = Array.from(byQuery.values()).map((item) => {
+    const landingPages = Array.from(item.landingPages.values())
+      .sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions || a.landingPage.localeCompare(b.landingPage));
+    const cluster = Array.from(item.clusterCounts.values()).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))[0] || {
+      key: 'other',
+      label: 'Other'
+    };
+    const businessLine = Array.from(item.businessLineCounts.values()).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))[0] || {
+      key: 'unknown',
+      label: 'Unknown'
+    };
+    const service = Array.from(item.serviceCounts.values()).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))[0] || null;
+    const pageType = Array.from(item.pageTypeCounts.values()).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))[0] || {
+      key: 'other',
+      label: 'Other'
+    };
+    const position = item.positionWeight > 0
+      ? roundMetric(item.weightedPosition / item.positionWeight, 1)
+      : null;
+    const ctr = getPercent(item.clicks, item.impressions);
+    const opportunityScoreBase = (
+      (Math.min(item.impressions, 2000) / 20)
+      + (position !== null && position >= 3 && position <= 20 ? (21 - position) * 3 : 0)
+      + (item.impressions >= 100 ? Math.max(0, 5 - ctr) * 8 : 0)
+      + (landingPages.length > 1 ? 12 : 0)
+    );
+
+    return {
+      key: item.key,
+      label: item.label,
+      normalizedQuery: item.normalizedQuery,
+      clicks: item.clicks,
+      impressions: item.impressions,
+      ctr,
+      position,
+      isBranded: item.isBranded,
+      landingPageCount: landingPages.length,
+      landingPages: landingPages.slice(0, 3),
+      primaryLandingPage: landingPages[0]?.landingPage || '/',
+      clusterKey: cluster.key,
+      clusterLabel: cluster.label,
+      businessLine: businessLine.key,
+      businessLineLabel: businessLine.label,
+      serviceKey: service?.key || null,
+      serviceLabel: service?.label || 'Autre',
+      pageType: pageType.key,
+      pageTypeLabel: pageType.label,
+      matchedCatalogCount: item.matchedCatalogCount,
+      opportunityScore: roundMetric(
+        opportunityScoreBase * (item.isBranded ? 0.35 : 1),
+        1
+      ) || 0
+    };
+  });
+
+  queryRows.sort((a, b) => (
+    b.clicks - a.clicks
+    || b.impressions - a.impressions
+    || a.label.localeCompare(b.label)
+  ));
+
+  const clusterRows = Array.from(byCluster.values())
+    .map((item) => ({
+      key: item.key,
+      label: item.label,
+      clicks: item.clicks,
+      impressions: item.impressions,
+      nonBrandedClicks: item.nonBrandedClicks,
+      queryCount: item.queryKeys.size,
+      landingPageCount: item.landingPages.size,
+      ctr: getPercent(item.clicks, item.impressions),
+      position: item.positionWeight > 0
+        ? roundMetric(item.weightedPosition / item.positionWeight, 1)
+        : null
+    }))
+    .sort((a, b) => (
+      b.nonBrandedClicks - a.nonBrandedClicks
+      || b.clicks - a.clicks
+      || b.impressions - a.impressions
+      || a.label.localeCompare(b.label)
+    ));
+
+  const weightedPositionSum = queryRows.reduce((total, row) => (
+    total + ((row.position || 0) * Math.max(row.impressions, 1))
+  ), 0);
+  const weightedPositionWeight = queryRows.reduce((total, row) => (
+    total + (row.position === null ? 0 : Math.max(row.impressions, 1))
+  ), 0);
+
+  return {
+    queryRows,
+    clusterRows,
+    summary: {
+      totalQueries: queryRows.length,
+      brandedClicks: queryRows.filter((row) => row.isBranded).reduce((sum, row) => sum + row.clicks, 0),
+      nonBrandedClicks: queryRows.filter((row) => !row.isBranded).reduce((sum, row) => sum + row.clicks, 0),
+      totalClicks: queryRows.reduce((sum, row) => sum + row.clicks, 0),
+      totalImpressions: queryRows.reduce((sum, row) => sum + row.impressions, 0),
+      averagePosition: weightedPositionWeight > 0
+        ? roundMetric(weightedPositionSum / weightedPositionWeight, 1)
+        : null,
+      cannibalizedQueryCount: queryRows.filter((row) => row.landingPageCount > 1).length
+    }
+  };
+}
+
+function buildSeoQueries(queryMetricRows = [], filters = {}) {
+  const { queryRows, clusterRows, summary } = buildQueryAggregateRows(queryMetricRows);
+  const opportunityRows = [...queryRows]
+    .filter((row) => !row.isBranded && row.impressions > 0)
+    .sort((a, b) => (
+      b.opportunityScore - a.opportunityScore
+      || b.impressions - a.impressions
+      || b.clicks - a.clicks
+      || a.label.localeCompare(b.label)
+    ))
+    .slice(0, 8);
+
+  return {
+    summary: {
+      ...summary,
+      nonBrandedClickShare: getPercent(summary.nonBrandedClicks, summary.totalClicks),
+      organicCtr: getPercent(summary.totalClicks, summary.totalImpressions)
+    },
+    topQueries: queryRows.slice(0, 10),
+    opportunities: opportunityRows,
+    clusters: clusterRows.slice(0, 8),
+    notes: {
+      basis: 'Search Console query rows aggregated across the selected period.',
+      brandedDefinition: 'Branded queries are matched with the internal brand pattern list and separated from non-branded opportunity work.',
+      deviceScope: filters.device
+        ? 'Query intelligence is currently cross-device; the device filter still only narrows SERP keyword visibility snapshots.'
+        : null
+    }
+  };
+}
+
+function buildLandingPageScorecard(currentLeads, externalMetricRows, queryMetricRows = []) {
+  const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
+  const pageRows = aggregateCombinedRows(
+    combinedRows,
+    (row) => row.landingPage,
+    (row) => row.landingPage,
+    { limit: 250 }
+  );
+  const queryCoverage = new Map();
+
+  queryMetricRows.forEach((row) => {
+    const current = queryCoverage.get(row.landingPage) || {
+      queryKeys: new Set(),
+      nonBrandedClicks: 0,
+      clusterCounts: new Map()
+    };
+
+    current.queryKeys.add(row.normalizedQuery);
+    if (!row.isBranded) {
+      current.nonBrandedClicks += row.clicks;
+    }
+    current.clusterCounts.set(
+      row.clusterKey,
+      {
+        key: row.clusterKey,
+        label: row.clusterLabel,
+        count: (current.clusterCounts.get(row.clusterKey)?.count || 0) + 1
+      }
+    );
+    queryCoverage.set(row.landingPage, current);
+  });
+
+  const rows = pageRows
+    .map((row) => {
+      const serviceKey = getServiceKeyForPath(row.label);
+      const businessLine = getBusinessLineForPath(row.label);
+      const pageType = getPageTypeForPath(row.label);
+      const coverage = queryCoverage.get(row.label) || null;
+      const dominantCluster = coverage
+        ? Array.from(coverage.clusterCounts.values()).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))[0]
+        : null;
+      const opportunityScore = roundMetric(
+        (row.qualifiedLeads * 25)
+        + (row.wonLeads * 50)
+        + (Math.min(row.clicks, 500) / 10)
+        + (Math.min(row.revenueProxy, 5000) / 250)
+        + row.leadRate
+        + ((coverage?.nonBrandedClicks || 0) / 20),
+        1
+      ) || 0;
+
+      return {
+        ...row,
+        businessLine,
+        businessLineLabel: getBusinessLineLabel(businessLine),
+        serviceKey,
+        serviceLabel: serviceKey ? getServiceLabel(serviceKey) : 'Autre',
+        pageType,
+        pageTypeLabel: getPageTypeLabel(pageType),
+        queryCount: coverage?.queryKeys.size || 0,
+        nonBrandedClicks: coverage?.nonBrandedClicks || 0,
+        dominantClusterLabel: dominantCluster?.label || 'Other',
+        opportunityScore
+      };
+    })
+    .sort((a, b) => (
+      b.opportunityScore - a.opportunityScore
+      || b.qualifiedLeads - a.qualifiedLeads
+      || b.leads - a.leads
+      || b.clicks - a.clicks
+      || a.label.localeCompare(b.label)
+    ))
+    .slice(0, 12);
+
+  return {
+    rows,
+    notes: {
+      basis: 'Landing-page score blends traffic, qualified demand, wins, non-branded search support, and estimated pipeline value.',
+      scoreDefinition: 'Opportunity score is directional and should be used to rank sprint candidates, not as a financial forecast.'
+    }
+  };
+}
+
+function getDecayComparisonWindow(range) {
+  if (!range?.from || !range?.to || Number(range.days || 0) < 14) {
+    return null;
+  }
+
+  const recentEnd = new Date(`${range.to}T00:00:00.000Z`);
+  const recentStart = new Date(recentEnd);
+  recentStart.setUTCDate(recentStart.getUTCDate() - 6);
+  const previousEnd = new Date(recentStart);
+  previousEnd.setUTCDate(previousEnd.getUTCDate() - 1);
+  const previousStart = new Date(previousEnd);
+  previousStart.setUTCDate(previousStart.getUTCDate() - 6);
+  const rangeStart = new Date(`${range.from}T00:00:00.000Z`);
+
+  if (previousStart < rangeStart) {
+    return null;
+  }
+
+  return {
+    recentStart: formatDateKey(recentStart),
+    recentEnd: formatDateKey(recentEnd),
+    previousStart: formatDateKey(previousStart),
+    previousEnd: formatDateKey(previousEnd)
+  };
+}
+
+function buildContentOpportunities(queryMetricRows = [], landingPageScorecard = { rows: [] }, range) {
+  const { queryRows } = buildQueryAggregateRows(queryMetricRows);
+  const rows = [];
+  const decayWindow = getDecayComparisonWindow(range);
+
+  if (decayWindow) {
+    const landingPagePeriods = new Map();
+
+    queryMetricRows.forEach((row) => {
+      const current = landingPagePeriods.get(row.landingPage) || {
+        landingPage: row.landingPage,
+        previousClicks: 0,
+        previousImpressions: 0,
+        recentClicks: 0,
+        recentImpressions: 0
+      };
+
+      if (row.metricDate >= decayWindow.previousStart && row.metricDate <= decayWindow.previousEnd) {
+        current.previousClicks += row.clicks;
+        current.previousImpressions += row.impressions;
+      }
+
+      if (row.metricDate >= decayWindow.recentStart && row.metricDate <= decayWindow.recentEnd) {
+        current.recentClicks += row.clicks;
+        current.recentImpressions += row.impressions;
+      }
+
+      landingPagePeriods.set(row.landingPage, current);
+    });
+
+    landingPagePeriods.forEach((item) => {
+      if (item.previousClicks < 20 || item.recentClicks >= item.previousClicks * 0.75) {
+        return;
+      }
+
+      const dropoffRate = roundMetric(((item.previousClicks - item.recentClicks) / item.previousClicks) * 100, 1) || 0;
+      rows.push({
+        key: `decay:${item.landingPage}`,
+        type: 'decay_risk',
+        typeLabel: 'Decay risk',
+        label: item.landingPage,
+        detail: `Organic clicks fell from ${item.previousClicks} to ${item.recentClicks} over the last two 7-day windows.`,
+        recommendation: 'Refresh the page, review snippet changes, and verify internal-link support before rankings erode further.',
+        priorityScore: roundMetric((dropoffRate / 2) + (item.previousClicks / 5), 1) || 0,
+        impressions: item.recentImpressions,
+        clicks: item.recentClicks,
+        deltaClicks: item.recentClicks - item.previousClicks
+      });
+    });
+  }
+
+  queryRows
+    .filter((row) => row.landingPageCount > 1 && row.impressions >= 50)
+    .slice(0, 6)
+    .forEach((row) => {
+      rows.push({
+        key: `cannibalization:${row.key}`,
+        type: 'cannibalization',
+        typeLabel: 'Cannibalization watch',
+        label: row.label,
+        detail: `${row.landingPageCount} pages share this query intent: ${row.landingPages.map((item) => item.landingPage).join(', ')}.`,
+        recommendation: 'Choose a clear primary target page, align internal links, and reduce overlapping intent between pages.',
+        priorityScore: roundMetric(row.opportunityScore + (row.landingPageCount * 8), 1) || 0,
+        impressions: row.impressions,
+        clicks: row.clicks,
+        pages: row.landingPageCount
+      });
+    });
+
+  queryRows
+    .filter((row) => !row.isBranded && row.impressions >= 100 && row.ctr < 4 && row.position !== null && row.position <= 12)
+    .slice(0, 6)
+    .forEach((row) => {
+      rows.push({
+        key: `ctr:${row.key}`,
+        type: 'ctr_lift',
+        typeLabel: 'CTR lift',
+        label: row.label,
+        detail: `${row.primaryLandingPage} is visible enough to win more clicks without waiting for a new ranking step-change.`,
+        recommendation: 'Test titles, meta descriptions, and richer snippet alignment for this query cluster.',
+        priorityScore: roundMetric(row.opportunityScore + ((4 - row.ctr) * 6), 1) || 0,
+        impressions: row.impressions,
+        clicks: row.clicks,
+        ctr: row.ctr
+      });
+    });
+
+  (landingPageScorecard.rows || [])
+    .filter((row) => (row.clicks >= 50 || row.sessions >= 50) && row.qualifiedLeads === 0)
+    .slice(0, 6)
+    .forEach((row) => {
+      rows.push({
+        key: `conversion:${row.key}`,
+        type: 'conversion_gap',
+        typeLabel: 'Conversion gap',
+        label: row.label,
+        detail: `${row.clicks} clicks and ${row.sessions} sessions produced no qualified demand in the selected period.`,
+        recommendation: 'Audit CTA hierarchy, form friction, offer clarity, and qualification mismatch before driving more traffic here.',
+        priorityScore: roundMetric(row.opportunityScore + (row.clicks / 5), 1) || 0,
+        impressions: row.impressions,
+        clicks: row.clicks,
+        leadRate: row.leadRate
+      });
+    });
+
+  const dedupedRows = Array.from(
+    new Map(rows.map((row) => [row.key, row])).values()
+  )
+    .sort((a, b) => (
+      b.priorityScore - a.priorityScore
+      || (b.impressions || 0) - (a.impressions || 0)
+      || (b.clicks || 0) - (a.clicks || 0)
+      || a.label.localeCompare(b.label)
+    ))
+    .slice(0, 10);
+
+  return {
+    rows: dedupedRows,
+    notes: {
+      basis: 'Stage 3 content opportunities combine query-level CTR upside, decay checks, cannibalization watch-outs, and page-level conversion gaps.',
+      decayDefinition: decayWindow
+        ? `Decay compares ${decayWindow.previousStart} to ${decayWindow.previousEnd} against ${decayWindow.recentStart} to ${decayWindow.recentEnd}.`
+        : 'Decay needs at least 14 days in the selected range before a prior-vs-recent comparison is meaningful.'
+    }
+  };
+}
+
+function buildFunnelDiagnostics(currentLeads = [], range) {
+  const steps = buildFunnel(currentLeads);
+  const summary = {
+    createdLeads: currentLeads.length,
+    qualifiedLeads: currentLeads.filter(hasReachedQualified).length,
+    wonLeads: currentLeads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_WON).length,
+    lostLeads: currentLeads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_LOST).length,
+    avgHoursToQualify: getAverage(currentLeads.map((lead) => lead.hoursToQualify)),
+    avgHoursToClose: getAverage(currentLeads.map((lead) => lead.hoursToClose))
+  };
+  const segmentDefinitions = [
+    {
+      key: 'sourceClass',
+      label: 'Source class',
+      getValue: (lead) => lead.sourceClass,
+      getLabel: (lead) => lead.sourceClassLabel
+    },
+    {
+      key: 'service',
+      label: 'Service',
+      getValue: (lead) => lead.serviceKey,
+      getLabel: (lead) => lead.serviceLabel
+    },
+    {
+      key: 'pageType',
+      label: 'Page type',
+      getValue: (lead) => lead.pageType,
+      getLabel: (lead) => lead.pageTypeLabel
+    },
+    {
+      key: 'businessLine',
+      label: 'Business line',
+      getValue: (lead) => lead.businessLine,
+      getLabel: (lead) => lead.businessLineLabel
+    }
+  ];
+  const dropoffRows = [];
+
+  segmentDefinitions.forEach((definition) => {
+    const groups = new Map();
+
+    currentLeads.forEach((lead) => {
+      const groupKey = definition.getValue(lead);
+      if (!groupKey) {
+        return;
+      }
+
+      const current = groups.get(groupKey) || {
+        key: groupKey,
+        label: definition.getLabel(lead),
+        created: 0,
+        qualified: 0,
+        won: 0
+      };
+
+      current.created += 1;
+      current.qualified += hasReachedQualified(lead) ? 1 : 0;
+      current.won += lead.status === LEAD_STATUSES.CLOSED_WON ? 1 : 0;
+      groups.set(groupKey, current);
+    });
+
+    groups.forEach((group) => {
+      if (group.created >= 3) {
+        const conversionRate = getPercent(group.qualified, group.created);
+        dropoffRows.push({
+          key: `${definition.key}:${group.key}:created_to_qualified`,
+          label: `${definition.label}: ${group.label}`,
+          stageLabel: 'Created -> Qualified',
+          fromCount: group.created,
+          toCount: group.qualified,
+          conversionRate,
+          dropoffRate: roundMetric(100 - conversionRate, 1) || 0,
+          recommendation: 'Review intent match, landing-page clarity, and form friction in this segment.'
+        });
+      }
+
+      if (group.qualified >= 2) {
+        const conversionRate = getPercent(group.won, group.qualified);
+        dropoffRows.push({
+          key: `${definition.key}:${group.key}:qualified_to_won`,
+          label: `${definition.label}: ${group.label}`,
+          stageLabel: 'Qualified -> Won',
+          fromCount: group.qualified,
+          toCount: group.won,
+          conversionRate,
+          dropoffRate: roundMetric(100 - conversionRate, 1) || 0,
+          recommendation: 'Review qualification quality, follow-up discipline, and close-stage friction in this segment.'
+        });
+      }
+    });
+  });
+
+  return {
+    summary,
+    steps,
+    topDropoffs: dropoffRows
+      .sort((a, b) => (
+        b.dropoffRate - a.dropoffRate
+        || b.fromCount - a.fromCount
+        || a.label.localeCompare(b.label)
+      ))
+      .slice(0, 8),
+    notes: {
+      basis: `Lifecycle-based funnel v1 on leads created between ${range.from} and ${range.to}.`,
+      coverage: 'CTA click, form-start, and form-completion steps are not yet persisted in the reporting mart, so this view currently starts at lead creation.'
+    }
+  };
+}
+
 function getChannelKey({
   metricDate,
   source,
@@ -3067,8 +3725,23 @@ function buildExecutiveOpportunity({
   acquisition,
   seoContent,
   pipeline,
+  landingPageScorecard,
   currentLeads = []
 }) {
+  const topScorecardPage = (landingPageScorecard?.rows || []).find((row) => (
+    row.qualifiedLeads > 0 || row.leads > 0 || row.clicks > 0 || row.sessions > 0
+  ));
+  if (topScorecardPage) {
+    return {
+      key: 'seo_landing_page',
+      title: 'Opportunity',
+      headline: `${topScorecardPage.label} is the highest-leverage landing-page candidate right now.`,
+      detail: `${formatSummaryCount(topScorecardPage.clicks)} clicks, ${formatSummaryCount(topScorecardPage.qualifiedLeads)} qualified leads, ${formatSummaryPercent(topScorecardPage.leadRate)} lead rate, ${formatSummaryCurrency(topScorecardPage.revenueProxy)} estimated pipeline value.`,
+      tone: topScorecardPage.qualifiedLeads > 0 ? 'positive' : 'neutral',
+      owner: 'Growth owner'
+    };
+  }
+
   const bestSeoPage = (seoContent?.landingPages || []).find((row) => (
     row.qualifiedLeads > 0 || row.leads > 0 || row.clicks > 0 || row.sessions > 0
   ));
@@ -3203,6 +3876,7 @@ function buildExecutiveSummary({
   pipeline,
   acquisition,
   seoContent,
+  landingPageScorecard,
   operations,
   dataHealth,
   filters = {}
@@ -3218,6 +3892,7 @@ function buildExecutiveSummary({
     acquisition,
     seoContent,
     pipeline,
+    landingPageScorecard,
     currentLeads
   });
   const nextAction = buildExecutiveNextAction({
@@ -3241,6 +3916,7 @@ export function buildAdminDashboardData({
   previousRows,
   universeRows,
   externalMetricRows = [],
+  queryMetricRows = [],
   whatsappClickRows = [],
   keywordCatalogRows = [],
   keywordRankingRows = [],
@@ -3265,6 +3941,10 @@ export function buildAdminDashboardData({
   const filteredPreviousLeads = previousLeads.filter((lead) => matchesLeadFilters(lead, normalizedFilters));
   const filteredUniverseLeads = universeLeads.filter((lead) => matchesLeadFilters(lead, normalizedFilters));
   const filteredExternalMetricRows = externalMetricRows.filter((row) => matchesExternalMetricFilters(row, normalizedFilters));
+  const filteredQueryMetricRows = queryMetricRows
+    .map(normalizeQueryMetricDashboardRow)
+    .filter((row) => row.metricDate && row.normalizedQuery)
+    .filter((row) => matchesQueryMetricFilters(row, normalizedFilters));
   const filteredWhatsAppClickRows = whatsappClickRows.filter((row) => matchesWhatsAppClickFilters(row, normalizedFilters));
   const filteredKeywordCatalogRows = keywordCatalogRows.filter((row) => matchesKeywordCatalogFilters(row, normalizedFilters));
   const filteredKeywordRankingRows = keywordRankingRows.filter((row) => matchesKeywordRankingFilters(row, normalizedFilters));
@@ -3273,6 +3953,18 @@ export function buildAdminDashboardData({
   const overviewCards = buildOverviewCards(filteredCurrentLeads, filteredPreviousLeads, filteredUniverseLeads, range);
   const pipeline = buildPipeline(filteredCurrentLeads, range);
   const acquisition = buildAcquisition(filteredCurrentLeads, filteredExternalMetricRows, filteredWhatsAppClickRows);
+  const seoQueries = buildSeoQueries(filteredQueryMetricRows, normalizedFilters);
+  const landingPageScorecard = buildLandingPageScorecard(
+    filteredCurrentLeads,
+    filteredExternalMetricRows,
+    filteredQueryMetricRows
+  );
+  const contentOpportunities = buildContentOpportunities(
+    filteredQueryMetricRows,
+    landingPageScorecard,
+    range
+  );
+  const funnelDiagnostics = buildFunnelDiagnostics(filteredCurrentLeads, range);
   const seoContent = buildSeoContent(
     filteredCurrentLeads,
     filteredExternalMetricRows,
@@ -3288,6 +3980,7 @@ export function buildAdminDashboardData({
     pipeline,
     acquisition,
     seoContent,
+    landingPageScorecard,
     operations,
     dataHealth,
     filters: normalizedFilters
@@ -3320,6 +4013,10 @@ export function buildAdminDashboardData({
     },
     pipeline,
     acquisition,
+    seoQueries,
+    contentOpportunities,
+    landingPageScorecard,
+    funnelDiagnostics,
     seoContent,
     operations,
     dataHealth

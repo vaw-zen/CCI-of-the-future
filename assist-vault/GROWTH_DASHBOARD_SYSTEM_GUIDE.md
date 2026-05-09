@@ -18,6 +18,7 @@ The completed work includes:
 - Separating keyword visibility trend from true keyword position trend in the SEO dashboard section
 - Adding Stage 1 lead-quality operations fields and admin controls for queue ownership, SLA, and last-worked tracking
 - Adding normalized Supabase reporting views for acquisition and lead-dimension rollups
+- Adding the first Stage 3 growth intelligence layer with query-level Search Console persistence, content opportunities, landing-page scoring, and lifecycle funnel diagnostics
 
 ## Core Files
 
@@ -33,12 +34,12 @@ The completed work includes:
 | Site inventory / valid target discovery | `src/libs/sitePathInventory.mjs` |
 | Admin auth stability | `src/hooks/useAdminAuth.js` |
 | Growth scripts | `scripts/growth/*` |
-| Growth SQL migrations | `supabase/20260506_growth_reporting.sql`, `supabase/20260506_growth_keyword_rankings.sql`, `supabase/20260506_growth_keyword_catalog.sql`, `supabase/20260509_stage1_lead_quality_dimensions.sql` |
+| Growth SQL migrations | `supabase/20260506_growth_reporting.sql`, `supabase/20260506_growth_keyword_rankings.sql`, `supabase/20260506_growth_keyword_catalog.sql`, `supabase/20260509_stage1_lead_quality_dimensions.sql`, `supabase/20260509_stage3_growth_intelligence.sql` |
 | Consolidated schema | `supabase/schema.sql` |
 
 ## Supabase Model
 
-The growth dashboard is now backed by six reporting tables plus two normalized reporting views:
+The growth dashboard is now backed by seven reporting tables plus five reporting views:
 
 | Table | Purpose |
 | --- | --- |
@@ -48,8 +49,12 @@ The growth dashboard is now backed by six reporting tables plus two normalized r
 | `growth_keyword_reference_rows` | Raw imported keyword CSV rows, preserved exactly as imported |
 | `growth_keyword_catalog` | Canonical active/inactive keyword catalog keyed by normalized keyword plus canonical target |
 | `growth_keyword_rankings_daily` | Daily live SERP ranking snapshots per keyword, per device, linked back to the canonical catalog row |
+| `growth_query_daily_metrics` | Daily query-level Search Console rows linked to landing pages, clusters, business lines, services, and page types |
 | `growth_channel_daily_metrics_normalized` | Normalized source / medium / campaign / landing-page view with `source_class` and `page_type` ready for segmentation |
 | `growth_lead_reporting_dimensions` | Unified lead-dimension view across `devis_requests` and `convention_requests` including `business_line`, `lead_quality_outcome`, `lead_owner`, `follow_up_sla_at`, and `last_worked_at` |
+| `growth_keyword_clusters` | Active keyword catalog rollup view that maps keywords into reusable query/content clusters |
+| `growth_funnel_daily_metrics` | Lifecycle-based funnel view by date, business line, service, source class, and page type |
+| `growth_landing_page_scores_daily` | Landing-page scoring view blending traffic, qualified demand, wins, and estimated pipeline value |
 
 Apply these migrations in order on any new environment:
 
@@ -57,6 +62,7 @@ Apply these migrations in order on any new environment:
 2. `supabase/20260506_growth_keyword_rankings.sql`
 3. `supabase/20260506_growth_keyword_catalog.sql`
 4. `supabase/20260509_stage1_lead_quality_dimensions.sql`
+5. `supabase/20260509_stage3_growth_intelligence.sql`
 
 ## Dashboard API Contract
 
@@ -76,10 +82,13 @@ It now returns these top-level sections:
 
 - `filters`
 - `executiveSummary`
-
 - `overview`
 - `pipeline`
 - `acquisition`
+- `seoQueries`
+- `contentOpportunities`
+- `landingPageScorecard`
+- `funnelDiagnostics`
 - `seoContent`
 - `operations`
 - `dataHealth`
@@ -90,6 +99,23 @@ Important Stage 2 scope note:
 
 - `device` currently scopes keyword visibility and ranking snapshots only
 - Lead, pipeline, acquisition, and operations sections remain cross-device until a device dimension exists in lead and acquisition reporting inputs
+- Stage 3 query intelligence is also currently cross-device because query-level Search Console persistence does not yet store a device dimension
+
+## Stage 3 Intelligence Layer
+
+The first Stage 3 slice adds four decision-oriented payloads on top of the Stage 2 segmented dashboard:
+
+- `seoQueries`: query-level demand, non-branded opportunity, and cluster rollups
+- `contentOpportunities`: CTR lift, decay-risk, cannibalization-watch, and conversion-gap candidates
+- `landingPageScorecard`: ranked landing pages scored by demand, qualified pipeline, wins, and estimated value
+- `funnelDiagnostics`: lifecycle-based funnel `v1` with top drop-off segments
+
+Important Stage 3 scope notes:
+
+- `funnelDiagnostics` currently starts at lead creation, not CTA click or form start
+- CTA/form-step diagnostics require persisted event marts that do not exist yet
+- `landingPageScorecard` is directional prioritization, not financial forecasting
+- `contentOpportunities` uses heuristics that should be reviewed after each weekly growth review until the thresholds stabilize
 
 ## Keyword Data Model and Trend Semantics
 
@@ -192,6 +218,11 @@ GSC_SITE_URL=https://cciservices.online/
 ```
 
 Do not use the `sc-domain:...` value for this dashboard setup unless the implementation is intentionally changed later.
+
+Search Console refresh now writes two layers:
+
+- page-level rows into `growth_channel_daily_metrics`
+- query-level rows into `growth_query_daily_metrics`
 
 ### SerpApi
 

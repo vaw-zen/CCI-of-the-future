@@ -15,6 +15,7 @@ const ADMIN_DASHBOARD_RATE_LIMIT = {
 };
 const NORMALIZED_EXTERNAL_METRIC_VIEW = 'growth_channel_daily_metrics_normalized';
 const NORMALIZED_EXTERNAL_METRIC_VIEW_WARNINGS = new Set();
+const GROWTH_QUERY_METRIC_WARNINGS = new Set();
 
 const DASHBOARD_SELECT_FIELDS = {
   devis: [
@@ -312,6 +313,54 @@ async function fetchKeywordCatalogRows(supabase) {
   });
 }
 
+async function fetchQueryMetricRows(supabase, range) {
+  const select = [
+    'metric_date',
+    'query',
+    'normalized_query',
+    'landing_page',
+    'normalized_landing_page',
+    'keyword_catalog_id',
+    'cluster_key',
+    'cluster_label',
+    'business_line',
+    'service_key',
+    'page_type',
+    'clicks',
+    'impressions',
+    'ctr',
+    'position',
+    'is_branded',
+    'metadata'
+  ].join(',');
+
+  const { data, error } = await supabase
+    .from('growth_query_daily_metrics')
+    .select(select)
+    .gte('metric_date', range.from)
+    .lte('metric_date', range.to)
+    .order('metric_date', { ascending: true });
+
+  if (error) {
+    if (!GROWTH_QUERY_METRIC_WARNINGS.has('growth_query_daily_metrics')) {
+      GROWTH_QUERY_METRIC_WARNINGS.add('growth_query_daily_metrics');
+      console.warn(
+        `[admin][dashboard] growth_query_daily_metrics unavailable, Stage 3 query intelligence will stay empty: ${error.message}`
+      );
+    }
+
+    return {
+      rows: [],
+      error
+    };
+  }
+
+  return {
+    rows: data || [],
+    error: null
+  };
+}
+
 async function fetchWhatsAppClickRows(supabase, range) {
   const { data, error } = await supabase
     .from('whatsapp_click_events')
@@ -424,6 +473,7 @@ export async function GET(request) {
       universeRows,
       auditEvents,
       externalMetricsResult,
+      queryMetricsResult,
       whatsappClickResult,
       keywordCatalogResult,
       keywordRankingResult,
@@ -434,6 +484,7 @@ export async function GET(request) {
       fetchAllLeadRows(supabase),
       fetchAuditEvents(supabase),
       fetchExternalMetricRows(supabase, rangeResult.range),
+      fetchQueryMetricRows(supabase, rangeResult.range),
       fetchWhatsAppClickRows(supabase, rangeResult.range),
       fetchKeywordCatalogRows(supabase),
       fetchKeywordRankingRows(supabase, rangeResult.range),
@@ -441,6 +492,7 @@ export async function GET(request) {
     ]);
     const reportingWarnings = [
       externalMetricsResult.error ? 'growth_channel_daily_metrics_unavailable' : null,
+      queryMetricsResult.error ? 'growth_query_daily_metrics_unavailable' : null,
       whatsappClickResult.error ? 'whatsapp_click_events_unavailable' : null,
       keywordCatalogResult.error ? 'growth_keyword_catalog_unavailable' : null,
       keywordRankingResult.error ? 'growth_keyword_rankings_daily_unavailable' : null,
@@ -451,6 +503,7 @@ export async function GET(request) {
       previousRows,
       universeRows,
       externalMetricRows: externalMetricsResult.rows,
+      queryMetricRows: queryMetricsResult.rows,
       whatsappClickRows: whatsappClickResult.rows,
       keywordCatalogRows: keywordCatalogResult.rows,
       keywordRankingRows: keywordRankingResult.rows,

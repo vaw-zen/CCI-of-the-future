@@ -1168,3 +1168,196 @@ test('seo notes and trends fall back to imported references when live snapshots 
   assert.match(data.seoContent.notes.keywordTrendDefinition, /remap ou une réimportation du catalogue/);
   assert.match(data.seoContent.notes.keywordRowDefinition, /desktop et mobile reprennent la référence importée/);
 });
+
+test('stage-three growth intelligence surfaces query opportunities, content risks, landing-page scoring, and lifecycle drop-offs', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-14' });
+  const currentDevisRows = [
+    buildDevisRow({
+      id: 'seo-lead-1',
+      created_at: '2026-05-08T09:00:00.000Z',
+      submitted_at: '2026-05-08T09:00:00.000Z',
+      qualified_at: '2026-05-09T09:00:00.000Z',
+      lead_status: 'qualified',
+      session_source: 'google',
+      session_medium: 'organic',
+      landing_page: '/salon',
+      calculator_estimate: 500
+    }),
+    buildDevisRow({
+      id: 'seo-lead-2',
+      created_at: '2026-05-08T10:00:00.000Z',
+      submitted_at: '2026-05-08T10:00:00.000Z',
+      lead_status: 'submitted',
+      session_source: 'google',
+      session_medium: 'organic',
+      landing_page: '/salon',
+      calculator_estimate: 250
+    }),
+    buildDevisRow({
+      id: 'seo-lead-3',
+      created_at: '2026-05-09T10:00:00.000Z',
+      submitted_at: '2026-05-09T10:00:00.000Z',
+      lead_status: 'submitted',
+      session_source: 'google',
+      session_medium: 'organic',
+      landing_page: '/salon',
+      calculator_estimate: 200
+    })
+  ];
+
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: currentDevisRows,
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: currentDevisRows,
+      conventions: []
+    },
+    externalMetricRows: [
+      {
+        metric_date: '2026-05-08',
+        metric_source: 'ga4',
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: '/salon',
+        sessions: 80,
+        users: 66,
+        clicks: 0,
+        impressions: 0,
+        spend: 0
+      },
+      {
+        metric_date: '2026-05-08',
+        metric_source: 'gsc',
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: '/salon',
+        sessions: 0,
+        users: 0,
+        clicks: 60,
+        impressions: 1200,
+        spend: 0
+      },
+      {
+        metric_date: '2026-05-08',
+        metric_source: 'gsc',
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: '/tapis',
+        sessions: 0,
+        users: 0,
+        clicks: 8,
+        impressions: 300,
+        spend: 0
+      }
+    ],
+    queryMetricRows: [
+      {
+        metric_date: '2026-05-03',
+        query: 'Nettoyage salon Tunis',
+        normalized_query: 'nettoyage salon tunis',
+        landing_page: '/salon',
+        normalized_landing_page: '/salon',
+        cluster_key: 'salon',
+        cluster_label: 'Salon',
+        business_line: 'b2c',
+        service_key: 'salon',
+        page_type: 'service',
+        clicks: 50,
+        impressions: 700,
+        ctr: 7.1,
+        position: 4.2,
+        is_branded: false
+      },
+      {
+        metric_date: '2026-05-10',
+        query: 'Nettoyage salon Tunis',
+        normalized_query: 'nettoyage salon tunis',
+        landing_page: '/salon',
+        normalized_landing_page: '/salon',
+        cluster_key: 'salon',
+        cluster_label: 'Salon',
+        business_line: 'b2c',
+        service_key: 'salon',
+        page_type: 'service',
+        clicks: 20,
+        impressions: 600,
+        ctr: 3.3,
+        position: 5.1,
+        is_branded: false
+      },
+      {
+        metric_date: '2026-05-11',
+        query: 'Nettoyage canapé Tunis',
+        normalized_query: 'nettoyage canape tunis',
+        landing_page: '/salon',
+        normalized_landing_page: '/salon',
+        cluster_key: 'salon',
+        cluster_label: 'Salon',
+        business_line: 'b2c',
+        service_key: 'salon',
+        page_type: 'service',
+        clicks: 10,
+        impressions: 200,
+        ctr: 5,
+        position: 6.1,
+        is_branded: false
+      },
+      {
+        metric_date: '2026-05-11',
+        query: 'Nettoyage canapé Tunis',
+        normalized_query: 'nettoyage canape tunis',
+        landing_page: '/contact',
+        normalized_landing_page: '/contact',
+        cluster_key: 'salon',
+        cluster_label: 'Salon',
+        business_line: 'b2c',
+        service_key: 'salon',
+        page_type: 'contact',
+        clicks: 8,
+        impressions: 180,
+        ctr: 4.4,
+        position: 7.3,
+        is_branded: false
+      },
+      {
+        metric_date: '2026-05-12',
+        query: 'Shampooing tapis Tunis',
+        normalized_query: 'shampooing tapis tunis',
+        landing_page: '/tapis',
+        normalized_landing_page: '/tapis',
+        cluster_key: 'tapis',
+        cluster_label: 'Tapis / moquettes',
+        business_line: 'b2c',
+        service_key: 'tapis',
+        page_type: 'service',
+        clicks: 5,
+        impressions: 300,
+        ctr: 1.7,
+        position: 8.2,
+        is_branded: false
+      }
+    ],
+    range: rangeResult.range,
+    nowIso: '2026-05-14T06:00:00.000Z'
+  });
+
+  assert.equal(data.seoQueries.summary.totalQueries, 3);
+  assert.equal(data.seoQueries.summary.cannibalizedQueryCount, 1);
+  assert.equal(data.seoQueries.opportunities.some((row) => row.label === 'Shampooing tapis Tunis'), true);
+  assert.equal(data.contentOpportunities.rows.some((row) => row.type === 'decay_risk'), true);
+  assert.equal(data.contentOpportunities.rows.some((row) => row.type === 'cannibalization'), true);
+  assert.equal(data.landingPageScorecard.rows[0]?.label, '/salon');
+  assert.equal(data.landingPageScorecard.rows[0]?.queryCount, 2);
+  assert.equal(data.funnelDiagnostics.summary.createdLeads, 3);
+  assert.equal(data.funnelDiagnostics.topDropoffs.some((row) => row.stageLabel === 'Created -> Qualified'), true);
+  assert.match(data.funnelDiagnostics.notes.coverage, /CTA click, form-start, and form-completion/);
+});

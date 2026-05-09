@@ -27,7 +27,8 @@ This document operationalizes the audit strategy into a delivery program that en
 | Normalized reporting views | Implemented in reporting layer | Supabase now exposes normalized growth metric and lead-dimension views for Stage 2 segmentation work |
 | Stage 2 segmentation contract | Implemented | Dashboard now supports `businessLine`, `service`, `sourceClass`, `device`, and `pageType` filters plus `executiveSummary` in the API payload |
 | Stage 2 UI layer | Implemented | `/admin/dashboard` now has a summary band, segment controls, and a dedicated pipeline section |
-| Stage 3+ intelligence marts | Pending | Tracked in backlog below |
+| Stage 3 first intelligence slice | Implemented in product, stabilization pending | Query sync, Stage 3 payload keys, and the first prioritization panels are live; workflow adoption and heuristic tuning remain open |
+| Stage 4+ intelligence and automation backlog | Pending | Tracked in backlog below |
 
 ## Delivery order
 
@@ -76,15 +77,15 @@ This document operationalizes the audit strategy into a delivery program that en
 
 ### Stage 3
 
-| ID | Tag | Owner | Work item | Dependency | Exit signal |
-| --- | --- | --- | --- | --- | --- |
-| S3-01 | `schema` | Engineering | Create `growth_query_daily_metrics` | Stage 2 | Query-level Search Console analysis becomes available |
-| S3-02 | `schema` | Engineering | Create `growth_funnel_daily_metrics` | Stage 2 | Funnel diagnostics can be evaluated by step and segment |
-| S3-03 | `schema` | Engineering | Create `growth_keyword_clusters` | S3-01 | Query opportunity can be rolled up by cluster |
-| S3-04 | `schema` | Engineering | Create `growth_landing_page_scores_daily` | S3-02 | Landing-page prioritization no longer depends on raw lists |
-| S3-05 | `metric-builder` | Engineering | Add `seoQueries`, `contentOpportunities`, `funnelDiagnostics`, and `landingPageScorecard` | S3-01 to S3-04 | Growth team can prioritize SEO and CRO from the dashboard |
-| S3-06 | `UI` | Engineering | Add query, funnel, and landing-page scorecard panels to existing dashboard | S3-05 | Query intelligence is clearly separated from tracked keyword monitoring |
-| S3-07 | `workflow` | Growth owner | Make Stage 3 outputs the default input for SEO refresh and CRO sprint planning | S3-06 | Roadmap selection references dashboard evidence each week |
+| ID | Tag | Owner | Work item | Dependency | Exit signal | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| S3-01 | `schema` | Engineering | Create `growth_query_daily_metrics` | Stage 2 | Query-level Search Console analysis becomes available | Implemented in migration |
+| S3-02 | `schema` | Engineering | Create `growth_funnel_daily_metrics` | Stage 2 | Funnel diagnostics can be evaluated by step and segment | Implemented in migration |
+| S3-03 | `schema` | Engineering | Create `growth_keyword_clusters` | S3-01 | Query opportunity can be rolled up by cluster | Implemented in migration |
+| S3-04 | `schema` | Engineering | Create `growth_landing_page_scores_daily` | S3-02 | Landing-page prioritization no longer depends on raw lists | Implemented in migration |
+| S3-05 | `metric-builder` | Engineering | Add `seoQueries`, `contentOpportunities`, `funnelDiagnostics`, and `landingPageScorecard` | S3-01 to S3-04 | Growth team can prioritize SEO and CRO from the dashboard | Implemented |
+| S3-06 | `UI` | Engineering | Add query, funnel, and landing-page scorecard panels to existing dashboard | S3-05 | Query intelligence is clearly separated from tracked keyword monitoring | Implemented |
+| S3-07 | `workflow` | Growth owner | Make Stage 3 outputs the default input for SEO refresh and CRO sprint planning | S3-06 | Roadmap selection references dashboard evidence each week | Next |
 
 ### Stage 4
 

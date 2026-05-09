@@ -830,6 +830,54 @@ function PipelineSection({ dashboardData }) {
       </div>
 
       <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>Funnel diagnostics</h2>
+          <p className={styles.inlineNote}>{dashboardData.funnelDiagnostics.notes.basis}</p>
+          <p className={styles.mutedText}>{dashboardData.funnelDiagnostics.notes.coverage}</p>
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(dashboardData.funnelDiagnostics.summary.createdLeads)}</strong>
+              <span>Créés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.funnelDiagnostics.summary.qualifiedLeads)}</strong>
+              <span>Qualifiés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.funnelDiagnostics.summary.wonLeads)}</strong>
+              <span>Gagnés</span>
+            </div>
+            <div>
+              <strong>{formatHours(dashboardData.funnelDiagnostics.summary.avgHoursToQualify)}</strong>
+              <span>Temps moyen qualification</span>
+            </div>
+          </div>
+        </div>
+
+        <MetricListPanel
+          title="Top drop-offs"
+          note="Segments avec le plus de perte entre étapes lifecycle dans la cohorte filtrée."
+          rows={dashboardData.funnelDiagnostics.topDropoffs}
+          emptyText="Pas assez de volume pour isoler un drop-off dominant."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.stageLabel}</span>
+                <span>{row.recommendation}</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'From', value: formatNumber(row.fromCount) },
+                { label: 'To', value: formatNumber(row.toCount) },
+                { label: 'Conv.', value: formatPercent(row.conversionRate) },
+                { label: 'Drop-off', value: formatPercent(row.dropoffRate) }
+              ]} />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
         <div className={`${styles.panel} ${styles.panelWide}`}>
           <h2>Tendance des leads créés</h2>
           <MultiSeriesTrendChart
@@ -1028,6 +1076,11 @@ function SeoSection({ dashboardData }) {
     : 'Historique insuffisant: il faut au moins 2 snapshots SERP classés sur des dates différentes.';
   const seoCards = dashboardData.seoContent.cards || [];
   const keywordCards = dashboardData.seoContent.keywordCards || [];
+  const seoQueryNotes = [
+    dashboardData.seoQueries.notes.basis,
+    dashboardData.seoQueries.notes.brandedDefinition,
+    dashboardData.seoQueries.notes.deviceScope
+  ].filter(Boolean);
 
   return (
     <>
@@ -1042,6 +1095,125 @@ function SeoSection({ dashboardData }) {
           <KpiCard key={card.key} card={card} />
         ))}
       </div>
+
+      <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>SEO query intelligence</h2>
+          {seoQueryNotes.map((note) => (
+            <p key={note} className={styles.inlineNote}>{note}</p>
+          ))}
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(dashboardData.seoQueries.summary.totalQueries)}</strong>
+              <span>Queries</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.seoQueries.summary.nonBrandedClicks)}</strong>
+              <span>Clicks non-brand</span>
+            </div>
+            <div>
+              <strong>{formatPercent(dashboardData.seoQueries.summary.nonBrandedClickShare)}</strong>
+              <span>Part non-brand</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.seoQueries.summary.cannibalizedQueryCount)}</strong>
+              <span>Queries multi-pages</span>
+            </div>
+          </div>
+        </div>
+
+        <MetricListPanel
+          title="Cluster rollup"
+          note="Agrégation des requêtes par cluster/service pour repérer les poches de demande à traiter en priorité."
+          rows={dashboardData.seoQueries.clusters}
+          emptyText="Aucun cluster de requêtes disponible sur cette période."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.queryCount} queries • {row.landingPageCount} landing pages</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Clicks', value: formatNumber(row.clicks) },
+                { label: 'Non-brand', value: formatNumber(row.nonBrandedClicks) },
+                { label: 'CTR', value: formatPercent(row.ctr) },
+                { label: 'Pos.', value: formatPosition(row.position) }
+              ]} />
+            </div>
+          )}
+        />
+      </div>
+
+      <MetricListPanel
+        title="Top non-branded query opportunities"
+        note="Requêtes à forte demande et bon levier potentiel sur CTR, ranking window, ou clarification de page cible."
+        rows={dashboardData.seoQueries.opportunities}
+        emptyText="Aucune opportunité query claire sur cette période."
+        renderRow={(row) => (
+          <div key={row.key} className={styles.metricRow}>
+            <div>
+              <strong>{row.label}</strong>
+              <span>{row.primaryLandingPage}</span>
+              <span>{row.clusterLabel} • {row.landingPageCount} page{row.landingPageCount > 1 ? 's' : ''} cible{row.landingPageCount > 1 ? 's' : ''}</span>
+            </div>
+            <MetricBadges items={[
+              { label: 'Clicks', value: formatNumber(row.clicks) },
+              { label: 'Impr.', value: formatNumber(row.impressions) },
+              { label: 'CTR', value: formatPercent(row.ctr) },
+              { label: 'Pos.', value: formatPosition(row.position) },
+              { label: 'Score', value: formatNumber(row.opportunityScore) }
+            ]} />
+          </div>
+        )}
+      />
+
+      <MetricListPanel
+        title="Content opportunities"
+        note={`${dashboardData.contentOpportunities.notes.basis} ${dashboardData.contentOpportunities.notes.decayDefinition}`}
+        rows={dashboardData.contentOpportunities.rows}
+        emptyText="Aucune opportunité contenu prioritaire sur cette période."
+        renderRow={(row) => (
+          <div key={row.key} className={styles.metricRow}>
+            <div>
+              <strong>{row.label}</strong>
+              <span>{row.typeLabel}</span>
+              <span>{row.detail}</span>
+              <span>{row.recommendation}</span>
+            </div>
+            <MetricBadges items={[
+              { label: 'Impr.', value: row.impressions === undefined ? 'N/A' : formatNumber(row.impressions) },
+              { label: 'Clicks', value: row.clicks === undefined ? 'N/A' : formatNumber(row.clicks) },
+              { label: 'CTR', value: row.ctr === undefined ? 'N/A' : formatPercent(row.ctr) },
+              { label: 'Lead rate', value: row.leadRate === undefined ? 'N/A' : formatPercent(row.leadRate) },
+              { label: 'Score', value: formatNumber(row.priorityScore) }
+            ]} />
+          </div>
+        )}
+      />
+
+      <MetricListPanel
+        title="Landing page scorecard"
+        note={`${dashboardData.landingPageScorecard.notes.basis} ${dashboardData.landingPageScorecard.notes.scoreDefinition}`}
+        rows={dashboardData.landingPageScorecard.rows}
+        emptyText="Aucune landing page scorée sur cette période."
+        renderRow={(row) => (
+          <div key={row.key} className={styles.metricRow}>
+            <div>
+              <strong>{row.label}</strong>
+              <span>{row.businessLineLabel} • {row.pageTypeLabel} • {row.serviceLabel}</span>
+              <span>{row.queryCount} queries • {row.dominantClusterLabel}</span>
+            </div>
+            <MetricBadges items={[
+              { label: 'Sessions', value: formatNumber(row.sessions) },
+              { label: 'Clicks', value: formatNumber(row.clicks) },
+              { label: 'Qual.', value: formatNumber(row.qualifiedLeads) },
+              { label: 'Lead rate', value: formatPercent(row.leadRate) },
+              { label: 'Value', value: formatCurrency(row.revenueProxy) },
+              { label: 'Score', value: formatNumber(row.opportunityScore) }
+            ]} />
+          </div>
+        )}
+      />
 
       <div className={styles.dashboardGrid}>
         <div className={`${styles.panel} ${styles.panelWide}`}>

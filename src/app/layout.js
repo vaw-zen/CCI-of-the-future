@@ -57,6 +57,8 @@ export default function RootLayout({ children }) {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
   const SITE_NAME = "CCI"; // or "Chaabane's Cleaning Intelligence"
   const SITE_LOGO = `${SITE_URL}/home/1-hero/main.webp`;
+  const GA_MEASUREMENT_ID =
+    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.GA4_MEASUREMENT_ID || '';
 
   // WebSite schema with SearchAction
   const websiteJSONLD = {
@@ -172,7 +174,7 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <Initializer />
         <Suspense fallback={null}>
-          <GoogleAnalytics />
+          <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
         </Suspense>
       
         <ClientHeader robotoClassName={APP_HEADER_FONT_CLASS} />

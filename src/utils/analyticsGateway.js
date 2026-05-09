@@ -371,6 +371,15 @@ function pushToDataLayer(payload) {
   return true;
 }
 
+function pushToGoogleAnalytics(name, payload) {
+  if (typeof window === 'undefined' || !window.__cciDirectGaEnabled || typeof window.gtag !== 'function') {
+    return false;
+  }
+
+  window.gtag('event', name, payload);
+  return true;
+}
+
 export function pushAnalyticsEvent(name, payload = {}) {
   if (typeof window === 'undefined') {
     return false;
@@ -384,11 +393,14 @@ export function pushAnalyticsEvent(name, payload = {}) {
   }
 
   const sanitizedPayload = sanitizePayload(payload);
-  return pushToDataLayer({
+  const sentToGoogleAnalytics = pushToGoogleAnalytics(name, sanitizedPayload);
+  const sentToDataLayer = pushToDataLayer({
     event: name,
     event_name: name,
     ...sanitizedPayload
   });
+
+  return sentToGoogleAnalytics || sentToDataLayer;
 }
 
 export function pushConsentEvent(command, action, payload = {}) {

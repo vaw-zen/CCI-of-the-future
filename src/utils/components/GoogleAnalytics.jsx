@@ -6,6 +6,8 @@ import { applyGoogleConsentStatus } from '@/utils/consent/consent';
 import { GTM_CONTAINER_ID, GTM_LOADER_ID } from '@/utils/consent/consent.constants';
 import { persistSessionAttribution, pushAnalyticsEvent } from '@/utils/analyticsGateway';
 
+const GA_LOADER_ID = 'ga4-loader';
+
 function getCurrentPagePath() {
   if (typeof window === 'undefined') {
     return '';
@@ -25,6 +27,38 @@ function ensureTagManagerLoaded() {
   gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`;
 
   document.head.appendChild(gtmScript);
+}
+
+function ensureGoogleAnalyticsLoaded(measurementId) {
+  if (typeof document === 'undefined' || !measurementId || GTM_CONTAINER_ID) {
+    return;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function gtag() {
+    window.dataLayer.push(arguments);
+  };
+
+  if (!document.getElementById(GA_LOADER_ID)) {
+    const gaScript = document.createElement('script');
+    gaScript.id = GA_LOADER_ID;
+    gaScript.async = true;
+    gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+
+    document.head.appendChild(gaScript);
+  }
+
+  if (window.__cciGaConfiguredMeasurementId === measurementId) {
+    window.__cciDirectGaEnabled = true;
+    return;
+  }
+
+  window.gtag('js', new Date());
+  window.gtag('config', measurementId, {
+    send_page_view: false
+  });
+  window.__cciGaConfiguredMeasurementId = measurementId;
+  window.__cciDirectGaEnabled = true;
 }
 
 function trackPageView(path) {
@@ -63,21 +97,28 @@ function trackUtmArrival() {
   });
 }
 
-export default function GoogleAnalytics() {
+export default function GoogleAnalytics({ measurementId = '' }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const initializedRef = useRef(false);
   const lastTrackedPathRef = useRef('');
 
   useEffect(() => {
+    if (initializedRef.current) {
+      return;
+    }
+
+    initializedRef.current = true;
     applyGoogleConsentStatus();
     ensureTagManagerLoaded();
+    ensureGoogleAnalyticsLoaded(measurementId);
 
     const currentPath = getCurrentPagePath();
     persistSessionAttribution();
     lastTrackedPathRef.current = currentPath;
     trackPageView(currentPath);
     trackUtmArrival();
-  }, []);
+  }, [measurementId]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {

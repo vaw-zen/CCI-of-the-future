@@ -10,7 +10,15 @@ import {
   buildWhatsAppAttributionColumns,
   findLatestWhatsAppClickMatch
 } from '@/libs/whatsappAttribution.mjs';
-import { LEAD_STATUSES } from '@/utils/leadLifecycle';
+import {
+  getDefaultFollowUpSlaAt,
+  LEAD_QUALITY_OUTCOMES,
+  LEAD_STATUSES
+} from '@/utils/leadLifecycle';
+import {
+  isMissingOptionalLeadOperationFieldError,
+  withoutOptionalLeadOperationFields
+} from '@/libs/leadTrackingSchemaCompat.mjs';
 import { guardMutationRequest } from '@/libs/security';
 
 const DEVIS_RATE_LIMIT = {
@@ -153,17 +161,29 @@ export async function POST(request) {
 
       // Lifecycle and attribution
       lead_status: LEAD_STATUSES.SUBMITTED,
+      lead_quality_outcome: LEAD_QUALITY_OUTCOMES.UNREVIEWED,
       submitted_at: submittedAt,
+      follow_up_sla_at: getDefaultFollowUpSlaAt(submittedAt),
+      last_worked_at: submittedAt,
       ...attributionColumns,
       ...whatsappAttributionColumns
     };
 
     // Save to Supabase first
-    const { data: supabaseData, error: supabaseError } = await supabase
+    let { data: supabaseData, error: supabaseError } = await supabase
       .from('devis_requests')
       .insert([devisData])
       .select()
       .single();
+
+    if (supabaseError && isMissingOptionalLeadOperationFieldError(supabaseError)) {
+      console.warn('[devis] retrying insert without optional lead-operations columns:', supabaseError.message);
+      ({ data: supabaseData, error: supabaseError } = await supabase
+        .from('devis_requests')
+        .insert([withoutOptionalLeadOperationFields(devisData)])
+        .select()
+        .single());
+    }
 
     if (supabaseError) {
       console.error('Supabase error:', supabaseError);

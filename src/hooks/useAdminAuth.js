@@ -44,6 +44,45 @@ export function useAdminAuth() {
     setAccessState(null, false);
   }, [setAccessState]);
 
+  const verifyAdminSession = useCallback(async (session, { recordLastLogin = false } = {}) => {
+    const accessToken = session?.access_token;
+
+    if (!accessToken) {
+      return {
+        ok: false,
+        status: 401,
+        message: 'Session administrateur invalide.',
+        user: null
+      };
+    }
+
+    const response = await fetch('/api/admin/auth', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'x-record-last-login': recordLastLogin ? '1' : '0'
+      }
+    });
+
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        status: response.status,
+        message: payload?.message || payload?.error || 'Accès administrateur requis.',
+        user: payload?.data?.user || session.user || null
+      };
+    }
+
+    return {
+      ok: Boolean(payload?.data?.isAdmin),
+      status: response.status,
+      message: payload?.message || '',
+      user: payload?.data?.user || session.user || null
+    };
+  }, []);
+
   const checkUserAuth = useCallback(async (session = null, options = {}) => {
     // Prevent multiple simultaneous auth checks
     if (isAuthCheckingRef.current) {
@@ -99,38 +138,27 @@ export function useAdminAuth() {
         setAccessState(session.user, isSameUser ? authStateRef.current.isAdmin : false);
       }
 
-      // Check if user is admin by querying admin_users table directly
-      const { data: adminData, error: adminError } = await withTimeout(
-        supabase
-          .from('admin_users')
-          .select('email')
-          .eq('email', session.user.email)
-          .eq('is_active', true)
-          .single(),
+      const verification = await withTimeout(
+        verifyAdminSession(session, {
+          recordLastLogin: Boolean(options.recordLastLogin)
+        }),
         'Admin privilege check timed out'
       );
 
-      if (adminError && adminError.code !== 'PGRST116') { // PGRST116 = no rows returned
+      if (!verification.ok) {
+        const failureMessage = verification.message || 'Accès administrateur requis.';
+
         if (!shouldBlockUi && isSameUser && hasKnownAccess) {
-          setError('Erreur lors de la vérification des privilèges admin: ' + adminError.message);
+          setError(`Erreur lors de la vérification des privilèges admin: ${failureMessage}`);
           return;
         }
 
-        setError('Erreur lors de la vérification des privilèges admin: ' + adminError.message);
+        setError(`Erreur lors de la vérification des privilèges admin: ${failureMessage}`);
         setAccessState(session.user, false);
         return;
       }
 
-      const hasAdminRecord = !!adminData;
-      setAccessState(session.user, hasAdminRecord);
-
-      // Record logins without blocking the auth flow on refresh events.
-      if (hasAdminRecord && options.recordLastLogin) {
-        void supabase
-          .from('admin_users')
-          .update({ last_login: new Date().toISOString() })
-          .eq('email', session.user.email);
-      }
+      setAccessState(verification.user || session.user, true);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       const currentUser = authStateRef.current.user;
@@ -148,7 +176,7 @@ export function useAdminAuth() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [clearAccessState, setAccessState]);
+  }, [clearAccessState, setAccessState, verifyAdminSession]);
 
   useEffect(() => {
     // Check if supabase client is available
@@ -249,10 +277,10 @@ export function useAdminAuth() {
     user,
     isAdmin,
     loading,
-    refreshing,
-    error,
-    signInWithEmail,
-    signOut,
-    checkUserAuth
-  };
+      refreshing,
+      error,
+      signInWithEmail,
+      signOut,
+      checkUserAuth
+    };
 }

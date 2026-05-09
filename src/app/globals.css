@@ -26,6 +26,15 @@ html::-webkit-scrollbar { width: .4vw; background-color: var(--bg-elevated); max
 html::-webkit-scrollbar-thumb { background-color: var(--ac-primary); border-radius: 5px; transition: .7s; }
 img { user-drag: none; -webkit-user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
 
+.appSans {
+  font-family: "Segoe UI", "Trebuchet MS", "Helvetica Neue", Arial, sans-serif;
+}
+
+.appCondensed {
+  font-family: "Arial Narrow", "HelveticaNeue-CondensedBold", "Franklin Gothic Medium", "Roboto Condensed", Arial, sans-serif;
+  font-stretch: condensed;
+}
+
 @media screen and (max-width: 1024px) {
   :root { --padding-base: 2vw; }
 }

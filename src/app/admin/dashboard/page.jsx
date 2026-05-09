@@ -17,10 +17,30 @@ const STATUS_LABELS = {
 
 const SECTION_OPTIONS = [
   { key: 'overview', label: 'Overview' },
+  { key: 'pipeline', label: 'Pipeline' },
   { key: 'acquisition', label: 'Acquisition' },
   { key: 'seo', label: 'SEO & Content' },
   { key: 'operations', label: 'Operations' }
 ];
+
+const FILTER_LABELS = {
+  businessLine: 'Business line',
+  service: 'Service',
+  sourceClass: 'Source class',
+  device: 'SEO device',
+  pageType: 'Page type'
+};
+
+const DEFAULT_FILTER_OPTIONS = {
+  businessLine: [],
+  service: [],
+  sourceClass: [],
+  device: [
+    { value: 'desktop', label: 'Desktop' },
+    { value: 'mobile', label: 'Mobile' }
+  ],
+  pageType: []
+};
 
 function toDateInputValue(date) {
   return date.toISOString().slice(0, 10);
@@ -34,6 +54,17 @@ function getDefaultRange() {
   return {
     from: toDateInputValue(from),
     to: toDateInputValue(to)
+  };
+}
+
+function buildInitialDashboardQuery() {
+  return {
+    ...getDefaultRange(),
+    businessLine: '',
+    service: '',
+    sourceClass: '',
+    device: '',
+    pageType: ''
   };
 }
 
@@ -297,13 +328,24 @@ function SectionTabs({ activeSection, onChange }) {
 }
 
 function KpiCard({ card }) {
+  const infoTitle = [
+    card.canonicalLabel,
+    card.owner ? `Owner: ${card.owner}` : null,
+    card.decisionIntent ? `Decision: ${card.decisionIntent}` : null
+  ].filter(Boolean).join(' | ');
+
   return (
-    <div className={styles.statCard}>
+    <div className={styles.statCard} title={infoTitle || undefined}>
       <h3>{formatMetricValue(card.value, card.type)}</h3>
       <p>{card.label}</p>
       {card.meta && <span className={styles.statMeta}>{card.meta}</span>}
       {formatDelta(card.delta, card.type) && (
         <span className={styles.statDelta}>{formatDelta(card.delta, card.type)}</span>
+      )}
+      {card.warning && (
+        <span className={`${styles.statWarning} ${styles[`statWarning_${card.warning.level}`] || ''}`}>
+          {card.warning.message}
+        </span>
       )}
     </div>
   );
@@ -520,6 +562,60 @@ function HealthGrid({ dataHealth }) {
   );
 }
 
+function ExecutiveSummary({ executiveSummary, filters }) {
+  const cards = [
+    executiveSummary.trend,
+    executiveSummary.risk,
+    executiveSummary.opportunity,
+    executiveSummary.nextAction
+  ].filter(Boolean);
+  const activeFilters = filters?.active || [];
+
+  return (
+    <div className={styles.panel}>
+      <div className={styles.panelHeader}>
+        <div>
+          <h2>Executive summary</h2>
+          <p className={styles.inlineNote}>
+            {filters?.segmentLabel || 'All traffic and lead cohorts'}
+            {filters?.seoDeviceLabel ? ` · SEO device: ${filters.seoDeviceLabel}` : ''}
+          </p>
+        </div>
+      </div>
+
+      {activeFilters.length > 0 && (
+        <div className={styles.filterChips}>
+          {activeFilters.map((item) => (
+            <span key={item.key} className={styles.filterChip}>
+              <strong>{item.label}</strong> {item.value}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {(executiveSummary.notes || []).map((note) => (
+        <p key={note} className={styles.inlineNote}>
+          {note}
+        </p>
+      ))}
+
+      <div className={styles.executiveGrid}>
+        {cards.map((card) => (
+          <div
+            key={card.key}
+            className={`${styles.executiveCard} ${styles[`executiveCard_${card.tone}`] || ''}`}
+          >
+            <span className={styles.executiveEyebrow}>{card.title}</span>
+            <strong className={styles.executiveHeadline}>{card.headline}</strong>
+            <p className={styles.executiveDetail}>{card.detail}</p>
+            {card.owner && <span className={styles.executiveOwner}>Owner: {card.owner}</span>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function MetricBadges({ items = [] }) {
   return (
     <div className={styles.metricBadges}>
@@ -557,26 +653,34 @@ function LeadSummaryList({ title, leads = [], emptyText, note }) {
         <p className={styles.mutedText}>{emptyText}</p>
       ) : (
         <div className={styles.compactList}>
-          {leads.map((lead) => (
-            <Link
-              key={`${lead.kind}-${lead.id}`}
-              href={lead.drilldownHref || (lead.kind === 'devis' ? `/admin/devis?lead=${lead.id}` : `/admin/conventions?lead=${lead.id}`)}
-              className={styles.compactItem}
-            >
-              <div>
-                <strong>{lead.kindLabel} - {lead.serviceLabel}</strong>
-                <span>{lead.metaLinePrimary || `${lead.source} / ${lead.medium}`}</span>
-                <span>{lead.metaLineSecondary || lead.landingPage}</span>
-                {lead.metaLineTertiary && <small>{lead.metaLineTertiary}</small>}
-              </div>
-              <div className={styles.compactMeta}>
-                <span className={`${styles.statusBadge} ${styles[`status_${lead.status}`]}`}>
-                  {lead.statusLabel}
-                </span>
-                <small>{lead.metaDateTime ? formatDateTime(lead.metaDateTime) : formatHours(lead.ageHours)}</small>
-              </div>
-            </Link>
-          ))}
+          {leads.map((lead) => {
+            const fallbackOpsMeta = [
+              lead.leadQualityLabel || null,
+              lead.leadOwner ? `Owner: ${lead.leadOwner}` : null,
+              lead.followUpSlaAt ? `SLA: ${formatDateTime(lead.followUpSlaAt)}` : null
+            ].filter(Boolean).join(' • ');
+
+            return (
+              <Link
+                key={`${lead.kind}-${lead.id}`}
+                href={lead.drilldownHref || (lead.kind === 'devis' ? `/admin/devis?lead=${lead.id}` : `/admin/conventions?lead=${lead.id}`)}
+                className={styles.compactItem}
+              >
+                <div>
+                  <strong>{lead.kindLabel} - {lead.serviceLabel}</strong>
+                  <span>{lead.metaLinePrimary || `${lead.source} / ${lead.medium}`}</span>
+                  <span>{lead.metaLineSecondary || lead.landingPage}</span>
+                  {(lead.metaLineTertiary || fallbackOpsMeta) && <small>{lead.metaLineTertiary || fallbackOpsMeta}</small>}
+                </div>
+                <div className={styles.compactMeta}>
+                  <span className={`${styles.statusBadge} ${styles[`status_${lead.status}`]}`}>
+                    {lead.statusLabel}
+                  </span>
+                  <small>{lead.metaDateTime ? formatDateTime(lead.metaDateTime) : formatHours(lead.ageHours)}</small>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
@@ -625,6 +729,63 @@ function OverviewSection({ dashboardData }) {
         ))}
       </div>
 
+      <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>Filtered cohort</h2>
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(dashboardData.overview.cohort.currentLeads)}</strong>
+              <span>Leads créés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.overview.cohort.qualifiedReached)}</strong>
+              <span>Qualifiés ou plus</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.overview.cohort.won)}</strong>
+              <span>Gagnés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.overview.cohort.unattributed)}</strong>
+              <span>Non attribués</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.panel}>
+          <h2>Segment context</h2>
+          <p className={styles.inlineNote}>
+            {dashboardData.filters.segmentLabel}
+            {dashboardData.filters.seoDeviceLabel ? ` · SEO device: ${dashboardData.filters.seoDeviceLabel}` : ''}
+          </p>
+          <div className={styles.metricBadges}>
+            {(dashboardData.filters.active || []).length === 0 ? (
+              <span className={styles.metricBadge}>
+                <strong>Scope</strong> All traffic and lead cohorts
+              </span>
+            ) : (
+              dashboardData.filters.active.map((item) => (
+                <span key={item.key} className={styles.metricBadge}>
+                  <strong>{item.label}</strong> {item.value}
+                </span>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <BreakdownList title="Business lines" items={dashboardData.pipeline.breakdowns.businessLine} />
+        <BreakdownList title="Source classes" items={dashboardData.pipeline.breakdowns.sourceClass} />
+        <BreakdownList title="Page types" items={dashboardData.pipeline.breakdowns.pageType} />
+      </div>
+    </>
+  );
+}
+
+function PipelineSection({ dashboardData }) {
+  return (
+    <>
       <div className={styles.dashboardGrid}>
         <div className={styles.panel}>
           <h2>Pipeline summary</h2>
@@ -702,14 +863,7 @@ function OverviewSection({ dashboardData }) {
 }
 
 function AcquisitionSection({ dashboardData }) {
-  const acquisitionCards = [
-    { key: 'sessions', label: 'Sessions', value: dashboardData.acquisition.totals.sessions, type: 'number', meta: 'GA4 snapshots' },
-    { key: 'clicks', label: 'Clicks', value: dashboardData.acquisition.totals.clicks, type: 'number', meta: 'GSC + paid/social' },
-    { key: 'impressions', label: 'Impressions', value: dashboardData.acquisition.totals.impressions, type: 'number' },
-    { key: 'spend', label: 'Spend', value: dashboardData.acquisition.totals.spend, type: 'currency' },
-    { key: 'cpl', label: 'CPL', value: dashboardData.acquisition.totals.costPerLead, type: 'currency', meta: 'Spend / leads créés' },
-    { key: 'cpa', label: 'CPA', value: dashboardData.acquisition.totals.costPerAcquisition, type: 'currency', meta: 'Spend / gains cohorte' }
-  ];
+  const acquisitionCards = dashboardData.acquisition.cards || [];
   const whatsappData = dashboardData.acquisition.whatsapp;
   const whatsappSourceUnavailable = dashboardData.diagnostics?.reportingWarnings?.includes('whatsapp_click_events_unavailable');
 
@@ -872,21 +1026,8 @@ function SeoSection({ dashboardData }) {
   const positionTrendSinglePointText = usingReferenceFallback
     ? `Une seule date de référence importée est disponible${referenceDateLabel ? ` (${referenceDateLabel})` : ''}. La tendance se remplira après les prochains snapshots live.`
     : 'Historique insuffisant: il faut au moins 2 snapshots SERP classés sur des dates différentes.';
-  const seoCards = [
-    { key: 'pages', label: 'Landing pages suivies', value: dashboardData.seoContent.totals.landingPagesTracked, type: 'number' },
-    { key: 'clicks', label: 'Clicks organiques', value: dashboardData.seoContent.totals.clicks, type: 'number' },
-    { key: 'impressions', label: 'Impressions organiques', value: dashboardData.seoContent.totals.impressions, type: 'number' },
-    { key: 'ctr', label: 'CTR organique', value: dashboardData.seoContent.totals.ctr, type: 'percent' },
-    { key: 'leadRate', label: 'Lead rate', value: dashboardData.seoContent.totals.leadRate, type: 'percent', meta: dashboardData.seoContent.notes.leadRateDefinition },
-    { key: 'qualifiedLeads', label: 'Qualifiés', value: dashboardData.seoContent.totals.qualifiedLeads, type: 'number' }
-  ];
-  const keywordCards = [
-    { key: 'trackedKeywords', label: 'Keywords suivis', value: keywordRankings.totals.trackedKeywords, type: 'number', meta: dashboardData.seoContent.notes.keywordDefinition },
-    { key: 'desktopRankedKeywords', label: 'Classés desktop', value: keywordRankings.totals.desktopRankedKeywords, type: 'number' },
-    { key: 'mobileRankedKeywords', label: 'Classés mobile', value: keywordRankings.totals.mobileRankedKeywords, type: 'number' },
-    { key: 'avgPosition', label: 'Meilleure position moyenne', value: keywordRankings.totals.averagePosition, type: 'position' },
-    { key: 'top10Count', label: 'Top 10', value: keywordRankings.totals.top10Count, type: 'number' }
-  ];
+  const seoCards = dashboardData.seoContent.cards || [];
+  const keywordCards = dashboardData.seoContent.keywordCards || [];
 
   return (
     <>
@@ -1035,8 +1176,23 @@ function OperationsSection({ dashboardData }) {
       <div className={styles.dashboardGrid}>
         <LeadSummaryList
           title={`Queue à relancer > ${dashboardData.operations.staleLeadHours}h`}
+          note="Basé sur le dernier moment travaillé (`last_worked_at`) lorsqu’il est disponible, sinon sur le dernier jalon lifecycle."
           leads={dashboardData.operations.staleQueue.leads}
           emptyText="Aucun lead ouvert en retard."
+        />
+        <LeadSummaryList
+          title="SLA de suivi dépassé"
+          note={`${dashboardData.operations.slaBreaches.count} lead${dashboardData.operations.slaBreaches.count > 1 ? 's' : ''} ouvert${dashboardData.operations.slaBreaches.count > 1 ? 's' : ''} au-delà de la date SLA.`}
+          leads={dashboardData.operations.slaBreaches.leads}
+          emptyText="Aucun lead ouvert au-delà de la SLA."
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <BreakdownList
+          title="Qualité des leads ouverts"
+          note={`${dashboardData.operations.leadQuality.note} ${dashboardData.operations.openLeadCount > 0 ? `${dashboardData.operations.leadQuality.reviewedCount}/${dashboardData.operations.openLeadCount} revus • ${dashboardData.operations.leadQuality.ownerAssignedCount}/${dashboardData.operations.openLeadCount} assignés` : 'Aucun lead ouvert à répartir.'}`}
+          items={dashboardData.operations.leadQuality.breakdown}
         />
         <LeadSummaryList
           title="Dernières soumissions"
@@ -1056,18 +1212,18 @@ function OperationsSection({ dashboardData }) {
 export default function AdminDashboardPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
-  const defaultRange = useMemo(() => getDefaultRange(), []);
-  const [dateRange, setDateRange] = useState(defaultRange);
+  const initialDashboardQuery = useMemo(() => buildInitialDashboardQuery(), []);
+  const [dashboardQuery, setDashboardQuery] = useState(initialDashboardQuery);
   const [dashboardData, setDashboardData] = useState(null);
   const [activeSection, setActiveSection] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const fetchDashboard = useCallback(async (range) => {
+  const fetchDashboard = useCallback(async (query) => {
     try {
       setLoading(true);
       setError('');
-      const data = await getAdminDashboardData(range);
+      const data = await getAdminDashboardData(query);
       setDashboardData(data);
     } catch (loadError) {
       console.error(loadError);
@@ -1079,15 +1235,15 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
-      router.push('/admin/login');
+      router.replace('/admin/login');
     }
   }, [user, isAdmin, authLoading, router]);
 
   useEffect(() => {
     if (!authLoading && user && isAdmin) {
-      fetchDashboard(defaultRange);
+      fetchDashboard(initialDashboardQuery);
     }
-  }, [user, isAdmin, authLoading, fetchDashboard, defaultRange]);
+  }, [user, isAdmin, authLoading, fetchDashboard, initialDashboardQuery]);
 
   const handleLogout = async () => {
     const result = await signOut();
@@ -1096,17 +1252,28 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const updateDateRange = (key, value) => {
-    setDateRange((currentRange) => ({
-      ...currentRange,
+  const updateDashboardQuery = (key, value) => {
+    setDashboardQuery((currentQuery) => ({
+      ...currentQuery,
       [key]: value
     }));
   };
 
-  if (authLoading || !user || !isAdmin) {
+  const availableFilterOptions = dashboardData?.filters?.options || DEFAULT_FILTER_OPTIONS;
+
+  if (authLoading) {
     return (
       <div className={styles.container}>
         <div className={styles.loading}>Vérification des privilèges administrateur...</div>
+        {authError && <div className={styles.error}>Erreur: {authError}</div>}
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>Redirection vers la connexion administrateur...</div>
         {authError && <div className={styles.error}>Erreur: {authError}</div>}
       </div>
     );
@@ -1119,7 +1286,7 @@ export default function AdminDashboardPage() {
         <div className={styles.header}>
           <h1>Administration - Growth Dashboard</h1>
           <div className={styles.headerActions}>
-            <button onClick={() => fetchDashboard(dateRange)} className={styles.refreshButton}>
+            <button onClick={() => fetchDashboard(dashboardQuery)} className={styles.refreshButton}>
               Actualiser
             </button>
             <button onClick={handleLogout} className={styles.logoutButton}>
@@ -1136,8 +1303,8 @@ export default function AdminDashboardPage() {
             <input
               id="dashboard-from"
               type="date"
-              value={dateRange.from}
-              onChange={(event) => updateDateRange('from', event.target.value)}
+              value={dashboardQuery.from}
+              onChange={(event) => updateDashboardQuery('from', event.target.value)}
             />
           </div>
           <div className={styles.filterField}>
@@ -1145,11 +1312,28 @@ export default function AdminDashboardPage() {
             <input
               id="dashboard-to"
               type="date"
-              value={dateRange.to}
-              onChange={(event) => updateDateRange('to', event.target.value)}
+              value={dashboardQuery.to}
+              onChange={(event) => updateDashboardQuery('to', event.target.value)}
             />
           </div>
-          <button onClick={() => fetchDashboard(dateRange)} className={styles.clearFiltersButton}>
+          {Object.entries(FILTER_LABELS).map(([key, label]) => (
+            <div key={key} className={styles.filterField}>
+              <label htmlFor={`dashboard-filter-${key}`}>{label}</label>
+              <select
+                id={`dashboard-filter-${key}`}
+                value={dashboardQuery[key]}
+                onChange={(event) => updateDashboardQuery(key, event.target.value)}
+              >
+                <option value="">All</option>
+                {(availableFilterOptions[key] || []).map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+          <button onClick={() => fetchDashboard(dashboardQuery)} className={styles.clearFiltersButton}>
             Appliquer
           </button>
         </div>
@@ -1158,7 +1342,7 @@ export default function AdminDashboardPage() {
         {error && (
           <div>
             <div className={styles.error}>{error}</div>
-            <button onClick={() => fetchDashboard(dateRange)} className={styles.refreshButton}>
+            <button onClick={() => fetchDashboard(dashboardQuery)} className={styles.refreshButton}>
               Réessayer
             </button>
           </div>
@@ -1168,12 +1352,17 @@ export default function AdminDashboardPage() {
           <>
             <div className={styles.resultsMeta}>
               Période: {dashboardData.range.from} au {dashboardData.range.to} - {dashboardData.range.days} jours
+              {' · '}
+              Segment: {dashboardData.filters.segmentLabel}
+              {dashboardData.filters.seoDeviceLabel ? ` · SEO device: ${dashboardData.filters.seoDeviceLabel}` : ''}
             </div>
 
+            <ExecutiveSummary executiveSummary={dashboardData.executiveSummary} filters={dashboardData.filters} />
             <HealthGrid dataHealth={dashboardData.dataHealth} />
             <SectionTabs activeSection={activeSection} onChange={setActiveSection} />
 
             {activeSection === 'overview' && <OverviewSection dashboardData={dashboardData} />}
+            {activeSection === 'pipeline' && <PipelineSection dashboardData={dashboardData} />}
             {activeSection === 'acquisition' && <AcquisitionSection dashboardData={dashboardData} />}
             {activeSection === 'seo' && <SeoSection dashboardData={dashboardData} />}
             {activeSection === 'operations' && <OperationsSection dashboardData={dashboardData} />}

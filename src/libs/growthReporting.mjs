@@ -3,6 +3,11 @@ import path from 'node:path';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { google } from 'googleapis';
+import {
+  DEFAULT_KEYWORD_SITE_URL,
+  KEYWORD_TRACKED_DEVICES,
+  fetchGrowthKeywordCatalogRows
+} from './growthKeywordCatalog.mjs';
 
 export const GROWTH_METRIC_SOURCES = {
   GA4: 'ga4',
@@ -15,6 +20,7 @@ export const GROWTH_SOURCE_HEALTH_KEYS = {
   SUPABASE: 'supabase_live',
   GA4: 'ga4',
   SEARCH_CONSOLE: 'search_console',
+  SERP_KEYWORD_RANKINGS: 'serp_keyword_rankings',
   PAID_MEDIA: 'paid_media',
   SOCIAL_MEDIA: 'social_media'
 };
@@ -61,6 +67,11 @@ function normalizeText(value, fallback = '') {
   return text || fallback;
 }
 
+function normalizeNullableText(value) {
+  const text = String(value ?? '').trim();
+  return text || null;
+}
+
 function normalizePathname(value, fallback = '/') {
   const text = normalizeText(value, fallback);
 
@@ -80,6 +91,15 @@ function normalizePathname(value, fallback = '/') {
   return text.startsWith('/') ? text : `/${text}`;
 }
 
+function normalizeNullablePathname(value) {
+  const text = normalizeNullableText(value);
+  if (!text) {
+    return null;
+  }
+
+  return normalizePathname(text, '/');
+}
+
 function normalizeInteger(value) {
   const numericValue = Number(value);
   if (!Number.isFinite(numericValue)) {
@@ -96,6 +116,43 @@ function normalizeNumeric(value) {
   }
 
   return Math.round(numericValue * 100) / 100;
+}
+
+function normalizePositiveIntegerOrNull(value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue) || numericValue <= 0) {
+    return null;
+  }
+
+  return Math.round(numericValue);
+}
+
+function normalizeDomain(value) {
+  const text = normalizeText(value, '');
+  if (!text) {
+    return '';
+  }
+
+  try {
+    const normalizedUrl = text.includes('://')
+      ? text
+      : `https://${text.replace(/^\/+/, '')}`;
+    return new URL(normalizedUrl).hostname.toLowerCase().replace(/^www\./, '');
+  } catch (error) {
+    return text.toLowerCase().replace(/^www\./, '').replace(/\/+$/, '');
+  }
+}
+
+function isSameDomain(resultDomain, targetDomain) {
+  return resultDomain === targetDomain || resultDomain.endsWith(`.${targetDomain}`);
+}
+
+function doesPathMatch(resultPath, targetPath) {
+  if (!targetPath || targetPath === '/') {
+    return true;
+  }
+
+  return resultPath === targetPath || resultPath.startsWith(`${targetPath}/`);
 }
 
 function resolveSourceHealthStatus(status = '') {
@@ -205,6 +262,42 @@ export function getSearchConsoleProperty() {
   return `sc-domain:${hostname}`;
 }
 
+export function getSerpApiKey() {
+  const apiKey = normalizeText(process.env.SERPAPI_API_KEY || process.env.SERPAPI_KEY);
+  if (!apiKey) {
+    const error = new Error('Missing SERPAPI_API_KEY or SERPAPI_KEY');
+    error.code = 'missing_serpapi_api_key';
+    throw error;
+  }
+
+  return apiKey;
+}
+
+export function getSerpApiTargetDomain() {
+  const configuredDomain = normalizeDomain(process.env.SERPAPI_TARGET_DOMAIN || process.env.NEXT_PUBLIC_SITE_URL);
+  if (!configuredDomain) {
+    const error = new Error('Missing SERPAPI_TARGET_DOMAIN or NEXT_PUBLIC_SITE_URL');
+    error.code = 'missing_serpapi_target_domain';
+    throw error;
+  }
+
+  return configuredDomain;
+}
+
+export function getSerpApiConfig() {
+  const numValue = Number(process.env.SERPAPI_NUM || 20);
+
+  return {
+    apiKey: getSerpApiKey(),
+    targetDomain: getSerpApiTargetDomain(),
+    googleDomain: normalizeText(process.env.SERPAPI_GOOGLE_DOMAIN, 'google.com'),
+    gl: normalizeText(process.env.SERPAPI_GL, ''),
+    hl: normalizeText(process.env.SERPAPI_HL, ''),
+    location: normalizeText(process.env.SERPAPI_LOCATION, ''),
+    num: Number.isFinite(numValue) && numValue > 0 ? Math.min(Math.round(numValue), 100) : 20
+  };
+}
+
 export function getDefaultSnapshotRange({ daysBack = 1 } = {}) {
   const endDate = new Date();
   endDate.setUTCDate(endDate.getUTCDate() - Math.max(0, daysBack));
@@ -234,6 +327,33 @@ export function normalizeGrowthMetricRow(row = {}) {
   };
 }
 
+export function normalizeGrowthKeywordRankingRow(row = {}) {
+  return {
+    metric_date: toDateString(row.metric_date),
+    keyword_catalog_id: normalizeNullableText(row.keyword_catalog_id),
+    keyword: normalizeText(row.keyword),
+    keyword_label: normalizeText(row.keyword_label || row.keyword, normalizeText(row.keyword)),
+    target_domain: normalizeDomain(row.target_domain),
+    target_path: normalizePathname(row.target_path || '/', '/'),
+    matched_domain: normalizeNullableText(row.matched_domain ? normalizeDomain(row.matched_domain) : null),
+    matched_path: normalizeNullablePathname(row.matched_path),
+    matched_url: normalizeNullableText(row.matched_url),
+    result_title: normalizeNullableText(row.result_title),
+    result_snippet: normalizeNullableText(row.result_snippet),
+    position: normalizePositiveIntegerOrNull(row.position),
+    is_ranked: Boolean(row.is_ranked ?? normalizePositiveIntegerOrNull(row.position)),
+    device: normalizeText(row.device, 'desktop'),
+    google_domain: normalizeText(row.google_domain, 'google.com'),
+    gl: normalizeText(row.gl, ''),
+    hl: normalizeText(row.hl, ''),
+    location: normalizeText(row.location, ''),
+    results_count: normalizeInteger(row.results_count),
+    metadata: row.metadata && typeof row.metadata === 'object' && !Array.isArray(row.metadata)
+      ? row.metadata
+      : {}
+  };
+}
+
 export async function upsertGrowthMetricRows(supabase, rows = []) {
   const sanitizedRows = rows
     .map((row) => normalizeGrowthMetricRow(row))
@@ -247,6 +367,31 @@ export async function upsertGrowthMetricRows(supabase, rows = []) {
     .from('growth_channel_daily_metrics')
     .upsert(sanitizedRows, {
       onConflict: 'metric_date,metric_source,source,medium,campaign,landing_page'
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  return {
+    count: sanitizedRows.length,
+    freshestMetricDate: getMaxMetricDate(sanitizedRows)
+  };
+}
+
+export async function upsertGrowthKeywordRankingRows(supabase, rows = []) {
+  const sanitizedRows = rows
+    .map((row) => normalizeGrowthKeywordRankingRow(row))
+    .filter((row) => row.metric_date && row.keyword && row.target_domain);
+
+  if (sanitizedRows.length === 0) {
+    return { count: 0 };
+  }
+
+  const { error } = await supabase
+    .from('growth_keyword_rankings_daily')
+    .upsert(sanitizedRows, {
+      onConflict: 'metric_date,keyword,target_domain,target_path,device,google_domain,gl,hl,location'
     });
 
   if (error) {
@@ -393,6 +538,205 @@ export async function fetchSearchConsoleSnapshotRows({ startDate, endDate }) {
   });
 }
 
+function parseSerpOrganicResult(result, index) {
+  const link = result?.link || result?.redirect_link || null;
+  if (!link) {
+    return null;
+  }
+
+  try {
+    const url = new URL(link);
+
+    return {
+      position: normalizePositiveIntegerOrNull(result.position) || index + 1,
+      matchedDomain: normalizeDomain(url.hostname),
+      matchedPath: normalizePathname(url.pathname || '/', '/'),
+      matchedUrl: url.toString(),
+      resultTitle: normalizeNullableText(result.title),
+      resultSnippet: normalizeNullableText(result.snippet)
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+function findTrackedOrganicResult(organicResults, targetDomain, targetPath = '/') {
+  const parsedResults = (organicResults || [])
+    .map(parseSerpOrganicResult)
+    .filter(Boolean);
+
+  const exactPathMatch = parsedResults.find((result) => (
+    isSameDomain(result.matchedDomain, targetDomain)
+    && doesPathMatch(result.matchedPath, targetPath)
+  ));
+
+  if (exactPathMatch) {
+    return exactPathMatch;
+  }
+
+  return parsedResults.find((result) => isSameDomain(result.matchedDomain, targetDomain)) || null;
+}
+
+export function buildSerpKeywordDeviceCounts(rows = []) {
+  return KEYWORD_TRACKED_DEVICES.reduce((accumulator, device) => {
+    accumulator[device] = rows.filter((row) => row.device === device).length;
+    return accumulator;
+  }, {});
+}
+
+async function loadActiveKeywordCatalogRows(supabase) {
+  const client = supabase || createGrowthServiceClient();
+  const { rows, error } = await fetchGrowthKeywordCatalogRows(client, {
+    activeOnly: true
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  if (rows.length === 0) {
+    const missingCatalogError = new Error('Missing active growth keyword catalog rows');
+    missingCatalogError.code = 'missing_serp_keyword_catalog';
+    throw missingCatalogError;
+  }
+
+  return rows;
+}
+
+async function fetchSerpApiJson(query = {}) {
+  const url = new URL('https://serpapi.com/search.json');
+
+  Object.entries(query).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') {
+      return;
+    }
+
+    url.searchParams.set(key, String(value));
+  });
+
+  const response = await fetch(url, {
+    headers: {
+      accept: 'application/json'
+    }
+  });
+
+  const responseText = await response.text();
+  let payload = null;
+
+  try {
+    payload = responseText ? JSON.parse(responseText) : {};
+  } catch (error) {
+    payload = null;
+  }
+
+  if (!response.ok) {
+    const error = new Error(payload?.error || `SerpApi request failed (${response.status})`);
+    error.code = response.status === 401 || response.status === 403
+      ? 'serpapi_auth_failed'
+      : 'serpapi_request_failed';
+    throw error;
+  }
+
+  if (payload?.error) {
+    const error = new Error(payload.error);
+    error.code = 'serpapi_request_failed';
+    throw error;
+  }
+
+  return payload || {};
+}
+
+export async function fetchSerpKeywordRankingRows({
+  metricDate,
+  supabase,
+  keywordCatalogRows,
+  onProgress
+} = {}) {
+  const serpConfig = getSerpApiConfig();
+  const resolvedMetricDate = toDateString(metricDate) || toDateString(new Date());
+  const resolvedCatalogRows = Array.isArray(keywordCatalogRows) && keywordCatalogRows.length > 0
+    ? keywordCatalogRows
+    : await loadActiveKeywordCatalogRows(supabase);
+  const totalRequests = resolvedCatalogRows.length * KEYWORD_TRACKED_DEVICES.length;
+  const rows = [];
+  let completedRequests = 0;
+
+  for (const catalogRow of resolvedCatalogRows) {
+    for (const device of KEYWORD_TRACKED_DEVICES) {
+      const payload = await fetchSerpApiJson({
+        engine: 'google',
+        api_key: serpConfig.apiKey,
+        q: catalogRow.display_keyword,
+        google_domain: serpConfig.googleDomain,
+        gl: serpConfig.gl,
+        hl: serpConfig.hl,
+        location: serpConfig.location,
+        device,
+        num: serpConfig.num
+      });
+
+      const organicResults = Array.isArray(payload.organic_results) ? payload.organic_results : [];
+      const matchedResult = findTrackedOrganicResult(
+        organicResults,
+        catalogRow.target_domain || serpConfig.targetDomain || normalizeDomain(DEFAULT_KEYWORD_SITE_URL),
+        catalogRow.canonical_target_path
+      );
+
+      rows.push(normalizeGrowthKeywordRankingRow({
+        metric_date: resolvedMetricDate,
+        keyword_catalog_id: catalogRow.id,
+        keyword: catalogRow.display_keyword,
+        keyword_label: catalogRow.display_keyword,
+        target_domain: catalogRow.target_domain || serpConfig.targetDomain,
+        target_path: catalogRow.canonical_target_path,
+        matched_domain: matchedResult?.matchedDomain || null,
+        matched_path: matchedResult?.matchedPath || null,
+        matched_url: matchedResult?.matchedUrl || null,
+        result_title: matchedResult?.resultTitle || null,
+        result_snippet: matchedResult?.resultSnippet || null,
+        position: matchedResult?.position || null,
+        is_ranked: Boolean(matchedResult),
+        device,
+        google_domain: serpConfig.googleDomain,
+        gl: serpConfig.gl,
+        hl: serpConfig.hl,
+        location: serpConfig.location,
+        results_count: organicResults.length,
+        metadata: {
+          serpapi_search_id: payload?.search_metadata?.id || null,
+          keywordCatalogId: catalogRow.id,
+          requested_target_path: catalogRow.canonical_target_path,
+          query: catalogRow.display_keyword,
+          source_connector: 'serpapi',
+          categoryTags: catalogRow.category_tags || [],
+          priorityTags: catalogRow.priority_tags || [],
+          search_parameters: {
+            google_domain: serpConfig.googleDomain,
+            gl: serpConfig.gl,
+            hl: serpConfig.hl,
+            location: serpConfig.location,
+            device,
+            num: serpConfig.num
+          }
+        }
+      }));
+
+      completedRequests += 1;
+      if (typeof onProgress === 'function') {
+        onProgress({
+          completedRequests,
+          totalRequests,
+          keyword: catalogRow.display_keyword,
+          device,
+          keywordCatalogId: catalogRow.id
+        });
+      }
+    }
+  }
+
+  return rows;
+}
+
 function buildSuccessHealthRecord({
   sourceKey,
   sourceLabel,
@@ -448,19 +792,57 @@ export async function refreshGrowthReporting({
   const fallbackRange = getDefaultSnapshotRange();
   const resolvedStartDate = toDateString(startDate) || fallbackRange.startDate;
   const resolvedEndDate = toDateString(endDate) || fallbackRange.endDate;
+  const serpMetricDate = toDateString(new Date());
 
   const tasks = [
     {
       sourceKey: GROWTH_SOURCE_HEALTH_KEYS.GA4,
       sourceLabel: 'GA4',
       connectorType: 'api',
-      fetchRows: fetchGa4SnapshotRows
+      fetchRows: () => fetchGa4SnapshotRows({
+        startDate: resolvedStartDate,
+        endDate: resolvedEndDate
+      }),
+      upsertRows: upsertGrowthMetricRows,
+      freshestMetricDate: resolvedEndDate,
+      metadata: {
+        startDate: resolvedStartDate,
+        endDate: resolvedEndDate
+      }
     },
     {
       sourceKey: GROWTH_SOURCE_HEALTH_KEYS.SEARCH_CONSOLE,
       sourceLabel: 'Search Console',
       connectorType: 'api',
-      fetchRows: fetchSearchConsoleSnapshotRows
+      fetchRows: () => fetchSearchConsoleSnapshotRows({
+        startDate: resolvedStartDate,
+        endDate: resolvedEndDate
+      }),
+      upsertRows: upsertGrowthMetricRows,
+      freshestMetricDate: resolvedEndDate,
+      metadata: {
+        startDate: resolvedStartDate,
+        endDate: resolvedEndDate
+      }
+    },
+    {
+      sourceKey: GROWTH_SOURCE_HEALTH_KEYS.SERP_KEYWORD_RANKINGS,
+      sourceLabel: 'SERP keyword rankings',
+      connectorType: 'api',
+      fetchRows: () => fetchSerpKeywordRankingRows({
+        metricDate: serpMetricDate,
+        supabase: client
+      }),
+      upsertRows: upsertGrowthKeywordRankingRows,
+      freshestMetricDate: serpMetricDate,
+      metadata: {
+        metricDate: serpMetricDate
+      },
+      buildSuccessMetadata: (rows) => ({
+        rowCount: rows.length,
+        activeKeywordCount: new Set(rows.map((row) => row.keyword_catalog_id).filter(Boolean)).size,
+        deviceRowCounts: buildSerpKeywordDeviceCounts(rows)
+      })
     }
   ];
 
@@ -470,11 +852,11 @@ export async function refreshGrowthReporting({
     const startedAt = new Date().toISOString();
 
     try {
-      const rows = await task.fetchRows({
-        startDate: resolvedStartDate,
-        endDate: resolvedEndDate
-      });
-      const upsertResult = await upsertGrowthMetricRows(client, rows);
+      const rows = await task.fetchRows();
+      const upsertResult = await task.upsertRows(client, rows);
+      const successMetadata = task.buildSuccessMetadata
+        ? task.buildSuccessMetadata(rows, upsertResult)
+        : { rowCount: rows.length };
 
       await upsertGrowthSourceHealth(client, [
         buildSuccessHealthRecord({
@@ -482,11 +864,11 @@ export async function refreshGrowthReporting({
           sourceLabel: task.sourceLabel,
           connectorType: task.connectorType,
           metricCount: upsertResult.count,
-          freshestMetricDate: upsertResult.freshestMetricDate || resolvedEndDate,
+          freshestMetricDate: upsertResult.freshestMetricDate || task.freshestMetricDate,
           startedAt,
           metadata: {
-            startDate: resolvedStartDate,
-            endDate: resolvedEndDate
+            ...task.metadata,
+            ...successMetadata
           }
         })
       ]);
@@ -495,7 +877,7 @@ export async function refreshGrowthReporting({
         sourceKey: task.sourceKey,
         status: 'success',
         metricCount: upsertResult.count,
-        freshestMetricDate: upsertResult.freshestMetricDate || resolvedEndDate
+        freshestMetricDate: upsertResult.freshestMetricDate || task.freshestMetricDate
       });
     } catch (error) {
       await upsertGrowthSourceHealth(client, [
@@ -506,8 +888,7 @@ export async function refreshGrowthReporting({
           startedAt,
           error,
           metadata: {
-            startDate: resolvedStartDate,
-            endDate: resolvedEndDate
+            ...task.metadata
           }
         })
       ]);

@@ -47,6 +47,11 @@ scripts/*
 !scripts/workflows/
 !scripts/data/
 !scripts/reports/
+!scripts/growth/
+!scripts/growth/*.mjs
+!scripts/growth/data/
+!scripts/growth/data/*.json
+!scripts/growth/data/*.csv
 
 # GSC Production Files - Exceptions pour cron jobs
 !scripts/gsc/

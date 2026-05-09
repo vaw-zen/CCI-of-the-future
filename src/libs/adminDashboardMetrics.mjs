@@ -14,11 +14,28 @@ import {
   isWhatsAppAttributed,
   normalizeWhatsAppClickRow
 } from './whatsappAttribution.mjs';
+import {
+  LEAD_QUALITY_OUTCOME_LABELS,
+  LEAD_QUALITY_OUTCOMES,
+  normalizeLeadQualityOutcome
+} from '../utils/leadLifecycle.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 export const MAX_RANGE_DAYS = 365;
 export const DEFAULT_RANGE_DAYS = 30;
 export const STALE_OPEN_LEAD_HOURS = 48;
+export const DASHBOARD_ALERT_THRESHOLDS = {
+  unattributedLeadRateWarning: 25,
+  unattributedLeadRateCritical: 40,
+  staleQueueBreachCount: 5,
+  staleQueueCriticalAgeHours: 72,
+  thinVolume: {
+    costPerLeadMinLeads: 5,
+    costPerAcquisitionMinWins: 3,
+    leadRateMinSessions: 20,
+    leadRateMinClicks: 20
+  }
+};
 
 export const LEAD_STATUSES = {
   SUBMITTED: 'submitted',
@@ -56,6 +73,185 @@ const SERVICE_LABELS = {
   bureau: 'Bureau',
   commerce: 'Commerce',
   autre: 'Autre'
+};
+
+const SOURCE_CLASS_LABELS = {
+  organic_search: 'Organic search',
+  paid_media: 'Paid media',
+  paid_social: 'Paid social',
+  organic_social: 'Organic social',
+  referral: 'Referral',
+  messaging: 'Messaging',
+  email: 'Email',
+  direct: 'Direct',
+  other: 'Other'
+};
+
+const PAGE_TYPE_LABELS = {
+  home: 'Home',
+  service: 'Service page',
+  article: 'Article',
+  contact: 'Contact page',
+  quote: 'Quote flow',
+  faq: 'FAQ',
+  about: 'About',
+  newsletter: 'Newsletter',
+  admin: 'Admin',
+  other: 'Other'
+};
+
+const BUSINESS_LINE_LABELS = {
+  b2c: 'B2C',
+  b2b: 'B2B',
+  unknown: 'Unknown'
+};
+
+const B2C_SERVICE_KEYS = new Set([
+  'salon',
+  'tapis',
+  'tapisserie',
+  'marbre',
+  'tfc'
+]);
+
+const B2B_SERVICE_KEYS = new Set([
+  'hotel',
+  'banque',
+  'assurance',
+  'clinique',
+  'bureau',
+  'commerce'
+]);
+
+const DASHBOARD_FILTER_KEYS = [
+  'businessLine',
+  'service',
+  'sourceClass',
+  'device',
+  'pageType'
+];
+
+const KPI_SEMANTICS = {
+  new_leads: {
+    canonicalLabel: 'New leads',
+    owner: 'Growth owner',
+    decisionIntent: 'Are we generating enough new demand this period?'
+  },
+  qualified_activity: {
+    canonicalLabel: 'Qualified activity',
+    owner: 'Admin ops',
+    decisionIntent: 'Is the team moving leads through the pipeline this period?'
+  },
+  won_activity: {
+    canonicalLabel: 'Won activity',
+    owner: 'Growth owner',
+    decisionIntent: 'Are leads converting into real wins this period?'
+  },
+  qualified_rate: {
+    canonicalLabel: 'Cohort qualification rate',
+    owner: 'Growth owner',
+    decisionIntent: 'Which acquisition periods produce qualified demand?'
+  },
+  win_rate: {
+    canonicalLabel: 'Cohort win rate',
+    owner: 'Growth owner',
+    decisionIntent: 'Which acquisition periods create win-ready leads?'
+  },
+  unattributed_rate: {
+    canonicalLabel: 'Unattributed lead rate',
+    owner: 'Engineering',
+    decisionIntent: 'Is attribution quality degrading?'
+  },
+  revenue_proxy: {
+    canonicalLabel: 'Estimated pipeline value',
+    owner: 'Growth owner',
+    decisionIntent: 'Are we attracting higher-value demand this period?'
+  },
+  sessions: {
+    canonicalLabel: 'Sessions',
+    owner: 'Growth owner',
+    decisionIntent: 'Which channels are bringing traffic volume?'
+  },
+  clicks: {
+    canonicalLabel: 'Clicks',
+    owner: 'Growth owner',
+    decisionIntent: 'Which channels and pages are generating actual visits or intent?'
+  },
+  impressions: {
+    canonicalLabel: 'Impressions',
+    owner: 'Growth owner',
+    decisionIntent: 'Are campaigns and pages earning visibility?'
+  },
+  spend: {
+    canonicalLabel: 'Spend',
+    owner: 'Growth owner',
+    decisionIntent: 'How much did we invest to generate demand?'
+  },
+  cost_per_lead: {
+    canonicalLabel: 'Cost per lead',
+    owner: 'Growth owner',
+    decisionIntent: 'Which channels create leads efficiently?'
+  },
+  cost_per_acquisition: {
+    canonicalLabel: 'Cost per acquisition',
+    owner: 'Growth owner',
+    decisionIntent: 'Which channels are producing actual acquisitions?'
+  },
+  landing_pages_tracked: {
+    canonicalLabel: 'Landing pages tracked',
+    owner: 'Growth owner',
+    decisionIntent: 'Do we have enough landing-page coverage to evaluate search demand?'
+  },
+  organic_clicks: {
+    canonicalLabel: 'Organic clicks',
+    owner: 'Growth owner',
+    decisionIntent: 'Which SEO pages are earning real search demand?'
+  },
+  organic_impressions: {
+    canonicalLabel: 'Organic impressions',
+    owner: 'Growth owner',
+    decisionIntent: 'Are SEO pages earning visibility?'
+  },
+  organic_ctr: {
+    canonicalLabel: 'Organic CTR',
+    owner: 'Growth owner',
+    decisionIntent: 'Are search snippets competitive enough?'
+  },
+  lead_rate: {
+    canonicalLabel: 'Lead rate',
+    owner: 'Growth owner',
+    decisionIntent: 'Which pages turn traffic into leads?'
+  },
+  qualified_leads: {
+    canonicalLabel: 'Qualified leads',
+    owner: 'Growth owner',
+    decisionIntent: 'Which pages and channels generate commercially promising demand?'
+  },
+  tracked_keywords: {
+    canonicalLabel: 'Tracked keywords',
+    owner: 'Growth owner',
+    decisionIntent: 'Are we tracking the full keyword universe that matters?'
+  },
+  desktop_ranked_keywords: {
+    canonicalLabel: 'Desktop ranked keywords',
+    owner: 'Growth owner',
+    decisionIntent: 'Is desktop visibility improving or falling?'
+  },
+  mobile_ranked_keywords: {
+    canonicalLabel: 'Mobile ranked keywords',
+    owner: 'Growth owner',
+    decisionIntent: 'Is mobile visibility improving or falling?'
+  },
+  average_position: {
+    canonicalLabel: 'Average best position',
+    owner: 'Growth owner',
+    decisionIntent: 'Are our tracked keywords moving upward or downward overall?'
+  },
+  top10_count: {
+    canonicalLabel: 'Top 10 keywords',
+    owner: 'Growth owner',
+    decisionIntent: 'Are more tracked keywords entering page one?'
+  }
 };
 
 const DATA_HEALTH_EXPECTATIONS = [
@@ -187,6 +383,339 @@ function normalizeText(value, fallback = 'Non défini') {
   return text || fallback;
 }
 
+function buildKpiCard({
+  key,
+  label,
+  value,
+  type = 'number',
+  meta = '',
+  delta = null,
+  warning = null
+}) {
+  const semantics = KPI_SEMANTICS[key] || {};
+
+  return {
+    key,
+    label,
+    value,
+    type,
+    meta,
+    delta,
+    warning,
+    canonicalLabel: semantics.canonicalLabel || label,
+    owner: semantics.owner || null,
+    decisionIntent: semantics.decisionIntent || null
+  };
+}
+
+function normalizePathForClassification(value = '') {
+  const rawValue = String(value || '').trim();
+  if (!rawValue) {
+    return '/';
+  }
+
+  try {
+    if (rawValue.startsWith('http://') || rawValue.startsWith('https://')) {
+      const url = new URL(rawValue);
+      return url.pathname || '/';
+    }
+  } catch (error) {
+    return rawValue.startsWith('/') ? rawValue : `/${rawValue}`;
+  }
+
+  return rawValue.startsWith('/') ? rawValue.split('?')[0] || '/' : `/${rawValue.split('?')[0] || ''}`;
+}
+
+export function getPageTypeForPath(path = '') {
+  const normalizedPath = normalizePathForClassification(path);
+
+  if (normalizedPath.startsWith('/admin')) {
+    return 'admin';
+  }
+
+  if (normalizedPath === '/') {
+    return 'home';
+  }
+
+  if (normalizedPath.startsWith('/conseils/')) {
+    return 'article';
+  }
+
+  if (normalizedPath === '/contact') {
+    return 'contact';
+  }
+
+  if (normalizedPath === '/devis') {
+    return 'quote';
+  }
+
+  if (normalizedPath.startsWith('/faq')) {
+    return 'faq';
+  }
+
+  if (normalizedPath.startsWith('/about')) {
+    return 'about';
+  }
+
+  if (normalizedPath.startsWith('/newsletter')) {
+    return 'newsletter';
+  }
+
+  if (
+    normalizedPath === '/services'
+    || normalizedPath === '/entreprises'
+    || normalizedPath === '/salon'
+    || normalizedPath === '/tapis'
+    || normalizedPath === '/tapisserie'
+    || normalizedPath === '/marbre'
+    || normalizedPath === '/tfc'
+  ) {
+    return 'service';
+  }
+
+  return 'other';
+}
+
+function getBusinessLineForLeadKind(kind = '') {
+  if (kind === 'devis') {
+    return 'b2c';
+  }
+
+  if (kind === 'convention') {
+    return 'b2b';
+  }
+
+  return 'unknown';
+}
+
+function getBusinessLineLabel(value) {
+  return BUSINESS_LINE_LABELS[value] || normalizeText(value, 'Unknown');
+}
+
+function getServiceKeyForPath(path = '') {
+  const normalizedPath = normalizePathForClassification(path).toLowerCase();
+  const servicePatterns = [
+    ['tapisserie', 'tapisserie'],
+    ['salon', 'salon'],
+    ['tapis', 'tapis'],
+    ['marbre', 'marbre'],
+    ['tfc', 'tfc'],
+    ['hotel', 'hotel'],
+    ['banque', 'banque'],
+    ['assurance', 'assurance'],
+    ['clinique', 'clinique'],
+    ['bureau', 'bureau'],
+    ['commerce', 'commerce']
+  ];
+
+  for (const [pattern, serviceKey] of servicePatterns) {
+    if (
+      normalizedPath === `/${pattern}`
+      || normalizedPath.startsWith(`/${pattern}/`)
+      || normalizedPath.includes(`/${pattern}-`)
+      || normalizedPath.includes(`-${pattern}`)
+      || normalizedPath.includes(pattern)
+    ) {
+      return serviceKey;
+    }
+  }
+
+  return null;
+}
+
+function getBusinessLineForPath(path = '') {
+  const normalizedPath = normalizePathForClassification(path).toLowerCase();
+
+  if (normalizedPath === '/entreprises' || normalizedPath.startsWith('/entreprises/')) {
+    return 'b2b';
+  }
+
+  const serviceKey = getServiceKeyForPath(normalizedPath);
+  if (serviceKey && B2B_SERVICE_KEYS.has(serviceKey)) {
+    return 'b2b';
+  }
+
+  if (serviceKey && B2C_SERVICE_KEYS.has(serviceKey)) {
+    return 'b2c';
+  }
+
+  return 'unknown';
+}
+
+function getSourceClassLabel(value) {
+  return SOURCE_CLASS_LABELS[value] || normalizeText(value, 'Other');
+}
+
+function getPageTypeLabel(value) {
+  return PAGE_TYPE_LABELS[value] || normalizeText(value, 'Other');
+}
+
+function getDeviceLabel(value) {
+  if (value === 'mobile') {
+    return 'Mobile';
+  }
+
+  if (value === 'desktop') {
+    return 'Desktop';
+  }
+
+  return normalizeText(value, 'Unknown');
+}
+
+export function getSourceClass({ source = '', medium = '' } = {}) {
+  const normalizedSource = String(source || '').trim().toLowerCase();
+  const normalizedMedium = String(medium || '').trim().toLowerCase();
+
+  const isDirectSource = !normalizedSource || normalizedSource === 'direct' || normalizedSource === '(direct)' || normalizedSource === 'unknown';
+  const isDirectMedium = !normalizedMedium || normalizedMedium === '(none)' || normalizedMedium === 'none' || normalizedMedium === '(not set)' || normalizedMedium === 'unknown';
+
+  if (normalizedMedium === 'messaging' || normalizedSource === 'whatsapp') {
+    return 'messaging';
+  }
+
+  if (normalizedMedium === 'email' || normalizedSource === 'email' || normalizedSource === 'newsletter') {
+    return 'email';
+  }
+
+  if (normalizedMedium === 'referral') {
+    return 'referral';
+  }
+
+  if (normalizedMedium === 'paid_social') {
+    return 'paid_social';
+  }
+
+  if (
+    normalizedMedium === 'cpc'
+    || normalizedMedium === 'ppc'
+    || normalizedMedium === 'paid'
+    || normalizedMedium === 'display'
+    || normalizedMedium === 'affiliate'
+    || normalizedSource.includes('ads')
+  ) {
+    return 'paid_media';
+  }
+
+  if (
+    normalizedMedium === 'social'
+    || normalizedSource === 'facebook'
+    || normalizedSource === 'instagram'
+    || normalizedSource === 'linkedin'
+    || normalizedSource === 'tiktok'
+  ) {
+    return 'organic_social';
+  }
+
+  if (
+    normalizedMedium === 'organic'
+    || normalizedSource === 'google'
+    || normalizedSource === 'bing'
+  ) {
+    return 'organic_search';
+  }
+
+  if (isDirectSource && isDirectMedium) {
+    return 'direct';
+  }
+
+  return 'other';
+}
+
+function getThinVolumeWarnings({
+  sessions = 0,
+  clicks = 0,
+  leads = 0,
+  wonLeads = 0,
+  leadRateBase = 'none'
+} = {}) {
+  const warnings = {};
+
+  if (leads > 0 && leads < DASHBOARD_ALERT_THRESHOLDS.thinVolume.costPerLeadMinLeads) {
+    warnings.costPerLead = {
+      key: 'cost_per_lead_low_sample',
+      level: 'warning',
+      message: `Use with caution: fewer than ${DASHBOARD_ALERT_THRESHOLDS.thinVolume.costPerLeadMinLeads} leads in the selected period.`
+    };
+  }
+
+  if (wonLeads > 0 && wonLeads < DASHBOARD_ALERT_THRESHOLDS.thinVolume.costPerAcquisitionMinWins) {
+    warnings.costPerAcquisition = {
+      key: 'cost_per_acquisition_low_sample',
+      level: 'warning',
+      message: `Use with caution: fewer than ${DASHBOARD_ALERT_THRESHOLDS.thinVolume.costPerAcquisitionMinWins} wins in the selected period.`
+    };
+  }
+
+  if (leadRateBase === 'sessions' && sessions > 0 && sessions < DASHBOARD_ALERT_THRESHOLDS.thinVolume.leadRateMinSessions) {
+    warnings.leadRate = {
+      key: 'lead_rate_low_session_sample',
+      level: 'warning',
+      message: `Use with caution: fewer than ${DASHBOARD_ALERT_THRESHOLDS.thinVolume.leadRateMinSessions} sessions in the selected period.`
+    };
+  }
+
+  if (leadRateBase === 'clicks' && clicks > 0 && clicks < DASHBOARD_ALERT_THRESHOLDS.thinVolume.leadRateMinClicks) {
+    warnings.leadRate = {
+      key: 'lead_rate_low_click_sample',
+      level: 'warning',
+      message: `Use with caution: fewer than ${DASHBOARD_ALERT_THRESHOLDS.thinVolume.leadRateMinClicks} clicks in the selected period.`
+    };
+  }
+
+  return warnings;
+}
+
+function getUnattributedRateWarning(rate = 0) {
+  if (rate >= DASHBOARD_ALERT_THRESHOLDS.unattributedLeadRateCritical) {
+    return {
+      key: 'unattributed_rate_critical',
+      level: 'critical',
+      message: `Critical: unattributed lead rate is ${rate}% and exceeds the ${DASHBOARD_ALERT_THRESHOLDS.unattributedLeadRateCritical}% threshold.`
+    };
+  }
+
+  if (rate >= DASHBOARD_ALERT_THRESHOLDS.unattributedLeadRateWarning) {
+    return {
+      key: 'unattributed_rate_warning',
+      level: 'warning',
+      message: `Warning: unattributed lead rate is ${rate}% and exceeds the ${DASHBOARD_ALERT_THRESHOLDS.unattributedLeadRateWarning}% threshold.`
+    };
+  }
+
+  return null;
+}
+
+function buildCombinedDerivedMetrics({
+  sessions = 0,
+  clicks = 0,
+  impressions = 0,
+  spend = 0,
+  leads = 0,
+  wonLeads = 0
+} = {}) {
+  const leadRateBase = sessions > 0 ? 'sessions' : clicks > 0 ? 'clicks' : 'none';
+  const leadRateDenominator = leadRateBase === 'sessions'
+    ? sessions
+    : leadRateBase === 'clicks'
+      ? clicks
+      : 0;
+
+  return {
+    ctr: getPercent(clicks, impressions),
+    leadRateBase,
+    leadRate: getPercent(leads, leadRateDenominator),
+    costPerLead: leads > 0 ? Math.round((spend / leads) * 100) / 100 : null,
+    costPerAcquisition: wonLeads > 0 ? Math.round((spend / wonLeads) * 100) / 100 : null,
+    warnings: getThinVolumeWarnings({
+      sessions,
+      clicks,
+      leads,
+      wonLeads,
+      leadRateBase
+    })
+  };
+}
+
 function normalizeNumber(value) {
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue : null;
@@ -245,7 +774,7 @@ function getLeadStatus(row, kind) {
 }
 
 function getMostRecentOpenTimestamp(lead) {
-  return lead.qualifiedAt || lead.submittedAt || lead.createdAt;
+  return lead.lastWorkedAt || lead.qualifiedAt || lead.submittedAt || lead.createdAt;
 }
 
 export function hasReachedQualified(lead) {
@@ -259,6 +788,25 @@ export function hasReachedQualified(lead) {
 
 export function isOpenLead(lead) {
   return lead.status === LEAD_STATUSES.SUBMITTED || lead.status === LEAD_STATUSES.QUALIFIED;
+}
+
+export function isLeadSlaBreached(lead, nowIso) {
+  if (!isOpenLead(lead) || !lead.followUpSlaAt) {
+    return false;
+  }
+
+  const slaTimestamp = new Date(lead.followUpSlaAt).getTime();
+  const nowTimestamp = new Date(nowIso).getTime();
+  if (!Number.isFinite(slaTimestamp) || !Number.isFinite(nowTimestamp)) {
+    return false;
+  }
+
+  const lastWorkedTimestamp = lead.lastWorkedAt ? new Date(lead.lastWorkedAt).getTime() : null;
+  if (Number.isFinite(lastWorkedTimestamp) && lastWorkedTimestamp >= slaTimestamp) {
+    return false;
+  }
+
+  return nowTimestamp > slaTimestamp;
 }
 
 export function isUnattributedLead(lead) {
@@ -278,6 +826,24 @@ export function normalizeLead(row, kind, nowIso) {
     ? (row.type_service || services[0] || 'unknown')
     : (services[0] || row.secteur_activite || 'unknown');
   const whatsappAttribution = getWhatsAppAttributionSummary(row);
+  const source = normalizeText(row.normalized_source || row.session_source, 'direct');
+  const medium = normalizeText(row.normalized_medium || row.session_medium, '(none)');
+  const campaign = normalizeText(row.normalized_campaign || row.session_campaign, '(not set)');
+  const landingPage = normalizeText(row.normalized_landing_page || row.landing_page || row.entry_path, 'Non renseignée');
+  const sourceClass = normalizeText(row.source_class, getSourceClass({ source, medium }));
+  const pageType = normalizeText(row.page_type, getPageTypeForPath(landingPage));
+  const businessLine = normalizeText(row.business_line, getBusinessLineForLeadKind(kind));
+  const leadQualityOutcome = normalizeLeadQualityOutcome(
+    row.lead_quality_outcome,
+    status === LEAD_STATUSES.CLOSED_WON
+      ? LEAD_QUALITY_OUTCOMES.WON
+      : status === LEAD_STATUSES.CLOSED_LOST
+        ? LEAD_QUALITY_OUTCOMES.LOST
+        : status === LEAD_STATUSES.QUALIFIED
+          ? LEAD_QUALITY_OUTCOMES.SALES_ACCEPTED
+          : LEAD_QUALITY_OUTCOMES.UNREVIEWED
+  );
+  const lastWorkedAt = row.last_worked_at || row.closed_at || row.qualified_at || row.submitted_at || row.created_at || null;
 
   const lead = {
     id: row.id,
@@ -290,11 +856,22 @@ export function normalizeLead(row, kind, nowIso) {
     submittedAt: row.submitted_at || row.created_at,
     qualifiedAt: row.qualified_at,
     closedAt: row.closed_at,
-    source: normalizeText(row.session_source, 'direct'),
-    medium: normalizeText(row.session_medium, '(none)'),
-    campaign: normalizeText(row.session_campaign, '(not set)'),
-    landingPage: normalizeText(row.landing_page || row.entry_path, 'Non renseignée'),
+    source,
+    medium,
+    campaign,
+    landingPage,
     referrerHost: normalizeText(row.referrer_host, 'Non renseigné'),
+    sourceClass,
+    sourceClassLabel: SOURCE_CLASS_LABELS[sourceClass] || sourceClass,
+    pageType,
+    pageTypeLabel: PAGE_TYPE_LABELS[pageType] || pageType,
+    businessLine,
+    businessLineLabel: BUSINESS_LINE_LABELS[businessLine] || businessLine,
+    leadQualityOutcome,
+    leadQualityLabel: LEAD_QUALITY_OUTCOME_LABELS[leadQualityOutcome] || leadQualityOutcome,
+    leadOwner: normalizeText(row.lead_owner, ''),
+    followUpSlaAt: row.follow_up_sla_at || null,
+    lastWorkedAt,
     serviceKey,
     serviceLabel: getServiceLabel(serviceKey),
     services: services.map((service) => ({
@@ -324,6 +901,342 @@ export function normalizeLeadRows(rows, nowIso) {
     ...(rows.devis || []).map((row) => normalizeLead(row, 'devis', nowIso)),
     ...(rows.conventions || []).map((row) => normalizeLead(row, 'convention', nowIso))
   ];
+}
+
+function normalizeFilterValue(value) {
+  const text = String(value || '').trim().toLowerCase();
+  if (!text || text === 'all') {
+    return null;
+  }
+
+  return text;
+}
+
+function normalizeDashboardFilters(filters = {}) {
+  return DASHBOARD_FILTER_KEYS.reduce((accumulator, key) => {
+    accumulator[key] = normalizeFilterValue(filters[key]);
+    return accumulator;
+  }, {});
+}
+
+function addFilterOption(map, value, label) {
+  if (!value) {
+    return;
+  }
+
+  if (!map.has(value)) {
+    map.set(value, {
+      value,
+      label
+    });
+  }
+}
+
+function buildDashboardFilterOptions({
+  universeLeads = [],
+  externalMetricRows = [],
+  keywordCatalogRows = [],
+  keywordRankingRows = []
+} = {}) {
+  const businessLine = new Map();
+  const service = new Map();
+  const sourceClass = new Map();
+  const pageType = new Map();
+
+  universeLeads.forEach((lead) => {
+    addFilterOption(businessLine, lead.businessLine, lead.businessLineLabel);
+    addFilterOption(sourceClass, lead.sourceClass, lead.sourceClassLabel);
+    addFilterOption(pageType, lead.pageType, lead.pageTypeLabel);
+    addFilterOption(service, lead.serviceKey, lead.serviceLabel);
+    lead.services.forEach((leadService) => {
+      addFilterOption(service, leadService.key, leadService.label);
+    });
+  });
+
+  externalMetricRows.forEach((row) => {
+    const normalizedRow = normalizeExternalMetricRow(row);
+    const inferredBusinessLine = getBusinessLineForPath(normalizedRow.landingPage);
+    const inferredService = getServiceKeyForPath(normalizedRow.landingPage);
+
+    addFilterOption(businessLine, inferredBusinessLine, getBusinessLineLabel(inferredBusinessLine));
+    addFilterOption(sourceClass, normalizedRow.sourceClass, normalizedRow.sourceClassLabel);
+    addFilterOption(pageType, normalizedRow.pageType, normalizedRow.pageTypeLabel);
+    addFilterOption(service, inferredService, inferredService ? getServiceLabel(inferredService) : null);
+  });
+
+  keywordCatalogRows.forEach((row) => {
+    const targetPath = row.canonical_target_path || row.target_path || row.canonical_target_url || row.target_url || '/';
+    const inferredBusinessLine = getBusinessLineForPath(targetPath);
+    const inferredService = getServiceKeyForPath(targetPath);
+    const inferredPageType = getPageTypeForPath(targetPath);
+
+    addFilterOption(businessLine, inferredBusinessLine, getBusinessLineLabel(inferredBusinessLine));
+    addFilterOption(pageType, inferredPageType, getPageTypeLabel(inferredPageType));
+    addFilterOption(service, inferredService, inferredService ? getServiceLabel(inferredService) : null);
+  });
+
+  const deviceValues = new Set(KEYWORD_TRACKED_DEVICES);
+  keywordRankingRows.forEach((row) => {
+    deviceValues.add(normalizeText(row.device, 'desktop'));
+  });
+
+  return {
+    businessLine: Array.from(businessLine.values()).sort((a, b) => a.label.localeCompare(b.label)),
+    service: Array.from(service.values()).sort((a, b) => a.label.localeCompare(b.label)),
+    sourceClass: Array.from(sourceClass.values()).sort((a, b) => a.label.localeCompare(b.label)),
+    device: Array.from(deviceValues)
+      .filter(Boolean)
+      .sort((a, b) => {
+        const aIndex = KEYWORD_TRACKED_DEVICES.indexOf(a);
+        const bIndex = KEYWORD_TRACKED_DEVICES.indexOf(b);
+        const safeAIndex = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+        const safeBIndex = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+        return safeAIndex - safeBIndex || a.localeCompare(b);
+      })
+      .map((value) => ({
+        value,
+        label: getDeviceLabel(value)
+      })),
+    pageType: Array.from(pageType.values()).sort((a, b) => a.label.localeCompare(b.label))
+  };
+}
+
+function buildActiveFilterChips(filters = {}) {
+  const chips = [];
+
+  if (filters.businessLine) {
+    chips.push({
+      key: 'businessLine',
+      label: 'Business line',
+      value: getBusinessLineLabel(filters.businessLine)
+    });
+  }
+
+  if (filters.service) {
+    chips.push({
+      key: 'service',
+      label: 'Service',
+      value: getServiceLabel(filters.service)
+    });
+  }
+
+  if (filters.sourceClass) {
+    chips.push({
+      key: 'sourceClass',
+      label: 'Source class',
+      value: getSourceClassLabel(filters.sourceClass)
+    });
+  }
+
+  if (filters.device) {
+    chips.push({
+      key: 'device',
+      label: 'SEO device',
+      value: getDeviceLabel(filters.device)
+    });
+  }
+
+  if (filters.pageType) {
+    chips.push({
+      key: 'pageType',
+      label: 'Page type',
+      value: getPageTypeLabel(filters.pageType)
+    });
+  }
+
+  return chips;
+}
+
+function buildDashboardFilterLabel(filters = {}) {
+  const parts = [];
+
+  if (filters.businessLine) {
+    parts.push(getBusinessLineLabel(filters.businessLine));
+  }
+
+  if (filters.service) {
+    parts.push(getServiceLabel(filters.service));
+  }
+
+  if (filters.sourceClass) {
+    parts.push(getSourceClassLabel(filters.sourceClass));
+  }
+
+  if (filters.pageType) {
+    parts.push(getPageTypeLabel(filters.pageType));
+  }
+
+  if (parts.length === 0) {
+    return 'All traffic and lead cohorts';
+  }
+
+  return parts.join(' · ');
+}
+
+function buildDashboardFilterNotes(filters = {}) {
+  const notes = [];
+
+  if (filters.businessLine) {
+    notes.push('Business line for traffic and SEO views is inferred from landing-page and keyword target paths.');
+  }
+
+  if (filters.service) {
+    notes.push('Service slices in traffic and SEO views are path-based for now; generic B2B entry pages remain outside service-specific segments.');
+  }
+
+  if (filters.device) {
+    notes.push('Device currently filters keyword visibility snapshots only; lead, pipeline, and acquisition KPIs remain cross-device.');
+  }
+
+  return notes;
+}
+
+function matchesLeadFilters(lead, filters = {}) {
+  if (filters.businessLine && lead.businessLine !== filters.businessLine) {
+    return false;
+  }
+
+  if (filters.service) {
+    const serviceKeys = new Set([
+      lead.serviceKey,
+      ...lead.services.map((service) => service.key)
+    ]);
+    if (!serviceKeys.has(filters.service)) {
+      return false;
+    }
+  }
+
+  if (filters.sourceClass && lead.sourceClass !== filters.sourceClass) {
+    return false;
+  }
+
+  if (filters.pageType && lead.pageType !== filters.pageType) {
+    return false;
+  }
+
+  return true;
+}
+
+function matchesExternalMetricFilters(row = {}, filters = {}) {
+  const normalizedRow = normalizeExternalMetricRow(row);
+  const inferredBusinessLine = getBusinessLineForPath(normalizedRow.landingPage);
+  const inferredService = getServiceKeyForPath(normalizedRow.landingPage);
+
+  if (filters.businessLine && inferredBusinessLine !== filters.businessLine) {
+    return false;
+  }
+
+  if (filters.service && inferredService !== filters.service) {
+    return false;
+  }
+
+  if (filters.sourceClass && normalizedRow.sourceClass !== filters.sourceClass) {
+    return false;
+  }
+
+  if (filters.pageType && normalizedRow.pageType !== filters.pageType) {
+    return false;
+  }
+
+  return true;
+}
+
+function matchesKeywordCatalogFilters(row = {}, filters = {}) {
+  if (filters.sourceClass && filters.sourceClass !== 'organic_search') {
+    return false;
+  }
+
+  const targetPath = row.canonical_target_path || row.target_path || row.canonical_target_url || row.target_url || '/';
+  const inferredBusinessLine = getBusinessLineForPath(targetPath);
+  const inferredService = getServiceKeyForPath(targetPath);
+  const pageType = getPageTypeForPath(targetPath);
+
+  if (filters.businessLine && inferredBusinessLine !== filters.businessLine) {
+    return false;
+  }
+
+  if (filters.service && inferredService !== filters.service) {
+    return false;
+  }
+
+  if (filters.pageType && pageType !== filters.pageType) {
+    return false;
+  }
+
+  return true;
+}
+
+function matchesKeywordRankingFilters(row = {}, filters = {}) {
+  if (filters.sourceClass && filters.sourceClass !== 'organic_search') {
+    return false;
+  }
+
+  const targetPath = row.target_path || row.matched_path || row.matched_url || '/';
+  const inferredBusinessLine = getBusinessLineForPath(targetPath);
+  const inferredService = getServiceKeyForPath(targetPath);
+  const pageType = getPageTypeForPath(targetPath);
+  const device = normalizeText(row.device, 'desktop');
+
+  if (filters.businessLine && inferredBusinessLine !== filters.businessLine) {
+    return false;
+  }
+
+  if (filters.service && inferredService !== filters.service) {
+    return false;
+  }
+
+  if (filters.pageType && pageType !== filters.pageType) {
+    return false;
+  }
+
+  if (filters.device && device !== filters.device) {
+    return false;
+  }
+
+  return true;
+}
+
+function matchesWhatsAppClickFilters(row = {}, filters = {}) {
+  const source = normalizeText(row.session_source, 'direct');
+  const medium = normalizeText(row.session_medium, '(none)');
+  const landingPage = normalizeText(row.landing_page || row.page_path, '/');
+  const sourceClass = getSourceClass({ source, medium });
+  const pageType = getPageTypeForPath(landingPage);
+  const businessLine = getBusinessLineForPath(landingPage);
+  const service = getServiceKeyForPath(landingPage);
+
+  if (filters.businessLine && businessLine !== filters.businessLine) {
+    return false;
+  }
+
+  if (filters.service && service !== filters.service) {
+    return false;
+  }
+
+  if (filters.sourceClass && sourceClass !== filters.sourceClass) {
+    return false;
+  }
+
+  if (filters.pageType && pageType !== filters.pageType) {
+    return false;
+  }
+
+  return true;
+}
+
+function filterAuditEvents(auditEvents = [], leads = []) {
+  const allowedLeadKeys = new Set(
+    leads.map((lead) => `${lead.kind}||${lead.id}`)
+  );
+
+  if (allowedLeadKeys.size === 0) {
+    return [];
+  }
+
+  return auditEvents.filter((event) => {
+    const kind = event.lead_kind === 'convention' ? 'convention' : event.lead_kind;
+    return allowedLeadKeys.has(`${kind}||${event.lead_id}`);
+  });
 }
 
 function isWithinRange(value, range) {
@@ -400,62 +1313,64 @@ function buildOverviewCards(currentLeads, previousLeads, universeLeads, range) {
   const qualifiedRate = getPercent(qualifiedCohort, currentLeads.length);
   const winRate = getPercent(wonCohort, currentLeads.length);
   const unattributedRate = getPercent(unattributedLeads, currentLeads.length);
+  const unattributedWarning = getUnattributedRateWarning(unattributedRate);
 
   return [
-    {
+    buildKpiCard({
       key: 'new_leads',
-      label: 'Nouveaux leads',
+      label: 'New leads',
       value: currentLeads.length,
       type: 'number',
-      meta: 'Cohorte créée sur la période',
+      meta: 'Created cohort in selected period',
       delta: getNumberDelta(currentLeads.length, previousLeads.length)
-    },
-    {
+    }),
+    buildKpiCard({
       key: 'qualified_activity',
-      label: 'Qualifiés (activité)',
+      label: 'Qualified activity',
       value: qualifiedActivity,
       type: 'number',
-      meta: 'qualified_at sur la période'
-    },
-    {
+      meta: '`qualified_at` inside selected period'
+    }),
+    buildKpiCard({
       key: 'won_activity',
-      label: 'Gagnés (activité)',
+      label: 'Won activity',
       value: wonActivity,
       type: 'number',
-      meta: 'closed_at sur la période'
-    },
-    {
+      meta: '`closed_at` for won leads inside selected period'
+    }),
+    buildKpiCard({
       key: 'qualified_rate',
-      label: 'Taux qualification cohorte',
+      label: 'Cohort qualification rate',
       value: qualifiedRate,
       type: 'percent',
-      meta: 'Leads créés sur la période ayant atteint le statut qualifié ou plus',
+      meta: 'Share of created leads that reached qualified or beyond',
       delta: getPercentDelta(qualifiedRate, previousQualifiedRate)
-    },
-    {
+    }),
+    buildKpiCard({
       key: 'win_rate',
-      label: 'Taux gain cohorte',
+      label: 'Cohort win rate',
       value: winRate,
       type: 'percent',
-      meta: 'Leads créés sur la période actuellement gagnés',
+      meta: 'Share of created leads currently marked won',
       delta: getPercentDelta(winRate, previousWinRate)
-    },
-    {
+    }),
+    buildKpiCard({
       key: 'unattributed_rate',
-      label: 'Leads non attribués',
+      label: 'Unattributed lead rate',
       value: unattributedRate,
       type: 'percent',
-      meta: 'Source + medium absents ou direct / (none)',
-      delta: getPercentDelta(unattributedRate, previousUnattributedRate)
-    },
-    {
+      meta: 'Leads with missing or direct-only source / medium',
+      delta: getPercentDelta(unattributedRate, previousUnattributedRate),
+      warning: unattributedWarning
+    }),
+    buildKpiCard({
       key: 'revenue_proxy',
-      label: 'Proxy CA estimé',
+      label: 'Estimated pipeline value',
       value: revenueProxy,
       type: 'currency',
-      meta: 'Somme calculator_estimate sur la cohorte créée',
+      meta: 'Sum of `calculator_estimate` across created cohort',
       delta: getNumberDelta(revenueProxy, previousRevenueProxy)
-    }
+    })
   ];
 }
 
@@ -523,12 +1438,18 @@ function buildBreakdowns(leads) {
   const serviceMentions = new Map();
   const primaryService = new Map();
   const kind = new Map();
+  const sourceClass = new Map();
+  const pageType = new Map();
+  const businessLine = new Map();
 
   leads.forEach((lead) => {
     addBreakdownValue(source, lead.source, lead.source);
     addBreakdownValue(medium, lead.medium, lead.medium);
     addBreakdownValue(campaign, lead.campaign, lead.campaign);
     addBreakdownValue(kind, lead.kind, lead.kindLabel);
+    addBreakdownValue(sourceClass, lead.sourceClass, lead.sourceClassLabel);
+    addBreakdownValue(pageType, lead.pageType, lead.pageTypeLabel);
+    addBreakdownValue(businessLine, lead.businessLine, lead.businessLineLabel);
     addBreakdownValue(primaryService, lead.serviceKey, lead.serviceLabel);
 
     const services = lead.services.length > 0
@@ -546,7 +1467,10 @@ function buildBreakdowns(leads) {
     campaign: finalizeBreakdown(campaign, leads.length),
     serviceMentions: finalizeBreakdown(serviceMentions, leads.length),
     primaryService: finalizeBreakdown(primaryService, leads.length),
-    kind: finalizeBreakdown(kind, leads.length)
+    kind: finalizeBreakdown(kind, leads.length),
+    sourceClass: finalizeBreakdown(sourceClass, leads.length),
+    pageType: finalizeBreakdown(pageType, leads.length),
+    businessLine: finalizeBreakdown(businessLine, leads.length)
   };
 }
 
@@ -633,6 +1557,17 @@ function summarizeLead(lead) {
     medium: lead.medium,
     campaign: lead.campaign,
     landingPage: lead.landingPage,
+    sourceClass: lead.sourceClass,
+    sourceClassLabel: lead.sourceClassLabel,
+    pageType: lead.pageType,
+    pageTypeLabel: lead.pageTypeLabel,
+    businessLine: lead.businessLine,
+    businessLineLabel: lead.businessLineLabel,
+    leadQualityOutcome: lead.leadQualityOutcome,
+    leadQualityLabel: lead.leadQualityLabel,
+    leadOwner: lead.leadOwner,
+    followUpSlaAt: lead.followUpSlaAt,
+    lastWorkedAt: lead.lastWorkedAt,
     createdAt: lead.createdAt,
     submittedAt: lead.submittedAt,
     qualifiedAt: lead.qualifiedAt,
@@ -651,13 +1586,23 @@ function summarizeLead(lead) {
 }
 
 function normalizeExternalMetricRow(row = {}) {
+  const source = normalizeText(row.normalized_source || row.source, 'unknown');
+  const medium = normalizeText(row.normalized_medium || row.medium, '(none)');
+  const landingPage = normalizeText(row.normalized_landing_page || row.landing_page, '/');
+  const sourceClass = normalizeText(row.source_class, getSourceClass({ source, medium }));
+  const pageType = normalizeText(row.page_type, getPageTypeForPath(landingPage));
+
   return {
     metricDate: row.metric_date,
     metricSource: normalizeText(row.metric_source, 'unknown'),
-    source: normalizeText(row.source, 'unknown'),
-    medium: normalizeText(row.medium, '(none)'),
-    campaign: normalizeText(row.campaign, '(not set)'),
-    landingPage: normalizeText(row.landing_page, '/'),
+    source,
+    medium,
+    campaign: normalizeText(row.normalized_campaign || row.campaign, '(not set)'),
+    landingPage,
+    sourceClass,
+    sourceClassLabel: SOURCE_CLASS_LABELS[sourceClass] || sourceClass,
+    pageType,
+    pageTypeLabel: PAGE_TYPE_LABELS[pageType] || pageType,
     sessions: Number(row.sessions || 0),
     users: Number(row.users || 0),
     clicks: Number(row.clicks || 0),
@@ -1124,7 +2069,9 @@ function resolveCatalogRowForRanking(row, catalogById, catalogByLookupKey) {
   return null;
 }
 
-function buildKeywordRankings(keywordCatalogRows = [], keywordRankingRows = []) {
+function buildKeywordRankings(keywordCatalogRows = [], keywordRankingRows = [], {
+  deviceFilter = null
+} = {}) {
   const normalizedCatalogRows = keywordCatalogRows
     .map(normalizeKeywordCatalogMetricRow)
     .filter((row) => row.normalizedKeyword && row.targetUrl);
@@ -1242,7 +2189,7 @@ function buildKeywordRankings(keywordCatalogRows = [], keywordRankingRows = []) 
     .map((row) => row.reference.lastUpdated)
     .filter(Boolean)
     .sort();
-  const usingReferenceFallback = matchedRankingRows.length === 0 && referenceRows.length > 0;
+  const usingReferenceFallback = !deviceFilter && matchedRankingRows.length === 0 && referenceRows.length > 0;
   snapshotDiagnostics.referenceRankedCount = referenceRows.length;
   snapshotDiagnostics.earliestReferenceMetricDate = referenceMetricDates[0] || null;
   snapshotDiagnostics.latestReferenceMetricDate = referenceMetricDates.at(-1) || null;
@@ -1354,6 +2301,9 @@ function getChannelKey({
 }
 
 function createCombinedChannelBucket(seed) {
+  const sourceClass = seed.sourceClass || getSourceClass({ source: seed.source, medium: seed.medium });
+  const pageType = seed.pageType || getPageTypeForPath(seed.landingPage);
+
   return {
     key: seed.key,
     metricDate: seed.metricDate,
@@ -1361,6 +2311,10 @@ function createCombinedChannelBucket(seed) {
     medium: seed.medium,
     campaign: seed.campaign,
     landingPage: seed.landingPage,
+    sourceClass,
+    sourceClassLabel: SOURCE_CLASS_LABELS[sourceClass] || sourceClass,
+    pageType,
+    pageTypeLabel: PAGE_TYPE_LABELS[pageType] || pageType,
     sessions: 0,
     users: 0,
     clicks: 0,
@@ -1376,17 +2330,11 @@ function createCombinedChannelBucket(seed) {
 
 function finalizeCombinedChannelBuckets(map) {
   return Array.from(map.values()).map((bucket) => {
-    const ctr = getPercent(bucket.clicks, bucket.impressions);
-    const leadRateBase = bucket.sessions > 0 ? 'sessions' : bucket.clicks > 0 ? 'clicks' : 'none';
-    const denominator = leadRateBase === 'sessions' ? bucket.sessions : leadRateBase === 'clicks' ? bucket.clicks : 0;
+    const derived = buildCombinedDerivedMetrics(bucket);
 
     return {
       ...bucket,
-      ctr,
-      leadRate: getPercent(bucket.leads, denominator),
-      leadRateBase,
-      costPerLead: bucket.leads > 0 ? Math.round((bucket.spend / bucket.leads) * 100) / 100 : null,
-      costPerAcquisition: bucket.wonLeads > 0 ? Math.round((bucket.spend / bucket.wonLeads) * 100) / 100 : null
+      ...derived
     };
   });
 }
@@ -1400,7 +2348,9 @@ export function buildCombinedChannelPerformance(currentLeads, externalMetricRows
       source: row.source,
       medium: row.medium,
       campaign: row.campaign,
-      landingPage: row.landingPage
+      landingPage: row.landingPage,
+      sourceClass: row.sourceClass,
+      pageType: row.pageType
     });
 
     const bucket = map.get(key) || createCombinedChannelBucket({
@@ -1427,7 +2377,9 @@ export function buildCombinedChannelPerformance(currentLeads, externalMetricRows
       source: lead.source,
       medium: lead.medium,
       campaign: lead.campaign,
-      landingPage: lead.landingPage
+      landingPage: lead.landingPage,
+      sourceClass: lead.sourceClass,
+      pageType: lead.pageType
     });
 
     const bucket = map.get(key) || createCombinedChannelBucket({
@@ -1462,6 +2414,10 @@ function aggregateCombinedRows(rows, keyGetter, labelGetter, { limit = 8 } = {})
     const current = map.get(key) || {
       key,
       label: labelGetter(row),
+      sourceClass: row.sourceClass,
+      sourceClassLabel: row.sourceClassLabel,
+      pageType: row.pageType,
+      pageTypeLabel: row.pageTypeLabel,
       sessions: 0,
       users: 0,
       clicks: 0,
@@ -1490,10 +2446,7 @@ function aggregateCombinedRows(rows, keyGetter, labelGetter, { limit = 8 } = {})
   return Array.from(map.values())
     .map((row) => ({
       ...row,
-      ctr: getPercent(row.clicks, row.impressions),
-      leadRate: getPercent(row.leads, row.sessions > 0 ? row.sessions : row.clicks),
-      costPerLead: row.leads > 0 ? Math.round((row.spend / row.leads) * 100) / 100 : null,
-      costPerAcquisition: row.wonLeads > 0 ? Math.round((row.spend / row.wonLeads) * 100) / 100 : null
+      ...buildCombinedDerivedMetrics(row)
     }))
     .sort((a, b) => (
       b.qualifiedLeads - a.qualifiedLeads
@@ -1506,7 +2459,7 @@ function aggregateCombinedRows(rows, keyGetter, labelGetter, { limit = 8 } = {})
 
 function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = []) {
   const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
-  const totals = combinedRows.reduce((accumulator, row) => ({
+  const totalsBase = combinedRows.reduce((accumulator, row) => ({
     sessions: accumulator.sessions + row.sessions,
     users: accumulator.users + row.users,
     clicks: accumulator.clicks + row.clicks,
@@ -1525,14 +2478,59 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
     qualifiedLeads: 0,
     wonLeads: 0
   });
+  const totals = {
+    ...totalsBase,
+    ...buildCombinedDerivedMetrics(totalsBase)
+  };
 
   return {
-    totals: {
-      ...totals,
-      ctr: getPercent(totals.clicks, totals.impressions),
-      costPerLead: totals.leads > 0 ? Math.round((totals.spend / totals.leads) * 100) / 100 : null,
-      costPerAcquisition: totals.wonLeads > 0 ? Math.round((totals.spend / totals.wonLeads) * 100) / 100 : null
-    },
+    totals,
+    cards: [
+      buildKpiCard({
+        key: 'sessions',
+        label: 'Sessions',
+        value: totals.sessions,
+        type: 'number',
+        meta: 'GA4 daily snapshots'
+      }),
+      buildKpiCard({
+        key: 'clicks',
+        label: 'Clicks',
+        value: totals.clicks,
+        type: 'number',
+        meta: 'Search Console + manual paid/social snapshots'
+      }),
+      buildKpiCard({
+        key: 'impressions',
+        label: 'Impressions',
+        value: totals.impressions,
+        type: 'number',
+        meta: 'Search Console + manual paid/social snapshots'
+      }),
+      buildKpiCard({
+        key: 'spend',
+        label: 'Spend',
+        value: totals.spend,
+        type: 'currency',
+        meta: 'Manual paid/social imports'
+      }),
+      buildKpiCard({
+        key: 'cost_per_lead',
+        label: 'Cost per lead',
+        value: totals.costPerLead,
+        type: 'currency',
+        meta: 'Spend / created leads',
+        warning: totals.warnings.costPerLead || null
+      }),
+      buildKpiCard({
+        key: 'cost_per_acquisition',
+        label: 'Cost per acquisition',
+        value: totals.costPerAcquisition,
+        type: 'currency',
+        meta: 'Spend / won leads from created cohort',
+        warning: totals.warnings.costPerAcquisition || null
+      })
+    ],
     sources: aggregateCombinedRows(
       combinedRows,
       (row) => row.source,
@@ -1553,7 +2551,7 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
   };
 }
 
-function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, keywordRankingRows) {
+function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, keywordRankingRows, filters = {}) {
   const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
   const pageRows = aggregateCombinedRows(
     combinedRows,
@@ -1561,7 +2559,9 @@ function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, k
     (row) => row.landingPage,
     { limit: 12 }
   );
-  const keywordRankings = buildKeywordRankings(keywordCatalogRows, keywordRankingRows);
+  const keywordRankings = buildKeywordRankings(keywordCatalogRows, keywordRankingRows, {
+    deviceFilter: filters.device || null
+  });
 
   const organicRows = combinedRows.filter((row) => (
     row.source.toLowerCase() === 'google'
@@ -1580,6 +2580,14 @@ function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, k
     sessions: 0,
     leads: 0,
     qualifiedLeads: 0
+  });
+  const organicDerived = buildCombinedDerivedMetrics({
+    sessions: organicTotals.sessions,
+    clicks: organicTotals.clicks,
+    impressions: organicTotals.impressions,
+    leads: organicTotals.leads,
+    wonLeads: 0,
+    spend: 0
   });
   const keywordSnapshotDiagnostics = keywordRankings.snapshotDiagnostics;
   const hasLiveKeywordSnapshots = keywordSnapshotDiagnostics.matchedSnapshotCount > 0;
@@ -1622,12 +2630,91 @@ function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, k
       clicks: organicTotals.clicks,
       impressions: organicTotals.impressions,
       sessions: organicTotals.sessions,
-      ctr: getPercent(organicTotals.clicks, organicTotals.impressions),
-      leadRate: getPercent(organicTotals.leads, organicTotals.sessions > 0 ? organicTotals.sessions : organicTotals.clicks),
+      ctr: organicDerived.ctr,
+      leadRateBase: organicDerived.leadRateBase,
+      leadRate: organicDerived.leadRate,
       qualifiedLeads: organicTotals.qualifiedLeads
     },
+    cards: [
+      buildKpiCard({
+        key: 'landing_pages_tracked',
+        label: 'Landing pages tracked',
+        value: pageRows.length,
+        type: 'number',
+        meta: 'Pages with SEO or landing-page performance rows in selected period'
+      }),
+      buildKpiCard({
+        key: 'organic_clicks',
+        label: 'Organic clicks',
+        value: organicTotals.clicks,
+        type: 'number',
+        meta: 'Rows where source is Google or medium is organic'
+      }),
+      buildKpiCard({
+        key: 'organic_impressions',
+        label: 'Organic impressions',
+        value: organicTotals.impressions,
+        type: 'number',
+        meta: 'Rows where source is Google or medium is organic'
+      }),
+      buildKpiCard({
+        key: 'organic_ctr',
+        label: 'Organic CTR',
+        value: organicDerived.ctr,
+        type: 'percent',
+        meta: 'Organic clicks / organic impressions'
+      }),
+      buildKpiCard({
+        key: 'lead_rate',
+        label: 'Lead rate',
+        value: organicDerived.leadRate,
+        type: 'percent',
+        meta: organicTotals.sessions > 0 ? 'Leads / sessions' : 'Leads / clicks',
+        warning: organicDerived.warnings.leadRate || null
+      }),
+      buildKpiCard({
+        key: 'qualified_leads',
+        label: 'Qualified leads',
+        value: organicTotals.qualifiedLeads,
+        type: 'number',
+        meta: 'Organic cohort leads that reached qualified or beyond'
+      })
+    ],
     landingPages: pageRows,
     keywordRankings,
+    keywordCards: [
+      buildKpiCard({
+        key: 'tracked_keywords',
+        label: 'Tracked keywords',
+        value: keywordRankings.totals.trackedKeywords,
+        type: 'number',
+        meta: keywordDefinition
+      }),
+      buildKpiCard({
+        key: 'desktop_ranked_keywords',
+        label: 'Desktop ranked keywords',
+        value: keywordRankings.totals.desktopRankedKeywords,
+        type: 'number'
+      }),
+      buildKpiCard({
+        key: 'mobile_ranked_keywords',
+        label: 'Mobile ranked keywords',
+        value: keywordRankings.totals.mobileRankedKeywords,
+        type: 'number'
+      }),
+      buildKpiCard({
+        key: 'average_position',
+        label: 'Average best position',
+        value: keywordRankings.totals.averagePosition,
+        type: 'position'
+      }),
+      buildKpiCard({
+        key: 'top10_count',
+        label: 'Top 10 keywords',
+        value: keywordRankings.totals.top10Count,
+        type: 'number'
+      })
+    ],
     notes: {
       leadRateDefinition: 'Leads / sessions lorsque disponibles, sinon leads / clicks',
       organicDefinition: 'Source google ou medium organic',
@@ -1638,12 +2725,41 @@ function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, k
   };
 }
 
+function buildLeadQualityBreakdown(leads = []) {
+  const total = leads.length;
+  const counts = new Map();
+
+  leads.forEach((lead) => {
+    const key = normalizeLeadQualityOutcome(lead.leadQualityOutcome, LEAD_QUALITY_OUTCOMES.UNREVIEWED);
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
+
+  return Object.values(LEAD_QUALITY_OUTCOMES)
+    .map((key) => {
+      const count = counts.get(key) || 0;
+      return {
+        key,
+        label: LEAD_QUALITY_OUTCOME_LABELS[key] || key,
+        count,
+        rate: getPercent(count, total)
+      };
+    })
+    .filter((item) => item.count > 0 || total === 0 || item.key === LEAD_QUALITY_OUTCOMES.UNREVIEWED);
+}
+
 function buildOperations(universeLeads, auditEvents, range, nowIso) {
   const staleCutoff = new Date(new Date(nowIso).getTime() - (STALE_OPEN_LEAD_HOURS * 60 * 60 * 1000));
+  const openLeads = universeLeads.filter(isOpenLead);
   const staleLeads = universeLeads
     .filter(isOpenLead)
     .filter((lead) => new Date(getMostRecentOpenTimestamp(lead)) < staleCutoff)
     .sort((a, b) => (b.ageHours || 0) - (a.ageHours || 0));
+  const slaBreaches = openLeads
+    .filter((lead) => isLeadSlaBreached(lead, nowIso))
+    .sort((a, b) => new Date(a.followUpSlaAt || 0) - new Date(b.followUpSlaAt || 0));
+  const qualityBreakdown = buildLeadQualityBreakdown(openLeads);
+  const reviewedCount = openLeads.filter((lead) => lead.leadQualityOutcome !== LEAD_QUALITY_OUTCOMES.UNREVIEWED).length;
+  const ownerAssignedCount = openLeads.filter((lead) => lead.leadOwner).length;
 
   const latestSubmitted = [...universeLeads]
     .sort((a, b) => new Date(b.submittedAt || b.createdAt) - new Date(a.submittedAt || a.createdAt))
@@ -1651,9 +2767,20 @@ function buildOperations(universeLeads, auditEvents, range, nowIso) {
 
   return {
     staleLeadHours: STALE_OPEN_LEAD_HOURS,
+    openLeadCount: openLeads.length,
     staleQueue: {
       count: staleLeads.length,
       leads: staleLeads.slice(0, 8).map(summarizeLead)
+    },
+    slaBreaches: {
+      count: slaBreaches.length,
+      leads: slaBreaches.slice(0, 8).map(summarizeLead)
+    },
+    leadQuality: {
+      reviewedCount,
+      ownerAssignedCount,
+      breakdown: qualityBreakdown,
+      note: 'Répartition calculée sur les leads encore ouverts dans la file opérationnelle.'
     },
     latestSubmitted: latestSubmitted.map(summarizeLead),
     lifecycleTrend: buildLifecycleTrend(universeLeads, range),
@@ -1793,6 +2920,322 @@ function buildPipeline(currentLeads, range) {
   };
 }
 
+function formatSummaryCount(value) {
+  return Number(value || 0).toLocaleString('fr-FR');
+}
+
+function formatSummaryPercent(value) {
+  return `${Number(value || 0).toLocaleString('fr-FR', { maximumFractionDigits: 1 })}%`;
+}
+
+function formatSummaryCurrency(value) {
+  return new Intl.NumberFormat('fr-TN', {
+    style: 'currency',
+    currency: 'TND',
+    maximumFractionDigits: 0
+  }).format(Number(value || 0));
+}
+
+function getLeadRateSnapshot(leads = []) {
+  const qualifiedRate = getPercent(
+    leads.filter(hasReachedQualified).length,
+    leads.length
+  );
+  const winRate = getPercent(
+    leads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_WON).length,
+    leads.length
+  );
+
+  return {
+    qualifiedRate,
+    winRate
+  };
+}
+
+function buildExecutiveTrend(currentLeads = [], previousLeads = []) {
+  const currentRates = getLeadRateSnapshot(currentLeads);
+  const previousRates = getLeadRateSnapshot(previousLeads);
+  const leadDelta = currentLeads.length - previousLeads.length;
+  const qualifiedRateDelta = getPercentDelta(currentRates.qualifiedRate, previousRates.qualifiedRate);
+  const winRateDelta = getPercentDelta(currentRates.winRate, previousRates.winRate);
+
+  let headline = 'Lead volume is flat versus the previous period.';
+  let tone = 'neutral';
+
+  if (currentLeads.length === 0 && previousLeads.length === 0) {
+    headline = 'No new leads in this segment yet.';
+  } else if (previousLeads.length === 0 && currentLeads.length > 0) {
+    headline = `New demand appeared with ${formatSummaryCount(currentLeads.length)} lead${currentLeads.length > 1 ? 's' : ''}.`;
+    tone = 'positive';
+  } else if (leadDelta > 0) {
+    headline = `New lead volume is up by ${formatSummaryCount(leadDelta)}.`;
+    tone = 'positive';
+  } else if (leadDelta < 0) {
+    headline = `New lead volume is down by ${formatSummaryCount(Math.abs(leadDelta))}.`;
+    tone = 'warning';
+  } else if (qualifiedRateDelta > 0) {
+    headline = 'Lead volume is flat, but qualification quality improved.';
+    tone = 'positive';
+  } else if (qualifiedRateDelta < 0) {
+    headline = 'Lead volume is flat, but qualification quality weakened.';
+    tone = 'warning';
+  }
+
+  return {
+    key: 'trend',
+    title: 'Trend',
+    headline,
+    detail: `${formatSummaryCount(currentLeads.length)} new leads, ${formatSummaryPercent(currentRates.qualifiedRate)} qualified, ${formatSummaryPercent(currentRates.winRate)} won.${qualifiedRateDelta !== null ? ` Qualification rate delta: ${qualifiedRateDelta > 0 ? '+' : ''}${qualifiedRateDelta.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} pts.` : ''}${winRateDelta !== null ? ` Win rate delta: ${winRateDelta > 0 ? '+' : ''}${winRateDelta.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} pts.` : ''}`,
+    tone
+  };
+}
+
+function buildExecutiveRisk({
+  currentLeads = [],
+  overviewCards = [],
+  operations,
+  dataHealth
+}) {
+  const unattributedCard = overviewCards.find((card) => card.key === 'unattributed_rate');
+  if (unattributedCard?.warning) {
+    return {
+      key: 'unattributed_rate',
+      title: 'Risk',
+      headline: 'Attribution quality is under pressure.',
+      detail: `${formatSummaryPercent(unattributedCard.value)} of filtered leads are unattributed or direct-only, above the monitoring threshold.`,
+      tone: unattributedCard.warning.level === 'critical' ? 'critical' : 'warning',
+      owner: 'Engineering'
+    };
+  }
+
+  if ((operations?.slaBreaches?.count || 0) > 0) {
+    return {
+      key: 'sla_breach',
+      title: 'Risk',
+      headline: 'Follow-up SLA breaches are accumulating.',
+      detail: `${formatSummaryCount(operations.slaBreaches.count)} open lead${operations.slaBreaches.count > 1 ? 's are' : ' is'} beyond follow-up SLA in this segment.`,
+      tone: 'warning',
+      owner: 'Admin ops'
+    };
+  }
+
+  if ((operations?.staleQueue?.count || 0) > 0) {
+    return {
+      key: 'stale_queue',
+      title: 'Risk',
+      headline: 'The open queue needs a refresh.',
+      detail: `${formatSummaryCount(operations.staleQueue.count)} lead${operations.staleQueue.count > 1 ? 's are' : ' is'} older than ${operations.staleLeadHours}h without a recent touch.`,
+      tone: operations.staleQueue.count >= DASHBOARD_ALERT_THRESHOLDS.staleQueueBreachCount ? 'critical' : 'warning',
+      owner: 'Admin ops'
+    };
+  }
+
+  const staleConnector = (dataHealth?.items || []).find((item) => item.status === 'error' || item.status === 'stale');
+  if (staleConnector) {
+    return {
+      key: 'connector_freshness',
+      title: 'Risk',
+      headline: `${staleConnector.label} needs attention before the next review.`,
+      detail: staleConnector.message || `${staleConnector.label} is stale and should be refreshed before using this slice for planning.`,
+      tone: staleConnector.status === 'error' ? 'critical' : 'warning',
+      owner: 'Engineering'
+    };
+  }
+
+  if (currentLeads.length === 0) {
+    return {
+      key: 'no_demand',
+      title: 'Risk',
+      headline: 'There is no new lead demand in this slice.',
+      detail: 'The selected segment produced no new leads in the current period, so downstream conversion and ROI signals are limited.',
+      tone: 'warning',
+      owner: 'Growth owner'
+    };
+  }
+
+  return {
+    key: 'no_acute_risk',
+    title: 'Risk',
+    headline: 'No acute operational risk is currently flagged.',
+    detail: 'Attribution, follow-up discipline, and connector freshness are all within the expected monitoring range for this slice.',
+    tone: 'neutral',
+    owner: 'Growth owner'
+  };
+}
+
+function buildExecutiveOpportunity({
+  acquisition,
+  seoContent,
+  pipeline,
+  currentLeads = []
+}) {
+  const bestSeoPage = (seoContent?.landingPages || []).find((row) => (
+    row.qualifiedLeads > 0 || row.leads > 0 || row.clicks > 0 || row.sessions > 0
+  ));
+  if (bestSeoPage) {
+    return {
+      key: 'seo_landing_page',
+      title: 'Opportunity',
+      headline: `${bestSeoPage.label} is the clearest SEO/CRO opportunity.`,
+      detail: `${formatSummaryCount(bestSeoPage.clicks)} organic clicks, ${formatSummaryCount(bestSeoPage.qualifiedLeads)} qualified leads, ${formatSummaryPercent(bestSeoPage.leadRate)} lead rate, ${formatSummaryCurrency(bestSeoPage.revenueProxy)} estimated pipeline value.`,
+      tone: bestSeoPage.qualifiedLeads > 0 ? 'positive' : 'neutral',
+      owner: 'Growth owner'
+    };
+  }
+
+  const topSource = (acquisition?.sources || [])[0];
+  if (topSource) {
+    return {
+      key: 'acquisition_source',
+      title: 'Opportunity',
+      headline: `${topSource.label} is leading this segment.`,
+      detail: `${formatSummaryCount(topSource.leads)} leads, ${formatSummaryCount(topSource.qualifiedLeads)} qualified, ${formatSummaryCount(topSource.wonLeads)} won, ${formatSummaryCurrency(topSource.revenueProxy)} estimated pipeline value.`,
+      tone: topSource.qualifiedLeads > 0 || topSource.wonLeads > 0 ? 'positive' : 'neutral',
+      owner: 'Growth owner'
+    };
+  }
+
+  const topService = (pipeline?.breakdowns?.primaryService || [])[0];
+  if (topService) {
+    return {
+      key: 'service_slice',
+      title: 'Opportunity',
+      headline: `${topService.label} is the strongest current service slice.`,
+      detail: `${formatSummaryCount(topService.count)} lead${topService.count > 1 ? 's' : ''} in the selected cohort.`,
+      tone: 'neutral',
+      owner: 'Growth owner'
+    };
+  }
+
+  return {
+    key: 'no_clear_opportunity',
+    title: 'Opportunity',
+    headline: currentLeads.length > 0
+      ? 'No single source or page clearly dominates yet.'
+      : 'No clear opportunity until more demand appears in this slice.',
+    detail: 'Use the segmented dashboard to keep monitoring source quality, page performance, and qualified demand density before committing effort.',
+    tone: 'neutral',
+    owner: 'Growth owner'
+  };
+}
+
+function buildExecutiveNextAction({ risk, opportunity, filters = {} }) {
+  if (risk.key === 'unattributed_rate') {
+    return {
+      key: 'next_action',
+      title: 'Next action',
+      headline: 'Fix attribution hygiene before scaling this slice.',
+      detail: 'Audit direct/(none) entries, landing-page capture, and campaign naming so channel efficiency can be trusted in the next growth review.',
+      tone: risk.tone,
+      owner: risk.owner
+    };
+  }
+
+  if (risk.key === 'sla_breach' || risk.key === 'stale_queue') {
+    return {
+      key: 'next_action',
+      title: 'Next action',
+      headline: 'Clear the open queue before adding more acquisition pressure.',
+      detail: 'Assign owners, refresh `last_worked_at`, and reset overdue SLAs so the segment can move back into an experiment-ready state.',
+      tone: 'warning',
+      owner: 'Admin ops'
+    };
+  }
+
+  if (risk.key === 'connector_freshness') {
+    return {
+      key: 'next_action',
+      title: 'Next action',
+      headline: 'Restore reporting freshness before the next executive readout.',
+      detail: 'Refresh the stale connector and confirm that the segment still holds once live data is back in sync.',
+      tone: risk.tone,
+      owner: 'Engineering'
+    };
+  }
+
+  if (opportunity.key === 'seo_landing_page') {
+    return {
+      key: 'next_action',
+      title: 'Next action',
+      headline: 'Prioritize the leading landing page in the next sprint.',
+      detail: 'Review snippet CTR, on-page CTA hierarchy, and lead capture friction so the current search demand turns into more qualified pipeline.',
+      tone: 'positive',
+      owner: 'Growth owner'
+    };
+  }
+
+  if (opportunity.key === 'acquisition_source') {
+    return {
+      key: 'next_action',
+      title: 'Next action',
+      headline: 'Use the leading source as the default weekly review slice.',
+      detail: 'Anchor channel review, experiment ideas, and spend discussions on the source already producing the densest qualified demand.',
+      tone: 'positive',
+      owner: 'Growth owner'
+    };
+  }
+
+  if (filters.device) {
+    return {
+      key: 'next_action',
+      title: 'Next action',
+      headline: 'Use this device view to validate SEO visibility before acting.',
+      detail: 'Device segmentation currently applies to keyword visibility only, so confirm desktop/mobile movement here before changing broader lead or acquisition plans.',
+      tone: 'neutral',
+      owner: 'Growth owner'
+    };
+  }
+
+  return {
+    key: 'next_action',
+    title: 'Next action',
+    headline: 'Use the segmented slice as the default review frame next week.',
+    detail: 'Keep decisions anchored to this filtered view so trend, risk, opportunity, and follow-up ownership stay consistent across growth reviews.',
+    tone: 'neutral',
+    owner: 'Growth owner'
+  };
+}
+
+function buildExecutiveSummary({
+  currentLeads = [],
+  previousLeads = [],
+  overviewCards = [],
+  pipeline,
+  acquisition,
+  seoContent,
+  operations,
+  dataHealth,
+  filters = {}
+}) {
+  const trend = buildExecutiveTrend(currentLeads, previousLeads);
+  const risk = buildExecutiveRisk({
+    currentLeads,
+    overviewCards,
+    operations,
+    dataHealth
+  });
+  const opportunity = buildExecutiveOpportunity({
+    acquisition,
+    seoContent,
+    pipeline,
+    currentLeads
+  });
+  const nextAction = buildExecutiveNextAction({
+    risk,
+    opportunity,
+    filters
+  });
+
+  return {
+    segmentLabel: buildDashboardFilterLabel(filters),
+    notes: buildDashboardFilterNotes(filters),
+    trend,
+    risk,
+    opportunity,
+    nextAction
+  };
+}
+
 export function buildAdminDashboardData({
   currentRows,
   previousRows,
@@ -1804,11 +3247,51 @@ export function buildAdminDashboardData({
   sourceHealthRows = [],
   auditEvents = [],
   range,
+  filters = {},
   nowIso = new Date().toISOString()
 }) {
   const currentLeads = normalizeLeadRows(currentRows, nowIso);
   const previousLeads = normalizeLeadRows(previousRows, nowIso);
   const universeLeads = normalizeLeadRows(universeRows, nowIso);
+  const normalizedFilters = normalizeDashboardFilters(filters);
+  const filterOptions = buildDashboardFilterOptions({
+    universeLeads,
+    externalMetricRows,
+    keywordCatalogRows,
+    keywordRankingRows
+  });
+  const activeFilters = buildActiveFilterChips(normalizedFilters);
+  const filteredCurrentLeads = currentLeads.filter((lead) => matchesLeadFilters(lead, normalizedFilters));
+  const filteredPreviousLeads = previousLeads.filter((lead) => matchesLeadFilters(lead, normalizedFilters));
+  const filteredUniverseLeads = universeLeads.filter((lead) => matchesLeadFilters(lead, normalizedFilters));
+  const filteredExternalMetricRows = externalMetricRows.filter((row) => matchesExternalMetricFilters(row, normalizedFilters));
+  const filteredWhatsAppClickRows = whatsappClickRows.filter((row) => matchesWhatsAppClickFilters(row, normalizedFilters));
+  const filteredKeywordCatalogRows = keywordCatalogRows.filter((row) => matchesKeywordCatalogFilters(row, normalizedFilters));
+  const filteredKeywordRankingRows = keywordRankingRows.filter((row) => matchesKeywordRankingFilters(row, normalizedFilters));
+  const filteredAuditEvents = filterAuditEvents(auditEvents, filteredUniverseLeads);
+  const dataHealth = buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRows, keywordRankingRows, nowIso);
+  const overviewCards = buildOverviewCards(filteredCurrentLeads, filteredPreviousLeads, filteredUniverseLeads, range);
+  const pipeline = buildPipeline(filteredCurrentLeads, range);
+  const acquisition = buildAcquisition(filteredCurrentLeads, filteredExternalMetricRows, filteredWhatsAppClickRows);
+  const seoContent = buildSeoContent(
+    filteredCurrentLeads,
+    filteredExternalMetricRows,
+    filteredKeywordCatalogRows,
+    filteredKeywordRankingRows,
+    normalizedFilters
+  );
+  const operations = buildOperations(filteredUniverseLeads, filteredAuditEvents, range, nowIso);
+  const executiveSummary = buildExecutiveSummary({
+    currentLeads: filteredCurrentLeads,
+    previousLeads: filteredPreviousLeads,
+    overviewCards,
+    pipeline,
+    acquisition,
+    seoContent,
+    operations,
+    dataHealth,
+    filters: normalizedFilters
+  });
 
   return {
     range: {
@@ -1817,19 +3300,28 @@ export function buildAdminDashboardData({
       days: range.days,
       staleLeadHours: STALE_OPEN_LEAD_HOURS
     },
+    filters: {
+      applied: normalizedFilters,
+      active: activeFilters,
+      segmentLabel: buildDashboardFilterLabel(normalizedFilters),
+      seoDeviceLabel: normalizedFilters.device ? getDeviceLabel(normalizedFilters.device) : null,
+      notes: buildDashboardFilterNotes(normalizedFilters),
+      options: filterOptions
+    },
+    executiveSummary,
     overview: {
-      cards: buildOverviewCards(currentLeads, previousLeads, universeLeads, range),
+      cards: overviewCards,
       cohort: {
-        currentLeads: currentLeads.length,
-        qualifiedReached: currentLeads.filter(hasReachedQualified).length,
-        won: currentLeads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_WON).length,
-        unattributed: currentLeads.filter(isUnattributedLead).length
+        currentLeads: filteredCurrentLeads.length,
+        qualifiedReached: filteredCurrentLeads.filter(hasReachedQualified).length,
+        won: filteredCurrentLeads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_WON).length,
+        unattributed: filteredCurrentLeads.filter(isUnattributedLead).length
       }
     },
-    pipeline: buildPipeline(currentLeads, range),
-    acquisition: buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows),
-    seoContent: buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, keywordRankingRows),
-    operations: buildOperations(universeLeads, auditEvents, range, nowIso),
-    dataHealth: buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRows, keywordRankingRows, nowIso)
+    pipeline,
+    acquisition,
+    seoContent,
+    operations,
+    dataHealth
   };
 }

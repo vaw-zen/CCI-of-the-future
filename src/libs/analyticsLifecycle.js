@@ -95,6 +95,7 @@ export function buildLeadMeasurementParams({
     lead_type: leadType,
     business_line: businessLine,
     lead_status: leadRecord?.lead_status,
+    lead_quality_outcome: leadRecord?.lead_quality_outcome,
     previous_status: previousStatus || undefined,
     service_type: leadRecord?.type_service,
     services_count: Array.isArray(leadRecord?.services_souhaites)

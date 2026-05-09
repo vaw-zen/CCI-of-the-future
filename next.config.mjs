@@ -34,6 +34,7 @@ const nextConfig = {
     pagesBufferLength: 2,
   },
   images: {
+    unoptimized: process.env.NODE_ENV !== 'production',
     remotePatterns: [
       { protocol: 'https', hostname: '**.fbcdn.net' },
       { protocol: 'https', hostname: 'lookaside.facebook.com' },

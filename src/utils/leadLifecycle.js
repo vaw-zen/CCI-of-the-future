@@ -7,6 +7,26 @@ export const LEAD_STATUSES = {
 
 export const LEAD_STATUS_OPTIONS = Object.values(LEAD_STATUSES);
 
+export const LEAD_QUALITY_OUTCOMES = {
+  UNREVIEWED: 'unreviewed',
+  SALES_ACCEPTED: 'sales_accepted',
+  SALES_REJECTED: 'sales_rejected',
+  WON: 'won',
+  LOST: 'lost'
+};
+
+export const LEAD_QUALITY_OUTCOME_OPTIONS = Object.values(LEAD_QUALITY_OUTCOMES);
+
+export const LEAD_QUALITY_OUTCOME_LABELS = {
+  [LEAD_QUALITY_OUTCOMES.UNREVIEWED]: 'Non revu',
+  [LEAD_QUALITY_OUTCOMES.SALES_ACCEPTED]: 'Accepté commercialement',
+  [LEAD_QUALITY_OUTCOMES.SALES_REJECTED]: 'Rejeté commercialement',
+  [LEAD_QUALITY_OUTCOMES.WON]: 'Gagné',
+  [LEAD_QUALITY_OUTCOMES.LOST]: 'Perdu'
+};
+
+export const DEFAULT_FOLLOW_UP_SLA_HOURS = 24;
+
 export const CONVENTION_OPERATIONAL_STATUSES = [
   'nouveau',
   'contacte',
@@ -67,3 +87,89 @@ export function getLifecycleTimestampPatch(previousStatus, nextStatus, nowIso = 
   return patch;
 }
 
+export function normalizeLeadQualityOutcome(value, fallback = LEAD_QUALITY_OUTCOMES.UNREVIEWED) {
+  if (!value) {
+    return fallback;
+  }
+
+  return LEAD_QUALITY_OUTCOME_OPTIONS.includes(value) ? value : fallback;
+}
+
+export function deriveLeadQualityOutcomeFromStatus(status, previousOutcome = LEAD_QUALITY_OUTCOMES.UNREVIEWED) {
+  if (status === LEAD_STATUSES.QUALIFIED) {
+    return LEAD_QUALITY_OUTCOMES.SALES_ACCEPTED;
+  }
+
+  if (status === LEAD_STATUSES.CLOSED_WON) {
+    return LEAD_QUALITY_OUTCOMES.WON;
+  }
+
+  if (status === LEAD_STATUSES.CLOSED_LOST) {
+    return LEAD_QUALITY_OUTCOMES.LOST;
+  }
+
+  return normalizeLeadQualityOutcome(previousOutcome);
+}
+
+export function getDefaultFollowUpSlaAt(baseIso, hours = DEFAULT_FOLLOW_UP_SLA_HOURS) {
+  const baseDate = new Date(baseIso || '');
+  if (!Number.isFinite(baseDate.getTime())) {
+    return null;
+  }
+
+  return new Date(baseDate.getTime() + (hours * 60 * 60 * 1000)).toISOString();
+}
+
+export function isLeadFollowUpOverdue({
+  leadStatus,
+  followUpSlaAt,
+  lastWorkedAt
+} = {}, nowIso = new Date().toISOString()) {
+  if (leadStatus !== LEAD_STATUSES.SUBMITTED && leadStatus !== LEAD_STATUSES.QUALIFIED) {
+    return false;
+  }
+
+  if (!followUpSlaAt) {
+    return false;
+  }
+
+  const slaTimestamp = new Date(followUpSlaAt).getTime();
+  const nowTimestamp = new Date(nowIso).getTime();
+  if (!Number.isFinite(slaTimestamp) || !Number.isFinite(nowTimestamp)) {
+    return false;
+  }
+
+  const lastWorkedTimestamp = lastWorkedAt ? new Date(lastWorkedAt).getTime() : null;
+  if (Number.isFinite(lastWorkedTimestamp) && lastWorkedTimestamp >= slaTimestamp) {
+    return false;
+  }
+
+  return nowTimestamp > slaTimestamp;
+}
+
+export function formatDateTimeLocalInputValue(value) {
+  if (!value) {
+    return '';
+  }
+
+  const parsedValue = new Date(value);
+  if (!Number.isFinite(parsedValue.getTime())) {
+    return '';
+  }
+
+  const timezoneOffsetMs = parsedValue.getTimezoneOffset() * 60 * 1000;
+  return new Date(parsedValue.getTime() - timezoneOffsetMs).toISOString().slice(0, 16);
+}
+
+export function parseDateTimeLocalInputValue(value) {
+  if (!value) {
+    return null;
+  }
+
+  const parsedValue = new Date(value);
+  if (!Number.isFinite(parsedValue.getTime())) {
+    return null;
+  }
+
+  return parsedValue.toISOString();
+}

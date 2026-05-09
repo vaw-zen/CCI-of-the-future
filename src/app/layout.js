@@ -1,4 +1,3 @@
-import { DM_Sans, Roboto_Condensed } from 'next/font/google';
 import "./globals.css";
 import Script from 'next/script';
 import { Suspense } from 'react';
@@ -9,24 +8,7 @@ import HydrationSuppressor from '@/utils/HydrationSuppressor';
 import Footer from '@/layout/footer/footer';
 import CookieBanner from '@/utils/components/cookieBanner/cookieBanner';
 
-
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  display: 'optional',
-  weight: ['400', '500', '600', '700'],
-  preload: true,
-  fallback: ['system-ui', 'arial'],
-  adjustFontFallback: true,
-});
-
-const roboto = Roboto_Condensed({
-  subsets: ['latin'],
-  display: 'optional',
-  weight: ['400'],
-  preload: true,
-  fallback: ['sans-serif'],
-  adjustFontFallback: true,
-});
+const APP_HEADER_FONT_CLASS = 'appCondensed';
 
 export const metadata = {
   title: "CCI Services — Leader du Nettoyage Professionnel en Tunisie | Moquettes, Salons & Marbre",
@@ -133,7 +115,7 @@ export default function RootLayout({ children }) {
     ]
   };
   return (
-    <html lang="fr-TN" className={dmSans.className} suppressHydrationWarning>
+    <html lang="fr-TN" className="appSans" suppressHydrationWarning>
       <head>
         <HydrationSuppressor />
         <Script
@@ -193,7 +175,7 @@ export default function RootLayout({ children }) {
           <GoogleAnalytics />
         </Suspense>
       
-        <ClientHeader roboto={roboto} />
+        <ClientHeader robotoClassName={APP_HEADER_FONT_CLASS} />
         {children}
         <Footer />
         <CookieBanner />

@@ -102,7 +102,7 @@ const NavItem = memo(function NavItem({ element, index, handleDropdownBlur, togg
 });
 
 // Main header component
-function Header({ roboto }) {
+function Header({ robotoClassName }) {
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [chatLoaded, setChatLoaded] = useState(false);
 
@@ -142,7 +142,7 @@ function Header({ roboto }) {
                     <Link href="/" className={styles.logo}>
                         <ResponsiveImage skeleton priority sizes={[3, 8, 10]} contain src='/layout/logo.png' alt="cci-logo" title="cci-logo"/>
 
-                        <h2 className={roboto.className}>
+                        <h2 className={robotoClassName}>
                             Chaabane&apos;s Cleaning Intelligence
                         </h2>
                     </Link>

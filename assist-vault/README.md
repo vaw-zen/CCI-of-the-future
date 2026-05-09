@@ -72,11 +72,12 @@ Google Analytics & Search Console accounts
 
 ### Installation
 
-1. **Clone the repository**
+1. **Access the private repository**
    ```bash
-   git clone https://github.com/vaw-zen/CCI-of-the-future.git
+   git clone <private-repo-url>
    cd CCI-of-the-future
    ```
+   This repository is private and intended for authorized internal collaborators only.
 
 2. **Install dependencies**
    ```bash
@@ -192,24 +193,30 @@ node updated-email-automation.cjs social-platforms
 - **Address**: 06 Rue Galant de nuit, El Aouina, 2045 Tunis, Tunisia
 
 ### Technical Support
-- **GitHub**: https://github.com/vaw-zen/CCI-of-the-future
 - **Documentation**: See `AUTOMATION_README.md` for detailed automation docs
-- **Issues**: GitHub issues for bug reports and feature requests
+- **Repository access**: Private internal repository
+- **Change requests**: Route through the internal maintainer or owner workflow
 
 ## 📝 Documentation
 
 - **`AUTOMATION_README.md`**: Complete automation systems documentation
 - **`ANALYTICS_GUIDE.md`**: Analytics implementation guide
 - **`CACHING_IMPLEMENTATION.md`**: Performance optimization guide
+- **`GROWTH_DASHBOARD_AUDIT_AND_ENHANCEMENT_STRATEGY.md`**: Repo-first audit, gap analysis, prioritization, and 6-12 month roadmap for turning the dashboard into a growth operating system
+- **`GROWTH_DASHBOARD_EXECUTION_PROGRAM.md`**: Stage-by-stage delivery program, owners, dependencies, and implementation backlog for the 24-week rollout
+- **`GROWTH_DASHBOARD_SYSTEM_GUIDE.md`**: End-to-end dashboard, reporting, keyword, and connector architecture
+- **`GROWTH_DASHBOARD_STAGE_TRACKING_REPORT.md`**: Current delivery checkpoint across Stages 0-6, shipped scope, verification, and next recommended implementation
+- **`GROWTH_DASHBOARD_METRIC_DEFINITIONS.md`**: KPI formulas, ownership, refresh cadence, and decision intent
+- **`GROWTH_DASHBOARD_SEMANTICS_AND_THRESHOLDS.md`**: Stage 0 KPI glossary, taxonomy lock, thresholds, owner model, and stage gates
+- **`GROWTH_DASHBOARD_RUNBOOK.md`**: Launch, stabilization, weekly review, and maintenance checklist
 - **`tuning/README.md`**: AI and tuning configurations
 
-## 🤝 Contributing
+## 🔒 Repository Policy
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- This project is maintained in a private repository.
+- It is not open to public contributions, forks, or external pull requests.
+- Changes should be made only by authorized collaborators with repository access.
+- Documentation, roadmap, and implementation requests should follow the internal review and approval process.
 
 ## 📄 License
 
@@ -220,6 +227,6 @@ This project is developed for **CCI Services** - Professional cleaning company i
 **Built with ❤️ for CCI Services**  
 *Professional cleaning excellence in Tunis since 2015*
 
-**Last Updated**: October 14, 2025  
+**Last Updated**: May 9, 2026  
 **Version**: 2.0  
 **Status**: Production Ready

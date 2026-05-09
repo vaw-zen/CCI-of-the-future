@@ -6,11 +6,13 @@ import {
 } from '@/libs/analyticsLifecycle';
 import {
   CONVENTION_OPERATIONAL_STATUSES,
+  deriveLeadQualityOutcomeFromStatus,
   deriveLeadStatusFromConventionStatus,
   getLifecycleTimestampPatch,
   isLeadStatusTransitionAllowed,
   LEAD_STATUS_OPTIONS,
-  LEAD_STATUSES
+  LEAD_STATUSES,
+  LEAD_QUALITY_OUTCOMES
 } from '@/utils/leadLifecycle';
 import {
   getClientIp,
@@ -18,6 +20,11 @@ import {
   hashRequestValue
 } from '@/libs/security';
 import { authenticateAdminRequest } from '@/libs/adminApiAuth';
+import {
+  isMissingOptionalLeadOperationFieldError,
+  runLeadSelectWithOptionalTrackingFallback,
+  withoutOptionalLeadOperationFields
+} from '@/libs/leadTrackingSchemaCompat.mjs';
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const ADMIN_STATUS_RATE_LIMIT = {
@@ -25,17 +32,6 @@ const ADMIN_STATUS_RATE_LIMIT = {
   limit: 30,
   windowMs: 60 * 1000
 };
-const OPTIONAL_LEAD_TRACKING_FIELDS = [
-  'whatsapp_click_id',
-  'whatsapp_clicked_at',
-  'whatsapp_click_label',
-  'whatsapp_click_page',
-  'whatsapp_manual_tag',
-  'whatsapp_manual_tagged_at'
-];
-const OPTIONAL_LEAD_TRACKING_FIELD_SET = new Set(OPTIONAL_LEAD_TRACKING_FIELDS);
-const OPTIONAL_LEAD_TRACKING_ERROR_PATTERN = new RegExp(`\\b(?:${OPTIONAL_LEAD_TRACKING_FIELDS.join('|')})\\b`, 'i');
-
 const LEAD_SELECT_FIELDS = {
   devis: [
     'id',
@@ -59,9 +55,13 @@ const LEAD_SELECT_FIELDS = {
     'message',
     'newsletter',
     'lead_status',
+    'lead_quality_outcome',
+    'lead_owner',
     'submitted_at',
     'qualified_at',
     'closed_at',
+    'follow_up_sla_at',
+    'last_worked_at',
     'ga_client_id',
     'landing_page',
     'session_source',
@@ -99,9 +99,13 @@ const LEAD_SELECT_FIELDS = {
     'statut',
     'updated_at',
     'lead_status',
+    'lead_quality_outcome',
+    'lead_owner',
     'submitted_at',
     'qualified_at',
     'closed_at',
+    'follow_up_sla_at',
+    'last_worked_at',
     'ga_client_id',
     'landing_page',
     'session_source',
@@ -232,37 +236,14 @@ function getErrorResponse(status, message, httpStatus) {
   }, { status: httpStatus });
 }
 
-function withoutOptionalLeadTrackingFields(selectClause = '') {
-  return selectClause
-    .split(',')
-    .map((field) => field.trim())
-    .filter(Boolean)
-    .filter((field) => !OPTIONAL_LEAD_TRACKING_FIELD_SET.has(field))
-    .join(',');
-}
-
-function isMissingOptionalLeadTrackingColumnError(error) {
-  return error?.code === '42703' && OPTIONAL_LEAD_TRACKING_ERROR_PATTERN.test(String(error?.message || ''));
-}
-
 async function runLeadSelectWithFallback({ supabase, table, select, applyQuery }) {
-  const primaryResult = await applyQuery(
-    supabase
-      .from(table)
-      .select(select)
-  );
-
-  if (!isMissingOptionalLeadTrackingColumnError(primaryResult.error)) {
-    return primaryResult;
-  }
-
-  console.warn(`[admin][lead-status] using legacy lead select for ${table}: optional WhatsApp tracking columns are missing.`);
-
-  return applyQuery(
-    supabase
-      .from(table)
-      .select(withoutOptionalLeadTrackingFields(select))
-  );
+  return runLeadSelectWithOptionalTrackingFallback({
+    supabase,
+    table,
+    select,
+    applyQuery,
+    channel: 'lead-status'
+  });
 }
 
 export async function PATCH(request, { params }) {
@@ -356,6 +337,7 @@ export async function PATCH(request, { params }) {
       || (kind === 'convention'
         ? deriveLeadStatusFromConventionStatus(currentLead.statut)
         : LEAD_STATUSES.SUBMITTED);
+    const nowIso = new Date().toISOString();
 
     const patch = {};
     let nextOperationalStatus = null;
@@ -405,15 +387,33 @@ export async function PATCH(request, { params }) {
     Object.assign(
       patch,
       {
-        lead_status: leadStatus
+        lead_status: leadStatus,
+        lead_quality_outcome: deriveLeadQualityOutcomeFromStatus(
+          leadStatus,
+          currentLead.lead_quality_outcome || LEAD_QUALITY_OUTCOMES.UNREVIEWED
+        ),
+        last_worked_at: nowIso,
+        follow_up_sla_at: leadStatus === LEAD_STATUSES.CLOSED_WON || leadStatus === LEAD_STATUSES.CLOSED_LOST
+          ? null
+          : currentLead.follow_up_sla_at || null
       },
-      getLifecycleTimestampPatch(previousLeadStatus, leadStatus)
+      getLifecycleTimestampPatch(previousLeadStatus, leadStatus, nowIso)
     );
 
-    const { error: updateError } = await supabase
+    let { error: updateError } = await supabase
       .from(config.table)
       .update(patch)
       .eq('id', id);
+
+    if (updateError && isMissingOptionalLeadOperationFieldError(updateError)) {
+      console.warn(
+        `[admin][lead-status] retrying status update without optional lead-operations columns for ${config.table}: ${updateError.message}`
+      );
+      ({ error: updateError } = await supabase
+        .from(config.table)
+        .update(withoutOptionalLeadOperationFields(patch))
+        .eq('id', id));
+    }
 
     if (updateError) {
       await writeStatusAuditEvent(supabase, {

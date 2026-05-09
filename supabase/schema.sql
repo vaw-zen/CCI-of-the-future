@@ -36,9 +36,13 @@ CREATE TABLE IF NOT EXISTS devis_requests (
 
   -- Lead Lifecycle
   lead_status TEXT NOT NULL DEFAULT 'submitted' CHECK (lead_status IN ('submitted', 'qualified', 'closed_won', 'closed_lost')),
+  lead_quality_outcome TEXT NOT NULL DEFAULT 'unreviewed' CHECK (lead_quality_outcome IN ('unreviewed', 'sales_accepted', 'sales_rejected', 'won', 'lost')),
+  lead_owner TEXT,
   submitted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   qualified_at TIMESTAMP WITH TIME ZONE,
   closed_at TIMESTAMP WITH TIME ZONE,
+  follow_up_sla_at TIMESTAMP WITH TIME ZONE,
+  last_worked_at TIMESTAMP WITH TIME ZONE,
 
   -- Attribution
   ga_client_id TEXT,
@@ -78,6 +82,10 @@ CREATE INDEX IF NOT EXISTS idx_devis_requests_email ON devis_requests(email);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_type_service ON devis_requests(type_service);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_lead_status ON devis_requests(lead_status);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_lead_status_created_at ON devis_requests(lead_status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_devis_requests_lead_quality_outcome ON devis_requests(lead_quality_outcome);
+CREATE INDEX IF NOT EXISTS idx_devis_requests_lead_owner ON devis_requests(lead_owner);
+CREATE INDEX IF NOT EXISTS idx_devis_requests_follow_up_sla_at ON devis_requests(follow_up_sla_at DESC);
+CREATE INDEX IF NOT EXISTS idx_devis_requests_last_worked_at ON devis_requests(last_worked_at DESC);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_session_source ON devis_requests(session_source);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_session_medium ON devis_requests(session_medium);
 CREATE INDEX IF NOT EXISTS idx_devis_requests_whatsapp_click_id ON devis_requests(whatsapp_click_id);

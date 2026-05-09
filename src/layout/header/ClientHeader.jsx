@@ -2,6 +2,6 @@
 
 import Header from './header';
 
-export default function ClientHeader({ roboto }) {
-  return <Header roboto={roboto} />;
+export default function ClientHeader({ robotoClassName }) {
+  return <Header robotoClassName={robotoClassName} />;
 }

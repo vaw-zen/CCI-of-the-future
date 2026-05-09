@@ -4,7 +4,8 @@ import {
   buildAdminDashboardData,
   buildCombinedChannelPerformance,
   buildLifecycleTrend,
-  getDashboardRange
+  getDashboardRange,
+  normalizeLead
 } from '../src/libs/adminDashboardMetrics.mjs';
 
 function buildDevisRow(overrides = {}) {
@@ -13,9 +14,13 @@ function buildDevisRow(overrides = {}) {
     created_at: overrides.created_at || '2026-05-01T10:00:00.000Z',
     type_service: overrides.type_service || 'salon',
     lead_status: overrides.lead_status || 'submitted',
+    lead_quality_outcome: overrides.lead_quality_outcome || null,
+    lead_owner: overrides.lead_owner || null,
     submitted_at: overrides.submitted_at || overrides.created_at || '2026-05-01T10:00:00.000Z',
     qualified_at: overrides.qualified_at || null,
     closed_at: overrides.closed_at || null,
+    follow_up_sla_at: overrides.follow_up_sla_at || null,
+    last_worked_at: overrides.last_worked_at || null,
     landing_page: overrides.landing_page || '/salon',
     session_source: overrides.session_source || 'direct',
     session_medium: overrides.session_medium || '(none)',
@@ -41,9 +46,13 @@ function buildConventionRow(overrides = {}) {
     services_souhaites: overrides.services_souhaites || ['hotel', 'clinique'],
     statut: overrides.statut || 'nouveau',
     lead_status: overrides.lead_status || null,
+    lead_quality_outcome: overrides.lead_quality_outcome || null,
+    lead_owner: overrides.lead_owner || null,
     submitted_at: overrides.submitted_at || overrides.created_at || '2026-05-03T09:00:00.000Z',
     qualified_at: overrides.qualified_at || null,
     closed_at: overrides.closed_at || null,
+    follow_up_sla_at: overrides.follow_up_sla_at || null,
+    last_worked_at: overrides.last_worked_at || null,
     landing_page: overrides.landing_page || '/entreprises',
     session_source: overrides.session_source || 'google',
     session_medium: overrides.session_medium || 'organic',
@@ -150,6 +159,60 @@ test('dashboard data uses global open leads for stale queue and keeps service br
   assert.equal(data.overview.cards.find((card) => card.key === 'unattributed_rate')?.value, 50);
 });
 
+test('stage-one lead operations use last_worked_at for stale queue and surface SLA and quality summaries', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-fresh-touch',
+          created_at: '2026-05-01T09:00:00.000Z',
+          submitted_at: '2026-05-01T09:00:00.000Z',
+          qualified_at: '2026-05-02T09:00:00.000Z',
+          last_worked_at: '2026-05-07T10:00:00.000Z',
+          follow_up_sla_at: '2026-05-06T09:00:00.000Z',
+          lead_quality_outcome: 'sales_accepted',
+          lead_owner: 'ops@cciservices.online'
+        }),
+        buildDevisRow({
+          id: 'devis-overdue-open',
+          created_at: '2026-05-01T07:00:00.000Z',
+          submitted_at: '2026-05-01T07:00:00.000Z',
+          follow_up_sla_at: '2026-05-03T07:00:00.000Z',
+          last_worked_at: '2026-05-02T07:00:00.000Z'
+        })
+      ],
+      conventions: [
+        buildConventionRow({
+          id: 'conv-unreviewed-open',
+          created_at: '2026-05-02T08:00:00.000Z',
+          submitted_at: '2026-05-02T08:00:00.000Z',
+          follow_up_sla_at: '2026-05-04T08:00:00.000Z',
+          last_worked_at: '2026-05-03T08:00:00.000Z'
+        })
+      ]
+    },
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  });
+
+  assert.equal(data.operations.staleQueue.count, 2);
+  assert.equal(data.operations.staleQueue.leads.some((lead) => lead.id === 'devis-fresh-touch'), false);
+  assert.equal(data.operations.slaBreaches.count, 2);
+  assert.equal(data.operations.leadQuality.reviewedCount, 1);
+  assert.equal(data.operations.leadQuality.ownerAssignedCount, 1);
+  assert.equal(data.operations.leadQuality.breakdown.find((item) => item.key === 'sales_accepted')?.count, 1);
+  assert.equal(data.operations.leadQuality.breakdown.find((item) => item.key === 'unreviewed')?.count, 2);
+});
+
 test('combined channel performance merges external metrics with current lead cohort', () => {
   const rows = buildCombinedChannelPerformance(
     [
@@ -203,6 +266,285 @@ test('combined channel performance merges external metrics with current lead coh
   assert.equal(rows[0].wonLeads, 1);
   assert.equal(rows[0].ctr, 10);
   assert.equal(rows[0].leadRate, 5);
+  assert.equal(rows[0].sourceClass, 'organic_search');
+  assert.equal(rows[0].pageType, 'service');
+  assert.equal(rows[0].warnings.costPerLead?.key, 'cost_per_lead_low_sample');
+  assert.equal(rows[0].warnings.costPerAcquisition?.key, 'cost_per_acquisition_low_sample');
+});
+
+test('normalizeLead derives business line, source class, and page type for stage-one segmentation readiness', () => {
+  const b2cLead = normalizeLead(buildDevisRow({
+    session_source: 'instagram',
+    session_medium: 'social',
+    landing_page: '/contact',
+    lead_quality_outcome: 'sales_rejected',
+    lead_owner: 'ops@cciservices.online',
+    follow_up_sla_at: '2026-05-08T12:00:00.000Z',
+    last_worked_at: '2026-05-07T08:00:00.000Z'
+  }), 'devis', '2026-05-07T12:00:00.000Z');
+  const b2bLead = normalizeLead(buildConventionRow({
+    session_source: 'google',
+    session_medium: 'organic',
+    landing_page: '/entreprises'
+  }), 'convention', '2026-05-07T12:00:00.000Z');
+
+  assert.equal(b2cLead.businessLine, 'b2c');
+  assert.equal(b2cLead.businessLineLabel, 'B2C');
+  assert.equal(b2cLead.sourceClass, 'organic_social');
+  assert.equal(b2cLead.pageType, 'contact');
+  assert.equal(b2cLead.leadQualityOutcome, 'sales_rejected');
+  assert.equal(b2cLead.leadOwner, 'ops@cciservices.online');
+  assert.equal(b2cLead.followUpSlaAt, '2026-05-08T12:00:00.000Z');
+  assert.equal(b2cLead.lastWorkedAt, '2026-05-07T08:00:00.000Z');
+
+  assert.equal(b2bLead.businessLine, 'b2b');
+  assert.equal(b2bLead.businessLineLabel, 'B2B');
+  assert.equal(b2bLead.sourceClass, 'organic_search');
+  assert.equal(b2bLead.pageType, 'service');
+});
+
+test('stage-two filters segment overview, pipeline, acquisition, seo, and executive summary in one contract', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-salon-organic',
+          created_at: '2026-05-02T10:00:00.000Z',
+          last_worked_at: '2026-05-07T08:00:00.000Z',
+          landing_page: '/salon',
+          entry_path: '/salon',
+          session_source: 'google',
+          session_medium: 'organic',
+          qualified_at: '2026-05-03T10:00:00.000Z',
+          calculator_estimate: 320
+        }),
+        buildDevisRow({
+          id: 'devis-marbre-paid',
+          created_at: '2026-05-03T10:00:00.000Z',
+          landing_page: '/marbre',
+          entry_path: '/marbre',
+          session_source: 'facebook',
+          session_medium: 'paid_social',
+          calculator_estimate: 150
+        })
+      ],
+      conventions: [
+        buildConventionRow({
+          id: 'conv-b2b-organic',
+          created_at: '2026-05-04T09:00:00.000Z',
+          landing_page: '/entreprises',
+          entry_path: '/entreprises',
+          session_source: 'google',
+          session_medium: 'organic',
+          qualified_at: '2026-05-05T09:00:00.000Z'
+        })
+      ]
+    },
+    previousRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-previous-salon',
+          created_at: '2026-04-26T10:00:00.000Z',
+          landing_page: '/salon',
+          entry_path: '/salon',
+          session_source: 'google',
+          session_medium: 'organic'
+        })
+      ],
+      conventions: []
+    },
+    universeRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-salon-organic',
+          created_at: '2026-05-02T10:00:00.000Z',
+          last_worked_at: '2026-05-07T08:00:00.000Z',
+          landing_page: '/salon',
+          entry_path: '/salon',
+          session_source: 'google',
+          session_medium: 'organic',
+          qualified_at: '2026-05-03T10:00:00.000Z',
+          calculator_estimate: 320
+        }),
+        buildDevisRow({
+          id: 'devis-marbre-paid',
+          created_at: '2026-05-03T10:00:00.000Z',
+          landing_page: '/marbre',
+          entry_path: '/marbre',
+          session_source: 'facebook',
+          session_medium: 'paid_social',
+          calculator_estimate: 150
+        })
+      ],
+      conventions: [
+        buildConventionRow({
+          id: 'conv-b2b-organic',
+          created_at: '2026-05-04T09:00:00.000Z',
+          landing_page: '/entreprises',
+          entry_path: '/entreprises',
+          session_source: 'google',
+          session_medium: 'organic',
+          qualified_at: '2026-05-05T09:00:00.000Z'
+        })
+      ]
+    },
+    externalMetricRows: [
+      {
+        metric_date: '2026-05-07',
+        metric_source: 'ga4',
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: '/salon',
+        sessions: 30,
+        users: 24,
+        clicks: 0,
+        impressions: 0,
+        spend: 0
+      },
+      {
+        metric_date: '2026-05-07',
+        metric_source: 'gsc',
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: '/salon',
+        sessions: 0,
+        users: 0,
+        clicks: 18,
+        impressions: 180,
+        spend: 0
+      },
+      {
+        metric_date: '2026-05-07',
+        metric_source: 'ga4',
+        source: 'facebook',
+        medium: 'paid_social',
+        campaign: 'retargeting',
+        landing_page: '/marbre',
+        sessions: 20,
+        users: 18,
+        clicks: 0,
+        impressions: 0,
+        spend: 0
+      }
+    ],
+    keywordCatalogRows: [
+      buildKeywordCatalogRow({
+        id: 'keyword-salon',
+        canonical_target_url: 'https://cciservices.online/salon',
+        canonical_target_path: '/salon'
+      }),
+      buildKeywordCatalogRow({
+        id: 'keyword-marbre',
+        normalized_keyword: 'nettoyage marbre tunis',
+        display_keyword: 'Nettoyage marbre Tunis',
+        canonical_target_url: 'https://cciservices.online/marbre',
+        canonical_target_path: '/marbre',
+        category_tags: ['Marbre'],
+        priority_tags: ['Medium']
+      })
+    ],
+    keywordRankingRows: [
+      {
+        keyword_catalog_id: 'keyword-salon',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/salon',
+        matched_path: '/salon',
+        matched_url: 'https://cciservices.online/salon',
+        result_title: 'Nettoyage salon',
+        position: 4,
+        is_ranked: true,
+        device: 'desktop',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      },
+      {
+        keyword_catalog_id: 'keyword-salon',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage salon tunis',
+        keyword_label: 'Nettoyage salon Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/salon',
+        matched_path: '/salon',
+        matched_url: 'https://cciservices.online/salon',
+        result_title: 'Nettoyage salon mobile',
+        position: 6,
+        is_ranked: true,
+        device: 'mobile',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      },
+      {
+        keyword_catalog_id: 'keyword-marbre',
+        metric_date: '2026-05-07',
+        keyword: 'nettoyage marbre tunis',
+        keyword_label: 'Nettoyage marbre Tunis',
+        target_domain: 'cciservices.online',
+        target_path: '/marbre',
+        matched_path: '/marbre',
+        matched_url: 'https://cciservices.online/marbre',
+        result_title: 'Nettoyage marbre',
+        position: 8,
+        is_ranked: true,
+        device: 'desktop',
+        google_domain: 'google.com',
+        gl: 'tn',
+        hl: 'fr',
+        location: 'Tunis, Tunisia',
+        results_count: 10
+      }
+    ],
+    filters: {
+      businessLine: 'b2c',
+      service: 'salon',
+      sourceClass: 'organic_search',
+      device: 'desktop',
+      pageType: 'service'
+    },
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  });
+
+  assert.equal(data.filters.applied.businessLine, 'b2c');
+  assert.equal(data.filters.applied.service, 'salon');
+  assert.equal(data.filters.applied.sourceClass, 'organic_search');
+  assert.equal(data.filters.applied.device, 'desktop');
+  assert.equal(data.filters.applied.pageType, 'service');
+  assert.equal(data.filters.segmentLabel, 'B2C · Salon · Organic search · Service page');
+  assert.equal(data.filters.seoDeviceLabel, 'Desktop');
+  assert.equal(data.filters.active.length, 5);
+  assert.match(data.filters.notes[0], /Business line/);
+  assert.match(data.filters.notes[1], /Service slices/);
+  assert.match(data.filters.notes[2], /Device currently filters keyword visibility snapshots only/);
+
+  assert.equal(data.overview.cohort.currentLeads, 1);
+  assert.equal(data.pipeline.summary.totalLeads, 1);
+  assert.equal(data.pipeline.breakdowns.sourceClass[0]?.key, 'organic_search');
+  assert.equal(data.pipeline.breakdowns.businessLine[0]?.key, 'b2c');
+  assert.equal(data.acquisition.totals.sessions, 30);
+  assert.equal(data.acquisition.totals.clicks, 18);
+  assert.equal(data.seoContent.landingPages.length, 1);
+  assert.equal(data.seoContent.landingPages[0]?.label, '/salon');
+  assert.equal(data.seoContent.keywordRankings.totals.trackedKeywords, 1);
+  assert.equal(data.seoContent.keywordRankings.totals.desktopRankedKeywords, 1);
+  assert.equal(data.seoContent.keywordRankings.totals.mobileRankedKeywords, 0);
+  assert.equal(data.operations.latestSubmitted.length, 1);
+  assert.equal(data.executiveSummary.segmentLabel, 'B2C · Salon · Organic search · Service page');
+  assert.equal(data.executiveSummary.trend.key, 'trend');
+  assert.equal(data.executiveSummary.risk.key, 'no_acute_risk');
+  assert.equal(data.executiveSummary.opportunity.key, 'seo_landing_page');
+  assert.equal(data.executiveSummary.nextAction.owner, 'Growth owner');
 });
 
 test('whatsapp acquisition summarizes clicks, attributed leads, and drilldown rows', () => {
@@ -468,6 +810,7 @@ test('seo content summarizes latest keyword rankings and ranking changes', () =>
   assert.equal(data.seoContent.keywordRankings.totals.mobileRankedKeywords, 1);
   assert.equal(data.seoContent.keywordRankings.totals.averagePosition, 3);
   assert.equal(data.seoContent.keywordRankings.totals.top10Count, 1);
+  assert.equal(data.seoContent.keywordCards.find((card) => card.key === 'tracked_keywords')?.canonicalLabel, 'Tracked keywords');
   assert.equal(data.seoContent.keywordRankings.rows[0].desktop.positionChange, 5);
   assert.equal(data.seoContent.keywordRankings.rows[0].mobile.positionChange, 2);
   assert.equal(data.seoContent.keywordRankings.rows[0].currentBestPosition, 3);
@@ -529,6 +872,100 @@ test('seo content summarizes latest keyword rankings and ranking changes', () =>
   assert.match(data.seoContent.notes.keywordDefinition, /Snapshots SERP live catalogués/);
   assert.equal(data.seoContent.keywordRankings.rows[0].reference.position, 7);
   assert.equal(data.seoContent.keywordRankings.rows[0].reference.lastUpdated, null);
+});
+
+test('dashboard stage-one cards expose canonical semantics and low-sample warnings', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-critical-direct',
+          created_at: '2026-05-02T10:00:00.000Z',
+          submitted_at: '2026-05-02T10:00:00.000Z',
+          lead_status: 'closed_won',
+          closed_at: '2026-05-05T10:00:00.000Z',
+          session_source: 'direct',
+          session_medium: '(none)',
+          calculator_estimate: 900
+        })
+      ],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-critical-direct',
+          created_at: '2026-05-02T10:00:00.000Z',
+          submitted_at: '2026-05-02T10:00:00.000Z',
+          lead_status: 'closed_won',
+          closed_at: '2026-05-05T10:00:00.000Z',
+          session_source: 'direct',
+          session_medium: '(none)',
+          calculator_estimate: 900
+        })
+      ],
+      conventions: []
+    },
+    externalMetricRows: [
+      {
+        metric_date: '2026-05-02',
+        metric_source: 'ga4',
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: '/salon',
+        sessions: 15,
+        users: 12,
+        clicks: 0,
+        impressions: 0,
+        spend: 0
+      },
+      {
+        metric_date: '2026-05-02',
+        metric_source: 'gsc',
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: '/salon',
+        sessions: 0,
+        users: 0,
+        clicks: 15,
+        impressions: 120,
+        spend: 0
+      },
+      {
+        metric_date: '2026-05-02',
+        metric_source: 'paid_manual',
+        source: 'direct',
+        medium: '(none)',
+        campaign: '(not set)',
+        landing_page: '/salon',
+        sessions: 0,
+        users: 0,
+        clicks: 0,
+        impressions: 0,
+        spend: 100
+      }
+    ],
+    keywordCatalogRows: [],
+    keywordRankingRows: [],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  });
+
+  assert.equal(data.overview.cards.find((card) => card.key === 'revenue_proxy')?.label, 'Estimated pipeline value');
+  assert.equal(data.overview.cards.find((card) => card.key === 'revenue_proxy')?.canonicalLabel, 'Estimated pipeline value');
+  assert.equal(data.overview.cards.find((card) => card.key === 'unattributed_rate')?.warning?.level, 'critical');
+
+  assert.equal(data.acquisition.cards.find((card) => card.key === 'cost_per_lead')?.warning?.key, 'cost_per_lead_low_sample');
+  assert.equal(data.acquisition.cards.find((card) => card.key === 'cost_per_acquisition')?.warning?.key, 'cost_per_acquisition_low_sample');
+
+  assert.equal(data.seoContent.cards.find((card) => card.key === 'lead_rate')?.warning?.key, 'lead_rate_low_session_sample');
 });
 
 test('keyword rankings fall back to lookup matching when keyword_catalog_id is stale', () => {

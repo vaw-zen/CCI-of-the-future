@@ -3,6 +3,10 @@ import { createServiceClient } from '@/libs/supabase';
 import { authenticateAdminRequest } from '@/libs/adminApiAuth';
 import { getClientIp, guardMutationRequest } from '@/libs/security';
 import { buildWhatsAppManualTagPatch } from '@/libs/whatsappAttribution.mjs';
+import {
+  isMissingOptionalLeadOperationFieldError,
+  withoutOptionalLeadOperationFields
+} from '@/libs/leadTrackingSchemaCompat.mjs';
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const ADMIN_ATTRIBUTION_RATE_LIMIT = {
@@ -84,12 +88,27 @@ export async function PATCH(request, { params }) {
   }
 
   try {
-    const { data: updatedLead, error } = await supabase
+    const attributionPatch = {
+      ...buildWhatsAppManualTagPatch(body.whatsappManualTag),
+      last_worked_at: new Date().toISOString()
+    };
+
+    let { data: updatedLead, error } = await supabase
       .from(table)
-      .update(buildWhatsAppManualTagPatch(body.whatsappManualTag))
+      .update(attributionPatch)
       .eq('id', id)
       .select('*')
       .single();
+
+    if (error && isMissingOptionalLeadOperationFieldError(error)) {
+      console.warn(`[admin][lead-attribution] retrying update without optional lead-operations columns for ${table}: ${error.message}`);
+      ({ data: updatedLead, error } = await supabase
+        .from(table)
+        .update(withoutOptionalLeadOperationFields(attributionPatch))
+        .eq('id', id)
+        .select('*')
+        .single());
+    }
 
     if (error || !updatedLead) {
       return getErrorResponse('update_failed', 'Impossible de mettre à jour l’attribution du lead.', 500);

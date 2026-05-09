@@ -58,7 +58,35 @@ export async function updateLeadAttribution(kind, id, payload) {
   return result.data;
 }
 
-export async function getAdminDashboardData({ from, to } = {}) {
+export async function updateLeadOperations(kind, id, payload) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(`/api/admin/leads/${kind}/${id}/ops`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.message || 'Lead operations update failed');
+  }
+
+  return result.data;
+}
+
+export async function getAdminDashboardData({
+  from,
+  to,
+  businessLine,
+  service,
+  sourceClass,
+  device,
+  pageType
+} = {}) {
   const accessToken = await getAccessToken();
   const params = new URLSearchParams();
 
@@ -68,6 +96,26 @@ export async function getAdminDashboardData({ from, to } = {}) {
 
   if (to) {
     params.set('to', to);
+  }
+
+  if (businessLine) {
+    params.set('businessLine', businessLine);
+  }
+
+  if (service) {
+    params.set('service', service);
+  }
+
+  if (sourceClass) {
+    params.set('sourceClass', sourceClass);
+  }
+
+  if (device) {
+    params.set('device', device);
+  }
+
+  if (pageType) {
+    params.set('pageType', pageType);
   }
 
   const response = await fetch(`/api/admin/dashboard${params.toString() ? `?${params.toString()}` : ''}`, {

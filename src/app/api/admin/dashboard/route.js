@@ -4,6 +4,7 @@ import { createServiceClient } from '@/libs/supabase';
 import { getClientIp, rateLimitRequest } from '@/libs/security';
 import { buildAdminDashboardData, getDashboardRange } from '@/libs/adminDashboardMetrics.mjs';
 import { fetchGrowthKeywordCatalogRows } from '@/libs/growthKeywordCatalog.mjs';
+import { runLeadSelectWithOptionalTrackingFallback } from '@/libs/leadTrackingSchemaCompat.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,17 +13,8 @@ const ADMIN_DASHBOARD_RATE_LIMIT = {
   limit: 60,
   windowMs: 60 * 1000
 };
-
-const OPTIONAL_LEAD_TRACKING_FIELDS = [
-  'whatsapp_click_id',
-  'whatsapp_clicked_at',
-  'whatsapp_click_label',
-  'whatsapp_click_page',
-  'whatsapp_manual_tag',
-  'whatsapp_manual_tagged_at'
-];
-const OPTIONAL_LEAD_TRACKING_FIELD_SET = new Set(OPTIONAL_LEAD_TRACKING_FIELDS);
-const OPTIONAL_LEAD_TRACKING_ERROR_PATTERN = new RegExp(`\\b(?:${OPTIONAL_LEAD_TRACKING_FIELDS.join('|')})\\b`, 'i');
+const NORMALIZED_EXTERNAL_METRIC_VIEW = 'growth_channel_daily_metrics_normalized';
+const NORMALIZED_EXTERNAL_METRIC_VIEW_WARNINGS = new Set();
 
 const DASHBOARD_SELECT_FIELDS = {
   devis: [
@@ -31,9 +23,13 @@ const DASHBOARD_SELECT_FIELDS = {
     'type_service',
     'calculator_estimate',
     'lead_status',
+    'lead_quality_outcome',
+    'lead_owner',
     'submitted_at',
     'qualified_at',
     'closed_at',
+    'follow_up_sla_at',
+    'last_worked_at',
     'landing_page',
     'session_source',
     'session_medium',
@@ -56,9 +52,13 @@ const DASHBOARD_SELECT_FIELDS = {
     'statut',
     'calculator_estimate',
     'lead_status',
+    'lead_quality_outcome',
+    'lead_owner',
     'submitted_at',
     'qualified_at',
     'closed_at',
+    'follow_up_sla_at',
+    'last_worked_at',
     'landing_page',
     'session_source',
     'session_medium',
@@ -86,37 +86,14 @@ function getErrorResponse(status, message, httpStatus) {
   }, { status: httpStatus });
 }
 
-function withoutOptionalLeadTrackingFields(selectClause = '') {
-  return selectClause
-    .split(',')
-    .map((field) => field.trim())
-    .filter(Boolean)
-    .filter((field) => !OPTIONAL_LEAD_TRACKING_FIELD_SET.has(field))
-    .join(',');
-}
-
-function isMissingOptionalLeadTrackingColumnError(error) {
-  return error?.code === '42703' && OPTIONAL_LEAD_TRACKING_ERROR_PATTERN.test(String(error?.message || ''));
-}
-
 async function runLeadSelectWithFallback({ supabase, table, select, applyQuery }) {
-  const primaryResult = await applyQuery(
-    supabase
-      .from(table)
-      .select(select)
-  );
-
-  if (!isMissingOptionalLeadTrackingColumnError(primaryResult.error)) {
-    return primaryResult;
-  }
-
-  console.warn(`[admin][dashboard] using legacy lead select for ${table}: optional WhatsApp tracking columns are missing.`);
-
-  return applyQuery(
-    supabase
-      .from(table)
-      .select(withoutOptionalLeadTrackingFields(select))
-  );
+  return runLeadSelectWithOptionalTrackingFallback({
+    supabase,
+    table,
+    select,
+    applyQuery,
+    channel: 'dashboard'
+  });
 }
 
 async function fetchLeadRows(supabase, range) {
@@ -211,22 +188,65 @@ async function fetchAuditEvents(supabase) {
 }
 
 async function fetchExternalMetricRows(supabase, range) {
+  const normalizedSelect = [
+    'metric_date',
+    'metric_source',
+    'source',
+    'medium',
+    'campaign',
+    'landing_page',
+    'normalized_source',
+    'normalized_medium',
+    'normalized_campaign',
+    'normalized_landing_page',
+    'source_class',
+    'page_type',
+    'sessions',
+    'users',
+    'clicks',
+    'impressions',
+    'spend',
+    'metadata'
+  ].join(',');
+  const rawSelect = [
+    'metric_date',
+    'metric_source',
+    'source',
+    'medium',
+    'campaign',
+    'landing_page',
+    'sessions',
+    'users',
+    'clicks',
+    'impressions',
+    'spend',
+    'metadata'
+  ].join(',');
+
+  const normalizedResult = await supabase
+    .from(NORMALIZED_EXTERNAL_METRIC_VIEW)
+    .select(normalizedSelect)
+    .gte('metric_date', range.from)
+    .lte('metric_date', range.to)
+    .order('metric_date', { ascending: true });
+
+  if (!normalizedResult.error) {
+    return {
+      rows: normalizedResult.data || [],
+      error: null
+    };
+  }
+
+  if (!NORMALIZED_EXTERNAL_METRIC_VIEW_WARNINGS.has(NORMALIZED_EXTERNAL_METRIC_VIEW)) {
+    NORMALIZED_EXTERNAL_METRIC_VIEW_WARNINGS.add(NORMALIZED_EXTERNAL_METRIC_VIEW);
+    console.warn(
+      `[admin][dashboard] falling back to raw growth metrics because ${NORMALIZED_EXTERNAL_METRIC_VIEW} is unavailable: ${normalizedResult.error.message}`
+    );
+  }
+
   const { data, error } = await supabase
     .from('growth_channel_daily_metrics')
-    .select([
-      'metric_date',
-      'metric_source',
-      'source',
-      'medium',
-      'campaign',
-      'landing_page',
-      'sessions',
-      'users',
-      'clicks',
-      'impressions',
-      'spend',
-      'metadata'
-    ].join(','))
+    .select(rawSelect)
     .gte('metric_date', range.from)
     .lte('metric_date', range.to)
     .order('metric_date', { ascending: true });
@@ -389,6 +409,14 @@ export async function GET(request) {
     return getErrorResponse(rangeResult.error, rangeResult.message, 400);
   }
 
+  const filters = {
+    businessLine: searchParams.get('businessLine'),
+    service: searchParams.get('service'),
+    sourceClass: searchParams.get('sourceClass'),
+    device: searchParams.get('device'),
+    pageType: searchParams.get('pageType')
+  };
+
   try {
     const [
       currentRows,
@@ -429,6 +457,7 @@ export async function GET(request) {
       sourceHealthRows: sourceHealthResult.rows,
       auditEvents,
       range: rangeResult.range,
+      filters,
       nowIso: new Date().toISOString()
     });
 

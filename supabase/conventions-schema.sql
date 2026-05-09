@@ -36,9 +36,13 @@ CREATE TABLE IF NOT EXISTS convention_requests (
 
   -- Lead Lifecycle
   lead_status TEXT NOT NULL DEFAULT 'submitted' CHECK (lead_status IN ('submitted', 'qualified', 'closed_won', 'closed_lost')),
+  lead_quality_outcome TEXT NOT NULL DEFAULT 'unreviewed' CHECK (lead_quality_outcome IN ('unreviewed', 'sales_accepted', 'sales_rejected', 'won', 'lost')),
+  lead_owner TEXT,
   submitted_at TIMESTAMPTZ DEFAULT NOW(),
   qualified_at TIMESTAMPTZ,
   closed_at TIMESTAMPTZ,
+  follow_up_sla_at TIMESTAMPTZ,
+  last_worked_at TIMESTAMPTZ,
 
   -- Attribution
   ga_client_id TEXT,
@@ -65,6 +69,10 @@ CREATE INDEX IF NOT EXISTS idx_convention_requests_created ON convention_request
 CREATE INDEX IF NOT EXISTS idx_convention_requests_secteur ON convention_requests(secteur_activite);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_status ON convention_requests(lead_status);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_status_created_at ON convention_requests(lead_status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_quality_outcome ON convention_requests(lead_quality_outcome);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_lead_owner ON convention_requests(lead_owner);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_follow_up_sla_at ON convention_requests(follow_up_sla_at DESC);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_last_worked_at ON convention_requests(last_worked_at DESC);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_session_source ON convention_requests(session_source);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_session_medium ON convention_requests(session_medium);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_whatsapp_click_id ON convention_requests(whatsapp_click_id);

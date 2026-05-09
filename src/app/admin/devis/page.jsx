@@ -6,8 +6,18 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getDevisRequests } from '@/services/devisService';
-import { updateLeadAttribution, updateLeadStatus } from '@/services/adminLeadService';
-import { LEAD_STATUS_OPTIONS, LEAD_STATUSES } from '@/utils/leadLifecycle';
+import { updateLeadAttribution, updateLeadOperations, updateLeadStatus } from '@/services/adminLeadService';
+import {
+  deriveLeadQualityOutcomeFromStatus,
+  formatDateTimeLocalInputValue,
+  LEAD_QUALITY_OUTCOME_LABELS,
+  LEAD_QUALITY_OUTCOME_OPTIONS,
+  LEAD_QUALITY_OUTCOMES,
+  LEAD_STATUS_OPTIONS,
+  LEAD_STATUSES,
+  parseDateTimeLocalInputValue,
+  isLeadFollowUpOverdue
+} from '@/utils/leadLifecycle';
 import { getWhatsAppAttributionSummary, matchesWhatsAppFilter } from '@/libs/whatsappAttribution.mjs';
 import styles from './admin.module.css';
 
@@ -18,6 +28,8 @@ const LEAD_STATUS_LABELS = {
   [LEAD_STATUSES.CLOSED_LOST]: 'Perdu'
 };
 
+const LEAD_QUALITY_LABELS = LEAD_QUALITY_OUTCOME_LABELS;
+
 export default function AdminDevisPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
@@ -26,14 +38,21 @@ export default function AdminDevisPage() {
   const [error, setError] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
+  const [leadQualityDraft, setLeadQualityDraft] = useState(LEAD_QUALITY_OUTCOMES.UNREVIEWED);
+  const [leadOwnerDraft, setLeadOwnerDraft] = useState('');
+  const [followUpSlaDraft, setFollowUpSlaDraft] = useState('');
   const [isSavingStatus, setIsSavingStatus] = useState(false);
+  const [isSavingOperations, setIsSavingOperations] = useState(false);
   const [isSavingAttribution, setIsSavingAttribution] = useState(false);
   const [statusError, setStatusError] = useState('');
+  const [operationsError, setOperationsError] = useState('');
   const [attributionError, setAttributionError] = useState('');
   const [filters, setFilters] = useState({
     leadStatus: 'all',
+    leadQualityOutcome: 'all',
     serviceType: 'all',
     whatsappAttribution: 'all',
+    leadOwner: '',
     sessionSource: '',
     sessionMedium: '',
     dateFrom: '',
@@ -43,7 +62,7 @@ export default function AdminDevisPage() {
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
-      router.push('/admin/login');
+      router.replace('/admin/login');
     }
   }, [user, isAdmin, authLoading, router]);
 
@@ -120,7 +139,14 @@ export default function AdminDevisPage() {
   const openRequest = useCallback((request, { syncQuery = true } = {}) => {
     setSelectedRequest(request);
     setLeadStatusDraft(request.lead_status || LEAD_STATUSES.SUBMITTED);
+    setLeadQualityDraft(
+      request.lead_quality_outcome
+      || deriveLeadQualityOutcomeFromStatus(request.lead_status || LEAD_STATUSES.SUBMITTED)
+    );
+    setLeadOwnerDraft(request.lead_owner || '');
+    setFollowUpSlaDraft(formatDateTimeLocalInputValue(request.follow_up_sla_at));
     setStatusError('');
+    setOperationsError('');
     setAttributionError('');
 
     if (syncQuery && leadIdParam !== request.id) {
@@ -131,6 +157,7 @@ export default function AdminDevisPage() {
   const closeRequest = useCallback(() => {
     setSelectedRequest(null);
     setStatusError('');
+    setOperationsError('');
     setAttributionError('');
 
     if (leadIdParam) {
@@ -165,6 +192,12 @@ export default function AdminDevisPage() {
         request.id === updatedLead.id ? updatedLead : request
       )));
       setSelectedRequest(updatedLead);
+      setLeadQualityDraft(
+        updatedLead.lead_quality_outcome
+        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
+      );
+      setLeadOwnerDraft(updatedLead.lead_owner || '');
+      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
     } catch (saveError) {
       console.error(saveError);
       setStatusError(saveError.message || 'Impossible de mettre à jour le statut.');
@@ -189,11 +222,79 @@ export default function AdminDevisPage() {
         request.id === updatedLead.id ? updatedLead : request
       )));
       setSelectedRequest(updatedLead);
+      setLeadQualityDraft(
+        updatedLead.lead_quality_outcome
+        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
+      );
+      setLeadOwnerDraft(updatedLead.lead_owner || '');
+      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
     } catch (saveError) {
       console.error(saveError);
       setAttributionError(saveError.message || 'Impossible de mettre à jour l’attribution WhatsApp.');
     } finally {
       setIsSavingAttribution(false);
+    }
+  };
+
+  const handleOperationsSave = async () => {
+    if (!selectedRequest) {
+      return;
+    }
+
+    try {
+      setIsSavingOperations(true);
+      setOperationsError('');
+      const updatedLead = await updateLeadOperations('devis', selectedRequest.id, {
+        leadQualityOutcome: leadQualityDraft,
+        leadOwner: leadOwnerDraft.trim() || null,
+        followUpSlaAt: parseDateTimeLocalInputValue(followUpSlaDraft)
+      });
+
+      setRequests((currentRequests) => currentRequests.map((request) => (
+        request.id === updatedLead.id ? updatedLead : request
+      )));
+      setSelectedRequest(updatedLead);
+      setLeadQualityDraft(
+        updatedLead.lead_quality_outcome
+        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
+      );
+      setLeadOwnerDraft(updatedLead.lead_owner || '');
+      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+    } catch (saveError) {
+      console.error(saveError);
+      setOperationsError(saveError.message || 'Impossible de mettre à jour le suivi du lead.');
+    } finally {
+      setIsSavingOperations(false);
+    }
+  };
+
+  const handleMarkWorkedNow = async () => {
+    if (!selectedRequest) {
+      return;
+    }
+
+    try {
+      setIsSavingOperations(true);
+      setOperationsError('');
+      const updatedLead = await updateLeadOperations('devis', selectedRequest.id, {
+        lastWorkedAt: new Date().toISOString()
+      });
+
+      setRequests((currentRequests) => currentRequests.map((request) => (
+        request.id === updatedLead.id ? updatedLead : request
+      )));
+      setSelectedRequest(updatedLead);
+      setLeadQualityDraft(
+        updatedLead.lead_quality_outcome
+        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
+      );
+      setLeadOwnerDraft(updatedLead.lead_owner || '');
+      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+    } catch (saveError) {
+      console.error(saveError);
+      setOperationsError(saveError.message || 'Impossible de marquer le lead comme travaillé.');
+    } finally {
+      setIsSavingOperations(false);
     }
   };
 
@@ -223,7 +324,19 @@ export default function AdminDevisPage() {
   };
 
   const getLeadStatus = useCallback((request) => request.lead_status || LEAD_STATUSES.SUBMITTED, []);
+  const getLeadQualityOutcome = useCallback((request) => (
+    request.lead_quality_outcome
+    || deriveLeadQualityOutcomeFromStatus(getLeadStatus(request))
+  ), [getLeadStatus]);
+  const getLeadQualityLabel = useCallback((request) => (
+    LEAD_QUALITY_LABELS[getLeadQualityOutcome(request)] || getLeadQualityOutcome(request)
+  ), [getLeadQualityOutcome]);
   const getWhatsAppSummary = useCallback((request) => getWhatsAppAttributionSummary(request), []);
+  const isFollowUpOverdue = useCallback((request) => isLeadFollowUpOverdue({
+    leadStatus: getLeadStatus(request),
+    followUpSlaAt: request.follow_up_sla_at,
+    lastWorkedAt: request.last_worked_at
+  }), [getLeadStatus]);
 
   const updateFilter = (key, value) => {
     setFilters((currentFilters) => ({
@@ -235,8 +348,10 @@ export default function AdminDevisPage() {
   const resetFilters = () => {
     setFilters({
       leadStatus: 'all',
+      leadQualityOutcome: 'all',
       serviceType: 'all',
       whatsappAttribution: 'all',
+      leadOwner: '',
       sessionSource: '',
       sessionMedium: '',
       dateFrom: '',
@@ -250,6 +365,10 @@ export default function AdminDevisPage() {
     const dateTo = filters.dateTo ? new Date(`${filters.dateTo}T23:59:59`) : null;
 
     if (filters.leadStatus !== 'all' && getLeadStatus(request) !== filters.leadStatus) {
+      return false;
+    }
+
+    if (filters.leadQualityOutcome !== 'all' && getLeadQualityOutcome(request) !== filters.leadQualityOutcome) {
       return false;
     }
 
@@ -269,6 +388,10 @@ export default function AdminDevisPage() {
       return false;
     }
 
+    if (filters.leadOwner && !String(request.lead_owner || '').toLowerCase().includes(filters.leadOwner.toLowerCase())) {
+      return false;
+    }
+
     if (dateFrom && (!requestDate || requestDate < dateFrom)) {
       return false;
     }
@@ -278,9 +401,9 @@ export default function AdminDevisPage() {
     }
 
     return true;
-  }), [requests, filters, getLeadStatus]);
+  }), [requests, filters, getLeadQualityOutcome, getLeadStatus]);
 
-  if (authLoading || !user || !isAdmin) {
+  if (authLoading) {
     return (
       <div style={{
         display: 'flex',
@@ -293,6 +416,28 @@ export default function AdminDevisPage() {
         padding: '20px'
       }}>
         <div>Vérification des privilèges administrateur...</div>
+        {authError && (
+          <div style={{ color: 'red', fontSize: '14px', textAlign: 'center' }}>
+            Erreur: {authError}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return (
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px',
+        gap: '20px',
+        padding: '20px'
+      }}>
+        <div>Redirection vers la connexion administrateur...</div>
         {authError && (
           <div style={{ color: 'red', fontSize: '14px', textAlign: 'center' }}>
             Erreur: {authError}
@@ -366,6 +511,14 @@ export default function AdminDevisPage() {
             <h3>{requests.filter((request) => getLeadStatus(request) === LEAD_STATUSES.CLOSED_WON).length}</h3>
             <p>Gagnées</p>
           </div>
+          <div className={styles.statCard}>
+            <h3>{requests.filter((request) => getLeadQualityOutcome(request) === LEAD_QUALITY_OUTCOMES.UNREVIEWED).length}</h3>
+            <p>Qualité non revue</p>
+          </div>
+          <div className={styles.statCard}>
+            <h3>{requests.filter((request) => isFollowUpOverdue(request)).length}</h3>
+            <p>SLA dépassée</p>
+          </div>
         </div>
 
         <div className={styles.filtersPanel}>
@@ -398,6 +551,22 @@ export default function AdminDevisPage() {
               <option value="tapisserie">Tapisserie</option>
               <option value="marbre">Marbre</option>
               <option value="tfc">TFC</option>
+            </select>
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="devis-lead-quality">Qualité</label>
+            <select
+              id="devis-lead-quality"
+              value={filters.leadQualityOutcome}
+              onChange={(event) => updateFilter('leadQualityOutcome', event.target.value)}
+            >
+              <option value="all">Tous les niveaux</option>
+              {LEAD_QUALITY_OUTCOME_OPTIONS.map((outcome) => (
+                <option key={outcome} value={outcome}>
+                  {LEAD_QUALITY_LABELS[outcome]}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -436,6 +605,17 @@ export default function AdminDevisPage() {
               value={filters.sessionMedium}
               onChange={(event) => updateFilter('sessionMedium', event.target.value)}
               placeholder="organic, cpc, social..."
+            />
+          </div>
+
+          <div className={styles.filterField}>
+            <label htmlFor="devis-lead-owner">Responsable</label>
+            <input
+              id="devis-lead-owner"
+              type="search"
+              value={filters.leadOwner}
+              onChange={(event) => updateFilter('leadOwner', event.target.value)}
+              placeholder="email ou nom de queue"
             />
           </div>
 
@@ -504,6 +684,15 @@ export default function AdminDevisPage() {
                 <div className={styles.detail}>
                   <strong>💬</strong> {getWhatsAppSummary(request).label}
                 </div>
+                <div className={styles.detail}>
+                  <strong>🧭</strong> {getLeadQualityLabel(request)}
+                </div>
+                <div className={styles.detail}>
+                  <strong>👤</strong> {request.lead_owner || 'Non assigné'}
+                </div>
+                <div className={styles.detail}>
+                  <strong>⏱</strong> {isFollowUpOverdue(request) ? 'SLA dépassée' : 'SLA dans les temps'}
+                </div>
               </div>
             </div>
           ))}
@@ -551,6 +740,86 @@ export default function AdminDevisPage() {
                   <p><strong>Soumis le :</strong> {formatDate(selectedRequest.submitted_at || selectedRequest.created_at)}</p>
                   <p><strong>Qualifié le :</strong> {formatDate(selectedRequest.qualified_at)}</p>
                   <p><strong>Clôturé le :</strong> {formatDate(selectedRequest.closed_at)}</p>
+                </div>
+
+                <div className={styles.section}>
+                  <h3>Suivi commercial</h3>
+                  <div className={styles.opsGrid}>
+                    <div className={styles.fieldGroup}>
+                      <label htmlFor="devis-quality-draft">Qualité</label>
+                      <select
+                        id="devis-quality-draft"
+                        className={styles.statusSelect}
+                        value={leadQualityDraft}
+                        onChange={(event) => setLeadQualityDraft(event.target.value)}
+                        disabled={isSavingOperations}
+                      >
+                        {LEAD_QUALITY_OUTCOME_OPTIONS.map((outcome) => (
+                          <option key={outcome} value={outcome}>
+                            {LEAD_QUALITY_LABELS[outcome]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className={styles.fieldGroup}>
+                      <label htmlFor="devis-owner-draft">Responsable</label>
+                      <input
+                        id="devis-owner-draft"
+                        className={styles.textInput}
+                        type="text"
+                        value={leadOwnerDraft}
+                        onChange={(event) => setLeadOwnerDraft(event.target.value)}
+                        placeholder="email ou nom de queue"
+                        disabled={isSavingOperations}
+                      />
+                    </div>
+
+                    <div className={styles.fieldGroup}>
+                      <label htmlFor="devis-follow-up-sla">SLA suivi</label>
+                      <input
+                        id="devis-follow-up-sla"
+                        className={styles.textInput}
+                        type="datetime-local"
+                        value={followUpSlaDraft}
+                        onChange={(event) => setFollowUpSlaDraft(event.target.value)}
+                        disabled={isSavingOperations}
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.lifecycleControls}>
+                    <button
+                      type="button"
+                      className={styles.saveButton}
+                      onClick={handleOperationsSave}
+                      disabled={isSavingOperations}
+                    >
+                      {isSavingOperations ? 'Enregistrement...' : 'Enregistrer le suivi'}
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={() => setLeadOwnerDraft(user?.email || '')}
+                      disabled={isSavingOperations}
+                    >
+                      Me l&apos;assigner
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={handleMarkWorkedNow}
+                      disabled={isSavingOperations}
+                    >
+                      Marquer travaillé maintenant
+                    </button>
+                  </div>
+                  {operationsError && <p className={styles.statusError}>{operationsError}</p>}
+                  <p><strong>Qualité actuelle :</strong> {getLeadQualityLabel(selectedRequest)}</p>
+                  <p><strong>Responsable :</strong> {selectedRequest.lead_owner || 'Non assigné'}</p>
+                  <p><strong>SLA de suivi :</strong> {formatDate(selectedRequest.follow_up_sla_at)}</p>
+                  <p><strong>Dernier suivi :</strong> {formatDate(selectedRequest.last_worked_at)}</p>
+                  <p><strong>État SLA :</strong> {isFollowUpOverdue(selectedRequest) ? 'Dépassée' : 'Dans les temps'}</p>
                 </div>
 
                 <div className={styles.section}>

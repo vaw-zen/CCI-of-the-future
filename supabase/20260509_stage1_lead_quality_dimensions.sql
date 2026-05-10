@@ -244,7 +244,8 @@ SELECT
   metric.spend,
   metric.metadata,
   metric.created_at,
-  metric.updated_at
+  metric.updated_at,
+  metric.events
 FROM public.growth_channel_daily_metrics AS metric;
 
 CREATE OR REPLACE VIEW public.growth_lead_reporting_dimensions AS

@@ -1,53 +1,61 @@
+import { PHASE_DEVELOPMENT_SERVER } from 'next/constants.js';
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
 const { origin: siteOrigin, hostname: siteHostname } = new URL(siteUrl);
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  trailingSlash: false,
-  transpilePackages: ['@supabase/supabase-js'],
-  experimental: {
-    optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],
-    // optimizeCss causes FOUC (flash of unstyled content) - disabled
-    // cssChunking: 'strict', // Disabled - causes issues with CSS loading order
-  },
-  // Remove console logs in production builds
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
-  // Add preconnect hints for external domains (GTM loads later, so only preconnect when needed)
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Link',
-            value: '<https://www.googletagmanager.com>; rel=preconnect; crossorigin',
-          },
-        ],
-      },
-    ];
-  },
-  // Suppress punycode deprecation warning
-  onDemandEntries: {
-    maxInactiveAge: 60 * 1000,
-    pagesBufferLength: 2,
-  },
-  images: {
-    unoptimized: process.env.NODE_ENV !== 'production',
-    remotePatterns: [
-      { protocol: 'https', hostname: '**.fbcdn.net' },
-      { protocol: 'https', hostname: 'lookaside.facebook.com' },
-      { protocol: 'https', hostname: '**.cdninstagram.com' },
-      { protocol: 'https', hostname: 'www.bouthouri.co' },
-      { protocol: 'https', hostname: 'uploads-ssl.webflow.com' },
-      { protocol: 'https', hostname: 'cciservices.online' },
-    ],
-    formats: ['image/avif', 'image/webp'],
-    qualities: [40, 60, 65, 70, 75, 80, 90, 100],
-  },
-  async redirects() {
-    return [
+export default function nextConfig(phase) {
+  const isDevServer = phase === PHASE_DEVELOPMENT_SERVER;
+
+  /** @type {import('next').NextConfig} */
+  return {
+    // Keep dev and build artifacts isolated so `next dev` and `next build`
+    // can run in the same repo without corrupting each other's manifests.
+    distDir: isDevServer ? '.next-dev' : '.next',
+    trailingSlash: false,
+    transpilePackages: ['@supabase/supabase-js'],
+    experimental: {
+      optimizePackageImports: ['react-markdown', 'remark-gfm', '@google/generative-ai'],
+      // optimizeCss causes FOUC (flash of unstyled content) - disabled
+      // cssChunking: 'strict', // Disabled - causes issues with CSS loading order
+    },
+    // Remove console logs in production builds
+    compiler: {
+      removeConsole: process.env.NODE_ENV === 'production',
+    },
+    // Add preconnect hints for external domains (GTM loads later, so only preconnect when needed)
+    async headers() {
+      return [
+        {
+          source: '/:path*',
+          headers: [
+            {
+              key: 'Link',
+              value: '<https://www.googletagmanager.com>; rel=preconnect; crossorigin',
+            },
+          ],
+        },
+      ];
+    },
+    // Suppress punycode deprecation warning
+    onDemandEntries: {
+      maxInactiveAge: 60 * 1000,
+      pagesBufferLength: 2,
+    },
+    images: {
+      unoptimized: process.env.NODE_ENV !== 'production',
+      remotePatterns: [
+        { protocol: 'https', hostname: '**.fbcdn.net' },
+        { protocol: 'https', hostname: 'lookaside.facebook.com' },
+        { protocol: 'https', hostname: '**.cdninstagram.com' },
+        { protocol: 'https', hostname: 'www.bouthouri.co' },
+        { protocol: 'https', hostname: 'uploads-ssl.webflow.com' },
+        { protocol: 'https', hostname: 'cciservices.online' },
+      ],
+      formats: ['image/avif', 'image/webp'],
+      qualities: [40, 60, 65, 70, 75, 80, 90, 100],
+    },
+    async redirects() {
+      return [
       // Domain canonicalization.
       // HTTPS should be enforced at the proxy/CDN layer; redirecting on
       // x-forwarded-proto here can self-loop when an upstream proxy always
@@ -105,43 +113,42 @@ const nextConfig = {
 
       // Cleanup of older conseils slug that mixed unrelated intent
       { source: '/conseils/nettoyage-salons-voiture-tapisseries-tunis', destination: '/conseils/nettoyage-salon-canape-tunis-2026', permanent: true },
-    ];
-  },
-  webpack: (config, { isServer }) => {
-    // Optimize bundle splitting for chat widget
-    if (!isServer) {
-      config.optimization.splitChunks = config.optimization.splitChunks || {};
-      config.optimization.splitChunks.cacheGroups = {
-        ...config.optimization.splitChunks.cacheGroups,
-        supabase: {
-          name: 'supabase',
-          test: /[\\/]node_modules[\\/]@supabase[\\/]/,
-          chunks: 'all',
-          priority: 25,
-        },
-        chatWidget: {
-          name: 'chat-widget',
-          test: /[\\/]components[\\/]chatWidget[\\/]/,
-          chunks: 'all',
-          priority: 20,
-        },
-        markdown: {
-          name: 'markdown',
-          test: /[\\/]node_modules[\\/](react-markdown|remark-gfm)[\\/]/,
-          chunks: 'all',
-          priority: 15,
-        },
-        gemini: {
-          name: 'gemini',
-          test: /[\\/]node_modules[\\/]@google[\\/]generative-ai[\\/]/,
-          chunks: 'all',
-          priority: 10,
-        },
-      };
-    }
-    
-    return config;
-  },
-};
+      ];
+    },
+    webpack: (config, { isServer }) => {
+      // Optimize bundle splitting for chat widget
+      if (!isServer) {
+        config.optimization.splitChunks = config.optimization.splitChunks || {};
+        config.optimization.splitChunks.cacheGroups = {
+          ...config.optimization.splitChunks.cacheGroups,
+          supabase: {
+            name: 'supabase',
+            test: /[\\/]node_modules[\\/]@supabase[\\/]/,
+            chunks: 'all',
+            priority: 25,
+          },
+          chatWidget: {
+            name: 'chat-widget',
+            test: /[\\/]components[\\/]chatWidget[\\/]/,
+            chunks: 'all',
+            priority: 20,
+          },
+          markdown: {
+            name: 'markdown',
+            test: /[\\/]node_modules[\\/](react-markdown|remark-gfm)[\\/]/,
+            chunks: 'all',
+            priority: 15,
+          },
+          gemini: {
+            name: 'gemini',
+            test: /[\\/]node_modules[\\/]@google[\\/]generative-ai[\\/]/,
+            chunks: 'all',
+            priority: 10,
+          },
+        };
+      }
 
-export default nextConfig;
+      return config;
+    },
+  };
+}

@@ -351,6 +351,27 @@
   font-weight: 600;
 }
 
+.executiveFollowup {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.executiveFollowupHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.executiveFollowupHeader h3 {
+  margin: 0;
+  color: var(--t-primary);
+  font-size: 15px;
+}
+
 .mutedText {
   margin: 0;
   color: var(--t-secondary);

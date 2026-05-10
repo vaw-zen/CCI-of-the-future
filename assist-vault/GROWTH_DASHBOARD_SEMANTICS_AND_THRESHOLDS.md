@@ -124,6 +124,8 @@ These fields are the Stage 1 schema target and should be added before Stage 2 se
 
 ## QA checklist lock
 
+Detailed weekly operating steps live in `GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md`.
+
 The following checks are required before metrics are treated as trustworthy in weekly review:
 
 1. Check unattributed lead rate and review any spike above the warning threshold.

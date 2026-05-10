@@ -36,7 +36,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json().catch(() => ({}));
-    analyticsContext = extractAnalyticsContext(body?.analyticsContext || {});
+    analyticsContext = extractAnalyticsContext(body?.analyticsContext || {}, { request });
     const { email, acceptedPrivacy, website, source } = body;
     placement = body?.placement || 'unknown';
 

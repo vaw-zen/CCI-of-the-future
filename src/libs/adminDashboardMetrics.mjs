@@ -7,6 +7,12 @@ import {
   normalizeKeywordForKey
 } from './growthKeywordCatalog.mjs';
 import {
+  getAttributionSiteHost,
+  normalizeAttributionHost,
+  normalizeAttributionPath,
+  resolveCanonicalAttribution
+} from './attributionHygiene.mjs';
+import {
   WHATSAPP_MATCH_WINDOW_DAYS,
   getWhatsAppAttributionSummary,
   hasWhatsAppAutoAttribution,
@@ -819,6 +825,31 @@ export function isUnattributedLead(lead) {
   return sourceUnknown && mediumUnknown;
 }
 
+function getCanonicalRowAttribution(row = {}, {
+  landingFallback = '/'
+} = {}) {
+  const referrerHost = normalizeAttributionHost(row.referrer_host);
+  const attribution = resolveCanonicalAttribution({
+    source: row.normalized_source || row.session_source,
+    medium: row.normalized_medium || row.session_medium,
+    campaign: row.normalized_campaign || row.session_campaign,
+    referrerHost,
+    siteHost: getAttributionSiteHost()
+  });
+  const landingPage = normalizeAttributionPath(
+    row.normalized_landing_page || row.landing_page || row.entry_path || row.page_path,
+    landingFallback
+  );
+
+  return {
+    source: attribution.source,
+    medium: attribution.medium,
+    campaign: attribution.campaign,
+    landingPage,
+    referrerHost: referrerHost || null
+  };
+}
+
 export function normalizeLead(row, kind, nowIso) {
   const services = getLeadServices(row, kind);
   const status = getLeadStatus(row, kind);
@@ -826,10 +857,13 @@ export function normalizeLead(row, kind, nowIso) {
     ? (row.type_service || services[0] || 'unknown')
     : (services[0] || row.secteur_activite || 'unknown');
   const whatsappAttribution = getWhatsAppAttributionSummary(row);
-  const source = normalizeText(row.normalized_source || row.session_source, 'direct');
-  const medium = normalizeText(row.normalized_medium || row.session_medium, '(none)');
-  const campaign = normalizeText(row.normalized_campaign || row.session_campaign, '(not set)');
-  const landingPage = normalizeText(row.normalized_landing_page || row.landing_page || row.entry_path, 'Non renseignée');
+  const canonicalAttribution = getCanonicalRowAttribution(row, {
+    landingFallback: '/'
+  });
+  const source = normalizeText(canonicalAttribution.source, 'direct');
+  const medium = normalizeText(canonicalAttribution.medium, '(none)');
+  const campaign = normalizeText(canonicalAttribution.campaign, '(not set)');
+  const landingPage = normalizeText(canonicalAttribution.landingPage, 'Non renseignée');
   const sourceClass = normalizeText(row.source_class, getSourceClass({ source, medium }));
   const pageType = normalizeText(row.page_type, getPageTypeForPath(landingPage));
   const businessLine = normalizeText(row.business_line, getBusinessLineForLeadKind(kind));
@@ -860,7 +894,7 @@ export function normalizeLead(row, kind, nowIso) {
     medium,
     campaign,
     landingPage,
-    referrerHost: normalizeText(row.referrer_host, 'Non renseigné'),
+    referrerHost: normalizeText(canonicalAttribution.referrerHost, 'Non renseigné'),
     sourceClass,
     sourceClassLabel: SOURCE_CLASS_LABELS[sourceClass] || sourceClass,
     pageType,
@@ -1217,9 +1251,12 @@ function matchesQueryMetricFilters(row = {}, filters = {}) {
 }
 
 function matchesWhatsAppClickFilters(row = {}, filters = {}) {
-  const source = normalizeText(row.session_source, 'direct');
-  const medium = normalizeText(row.session_medium, '(none)');
-  const landingPage = normalizeText(row.landing_page || row.page_path, '/');
+  const canonicalAttribution = getCanonicalRowAttribution(row, {
+    landingFallback: '/'
+  });
+  const source = normalizeText(canonicalAttribution.source, 'direct');
+  const medium = normalizeText(canonicalAttribution.medium, '(none)');
+  const landingPage = normalizeText(canonicalAttribution.landingPage, '/');
   const sourceClass = getSourceClass({ source, medium });
   const pageType = getPageTypeForPath(landingPage);
   const businessLine = getBusinessLineForPath(landingPage);
@@ -1625,6 +1662,7 @@ function normalizeExternalMetricRow(row = {}) {
     pageTypeLabel: PAGE_TYPE_LABELS[pageType] || pageType,
     sessions: Number(row.sessions || 0),
     users: Number(row.users || 0),
+    events: Number(row.events || 0),
     clicks: Number(row.clicks || 0),
     impressions: Number(row.impressions || 0),
     spend: Number(row.spend || 0),
@@ -2975,6 +3013,7 @@ function createCombinedChannelBucket(seed) {
     pageTypeLabel: PAGE_TYPE_LABELS[pageType] || pageType,
     sessions: 0,
     users: 0,
+    events: 0,
     clicks: 0,
     impressions: 0,
     spend: 0,
@@ -3022,6 +3061,7 @@ export function buildCombinedChannelPerformance(currentLeads, externalMetricRows
 
     bucket.sessions += row.sessions;
     bucket.users += row.users;
+    bucket.events += row.events;
     bucket.clicks += row.clicks;
     bucket.impressions += row.impressions;
     bucket.spend += row.spend;
@@ -3078,6 +3118,7 @@ function aggregateCombinedRows(rows, keyGetter, labelGetter, { limit = 8 } = {})
       pageTypeLabel: row.pageTypeLabel,
       sessions: 0,
       users: 0,
+      events: 0,
       clicks: 0,
       impressions: 0,
       spend: 0,
@@ -3090,6 +3131,7 @@ function aggregateCombinedRows(rows, keyGetter, labelGetter, { limit = 8 } = {})
 
     current.sessions += row.sessions;
     current.users += row.users;
+    current.events += row.events;
     current.clicks += row.clicks;
     current.impressions += row.impressions;
     current.spend += row.spend;
@@ -3120,6 +3162,7 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
   const totalsBase = combinedRows.reduce((accumulator, row) => ({
     sessions: accumulator.sessions + row.sessions,
     users: accumulator.users + row.users,
+    events: accumulator.events + row.events,
     clicks: accumulator.clicks + row.clicks,
     impressions: accumulator.impressions + row.impressions,
     spend: accumulator.spend + row.spend,
@@ -3129,6 +3172,7 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
   }), {
     sessions: 0,
     users: 0,
+    events: 0,
     clicks: 0,
     impressions: 0,
     spend: 0,
@@ -3148,6 +3192,13 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
         key: 'sessions',
         label: 'Sessions',
         value: totals.sessions,
+        type: 'number',
+        meta: 'GA4 daily snapshots'
+      }),
+      buildKpiCard({
+        key: 'events',
+        label: 'Events',
+        value: totals.events,
         type: 'number',
         meta: 'GA4 daily snapshots'
       }),
@@ -3204,7 +3255,7 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
     whatsapp: buildWhatsAppAcquisition(currentLeads, whatsappClickRows),
     notes: {
       leadBasis: 'Leads créés sur la période',
-      externalMetricBasis: 'Sessions, clics, impressions et spend issus des snapshots externes journaliers'
+      externalMetricBasis: 'Sessions, events, clics, impressions et spend issus des snapshots externes journaliers'
     }
   };
 }
@@ -3230,12 +3281,14 @@ function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, k
     clicks: accumulator.clicks + row.clicks,
     impressions: accumulator.impressions + row.impressions,
     sessions: accumulator.sessions + row.sessions,
+    events: accumulator.events + row.events,
     leads: accumulator.leads + row.leads,
     qualifiedLeads: accumulator.qualifiedLeads + row.qualifiedLeads
   }), {
     clicks: 0,
     impressions: 0,
     sessions: 0,
+    events: 0,
     leads: 0,
     qualifiedLeads: 0
   });
@@ -3288,6 +3341,7 @@ function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, k
       clicks: organicTotals.clicks,
       impressions: organicTotals.impressions,
       sessions: organicTotals.sessions,
+      events: organicTotals.events,
       ctr: organicDerived.ctr,
       leadRateBase: organicDerived.leadRateBase,
       leadRate: organicDerived.leadRate,
@@ -3610,6 +3664,10 @@ function getLeadRateSnapshot(leads = []) {
   };
 }
 
+function isLowSampleLeadCohort(leads = []) {
+  return leads.length > 0 && leads.length < DASHBOARD_ALERT_THRESHOLDS.thinVolume.costPerLeadMinLeads;
+}
+
 function buildExecutiveTrend(currentLeads = [], previousLeads = []) {
   const currentRates = getLeadRateSnapshot(currentLeads);
   const previousRates = getLeadRateSnapshot(previousLeads);
@@ -3656,6 +3714,17 @@ function buildExecutiveRisk({
 }) {
   const unattributedCard = overviewCards.find((card) => card.key === 'unattributed_rate');
   if (unattributedCard?.warning) {
+    if (isLowSampleLeadCohort(currentLeads)) {
+      return {
+        key: 'attribution_low_sample',
+        title: 'Risk',
+        headline: 'Attribution signal is still directional in this slice.',
+        detail: `${formatSummaryCount(currentLeads.length)} lead${currentLeads.length > 1 ? 's are' : ' is'} in this filtered cohort. ${formatSummaryPercent(unattributedCard.value)} appear unattributed or direct-only, but that is below the ${DASHBOARD_ALERT_THRESHOLDS.thinVolume.costPerLeadMinLeads}-lead reliability threshold for channel interpretation.`,
+        tone: 'neutral',
+        owner: 'Growth owner'
+      };
+    }
+
     return {
       key: 'unattributed_rate',
       title: 'Risk',
@@ -3728,6 +3797,22 @@ function buildExecutiveOpportunity({
   landingPageScorecard,
   currentLeads = []
 }) {
+  const formatOpportunityTrafficDetail = (row = {}, { organicLabel = false } = {}) => {
+    const parts = [];
+
+    parts.push(`${formatSummaryCount(row.clicks)} ${organicLabel ? 'GSC organic clicks' : 'GSC clicks'}`);
+
+    if ((row.sessions || 0) > 0 || (row.users || 0) > 0) {
+      parts.push(`${formatSummaryCount(row.sessions)} GA4 sessions`);
+    }
+
+    if ((row.users || 0) > 0) {
+      parts.push(`${formatSummaryCount(row.users)} GA4 users`);
+    }
+
+    return parts.join(', ');
+  };
+
   const topScorecardPage = (landingPageScorecard?.rows || []).find((row) => (
     row.qualifiedLeads > 0 || row.leads > 0 || row.clicks > 0 || row.sessions > 0
   ));
@@ -3736,7 +3821,7 @@ function buildExecutiveOpportunity({
       key: 'seo_landing_page',
       title: 'Opportunity',
       headline: `${topScorecardPage.label} is the highest-leverage landing-page candidate right now.`,
-      detail: `${formatSummaryCount(topScorecardPage.clicks)} clicks, ${formatSummaryCount(topScorecardPage.qualifiedLeads)} qualified leads, ${formatSummaryPercent(topScorecardPage.leadRate)} lead rate, ${formatSummaryCurrency(topScorecardPage.revenueProxy)} estimated pipeline value.`,
+      detail: `${formatOpportunityTrafficDetail(topScorecardPage)}, ${formatSummaryCount(topScorecardPage.qualifiedLeads)} qualified leads, ${formatSummaryPercent(topScorecardPage.leadRate)} lead rate, ${formatSummaryCurrency(topScorecardPage.revenueProxy)} estimated pipeline value.`,
       tone: topScorecardPage.qualifiedLeads > 0 ? 'positive' : 'neutral',
       owner: 'Growth owner'
     };
@@ -3750,7 +3835,7 @@ function buildExecutiveOpportunity({
       key: 'seo_landing_page',
       title: 'Opportunity',
       headline: `${bestSeoPage.label} is the clearest SEO/CRO opportunity.`,
-      detail: `${formatSummaryCount(bestSeoPage.clicks)} organic clicks, ${formatSummaryCount(bestSeoPage.qualifiedLeads)} qualified leads, ${formatSummaryPercent(bestSeoPage.leadRate)} lead rate, ${formatSummaryCurrency(bestSeoPage.revenueProxy)} estimated pipeline value.`,
+      detail: `${formatOpportunityTrafficDetail(bestSeoPage, { organicLabel: true })}, ${formatSummaryCount(bestSeoPage.qualifiedLeads)} qualified leads, ${formatSummaryPercent(bestSeoPage.leadRate)} lead rate, ${formatSummaryCurrency(bestSeoPage.revenueProxy)} estimated pipeline value.`,
       tone: bestSeoPage.qualifiedLeads > 0 ? 'positive' : 'neutral',
       owner: 'Growth owner'
     };
@@ -3793,6 +3878,17 @@ function buildExecutiveOpportunity({
 }
 
 function buildExecutiveNextAction({ risk, opportunity, filters = {} }) {
+  if (risk.key === 'attribution_low_sample') {
+    return {
+      key: 'next_action',
+      title: 'Next action',
+      headline: 'Validate this low-volume slice before making efficiency decisions.',
+      detail: `Inspect the unattributed row manually or widen the date range until the segment reaches at least ${DASHBOARD_ALERT_THRESHOLDS.thinVolume.costPerLeadMinLeads} leads.`,
+      tone: 'neutral',
+      owner: 'Growth owner'
+    };
+  }
+
   if (risk.key === 'unattributed_rate') {
     return {
       key: 'next_action',
@@ -3869,16 +3965,267 @@ function buildExecutiveNextAction({ risk, opportunity, filters = {} }) {
   };
 }
 
+function buildExecutiveAttributionDrilldown(currentLeads = [], risk = null) {
+  if (!risk || !['unattributed_rate', 'attribution_low_sample'].includes(risk.key)) {
+    return null;
+  }
+
+  const unattributedLeads = [...currentLeads]
+    .filter(isUnattributedLead)
+    .sort((a, b) => (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime()))
+    .slice(0, 6)
+    .map((lead) => ({
+      ...summarizeLead(lead),
+      title: `${lead.kindLabel} #${lead.id} - ${lead.serviceLabel}`,
+      metaLinePrimary: `${lead.source} / ${lead.medium} • ${lead.campaign}`,
+      metaLineSecondary: lead.landingPage,
+      metaLineTertiary: [
+        lead.referrerHost && lead.referrerHost !== 'Non renseigné' ? `Referrer: ${lead.referrerHost}` : null,
+        lead.sourceClassLabel ? `Class: ${lead.sourceClassLabel}` : null,
+        lead.pageTypeLabel ? `Page: ${lead.pageTypeLabel}` : null
+      ].filter(Boolean).join(' • '),
+      metaDateTime: lead.createdAt
+    }));
+
+  if (unattributedLeads.length === 0) {
+    return null;
+  }
+
+  const totalCount = currentLeads.filter(isUnattributedLead).length;
+  const hiddenCount = Math.max(0, totalCount - unattributedLeads.length);
+
+  return {
+    key: 'attribution_drilldown',
+    title: 'Attribution review leads',
+    note: risk.key === 'attribution_low_sample'
+      ? `Low-volume slice: review the specific lead${totalCount > 1 ? 's' : ''} below before treating attribution as a scaling issue.`
+      : `Direct / unattributed leads currently driving the executive warning in this filtered cohort.`,
+    totalCount,
+    hiddenCount,
+    leads: unattributedLeads
+  };
+}
+
+function buildExecutiveOrganicEvidence({
+  currentLeads = [],
+  seoContent,
+  seoQueries,
+  externalMetricRows = [],
+  queryMetricRows = []
+} = {}) {
+  const organicExternalRows = externalMetricRows
+    .map(normalizeExternalMetricRow)
+    .filter((row) => row.sourceClass === 'organic_search');
+  const organicExternalByPage = new Map();
+
+  organicExternalRows.forEach((row) => {
+      const current = organicExternalByPage.get(row.landingPage) || {
+        landingPage: row.landingPage,
+        clicks: 0,
+        impressions: 0,
+        sessions: 0,
+        users: 0,
+        events: 0
+      };
+
+      current.clicks += row.clicks;
+      current.impressions += row.impressions;
+      current.sessions += row.sessions;
+      current.users += row.users;
+      current.events += row.events;
+      organicExternalByPage.set(row.landingPage, current);
+    });
+
+  const queryByPage = new Map();
+  queryMetricRows.forEach((row) => {
+    const current = queryByPage.get(row.landingPage) || {
+      landingPage: row.landingPage,
+      queryClicks: 0,
+      queryImpressions: 0,
+      queryKeys: new Set()
+    };
+
+    current.queryClicks += row.clicks;
+    current.queryImpressions += row.impressions;
+    current.queryKeys.add(row.normalizedQuery);
+    queryByPage.set(row.landingPage, current);
+  });
+
+  const pageEvidenceMap = new Map();
+  organicExternalByPage.forEach((row, landingPage) => {
+    pageEvidenceMap.set(landingPage, {
+      landingPage,
+      clicks: row.clicks,
+      impressions: row.impressions,
+      sessions: row.sessions,
+      users: row.users,
+      events: row.events,
+      queryClicks: 0,
+      queryImpressions: 0,
+      queryCount: 0,
+      leads: 0,
+      qualifiedLeads: 0
+    });
+  });
+  queryByPage.forEach((row, landingPage) => {
+    const current = pageEvidenceMap.get(landingPage) || {
+      landingPage,
+      clicks: 0,
+      impressions: 0,
+      sessions: 0,
+      users: 0,
+      events: 0,
+      queryClicks: 0,
+      queryImpressions: 0,
+      queryCount: 0,
+      leads: 0,
+      qualifiedLeads: 0
+    };
+
+    current.queryClicks = row.queryClicks;
+    current.queryImpressions = row.queryImpressions;
+    current.queryCount = row.queryKeys.size;
+    pageEvidenceMap.set(landingPage, current);
+  });
+  currentLeads.forEach((lead) => {
+    const current = pageEvidenceMap.get(lead.landingPage) || {
+      landingPage: lead.landingPage,
+      clicks: 0,
+      impressions: 0,
+      sessions: 0,
+      users: 0,
+      events: 0,
+      queryClicks: 0,
+      queryImpressions: 0,
+      queryCount: 0,
+      leads: 0,
+      qualifiedLeads: 0
+    };
+
+    current.leads += 1;
+    current.qualifiedLeads += hasReachedQualified(lead) ? 1 : 0;
+    pageEvidenceMap.set(lead.landingPage, current);
+  });
+
+  const topLandingPages = Array.from(pageEvidenceMap.values())
+    .filter((row) => (
+      row.clicks > 0
+      || row.impressions > 0
+      || row.sessions > 0
+      || row.events > 0
+      || row.queryClicks > 0
+      || row.leads > 0
+    ))
+    .sort((a, b) => (
+      b.clicks - a.clicks
+      || b.impressions - a.impressions
+      || b.queryClicks - a.queryClicks
+      || b.sessions - a.sessions
+      || b.users - a.users
+      || b.events - a.events
+      || b.qualifiedLeads - a.qualifiedLeads
+      || b.leads - a.leads
+      || a.landingPage.localeCompare(b.landingPage)
+    ))
+    .slice(0, 5);
+
+  const leadPages = Array.from(
+    new Set(
+      currentLeads
+        .map((lead) => lead.landingPage)
+        .filter(Boolean)
+    )
+  );
+  const pageCoverageRows = leadPages.map((landingPage) => {
+    const pageMetrics = organicExternalByPage.get(landingPage);
+    const queryMetrics = queryByPage.get(landingPage);
+    const pageLeads = currentLeads.filter((lead) => lead.landingPage === landingPage);
+    const hasPageMetrics = Boolean(
+      (pageMetrics?.clicks || 0) > 0
+      || (pageMetrics?.impressions || 0) > 0
+      || (pageMetrics?.sessions || 0) > 0
+      || (pageMetrics?.events || 0) > 0
+    );
+    const hasQueryMetrics = Boolean(
+      (queryMetrics?.queryClicks || 0) > 0
+      || (queryMetrics?.queryImpressions || 0) > 0
+      || (queryMetrics?.queryKeys?.size || 0) > 0
+    );
+    const status = hasPageMetrics
+      ? 'page_metrics'
+      : hasQueryMetrics
+        ? 'query_only'
+        : 'no_metrics';
+
+    return {
+      landingPage,
+      status,
+      leads: pageLeads.length,
+      qualifiedLeads: pageLeads.filter(hasReachedQualified).length,
+      clicks: pageMetrics?.clicks || 0,
+      impressions: pageMetrics?.impressions || 0,
+      sessions: pageMetrics?.sessions || 0,
+      users: pageMetrics?.users || 0,
+      events: pageMetrics?.events || 0,
+      queryClicks: queryMetrics?.queryClicks || 0,
+      queryImpressions: queryMetrics?.queryImpressions || 0,
+      queryCount: queryMetrics?.queryKeys?.size || 0
+    };
+  });
+  const queryOnlyPages = pageCoverageRows.filter((row) => row.status === 'query_only');
+  const noMetricPages = pageCoverageRows.filter((row) => row.status === 'no_metrics');
+
+  let joinStatus = 'clear';
+  let joinNote = 'Landing-page organic evidence is aligned for the current lead pages in this slice.';
+
+  if (pageCoverageRows.length === 0) {
+    joinStatus = 'neutral';
+    joinNote = 'No current lead landing pages are available to validate in this slice yet.';
+  } else if (queryOnlyPages.length > 0) {
+    joinStatus = 'warning';
+    joinNote = 'Some lead pages have Search Console query evidence but no page-level organic metrics. That suggests a landing-page alignment or page-level import gap for those pages.';
+  } else if (noMetricPages.length > 0) {
+    joinStatus = 'partial';
+    joinNote = 'Some lead pages have no organic page or query evidence in the selected period. This can be true zero demand or a missing page-level import, so inspect the pages below.';
+  }
+
+  return {
+    summary: {
+      organicClicks: seoContent?.totals?.clicks || 0,
+      organicImpressions: seoContent?.totals?.impressions || 0,
+      organicSessions: seoContent?.totals?.sessions || 0,
+      organicUsers: organicExternalRows.reduce((total, row) => total + row.users, 0),
+      organicEvents: organicExternalRows.reduce((total, row) => total + row.events, 0),
+      qualifiedLeads: seoContent?.totals?.qualifiedLeads || 0,
+      organicLandingPages: organicExternalByPage.size,
+      queryClicks: seoQueries?.summary?.totalClicks || 0,
+      nonBrandedClicks: seoQueries?.summary?.nonBrandedClicks || 0
+    },
+    topLandingPages,
+    joinHealth: {
+      status: joinStatus,
+      note: joinNote,
+      leadPageCount: pageCoverageRows.length,
+      pageMetricCoverageCount: pageCoverageRows.filter((row) => row.status === 'page_metrics').length,
+      queryCoverageCount: pageCoverageRows.filter((row) => row.status !== 'no_metrics').length,
+      problemPages: [...queryOnlyPages, ...noMetricPages].slice(0, 6)
+    }
+  };
+}
+
 function buildExecutiveSummary({
   currentLeads = [],
   previousLeads = [],
   overviewCards = [],
   pipeline,
   acquisition,
+  seoQueries,
   seoContent,
   landingPageScorecard,
   operations,
   dataHealth,
+  externalMetricRows = [],
+  queryMetricRows = [],
   filters = {}
 }) {
   const trend = buildExecutiveTrend(currentLeads, previousLeads);
@@ -3900,6 +4247,14 @@ function buildExecutiveSummary({
     opportunity,
     filters
   });
+  const attributionDrilldown = buildExecutiveAttributionDrilldown(currentLeads, risk);
+  const organicEvidence = buildExecutiveOrganicEvidence({
+    currentLeads,
+    seoContent,
+    seoQueries,
+    externalMetricRows,
+    queryMetricRows
+  });
 
   return {
     segmentLabel: buildDashboardFilterLabel(filters),
@@ -3907,7 +4262,9 @@ function buildExecutiveSummary({
     trend,
     risk,
     opportunity,
-    nextAction
+    nextAction,
+    attributionDrilldown,
+    organicEvidence
   };
 }
 
@@ -3979,10 +4336,13 @@ export function buildAdminDashboardData({
     overviewCards,
     pipeline,
     acquisition,
+    seoQueries,
     seoContent,
     landingPageScorecard,
     operations,
     dataHealth,
+    externalMetricRows: filteredExternalMetricRows,
+    queryMetricRows: filteredQueryMetricRows,
     filters: normalizedFilters
   });
 

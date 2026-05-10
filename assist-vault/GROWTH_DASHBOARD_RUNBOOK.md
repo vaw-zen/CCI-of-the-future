@@ -40,7 +40,9 @@ Date: 2026-05-09
    - active keyword catalog count is correct
    - desktop and mobile rankings both exist
    - visibility trend and position trend behave as expected for the current history depth
-11. Run `npm run analytics:validate`, `npm run test:dashboard`, and `npm run build`.
+11. Run the attribution hygiene audit and review the recent problematic rows:
+   - `npm run growth:audit:attribution -- --days 30`
+12. Run `npm run analytics:validate`, `npm run test:dashboard`, and `npm run build`.
 
 ## Week 1 Stabilization
 
@@ -48,10 +50,12 @@ Date: 2026-05-09
 - Checklist:
   - Confirm data-health badges are green or explain any stale/missing state.
   - Compare yesterday’s GA4 and Search Console snapshots to source tools.
+  - Run `npm run growth:audit:attribution -- --days 7` and record pass / warning / critical status.
   - Confirm SERP keyword freshness and that both `desktop` and `mobile` snapshots landed.
   - Check whether the position trend has enough ranked snapshot days to be decision-useful.
   - Check stale queue count and oldest lead age.
-  - Note attribution anomalies such as spikes in direct / (none).
+  - Review suspicious `direct / (none)` rows with external referrers and landing-page capture gaps.
+  - Check campaign naming drift and fix source links or imports when variants appear.
   - Flag any KPI card carrying a thin-volume warning and treat it as directional only.
   - Note keyword-target mismatches or catalog rows that should move to better landing pages.
   - Capture any KPI mismatches in a short engineering follow-up list.
@@ -60,15 +64,26 @@ Date: 2026-05-09
 
 - Order of review:
   - Data health first
-  - Acquisition changes second
-  - Top landing pages, keyword visibility, and campaigns third
-  - Stale queue and throughput fourth
+  - Attribution audit second
+  - Acquisition changes third
+  - Top landing pages, keyword visibility, and campaigns fourth
+  - Stale queue and throughput fifth
   - Next-week action list last
 - Required output:
   - 3 KPIs that moved
   - 3 suspected causes
   - 3 actions with owners and due dates
   - Every action references a dashboard segment or taxonomy slice, not only a top-line total
+  - Attribution review is marked `trusted`, `trusted with caveats`, or `not decision-safe`
+
+## Weekly Attribution QA
+
+- Run `npm run growth:audit:attribution -- --days 7`.
+- Use [GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md) as the named pass/fail workflow.
+- Escalate immediately if:
+  - unattributed rate is `>= 40%`
+  - landing-page capture is missing on new leads
+  - campaign naming drift makes acquisition comparisons ambiguous
 
 ## Weekly Friday Closeout
 

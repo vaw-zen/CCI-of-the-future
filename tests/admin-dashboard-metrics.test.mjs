@@ -238,6 +238,7 @@ test('combined channel performance merges external metrics with current lead coh
         landing_page: '/marbre',
         sessions: 20,
         users: 18,
+        events: 40,
         clicks: 0,
         impressions: 0,
         spend: 0
@@ -260,6 +261,7 @@ test('combined channel performance merges external metrics with current lead coh
 
   assert.equal(rows.length, 1);
   assert.equal(rows[0].sessions, 20);
+  assert.equal(rows[0].events, 40);
   assert.equal(rows[0].clicks, 10);
   assert.equal(rows[0].leads, 1);
   assert.equal(rows[0].qualifiedLeads, 1);
@@ -301,6 +303,25 @@ test('normalizeLead derives business line, source class, and page type for stage
   assert.equal(b2bLead.businessLineLabel, 'B2B');
   assert.equal(b2bLead.sourceClass, 'organic_search');
   assert.equal(b2bLead.pageType, 'service');
+});
+
+test('normalizeLead reclassifies suspicious direct rows and normalizes campaign naming at read time', () => {
+  const lead = normalizeLead(buildDevisRow({
+    session_source: 'direct',
+    session_medium: '(none)',
+    session_campaign: 'Spring Sale 2026',
+    referrer_host: 'https://instagram.com/p/demo',
+    landing_page: 'https://cciservices.online/contact?utm_campaign=Spring%20Sale%202026',
+    entry_path: '/contact?utm_campaign=Spring%20Sale%202026'
+  }), 'devis', '2026-05-07T12:00:00.000Z');
+
+  assert.equal(lead.source, 'instagram');
+  assert.equal(lead.medium, 'social');
+  assert.equal(lead.campaign, 'spring_sale_2026');
+  assert.equal(lead.referrerHost, 'instagram.com');
+  assert.equal(lead.landingPage, '/contact');
+  assert.equal(lead.sourceClass, 'organic_social');
+  assert.equal(lead.pageType, 'contact');
 });
 
 test('stage-two filters segment overview, pipeline, acquisition, seo, and executive summary in one contract', () => {
@@ -399,6 +420,7 @@ test('stage-two filters segment overview, pipeline, acquisition, seo, and execut
         landing_page: '/salon',
         sessions: 30,
         users: 24,
+        events: 66,
         clicks: 0,
         impressions: 0,
         spend: 0
@@ -425,6 +447,7 @@ test('stage-two filters segment overview, pipeline, acquisition, seo, and execut
         landing_page: '/marbre',
         sessions: 20,
         users: 18,
+        events: 44,
         clicks: 0,
         impressions: 0,
         spend: 0
@@ -533,18 +556,171 @@ test('stage-two filters segment overview, pipeline, acquisition, seo, and execut
   assert.equal(data.pipeline.breakdowns.sourceClass[0]?.key, 'organic_search');
   assert.equal(data.pipeline.breakdowns.businessLine[0]?.key, 'b2c');
   assert.equal(data.acquisition.totals.sessions, 30);
+  assert.equal(data.acquisition.totals.events, 66);
   assert.equal(data.acquisition.totals.clicks, 18);
   assert.equal(data.seoContent.landingPages.length, 1);
   assert.equal(data.seoContent.landingPages[0]?.label, '/salon');
   assert.equal(data.seoContent.keywordRankings.totals.trackedKeywords, 1);
   assert.equal(data.seoContent.keywordRankings.totals.desktopRankedKeywords, 1);
   assert.equal(data.seoContent.keywordRankings.totals.mobileRankedKeywords, 0);
+  assert.equal(data.executiveSummary.organicEvidence.summary.organicClicks, 18);
+  assert.equal(data.executiveSummary.organicEvidence.summary.organicUsers, 24);
+  assert.equal(data.executiveSummary.organicEvidence.summary.organicEvents, 66);
+  assert.equal(data.executiveSummary.organicEvidence.summary.queryClicks, 0);
+  assert.equal(data.executiveSummary.organicEvidence.joinHealth.status, 'clear');
+  assert.equal(data.executiveSummary.organicEvidence.topLandingPages[0]?.landingPage, '/salon');
+  assert.equal(data.executiveSummary.organicEvidence.topLandingPages[0]?.events, 66);
   assert.equal(data.operations.latestSubmitted.length, 1);
   assert.equal(data.executiveSummary.segmentLabel, 'B2C · Salon · Organic search · Service page');
   assert.equal(data.executiveSummary.trend.key, 'trend');
   assert.equal(data.executiveSummary.risk.key, 'no_acute_risk');
   assert.equal(data.executiveSummary.opportunity.key, 'seo_landing_page');
+  assert.match(data.executiveSummary.opportunity.detail, /18 GSC clicks/i);
+  assert.match(data.executiveSummary.opportunity.detail, /30 GA4 sessions/i);
+  assert.match(data.executiveSummary.opportunity.detail, /24 GA4 users/i);
   assert.equal(data.executiveSummary.nextAction.owner, 'Growth owner');
+});
+
+test('overview unattributed rate excludes suspicious direct rows after canonical normalization', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-instagram-referrer',
+          created_at: '2026-05-02T10:00:00.000Z',
+          session_source: 'direct',
+          session_medium: '(none)',
+          referrer_host: 'instagram.com',
+          landing_page: null,
+          entry_path: '/salon?utm_source=instagram&utm_medium=social',
+          calculator_estimate: 180
+        })
+      ],
+      conventions: [
+        buildConventionRow({
+          id: 'conv-organic',
+          created_at: '2026-05-04T09:00:00.000Z',
+          session_source: 'google',
+          session_medium: 'organic',
+          landing_page: '/entreprises',
+          qualified_at: '2026-05-05T09:00:00.000Z'
+        })
+      ]
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: []
+    },
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  });
+
+  assert.equal(data.overview.cards.find((card) => card.key === 'unattributed_rate')?.value, 0);
+});
+
+test('executive summary softens unattributed risk when the cohort is below the lead reliability threshold', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-truly-direct',
+          created_at: '2026-05-02T10:00:00.000Z',
+          session_source: 'direct',
+          session_medium: '(none)',
+          landing_page: '/salon',
+          entry_path: '/salon'
+        })
+      ],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: []
+    },
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  });
+
+  assert.equal(data.overview.cards.find((card) => card.key === 'unattributed_rate')?.value, 100);
+  assert.equal(data.overview.cards.find((card) => card.key === 'unattributed_rate')?.warning?.level, 'critical');
+  assert.equal(data.executiveSummary.risk.key, 'attribution_low_sample');
+  assert.equal(data.executiveSummary.risk.owner, 'Growth owner');
+  assert.match(data.executiveSummary.risk.detail, /below the 5-lead reliability threshold/i);
+  assert.equal(data.executiveSummary.nextAction.owner, 'Growth owner');
+  assert.match(data.executiveSummary.nextAction.headline, /Validate this low-volume slice/i);
+  assert.equal(data.executiveSummary.attributionDrilldown?.totalCount, 1);
+  assert.equal(data.executiveSummary.attributionDrilldown?.leads[0]?.id, 'devis-truly-direct');
+  assert.equal(data.executiveSummary.attributionDrilldown?.leads[0]?.drilldownHref, '/admin/devis?lead=devis-truly-direct');
+  assert.match(data.executiveSummary.attributionDrilldown?.leads[0]?.title || '', /devis-truly-direct/i);
+});
+
+test('organic evidence flags landing-page query-only gaps when page metrics are missing', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-organic-gap',
+          created_at: '2026-05-02T10:00:00.000Z',
+          landing_page: '/salon',
+          entry_path: '/salon',
+          session_source: 'google',
+          session_medium: 'organic'
+        })
+      ],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: []
+    },
+    externalMetricRows: [],
+    queryMetricRows: [
+      {
+        metric_date: '2026-05-03',
+        query: 'nettoyage salon tunis',
+        normalized_query: 'nettoyage_salon_tunis',
+        landing_page: '/salon',
+        normalized_landing_page: '/salon',
+        cluster_key: 'salon',
+        cluster_label: 'Salon',
+        business_line: 'b2c',
+        service_key: 'salon',
+        page_type: 'service',
+        clicks: 12,
+        impressions: 120,
+        ctr: 10,
+        position: 5.8,
+        is_branded: false,
+        metadata: {}
+      }
+    ],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  });
+
+  assert.equal(data.executiveSummary.organicEvidence.summary.organicClicks, 0);
+  assert.equal(data.executiveSummary.organicEvidence.summary.organicUsers, 0);
+  assert.equal(data.executiveSummary.organicEvidence.summary.organicEvents, 0);
+  assert.equal(data.executiveSummary.organicEvidence.summary.queryClicks, 12);
+  assert.equal(data.executiveSummary.organicEvidence.joinHealth.status, 'warning');
+  assert.equal(data.executiveSummary.organicEvidence.joinHealth.problemPages[0]?.landingPage, '/salon');
+  assert.equal(data.executiveSummary.organicEvidence.joinHealth.problemPages[0]?.status, 'query_only');
+  assert.equal(data.executiveSummary.organicEvidence.topLandingPages[0]?.queryClicks, 12);
 });
 
 test('whatsapp acquisition summarizes clicks, attributed leads, and drilldown rows', () => {
@@ -921,6 +1097,7 @@ test('dashboard stage-one cards expose canonical semantics and low-sample warnin
         landing_page: '/salon',
         sessions: 15,
         users: 12,
+        events: 33,
         clicks: 0,
         impressions: 0,
         spend: 0
@@ -964,6 +1141,7 @@ test('dashboard stage-one cards expose canonical semantics and low-sample warnin
 
   assert.equal(data.acquisition.cards.find((card) => card.key === 'cost_per_lead')?.warning?.key, 'cost_per_lead_low_sample');
   assert.equal(data.acquisition.cards.find((card) => card.key === 'cost_per_acquisition')?.warning?.key, 'cost_per_acquisition_low_sample');
+  assert.equal(data.acquisition.cards.find((card) => card.key === 'events')?.value, 33);
 
   assert.equal(data.seoContent.cards.find((card) => card.key === 'lead_rate')?.warning?.key, 'lead_rate_low_session_sample');
 });

@@ -220,6 +220,7 @@ CREATE TABLE IF NOT EXISTS growth_channel_daily_metrics (
   landing_page TEXT NOT NULL DEFAULT '/',
   sessions INTEGER NOT NULL DEFAULT 0 CHECK (sessions >= 0),
   users INTEGER NOT NULL DEFAULT 0 CHECK (users >= 0),
+  events INTEGER NOT NULL DEFAULT 0 CHECK (events >= 0),
   clicks INTEGER NOT NULL DEFAULT 0 CHECK (clicks >= 0),
   impressions INTEGER NOT NULL DEFAULT 0 CHECK (impressions >= 0),
   spend NUMERIC(12, 2) NOT NULL DEFAULT 0 CHECK (spend >= 0),

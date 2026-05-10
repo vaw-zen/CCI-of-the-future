@@ -1,8 +1,8 @@
 # Growth Dashboard System Guide
 
-Date: 2026-05-09
+Date: 2026-05-10
 
-This guide documents the full growth dashboard system that now powers `/admin/dashboard`. It covers the shipped dashboard UI, API contract, Supabase reporting model, keyword catalog flow, dual-device SERP tracking, data-health behavior, and the admin auth stability fix that keeps admin pages usable during background session refreshes.
+This guide documents the full growth dashboard system that now powers `/admin/dashboard`. It covers the shipped dashboard UI, API contract, Supabase reporting model, keyword catalog flow, dual-device SERP tracking, attribution hygiene, data-health behavior, and the admin auth stability fix that keeps admin pages usable during background session refreshes.
 
 ## Scope
 
@@ -11,12 +11,15 @@ The completed work includes:
 - Upgrading the existing admin dashboard instead of creating a second reporting surface
 - Keeping `GET /api/admin/dashboard` as the single dashboard entrypoint, now with date + Stage 2 segment filters and sectioned responses
 - Adding a Supabase reporting layer for GA4, Search Console, paid media, and social media snapshots
+- Extending GA4 evidence so sessions, users, and event counts can all be surfaced in dashboard reviews
 - Adding a keyword reference and canonical catalog flow driven by a cleaned CSV and stored in Supabase
 - Tracking live keyword rankings from SerpApi on both `desktop` and `mobile`
 - Adding source-health reporting so missing or stale connectors are visible in the UI
 - Stabilizing admin auth refreshes so background Supabase token events no longer blank admin pages
+- Isolating development and production build artifacts so local `next dev` and `next build` do not corrupt each other
 - Separating keyword visibility trend from true keyword position trend in the SEO dashboard section
 - Adding Stage 1 lead-quality operations fields and admin controls for queue ownership, SLA, and last-worked tracking
+- Adding attribution hygiene normalization plus a named weekly audit for `direct/(none)` rows, landing-page capture, and campaign naming drift
 - Adding normalized Supabase reporting views for acquisition and lead-dimension rollups
 - Adding the first Stage 3 growth intelligence layer with query-level Search Console persistence, content opportunities, landing-page scoring, and lifecycle funnel diagnostics
 
@@ -28,6 +31,7 @@ The completed work includes:
 | Dashboard API | `src/app/api/admin/dashboard/route.js` |
 | Lead ops APIs | `src/app/api/admin/leads/[kind]/[id]/status/route.js`, `src/app/api/admin/leads/[kind]/[id]/attribution/route.js`, `src/app/api/admin/leads/[kind]/[id]/ops/route.js` |
 | Dashboard metric builders | `src/libs/adminDashboardMetrics.mjs` |
+| Attribution normalization and audit helpers | `src/libs/attributionHygiene.mjs` |
 | Growth reporting connectors and sync logic | `src/libs/growthReporting.mjs` |
 | Keyword catalog normalization and import logic | `src/libs/growthKeywordCatalog.mjs` |
 | Lead schema compatibility helpers | `src/libs/leadTrackingSchemaCompat.mjs` |
@@ -43,7 +47,7 @@ The growth dashboard is now backed by seven reporting tables plus five reporting
 
 | Table | Purpose |
 | --- | --- |
-| `growth_channel_daily_metrics` | Daily acquisition, traffic, click, impression, and spend snapshots from GA4, GSC, and manual paid/social imports |
+| `growth_channel_daily_metrics` | Daily acquisition, traffic, event, click, impression, and spend snapshots from GA4, GSC, and manual paid/social imports |
 | `growth_reporting_source_health` | Freshness, status, last success, and connector metadata for each dashboard source |
 | `growth_keyword_reference_imports` | Import batches for source keyword CSV files |
 | `growth_keyword_reference_rows` | Raw imported keyword CSV rows, preserved exactly as imported |
@@ -100,6 +104,21 @@ Important Stage 2 scope note:
 - `device` currently scopes keyword visibility and ranking snapshots only
 - Lead, pipeline, acquisition, and operations sections remain cross-device until a device dimension exists in lead and acquisition reporting inputs
 - Stage 3 query intelligence is also currently cross-device because query-level Search Console persistence does not yet store a device dimension
+
+## Attribution Hygiene Layer
+
+The dashboard now hardens attribution in three places:
+
+- client capture: session attribution refreshes on new UTM arrivals so `landing_page` does not stay stale through the session
+- server ingestion: lead and newsletter routes normalize `source`, `medium`, `campaign`, `landing_page`, and `entry_path`, with request-cookie and referer fallback when the browser payload is incomplete
+- reporting read path: dashboard lead normalization reclassifies suspicious historical `direct/(none)` rows when the external referrer clearly indicates social, search, referral, or messaging traffic
+
+Use the audit command below to review attribution quality before weekly growth decisions:
+
+- `direct/(none)` spikes
+- missing `landing_page`
+- missing `entry_path`
+- campaign naming drift
 
 ## Stage 3 Intelligence Layer
 
@@ -221,7 +240,7 @@ Do not use the `sc-domain:...` value for this dashboard setup unless the impleme
 
 Search Console refresh now writes two layers:
 
-- page-level rows into `growth_channel_daily_metrics`
+- page-level rows into `growth_channel_daily_metrics` including GA4 sessions, users, and event counts
 - query-level rows into `growth_query_daily_metrics`
 
 ### SerpApi
@@ -258,6 +277,7 @@ Paid and social connectors are manual in this version. Populate them by importin
 | Command | Purpose |
 | --- | --- |
 | `npm run analytics:validate` | Validate analytics event wiring |
+| `npm run growth:audit:attribution -- --days 7` | Audit direct / unattributed rows, landing-page capture, and campaign naming hygiene |
 | `npm run growth:refresh` | Refresh GA4 and GSC reporting snapshots together |
 | `npm run growth:import:ga4` | Import GA4 daily snapshots |
 | `npm run growth:import:gsc` | Import Search Console daily snapshots |
@@ -265,7 +285,7 @@ Paid and social connectors are manual in this version. Populate them by importin
 | `npm run growth:prepare:keyword-csv -- <csvPath>` | Clean keyword CSV, rebuild catalog, and upsert Supabase rows |
 | `npm run growth:prepare:keyword-csv -- <csvPath> --skip-supabase` | Dry-run keyword cleaning without writing to Supabase |
 | `npm run growth:import:serp` | Fetch live keyword rankings for active catalog rows on desktop and mobile |
-| `npm run test:dashboard` | Run dashboard, payload, and keyword catalog tests |
+| `npm run test:dashboard` | Run dashboard, payload, attribution, and keyword catalog tests |
 | `npm run build` | Production build validation |
 
 ### Common First-Time Setup Sequence
@@ -273,6 +293,7 @@ Paid and social connectors are manual in this version. Populate them by importin
 ```bash
 npm run growth:import:ga4
 npm run growth:import:gsc
+npm run growth:audit:attribution -- --days 7
 npm run growth:prepare:keyword-csv -- '/absolute/path/to/seo-keywords.csv'
 npm run growth:import:serp
 npm run analytics:validate
@@ -386,7 +407,7 @@ That behavior should be fixed by `src/hooks/useAdminAuth.js`. If it appears agai
 
 ### Local dev shows a missing `.next/.../page.js` module
 
-This is usually a corrupted local dev cache. Remove `.next` and restart `npm run dev`.
+This is usually a corrupted local dev cache. Remove `.next-dev` and restart `npm run dev`. If the issue affects production-build output instead, remove `.next` and rerun `npm run build`.
 
 ## Verification Queries
 
@@ -427,5 +448,6 @@ Before considering the dashboard ready:
 - SERP sync has populated both desktop and mobile rankings
 - source-health cards reflect real freshness states
 - `npm run analytics:validate` passes
+- `npm run growth:audit:attribution -- --days 7` is not `critical` before efficiency decisions
 - `npm run test:dashboard` passes
 - `npm run build` passes

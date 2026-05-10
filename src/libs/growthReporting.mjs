@@ -38,6 +38,12 @@ const BRAND_QUERY_PATTERNS = [
 
 const GROWTH_SOURCE_STATUS_VALUES = new Set(['fresh', 'stale', 'missing', 'error']);
 const DEFAULT_ENV_PATH = path.resolve('.env.local');
+const OPTIONAL_GROWTH_EVENTS_WARNINGS = new Set();
+
+function isMissingGrowthEventsColumnError(error) {
+  const message = `${error?.message || ''} ${error?.details || ''} ${error?.hint || ''}`.toLowerCase();
+  return error?.code === '42703' && message.includes('events');
+}
 
 function safeJsonParse(value) {
   try {
@@ -451,6 +457,7 @@ export function normalizeGrowthMetricRow(row = {}) {
     landing_page: normalizePathname(row.landing_page, '/'),
     sessions: normalizeInteger(row.sessions),
     users: normalizeInteger(row.users),
+    events: normalizeInteger(row.events),
     clicks: normalizeInteger(row.clicks),
     impressions: normalizeInteger(row.impressions),
     spend: normalizeNumeric(row.spend),
@@ -458,6 +465,53 @@ export function normalizeGrowthMetricRow(row = {}) {
       ? row.metadata
       : {}
   };
+}
+
+function getGrowthMetricConflictKey(row = {}) {
+  return [
+    row.metric_date,
+    row.metric_source,
+    row.source,
+    row.medium,
+    row.campaign,
+    row.landing_page
+  ].join('||');
+}
+
+export function combineGrowthMetricRows(rows = []) {
+  const combined = new Map();
+
+  rows
+    .map((row) => normalizeGrowthMetricRow(row))
+    .filter((row) => row.metric_date)
+    .forEach((row) => {
+      const key = getGrowthMetricConflictKey(row);
+      const current = combined.get(key) || {
+        ...row,
+        sessions: 0,
+        users: 0,
+        events: 0,
+        clicks: 0,
+        impressions: 0,
+        spend: 0,
+        metadata: {}
+      };
+
+      current.sessions += row.sessions;
+      current.users += row.users;
+      current.events += row.events;
+      current.clicks += row.clicks;
+      current.impressions += row.impressions;
+      current.spend = normalizeNumeric(current.spend + row.spend);
+      current.metadata = {
+        ...current.metadata,
+        ...row.metadata
+      };
+
+      combined.set(key, current);
+    });
+
+  return Array.from(combined.values());
 }
 
 export function normalizeGrowthQueryMetricRow(row = {}) {
@@ -512,19 +566,33 @@ export function normalizeGrowthKeywordRankingRow(row = {}) {
 }
 
 export async function upsertGrowthMetricRows(supabase, rows = []) {
-  const sanitizedRows = rows
-    .map((row) => normalizeGrowthMetricRow(row))
-    .filter((row) => row.metric_date);
+  const sanitizedRows = combineGrowthMetricRows(rows);
 
   if (sanitizedRows.length === 0) {
     return { count: 0 };
   }
 
-  const { error } = await supabase
+  let { error } = await supabase
     .from('growth_channel_daily_metrics')
     .upsert(sanitizedRows, {
       onConflict: 'metric_date,metric_source,source,medium,campaign,landing_page'
     });
+
+  if (error && isMissingGrowthEventsColumnError(error)) {
+    if (!OPTIONAL_GROWTH_EVENTS_WARNINGS.has('growth_channel_daily_metrics')) {
+      OPTIONAL_GROWTH_EVENTS_WARNINGS.add('growth_channel_daily_metrics');
+      console.warn(
+        '[growth][reporting] growth_channel_daily_metrics.events is missing; retrying metric upsert without GA4 events until the schema migration is applied.'
+      );
+    }
+
+    const legacyRows = sanitizedRows.map(({ events, ...legacyRow }) => legacyRow);
+    ({ error } = await supabase
+      .from('growth_channel_daily_metrics')
+      .upsert(legacyRows, {
+        onConflict: 'metric_date,metric_source,source,medium,campaign,landing_page'
+      }));
+  }
 
   if (error) {
     throw error;
@@ -638,6 +706,7 @@ function parseGa4Row(row) {
     landing_page: dimensionValues[4]?.value?.split('?')[0] || '/',
     sessions: metricValues[0]?.value,
     users: metricValues[1]?.value,
+    events: metricValues[2]?.value,
     metadata: {
       source_connector: 'ga4'
     }
@@ -666,7 +735,8 @@ export async function fetchGa4SnapshotRows({ startDate, endDate }) {
       ],
       metrics: [
         { name: 'sessions' },
-        { name: 'totalUsers' }
+        { name: 'totalUsers' },
+        { name: 'eventCount' }
       ],
       limit: '100000'
     }

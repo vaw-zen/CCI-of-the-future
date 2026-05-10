@@ -1,14 +1,18 @@
-import { sendMeasurementEvent } from '@/libs/ga4Measurement';
-import { sanitizePayload } from '@/utils/analyticsGateway';
+import { sendMeasurementEvent } from './ga4Measurement.js';
+import { normalizeAnalyticsAttributionContext } from './attributionHygiene.mjs';
+import { sanitizePayload } from '../utils/analyticsGateway.js';
 
 const ATTRIBUTION_KEYS = [
   'ga_client_id',
   'landing_page',
+  'landing_location',
   'session_source',
   'session_medium',
   'session_campaign',
   'referrer_host',
   'entry_path',
+  'page_path',
+  'page_location',
   'calculator_estimate',
   'selected_services'
 ];
@@ -30,22 +34,23 @@ function normalizeNumber(value) {
   return Number.isFinite(numericValue) ? numericValue : null;
 }
 
-export function extractAnalyticsContext(rawContext = {}) {
+export function extractAnalyticsContext(rawContext = {}, options = {}) {
   const context = Object.fromEntries(
     ATTRIBUTION_KEYS.map((key) => [key, rawContext?.[key]])
   );
 
   const sanitizedContext = sanitizePayload(context);
+  const normalizedAttribution = normalizeAnalyticsAttributionContext(sanitizedContext, options);
 
   return {
-    ...sanitizedContext,
+    ...normalizedAttribution,
     selected_services: normalizeStringArray(sanitizedContext.selected_services),
     calculator_estimate: normalizeNumber(sanitizedContext.calculator_estimate)
   };
 }
 
-export function buildAttributionColumns(rawContext = {}) {
-  const context = extractAnalyticsContext(rawContext);
+export function buildAttributionColumns(rawContext = {}, options = {}) {
+  const context = extractAnalyticsContext(rawContext, options);
 
   return {
     ga_client_id: context.ga_client_id || null,
@@ -54,7 +59,7 @@ export function buildAttributionColumns(rawContext = {}) {
     session_medium: context.session_medium || null,
     session_campaign: context.session_campaign || null,
     referrer_host: context.referrer_host || null,
-    entry_path: context.entry_path || null,
+    entry_path: context.entry_path || context.landing_page || null,
     calculator_estimate: context.calculator_estimate,
     selected_services: context.selected_services
   };

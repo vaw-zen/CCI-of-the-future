@@ -206,6 +206,7 @@ node updated-email-automation.cjs social-platforms
 - **`GROWTH_DASHBOARD_EXECUTION_PROGRAM.md`**: Stage-by-stage delivery program, owners, dependencies, and implementation backlog for the 24-week rollout
 - **`GROWTH_DASHBOARD_SYSTEM_GUIDE.md`**: End-to-end dashboard, reporting, keyword, and connector architecture
 - **`GROWTH_DASHBOARD_STAGE_TRACKING_REPORT.md`**: Current delivery checkpoint across Stages 0-6, shipped scope, verification, and next recommended implementation
+- **`GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md`**: Weekly pass/fail workflow for auditing direct traffic, landing-page capture, and campaign naming hygiene
 - **`GROWTH_DASHBOARD_METRIC_DEFINITIONS.md`**: KPI formulas, ownership, refresh cadence, and decision intent
 - **`GROWTH_DASHBOARD_SEMANTICS_AND_THRESHOLDS.md`**: Stage 0 KPI glossary, taxonomy lock, thresholds, owner model, and stage gates
 - **`GROWTH_DASHBOARD_RUNBOOK.md`**: Launch, stabilization, weekly review, and maintenance checklist

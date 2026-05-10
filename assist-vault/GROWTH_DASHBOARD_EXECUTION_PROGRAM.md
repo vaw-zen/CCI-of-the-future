@@ -1,6 +1,6 @@
 # Growth Dashboard Execution Program
 
-Date: 2026-05-09
+Date: 2026-05-10
 
 This document operationalizes the audit strategy into a delivery program that engineering, growth, and admin ops can execute without creating a second reporting surface. The target remains the current `/admin/dashboard`, its API contract, and its reporting layer.
 
@@ -25,9 +25,12 @@ This document operationalizes the audit strategy into a delivery program that en
 | Dimension-ready normalization | Implemented in metric layer | Leads and combined rows now expose `sourceClass`, `pageType`, and `businessLine` |
 | Lead-quality operations fields | Implemented in schema + admin UI | `lead_quality_outcome`, `lead_owner`, `follow_up_sla_at`, and `last_worked_at` now flow through forms, admin drawers, and status/attribution updates |
 | Normalized reporting views | Implemented in reporting layer | Supabase now exposes normalized growth metric and lead-dimension views for Stage 2 segmentation work |
+| Attribution hygiene normalization and audit | Implemented | New lead payloads normalize source/medium/campaign and landing paths, historical suspicious direct rows are reclassified at read time, and weekly QA now has a named audit command |
 | Stage 2 segmentation contract | Implemented | Dashboard now supports `businessLine`, `service`, `sourceClass`, `device`, and `pageType` filters plus `executiveSummary` in the API payload |
 | Stage 2 UI layer | Implemented | `/admin/dashboard` now has a summary band, segment controls, and a dedicated pipeline section |
 | Stage 3 first intelligence slice | Implemented in product, stabilization pending | Query sync, Stage 3 payload keys, and the first prioritization panels are live; workflow adoption and heuristic tuning remain open |
+| GA4 events completeness | Implemented as a reporting enhancement | GA4 snapshots now support `events`, the dashboard surfaces GA4 events alongside sessions/users, and imports dedupe normalized conflicts before upsert |
+| Dev/build artifact isolation | Implemented as an engineering reliability enhancement | `next dev` now writes to `.next-dev` while production builds keep using `.next`, preventing cache collisions from breaking admin routes |
 | Stage 4+ intelligence and automation backlog | Pending | Tracked in backlog below |
 
 ## Delivery order
@@ -62,7 +65,7 @@ This document operationalizes the audit strategy into a delivery program that en
 | S1-03 | `metric-builder` | Engineering | Attach canonical KPI semantics to cards | Stage 0 | UI consumes card semantics from API, not local hardcoded labels | Implemented |
 | S1-04 | `metric-builder` | Engineering | Add thin-volume warnings for CPL, CPA, and lead-rate metrics | Stage 0 | Low-sample efficiency metrics show warnings automatically | Implemented |
 | S1-05 | `UI` | Engineering | Render KPI warnings and replace ambiguous labels | S1-03, S1-04 | Dashboard surfaces trust signals directly in cards | Implemented |
-| S1-06 | `workflow` | Admin ops + Engineering | Formalize attribution QA checklist and weekly reconciliation | Stage 0 | Unattributed lead spikes are detected and reviewed weekly | Next |
+| S1-06 | `workflow` | Admin ops + Engineering | Formalize attribution QA checklist and weekly reconciliation | Stage 0 | Unattributed lead spikes are detected and reviewed weekly | Implemented |
 | S1-07 | `documentation` | Engineering | Update metric definitions and launch runbook to reflect Stage 1 semantics | S1-03, S1-04 | Docs and runtime contract match | Implemented |
 
 ### Stage 2
@@ -142,14 +145,22 @@ This document operationalizes the audit strategy into a delivery program that en
 | Cadence | Owner | Output |
 | --- | --- | --- |
 | Weekly growth review | Growth owner | Prioritized actions tied to a dashboard segment |
-| Weekly ops QA | Admin ops + Engineering | Attribution QA, stale queue review, unresolved data issues |
+| Weekly ops QA | Admin ops + Engineering | Attribution QA via `npm run growth:audit:attribution`, stale queue review, unresolved data issues |
 | Monthly executive review | Growth owner | Trend, risk, opportunity, next action, experiment outcomes |
 | Monthly dashboard governance | Engineering | KPI drift review, threshold tuning, deprecated panel cleanup |
 
 ## What gets done first
 
-1. Finish the remaining Stage 1 schema and workflow tasks so lead quality and attribution QA become operational, not just visible.
-2. Operationalize Stage 2 in the weekly growth review next so segmentation becomes the default decision frame instead of an optional view.
-3. Build Stage 3 marts before experiments or alerts, because prioritization and anomaly detection need stable, segmented metrics.
+1. Operationalize Stage 2 in the weekly growth review so segmentation becomes the default decision frame instead of an optional view.
+2. Keep Stage 1 attribution QA in the weekly ops cadence using the named audit checklist and command.
+3. Build Stage 3 adoption and stability before experiments or alerts, because prioritization and anomaly detection need stable, segmented metrics.
 4. Add experiments in Stage 4 and automation in Stage 5 only after the Stage 3 logic remains stable for at least two weekly review cycles.
 5. Defer ROI, LTV, forecasting, and advanced attribution to Stage 6 until history depth and lead-quality adoption are strong enough.
+
+## Roadmap Impact
+
+- No stage order has changed.
+- No new phase has been introduced.
+- No dependency gate has been relaxed or bypassed.
+- GA4 `events` support enhances the existing acquisition and SEO evidence model inside Stage 3 without changing the program sequence.
+- GA4 import deduplication and dev/build cache isolation are delivery hardening changes that protect Stage 1 trust and Stage 3 stability; they do not create new roadmap scope.

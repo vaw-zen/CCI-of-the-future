@@ -4,6 +4,11 @@
  */
 
 import { pushAnalyticsEvent } from './analyticsGateway';
+import {
+  normalizeAttributionMedium,
+  normalizeAttributionSource,
+  normalizeCampaignName
+} from '../libs/attributionHygiene.mjs';
 
 /**
  * Generate a URL with UTM parameters
@@ -181,9 +186,9 @@ export function extractUTMParameters() {
   if (!source) return null;
   
   return {
-    source: source,
-    medium: urlParams.get('utm_medium'),
-    campaign: urlParams.get('utm_campaign'),
+    source: normalizeAttributionSource(source),
+    medium: normalizeAttributionMedium(urlParams.get('utm_medium')),
+    campaign: normalizeCampaignName(urlParams.get('utm_campaign')),
     content: urlParams.get('utm_content'),
     term: urlParams.get('utm_term'),
     timestamp: new Date().toISOString(),

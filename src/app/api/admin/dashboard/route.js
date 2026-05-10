@@ -16,6 +16,7 @@ const ADMIN_DASHBOARD_RATE_LIMIT = {
 const NORMALIZED_EXTERNAL_METRIC_VIEW = 'growth_channel_daily_metrics_normalized';
 const NORMALIZED_EXTERNAL_METRIC_VIEW_WARNINGS = new Set();
 const GROWTH_QUERY_METRIC_WARNINGS = new Set();
+const OPTIONAL_GROWTH_EVENTS_WARNINGS = new Set();
 
 const DASHBOARD_SELECT_FIELDS = {
   devis: [
@@ -85,6 +86,11 @@ function getErrorResponse(status, message, httpStatus) {
       failureType: status
     }
   }, { status: httpStatus });
+}
+
+function isMissingGrowthEventsColumnError(error) {
+  const message = `${error?.message || ''} ${error?.details || ''} ${error?.hint || ''}`.toLowerCase();
+  return error?.code === '42703' && message.includes('events');
 }
 
 async function runLeadSelectWithFallback({ supabase, table, select, applyQuery }) {
@@ -189,7 +195,28 @@ async function fetchAuditEvents(supabase) {
 }
 
 async function fetchExternalMetricRows(supabase, range) {
-  const normalizedSelect = [
+  const normalizedSelectWithEvents = [
+    'metric_date',
+    'metric_source',
+    'source',
+    'medium',
+    'campaign',
+    'landing_page',
+    'normalized_source',
+    'normalized_medium',
+    'normalized_campaign',
+    'normalized_landing_page',
+    'source_class',
+    'page_type',
+    'sessions',
+    'users',
+    'events',
+    'clicks',
+    'impressions',
+    'spend',
+    'metadata'
+  ].join(',');
+  const normalizedSelectLegacy = [
     'metric_date',
     'metric_source',
     'source',
@@ -209,7 +236,22 @@ async function fetchExternalMetricRows(supabase, range) {
     'spend',
     'metadata'
   ].join(',');
-  const rawSelect = [
+  const rawSelectWithEvents = [
+    'metric_date',
+    'metric_source',
+    'source',
+    'medium',
+    'campaign',
+    'landing_page',
+    'sessions',
+    'users',
+    'events',
+    'clicks',
+    'impressions',
+    'spend',
+    'metadata'
+  ].join(',');
+  const rawSelectLegacy = [
     'metric_date',
     'metric_source',
     'source',
@@ -224,12 +266,28 @@ async function fetchExternalMetricRows(supabase, range) {
     'metadata'
   ].join(',');
 
-  const normalizedResult = await supabase
+  let normalizedResult = await supabase
     .from(NORMALIZED_EXTERNAL_METRIC_VIEW)
-    .select(normalizedSelect)
+    .select(normalizedSelectWithEvents)
     .gte('metric_date', range.from)
     .lte('metric_date', range.to)
     .order('metric_date', { ascending: true });
+
+  if (normalizedResult.error && isMissingGrowthEventsColumnError(normalizedResult.error)) {
+    if (!OPTIONAL_GROWTH_EVENTS_WARNINGS.has(NORMALIZED_EXTERNAL_METRIC_VIEW)) {
+      OPTIONAL_GROWTH_EVENTS_WARNINGS.add(NORMALIZED_EXTERNAL_METRIC_VIEW);
+      console.warn(
+        `[admin][dashboard] ${NORMALIZED_EXTERNAL_METRIC_VIEW}.events is missing; retrying without GA4 events until the schema migration is applied.`
+      );
+    }
+
+    normalizedResult = await supabase
+      .from(NORMALIZED_EXTERNAL_METRIC_VIEW)
+      .select(normalizedSelectLegacy)
+      .gte('metric_date', range.from)
+      .lte('metric_date', range.to)
+      .order('metric_date', { ascending: true });
+  }
 
   if (!normalizedResult.error) {
     return {
@@ -245,12 +303,30 @@ async function fetchExternalMetricRows(supabase, range) {
     );
   }
 
-  const { data, error } = await supabase
+  let rawResult = await supabase
     .from('growth_channel_daily_metrics')
-    .select(rawSelect)
+    .select(rawSelectWithEvents)
     .gte('metric_date', range.from)
     .lte('metric_date', range.to)
     .order('metric_date', { ascending: true });
+
+  if (rawResult.error && isMissingGrowthEventsColumnError(rawResult.error)) {
+    if (!OPTIONAL_GROWTH_EVENTS_WARNINGS.has('growth_channel_daily_metrics')) {
+      OPTIONAL_GROWTH_EVENTS_WARNINGS.add('growth_channel_daily_metrics');
+      console.warn(
+        '[admin][dashboard] growth_channel_daily_metrics.events is missing; retrying raw metrics without GA4 events until the schema migration is applied.'
+      );
+    }
+
+    rawResult = await supabase
+      .from('growth_channel_daily_metrics')
+      .select(rawSelectLegacy)
+      .gte('metric_date', range.from)
+      .lte('metric_date', range.to)
+      .order('metric_date', { ascending: true });
+  }
+
+  const { data, error } = rawResult;
 
   if (error) {
     return {

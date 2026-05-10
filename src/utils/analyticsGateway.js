@@ -1,4 +1,11 @@
 import {
+  ATTRIBUTION_DEFAULTS,
+  inferAttributionFromReferrerHost,
+  normalizeAttributionHost,
+  normalizeAttributionPath,
+  resolveCanonicalAttribution
+} from '../libs/attributionHygiene.mjs';
+import {
   SESSION_ATTRIBUTION_COOKIE_KEY,
   serializeSessionAttributionCookie
 } from '../libs/whatsappTracking.mjs';
@@ -161,15 +168,7 @@ function getCookieValue(name) {
 }
 
 function getReferrerHost(referrer = '') {
-  if (!referrer) {
-    return '';
-  }
-
-  try {
-    return new URL(referrer).hostname.replace(/^www\./, '');
-  } catch (error) {
-    return '';
-  }
+  return normalizeAttributionHost(referrer);
 }
 
 export function getGaClientId() {
@@ -211,51 +210,36 @@ export function inferSessionAttribution() {
   }
 
   const urlParams = new URLSearchParams(window.location.search);
-  const currentHost = window.location.hostname.replace(/^www\./, '');
+  const currentHost = normalizeAttributionHost(window.location.hostname);
   const referrerHost = getReferrerHost(document.referrer);
-  const utmSource = urlParams.get('utm_source');
-  const utmMedium = urlParams.get('utm_medium');
-  const utmCampaign = urlParams.get('utm_campaign');
-
-  let source = utmSource;
-  let medium = utmMedium;
-
-  if (!source) {
-    if (referrerHost.includes('google.')) {
-      source = 'google';
-      medium = 'organic';
-    } else if (referrerHost.includes('bing.')) {
-      source = 'bing';
-      medium = 'organic';
-    } else if (referrerHost.includes('facebook.')) {
-      source = 'facebook';
-      medium = 'social';
-    } else if (referrerHost.includes('instagram.')) {
-      source = 'instagram';
-      medium = 'social';
-    } else if (referrerHost.includes('linkedin.')) {
-      source = 'linkedin';
-      medium = 'social';
-    } else if (referrerHost && referrerHost !== currentHost) {
-      source = referrerHost;
-      medium = 'referral';
-    } else {
-      source = 'direct';
-      medium = '(none)';
-    }
-  }
+  const canonicalAttribution = resolveCanonicalAttribution({
+    source: urlParams.get('utm_source') || inferAttributionFromReferrerHost(referrerHost, currentHost).source,
+    medium: urlParams.get('utm_medium') || inferAttributionFromReferrerHost(referrerHost, currentHost).medium,
+    campaign: urlParams.get('utm_campaign'),
+    referrerHost,
+    siteHost: currentHost
+  });
 
   return sanitizePayload({
-    source,
-    medium: medium || '(none)',
-    campaign: utmCampaign || undefined,
+    source: canonicalAttribution.source,
+    medium: canonicalAttribution.medium,
+    campaign: canonicalAttribution.campaign,
     content: urlParams.get('utm_content') || undefined,
     term: urlParams.get('utm_term') || undefined,
-    landing_page: window.location.pathname,
+    landing_page: normalizeAttributionPath(window.location.pathname, ATTRIBUTION_DEFAULTS.landingPage),
     landing_location: window.location.href,
     referrer_host: referrerHost || undefined,
     captured_at: new Date().toISOString()
   });
+}
+
+function hasExplicitUtmAttribution() {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.has('utm_source') || urlParams.has('utm_medium') || urlParams.has('utm_campaign');
 }
 
 function persistSessionAttributionCookie(value = {}) {
@@ -278,18 +262,22 @@ export function persistSessionAttribution() {
   }
 
   const existing = readSessionAttribution();
-  if (existing) {
-    persistSessionAttributionCookie(existing);
-    return existing;
-  }
-
   const inferred = inferSessionAttribution();
-  if (inferred) {
-    window.sessionStorage.setItem(SESSION_ATTRIBUTION_KEY, JSON.stringify(inferred));
-    persistSessionAttributionCookie(inferred);
+  const shouldRefresh = !existing
+    || hasExplicitUtmAttribution()
+    || !existing.landing_page
+    || !existing.source
+    || !existing.medium;
+  const resolvedAttribution = shouldRefresh
+    ? (inferred || existing)
+    : existing;
+
+  if (resolvedAttribution) {
+    window.sessionStorage.setItem(SESSION_ATTRIBUTION_KEY, JSON.stringify(resolvedAttribution));
+    persistSessionAttributionCookie(resolvedAttribution);
   }
 
-  return inferred;
+  return resolvedAttribution;
 }
 
 export function getQuoteCalculatorContext() {
@@ -344,19 +332,39 @@ export function getAnalyticsContext(additionalData = {}) {
 
   const sessionAttribution = persistSessionAttribution() || {};
   const utmData = safeJsonParse(window.sessionStorage.getItem('utm_data'), {}) || {};
+  const currentHost = normalizeAttributionHost(window.location.hostname);
+  const referrerHost = normalizeAttributionHost(
+    sessionAttribution.referrer_host || getReferrerHost(document.referrer)
+  );
+  const canonicalAttribution = resolveCanonicalAttribution({
+    source: utmData.source || sessionAttribution.source,
+    medium: utmData.medium || sessionAttribution.medium,
+    campaign: utmData.campaign || sessionAttribution.campaign,
+    referrerHost,
+    siteHost: currentHost
+  });
+  const landingPage = normalizeAttributionPath(
+    sessionAttribution.landing_page || window.location.pathname,
+    ATTRIBUTION_DEFAULTS.landingPage
+  );
+  const entryPath = normalizeAttributionPath(
+    `${window.location.pathname}${window.location.search}`,
+    landingPage,
+    { includeSearch: true }
+  );
 
   return sanitizePayload({
     ga_client_id: getGaClientId(),
     page_location: window.location.href,
-    page_path: window.location.pathname,
+    page_path: normalizeAttributionPath(window.location.pathname, ATTRIBUTION_DEFAULTS.landingPage),
     page_title: document.title,
-    landing_page: sessionAttribution.landing_page || window.location.pathname,
+    landing_page: landingPage,
     landing_location: sessionAttribution.landing_location,
-    session_source: utmData.source || sessionAttribution.source,
-    session_medium: utmData.medium || sessionAttribution.medium,
-    session_campaign: utmData.campaign || sessionAttribution.campaign,
-    referrer_host: sessionAttribution.referrer_host || getReferrerHost(document.referrer),
-    entry_path: `${window.location.pathname}${window.location.search}`,
+    session_source: canonicalAttribution.source,
+    session_medium: canonicalAttribution.medium,
+    session_campaign: canonicalAttribution.campaign,
+    referrer_host: referrerHost || undefined,
+    entry_path: entryPath,
     ...additionalData
   });
 }

@@ -68,7 +68,7 @@ export async function POST(request) {
     }
 
     const body = await request.json().catch(() => ({}));
-    analyticsContext = extractAnalyticsContext(body?.analyticsContext || {});
+    analyticsContext = extractAnalyticsContext(body?.analyticsContext || {}, { request });
     const formData = body?.formData || body || {};
     const attributionColumns = buildAttributionColumns(analyticsContext);
 

@@ -19,6 +19,7 @@ This sheet is the source of truth for the upgraded admin growth dashboard. It de
 - Lead and combined acquisition rows now expose dimension-ready normalization fields including `sourceClass`, `pageType`, and `businessLine`.
 - Lead operations now persist `lead_quality_outcome`, `lead_owner`, `follow_up_sla_at`, and `last_worked_at`, and the operations section uses `last_worked_at` before lifecycle timestamps when determining whether an open lead is stale.
 - Reporting reads can use `growth_channel_daily_metrics_normalized` and `growth_lead_reporting_dimensions` when normalized source, campaign, landing-page, and page-type dimensions are needed directly from Supabase.
+- Attribution capture and ingestion now normalize source, medium, campaign, landing-page, and entry-path context, while weekly QA uses `npm run growth:audit:attribution`.
 
 ## Overview
 
@@ -47,6 +48,7 @@ This sheet is the source of truth for the upgraded admin growth dashboard. It de
 | KPI | Formula | Source table / API | Owner | Refresh cadence | Intended decision |
 | --- | --- | --- | --- | --- | --- |
 | Sessions | Sum of `sessions` on reporting snapshots in range | `growth_channel_daily_metrics_normalized` (`ga4`) | Growth owner | Daily cron / manual refresh | Which channels are bringing traffic volume? |
+| Events | Sum of `events` on reporting snapshots in range | `growth_channel_daily_metrics_normalized` (`ga4`) | Growth owner | Daily cron / manual refresh | Is traffic actually engaging with the site once it arrives? |
 | Clicks | Sum of `clicks` on reporting snapshots in range | `growth_channel_daily_metrics_normalized` (`gsc`, `paid_manual`, `social_manual`) | Growth owner | Daily / manual | Which channels are generating actual visits or intent? |
 | Impressions | Sum of `impressions` on reporting snapshots in range | `growth_channel_daily_metrics_normalized` | Growth owner | Daily / manual | Are campaigns and pages earning visibility? |
 | Spend | Sum of `spend` on paid/social manual imports in range | `growth_channel_daily_metrics_normalized` (`paid_manual`, `social_manual`) | Growth owner | Daily / manual | How much did we invest to generate demand? |
@@ -97,6 +99,8 @@ This sheet is the source of truth for the upgraded admin growth dashboard. It de
   - wins `< 3` for cost per acquisition
   - sessions `< 20` or clicks `< 20` for lead-rate calculations
 - Attribution quality should be reviewed whenever unattributed lead rate exceeds `25%`, and escalated immediately above `40%`.
+- Executive summary attribution risk should be treated as directional only when the filtered cohort is below `5 leads`, even if the unattributed rate is high.
+- Weekly attribution QA should be run with `npm run growth:audit:attribution -- --days 7` before using CPL, CPA, or landing-page efficiency in the growth review.
 - Keyword reference fields in `growth_keyword_catalog` such as imported position, CTR, and CSV trend labels are baseline reference metadata only.
 - Live keyword KPIs and keyword trend charts in the dashboard come from `growth_keyword_rankings_daily`.
 - The dashboard now separates keyword visibility trend from keyword average position trend. The old `trend` payload key remains only as a backward-compatible alias to visibility.

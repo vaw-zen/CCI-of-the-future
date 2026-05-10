@@ -570,6 +570,16 @@ function ExecutiveSummary({ executiveSummary, filters }) {
     executiveSummary.nextAction
   ].filter(Boolean);
   const activeFilters = filters?.active || [];
+  const attributionDrilldown = executiveSummary.attributionDrilldown;
+  const organicEvidence = executiveSummary.organicEvidence;
+  const joinHealthStatus = organicEvidence?.joinHealth?.status;
+  const joinHealthBadge = joinHealthStatus === 'clear'
+    ? { label: 'Aligned', className: styles.health_fresh }
+    : joinHealthStatus === 'warning'
+      ? { label: 'Query gap', className: styles.health_stale }
+      : joinHealthStatus === 'partial'
+        ? { label: 'Check pages', className: styles.health_missing }
+        : { label: 'N/A', className: styles.health_missing };
 
   return (
     <div className={styles.panel}>
@@ -612,6 +622,136 @@ function ExecutiveSummary({ executiveSummary, filters }) {
           </div>
         ))}
       </div>
+
+      {organicEvidence && (
+        <div className={styles.executiveFollowup}>
+          <div className={styles.executiveFollowupHeader}>
+            <div>
+              <h3>Organic search evidence</h3>
+              <p className={styles.inlineNote}>{organicEvidence.joinHealth.note}</p>
+            </div>
+            <span className={`${styles.healthBadge} ${joinHealthBadge.className}`}>
+              {joinHealthBadge.label}
+            </span>
+          </div>
+
+          <MetricBadges items={[
+            { label: 'GSC clicks', value: formatNumber(organicEvidence.summary.organicClicks) },
+            { label: 'GSC impressions', value: formatNumber(organicEvidence.summary.organicImpressions) },
+            { label: 'GA4 sessions', value: formatNumber(organicEvidence.summary.organicSessions) },
+            { label: 'GA4 users', value: formatNumber(organicEvidence.summary.organicUsers) },
+            { label: 'GA4 events', value: formatNumber(organicEvidence.summary.organicEvents) },
+            { label: 'GSC query clicks', value: formatNumber(organicEvidence.summary.queryClicks) },
+            { label: 'Lead pages', value: formatNumber(organicEvidence.joinHealth.leadPageCount) }
+          ]} />
+          <p className={styles.inlineNote}>
+            GA4 sessions, users, and events are shown separately from Search Console clicks and impressions.
+          </p>
+
+          {organicEvidence.topLandingPages.length > 0 ? (
+            <div className={styles.metricList}>
+              {organicEvidence.topLandingPages.map((row) => (
+                <div key={row.landingPage} className={styles.metricRow}>
+                  <div>
+                    <strong>{row.landingPage}</strong>
+                    <span>{row.queryCount} queries • {row.leads} leads • {row.qualifiedLeads} qualified</span>
+                  </div>
+                  <MetricBadges items={[
+                    { label: 'GSC page clicks', value: formatNumber(row.clicks) },
+                    { label: 'GSC impr.', value: formatNumber(row.impressions) },
+                    { label: 'GA4 sessions', value: formatNumber(row.sessions) },
+                    { label: 'GA4 users', value: formatNumber(row.users) },
+                    { label: 'GA4 events', value: formatNumber(row.events) },
+                    { label: 'GSC query clicks', value: formatNumber(row.queryClicks) }
+                  ]} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className={styles.mutedText}>No organic landing-page evidence is available in this slice yet.</p>
+          )}
+
+          {organicEvidence.joinHealth.problemPages.length > 0 && (
+            <>
+              <p className={joinHealthStatus === 'warning' ? styles.healthError : styles.inlineNote}>
+                Landing-page coverage check for current lead pages.
+              </p>
+              <div className={styles.metricList}>
+                {organicEvidence.joinHealth.problemPages.map((row) => (
+                  <div key={row.landingPage} className={styles.metricRow}>
+                    <div>
+                      <strong>{row.landingPage}</strong>
+                      <span>
+                        {row.status === 'query_only'
+                          ? 'Query-level evidence exists, but page-level organic metrics are missing.'
+                          : 'No organic page or query evidence exists for this lead page in the selected period.'}
+                      </span>
+                    </div>
+                    <MetricBadges items={[
+                      { label: 'Leads', value: formatNumber(row.leads) },
+                      { label: 'Qualified', value: formatNumber(row.qualifiedLeads) },
+                      { label: 'GA4 sessions', value: formatNumber(row.sessions) },
+                      { label: 'GA4 users', value: formatNumber(row.users) },
+                      { label: 'GA4 events', value: formatNumber(row.events) },
+                      { label: 'GSC page clicks', value: formatNumber(row.clicks) },
+                      { label: 'GSC query clicks', value: formatNumber(row.queryClicks) }
+                    ]} />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {attributionDrilldown?.leads?.length > 0 && (
+        <div className={styles.executiveFollowup}>
+          <div className={styles.executiveFollowupHeader}>
+            <div>
+              <h3>{attributionDrilldown.title}</h3>
+              <p className={styles.inlineNote}>{attributionDrilldown.note}</p>
+            </div>
+            <span className={styles.metricBadge}>
+              <strong>Rows</strong> {formatNumber(attributionDrilldown.totalCount)}
+            </span>
+          </div>
+          {attributionDrilldown.hiddenCount > 0 && (
+            <p className={styles.mutedText}>
+              Showing the {formatNumber(attributionDrilldown.leads.length)} most recent rows. {formatNumber(attributionDrilldown.hiddenCount)} older row{attributionDrilldown.hiddenCount > 1 ? 's remain' : ' remains'} in this filtered cohort.
+            </p>
+          )}
+          <div className={styles.compactList}>
+            {attributionDrilldown.leads.map((lead) => {
+              const fallbackOpsMeta = [
+                lead.leadQualityLabel || null,
+                lead.leadOwner ? `Owner: ${lead.leadOwner}` : null,
+                lead.followUpSlaAt ? `SLA: ${formatDateTime(lead.followUpSlaAt)}` : null
+              ].filter(Boolean).join(' • ');
+
+              return (
+                <Link
+                  key={`${lead.kind}-${lead.id}`}
+                  href={lead.drilldownHref || (lead.kind === 'devis' ? `/admin/devis?lead=${lead.id}` : `/admin/conventions?lead=${lead.id}`)}
+                  className={styles.compactItem}
+                >
+                  <div>
+                    <strong>{lead.title || `${lead.kindLabel} - ${lead.serviceLabel}`}</strong>
+                    <span>{lead.metaLinePrimary || `${lead.source} / ${lead.medium}`}</span>
+                    <span>{lead.metaLineSecondary || lead.landingPage}</span>
+                    {(lead.metaLineTertiary || fallbackOpsMeta) && <small>{lead.metaLineTertiary || fallbackOpsMeta}</small>}
+                  </div>
+                  <div className={styles.compactMeta}>
+                    <span className={`${styles.statusBadge} ${styles[`status_${lead.status}`]}`}>
+                      {lead.statusLabel}
+                    </span>
+                    <small>{lead.metaDateTime ? formatDateTime(lead.metaDateTime) : formatHours(lead.ageHours)}</small>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -667,7 +807,7 @@ function LeadSummaryList({ title, leads = [], emptyText, note }) {
                 className={styles.compactItem}
               >
                 <div>
-                  <strong>{lead.kindLabel} - {lead.serviceLabel}</strong>
+                  <strong>{lead.title || `${lead.kindLabel} - ${lead.serviceLabel}`}</strong>
                   <span>{lead.metaLinePrimary || `${lead.source} / ${lead.medium}`}</span>
                   <span>{lead.metaLineSecondary || lead.landingPage}</span>
                   {(lead.metaLineTertiary || fallbackOpsMeta) && <small>{lead.metaLineTertiary || fallbackOpsMeta}</small>}
@@ -937,6 +1077,7 @@ function AcquisitionSection({ dashboardData }) {
               </div>
               <MetricBadges items={[
                 { label: 'Sessions', value: formatNumber(row.sessions) },
+                { label: 'Events', value: formatNumber(row.events) },
                 { label: 'Clicks', value: formatNumber(row.clicks) },
                 { label: 'Spend', value: formatCurrency(row.spend) },
                 { label: 'CPL', value: row.costPerLead === null ? 'N/A' : formatCurrency(row.costPerLead) }
@@ -957,6 +1098,7 @@ function AcquisitionSection({ dashboardData }) {
                 <span>{row.leads} leads, {row.qualifiedLeads} qualifiés, {row.wonLeads} gagnés</span>
               </div>
               <MetricBadges items={[
+                { label: 'Events', value: formatNumber(row.events) },
                 { label: 'Clicks', value: formatNumber(row.clicks) },
                 { label: 'CTR', value: formatPercent(row.ctr) },
                 { label: 'Spend', value: formatCurrency(row.spend) },

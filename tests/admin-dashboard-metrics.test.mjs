@@ -99,6 +99,10 @@ function buildWhatsAppDirectRow(overrides = {}) {
     referrer_host: overrides.referrer_host || null,
     landing_page: overrides.landing_page || null,
     entry_path: overrides.entry_path || null,
+    whatsapp_click_id: overrides.whatsapp_click_id || null,
+    whatsapp_clicked_at: overrides.whatsapp_clicked_at || null,
+    whatsapp_click_label: overrides.whatsapp_click_label || null,
+    whatsapp_click_page: overrides.whatsapp_click_page || null,
     whatsapp_manual_tag: overrides.whatsapp_manual_tag ?? true,
     whatsapp_manual_tagged_at: overrides.whatsapp_manual_tagged_at || '2026-05-11T10:00:00.000Z'
   };
@@ -953,6 +957,27 @@ test('direct whatsapp leads use lead_captured_at for cohorts, funnel, operations
   assert.match(data.acquisition.whatsapp.recentLeads[0]?.metaLinePrimary || '', /\+216 20 000 002/);
   assert.equal(data.operations.latestSubmitted.some((lead) => lead.id === 'wa-direct-won'), true);
   assert.equal(data.operations.latestSubmitted.some((lead) => lead.id === 'wa-direct-qualified'), true);
+});
+
+test('converted site-click whatsapp leads keep the site-intent attribution label', () => {
+  const normalizedLead = normalizeLead(buildWhatsAppDirectRow({
+    id: 'wa-direct-from-site',
+    lead_captured_at: '2026-05-11T09:00:00.000Z',
+    submitted_at: '2026-05-11T09:00:00.000Z',
+    whatsapp_click_id: 'wa-click-1',
+    whatsapp_clicked_at: '2026-05-11T08:55:00.000Z',
+    whatsapp_click_label: 'sticky_header_whatsapp',
+    whatsapp_click_page: '/contact',
+    session_source: 'google',
+    session_medium: 'organic',
+    landing_page: '/contact',
+    entry_path: '/contact'
+  }), 'whatsapp', '2026-05-11T12:00:00.000Z');
+
+  assert.equal(normalizedLead.whatsappAttributionMode, 'site_intent');
+  assert.equal(normalizedLead.whatsappAttributionLabel, 'Intent site converti');
+  assert.equal(normalizedLead.source, 'google');
+  assert.equal(normalizedLead.medium, 'organic');
 });
 
 test('lifecycle trend counts created, qualified, won, and lost activity independently', () => {

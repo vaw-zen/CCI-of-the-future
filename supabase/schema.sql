@@ -206,6 +206,10 @@ CREATE TABLE IF NOT EXISTS whatsapp_direct_leads (
   referrer_host TEXT,
   landing_page TEXT,
   entry_path TEXT,
+  whatsapp_click_id UUID REFERENCES whatsapp_click_events(id) ON DELETE SET NULL,
+  whatsapp_clicked_at TIMESTAMP WITH TIME ZONE,
+  whatsapp_click_label TEXT,
+  whatsapp_click_page TEXT,
   whatsapp_manual_tag BOOLEAN NOT NULL DEFAULT TRUE,
   whatsapp_manual_tagged_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   CONSTRAINT whatsapp_direct_leads_company_required
@@ -216,6 +220,7 @@ CREATE INDEX IF NOT EXISTS idx_whatsapp_direct_leads_captured_at ON whatsapp_dir
 CREATE INDEX IF NOT EXISTS idx_whatsapp_direct_leads_status ON whatsapp_direct_leads(lead_status);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_direct_leads_business_line ON whatsapp_direct_leads(business_line);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_direct_leads_telephone ON whatsapp_direct_leads(telephone);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_whatsapp_direct_leads_whatsapp_click_id ON whatsapp_direct_leads(whatsapp_click_id) WHERE whatsapp_click_id IS NOT NULL;
 
 ALTER TABLE whatsapp_direct_leads ENABLE ROW LEVEL SECURITY;
 

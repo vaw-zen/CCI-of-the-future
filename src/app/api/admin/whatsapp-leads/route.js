@@ -3,7 +3,9 @@ import { authenticateAdminRequest } from '@/libs/adminApiAuth';
 import { createServiceClient } from '@/libs/supabase';
 import {
   buildWhatsAppDirectLeadInsert,
+  isMissingWhatsAppDirectLeadIntentFieldError,
   isMissingWhatsAppDirectLeadSchemaError,
+  WHATSAPP_DIRECT_INTENT_MIGRATION_HINT,
   WHATSAPP_DIRECT_LEAD_MIGRATION_HINT,
   WHATSAPP_DIRECT_LEAD_SELECT_FIELDS,
   WHATSAPP_DIRECT_LEAD_TABLE
@@ -13,6 +15,7 @@ import {
   guardMutationRequest,
   rateLimitRequest
 } from '@/libs/security';
+import { runLeadSelectWithOptionalTrackingFallback } from '@/libs/leadTrackingSchemaCompat.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,6 +51,16 @@ function getSafeLimit(value, fallback = 200) {
   return Math.max(1, Math.min(500, Math.round(numericValue)));
 }
 
+async function runWhatsAppLeadSelectWithFallback({ supabase, applyQuery }) {
+  return runLeadSelectWithOptionalTrackingFallback({
+    supabase,
+    table: WHATSAPP_DIRECT_LEAD_TABLE,
+    select: WHATSAPP_DIRECT_LEAD_SELECT_FIELDS,
+    channel: 'admin-whatsapp-leads',
+    applyQuery
+  });
+}
+
 export async function GET(request) {
   const rateLimitResponse = rateLimitRequest(request, ADMIN_WHATSAPP_LIST_RATE_LIMIT);
   if (rateLimitResponse) {
@@ -81,41 +94,44 @@ export async function GET(request) {
   const limit = getSafeLimit(searchParams.get('limit'));
 
   try {
-    let query = supabase
-      .from(WHATSAPP_DIRECT_LEAD_TABLE)
-      .select(WHATSAPP_DIRECT_LEAD_SELECT_FIELDS)
-      .order('lead_captured_at', { ascending: false })
-      .limit(limit);
+    const { data, error } = await runWhatsAppLeadSelectWithFallback({
+      supabase,
+      applyQuery: (query) => {
+        let nextQuery = query
+          .order('lead_captured_at', { ascending: false })
+          .limit(limit);
 
-    if (leadId) {
-      query = query.eq('id', leadId);
-    }
+        if (leadId) {
+          nextQuery = nextQuery.eq('id', leadId);
+        }
 
-    if (businessLine) {
-      query = query.eq('business_line', businessLine);
-    }
+        if (businessLine) {
+          nextQuery = nextQuery.eq('business_line', businessLine);
+        }
 
-    if (leadStatus) {
-      query = query.eq('lead_status', leadStatus);
-    }
+        if (leadStatus) {
+          nextQuery = nextQuery.eq('lead_status', leadStatus);
+        }
 
-    if (phone.trim()) {
-      query = query.ilike('telephone', `%${phone.trim()}%`);
-    }
+        if (phone.trim()) {
+          nextQuery = nextQuery.ilike('telephone', `%${phone.trim()}%`);
+        }
 
-    if (leadOwner.trim()) {
-      query = query.ilike('lead_owner', `%${leadOwner.trim()}%`);
-    }
+        if (leadOwner.trim()) {
+          nextQuery = nextQuery.ilike('lead_owner', `%${leadOwner.trim()}%`);
+        }
 
-    if (dateFrom) {
-      query = query.gte('lead_captured_at', `${dateFrom}T00:00:00.000Z`);
-    }
+        if (dateFrom) {
+          nextQuery = nextQuery.gte('lead_captured_at', `${dateFrom}T00:00:00.000Z`);
+        }
 
-    if (dateTo) {
-      query = query.lte('lead_captured_at', `${dateTo}T23:59:59.999Z`);
-    }
+        if (dateTo) {
+          nextQuery = nextQuery.lte('lead_captured_at', `${dateTo}T23:59:59.999Z`);
+        }
 
-    const { data, error } = await query;
+        return nextQuery;
+      }
+    });
 
     if (error) {
       if (isMissingWhatsAppDirectLeadSchemaError(error)) {
@@ -169,22 +185,43 @@ export async function POST(request) {
   }
 
   try {
-    const { data, error } = await supabase
+    const { data: insertedLead, error: insertError } = await supabase
       .from(WHATSAPP_DIRECT_LEAD_TABLE)
       .insert(insertResult.data)
-      .select(WHATSAPP_DIRECT_LEAD_SELECT_FIELDS)
+      .select('id')
       .single();
 
-    if (error || !data) {
-      if (isMissingWhatsAppDirectLeadSchemaError(error)) {
+    if (insertError || !insertedLead?.id) {
+      if (isMissingWhatsAppDirectLeadSchemaError(insertError)) {
         return getErrorResponse(
           'schema_missing',
           `Le schéma WhatsApp direct n’est pas encore appliqué. ${WHATSAPP_DIRECT_LEAD_MIGRATION_HINT}`,
           409
         );
       }
-      console.error('[admin][whatsapp-leads] create failed:', error);
+
+      if (isMissingWhatsAppDirectLeadIntentFieldError(insertError)) {
+        return getErrorResponse(
+          'schema_missing',
+          `Le rattachement des intentions WhatsApp n’est pas encore appliqué. ${WHATSAPP_DIRECT_INTENT_MIGRATION_HINT}`,
+          409
+        );
+      }
+
+      console.error('[admin][whatsapp-leads] create failed:', insertError);
       return getErrorResponse('create_failed', 'Impossible de créer le lead WhatsApp.', 500);
+    }
+
+    const { data, error } = await runWhatsAppLeadSelectWithFallback({
+      supabase,
+      applyQuery: (query) => query
+        .eq('id', insertedLead.id)
+        .single()
+    });
+
+    if (error || !data) {
+      console.error('[admin][whatsapp-leads] fetch after create failed:', error);
+      return getErrorResponse('fetch_failed', 'Lead WhatsApp créé mais impossible à relire.', 500);
     }
 
     return NextResponse.json({

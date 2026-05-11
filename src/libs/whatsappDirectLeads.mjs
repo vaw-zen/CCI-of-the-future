@@ -8,7 +8,9 @@ import {
 export const WHATSAPP_DIRECT_LEAD_TABLE = 'whatsapp_direct_leads';
 export const WHATSAPP_DIRECT_LEAD_KIND = 'whatsapp';
 export const WHATSAPP_DIRECT_ATTRIBUTION_LABEL = 'Manuel (direct chat)';
+export const WHATSAPP_SITE_INTENT_ATTRIBUTION_LABEL = 'Intent site converti';
 export const WHATSAPP_DIRECT_LEAD_MIGRATION_HINT = 'Appliquez la migration `supabase/20260511_whatsapp_direct_leads.sql` sur la base ciblée.';
+export const WHATSAPP_DIRECT_INTENT_MIGRATION_HINT = 'Appliquez la migration `supabase/20260511_whatsapp_intent_claims.sql` sur la base ciblée.';
 
 export const WHATSAPP_DIRECT_LEAD_BUSINESS_LINES = [
   { value: 'b2c', label: 'B2C' },
@@ -66,9 +68,16 @@ export const WHATSAPP_DIRECT_LEAD_SELECT_FIELDS = [
   'referrer_host',
   'landing_page',
   'entry_path',
+  'whatsapp_click_id',
+  'whatsapp_clicked_at',
+  'whatsapp_click_label',
+  'whatsapp_click_page',
   'whatsapp_manual_tag',
   'whatsapp_manual_tagged_at'
 ].join(',');
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const WHATSAPP_DIRECT_INTENT_FIELD_PATTERN = /\b(?:whatsapp_click_id|whatsapp_clicked_at|whatsapp_click_label|whatsapp_click_page)\b/i;
 
 const VALID_BUSINESS_LINES = new Set(
   WHATSAPP_DIRECT_LEAD_BUSINESS_LINES.map((option) => option.value)
@@ -172,6 +181,29 @@ export function matchesWhatsAppDirectPhone(value, searchTerm) {
   return normalizePhoneDigits(value).includes(normalizedSearch);
 }
 
+export function hasWhatsAppDirectSiteIntent(value = {}) {
+  return Boolean(
+    value?.whatsapp_click_id
+    || value?.whatsappClickId
+    || value?.whatsapp_clicked_at
+    || value?.whatsappClickedAt
+    || value?.whatsapp_click_label
+    || value?.whatsappClickLabel
+    || value?.whatsapp_click_page
+    || value?.whatsappClickPage
+  );
+}
+
+export function getWhatsAppDirectLeadAttributionMode(value = {}) {
+  return hasWhatsAppDirectSiteIntent(value) ? 'site_intent' : 'manual';
+}
+
+export function getWhatsAppDirectLeadAttributionLabel(value = {}) {
+  return hasWhatsAppDirectSiteIntent(value)
+    ? WHATSAPP_SITE_INTENT_ATTRIBUTION_LABEL
+    : WHATSAPP_DIRECT_ATTRIBUTION_LABEL;
+}
+
 export function isMissingWhatsAppDirectLeadSchemaError(error) {
   const message = `${error?.message || ''} ${error?.details || ''} ${error?.hint || ''}`.toLowerCase();
   const referencesTable = message.includes('whatsapp_direct_leads');
@@ -182,6 +214,16 @@ export function isMissingWhatsAppDirectLeadSchemaError(error) {
     error?.code === '42P01'
     || (referencesTable && missingRelation)
     || (referencesTable && missingSchemaCacheEntry)
+  );
+}
+
+export function isMissingWhatsAppDirectLeadIntentFieldError(error) {
+  const message = `${error?.message || ''} ${error?.details || ''} ${error?.hint || ''}`;
+
+  return (
+    (error?.code === '42703' || /does not exist|schema cache/i.test(message))
+    && /\bwhatsapp_direct_leads\b/i.test(message)
+    && WHATSAPP_DIRECT_INTENT_FIELD_PATTERN.test(message)
   );
 }
 
@@ -276,6 +318,24 @@ export function validateWhatsAppDirectLeadPayload(rawPayload = {}) {
     };
   }
 
+  const whatsappClickId = normalizeNullableText(rawPayload.whatsappClickId || rawPayload.whatsapp_click_id);
+  if (whatsappClickId && !UUID_PATTERN.test(whatsappClickId)) {
+    return {
+      ok: false,
+      error: 'invalid_whatsapp_click_id',
+      message: 'L’identifiant du clic WhatsApp est invalide.'
+    };
+  }
+
+  const whatsappClickedAt = normalizeIso(rawPayload.whatsappClickedAt || rawPayload.whatsapp_clicked_at);
+  if ((rawPayload.whatsappClickedAt || rawPayload.whatsapp_clicked_at) && !whatsappClickedAt) {
+    return {
+      ok: false,
+      error: 'invalid_whatsapp_clicked_at',
+      message: 'La date du clic WhatsApp est invalide.'
+    };
+  }
+
   return {
     ok: true,
     data: {
@@ -292,9 +352,16 @@ export function validateWhatsAppDirectLeadPayload(rawPayload = {}) {
       leadOwner: normalizeNullableText(rawPayload.leadOwner || rawPayload.lead_owner),
       leadCapturedAt,
       followUpSlaAt,
+      sessionSource: normalizeNullableText(rawPayload.sessionSource || rawPayload.session_source),
+      sessionMedium: normalizeNullableText(rawPayload.sessionMedium || rawPayload.session_medium),
+      sessionCampaign: normalizeNullableText(rawPayload.sessionCampaign || rawPayload.session_campaign),
       referrerHost: normalizeNullableText(rawPayload.referrerHost || rawPayload.referrer_host),
       landingPage: normalizeNullableText(rawPayload.landingPage || rawPayload.landing_page),
-      entryPath: normalizeNullableText(rawPayload.entryPath || rawPayload.entry_path)
+      entryPath: normalizeNullableText(rawPayload.entryPath || rawPayload.entry_path),
+      whatsappClickId,
+      whatsappClickedAt,
+      whatsappClickLabel: normalizeNullableText(rawPayload.whatsappClickLabel || rawPayload.whatsapp_click_label),
+      whatsappClickPage: normalizeNullableText(rawPayload.whatsappClickPage || rawPayload.whatsapp_click_page)
     }
   };
 }
@@ -345,12 +412,16 @@ export function buildWhatsAppDirectLeadInsert(rawPayload = {}, nowIso = new Date
       closed_at: closedAt,
       follow_up_sla_at: followUpSlaAt,
       last_worked_at: payload.leadCapturedAt,
-      session_source: 'whatsapp',
-      session_medium: 'messaging',
-      session_campaign: 'direct_chat',
+      session_source: payload.sessionSource || 'whatsapp',
+      session_medium: payload.sessionMedium || 'messaging',
+      session_campaign: payload.sessionCampaign || 'direct_chat',
       referrer_host: payload.referrerHost,
       landing_page: payload.landingPage,
       entry_path: payload.entryPath,
+      ...(payload.whatsappClickId ? { whatsapp_click_id: payload.whatsappClickId } : {}),
+      ...(payload.whatsappClickedAt ? { whatsapp_clicked_at: payload.whatsappClickedAt } : {}),
+      ...(payload.whatsappClickLabel ? { whatsapp_click_label: payload.whatsappClickLabel } : {}),
+      ...(payload.whatsappClickPage ? { whatsapp_click_page: payload.whatsappClickPage } : {}),
       whatsapp_manual_tag: true,
       whatsapp_manual_tagged_at: nowIso
     }

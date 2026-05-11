@@ -5,7 +5,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import {
+  convertWhatsAppIntentToLead,
   getWhatsAppDirectLeads,
+  getWhatsAppIntents,
   updateLeadOperations,
   updateLeadStatus
 } from '@/services/adminLeadService';
@@ -22,8 +24,8 @@ import {
 import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
 import WhatsAppLeadCreateModal from '@/app/admin/_components/WhatsAppLeadCreateModal';
 import {
+  getWhatsAppDirectLeadAttributionLabel,
   matchesWhatsAppDirectPhone,
-  WHATSAPP_DIRECT_ATTRIBUTION_LABEL,
   WHATSAPP_DIRECT_LEAD_BUSINESS_LINES,
   WHATSAPP_DIRECT_LEAD_SCHEDULE_TYPES,
   filterWhatsAppServiceOptions
@@ -49,8 +51,10 @@ export default function AdminWhatsAppPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
   const [requests, setRequests] = useState([]);
+  const [intents, setIntents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [intentError, setIntentError] = useState('');
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
   const [leadQualityDraft, setLeadQualityDraft] = useState(LEAD_QUALITY_OUTCOMES.UNREVIEWED);
@@ -63,6 +67,7 @@ export default function AdminWhatsAppPage() {
   const [leadIdParam, setLeadIdParam] = useState('');
   const [phoneCopyState, setPhoneCopyState] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedIntentForConversion, setSelectedIntentForConversion] = useState(null);
   const [filters, setFilters] = useState({
     leadStatus: 'all',
     businessLine: 'all',
@@ -115,8 +120,26 @@ export default function AdminWhatsAppPage() {
     try {
       setLoading(true);
       setError(null);
-      const data = await getWhatsAppDirectLeads({ limit: 500 });
-      setRequests(data);
+      setIntentError('');
+
+      const [leadsResult, intentsResult] = await Promise.allSettled([
+        getWhatsAppDirectLeads({ limit: 500 }),
+        getWhatsAppIntents({ limit: 250 })
+      ]);
+
+      if (leadsResult.status !== 'fulfilled') {
+        throw leadsResult.reason;
+      }
+
+      setRequests(leadsResult.value);
+
+      if (intentsResult.status === 'fulfilled') {
+        setIntents(intentsResult.value);
+      } else {
+        console.error(intentsResult.reason);
+        setIntents([]);
+        setIntentError(intentsResult.reason?.message || 'Impossible de charger les intentions site WhatsApp.');
+      }
     } catch (loadError) {
       console.error(loadError);
       setError(loadError.message || 'Erreur lors du chargement des leads WhatsApp');
@@ -290,9 +313,28 @@ export default function AdminWhatsAppPage() {
     }
   };
 
-  const handleCreateSuccess = async (createdLead) => {
-    upsertRequest(createdLead);
+  const openManualCreateModal = () => {
+    setSelectedIntentForConversion(null);
+    setIsCreateModalOpen(true);
+  };
+
+  const openIntentConversionModal = (intent) => {
+    setSelectedIntentForConversion(intent);
+    setIsCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
     setIsCreateModalOpen(false);
+    setSelectedIntentForConversion(null);
+  };
+
+  const handleCreateSuccess = async (createdLead) => {
+    if (selectedIntentForConversion?.id) {
+      setIntents((currentIntents) => currentIntents.filter((intent) => intent.id !== selectedIntentForConversion.id));
+    }
+
+    upsertRequest(createdLead);
+    closeCreateModal();
     openRequest(createdLead);
   };
 
@@ -339,11 +381,56 @@ export default function AdminWhatsAppPage() {
   const getLeadQualityLabel = useCallback((request) => (
     LEAD_QUALITY_OUTCOME_LABELS[getLeadQualityOutcome(request)] || getLeadQualityOutcome(request)
   ), [getLeadQualityOutcome]);
+  const getAttributionLabel = useCallback(
+    (request) => getWhatsAppDirectLeadAttributionLabel(request),
+    []
+  );
   const isFollowUpOverdue = useCallback((request) => isLeadFollowUpOverdue({
     leadStatus: getLeadStatus(request),
     followUpSlaAt: request.follow_up_sla_at,
     lastWorkedAt: request.last_worked_at
   }), [getLeadStatus]);
+
+  const createModalInitialValues = useMemo(() => {
+    if (!selectedIntentForConversion) {
+      return null;
+    }
+
+    return {
+      leadCapturedAt: formatDateTimeLocalInputValue(
+        selectedIntentForConversion.clickedAt || selectedIntentForConversion.createdAt || new Date().toISOString()
+      )
+    };
+  }, [selectedIntentForConversion]);
+
+  const createModalPayloadOverrides = useMemo(() => {
+    if (!selectedIntentForConversion) {
+      return null;
+    }
+
+    return {
+      clickId: selectedIntentForConversion.id,
+      sessionSource: selectedIntentForConversion.sessionSource,
+      sessionMedium: selectedIntentForConversion.sessionMedium,
+      sessionCampaign: selectedIntentForConversion.sessionCampaign,
+      referrerHost: selectedIntentForConversion.referrerHost,
+      landingPage: selectedIntentForConversion.landingPage,
+      entryPath: selectedIntentForConversion.pagePath
+    };
+  }, [selectedIntentForConversion]);
+
+  const createModalTitle = selectedIntentForConversion
+    ? 'Convertir intention WhatsApp en lead'
+    : 'Ajouter lead WhatsApp';
+  const createModalIntro = selectedIntentForConversion
+    ? `Clic enregistré le ${formatDate(selectedIntentForConversion.clickedAt || selectedIntentForConversion.createdAt)} depuis ${selectedIntentForConversion.pagePath || '/'} (${selectedIntentForConversion.eventLabel || 'unknown'}). Ajoutez le téléphone et le contact avant de créer le lead.`
+    : '';
+  const createModalSubmitLabel = selectedIntentForConversion
+    ? 'Créer le lead depuis le clic'
+    : 'Créer le lead';
+  const submitWhatsAppLead = selectedIntentForConversion
+    ? convertWhatsAppIntentToLead
+    : undefined;
 
   const updateFilter = (key, value) => {
     setFilters((currentFilters) => ({
@@ -449,7 +536,7 @@ export default function AdminWhatsAppPage() {
         <div className={styles.header}>
           <h1>Administration - Leads WhatsApp</h1>
           <div className={styles.headerActions}>
-            <button type="button" onClick={() => setIsCreateModalOpen(true)} className={styles.saveButton}>
+            <button type="button" onClick={openManualCreateModal} className={styles.saveButton}>
               Ajouter lead WhatsApp
             </button>
             <button onClick={loadRequests} className={styles.refreshButton}>
@@ -467,6 +554,10 @@ export default function AdminWhatsAppPage() {
           <div className={styles.statCard}>
             <h3>{requests.length}</h3>
             <p>Leads WhatsApp</p>
+          </div>
+          <div className={styles.statCard}>
+            <h3>{intents.length}</h3>
+            <p>Intentions site à traiter</p>
           </div>
           <div className={styles.statCard}>
             <h3>{requests.filter((request) => getLeadStatus(request) === LEAD_STATUSES.SUBMITTED).length}</h3>
@@ -487,6 +578,45 @@ export default function AdminWhatsAppPage() {
           <div className={styles.statCard}>
             <h3>{requests.filter((request) => isFollowUpOverdue(request)).length}</h3>
             <p>SLA dépassée</p>
+          </div>
+        </div>
+
+        <div className={styles.dashboardGrid}>
+          <div className={`${styles.panel} ${styles.panelWide}`}>
+            <h2>Intentions site WhatsApp</h2>
+            <p className={styles.inlineHelp}>
+              Ces clics viennent du site mais ne comptent pas encore comme des leads. Convertissez-les seulement quand une vraie conversation WhatsApp existe et que vous connaissez le téléphone du contact.
+            </p>
+            {intentError ? (
+              <p className={styles.statusError}>{intentError}</p>
+            ) : intents.length === 0 ? (
+              <p className={styles.mutedText}>Aucune intention site WhatsApp en attente pour le moment.</p>
+            ) : (
+              <div className={styles.metricList}>
+                {intents.map((intent) => (
+                  <div key={intent.id} className={styles.metricRow}>
+                    <div>
+                      <strong>{intent.eventLabel || 'Clic WhatsApp site'}</strong>
+                      <span>{intent.pagePath || '/'} • {formatDate(intent.clickedAt || intent.createdAt)}</span>
+                      <span>{intent.sessionSource || 'direct'} / {intent.sessionMedium || '(none)'} • {intent.sessionCampaign || '(not set)'}</span>
+                      <span>{intent.landingPage || '/'} • {intent.referrerHost || 'Referrer non renseigné'}</span>
+                    </div>
+                    <div className={styles.metricBadges}>
+                      <span className={styles.metricBadge}>
+                        <strong>Type</strong> Clic site
+                      </span>
+                      <button
+                        type="button"
+                        className={styles.secondaryButton}
+                        onClick={() => openIntentConversionModal(intent)}
+                      >
+                        Convertir en lead
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -637,7 +767,7 @@ export default function AdminWhatsAppPage() {
                   <strong>📧</strong> {request.email || 'Email non renseigné'}
                 </div>
                 <div className={styles.detail}>
-                  <strong>💬</strong> {WHATSAPP_DIRECT_ATTRIBUTION_LABEL}
+                  <strong>💬</strong> {getAttributionLabel(request)}
                 </div>
                 <div className={styles.detail}>
                   <strong>📅</strong> {request.scheduled_at ? `${getScheduleLabel(request.scheduled_type)} • ${formatDate(request.scheduled_at)}` : 'Aucun rendez-vous'}
@@ -812,7 +942,13 @@ export default function AdminWhatsAppPage() {
                   <p><strong>Landing page :</strong> {selectedRequest.landing_page || 'Non renseignée'}</p>
                   <p><strong>Referrer host :</strong> {selectedRequest.referrer_host || 'Non renseigné'}</p>
                   <p><strong>Entry path :</strong> {selectedRequest.entry_path || 'Non renseigné'}</p>
-                  <p><strong>Attribution WhatsApp :</strong> {WHATSAPP_DIRECT_ATTRIBUTION_LABEL}</p>
+                  <p><strong>Attribution WhatsApp :</strong> {getAttributionLabel(selectedRequest)}</p>
+                  {selectedRequest.whatsapp_click_label && (
+                    <p><strong>Clic site :</strong> {selectedRequest.whatsapp_click_label}{selectedRequest.whatsapp_click_page ? ` • ${selectedRequest.whatsapp_click_page}` : ''}</p>
+                  )}
+                  {selectedRequest.whatsapp_clicked_at && (
+                    <p><strong>Clic enregistré le :</strong> {formatDate(selectedRequest.whatsapp_clicked_at)}</p>
+                  )}
                 </div>
 
                 {selectedRequest.notes && (
@@ -835,8 +971,14 @@ export default function AdminWhatsAppPage() {
 
         <WhatsAppLeadCreateModal
           isOpen={isCreateModalOpen}
-          onClose={() => setIsCreateModalOpen(false)}
+          onClose={closeCreateModal}
           onCreated={handleCreateSuccess}
+          onSubmitLead={submitWhatsAppLead}
+          initialValues={createModalInitialValues}
+          payloadOverrides={createModalPayloadOverrides}
+          title={createModalTitle}
+          introNote={createModalIntro}
+          submitLabel={createModalSubmitLabel}
         />
       </div>
     </>

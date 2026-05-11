@@ -20,7 +20,10 @@ import {
   isWhatsAppAttributed,
   normalizeWhatsAppClickRow
 } from './whatsappAttribution.mjs';
-import { WHATSAPP_DIRECT_ATTRIBUTION_LABEL } from './whatsappDirectLeads.mjs';
+import {
+  getWhatsAppDirectLeadAttributionLabel,
+  getWhatsAppDirectLeadAttributionMode
+} from './whatsappDirectLeads.mjs';
 import {
   getDashboardPageTypeForBehaviorPageType,
   matchesBehaviorDashboardPageType
@@ -923,8 +926,8 @@ export function normalizeLead(row, kind, nowIso) {
   const whatsappAttribution = isWhatsAppDirectLead
     ? {
       ...baseWhatsAppAttribution,
-      mode: 'manual',
-      label: WHATSAPP_DIRECT_ATTRIBUTION_LABEL
+      mode: getWhatsAppDirectLeadAttributionMode(row),
+      label: getWhatsAppDirectLeadAttributionLabel(row)
     }
     : baseWhatsAppAttribution;
   const canonicalAttribution = getCanonicalRowAttribution(row, {
@@ -1971,7 +1974,7 @@ function buildWhatsAppAcquisition(currentLeads, whatsappClickRows = []) {
     notes: {
       clickBasis: 'Clics WhatsApp enregistrés côté serveur sur la période sélectionnée.',
       funnelBasis: 'Leads créés sur la période sélectionnée avec attribution site WhatsApp auto/manuelle, plus les leads WhatsApp directs saisis depuis l’admin.',
-      manualTagExplanation: 'Le tag manuel couvre les leads site créés après WhatsApp. Les conversations reçues directement dans WhatsApp sont à saisir dans Admin > WhatsApp.',
+      manualTagExplanation: 'Le tag manuel couvre les leads site créés après WhatsApp. Les conversations directes sont à saisir dans Admin > WhatsApp, et les clics site non encore traités sont visibles dans la file “Intentions site WhatsApp”.',
       autoMatchWindow: `Matching automatique sur le dernier clic WhatsApp du même navigateur dans les ${WHATSAPP_MATCH_WINDOW_DAYS} derniers jours.`
     }
   };

@@ -21,7 +21,7 @@ const LEAD_STATUS_LABELS = {
   [LEAD_STATUSES.CLOSED_LOST]: 'Perdu'
 };
 
-function createDefaultFormState() {
+function createDefaultFormState(initialValues = {}) {
   return {
     businessLine: 'b2c',
     contactName: '',
@@ -35,16 +35,28 @@ function createDefaultFormState() {
     notes: '',
     leadOwner: '',
     followUpSlaAt: '',
-    leadStatus: LEAD_STATUSES.SUBMITTED
+    leadStatus: LEAD_STATUSES.SUBMITTED,
+    ...(initialValues || {})
   };
 }
 
 export default function WhatsAppLeadCreateModal({
   isOpen,
   onClose,
-  onCreated
+  onCreated,
+  onSubmitLead,
+  initialValues = null,
+  payloadOverrides = null,
+  title = 'Ajouter lead WhatsApp',
+  introNote = '',
+  submitLabel = 'Créer le lead'
 }) {
-  const [form, setForm] = useState(createDefaultFormState);
+  const initialStateSignature = JSON.stringify(initialValues || {});
+  const parsedInitialValues = useMemo(
+    () => JSON.parse(initialStateSignature),
+    [initialStateSignature]
+  );
+  const [form, setForm] = useState(() => createDefaultFormState(parsedInitialValues));
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -53,10 +65,10 @@ export default function WhatsAppLeadCreateModal({
       return;
     }
 
-    setForm(createDefaultFormState());
+    setForm(createDefaultFormState(parsedInitialValues));
     setError('');
     setIsSaving(false);
-  }, [isOpen]);
+  }, [isOpen, parsedInitialValues]);
 
   const serviceOptions = useMemo(
     () => filterWhatsAppServiceOptions(form.businessLine),
@@ -77,7 +89,11 @@ export default function WhatsAppLeadCreateModal({
     setError('');
 
     try {
-      const createdLead = await createWhatsAppDirectLead({
+      const submitLead = typeof onSubmitLead === 'function'
+        ? onSubmitLead
+        : createWhatsAppDirectLead;
+
+      const createdLead = await submitLead({
         businessLine: form.businessLine,
         contactName: form.contactName,
         companyName: form.businessLine === 'b2b' ? form.companyName : null,
@@ -90,7 +106,8 @@ export default function WhatsAppLeadCreateModal({
         notes: form.notes || null,
         leadOwner: form.leadOwner || null,
         followUpSlaAt: parseDateTimeLocalInputValue(form.followUpSlaAt),
-        leadStatus: form.leadStatus
+        leadStatus: form.leadStatus,
+        ...(payloadOverrides || {})
       });
 
       if (typeof onCreated === 'function') {
@@ -116,7 +133,7 @@ export default function WhatsAppLeadCreateModal({
     <div className={styles.modal} onClick={onClose}>
       <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h2>Ajouter lead WhatsApp</h2>
+          <h2>{title}</h2>
           <button className={styles.closeButton} onClick={onClose}>
             ×
           </button>
@@ -126,6 +143,9 @@ export default function WhatsAppLeadCreateModal({
           <form className={styles.modalForm} onSubmit={handleSubmit}>
             <div className={styles.section}>
               <h3>Lead direct WhatsApp</h3>
+              {introNote && (
+                <p className={styles.inlineHelp}>{introNote}</p>
+              )}
               <p className={styles.inlineHelp}>
                 Le numéro de téléphone restera visible dans la liste, le détail du lead et les drilldowns du dashboard.
               </p>
@@ -327,7 +347,7 @@ export default function WhatsAppLeadCreateModal({
 
             <div className={styles.lifecycleControls}>
               <button type="submit" className={styles.saveButton} disabled={isSaving}>
-                {isSaving ? 'Création...' : 'Créer le lead'}
+                {isSaving ? 'Création...' : submitLabel}
               </button>
               <button type="button" className={styles.secondaryButton} onClick={onClose} disabled={isSaving}>
                 Annuler

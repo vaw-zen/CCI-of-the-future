@@ -157,6 +157,60 @@ export async function createWhatsAppDirectLead(payload) {
   return result.data;
 }
 
+export async function getWhatsAppIntents({
+  dateFrom,
+  dateTo,
+  limit
+} = {}) {
+  const accessToken = await getAccessToken();
+  const params = new URLSearchParams();
+
+  if (dateFrom) {
+    params.set('dateFrom', dateFrom);
+  }
+
+  if (dateTo) {
+    params.set('dateTo', dateTo);
+  }
+
+  if (limit) {
+    params.set('limit', String(limit));
+  }
+
+  const response = await fetch(`/api/admin/whatsapp-intents${params.toString() ? `?${params.toString()}` : ''}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.message || 'WhatsApp intents load failed');
+  }
+
+  return result.data;
+}
+
+export async function convertWhatsAppIntentToLead(payload) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch('/api/admin/whatsapp-intents', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.message || 'WhatsApp intent conversion failed');
+  }
+
+  return result.data;
+}
+
 export async function getAdminDashboardData({
   from,
   to,

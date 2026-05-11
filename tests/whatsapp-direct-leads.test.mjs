@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   buildWhatsAppDirectLeadInsert,
+  getWhatsAppDirectLeadAttributionLabel,
   isMissingWhatsAppDirectLeadSchemaError,
   matchesWhatsAppDirectPhone,
   validateWhatsAppDirectLeadPayload
@@ -80,9 +81,44 @@ test('buildWhatsAppDirectLeadInsert backdates lifecycle timestamps from lead_cap
   });
 });
 
+test('buildWhatsAppDirectLeadInsert preserves source and click metadata when converting a site intent', () => {
+  const buildResult = buildWhatsAppDirectLeadInsert({
+    businessLine: 'b2c',
+    contactName: 'Client site WhatsApp',
+    telephone: '+216 98 765 432',
+    leadCapturedAt: '2026-05-11T08:45:00.000Z',
+    leadStatus: 'submitted',
+    sessionSource: 'google',
+    sessionMedium: 'organic',
+    sessionCampaign: '(not set)',
+    referrerHost: 'google.com',
+    landingPage: '/salon',
+    entryPath: '/salon',
+    whatsappClickId: '11111111-1111-4111-8111-111111111111',
+    whatsappClickedAt: '2026-05-11T08:45:00.000Z',
+    whatsappClickLabel: 'home_hero_whatsapp_main',
+    whatsappClickPage: '/salon'
+  }, '2026-05-11T10:00:00.000Z');
+
+  assert.equal(buildResult.ok, true);
+  assert.equal(buildResult.data.session_source, 'google');
+  assert.equal(buildResult.data.session_medium, 'organic');
+  assert.equal(buildResult.data.referrer_host, 'google.com');
+  assert.equal(buildResult.data.whatsapp_click_id, '11111111-1111-4111-8111-111111111111');
+  assert.equal(buildResult.data.whatsapp_click_label, 'home_hero_whatsapp_main');
+  assert.equal(buildResult.data.whatsapp_click_page, '/salon');
+});
+
 test('matchesWhatsAppDirectPhone ignores spaces and punctuation when filtering by phone', () => {
   assert.equal(matchesWhatsAppDirectPhone('+216 20 000 002', '20000002'), true);
   assert.equal(matchesWhatsAppDirectPhone('+216 20 000 002', '333'), false);
+});
+
+test('getWhatsAppDirectLeadAttributionLabel distinguishes manual leads from converted site intents', () => {
+  assert.equal(getWhatsAppDirectLeadAttributionLabel({}), 'Manuel (direct chat)');
+  assert.equal(getWhatsAppDirectLeadAttributionLabel({
+    whatsapp_click_id: '11111111-1111-4111-8111-111111111111'
+  }), 'Intent site converti');
 });
 
 test('isMissingWhatsAppDirectLeadSchemaError recognizes missing-table responses from Postgres and PostgREST', () => {

@@ -20,7 +20,7 @@
     "gsc:prepare-indexing": "node scripts/gsc/prepare-indexing-batch.cjs",
     "gsc:submit-sitemap": "node scripts/gsc/submit-sitemap.cjs",
     "gsc:inspect-batch": "node scripts/gsc/inspect-batch.cjs",
-    "test:dashboard": "node --test tests/admin-dashboard-metrics.test.mjs tests/admin-dashboard-payload.test.mjs tests/attribution-hygiene.test.mjs tests/behavior-tracking.test.mjs tests/growth-keyword-catalog.test.mjs tests/growth-reporting.test.mjs tests/lead-tracking-schema-compat.test.mjs tests/whatsapp-attribution.test.mjs"
+    "test:dashboard": "node --test tests/admin-dashboard-metrics.test.mjs tests/admin-dashboard-payload.test.mjs tests/attribution-hygiene.test.mjs tests/behavior-tracking.test.mjs tests/growth-keyword-catalog.test.mjs tests/growth-reporting.test.mjs tests/lead-tracking-schema-compat.test.mjs tests/whatsapp-attribution.test.mjs tests/whatsapp-direct-leads.test.mjs"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

@@ -1,16 +1,16 @@
 'use client';
 
-import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
+import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
-import { getConventionRequests } from '@/services/conventionService';
-import { updateLeadAttribution, updateLeadOperations, updateLeadStatus } from '@/services/adminLeadService';
-import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
 import {
-  CONVENTION_OPERATIONAL_STATUSES,
+  getWhatsAppDirectLeads,
+  updateLeadOperations,
+  updateLeadStatus
+} from '@/services/adminLeadService';
+import {
   deriveLeadQualityOutcomeFromStatus,
-  deriveLeadStatusFromConventionStatus,
   formatDateTimeLocalInputValue,
   isLeadFollowUpOverdue,
   LEAD_QUALITY_OUTCOME_LABELS,
@@ -19,7 +19,15 @@ import {
   LEAD_STATUSES,
   parseDateTimeLocalInputValue
 } from '@/utils/leadLifecycle';
-import { getWhatsAppAttributionSummary, matchesWhatsAppFilter } from '@/libs/whatsappAttribution.mjs';
+import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
+import WhatsAppLeadCreateModal from '@/app/admin/_components/WhatsAppLeadCreateModal';
+import {
+  matchesWhatsAppDirectPhone,
+  WHATSAPP_DIRECT_ATTRIBUTION_LABEL,
+  WHATSAPP_DIRECT_LEAD_BUSINESS_LINES,
+  WHATSAPP_DIRECT_LEAD_SCHEDULE_TYPES,
+  filterWhatsAppServiceOptions
+} from '@/libs/whatsappDirectLeads.mjs';
 import styles from '../devis/admin.module.css';
 
 const LEAD_STATUS_LABELS = {
@@ -29,47 +37,42 @@ const LEAD_STATUS_LABELS = {
   [LEAD_STATUSES.CLOSED_LOST]: 'Perdu'
 };
 
-const OPERATIONAL_STATUS_LABELS = {
-  nouveau: 'Nouveau',
-  contacte: 'Contacté',
-  audit_planifie: 'Audit planifié',
-  devis_envoye: 'Devis envoyé',
-  signe: 'Signé',
-  refuse: 'Refusé'
-};
+const BUSINESS_LINE_LABELS = Object.fromEntries(
+  WHATSAPP_DIRECT_LEAD_BUSINESS_LINES.map((option) => [option.value, option.label])
+);
 
-const LEAD_QUALITY_LABELS = LEAD_QUALITY_OUTCOME_LABELS;
+const SCHEDULE_TYPE_LABELS = Object.fromEntries(
+  WHATSAPP_DIRECT_LEAD_SCHEDULE_TYPES.map((option) => [option.value, option.label])
+);
 
-export default function AdminConventionsPage() {
+export default function AdminWhatsAppPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [operationalStatusDraft, setOperationalStatusDraft] = useState('nouveau');
+  const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
   const [leadQualityDraft, setLeadQualityDraft] = useState(LEAD_QUALITY_OUTCOMES.UNREVIEWED);
   const [leadOwnerDraft, setLeadOwnerDraft] = useState('');
   const [followUpSlaDraft, setFollowUpSlaDraft] = useState('');
   const [isSavingStatus, setIsSavingStatus] = useState(false);
   const [isSavingOperations, setIsSavingOperations] = useState(false);
-  const [isSavingAttribution, setIsSavingAttribution] = useState(false);
   const [statusError, setStatusError] = useState('');
   const [operationsError, setOperationsError] = useState('');
-  const [attributionError, setAttributionError] = useState('');
+  const [leadIdParam, setLeadIdParam] = useState('');
+  const [phoneCopyState, setPhoneCopyState] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     leadStatus: 'all',
+    businessLine: 'all',
+    scheduledType: 'all',
     leadQualityOutcome: 'all',
-    operationalStatus: 'all',
-    sector: 'all',
-    whatsappAttribution: 'all',
     leadOwner: '',
-    sessionSource: '',
-    sessionMedium: '',
+    phone: '',
     dateFrom: '',
     dateTo: ''
   });
-  const [leadIdParam, setLeadIdParam] = useState('');
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -84,11 +87,11 @@ export default function AdminConventionsPage() {
   }, [user, isAdmin, authLoading]);
 
   useEffect(() => {
-    document.body.style.overflow = selectedRequest ? 'hidden' : 'unset';
+    document.body.style.overflow = selectedRequest || isCreateModalOpen ? 'hidden' : 'unset';
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [selectedRequest]);
+  }, [selectedRequest, isCreateModalOpen]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -112,11 +115,11 @@ export default function AdminConventionsPage() {
     try {
       setLoading(true);
       setError(null);
-      const data = await getConventionRequests({ limit: 50 });
+      const data = await getWhatsAppDirectLeads({ limit: 500 });
       setRequests(data);
-    } catch (err) {
-      console.error(err);
-      setError('Erreur lors du chargement des conventions');
+    } catch (loadError) {
+      console.error(loadError);
+      setError('Erreur lors du chargement des leads WhatsApp');
     } finally {
       setLoading(false);
     }
@@ -149,18 +152,16 @@ export default function AdminConventionsPage() {
 
   const openRequest = useCallback((request, { syncQuery = true } = {}) => {
     setSelectedRequest(request);
-    setOperationalStatusDraft(request.statut || 'nouveau');
-    setStatusError('');
+    setLeadStatusDraft(request.lead_status || LEAD_STATUSES.SUBMITTED);
     setLeadQualityDraft(
       request.lead_quality_outcome
-      || deriveLeadQualityOutcomeFromStatus(
-        request.lead_status || deriveLeadStatusFromConventionStatus(request.statut)
-      )
+      || deriveLeadQualityOutcomeFromStatus(request.lead_status || LEAD_STATUSES.SUBMITTED)
     );
     setLeadOwnerDraft(request.lead_owner || '');
     setFollowUpSlaDraft(formatDateTimeLocalInputValue(request.follow_up_sla_at));
+    setStatusError('');
     setOperationsError('');
-    setAttributionError('');
+    setPhoneCopyState('');
 
     if (syncQuery && leadIdParam !== request.id) {
       syncLeadQuery(request.id);
@@ -171,7 +172,7 @@ export default function AdminConventionsPage() {
     setSelectedRequest(null);
     setStatusError('');
     setOperationsError('');
-    setAttributionError('');
+    setPhoneCopyState('');
 
     if (leadIdParam) {
       syncLeadQuery(null);
@@ -189,8 +190,23 @@ export default function AdminConventionsPage() {
     }
   }, [leadIdParam, openRequest, requests, selectedRequest?.id]);
 
+  const upsertRequest = useCallback((updatedLead) => {
+    setRequests((currentRequests) => {
+      const nextRequests = [
+        updatedLead,
+        ...currentRequests.filter((request) => request.id !== updatedLead.id)
+      ];
+
+      return nextRequests.sort(
+        (left, right) => new Date(right.lead_captured_at || right.created_at || 0)
+          - new Date(left.lead_captured_at || left.created_at || 0)
+      );
+    });
+    setSelectedRequest(updatedLead);
+  }, []);
+
   const handleStatusSave = async () => {
-    if (!selectedRequest) {
+    if (!selectedRequest || !leadStatusDraft) {
       return;
     }
 
@@ -198,20 +214,14 @@ export default function AdminConventionsPage() {
       setIsSavingStatus(true);
       setStatusError('');
 
-      const updatedLead = await updateLeadStatus('convention', selectedRequest.id, {
-        operationalStatus: operationalStatusDraft,
-        leadStatus: deriveLeadStatusFromConventionStatus(operationalStatusDraft)
+      const updatedLead = await updateLeadStatus('whatsapp', selectedRequest.id, {
+        leadStatus: leadStatusDraft
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
-      setSelectedRequest(updatedLead);
+      upsertRequest(updatedLead);
       setLeadQualityDraft(
         updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(
-          updatedLead.lead_status || deriveLeadStatusFromConventionStatus(updatedLead.statut)
-        )
+        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
       );
       setLeadOwnerDraft(updatedLead.lead_owner || '');
       setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
@@ -223,38 +233,6 @@ export default function AdminConventionsPage() {
     }
   };
 
-  const handleWhatsAppManualTagToggle = async () => {
-    if (!selectedRequest) {
-      return;
-    }
-
-    try {
-      setIsSavingAttribution(true);
-      setAttributionError('');
-      const updatedLead = await updateLeadAttribution('convention', selectedRequest.id, {
-        whatsappManualTag: !Boolean(selectedRequest.whatsapp_manual_tag)
-      });
-
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
-      setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(
-          updatedLead.lead_status || deriveLeadStatusFromConventionStatus(updatedLead.statut)
-        )
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
-    } catch (saveError) {
-      console.error(saveError);
-      setAttributionError(saveError.message || 'Impossible de mettre à jour l’attribution WhatsApp.');
-    } finally {
-      setIsSavingAttribution(false);
-    }
-  };
-
   const handleOperationsSave = async () => {
     if (!selectedRequest) {
       return;
@@ -263,21 +241,17 @@ export default function AdminConventionsPage() {
     try {
       setIsSavingOperations(true);
       setOperationsError('');
-      const updatedLead = await updateLeadOperations('convention', selectedRequest.id, {
+
+      const updatedLead = await updateLeadOperations('whatsapp', selectedRequest.id, {
         leadQualityOutcome: leadQualityDraft,
         leadOwner: leadOwnerDraft.trim() || null,
         followUpSlaAt: parseDateTimeLocalInputValue(followUpSlaDraft)
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
-      setSelectedRequest(updatedLead);
+      upsertRequest(updatedLead);
       setLeadQualityDraft(
         updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(
-          updatedLead.lead_status || deriveLeadStatusFromConventionStatus(updatedLead.statut)
-        )
+        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
       );
       setLeadOwnerDraft(updatedLead.lead_owner || '');
       setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
@@ -297,19 +271,14 @@ export default function AdminConventionsPage() {
     try {
       setIsSavingOperations(true);
       setOperationsError('');
-      const updatedLead = await updateLeadOperations('convention', selectedRequest.id, {
+      const updatedLead = await updateLeadOperations('whatsapp', selectedRequest.id, {
         lastWorkedAt: new Date().toISOString()
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
-      setSelectedRequest(updatedLead);
+      upsertRequest(updatedLead);
       setLeadQualityDraft(
         updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(
-          updatedLead.lead_status || deriveLeadStatusFromConventionStatus(updatedLead.statut)
-        )
+        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
       );
       setLeadOwnerDraft(updatedLead.lead_owner || '');
       setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
@@ -318,6 +287,26 @@ export default function AdminConventionsPage() {
       setOperationsError(saveError.message || 'Impossible de marquer le lead comme travaillé.');
     } finally {
       setIsSavingOperations(false);
+    }
+  };
+
+  const handleCreateSuccess = async (createdLead) => {
+    upsertRequest(createdLead);
+    setIsCreateModalOpen(false);
+    openRequest(createdLead);
+  };
+
+  const handleCopyPhone = async () => {
+    if (!selectedRequest?.telephone) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(selectedRequest.telephone);
+      setPhoneCopyState('Numéro copié');
+    } catch (copyError) {
+      console.error(copyError);
+      setPhoneCopyState('Copie impossible');
     }
   };
 
@@ -335,15 +324,21 @@ export default function AdminConventionsPage() {
     });
   };
 
-  const getLeadStatus = useCallback((request) => request.lead_status || deriveLeadStatusFromConventionStatus(request.statut), []);
+  const getBusinessLineLabel = useCallback((value) => BUSINESS_LINE_LABELS[value] || value || 'Inconnu', []);
+  const getScheduleLabel = useCallback((value) => SCHEDULE_TYPE_LABELS[value] || 'Non planifié', []);
+  const getServiceLabel = useCallback((serviceKey, businessLine) => (
+    filterWhatsAppServiceOptions(businessLine)
+      .find((option) => option.value === serviceKey)?.label
+    || 'Service non renseigné'
+  ), []);
+  const getLeadStatus = useCallback((request) => request.lead_status || LEAD_STATUSES.SUBMITTED, []);
   const getLeadQualityOutcome = useCallback((request) => (
     request.lead_quality_outcome
     || deriveLeadQualityOutcomeFromStatus(getLeadStatus(request))
   ), [getLeadStatus]);
   const getLeadQualityLabel = useCallback((request) => (
-    LEAD_QUALITY_LABELS[getLeadQualityOutcome(request)] || getLeadQualityOutcome(request)
+    LEAD_QUALITY_OUTCOME_LABELS[getLeadQualityOutcome(request)] || getLeadQualityOutcome(request)
   ), [getLeadQualityOutcome]);
-  const getWhatsAppSummary = useCallback((request) => getWhatsAppAttributionSummary(request), []);
   const isFollowUpOverdue = useCallback((request) => isLeadFollowUpOverdue({
     leadStatus: getLeadStatus(request),
     followUpSlaAt: request.follow_up_sla_at,
@@ -360,20 +355,18 @@ export default function AdminConventionsPage() {
   const resetFilters = () => {
     setFilters({
       leadStatus: 'all',
+      businessLine: 'all',
+      scheduledType: 'all',
       leadQualityOutcome: 'all',
-      operationalStatus: 'all',
-      sector: 'all',
-      whatsappAttribution: 'all',
       leadOwner: '',
-      sessionSource: '',
-      sessionMedium: '',
+      phone: '',
       dateFrom: '',
       dateTo: ''
     });
   };
 
   const filteredRequests = useMemo(() => requests.filter((request) => {
-    const requestDate = request.created_at ? new Date(request.created_at) : null;
+    const requestDate = request.lead_captured_at ? new Date(request.lead_captured_at) : null;
     const dateFrom = filters.dateFrom ? new Date(`${filters.dateFrom}T00:00:00`) : null;
     const dateTo = filters.dateTo ? new Date(`${filters.dateTo}T23:59:59`) : null;
 
@@ -381,31 +374,23 @@ export default function AdminConventionsPage() {
       return false;
     }
 
+    if (filters.businessLine !== 'all' && request.business_line !== filters.businessLine) {
+      return false;
+    }
+
+    if (filters.scheduledType !== 'all' && (request.scheduled_type || 'none') !== filters.scheduledType) {
+      return false;
+    }
+
     if (filters.leadQualityOutcome !== 'all' && getLeadQualityOutcome(request) !== filters.leadQualityOutcome) {
       return false;
     }
 
-    if (filters.operationalStatus !== 'all' && request.statut !== filters.operationalStatus) {
-      return false;
-    }
-
-    if (filters.sector !== 'all' && request.secteur_activite !== filters.sector) {
-      return false;
-    }
-
-    if (!matchesWhatsAppFilter(request, filters.whatsappAttribution)) {
-      return false;
-    }
-
-    if (filters.sessionSource && !String(request.session_source || 'direct').toLowerCase().includes(filters.sessionSource.toLowerCase())) {
-      return false;
-    }
-
-    if (filters.sessionMedium && !String(request.session_medium || '(none)').toLowerCase().includes(filters.sessionMedium.toLowerCase())) {
-      return false;
-    }
-
     if (filters.leadOwner && !String(request.lead_owner || '').toLowerCase().includes(filters.leadOwner.toLowerCase())) {
+      return false;
+    }
+
+    if (!matchesWhatsAppDirectPhone(request.telephone, filters.phone)) {
       return false;
     }
 
@@ -422,44 +407,18 @@ export default function AdminConventionsPage() {
 
   if (authLoading) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontSize: '18px',
-        gap: '20px',
-        padding: '20px'
-      }}>
-        <div>Vérification des privilèges administrateur...</div>
-        {authError && (
-          <div style={{ color: 'red', fontSize: '14px', textAlign: 'center' }}>
-            Erreur: {authError}
-          </div>
-        )}
+      <div className={styles.container}>
+        <div className={styles.loading}>Vérification des privilèges administrateur...</div>
+        {authError && <div className={styles.error}>Erreur: {authError}</div>}
       </div>
     );
   }
 
   if (!user || !isAdmin) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontSize: '18px',
-        gap: '20px',
-        padding: '20px'
-      }}>
-        <div>Redirection vers la connexion administrateur...</div>
-        {authError && (
-          <div style={{ color: 'red', fontSize: '14px', textAlign: 'center' }}>
-            Erreur: {authError}
-          </div>
-        )}
+      <div className={styles.container}>
+        <div className={styles.loading}>Redirection vers la connexion administrateur...</div>
+        {authError && <div className={styles.error}>Erreur: {authError}</div>}
       </div>
     );
   }
@@ -467,7 +426,7 @@ export default function AdminConventionsPage() {
   if (loading) {
     return (
       <div className={styles.container}>
-        <div className={styles.loading}>Chargement des conventions...</div>
+        <div className={styles.loading}>Chargement des leads WhatsApp...</div>
       </div>
     );
   }
@@ -485,11 +444,14 @@ export default function AdminConventionsPage() {
 
   return (
     <>
-      <HeroHeader title={"Administration - Conventions"} />
+      <HeroHeader title="Administration - Leads WhatsApp" />
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1>Administration - Conventions</h1>
+          <h1>Administration - Leads WhatsApp</h1>
           <div className={styles.headerActions}>
+            <button type="button" onClick={() => setIsCreateModalOpen(true)} className={styles.saveButton}>
+              Ajouter lead WhatsApp
+            </button>
             <button onClick={loadRequests} className={styles.refreshButton}>
               Actualiser
             </button>
@@ -499,24 +461,24 @@ export default function AdminConventionsPage() {
           </div>
         </div>
 
-        <AdminNavTabs active="conventions" />
+        <AdminNavTabs active="whatsapp" />
 
         <div className={styles.stats}>
           <div className={styles.statCard}>
             <h3>{requests.length}</h3>
-            <p>Demandes totales</p>
+            <p>Leads WhatsApp</p>
           </div>
           <div className={styles.statCard}>
             <h3>{requests.filter((request) => getLeadStatus(request) === LEAD_STATUSES.SUBMITTED).length}</h3>
-            <p>Soumises</p>
+            <p>Soumis</p>
           </div>
           <div className={styles.statCard}>
             <h3>{requests.filter((request) => getLeadStatus(request) === LEAD_STATUSES.QUALIFIED).length}</h3>
-            <p>Qualifiées</p>
+            <p>Qualifiés</p>
           </div>
           <div className={styles.statCard}>
             <h3>{requests.filter((request) => getLeadStatus(request) === LEAD_STATUSES.CLOSED_WON).length}</h3>
-            <p>Gagnées</p>
+            <p>Gagnés</p>
           </div>
           <div className={styles.statCard}>
             <h3>{requests.filter((request) => getLeadQualityOutcome(request) === LEAD_QUALITY_OUTCOMES.UNREVIEWED).length}</h3>
@@ -530,9 +492,9 @@ export default function AdminConventionsPage() {
 
         <div className={styles.filtersPanel}>
           <div className={styles.filterField}>
-            <label htmlFor="convention-lead-status">Statut lead</label>
+            <label htmlFor="whatsapp-lead-status">Statut</label>
             <select
-              id="convention-lead-status"
+              id="whatsapp-lead-status"
               value={filters.leadStatus}
               onChange={(event) => updateFilter('leadStatus', event.target.value)}
             >
@@ -546,97 +508,69 @@ export default function AdminConventionsPage() {
           </div>
 
           <div className={styles.filterField}>
-            <label htmlFor="convention-operational-status">Statut opérationnel</label>
+            <label htmlFor="whatsapp-business-line-filter">Business line</label>
             <select
-              id="convention-operational-status"
-              value={filters.operationalStatus}
-              onChange={(event) => updateFilter('operationalStatus', event.target.value)}
+              id="whatsapp-business-line-filter"
+              value={filters.businessLine}
+              onChange={(event) => updateFilter('businessLine', event.target.value)}
             >
-              <option value="all">Tous les statuts</option>
-              {CONVENTION_OPERATIONAL_STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {OPERATIONAL_STATUS_LABELS[status]}
+              <option value="all">Tous</option>
+              {WHATSAPP_DIRECT_LEAD_BUSINESS_LINES.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </select>
           </div>
 
           <div className={styles.filterField}>
-            <label htmlFor="convention-sector">Secteur</label>
+            <label htmlFor="whatsapp-scheduled-type-filter">Type prévu</label>
             <select
-              id="convention-sector"
-              value={filters.sector}
-              onChange={(event) => updateFilter('sector', event.target.value)}
+              id="whatsapp-scheduled-type-filter"
+              value={filters.scheduledType}
+              onChange={(event) => updateFilter('scheduledType', event.target.value)}
             >
-              <option value="all">Tous les secteurs</option>
-              <option value="banque">Banque</option>
-              <option value="assurance">Assurance</option>
-              <option value="clinique">Clinique</option>
-              <option value="hotel">Hôtel</option>
-              <option value="bureau">Bureau</option>
-              <option value="commerce">Commerce</option>
-              <option value="autre">Autre</option>
+              <option value="all">Tous</option>
+              <option value="none">Non planifié</option>
+              {WHATSAPP_DIRECT_LEAD_SCHEDULE_TYPES.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
 
           <div className={styles.filterField}>
-            <label htmlFor="convention-lead-quality">Qualité</label>
+            <label htmlFor="whatsapp-lead-quality">Qualité</label>
             <select
-              id="convention-lead-quality"
+              id="whatsapp-lead-quality"
               value={filters.leadQualityOutcome}
               onChange={(event) => updateFilter('leadQualityOutcome', event.target.value)}
             >
               <option value="all">Tous les niveaux</option>
               {LEAD_QUALITY_OUTCOME_OPTIONS.map((outcome) => (
                 <option key={outcome} value={outcome}>
-                  {LEAD_QUALITY_LABELS[outcome]}
+                  {LEAD_QUALITY_OUTCOME_LABELS[outcome]}
                 </option>
               ))}
             </select>
           </div>
 
           <div className={styles.filterField}>
-            <label htmlFor="convention-whatsapp-attribution">WhatsApp</label>
-            <select
-              id="convention-whatsapp-attribution"
-              value={filters.whatsappAttribution}
-              onChange={(event) => updateFilter('whatsappAttribution', event.target.value)}
-            >
-              <option value="all">Tous les leads</option>
-              <option value="any">Tous les leads WhatsApp</option>
-              <option value="auto">Match auto ou mixte</option>
-              <option value="manual">Tag manuel ou mixte</option>
-              <option value="both">Auto + manuel</option>
-              <option value="none">Sans attribution WhatsApp</option>
-            </select>
-          </div>
-
-          <div className={styles.filterField}>
-            <label htmlFor="convention-session-source">Source</label>
+            <label htmlFor="whatsapp-phone-filter">Téléphone</label>
             <input
-              id="convention-session-source"
+              id="whatsapp-phone-filter"
               type="search"
-              value={filters.sessionSource}
-              onChange={(event) => updateFilter('sessionSource', event.target.value)}
-              placeholder="google, facebook, direct..."
+              value={filters.phone}
+              onChange={(event) => updateFilter('phone', event.target.value)}
+              placeholder="Chercher par numéro"
             />
           </div>
 
           <div className={styles.filterField}>
-            <label htmlFor="convention-session-medium">Medium</label>
+            <label htmlFor="whatsapp-lead-owner">Responsable</label>
             <input
-              id="convention-session-medium"
-              type="search"
-              value={filters.sessionMedium}
-              onChange={(event) => updateFilter('sessionMedium', event.target.value)}
-              placeholder="organic, cpc, social..."
-            />
-          </div>
-
-          <div className={styles.filterField}>
-            <label htmlFor="convention-lead-owner">Responsable</label>
-            <input
-              id="convention-lead-owner"
+              id="whatsapp-lead-owner"
               type="search"
               value={filters.leadOwner}
               onChange={(event) => updateFilter('leadOwner', event.target.value)}
@@ -645,9 +579,9 @@ export default function AdminConventionsPage() {
           </div>
 
           <div className={styles.filterField}>
-            <label htmlFor="convention-date-from">Depuis</label>
+            <label htmlFor="whatsapp-date-from">Depuis</label>
             <input
-              id="convention-date-from"
+              id="whatsapp-date-from"
               type="date"
               value={filters.dateFrom}
               onChange={(event) => updateFilter('dateFrom', event.target.value)}
@@ -655,9 +589,9 @@ export default function AdminConventionsPage() {
           </div>
 
           <div className={styles.filterField}>
-            <label htmlFor="convention-date-to">Jusqu&apos;au</label>
+            <label htmlFor="whatsapp-date-to">Jusqu&apos;au</label>
             <input
-              id="convention-date-to"
+              id="whatsapp-date-to"
               type="date"
               value={filters.dateTo}
               onChange={(event) => updateFilter('dateTo', event.target.value)}
@@ -670,7 +604,7 @@ export default function AdminConventionsPage() {
         </div>
 
         <div className={styles.resultsMeta}>
-          {filteredRequests.length} convention{filteredRequests.length > 1 ? 's' : ''} affichée{filteredRequests.length > 1 ? 's' : ''}
+          {filteredRequests.length} lead{filteredRequests.length > 1 ? 's' : ''} WhatsApp affiché{filteredRequests.length > 1 ? 's' : ''}
         </div>
 
         <div className={styles.requestsList}>
@@ -682,11 +616,13 @@ export default function AdminConventionsPage() {
             >
               <div className={styles.requestHeader}>
                 <div className={styles.requestInfo}>
-                  <h3>{request.raison_sociale}</h3>
-                  <p className={styles.service}>{request.secteur_activite}</p>
+                  <h3>{request.company_name ? `${request.company_name} • ${request.contact_name}` : request.contact_name}</h3>
+                  <p className={styles.service}>
+                    {getServiceLabel(request.service_key, request.business_line)} • {getBusinessLineLabel(request.business_line)}
+                  </p>
                 </div>
                 <div className={styles.requestMeta}>
-                  <span className={styles.date}>{formatDate(request.created_at)}</span>
+                  <span className={styles.date}>{formatDate(request.lead_captured_at || request.created_at)}</span>
                   <span className={`${styles.statusBadge} ${styles[`status_${getLeadStatus(request)}`]}`}>
                     {LEAD_STATUS_LABELS[getLeadStatus(request)]}
                   </span>
@@ -695,19 +631,16 @@ export default function AdminConventionsPage() {
 
               <div className={styles.requestDetails}>
                 <div className={styles.detail}>
-                  <strong>👤</strong> {request.contact_nom} {request.contact_prenom}
-                </div>
-                <div className={styles.detail}>
-                  <strong>📧</strong> {request.email}
-                </div>
-                <div className={styles.detail}>
                   <strong>📞</strong> {request.telephone}
                 </div>
                 <div className={styles.detail}>
-                  <strong>📈</strong> {request.session_source || 'direct'} / {request.session_medium || '(none)'}
+                  <strong>📧</strong> {request.email || 'Email non renseigné'}
                 </div>
                 <div className={styles.detail}>
-                  <strong>💬</strong> {getWhatsAppSummary(request).label}
+                  <strong>💬</strong> {WHATSAPP_DIRECT_ATTRIBUTION_LABEL}
+                </div>
+                <div className={styles.detail}>
+                  <strong>📅</strong> {request.scheduled_at ? `${getScheduleLabel(request.scheduled_type)} • ${formatDate(request.scheduled_at)}` : 'Aucun rendez-vous'}
                 </div>
                 <div className={styles.detail}>
                   <strong>🧭</strong> {getLeadQualityLabel(request)}
@@ -722,7 +655,7 @@ export default function AdminConventionsPage() {
             </div>
           ))}
           {filteredRequests.length === 0 && (
-            <div className={styles.emptyState}>Aucune convention ne correspond aux filtres.</div>
+            <div className={styles.emptyState}>Aucun lead WhatsApp ne correspond aux filtres.</div>
           )}
         </div>
 
@@ -730,7 +663,18 @@ export default function AdminConventionsPage() {
           <div className={styles.modal} onClick={closeRequest}>
             <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
               <div className={styles.modalHeader}>
-                <h2>Détails de la convention</h2>
+                <div className={styles.headerTitleBlock}>
+                  <h2>{selectedRequest.company_name ? `${selectedRequest.company_name} • ${selectedRequest.contact_name}` : selectedRequest.contact_name}</h2>
+                  <div className={styles.headerMetaLine}>
+                    <a href={`tel:${selectedRequest.telephone}`} className={styles.phoneLink}>
+                      {selectedRequest.telephone}
+                    </a>
+                    <button type="button" className={styles.secondaryButton} onClick={handleCopyPhone}>
+                      Copier le numéro
+                    </button>
+                    {phoneCopyState && <span className={styles.copyStatus}>{phoneCopyState}</span>}
+                  </div>
+                </div>
                 <button className={styles.closeButton} onClick={closeRequest}>
                   ×
                 </button>
@@ -738,17 +682,17 @@ export default function AdminConventionsPage() {
 
               <div className={styles.modalBody}>
                 <div className={styles.section}>
-                  <h3>Statuts</h3>
+                  <h3>Statut du lead</h3>
                   <div className={styles.lifecycleControls}>
                     <select
                       className={styles.statusSelect}
-                      value={operationalStatusDraft}
-                      onChange={(event) => setOperationalStatusDraft(event.target.value)}
+                      value={leadStatusDraft}
+                      onChange={(event) => setLeadStatusDraft(event.target.value)}
                       disabled={isSavingStatus}
                     >
-                      {CONVENTION_OPERATIONAL_STATUSES.map((status) => (
+                      {Object.values(LEAD_STATUSES).map((status) => (
                         <option key={status} value={status}>
-                          {OPERATIONAL_STATUS_LABELS[status]}
+                          {LEAD_STATUS_LABELS[status]}
                         </option>
                       ))}
                     </select>
@@ -756,14 +700,14 @@ export default function AdminConventionsPage() {
                       type="button"
                       className={styles.saveButton}
                       onClick={handleStatusSave}
-                      disabled={isSavingStatus || operationalStatusDraft === selectedRequest.statut}
+                      disabled={isSavingStatus || leadStatusDraft === getLeadStatus(selectedRequest)}
                     >
                       {isSavingStatus ? 'Enregistrement...' : 'Enregistrer'}
                     </button>
                   </div>
                   {statusError && <p className={styles.statusError}>{statusError}</p>}
-                  <p><strong>Lead status :</strong> {LEAD_STATUS_LABELS[deriveLeadStatusFromConventionStatus(operationalStatusDraft)]}</p>
-                  <p><strong>Soumis le :</strong> {formatDate(selectedRequest.submitted_at || selectedRequest.created_at)}</p>
+                  <p><strong>Lead capté le :</strong> {formatDate(selectedRequest.lead_captured_at || selectedRequest.created_at)}</p>
+                  <p><strong>Soumis le :</strong> {formatDate(selectedRequest.submitted_at)}</p>
                   <p><strong>Qualifié le :</strong> {formatDate(selectedRequest.qualified_at)}</p>
                   <p><strong>Clôturé le :</strong> {formatDate(selectedRequest.closed_at)}</p>
                 </div>
@@ -772,9 +716,9 @@ export default function AdminConventionsPage() {
                   <h3>Suivi commercial</h3>
                   <div className={styles.opsGrid}>
                     <div className={styles.fieldGroup}>
-                      <label htmlFor="convention-quality-draft">Qualité</label>
+                      <label htmlFor="whatsapp-quality-draft">Qualité</label>
                       <select
-                        id="convention-quality-draft"
+                        id="whatsapp-quality-draft"
                         className={styles.statusSelect}
                         value={leadQualityDraft}
                         onChange={(event) => setLeadQualityDraft(event.target.value)}
@@ -782,16 +726,16 @@ export default function AdminConventionsPage() {
                       >
                         {LEAD_QUALITY_OUTCOME_OPTIONS.map((outcome) => (
                           <option key={outcome} value={outcome}>
-                            {LEAD_QUALITY_LABELS[outcome]}
+                            {LEAD_QUALITY_OUTCOME_LABELS[outcome]}
                           </option>
                         ))}
                       </select>
                     </div>
 
                     <div className={styles.fieldGroup}>
-                      <label htmlFor="convention-owner-draft">Responsable</label>
+                      <label htmlFor="whatsapp-owner-draft">Responsable</label>
                       <input
-                        id="convention-owner-draft"
+                        id="whatsapp-owner-draft"
                         className={styles.textInput}
                         type="text"
                         value={leadOwnerDraft}
@@ -802,9 +746,9 @@ export default function AdminConventionsPage() {
                     </div>
 
                     <div className={styles.fieldGroup}>
-                      <label htmlFor="convention-follow-up-sla">SLA suivi</label>
+                      <label htmlFor="whatsapp-follow-up-sla">SLA suivi</label>
                       <input
-                        id="convention-follow-up-sla"
+                        id="whatsapp-follow-up-sla"
                         className={styles.textInput}
                         type="datetime-local"
                         value={followUpSlaDraft}
@@ -815,12 +759,7 @@ export default function AdminConventionsPage() {
                   </div>
 
                   <div className={styles.lifecycleControls}>
-                    <button
-                      type="button"
-                      className={styles.saveButton}
-                      onClick={handleOperationsSave}
-                      disabled={isSavingOperations}
-                    >
+                    <button type="button" className={styles.saveButton} onClick={handleOperationsSave} disabled={isSavingOperations}>
                       {isSavingOperations ? 'Enregistrement...' : 'Enregistrer le suivi'}
                     </button>
                     <button
@@ -849,79 +788,56 @@ export default function AdminConventionsPage() {
                 </div>
 
                 <div className={styles.section}>
-                  <h3>Entreprise</h3>
-                  <p><strong>Raison sociale :</strong> {selectedRequest.raison_sociale}</p>
-                  <p><strong>Matricule fiscale :</strong> {selectedRequest.matricule_fiscale}</p>
-                  <p><strong>Secteur :</strong> {selectedRequest.secteur_activite}</p>
-                  <p><strong>Statut opérationnel :</strong> {OPERATIONAL_STATUS_LABELS[selectedRequest.statut] || selectedRequest.statut}</p>
-                </div>
-
-                <div className={styles.section}>
-                  <h3>Contact</h3>
-                  <p><strong>Nom :</strong> {selectedRequest.contact_nom} {selectedRequest.contact_prenom}</p>
-                  {selectedRequest.contact_fonction && (
-                    <p><strong>Fonction :</strong> {selectedRequest.contact_fonction}</p>
+                  <h3>Contact WhatsApp</h3>
+                  <p><strong>Contact :</strong> {selectedRequest.contact_name}</p>
+                  <p><strong>Business line :</strong> {getBusinessLineLabel(selectedRequest.business_line)}</p>
+                  {selectedRequest.company_name && (
+                    <p><strong>Société :</strong> {selectedRequest.company_name}</p>
                   )}
-                  <p><strong>Email :</strong> <a href={`mailto:${selectedRequest.email}`}>{selectedRequest.email}</a></p>
                   <p><strong>Téléphone :</strong> <a href={`tel:${selectedRequest.telephone}`}>{selectedRequest.telephone}</a></p>
+                  <p><strong>Email :</strong> {selectedRequest.email ? <a href={`mailto:${selectedRequest.email}`}>{selectedRequest.email}</a> : 'Non renseigné'}</p>
+                  <p><strong>Service :</strong> {getServiceLabel(selectedRequest.service_key, selectedRequest.business_line)}</p>
                 </div>
 
                 <div className={styles.section}>
-                  <h3>Convention</h3>
-                  <p><strong>Nombre de sites :</strong> {selectedRequest.nombre_sites || 1}</p>
-                  <p><strong>Surface totale :</strong> {selectedRequest.surface_totale || 'Non renseignée'}</p>
-                  <p><strong>Fréquence :</strong> {selectedRequest.frequence}</p>
-                  <p><strong>Durée contrat :</strong> {selectedRequest.duree_contrat}</p>
-                  <p><strong>Services :</strong> {Array.isArray(selectedRequest.services_souhaites) ? selectedRequest.services_souhaites.join(', ') : 'Non renseignés'}</p>
+                  <h3>Planification</h3>
+                  <p><strong>Type prévu :</strong> {selectedRequest.scheduled_at ? getScheduleLabel(selectedRequest.scheduled_type) : 'Non planifié'}</p>
+                  <p><strong>Prévu le :</strong> {formatDate(selectedRequest.scheduled_at)}</p>
                 </div>
 
                 <div className={styles.section}>
                   <h3>Attribution</h3>
-                  <p><strong>Source / Medium :</strong> {selectedRequest.session_source || 'direct'} / {selectedRequest.session_medium || '(none)'}</p>
-                  <p><strong>Campagne :</strong> {selectedRequest.session_campaign || 'Aucune'}</p>
+                  <p><strong>Source / Medium :</strong> {selectedRequest.session_source || 'whatsapp'} / {selectedRequest.session_medium || 'messaging'}</p>
+                  <p><strong>Campagne :</strong> {selectedRequest.session_campaign || 'direct_chat'}</p>
                   <p><strong>Landing page :</strong> {selectedRequest.landing_page || 'Non renseignée'}</p>
-                  <p><strong>Referrer host :</strong> {selectedRequest.referrer_host || 'Direct'}</p>
+                  <p><strong>Referrer host :</strong> {selectedRequest.referrer_host || 'Non renseigné'}</p>
                   <p><strong>Entry path :</strong> {selectedRequest.entry_path || 'Non renseigné'}</p>
-                  <p><strong>Attribution WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).label}</p>
-                  {getWhatsAppSummary(selectedRequest).clickLabel && (
-                    <p><strong>Touchpoint WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).clickLabel}</p>
-                  )}
-                  {getWhatsAppSummary(selectedRequest).clickPage && (
-                    <p><strong>Page du clic WhatsApp :</strong> {getWhatsAppSummary(selectedRequest).clickPage}</p>
-                  )}
-                  {getWhatsAppSummary(selectedRequest).clickedAt && (
-                    <p><strong>Clic WhatsApp détecté le :</strong> {formatDate(getWhatsAppSummary(selectedRequest).clickedAt)}</p>
-                  )}
-                  {getWhatsAppSummary(selectedRequest).manualTaggedAt && (
-                    <p><strong>Tag manuel le :</strong> {formatDate(getWhatsAppSummary(selectedRequest).manualTaggedAt)}</p>
-                  )}
-                  <div className={styles.lifecycleControls}>
-                    <button
-                      type="button"
-                      className={styles.saveButton}
-                      onClick={handleWhatsAppManualTagToggle}
-                      disabled={isSavingAttribution}
-                    >
-                      {isSavingAttribution
-                        ? 'Enregistrement...'
-                        : selectedRequest.whatsapp_manual_tag
-                          ? 'Retirer le tag WhatsApp'
-                          : 'Marquer comme lead WhatsApp'}
-                    </button>
-                  </div>
-                  {attributionError && <p className={styles.statusError}>{attributionError}</p>}
+                  <p><strong>Attribution WhatsApp :</strong> {WHATSAPP_DIRECT_ATTRIBUTION_LABEL}</p>
                 </div>
 
-                {selectedRequest.message && (
+                {selectedRequest.notes && (
                   <div className={styles.section}>
-                    <h3>Message</h3>
-                    <p>{selectedRequest.message}</p>
+                    <h3>Notes</h3>
+                    <p>{selectedRequest.notes}</p>
                   </div>
                 )}
+
+                <div className={styles.section}>
+                  <h3>Informations système</h3>
+                  <p><strong>Date de création :</strong> {formatDate(selectedRequest.created_at)}</p>
+                  <p><strong>Dernière mise à jour :</strong> {formatDate(selectedRequest.updated_at)}</p>
+                  <p><strong>ID :</strong> {selectedRequest.id}</p>
+                </div>
               </div>
             </div>
           </div>
         )}
+
+        <WhatsAppLeadCreateModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={handleCreateSuccess}
+        />
       </div>
     </>
   );

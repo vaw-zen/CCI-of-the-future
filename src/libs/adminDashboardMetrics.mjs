@@ -20,6 +20,7 @@ import {
   isWhatsAppAttributed,
   normalizeWhatsAppClickRow
 } from './whatsappAttribution.mjs';
+import { WHATSAPP_DIRECT_ATTRIBUTION_LABEL } from './whatsappDirectLeads.mjs';
 import {
   getDashboardPageTypeForBehaviorPageType,
   matchesBehaviorDashboardPageType
@@ -130,6 +131,14 @@ const CONTACT_METHOD_LABELS = {
   email: 'Email',
   whatsapp: 'WhatsApp',
   form: 'Form'
+};
+
+const WHATSAPP_DIRECT_SCHEDULE_LABELS = {
+  service: 'Prestation',
+  inspection: 'Inspection',
+  meeting: 'Rendez-vous',
+  callback: 'Rappel',
+  other: 'Autre'
 };
 
 const B2C_SERVICE_KEYS = new Set([
@@ -511,6 +520,10 @@ function getBusinessLineForLeadKind(kind = '') {
     return 'b2b';
   }
 
+  if (kind === 'whatsapp') {
+    return 'unknown';
+  }
+
   return 'unknown';
 }
 
@@ -605,6 +618,10 @@ function getFormLabel(value = '') {
 
 function getContactMethodLabel(value = '') {
   return CONTACT_METHOD_LABELS[value] || formatSlugLabel(value, 'Unknown method');
+}
+
+function getWhatsAppDirectScheduleLabel(value = '') {
+  return WHATSAPP_DIRECT_SCHEDULE_LABELS[value] || formatSlugLabel(value, 'Non planifié');
 }
 
 export function getSourceClass({ source = '', medium = '' } = {}) {
@@ -797,6 +814,10 @@ function getLeadServices(row, kind) {
     return row.type_service ? [row.type_service] : [];
   }
 
+  if (kind === 'whatsapp') {
+    return row.service_key ? [row.service_key] : [];
+  }
+
   if (Array.isArray(row.services_souhaites) && row.services_souhaites.length > 0) {
     return row.services_souhaites;
   }
@@ -890,14 +911,24 @@ function getCanonicalRowAttribution(row = {}, {
 }
 
 export function normalizeLead(row, kind, nowIso) {
+  const isWhatsAppDirectLead = kind === 'whatsapp';
   const services = getLeadServices(row, kind);
   const status = getLeadStatus(row, kind);
   const serviceKey = kind === 'devis'
     ? (row.type_service || services[0] || 'unknown')
-    : (services[0] || row.secteur_activite || 'unknown');
-  const whatsappAttribution = getWhatsAppAttributionSummary(row);
+    : kind === 'whatsapp'
+      ? (row.service_key || services[0] || 'autre')
+      : (services[0] || row.secteur_activite || 'unknown');
+  const baseWhatsAppAttribution = getWhatsAppAttributionSummary(row);
+  const whatsappAttribution = isWhatsAppDirectLead
+    ? {
+      ...baseWhatsAppAttribution,
+      mode: 'manual',
+      label: WHATSAPP_DIRECT_ATTRIBUTION_LABEL
+    }
+    : baseWhatsAppAttribution;
   const canonicalAttribution = getCanonicalRowAttribution(row, {
-    landingFallback: '/'
+    landingFallback: isWhatsAppDirectLead ? '/whatsapp' : '/'
   });
   const source = normalizeText(canonicalAttribution.source, 'direct');
   const medium = normalizeText(canonicalAttribution.medium, '(none)');
@@ -916,17 +947,29 @@ export function normalizeLead(row, kind, nowIso) {
           ? LEAD_QUALITY_OUTCOMES.SALES_ACCEPTED
           : LEAD_QUALITY_OUTCOMES.UNREVIEWED
   );
-  const lastWorkedAt = row.last_worked_at || row.closed_at || row.qualified_at || row.submitted_at || row.created_at || null;
+  const createdAt = isWhatsAppDirectLead
+    ? (row.lead_captured_at || row.created_at)
+    : row.created_at;
+  const submittedAt = isWhatsAppDirectLead
+    ? (row.lead_captured_at || row.submitted_at || row.created_at)
+    : (row.submitted_at || row.created_at);
+  const lastWorkedAt = row.last_worked_at
+    || row.closed_at
+    || row.qualified_at
+    || row.submitted_at
+    || row.lead_captured_at
+    || row.created_at
+    || null;
 
   const lead = {
     id: row.id,
     kind,
-    kindLabel: kind === 'devis' ? 'Devis' : 'Convention',
+    kindLabel: kind === 'devis' ? 'Devis' : kind === 'convention' ? 'Convention' : 'WhatsApp direct',
     status,
     statusLabel: LEAD_STATUS_LABELS[status] || status,
     operationalStatus: kind === 'convention' ? row.statut || 'nouveau' : null,
-    createdAt: row.created_at,
-    submittedAt: row.submitted_at || row.created_at,
+    createdAt,
+    submittedAt,
     qualifiedAt: row.qualified_at,
     closedAt: row.closed_at,
     source,
@@ -947,13 +990,21 @@ export function normalizeLead(row, kind, nowIso) {
     lastWorkedAt,
     serviceKey,
     serviceLabel: getServiceLabel(serviceKey),
+    contactName: row.contact_name || null,
+    companyName: row.company_name || null,
+    telephone: row.telephone || null,
+    email: row.email || null,
+    notes: row.notes || null,
+    scheduledType: row.scheduled_type || null,
+    scheduledTypeLabel: getWhatsAppDirectScheduleLabel(row.scheduled_type),
+    scheduledAt: row.scheduled_at || null,
     services: services.map((service) => ({
       key: service,
       label: getServiceLabel(service)
     })),
     calculatorEstimate: normalizeNumber(row.calculator_estimate),
-    hoursToQualify: getHoursBetween(row.submitted_at || row.created_at, row.qualified_at),
-    hoursToClose: getHoursBetween(row.submitted_at || row.created_at, row.closed_at),
+    hoursToQualify: getHoursBetween(submittedAt, row.qualified_at),
+    hoursToClose: getHoursBetween(submittedAt, row.closed_at),
     whatsappClickId: row.whatsapp_click_id || null,
     whatsappClickedAt: row.whatsapp_clicked_at || null,
     whatsappClickLabel: row.whatsapp_click_label || null,
@@ -972,7 +1023,8 @@ export function normalizeLead(row, kind, nowIso) {
 export function normalizeLeadRows(rows, nowIso) {
   return [
     ...(rows.devis || []).map((row) => normalizeLead(row, 'devis', nowIso)),
-    ...(rows.conventions || []).map((row) => normalizeLead(row, 'convention', nowIso))
+    ...(rows.conventions || []).map((row) => normalizeLead(row, 'convention', nowIso)),
+    ...(rows.whatsapp || []).map((row) => normalizeLead(row, 'whatsapp', nowIso))
   ];
 }
 
@@ -1693,6 +1745,14 @@ function summarizeLead(lead) {
     leadQualityOutcome: lead.leadQualityOutcome,
     leadQualityLabel: lead.leadQualityLabel,
     leadOwner: lead.leadOwner,
+    contactName: lead.contactName,
+    companyName: lead.companyName,
+    telephone: lead.telephone,
+    email: lead.email,
+    notes: lead.notes,
+    scheduledType: lead.scheduledType,
+    scheduledTypeLabel: lead.scheduledTypeLabel,
+    scheduledAt: lead.scheduledAt,
     followUpSlaAt: lead.followUpSlaAt,
     lastWorkedAt: lead.lastWorkedAt,
     createdAt: lead.createdAt,
@@ -1701,7 +1761,11 @@ function summarizeLead(lead) {
     closedAt: lead.closedAt,
     calculatorEstimate: lead.calculatorEstimate,
     ageHours: lead.ageHours,
-    drilldownHref: lead.kind === 'devis' ? `/admin/devis?lead=${lead.id}` : `/admin/conventions?lead=${lead.id}`,
+    drilldownHref: lead.kind === 'devis'
+      ? `/admin/devis?lead=${lead.id}`
+      : lead.kind === 'convention'
+        ? `/admin/conventions?lead=${lead.id}`
+        : `/admin/whatsapp?lead=${lead.id}`,
     whatsappAttributionMode: lead.whatsappAttributionMode,
     whatsappAttributionLabel: lead.whatsappAttributionLabel,
     whatsappClickLabel: lead.whatsappClickLabel,
@@ -1854,6 +1918,8 @@ function buildWhatsAppTouchpoints(clickRows = [], attributedLeads = []) {
 
 function buildWhatsAppAcquisition(currentLeads, whatsappClickRows = []) {
   const normalizedClickRows = (whatsappClickRows || []).map(normalizeWhatsAppClickRow);
+  const directWhatsAppLeads = currentLeads.filter((lead) => lead.kind === 'whatsapp');
+  const siteLeads = currentLeads.filter((lead) => lead.kind !== 'whatsapp');
   const attributedLeads = currentLeads
     .filter(isWhatsAppAttributed)
     .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
@@ -1866,29 +1932,46 @@ function buildWhatsAppAcquisition(currentLeads, whatsappClickRows = []) {
 
   return {
     summary: {
-      clicks: normalizedClickRows.length,
+      siteClicks: normalizedClickRows.length,
       uniqueClickers: uniqueClickers.size,
-      autoAttributedLeads: currentLeads.filter(hasWhatsAppAutoAttribution).length,
-      manualTaggedLeads: currentLeads.filter(hasWhatsAppManualTag).length,
-      totalAttributedLeads: attributedLeads.length
+      autoAttributedSiteLeads: siteLeads.filter(hasWhatsAppAutoAttribution).length,
+      manualTaggedSiteLeads: siteLeads.filter(hasWhatsAppManualTag).length,
+      directWhatsAppLeads: directWhatsAppLeads.length,
+      totalWhatsAppLeads: attributedLeads.length
     },
     funnel: buildFunnel(attributedLeads),
     touchpoints: buildWhatsAppTouchpoints(normalizedClickRows, attributedLeads),
     recentLeads: attributedLeads.slice(0, 8).map((lead) => ({
       ...summarizeLead(lead),
-      metaLinePrimary: `${lead.whatsappAttributionLabel} • ${lead.source} / ${lead.medium}`,
-      metaLineSecondary: lead.whatsappClickLabel
-        ? `${lead.whatsappClickLabel}${lead.whatsappClickPage ? ` • ${lead.whatsappClickPage}` : ''}`
-        : lead.landingPage,
-      metaLineTertiary: lead.whatsappManualTag
-        ? (hasWhatsAppAutoAttribution(lead) ? 'Match auto + tag manuel' : 'Tag manuel WhatsApp')
-        : 'Match automatique',
+      title: lead.kind === 'whatsapp'
+        ? `${lead.companyName ? `${lead.companyName} • ` : ''}${lead.contactName || 'Lead WhatsApp direct'}`
+        : undefined,
+      metaLinePrimary: lead.kind === 'whatsapp'
+        ? `${lead.telephone || 'Téléphone non renseigné'} • ${lead.whatsappAttributionLabel}`
+        : `${lead.whatsappAttributionLabel} • ${lead.source} / ${lead.medium}`,
+      metaLineSecondary: lead.kind === 'whatsapp'
+        ? [
+          lead.serviceLabel && lead.serviceLabel !== 'Autre' ? lead.serviceLabel : null,
+          lead.businessLineLabel,
+          lead.companyName && lead.companyName !== lead.contactName ? lead.companyName : null
+        ].filter(Boolean).join(' • ')
+        : lead.whatsappClickLabel
+          ? `${lead.whatsappClickLabel}${lead.whatsappClickPage ? ` • ${lead.whatsappClickPage}` : ''}`
+          : lead.landingPage,
+      metaLineTertiary: lead.kind === 'whatsapp'
+        ? [
+          lead.scheduledAt ? `${lead.scheduledTypeLabel} • ${lead.scheduledAt}` : null,
+          lead.leadOwner ? `Owner: ${lead.leadOwner}` : null
+        ].filter(Boolean).join(' • ')
+        : lead.whatsappManualTag
+          ? (hasWhatsAppAutoAttribution(lead) ? 'Match auto + tag manuel' : 'Tag manuel WhatsApp')
+          : 'Match automatique',
       metaDateTime: lead.createdAt
     })),
     notes: {
       clickBasis: 'Clics WhatsApp enregistrés côté serveur sur la période sélectionnée.',
-      funnelBasis: 'Leads créés sur la période sélectionnée avec attribution WhatsApp auto, manuelle, ou les deux.',
-      manualTagExplanation: 'Le tag manuel permet d’inclure les leads créés hors formulaire après une conversation WhatsApp.',
+      funnelBasis: 'Leads créés sur la période sélectionnée avec attribution site WhatsApp auto/manuelle, plus les leads WhatsApp directs saisis depuis l’admin.',
+      manualTagExplanation: 'Le tag manuel couvre les leads site créés après WhatsApp. Les conversations reçues directement dans WhatsApp sont à saisir dans Admin > WhatsApp.',
       autoMatchWindow: `Matching automatique sur le dernier clic WhatsApp du même navigateur dans les ${WHATSAPP_MATCH_WINDOW_DAYS} derniers jours.`
     }
   };

@@ -1,6 +1,6 @@
 # Growth Dashboard Launch Runbook
 
-Date: 2026-05-09
+Date: 2026-05-10
 
 ## Before Launch
 
@@ -62,6 +62,8 @@ Date: 2026-05-09
 
 ## Weekly Monday Review
 
+- Use [GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md) as the default meeting format.
+- Use [GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md) to choose the weekly SEO refresh and CRO sprint candidates.
 - Order of review:
   - Data health first
   - Attribution audit second
@@ -75,6 +77,7 @@ Date: 2026-05-09
   - 3 actions with owners and due dates
   - Every action references a dashboard segment or taxonomy slice, not only a top-line total
   - Attribution review is marked `trusted`, `trusted with caveats`, or `not decision-safe`
+  - The selected SEO refresh and CRO sprint candidates each reference at least one Stage 3 evidence panel
 
 ## Weekly Attribution QA
 

@@ -77,6 +77,8 @@ This report tracks what has been shipped in the growth dashboard program so far,
   - `risk`
   - `opportunity`
   - `nextAction`
+- Segment-first review workflow is now scaffolded in docs through:
+  - `assist-vault/GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md`
 
 ### Stage 3
 
@@ -102,6 +104,8 @@ This report tracks what has been shipped in the growth dashboard program so far,
 - Funnel diagnostics are intentionally labeled as lifecycle-based `v1` because CTA/form-start/form-completion events are not yet persisted in the reporting mart.
 - GA4 evidence now surfaces sessions, users, and events separately from Search Console clicks and impressions.
 - GA4 import hardening now deduplicates normalized snapshot conflicts before upsert so large backfills do not fail on `ON CONFLICT DO UPDATE`.
+- Stage 3 sprint-selection workflow is now scaffolded in docs through:
+  - `assist-vault/GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md`
 
 ## Verification Status
 
@@ -144,8 +148,8 @@ This report tracks what has been shipped in the growth dashboard program so far,
 
 | ID | Type | Owner | Status | Next step |
 | --- | --- | --- | --- | --- |
-| S2-05 | Workflow | Growth owner | Open | Require weekly review actions to reference a dashboard segment, not just top-line totals |
-| S3-07 | Workflow | Growth owner | Open | Make `seoQueries`, `contentOpportunities`, `landingPageScorecard`, and `funnelDiagnostics` the default input for SEO and CRO sprint selection |
+| S2-05 | Workflow | Growth owner | Scaffolded in docs, adoption pending | Run the next two weekly reviews from the segment-first template and keep action logs tied to explicit segments |
+| S3-07 | Workflow | Growth owner | Scaffolded in docs, adoption pending | Use the Stage 3 sprint-selection workflow to choose the next SEO refresh and CRO sprint candidates |
 | S3-08 | Validation | Engineering + Growth owner | Open | Validate Stage 3 outputs across two weekly review cycles and tune heuristics for decay, CTR lift, and drop-off prioritization |
 
 ## Recommended Next Implementation

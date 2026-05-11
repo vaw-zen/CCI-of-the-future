@@ -76,7 +76,7 @@ This document operationalizes the audit strategy into a delivery program that en
 | S2-02 | `metric-builder` | Engineering | Recompute overview, pipeline, acquisition, and SEO sections under active filters | S2-01 | Filtered views reconcile to underlying facts | Implemented |
 | S2-03 | `metric-builder` | Engineering | Add `executiveSummary` with `trend`, `risk`, `opportunity`, and `nextAction` | S2-02 | Leadership can understand the period in under two minutes | Implemented |
 | S2-04 | `UI` | Engineering | Add top executive summary band and segment controls | S2-03 | Weekly review can be run from segmented dashboard views | Implemented |
-| S2-05 | `workflow` | Growth owner | Require every weekly action to reference a dashboard segment | S2-04 | Review notes point to segments instead of top-line totals | Next |
+| S2-05 | `workflow` | Growth owner | Require every weekly action to reference a dashboard segment | S2-04 | Review notes point to segments instead of top-line totals | Scaffolded in docs, adoption pending |
 
 ### Stage 3
 
@@ -88,7 +88,7 @@ This document operationalizes the audit strategy into a delivery program that en
 | S3-04 | `schema` | Engineering | Create `growth_landing_page_scores_daily` | S3-02 | Landing-page prioritization no longer depends on raw lists | Implemented in migration |
 | S3-05 | `metric-builder` | Engineering | Add `seoQueries`, `contentOpportunities`, `funnelDiagnostics`, and `landingPageScorecard` | S3-01 to S3-04 | Growth team can prioritize SEO and CRO from the dashboard | Implemented |
 | S3-06 | `UI` | Engineering | Add query, funnel, and landing-page scorecard panels to existing dashboard | S3-05 | Query intelligence is clearly separated from tracked keyword monitoring | Implemented |
-| S3-07 | `workflow` | Growth owner | Make Stage 3 outputs the default input for SEO refresh and CRO sprint planning | S3-06 | Roadmap selection references dashboard evidence each week | Next |
+| S3-07 | `workflow` | Growth owner | Make Stage 3 outputs the default input for SEO refresh and CRO sprint planning | S3-06 | Roadmap selection references dashboard evidence each week | Scaffolded in docs, adoption pending |
 
 ### Stage 4
 

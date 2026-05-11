@@ -938,6 +938,10 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
   padding: 30px;
 }
 
+.modalForm {
+  display: block;
+}
+
 .section {
   margin-bottom: 25px;
   padding-bottom: 20px;
@@ -962,6 +966,12 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
 .section p {
   margin: 8px 0;
   line-height: 1.5;
+}
+
+.inlineHelp {
+  margin: 0 0 14px;
+  color: var(--t-secondary);
+  font-size: 13px;
 }
 
 .section p strong {
@@ -1028,6 +1038,17 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
   color: var(--t-primary);
 }
 
+.textareaInput {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(203, 251, 66, 0.2);
+  background: var(--bg-elevated);
+  color: var(--t-primary);
+  resize: vertical;
+}
+
 .saveButton {
   border: none;
   border-radius: 6px;
@@ -1060,6 +1081,7 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
 
 .secondaryButton:disabled,
 .textInput:disabled,
+.textareaInput:disabled,
 .statusSelect:disabled {
   opacity: 0.55;
   cursor: not-allowed;
@@ -1068,6 +1090,34 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
 .statusError {
   color: #ff8a8a;
   margin: 8px 0 0;
+}
+
+.headerTitleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerMetaLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.phoneLink {
+  color: var(--ac-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.phoneLink:hover {
+  text-decoration: underline;
+}
+
+.copyStatus {
+  color: var(--t-secondary);
+  font-size: 12px;
 }
 
 /* Responsive Design */

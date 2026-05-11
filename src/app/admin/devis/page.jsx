@@ -1,12 +1,12 @@
 'use client';
 
 import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
-import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getDevisRequests } from '@/services/devisService';
 import { updateLeadAttribution, updateLeadOperations, updateLeadStatus } from '@/services/adminLeadService';
+import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
 import {
   deriveLeadQualityOutcomeFromStatus,
   formatDateTimeLocalInputValue,
@@ -482,17 +482,7 @@ export default function AdminDevisPage() {
           </div>
         </div>
 
-        <div className={styles.navTabs}>
-          <Link href="/admin/dashboard" className={styles.navLink}>
-            Dashboard
-          </Link>
-          <Link href="/admin/devis" className={`${styles.navLink} ${styles.navLinkActive}`}>
-            Devis
-          </Link>
-          <Link href="/admin/conventions" className={styles.navLink}>
-            Conventions
-          </Link>
-        </div>
+        <AdminNavTabs active="devis" />
 
         <div className={styles.stats}>
           <div className={styles.statCard}>

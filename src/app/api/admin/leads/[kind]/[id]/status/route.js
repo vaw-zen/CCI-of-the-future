@@ -25,6 +25,7 @@ import {
   runLeadSelectWithOptionalTrackingFallback,
   withoutOptionalLeadOperationFields
 } from '@/libs/leadTrackingSchemaCompat.mjs';
+import { WHATSAPP_DIRECT_LEAD_SELECT_FIELDS } from '@/libs/whatsappDirectLeads.mjs';
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const ADMIN_STATUS_RATE_LIMIT = {
@@ -121,6 +122,9 @@ const LEAD_SELECT_FIELDS = {
     'whatsapp_click_page',
     'whatsapp_manual_tag',
     'whatsapp_manual_tagged_at'
+  ].join(','),
+  whatsapp: [
+    WHATSAPP_DIRECT_LEAD_SELECT_FIELDS
   ].join(',')
 };
 
@@ -143,6 +147,15 @@ function getLeadConfig(kind) {
     };
   }
 
+  if (kind === 'whatsapp') {
+    return {
+      table: 'whatsapp_direct_leads',
+      leadType: 'whatsapp_direct',
+      businessLine: null,
+      select: LEAD_SELECT_FIELDS.whatsapp
+    };
+  }
+
   return null;
 }
 
@@ -157,9 +170,12 @@ function validateStatusPayload(kind, body) {
 
   const keys = Object.keys(body);
 
-  if (kind === 'devis') {
+  if (kind === 'devis' || kind === 'whatsapp') {
     if (keys.length !== 1 || keys[0] !== 'leadStatus') {
-      return { error: 'invalid_payload', message: 'Payload devis invalide.' };
+      return {
+        error: 'invalid_payload',
+        message: kind === 'whatsapp' ? 'Payload WhatsApp invalide.' : 'Payload devis invalide.'
+      };
     }
 
     if (!LEAD_STATUS_OPTIONS.includes(body.leadStatus)) {
@@ -485,8 +501,13 @@ export async function PATCH(request, { params }) {
           eventParams: buildLeadMeasurementParams({
             leadRecord: updatedLead,
             leadType: config.leadType,
-            businessLine: config.businessLine,
-            previousStatus: previousLeadStatus
+            businessLine: currentLead.business_line || config.businessLine,
+            previousStatus: previousLeadStatus,
+            additionalParams: kind === 'whatsapp'
+              ? {
+                service_type: updatedLead.service_key
+              }
+              : {}
           })
         });
       }

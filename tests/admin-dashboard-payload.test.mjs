@@ -44,6 +44,9 @@ test('dashboard payload exposes sectioned contract and data-health fallbacks', (
   assert.ok(data.acquisition);
   assert.ok(Array.isArray(data.acquisition.cards));
   assert.ok(data.acquisition.whatsapp);
+  assert.equal(typeof data.acquisition.whatsapp.summary.siteClicks, 'number');
+  assert.equal(typeof data.acquisition.whatsapp.summary.directWhatsAppLeads, 'number');
+  assert.equal(typeof data.acquisition.whatsapp.summary.totalWhatsAppLeads, 'number');
   assert.ok(Array.isArray(data.acquisition.whatsapp.funnel));
   assert.ok(Array.isArray(data.acquisition.whatsapp.touchpoints));
   assert.ok(Array.isArray(data.acquisition.whatsapp.recentLeads));

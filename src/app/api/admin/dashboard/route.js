@@ -5,6 +5,7 @@ import { getClientIp, rateLimitRequest } from '@/libs/security';
 import { buildAdminDashboardData, getDashboardRange } from '@/libs/adminDashboardMetrics.mjs';
 import { fetchGrowthKeywordCatalogRows } from '@/libs/growthKeywordCatalog.mjs';
 import { runLeadSelectWithOptionalTrackingFallback } from '@/libs/leadTrackingSchemaCompat.mjs';
+import { WHATSAPP_DIRECT_LEAD_SELECT_FIELDS } from '@/libs/whatsappDirectLeads.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -75,6 +76,9 @@ const DASHBOARD_SELECT_FIELDS = {
     'whatsapp_click_page',
     'whatsapp_manual_tag',
     'whatsapp_manual_tagged_at'
+  ].join(','),
+  whatsapp: [
+    WHATSAPP_DIRECT_LEAD_SELECT_FIELDS
   ].join(',')
 };
 
@@ -105,7 +109,7 @@ async function runLeadSelectWithFallback({ supabase, table, select, applyQuery }
 }
 
 async function fetchLeadRows(supabase, range) {
-  const [devisResult, conventionResult] = await Promise.all([
+  const [devisResult, conventionResult, whatsappResult] = await Promise.all([
     runLeadSelectWithFallback({
       supabase,
       table: 'devis_requests',
@@ -123,6 +127,15 @@ async function fetchLeadRows(supabase, range) {
         .gte('created_at', range.fromIso)
         .lte('created_at', range.toIso)
         .order('created_at', { ascending: true })
+    }),
+    runLeadSelectWithFallback({
+      supabase,
+      table: 'whatsapp_direct_leads',
+      select: DASHBOARD_SELECT_FIELDS.whatsapp,
+      applyQuery: (query) => query
+        .gte('lead_captured_at', range.fromIso)
+        .lte('lead_captured_at', range.toIso)
+        .order('lead_captured_at', { ascending: true })
     })
   ]);
 
@@ -134,14 +147,19 @@ async function fetchLeadRows(supabase, range) {
     throw conventionResult.error;
   }
 
+  if (whatsappResult.error) {
+    throw whatsappResult.error;
+  }
+
   return {
     devis: devisResult.data || [],
-    conventions: conventionResult.data || []
+    conventions: conventionResult.data || [],
+    whatsapp: whatsappResult.data || []
   };
 }
 
 async function fetchAllLeadRows(supabase) {
-  const [devisResult, conventionResult] = await Promise.all([
+  const [devisResult, conventionResult, whatsappResult] = await Promise.all([
     runLeadSelectWithFallback({
       supabase,
       table: 'devis_requests',
@@ -153,6 +171,12 @@ async function fetchAllLeadRows(supabase) {
       table: 'convention_requests',
       select: DASHBOARD_SELECT_FIELDS.convention,
       applyQuery: (query) => query.order('created_at', { ascending: true })
+    }),
+    runLeadSelectWithFallback({
+      supabase,
+      table: 'whatsapp_direct_leads',
+      select: DASHBOARD_SELECT_FIELDS.whatsapp,
+      applyQuery: (query) => query.order('lead_captured_at', { ascending: true })
     })
   ]);
 
@@ -164,9 +188,14 @@ async function fetchAllLeadRows(supabase) {
     throw conventionResult.error;
   }
 
+  if (whatsappResult.error) {
+    throw whatsappResult.error;
+  }
+
   return {
     devis: devisResult.data || [],
-    conventions: conventionResult.data || []
+    conventions: conventionResult.data || [],
+    whatsapp: whatsappResult.data || []
   };
 }
 

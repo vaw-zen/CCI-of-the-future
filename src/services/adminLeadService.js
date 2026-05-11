@@ -78,6 +78,85 @@ export async function updateLeadOperations(kind, id, payload) {
   return result.data;
 }
 
+export async function getWhatsAppDirectLeads({
+  leadStatus,
+  businessLine,
+  phone,
+  leadOwner,
+  dateFrom,
+  dateTo,
+  leadId,
+  limit
+} = {}) {
+  const accessToken = await getAccessToken();
+  const params = new URLSearchParams();
+
+  if (leadStatus) {
+    params.set('leadStatus', leadStatus);
+  }
+
+  if (businessLine) {
+    params.set('businessLine', businessLine);
+  }
+
+  if (phone) {
+    params.set('phone', phone);
+  }
+
+  if (leadOwner) {
+    params.set('leadOwner', leadOwner);
+  }
+
+  if (dateFrom) {
+    params.set('dateFrom', dateFrom);
+  }
+
+  if (dateTo) {
+    params.set('dateTo', dateTo);
+  }
+
+  if (leadId) {
+    params.set('leadId', leadId);
+  }
+
+  if (limit) {
+    params.set('limit', String(limit));
+  }
+
+  const response = await fetch(`/api/admin/whatsapp-leads${params.toString() ? `?${params.toString()}` : ''}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.message || 'WhatsApp leads load failed');
+  }
+
+  return result.data;
+}
+
+export async function createWhatsAppDirectLead(payload) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch('/api/admin/whatsapp-leads', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.message || 'WhatsApp lead creation failed');
+  }
+
+  return result.data;
+}
+
 export async function getAdminDashboardData({
   from,
   to,

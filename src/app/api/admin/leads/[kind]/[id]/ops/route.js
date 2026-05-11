@@ -30,6 +30,10 @@ function getLeadTable(kind) {
     return 'convention_requests';
   }
 
+  if (kind === 'whatsapp') {
+    return 'whatsapp_direct_leads';
+  }
+
   return null;
 }
 

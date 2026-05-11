@@ -70,6 +70,40 @@ function buildConventionRow(overrides = {}) {
   };
 }
 
+function buildWhatsAppDirectRow(overrides = {}) {
+  return {
+    id: overrides.id || 'wa-direct-1',
+    created_at: overrides.created_at || '2026-05-11T10:00:00.000Z',
+    updated_at: overrides.updated_at || overrides.created_at || '2026-05-11T10:00:00.000Z',
+    lead_captured_at: overrides.lead_captured_at || '2026-05-10T08:30:00.000Z',
+    business_line: overrides.business_line || 'b2c',
+    contact_name: overrides.contact_name || 'Client WhatsApp',
+    company_name: overrides.company_name || null,
+    telephone: overrides.telephone || '+216 11 222 333',
+    email: overrides.email || null,
+    service_key: overrides.service_key || 'salon',
+    notes: overrides.notes || null,
+    scheduled_type: overrides.scheduled_type || null,
+    scheduled_at: overrides.scheduled_at || null,
+    lead_status: overrides.lead_status || 'submitted',
+    lead_quality_outcome: overrides.lead_quality_outcome || null,
+    lead_owner: overrides.lead_owner || null,
+    submitted_at: overrides.submitted_at || overrides.lead_captured_at || '2026-05-10T08:30:00.000Z',
+    qualified_at: overrides.qualified_at || null,
+    closed_at: overrides.closed_at || null,
+    follow_up_sla_at: overrides.follow_up_sla_at || null,
+    last_worked_at: overrides.last_worked_at || null,
+    session_source: overrides.session_source || 'whatsapp',
+    session_medium: overrides.session_medium || 'messaging',
+    session_campaign: overrides.session_campaign || 'direct_chat',
+    referrer_host: overrides.referrer_host || null,
+    landing_page: overrides.landing_page || null,
+    entry_path: overrides.entry_path || null,
+    whatsapp_manual_tag: overrides.whatsapp_manual_tag ?? true,
+    whatsapp_manual_tagged_at: overrides.whatsapp_manual_tagged_at || '2026-05-11T10:00:00.000Z'
+  };
+}
+
 function buildKeywordCatalogRow(overrides = {}) {
   return {
     id: overrides.id || 'keyword-1',
@@ -745,11 +779,23 @@ test('whatsapp acquisition summarizes clicks, attributed leads, and drilldown ro
           whatsapp_manual_tagged_at: '2026-05-03T12:00:00.000Z'
         })
       ],
-      conventions: []
+      conventions: [],
+      whatsapp: [
+        buildWhatsAppDirectRow({
+          id: 'wa-direct-created',
+          lead_captured_at: '2026-05-05T08:00:00.000Z',
+          submitted_at: '2026-05-05T08:00:00.000Z',
+          contact_name: 'Inspection WhatsApp',
+          telephone: '+216 55 111 222',
+          business_line: 'b2c',
+          service_key: 'marbre'
+        })
+      ]
     },
     previousRows: {
       devis: [],
-      conventions: []
+      conventions: [],
+      whatsapp: []
     },
     universeRows: {
       devis: [
@@ -770,7 +816,18 @@ test('whatsapp acquisition summarizes clicks, attributed leads, and drilldown ro
           whatsapp_manual_tagged_at: '2026-05-03T12:00:00.000Z'
         })
       ],
-      conventions: []
+      conventions: [],
+      whatsapp: [
+        buildWhatsAppDirectRow({
+          id: 'wa-direct-created',
+          lead_captured_at: '2026-05-05T08:00:00.000Z',
+          submitted_at: '2026-05-05T08:00:00.000Z',
+          contact_name: 'Inspection WhatsApp',
+          telephone: '+216 55 111 222',
+          business_line: 'b2c',
+          service_key: 'marbre'
+        })
+      ]
     },
     externalMetricRows: [],
     whatsappClickRows: [
@@ -815,14 +872,87 @@ test('whatsapp acquisition summarizes clicks, attributed leads, and drilldown ro
     nowIso: '2026-05-07T12:00:00.000Z'
   });
 
-  assert.equal(data.acquisition.whatsapp.summary.clicks, 3);
+  assert.equal(data.acquisition.whatsapp.summary.siteClicks, 3);
   assert.equal(data.acquisition.whatsapp.summary.uniqueClickers, 2);
-  assert.equal(data.acquisition.whatsapp.summary.autoAttributedLeads, 1);
-  assert.equal(data.acquisition.whatsapp.summary.manualTaggedLeads, 1);
-  assert.equal(data.acquisition.whatsapp.summary.totalAttributedLeads, 2);
-  assert.equal(data.acquisition.whatsapp.funnel.find((item) => item.key === 'created')?.count, 2);
+  assert.equal(data.acquisition.whatsapp.summary.autoAttributedSiteLeads, 1);
+  assert.equal(data.acquisition.whatsapp.summary.manualTaggedSiteLeads, 1);
+  assert.equal(data.acquisition.whatsapp.summary.directWhatsAppLeads, 1);
+  assert.equal(data.acquisition.whatsapp.summary.totalWhatsAppLeads, 3);
+  assert.equal(data.acquisition.whatsapp.funnel.find((item) => item.key === 'created')?.count, 3);
   assert.equal(data.acquisition.whatsapp.touchpoints[0]?.label, 'home_hero_whatsapp_main');
-  assert.equal(data.acquisition.whatsapp.recentLeads[0]?.drilldownHref, '/admin/devis?lead=devis-wa-manual');
+  assert.equal(data.acquisition.whatsapp.recentLeads[0]?.drilldownHref, '/admin/whatsapp?lead=wa-direct-created');
+  assert.match(data.acquisition.whatsapp.recentLeads[0]?.metaLinePrimary || '', /\+216 55 111 222/);
+});
+
+test('direct whatsapp leads use lead_captured_at for cohorts, funnel, operations, and drilldowns', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-10', to: '2026-05-12' });
+  const sundayWonLead = buildWhatsAppDirectRow({
+    id: 'wa-direct-won',
+    created_at: '2026-05-11T09:00:00.000Z',
+    lead_captured_at: '2026-05-10T07:45:00.000Z',
+    submitted_at: '2026-05-10T07:45:00.000Z',
+    qualified_at: '2026-05-10T07:45:00.000Z',
+    closed_at: '2026-05-10T07:45:00.000Z',
+    lead_status: 'closed_won',
+    lead_quality_outcome: 'won',
+    contact_name: 'Client confirmé',
+    telephone: '+216 20 000 001',
+    business_line: 'b2c',
+    service_key: 'salon',
+    scheduled_type: 'service',
+    scheduled_at: '2026-05-12T08:00:00.000Z',
+    follow_up_sla_at: '2026-05-12T08:00:00.000Z'
+  });
+  const mondayQualifiedLead = buildWhatsAppDirectRow({
+    id: 'wa-direct-qualified',
+    created_at: '2026-05-11T11:00:00.000Z',
+    lead_captured_at: '2026-05-11T10:15:00.000Z',
+    submitted_at: '2026-05-11T10:15:00.000Z',
+    qualified_at: '2026-05-11T10:15:00.000Z',
+    lead_status: 'qualified',
+    lead_quality_outcome: 'sales_accepted',
+    contact_name: 'Inspection 7h',
+    telephone: '+216 20 000 002',
+    business_line: 'b2b',
+    company_name: 'Inspection SARL',
+    service_key: 'bureau',
+    scheduled_type: 'inspection',
+    scheduled_at: '2026-05-12T07:00:00.000Z',
+    follow_up_sla_at: '2026-05-12T07:00:00.000Z',
+    lead_owner: 'ops@cciservices.online'
+  });
+
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: [sundayWonLead, mondayQualifiedLead]
+    },
+    previousRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: [sundayWonLead, mondayQualifiedLead]
+    },
+    externalMetricRows: [],
+    whatsappClickRows: [],
+    range: rangeResult.range,
+    nowIso: '2026-05-11T12:00:00.000Z'
+  });
+
+  assert.equal(data.overview.cohort.currentLeads, 2);
+  assert.equal(data.pipeline.summary.totalLeads, 2);
+  assert.equal(data.pipeline.summary.closedWon, 1);
+  assert.equal(data.pipeline.summary.qualifiedLeads, 2);
+  assert.equal(data.acquisition.whatsapp.summary.directWhatsAppLeads, 2);
+  assert.equal(data.acquisition.whatsapp.recentLeads[0]?.drilldownHref, '/admin/whatsapp?lead=wa-direct-qualified');
+  assert.match(data.acquisition.whatsapp.recentLeads[0]?.metaLinePrimary || '', /\+216 20 000 002/);
+  assert.equal(data.operations.latestSubmitted.some((lead) => lead.id === 'wa-direct-won'), true);
+  assert.equal(data.operations.latestSubmitted.some((lead) => lead.id === 'wa-direct-qualified'), true);
 });
 
 test('lifecycle trend counts created, qualified, won, and lost activity independently', () => {

@@ -6,6 +6,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getAdminDashboardData } from '@/services/adminLeadService';
+import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
+import WhatsAppLeadCreateModal from '@/app/admin/_components/WhatsAppLeadCreateModal';
 import styles from '../devis/admin.module.css';
 
 const STATUS_LABELS = {
@@ -292,22 +294,6 @@ function getHealthLabel(status) {
   }
 
   return 'Manquant';
-}
-
-function AdminNavTabs() {
-  return (
-    <div className={styles.navTabs}>
-      <Link href="/admin/dashboard" className={`${styles.navLink} ${styles.navLinkActive}`}>
-        Dashboard
-      </Link>
-      <Link href="/admin/devis" className={styles.navLink}>
-        Devis
-      </Link>
-      <Link href="/admin/conventions" className={styles.navLink}>
-        Conventions
-      </Link>
-    </div>
-  );
 }
 
 function SectionTabs({ activeSection, onChange }) {
@@ -731,7 +717,7 @@ function ExecutiveSummary({ executiveSummary, filters }) {
               return (
                 <Link
                   key={`${lead.kind}-${lead.id}`}
-                  href={lead.drilldownHref || (lead.kind === 'devis' ? `/admin/devis?lead=${lead.id}` : `/admin/conventions?lead=${lead.id}`)}
+                  href={getLeadDrilldownHref(lead)}
                   className={styles.compactItem}
                 >
                   <div>
@@ -766,6 +752,22 @@ function MetricBadges({ items = [] }) {
       ))}
     </div>
   );
+}
+
+function getLeadDrilldownHref(lead) {
+  if (lead?.drilldownHref) {
+    return lead.drilldownHref;
+  }
+
+  if (lead?.kind === 'devis') {
+    return `/admin/devis?lead=${lead.id}`;
+  }
+
+  if (lead?.kind === 'convention') {
+    return `/admin/conventions?lead=${lead.id}`;
+  }
+
+  return `/admin/whatsapp?lead=${lead?.id || ''}`;
 }
 
 function MetricListPanel({ title, note, rows = [], emptyText, renderRow }) {
@@ -803,7 +805,7 @@ function LeadSummaryList({ title, leads = [], emptyText, note }) {
             return (
               <Link
                 key={`${lead.kind}-${lead.id}`}
-                href={lead.drilldownHref || (lead.kind === 'devis' ? `/admin/devis?lead=${lead.id}` : `/admin/conventions?lead=${lead.id}`)}
+                href={getLeadDrilldownHref(lead)}
                 className={styles.compactItem}
               >
                 <div>
@@ -839,7 +841,13 @@ function AuditFeed({ title, events = [] }) {
             <div key={event.id} className={styles.auditItem}>
               <div>
                 <strong>
-                  {event.leadKind === 'devis' ? 'Devis' : event.leadKind === 'convention' ? 'Convention' : 'Lead'} - {event.actionResult === 'success' ? 'modifié' : 'rejeté'}
+                  {event.leadKind === 'devis'
+                    ? 'Devis'
+                    : event.leadKind === 'convention'
+                      ? 'Convention'
+                      : event.leadKind === 'whatsapp'
+                        ? 'WhatsApp'
+                        : 'Lead'} - {event.actionResult === 'success' ? 'modifié' : 'rejeté'}
                 </strong>
                 <span>
                   {(STATUS_LABELS[event.previousStatus] || event.previousStatus || 'N/A')} vers {(STATUS_LABELS[event.nextStatus] || event.nextStatus || 'N/A')}
@@ -1216,23 +1224,27 @@ function AcquisitionSection({ dashboardData }) {
           <p className={styles.inlineNote}>{whatsappData.notes.clickBasis}</p>
           <div className={styles.miniStats}>
             <div>
-              <strong>{formatNumber(whatsappData.summary.clicks)}</strong>
-              <span>Clics</span>
+              <strong>{formatNumber(whatsappData.summary.siteClicks)}</strong>
+              <span>Clics site</span>
             </div>
             <div>
               <strong>{formatNumber(whatsappData.summary.uniqueClickers)}</strong>
               <span>Navigateurs uniques</span>
             </div>
             <div>
-              <strong>{formatNumber(whatsappData.summary.autoAttributedLeads)}</strong>
-              <span>Leads auto-attribués</span>
+              <strong>{formatNumber(whatsappData.summary.autoAttributedSiteLeads)}</strong>
+              <span>Leads auto site</span>
             </div>
             <div>
-              <strong>{formatNumber(whatsappData.summary.manualTaggedLeads)}</strong>
-              <span>Leads taggés manuellement</span>
+              <strong>{formatNumber(whatsappData.summary.manualTaggedSiteLeads)}</strong>
+              <span>Leads manuels site</span>
             </div>
             <div>
-              <strong>{formatNumber(whatsappData.summary.totalAttributedLeads)}</strong>
+              <strong>{formatNumber(whatsappData.summary.directWhatsAppLeads)}</strong>
+              <span>Leads WhatsApp directs</span>
+            </div>
+            <div>
+              <strong>{formatNumber(whatsappData.summary.totalWhatsAppLeads)}</strong>
               <span>Total leads WhatsApp</span>
             </div>
           </div>
@@ -1628,6 +1640,7 @@ export default function AdminDashboardPage() {
   const [activeSection, setActiveSection] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const fetchDashboard = useCallback(async (query) => {
     try {
@@ -1669,6 +1682,11 @@ export default function AdminDashboardPage() {
     }));
   };
 
+  const handleWhatsAppLeadCreated = useCallback(async () => {
+    await fetchDashboard(dashboardQuery);
+    setIsCreateModalOpen(false);
+  }, [dashboardQuery, fetchDashboard]);
+
   const availableFilterOptions = dashboardData?.filters?.options || DEFAULT_FILTER_OPTIONS;
 
   if (authLoading) {
@@ -1696,6 +1714,9 @@ export default function AdminDashboardPage() {
         <div className={styles.header}>
           <h1>Administration - Growth Dashboard</h1>
           <div className={styles.headerActions}>
+            <button type="button" onClick={() => setIsCreateModalOpen(true)} className={styles.saveButton}>
+              Ajouter lead WhatsApp
+            </button>
             <button onClick={() => fetchDashboard(dashboardQuery)} className={styles.refreshButton}>
               Actualiser
             </button>
@@ -1705,7 +1726,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <AdminNavTabs />
+        <AdminNavTabs active="dashboard" />
 
         <div className={styles.filtersPanel}>
           <div className={styles.filterField}>
@@ -1778,6 +1799,12 @@ export default function AdminDashboardPage() {
             {activeSection === 'operations' && <OperationsSection dashboardData={dashboardData} />}
           </>
         )}
+
+        <WhatsAppLeadCreateModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={handleWhatsAppLeadCreated}
+        />
       </div>
     </>
   );

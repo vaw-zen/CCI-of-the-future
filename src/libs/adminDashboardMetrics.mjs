@@ -21,6 +21,10 @@ import {
   normalizeWhatsAppClickRow
 } from './whatsappAttribution.mjs';
 import {
+  getDashboardPageTypeForBehaviorPageType,
+  matchesBehaviorDashboardPageType
+} from './behaviorTracking.mjs';
+import {
   LEAD_QUALITY_OUTCOME_LABELS,
   LEAD_QUALITY_OUTCOMES,
   normalizeLeadQualityOutcome
@@ -109,7 +113,23 @@ const PAGE_TYPE_LABELS = {
 const BUSINESS_LINE_LABELS = {
   b2c: 'B2C',
   b2b: 'B2B',
+  content: 'Content',
+  brand: 'Brand',
   unknown: 'Unknown'
+};
+
+const FORM_LABELS = {
+  devis_form: 'Devis form',
+  contact_quote_form: 'Contact quote form',
+  convention_form: 'Convention form',
+  newsletter_form: 'Newsletter form'
+};
+
+const CONTACT_METHOD_LABELS = {
+  phone: 'Phone',
+  email: 'Email',
+  whatsapp: 'WhatsApp',
+  form: 'Form'
 };
 
 const B2C_SERVICE_KEYS = new Set([
@@ -568,6 +588,25 @@ function getDeviceLabel(value) {
   return normalizeText(value, 'Unknown');
 }
 
+function formatSlugLabel(value = '', fallback = 'Unknown') {
+  const normalizedValue = normalizeText(value, '');
+  if (!normalizedValue) {
+    return fallback;
+  }
+
+  return normalizedValue
+    .replace(/[_-]+/g, ' ')
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function getFormLabel(value = '') {
+  return FORM_LABELS[value] || formatSlugLabel(value, 'Unknown form');
+}
+
+function getContactMethodLabel(value = '') {
+  return CONTACT_METHOD_LABELS[value] || formatSlugLabel(value, 'Unknown method');
+}
+
 export function getSourceClass({ source = '', medium = '' } = {}) {
   const normalizedSource = String(source || '').trim().toLowerCase();
   const normalizedMedium = String(medium || '').trim().toLowerCase();
@@ -969,6 +1008,7 @@ function addFilterOption(map, value, label) {
 function buildDashboardFilterOptions({
   universeLeads = [],
   externalMetricRows = [],
+  behaviorMetricRows = [],
   keywordCatalogRows = [],
   keywordRankingRows = []
 } = {}) {
@@ -996,6 +1036,14 @@ function buildDashboardFilterOptions({
     addFilterOption(sourceClass, normalizedRow.sourceClass, normalizedRow.sourceClassLabel);
     addFilterOption(pageType, normalizedRow.pageType, normalizedRow.pageTypeLabel);
     addFilterOption(service, inferredService, inferredService ? getServiceLabel(inferredService) : null);
+  });
+
+  behaviorMetricRows.forEach((row) => {
+    const normalizedRow = normalizeBehaviorMetricDashboardRow(row);
+    addFilterOption(businessLine, normalizedRow.businessLine, normalizedRow.businessLineLabel);
+    addFilterOption(sourceClass, normalizedRow.sourceClass, normalizedRow.sourceClassLabel);
+    addFilterOption(pageType, normalizedRow.pageType, normalizedRow.pageTypeLabel);
+    addFilterOption(service, normalizedRow.serviceKey, normalizedRow.serviceKey ? getServiceLabel(normalizedRow.serviceKey) : null);
   });
 
   keywordCatalogRows.forEach((row) => {
@@ -1244,6 +1292,28 @@ function matchesQueryMetricFilters(row = {}, filters = {}) {
   }
 
   if (filters.pageType && row.pageType !== filters.pageType) {
+    return false;
+  }
+
+  return true;
+}
+
+function matchesBehaviorMetricFilters(row = {}, filters = {}) {
+  const normalizedRow = normalizeBehaviorMetricDashboardRow(row);
+
+  if (filters.businessLine && normalizedRow.businessLine !== filters.businessLine) {
+    return false;
+  }
+
+  if (filters.service && normalizedRow.serviceKey !== filters.service) {
+    return false;
+  }
+
+  if (filters.sourceClass && normalizedRow.sourceClass !== filters.sourceClass) {
+    return false;
+  }
+
+  if (filters.pageType && !matchesBehaviorDashboardPageType(normalizedRow.canonicalPageType, filters.pageType)) {
     return false;
   }
 
@@ -1667,6 +1737,58 @@ function normalizeExternalMetricRow(row = {}) {
     impressions: Number(row.impressions || 0),
     spend: Number(row.spend || 0),
     metadata: row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
+  };
+}
+
+function normalizeBehaviorMetricDashboardRow(row = {}) {
+  const canonicalPageType = normalizeText(row.page_type, 'other');
+  const pageType = normalizeText(
+    row.dashboard_page_type,
+    getDashboardPageTypeForBehaviorPageType(canonicalPageType)
+  );
+  const serviceKey = normalizeText(row.service_type, 'unknown');
+  const formName = normalizeText(row.form_name, '');
+  const contactMethod = normalizeText(row.contact_method, '');
+  const ctaId = normalizeText(row.cta_id, '');
+  const ctaLocation = normalizeText(row.cta_location, '');
+  const sourceClass = normalizeText(row.source_class, getSourceClass({
+    source: row.session_source,
+    medium: row.session_medium
+  }));
+
+  return {
+    eventDate: row.event_date,
+    eventName: normalizeText(row.event_name, 'unknown'),
+    canonicalPageType,
+    pageType,
+    pageTypeLabel: getPageTypeLabel(pageType),
+    landingPage: normalizeText(row.landing_page, '/'),
+    businessLine: normalizeText(row.business_line, 'brand'),
+    businessLineLabel: getBusinessLineLabel(row.business_line),
+    serviceKey: serviceKey === 'unknown' ? '' : serviceKey,
+    serviceLabel: serviceKey && serviceKey !== 'unknown' ? getServiceLabel(serviceKey) : 'Unknown',
+    formName,
+    formLabel: getFormLabel(formName),
+    formPlacement: normalizeText(row.form_placement, ''),
+    funnelName: normalizeText(row.funnel_name, ''),
+    stepName: normalizeText(row.step_name, ''),
+    stepNumber: Number(row.step_number || 0),
+    ctaId,
+    ctaLabel: ctaId ? formatSlugLabel(ctaId, 'Unnamed CTA') : '',
+    ctaLocation,
+    ctaLocationLabel: ctaLocation ? formatSlugLabel(ctaLocation, 'Unknown location') : '',
+    ctaType: normalizeText(row.cta_type, ''),
+    contactMethod,
+    contactMethodLabel: getContactMethodLabel(contactMethod),
+    contentType: normalizeText(row.content_type, ''),
+    contentCluster: normalizeText(row.content_cluster, ''),
+    source: normalizeText(row.session_source, 'direct'),
+    medium: normalizeText(row.session_medium, '(none)'),
+    campaign: normalizeText(row.session_campaign, '(not set)'),
+    sourceClass,
+    sourceClassLabel: getSourceClassLabel(sourceClass),
+    eventCount: Number(row.event_count || 0),
+    uniqueClientCount: Number(row.unique_client_count || 0)
   };
 }
 
@@ -2871,7 +2993,275 @@ function buildContentOpportunities(queryMetricRows = [], landingPageScorecard = 
   };
 }
 
-function buildFunnelDiagnostics(currentLeads = [], range) {
+function buildCtaPerformance(behaviorRows = []) {
+  const relevantRows = behaviorRows
+    .map(normalizeBehaviorMetricDashboardRow)
+    .filter((row) => (
+      row.ctaId
+      && ['cta_impression', 'cta_click', 'phone_click', 'email_click', 'whatsapp_click'].includes(row.eventName)
+    ));
+
+  const summary = {
+    impressions: 0,
+    clicks: 0,
+    contactClicks: 0,
+    uniqueClients: 0
+  };
+  const groupedRows = new Map();
+
+  relevantRows.forEach((row) => {
+    const key = `${row.ctaId}||${row.ctaLocation}`;
+    const current = groupedRows.get(key) || {
+      key,
+      ctaId: row.ctaId,
+      label: row.ctaLabel,
+      location: row.ctaLocationLabel,
+      ctaType: row.ctaType || 'unknown',
+      pageTypeLabel: row.pageTypeLabel,
+      businessLineLabel: row.businessLineLabel,
+      serviceLabel: row.serviceLabel,
+      impressions: 0,
+      clicks: 0,
+      phoneClicks: 0,
+      emailClicks: 0,
+      whatsappClicks: 0,
+      uniqueClients: 0
+    };
+
+    if (row.eventName === 'cta_impression') {
+      current.impressions += row.eventCount;
+      summary.impressions += row.eventCount;
+    }
+
+    if (row.eventName === 'cta_click') {
+      current.clicks += row.eventCount;
+      summary.clicks += row.eventCount;
+    }
+
+    if (row.eventName === 'phone_click') {
+      current.phoneClicks += row.eventCount;
+      summary.contactClicks += row.eventCount;
+    }
+
+    if (row.eventName === 'email_click') {
+      current.emailClicks += row.eventCount;
+      summary.contactClicks += row.eventCount;
+    }
+
+    if (row.eventName === 'whatsapp_click') {
+      current.whatsappClicks += row.eventCount;
+      summary.contactClicks += row.eventCount;
+    }
+
+    current.uniqueClients += row.uniqueClientCount;
+    summary.uniqueClients += row.uniqueClientCount;
+    groupedRows.set(key, current);
+  });
+
+  const rows = Array.from(groupedRows.values())
+    .map((row) => ({
+      ...row,
+      ctr: getPercent(row.clicks, row.impressions),
+      directIntentClicks: row.phoneClicks + row.emailClicks + row.whatsappClicks
+    }))
+    .sort((a, b) => (
+      (b.directIntentClicks + b.clicks) - (a.directIntentClicks + a.clicks)
+      || b.impressions - a.impressions
+      || a.label.localeCompare(b.label)
+    ))
+    .slice(0, 8);
+
+  return {
+    summary: {
+      ...summary,
+      ctr: getPercent(summary.clicks, summary.impressions)
+    },
+    rows,
+    notes: {
+      basis: 'Behavior mart from persisted CTA impressions, clicks, and direct contact-intent actions.',
+      coverage: 'Service CTA blocks and the conseils CTA section now use stable CTA ids and locations.'
+    }
+  };
+}
+
+function buildContactIntent(behaviorRows = []) {
+  const relevantRows = behaviorRows
+    .map(normalizeBehaviorMetricDashboardRow)
+    .filter((row) => (
+      ['phone_click', 'email_click', 'whatsapp_click', 'generate_lead'].includes(row.eventName)
+      && (row.contactMethod || row.eventName === 'generate_lead')
+    ));
+
+  const methods = new Map();
+  const touchpoints = new Map();
+  const summary = {
+    totalIntent: 0,
+    formLeads: 0,
+    phoneClicks: 0,
+    emailClicks: 0,
+    whatsappClicks: 0
+  };
+
+  relevantRows.forEach((row) => {
+    const methodKey = row.contactMethod || (row.eventName === 'generate_lead' ? 'form' : 'unknown');
+    const method = methods.get(methodKey) || {
+      key: methodKey,
+      label: getContactMethodLabel(methodKey),
+      count: 0,
+      uniqueClients: 0
+    };
+    method.count += row.eventCount;
+    method.uniqueClients += row.uniqueClientCount;
+    methods.set(methodKey, method);
+
+    const touchpointKey = `${methodKey}||${row.ctaLocation || row.formPlacement || row.landingPage}`;
+    const touchpoint = touchpoints.get(touchpointKey) || {
+      key: touchpointKey,
+      label: row.ctaLocationLabel || formatSlugLabel(row.formPlacement, row.formLabel) || row.landingPage,
+      methodLabel: getContactMethodLabel(methodKey),
+      count: 0,
+      uniqueClients: 0,
+      landingPage: row.landingPage
+    };
+    touchpoint.count += row.eventCount;
+    touchpoint.uniqueClients += row.uniqueClientCount;
+    touchpoints.set(touchpointKey, touchpoint);
+
+    summary.totalIntent += row.eventCount;
+    if (methodKey === 'form') {
+      summary.formLeads += row.eventCount;
+    }
+    if (methodKey === 'phone') {
+      summary.phoneClicks += row.eventCount;
+    }
+    if (methodKey === 'email') {
+      summary.emailClicks += row.eventCount;
+    }
+    if (methodKey === 'whatsapp') {
+      summary.whatsappClicks += row.eventCount;
+    }
+  });
+
+  return {
+    summary,
+    methods: Array.from(methods.values())
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
+    touchpoints: Array.from(touchpoints.values())
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+      .slice(0, 8),
+    notes: {
+      basis: 'Contact intent combines direct contact clicks with form-generated leads from the persisted behavior layer.',
+      coverage: 'Form submissions are tracked separately from phone, email, and WhatsApp intent to compare assisted vs. form-first demand.'
+    }
+  };
+}
+
+function buildFormHealth(behaviorRows = []) {
+  const relevantRows = behaviorRows
+    .map(normalizeBehaviorMetricDashboardRow)
+    .filter((row) => (
+      row.formName
+      && (
+        row.eventName === 'funnel_step'
+        || row.eventName === 'form_field_focus'
+        || row.eventName === 'form_field_complete'
+        || row.eventName === 'form_validation_failed'
+        || row.eventName === 'form_abandonment'
+        || row.eventName === 'submit_failed'
+      )
+    ));
+
+  const summary = {
+    starts: 0,
+    fieldFocuses: 0,
+    fieldCompletions: 0,
+    validationFailures: 0,
+    abandonments: 0,
+    submitSuccesses: 0,
+    submitFailures: 0
+  };
+  const groupedRows = new Map();
+
+  relevantRows.forEach((row) => {
+    const key = `${row.formName}||${row.formPlacement}`;
+    const current = groupedRows.get(key) || {
+      key,
+      label: row.formLabel,
+      placementLabel: formatSlugLabel(row.formPlacement, 'Unknown placement'),
+      businessLineLabel: row.businessLineLabel,
+      serviceLabel: row.serviceLabel,
+      starts: 0,
+      fieldFocuses: 0,
+      fieldCompletions: 0,
+      validationFailures: 0,
+      abandonments: 0,
+      submitSuccesses: 0,
+      submitFailures: 0
+    };
+
+    if (row.eventName === 'funnel_step' && row.stepName === 'form_start') {
+      current.starts += row.eventCount;
+      summary.starts += row.eventCount;
+    }
+
+    if (row.eventName === 'form_field_focus') {
+      current.fieldFocuses += row.eventCount;
+      summary.fieldFocuses += row.eventCount;
+    }
+
+    if (row.eventName === 'form_field_complete') {
+      current.fieldCompletions += row.eventCount;
+      summary.fieldCompletions += row.eventCount;
+    }
+
+    if (row.eventName === 'form_validation_failed') {
+      current.validationFailures += row.eventCount;
+      summary.validationFailures += row.eventCount;
+    }
+
+    if (row.eventName === 'form_abandonment') {
+      current.abandonments += row.eventCount;
+      summary.abandonments += row.eventCount;
+    }
+
+    if (row.eventName === 'submit_failed') {
+      current.submitFailures += row.eventCount;
+      summary.submitFailures += row.eventCount;
+    }
+
+    if (row.eventName === 'funnel_step' && row.stepName === 'submit_success') {
+      current.submitSuccesses += row.eventCount;
+      summary.submitSuccesses += row.eventCount;
+    }
+
+    groupedRows.set(key, current);
+  });
+
+  const rows = Array.from(groupedRows.values())
+    .map((row) => ({
+      ...row,
+      submitSuccessRate: getPercent(row.submitSuccesses, row.starts),
+      validationFailureRate: getPercent(row.validationFailures, row.starts),
+      abandonmentRate: getPercent(row.abandonments, row.starts)
+    }))
+    .sort((a, b) => (
+      b.starts - a.starts
+      || b.submitSuccesses - a.submitSuccesses
+      || a.label.localeCompare(b.label)
+    ))
+    .slice(0, 8);
+
+  return {
+    summary,
+    rows,
+    notes: {
+      basis: 'Behavior mart from persisted funnel steps, field interactions, validation failures, abandonment signals, and submit outcomes.',
+      coverage: 'Contact, devis, and convention forms now share canonical naming so placement-level friction can be compared safely.'
+    }
+  };
+}
+
+function buildFunnelDiagnostics(currentLeads = [], range, behaviorRows = []) {
   const steps = buildFunnel(currentLeads);
   const summary = {
     createdLeads: currentLeads.length,
@@ -2975,7 +3365,9 @@ function buildFunnelDiagnostics(currentLeads = [], range) {
       .slice(0, 8),
     notes: {
       basis: `Lifecycle-based funnel v1 on leads created between ${range.from} and ${range.to}.`,
-      coverage: 'CTA click, form-start, and form-completion steps are not yet persisted in the reporting mart, so this view currently starts at lead creation.'
+      coverage: behaviorRows.length > 0
+        ? 'Lifecycle funnel v1 still starts at lead creation. Use CTA performance, form health, and contact intent below for pre-lead behavior while the combined funnel mart stabilizes.'
+        : 'CTA click, form-start, and form-completion steps are not yet persisted in the reporting mart, so this view currently starts at lead creation.'
     }
   };
 }
@@ -4274,6 +4666,7 @@ export function buildAdminDashboardData({
   universeRows,
   externalMetricRows = [],
   queryMetricRows = [],
+  behaviorMetricRows = [],
   whatsappClickRows = [],
   keywordCatalogRows = [],
   keywordRankingRows = [],
@@ -4290,6 +4683,7 @@ export function buildAdminDashboardData({
   const filterOptions = buildDashboardFilterOptions({
     universeLeads,
     externalMetricRows,
+    behaviorMetricRows,
     keywordCatalogRows,
     keywordRankingRows
   });
@@ -4302,6 +4696,8 @@ export function buildAdminDashboardData({
     .map(normalizeQueryMetricDashboardRow)
     .filter((row) => row.metricDate && row.normalizedQuery)
     .filter((row) => matchesQueryMetricFilters(row, normalizedFilters));
+  const filteredBehaviorMetricRows = behaviorMetricRows
+    .filter((row) => matchesBehaviorMetricFilters(row, normalizedFilters));
   const filteredWhatsAppClickRows = whatsappClickRows.filter((row) => matchesWhatsAppClickFilters(row, normalizedFilters));
   const filteredKeywordCatalogRows = keywordCatalogRows.filter((row) => matchesKeywordCatalogFilters(row, normalizedFilters));
   const filteredKeywordRankingRows = keywordRankingRows.filter((row) => matchesKeywordRankingFilters(row, normalizedFilters));
@@ -4321,7 +4717,10 @@ export function buildAdminDashboardData({
     landingPageScorecard,
     range
   );
-  const funnelDiagnostics = buildFunnelDiagnostics(filteredCurrentLeads, range);
+  const ctaPerformance = buildCtaPerformance(filteredBehaviorMetricRows);
+  const contactIntent = buildContactIntent(filteredBehaviorMetricRows);
+  const formHealth = buildFormHealth(filteredBehaviorMetricRows);
+  const funnelDiagnostics = buildFunnelDiagnostics(filteredCurrentLeads, range, filteredBehaviorMetricRows);
   const seoContent = buildSeoContent(
     filteredCurrentLeads,
     filteredExternalMetricRows,
@@ -4339,10 +4738,14 @@ export function buildAdminDashboardData({
     seoQueries,
     seoContent,
     landingPageScorecard,
+    ctaPerformance,
+    contactIntent,
+    formHealth,
     operations,
     dataHealth,
     externalMetricRows: filteredExternalMetricRows,
     queryMetricRows: filteredQueryMetricRows,
+    behaviorMetricRows: filteredBehaviorMetricRows,
     filters: normalizedFilters
   });
 
@@ -4376,6 +4779,9 @@ export function buildAdminDashboardData({
     seoQueries,
     contentOpportunities,
     landingPageScorecard,
+    ctaPerformance,
+    contactIntent,
+    formHealth,
     funnelDiagnostics,
     seoContent,
     operations,

@@ -1018,6 +1018,102 @@ function PipelineSection({ dashboardData }) {
       </div>
 
       <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>Behavior snapshot</h2>
+          <p className={styles.inlineNote}>{dashboardData.formHealth.notes.basis}</p>
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(dashboardData.ctaPerformance.summary.impressions)}</strong>
+              <span>CTA impressions</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.ctaPerformance.summary.clicks)}</strong>
+              <span>CTA clicks</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.formHealth.summary.starts)}</strong>
+              <span>Form starts</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.formHealth.summary.submitSuccesses)}</strong>
+              <span>Submit success</span>
+            </div>
+            <div>
+              <strong>{formatNumber(dashboardData.contactIntent.summary.totalIntent)}</strong>
+              <span>Contact intent</span>
+            </div>
+          </div>
+          <p className={styles.mutedText}>{dashboardData.ctaPerformance.notes.coverage}</p>
+        </div>
+
+        <MetricListPanel
+          title="CTA performance"
+          note={dashboardData.ctaPerformance.notes.basis}
+          rows={dashboardData.ctaPerformance.rows}
+          emptyText="No persisted CTA behavior is available in this slice yet."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.location} • {row.businessLineLabel} • {row.pageTypeLabel}</span>
+                <span>{row.serviceLabel}</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Impr.', value: formatNumber(row.impressions) },
+                { label: 'Clicks', value: formatNumber(row.clicks) },
+                { label: 'CTR', value: formatPercent(row.ctr) },
+                { label: 'Intent', value: formatNumber(row.directIntentClicks) }
+              ]} />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <MetricListPanel
+          title="Form health"
+          note={dashboardData.formHealth.notes.coverage}
+          rows={dashboardData.formHealth.rows}
+          emptyText="No persisted form-health evidence is available in this slice yet."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.placementLabel} • {row.businessLineLabel}</span>
+                <span>{row.serviceLabel}</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Starts', value: formatNumber(row.starts) },
+                { label: 'Success', value: formatPercent(row.submitSuccessRate) },
+                { label: 'Validation', value: formatPercent(row.validationFailureRate) },
+                { label: 'Abandon', value: formatPercent(row.abandonmentRate) }
+              ]} />
+            </div>
+          )}
+        />
+
+        <MetricListPanel
+          title="Contact intent"
+          note={dashboardData.contactIntent.notes.basis}
+          rows={dashboardData.contactIntent.touchpoints}
+          emptyText="No persisted contact-intent evidence is available in this slice yet."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.methodLabel}</span>
+                <span>{row.landingPage}</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Count', value: formatNumber(row.count) },
+                { label: 'Uniques', value: formatNumber(row.uniqueClients) }
+              ]} />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
         <div className={`${styles.panel} ${styles.panelWide}`}>
           <h2>Tendance des leads créés</h2>
           <MultiSeriesTrendChart

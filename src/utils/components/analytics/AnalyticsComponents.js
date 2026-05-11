@@ -66,6 +66,7 @@ export function AnalyticsLink({
   eventName = 'link_click',
   eventCategory = 'navigation',
   eventLabel = '',
+  eventData = {},
   className = '',
   ...props 
 }) {
@@ -97,17 +98,25 @@ export function AnalyticsLink({
         is_external: isExternal,
         is_mailto: isMailto,
         is_tel: isTel,
-        is_whatsapp: isWhatsApp
+        is_whatsapp: isWhatsApp,
+        ...eventData
       });
 
       // Track Google Ads conversions for email, phone, and WhatsApp links
       if (isMailto) {
-        trackEmailClick(eventLabel || 'link_click');
+        trackEmailClick(eventLabel || 'link_click', '', {
+          link_destination: originalHref,
+          ...eventData
+        });
       } else if (isTel) {
-        trackPhoneReveal(eventLabel || 'link_click');
+        trackPhoneReveal(eventLabel || 'link_click', {
+          link_destination: originalHref,
+          ...eventData
+        });
       } else if (isWhatsApp) {
         trackWhatsAppClick(eventLabel || 'link_click', whatsappLink?.phoneNumber || '', {
-          link_destination: originalHref
+          link_destination: originalHref,
+          ...eventData
         }, {
           persistServerClick: false
         });

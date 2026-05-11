@@ -11,6 +11,7 @@ export default function ConventionForm() {
     handleInputChange,
     handleServiceToggle,
     handleSubmit,
+    handleFieldFocus,
     SERVICES_OPTIONS
   } = useConventionFormLogic();
 
@@ -25,7 +26,7 @@ export default function ConventionForm() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit} onFocusCapture={handleFieldFocus} className={styles.form}>
             {/* Company Information */}
             <div className={styles.section}>
               <h3 className={styles.sectionTitle}>

@@ -3,6 +3,7 @@ import { submitConventionRequest } from '@/services/conventionService';
 import {
   trackFunnelStep,
   trackFunnelComplete,
+  trackFormFieldFocus,
   trackFormFieldComplete,
   trackFormAbandonment,
   trackConventionSubmission,
@@ -41,21 +42,39 @@ const SERVICES_OPTIONS = [
   { id: 'vitres', label: 'Nettoyage vitres & façades' }
 ];
 
+function buildConventionFormContext(secteurActivite = '') {
+  return {
+    form_name: 'convention_form',
+    form_placement: 'entreprises_page',
+    funnel_name: 'convention_request',
+    page_type: 'b2b_page',
+    business_line: 'b2b',
+    service_type: SERVICE_TYPES.CONVENTION,
+    company_sector: secteurActivite || undefined
+  };
+}
+
 export function useConventionFormLogic() {
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const completedFields = useRef(new Set());
   const formStartTime = useRef(Date.now());
+  const latestSector = useRef('');
 
   useEffect(() => {
-    trackFunnelStep('convention_form', 'form_start', 1, { page: 'entreprises' });
+    trackFunnelStep('convention_request', 'form_start', 1, buildConventionFormContext());
 
     const handleBeforeUnload = () => {
       const completionRate = Math.round((completedFields.current.size / Object.keys(initialFormData).length) * 100);
       if (completionRate > 0 && completionRate < 100) {
         const lastField = Array.from(completedFields.current).pop() || 'unknown';
-        trackFormAbandonment('convention_form', lastField, completionRate);
+        trackFormAbandonment(
+          'convention_form',
+          lastField,
+          completionRate,
+          buildConventionFormContext(latestSector.current)
+        );
       }
     };
 
@@ -63,8 +82,13 @@ export function useConventionFormLogic() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
+  useEffect(() => {
+    latestSector.current = formData.secteurActivite;
+  }, [formData.secteurActivite]);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const nextSecteur = name === 'secteurActivite' ? value : formData.secteurActivite;
 
     setFormData(prev => ({
       ...prev,
@@ -74,13 +98,32 @@ export function useConventionFormLogic() {
     if ((type !== 'checkbox' && value.trim()) || (type === 'checkbox' && checked)) {
       if (!completedFields.current.has(name)) {
         completedFields.current.add(name);
-        trackFormFieldComplete('convention_form', name);
+        trackFormFieldComplete('convention_form', name, buildConventionFormContext(nextSecteur));
       }
     }
 
     if (name === 'secteurActivite' && value) {
-      trackFunnelStep('convention_form', 'secteur_selected', 2, { secteur: value });
+      trackFunnelStep('convention_request', 'service_selected', 2, buildConventionFormContext(value));
     }
+  };
+
+  const handleFieldFocus = (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    const fieldName = target.getAttribute('name');
+    if (!fieldName || fieldName === 'honeypotWebsite') {
+      return;
+    }
+
+    trackFormFieldFocus(
+      'convention_form',
+      fieldName,
+      target.getAttribute('type') || target.tagName.toLowerCase(),
+      buildConventionFormContext(formData.secteurActivite)
+    );
   };
 
   const handleServiceToggle = (serviceId) => {
@@ -94,7 +137,7 @@ export function useConventionFormLogic() {
 
     if (!completedFields.current.has('servicesSouhaites')) {
       completedFields.current.add('servicesSouhaites');
-      trackFormFieldComplete('convention_form', 'servicesSouhaites');
+      trackFormFieldComplete('convention_form', 'servicesSouhaites', buildConventionFormContext(formData.secteurActivite));
     }
   };
 
@@ -105,7 +148,7 @@ export function useConventionFormLogic() {
         message
       });
       trackFormValidationFailed('convention_form', fields, failureType, {
-        company_sector: formData.secteurActivite,
+        ...buildConventionFormContext(formData.secteurActivite),
         services_count: formData.servicesSouhaites.length
       });
       return false;
@@ -202,9 +245,10 @@ export function useConventionFormLogic() {
           servicesCount: formData.servicesSouhaites.length,
           frequence: formData.frequence,
           duree: formData.dureeContrat,
-          surfaceTotale: formData.surfaceTotale
+          surfaceTotale: formData.surfaceTotale,
+          ...buildConventionFormContext(formData.secteurActivite)
         });
-        trackFunnelComplete('convention_form', 'form_submitted', 3);
+        trackFunnelComplete('convention_request', 'submit_success', 3, buildConventionFormContext(formData.secteurActivite));
 
         const timeToComplete = Math.round((Date.now() - formStartTime.current) / 1000);
         trackPerformance('convention_form_time', timeToComplete, 'seconds');
@@ -213,7 +257,7 @@ export function useConventionFormLogic() {
         completedFields.current.clear();
       } else {
         trackFormSubmitFailed('convention_form', result.failureType || result.status || 'submit_failed', {
-          company_sector: formData.secteurActivite,
+          ...buildConventionFormContext(formData.secteurActivite),
           services_count: formData.servicesSouhaites.length
         });
         setSubmitStatus({
@@ -224,7 +268,7 @@ export function useConventionFormLogic() {
     } catch (error) {
       console.error('Convention form submission error:', error);
       trackFormSubmitFailed('convention_form', 'network_error', {
-        company_sector: formData.secteurActivite,
+        ...buildConventionFormContext(formData.secteurActivite),
         services_count: formData.servicesSouhaites.length
       });
       setSubmitStatus({
@@ -243,6 +287,7 @@ export function useConventionFormLogic() {
     handleInputChange,
     handleServiceToggle,
     handleSubmit,
+    handleFieldFocus,
     SERVICES_OPTIONS
   };
 }

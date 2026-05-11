@@ -9,9 +9,11 @@ import {
   SESSION_ATTRIBUTION_COOKIE_KEY,
   serializeSessionAttributionCookie
 } from '../libs/whatsappTracking.mjs';
+import { shouldPersistBehaviorEvent } from '../libs/behaviorTracking.mjs';
 
 const SESSION_ATTRIBUTION_KEY = 'cci_session_attribution';
 const QUOTE_CALCULATOR_CONTEXT_KEY = 'cci_quote_calculator_context';
+const BEHAVIOR_ANALYTICS_ENDPOINT = '/api/analytics/behavior';
 const FORBIDDEN_PARAM_KEYS = new Set([
   'email',
   'emailaddress',
@@ -388,6 +390,39 @@ function pushToGoogleAnalytics(name, payload) {
   return true;
 }
 
+function persistBehaviorEvent(name, payload) {
+  if (
+    typeof window === 'undefined'
+    || !shouldPersistBehaviorEvent(name, payload)
+  ) {
+    return false;
+  }
+
+  const serializedPayload = JSON.stringify({
+    eventName: name,
+    occurredAt: new Date().toISOString(),
+    payload
+  });
+
+  if (navigator.sendBeacon) {
+    const blob = new Blob([serializedPayload], { type: 'application/json' });
+    if (navigator.sendBeacon(BEHAVIOR_ANALYTICS_ENDPOINT, blob)) {
+      return true;
+    }
+  }
+
+  fetch(BEHAVIOR_ANALYTICS_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: serializedPayload,
+    keepalive: true
+  }).catch(() => {});
+
+  return true;
+}
+
 export function pushAnalyticsEvent(name, payload = {}) {
   if (typeof window === 'undefined') {
     return false;
@@ -407,8 +442,9 @@ export function pushAnalyticsEvent(name, payload = {}) {
     event_name: name,
     ...sanitizedPayload
   });
+  const persistedBehaviorEvent = persistBehaviorEvent(name, sanitizedPayload);
 
-  return sentToGoogleAnalytics || sentToDataLayer;
+  return sentToGoogleAnalytics || sentToDataLayer || persistedBehaviorEvent;
 }
 
 export function pushConsentEvent(command, action, payload = {}) {

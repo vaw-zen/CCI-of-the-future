@@ -13,7 +13,7 @@ export const SERVICE_TYPES = {
   MOQUETTE: 'moquette',
   SALON: 'salon',
   TAPISSERIE: 'tapisserie',
-  TFC: 'travaux_fin_chantier',
+  TFC: 'tfc',
   CONSEIL: 'conseil',
   CONVENTION: 'convention'
 };
@@ -29,6 +29,30 @@ export const ARTICLE_CATEGORIES = {
 
 function emitEvent(name, payload = {}) {
   return pushAnalyticsEvent(name, payload);
+}
+
+function normalizeCtaConfig(input, legacyConfig = {}) {
+  if (typeof input === 'object' && input !== null) {
+    return {
+      ctaText: input.ctaText || input.label || input.ctaId || 'CTA',
+      ctaId: input.ctaId || '',
+      ctaLocation: input.ctaLocation || input.location || '',
+      ctaType: input.ctaType || input.type || 'primary',
+      ctaDestination: input.ctaDestination || input.destination || '',
+      value: input.value || 0,
+      additionalData: input.additionalData || {}
+    };
+  }
+
+  return {
+    ctaText: input || 'CTA',
+    ctaId: legacyConfig.ctaId || '',
+    ctaLocation: legacyConfig.ctaLocation || '',
+    ctaType: legacyConfig.ctaType || 'primary',
+    ctaDestination: legacyConfig.ctaDestination || '',
+    value: legacyConfig.value || 0,
+    additionalData: legacyConfig.additionalData || {}
+  };
 }
 
 function persistWhatsAppClick(location = 'general') {
@@ -140,6 +164,7 @@ export const trackPhoneReveal = (location = 'header', additionalData = {}) => {
     event_category: 'lead_generation',
     event_label: location,
     value: 5,
+    cta_location: additionalData.cta_location || location,
     ...getLeadContext(additionalData)
   });
 };
@@ -149,6 +174,7 @@ export const trackEmailClick = (location = 'general', emailAddress = '', additio
     event_category: 'lead_generation',
     event_label: location,
     value: 5,
+    cta_location: additionalData.cta_location || location,
     ...getLeadContext(additionalData)
   });
 };
@@ -161,6 +187,7 @@ export const trackWhatsAppClick = (location = 'general', phoneNumber = '', addit
     event_category: 'lead_generation',
     event_label: location,
     value: 5,
+    cta_location: additionalData.cta_location || location,
     ...leadContext
   });
 
@@ -213,22 +240,44 @@ export const trackScrollDepth = (percentage, pageName = '') => {
   });
 };
 
-export const trackCTAImpression = (ctaText, ctaLocation, ctaType = 'primary') => {
+export const trackCTAImpression = (ctaTextOrConfig, ctaLocation, ctaType = 'primary', additionalData = {}) => {
+  const config = normalizeCtaConfig(ctaTextOrConfig, {
+    ctaLocation,
+    ctaType,
+    additionalData
+  });
+
   emitEvent('view_promotion', {
     event_category: 'visibility',
-    promotion_name: ctaText,
-    creative_slot: ctaLocation,
-    promotion_type: ctaType
+    promotion_name: config.ctaText,
+    creative_slot: config.ctaLocation,
+    promotion_type: config.ctaType,
+    cta_id: config.ctaId,
+    cta_location: config.ctaLocation,
+    cta_type: config.ctaType,
+    ...getAnalyticsContext(config.additionalData)
   });
 };
 
-export const trackCTAClick = (ctaText, ctaLocation, ctaDestination = '', value = 0) => {
-  emitEvent('select_promotion', {
+export const trackCTAClick = (ctaTextOrConfig, ctaLocation, ctaDestination = '', value = 0, additionalData = {}) => {
+  const config = normalizeCtaConfig(ctaTextOrConfig, {
+    ctaLocation,
+    ctaDestination,
+    value,
+    additionalData
+  });
+
+  emitEvent('cta_click', {
     event_category: 'engagement',
-    promotion_name: ctaText,
-    creative_slot: ctaLocation,
-    cta_destination: ctaDestination,
-    value
+    promotion_name: config.ctaText,
+    creative_slot: config.ctaLocation,
+    cta_destination: config.ctaDestination,
+    link_destination: config.ctaDestination,
+    cta_id: config.ctaId,
+    cta_location: config.ctaLocation,
+    cta_type: config.ctaType,
+    value: config.value,
+    ...getAnalyticsContext(config.additionalData)
   });
 };
 
@@ -276,7 +325,8 @@ export const trackTimeOnPage = (duration, pageName = '') => {
     event_category: 'engagement',
     name: 'time_on_page',
     value: duration,
-    event_label: pageName
+    event_label: pageName,
+    ...getAnalyticsContext()
   });
 };
 
@@ -286,42 +336,46 @@ export const trackFunnelStep = (funnelName, stepName, stepNumber, stepData = {})
     funnel_name: funnelName,
     step_name: stepName,
     step_number: stepNumber,
-    ...stepData
+    ...getAnalyticsContext(stepData)
   });
 };
 
-export const trackFunnelComplete = (funnelName, stepName, stepNumber) => {
+export const trackFunnelComplete = (funnelName, stepName, stepNumber, stepData = {}) => {
   emitEvent('checkout_progress', {
     event_category: 'conversion_funnel',
     funnel_name: funnelName,
     step_name: stepName,
-    step_number: stepNumber
+    step_number: stepNumber,
+    ...getAnalyticsContext(stepData)
   });
 };
 
-export const trackFormFieldFocus = (formName, fieldName, fieldType = 'text') => {
+export const trackFormFieldFocus = (formName, fieldName, fieldType = 'text', additionalData = {}) => {
   emitEvent('form_field_focus', {
     event_category: 'form_interaction',
     form_name: formName,
     field_name: fieldName,
-    field_type: fieldType
+    field_type: fieldType,
+    ...getAnalyticsContext(additionalData)
   });
 };
 
-export const trackFormFieldComplete = (formName, fieldName) => {
+export const trackFormFieldComplete = (formName, fieldName, additionalData = {}) => {
   emitEvent('form_field_complete', {
     event_category: 'form_interaction',
     form_name: formName,
-    field_name: fieldName
+    field_name: fieldName,
+    ...getAnalyticsContext(additionalData)
   });
 };
 
-export const trackFormAbandonment = (formName, lastCompletedField, completionPercentage) => {
+export const trackFormAbandonment = (formName, lastCompletedField, completionPercentage, additionalData = {}) => {
   emitEvent('form_abandonment', {
     event_category: 'conversion_funnel',
     form_name: formName,
     last_field: lastCompletedField,
-    completion_rate: completionPercentage
+    completion_rate: completionPercentage,
+    ...getAnalyticsContext(additionalData)
   });
 };
 
@@ -435,7 +489,8 @@ export const trackConventionSubmission = ({
   servicesCount = 0,
   frequence = '',
   duree = '',
-  surfaceTotale = 0
+  surfaceTotale = 0,
+  ...additionalData
 } = {}) => {
   const normalizedSites = Number(nombreSites) || 1;
   const normalizedSurface = Number(surfaceTotale) || 0;
@@ -448,7 +503,8 @@ export const trackConventionSubmission = ({
     services_count: servicesCount,
     contract_frequency: frequence,
     contract_duration: duree,
-    surface_total: normalizedSurface || undefined
+    surface_total: normalizedSurface || undefined,
+    ...additionalData
   });
 
   emitEvent('generate_lead', {
@@ -465,7 +521,11 @@ export const trackArticleReadProgress = (articleTitle, progressPercentage) => {
   emitEvent('article_read_progress', {
     event_category: 'content_engagement',
     article_title: articleTitle,
-    read_progress: progressPercentage
+    read_progress: progressPercentage,
+    content_type: 'article',
+    ...getAnalyticsContext({
+      business_line: 'content'
+    })
   });
 };
 
@@ -474,7 +534,11 @@ export const trackArticleComplete = (articleTitle, timeSpent) => {
     event_category: 'content_engagement',
     article_title: articleTitle,
     time_spent: timeSpent,
-    value: 2
+    value: 2,
+    content_type: 'article',
+    ...getAnalyticsContext({
+      business_line: 'content'
+    })
   });
 };
 

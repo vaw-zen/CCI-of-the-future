@@ -35,6 +35,17 @@ const initialFormData = {
   honeypotWebsite: ''
 };
 
+function buildDevisFormContext(serviceType = '') {
+  return {
+    form_name: 'devis_form',
+    form_placement: 'devis_page',
+    funnel_name: 'quote_request',
+    page_type: 'quote_page',
+    business_line: 'b2c',
+    service_type: serviceType || undefined
+  };
+}
+
 export function useDevisFormLogic() {
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,17 +53,18 @@ export function useDevisFormLogic() {
   const completedFields = useRef(new Set());
   const formStartTime = useRef(Date.now());
   const lastInteractionTime = useRef(Date.now());
+  const latestServiceType = useRef('');
 
   // Track form entry on mount
   useEffect(() => {
-    trackFunnelStep('devis_form', 'form_start', 1, { page: 'devis' });
+    trackFunnelStep('quote_request', 'form_start', 1, buildDevisFormContext());
 
     // Track form abandonment on page exit
     const handleBeforeUnload = () => {
       const completionRate = Math.round((completedFields.current.size / Object.keys(initialFormData).length) * 100);
       if (completionRate > 0 && completionRate < 100) {
         const lastField = Array.from(completedFields.current).pop() || 'unknown';
-        trackFormAbandonment('devis_form', lastField, completionRate);
+        trackFormAbandonment('devis_form', lastField, completionRate, buildDevisFormContext(latestServiceType.current));
       }
     };
 
@@ -60,9 +72,14 @@ export function useDevisFormLogic() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
+  useEffect(() => {
+    latestServiceType.current = formData.typeService;
+  }, [formData.typeService]);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     lastInteractionTime.current = Date.now();
+    const nextServiceType = name === 'typeService' ? value : formData.typeService;
     
     setFormData(prev => ({
       ...prev,
@@ -73,14 +90,33 @@ export function useDevisFormLogic() {
     if ((type !== 'checkbox' && value.trim()) || (type === 'checkbox' && checked)) {
       if (!completedFields.current.has(name)) {
         completedFields.current.add(name);
-        trackFormFieldComplete('devis_form', name);
+        trackFormFieldComplete('devis_form', name, buildDevisFormContext(nextServiceType));
       }
     }
 
     // Track important field changes
     if (name === 'typeService' && value) {
-      trackFunnelStep('devis_form', 'service_selected', 2, { serviceType: value });
+      trackFunnelStep('quote_request', 'service_selected', 2, buildDevisFormContext(value));
     }
+  };
+
+  const handleFieldFocus = (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    const fieldName = target.getAttribute('name');
+    if (!fieldName || fieldName === 'honeypotWebsite') {
+      return;
+    }
+
+    trackFormFieldFocus(
+      'devis_form',
+      fieldName,
+      target.getAttribute('type') || target.tagName.toLowerCase(),
+      buildDevisFormContext(formData.typeService)
+    );
   };
 
   const validateForm = () => {
@@ -89,9 +125,7 @@ export function useDevisFormLogic() {
         type: 'error',
         message
       });
-      trackFormValidationFailed('devis_form', fields, failureType, {
-        service_type: formData.typeService
-      });
+      trackFormValidationFailed('devis_form', fields, failureType, buildDevisFormContext(formData.typeService));
       return false;
     };
 
@@ -197,9 +231,10 @@ export function useDevisFormLogic() {
         trackDevisSubmission(
           formData.typeService,
           formData.surfaceService || formData.nombrePlaces || 0,
-          'form'
+          'form',
+          buildDevisFormContext(formData.typeService)
         );
-        trackFunnelComplete('devis_form', 'form_submitted', 3);
+        trackFunnelComplete('quote_request', 'submit_success', 3, buildDevisFormContext(formData.typeService));
 
         // Track time to complete
         const timeToComplete = Math.round((Date.now() - formStartTime.current) / 1000);
@@ -209,9 +244,7 @@ export function useDevisFormLogic() {
         setFormData(initialFormData);
         completedFields.current.clear();
       } else {
-        trackFormSubmitFailed('devis_form', result.failureType || result.status || 'submit_failed', {
-          service_type: formData.typeService
-        });
+        trackFormSubmitFailed('devis_form', result.failureType || result.status || 'submit_failed', buildDevisFormContext(formData.typeService));
         setSubmitStatus({
           type: 'error',
           message: result.error || 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
@@ -220,9 +253,7 @@ export function useDevisFormLogic() {
 
     } catch (error) {
       console.error('Form submission error:', error);
-      trackFormSubmitFailed('devis_form', 'network_error', {
-        service_type: formData.typeService
-      });
+      trackFormSubmitFailed('devis_form', 'network_error', buildDevisFormContext(formData.typeService));
       setSubmitStatus({
         type: 'error',
         message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'
@@ -237,6 +268,7 @@ export function useDevisFormLogic() {
     isSubmitting,
     submitStatus,
     handleInputChange,
-    handleSubmit
+    handleSubmit,
+    handleFieldFocus
   };
 }

@@ -8,39 +8,57 @@ import { submitDevisRequest } from "@/services/devisService";
 import { LineMdCalendar } from "@/utils/components/icons";
 import {
   trackDevisSubmission,
+  trackFormAbandonment,
+  trackFormFieldComplete,
+  trackFormFieldFocus,
   trackFormSubmitFailed,
   trackFormValidationFailed,
   trackFunnelComplete,
   trackFunnelStep
 } from "@/utils/analytics";
 
+const initialFormData = {
+  typePersonne: 'physique',
+  matriculeFiscale: '',
+  nom: '',
+  prenom: '',
+  email: '',
+  telephone: '',
+  adresse: '',
+  ville: '',
+  codePostal: '',
+  typeLogement: '',
+  surface: '',
+  typeService: '',
+  nombrePlaces: '',
+  surfaceService: '',
+  datePreferee: '',
+  heurePreferee: '',
+  message: '',
+  newsletter: false,
+  conditions: false,
+  honeypotWebsite: ''
+};
+
+function buildContactFormContext(serviceType = '') {
+  return {
+    form_name: 'contact_quote_form',
+    form_placement: 'contact_page',
+    funnel_name: 'quote_request',
+    page_type: 'contact_page',
+    business_line: 'b2c',
+    service_type: serviceType || undefined
+  };
+}
+
 export default function DevisForm() {
   const formRef = useRef();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState({ type: '', message: '' });
+  const completedFields = useRef(new Set());
+  const latestServiceType = useRef('');
 
-  const [formData, setFormData] = useState({
-    typePersonne: 'physique',
-    matriculeFiscale: '',
-    nom: '',
-    prenom: '',
-    email: '',
-    telephone: '',
-    adresse: '',
-    ville: '',
-    codePostal: '',
-    typeLogement: '',
-    surface: '',
-    typeService: '',
-    nombrePlaces: '',
-    surfaceService: '',
-    datePreferee: '',
-    heurePreferee: '',
-    message: '',
-    newsletter: false,
-    conditions: false,
-    honeypotWebsite: ''
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,23 +67,68 @@ export default function DevisForm() {
       [name]: type === 'checkbox' ? checked : value
     }));
 
+    const nextServiceType = name === 'typeService' ? value : formData.typeService;
+    if ((type !== 'checkbox' && value.trim()) || (type === 'checkbox' && checked)) {
+      if (!completedFields.current.has(name)) {
+        completedFields.current.add(name);
+        trackFormFieldComplete('contact_quote_form', name, buildContactFormContext(nextServiceType));
+      }
+    }
+
     if (name === 'typeService' && value) {
-      trackFunnelStep('contact_form', 'service_selected', 2, { serviceType: value });
+      trackFunnelStep('quote_request', 'service_selected', 2, buildContactFormContext(value));
     }
   };
 
   useEffect(() => {
-    trackFunnelStep('contact_form', 'form_start', 1, { page: 'contact' });
+    trackFunnelStep('quote_request', 'form_start', 1, buildContactFormContext());
+
+    const handleBeforeUnload = () => {
+      const completionRate = Math.round((completedFields.current.size / Object.keys(initialFormData).length) * 100);
+      if (completionRate > 0 && completionRate < 100) {
+        const lastField = Array.from(completedFields.current).pop() || 'unknown';
+        trackFormAbandonment(
+          'contact_quote_form',
+          lastField,
+          completionRate,
+          buildContactFormContext(latestServiceType.current)
+        );
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
+
+  useEffect(() => {
+    latestServiceType.current = formData.typeService;
+  }, [formData.typeService]);
+
+  const handleFieldFocusCapture = (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    const fieldName = target.getAttribute('name');
+    if (!fieldName || fieldName === 'honeypotWebsite') {
+      return;
+    }
+
+    trackFormFieldFocus(
+      'contact_quote_form',
+      fieldName,
+      target.getAttribute('type') || target.tagName.toLowerCase(),
+      buildContactFormContext(formData.typeService)
+    );
+  };
 
   const failValidation = (message, fields = [], failureType = 'client_validation') => {
     setResult({
       type: 'error',
       message
     });
-    trackFormValidationFailed('contact_form', fields, failureType, {
-      service_type: formData.typeService
-    });
+    trackFormValidationFailed('contact_quote_form', fields, failureType, buildContactFormContext(formData.typeService));
     return false;
   };
 
@@ -172,37 +235,20 @@ export default function DevisForm() {
         trackDevisSubmission(
           formData.typeService,
           Number(formData.surfaceService || formData.nombrePlaces || 0),
-          'contact_form'
+          'form',
+          buildContactFormContext(formData.typeService)
         );
-        trackFunnelComplete('contact_form', 'form_submitted', 3);
+        trackFunnelComplete('quote_request', 'submit_success', 3, buildContactFormContext(formData.typeService));
         
         // Reset form
-        setFormData({
-          typePersonne: 'physique',
-          matriculeFiscale: '',
-          nom: '',
-          prenom: '',
-          email: '',
-          telephone: '',
-          adresse: '',
-          ville: '',
-          codePostal: '',
-          typeLogement: '',
-          surface: '',
-          typeService: '',
-          nombrePlaces: '',
-          surfaceService: '',
-          datePreferee: '',
-          heurePreferee: '',
-          message: '',
-          newsletter: false,
-          conditions: false,
-          honeypotWebsite: ''
-        });
+        completedFields.current.clear();
+        setFormData(initialFormData);
       } else {
-        trackFormSubmitFailed('contact_form', result.failureType || result.status || 'submit_failed', {
-          service_type: formData.typeService
-        });
+        trackFormSubmitFailed(
+          'contact_quote_form',
+          result.failureType || result.status || 'submit_failed',
+          buildContactFormContext(formData.typeService)
+        );
         setResult({
           type: 'error',
           message: result.error || 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
@@ -210,9 +256,7 @@ export default function DevisForm() {
       }
     } catch (err) {
       console.error('Form submission error:', err);
-      trackFormSubmitFailed('contact_form', 'network_error', {
-        service_type: formData.typeService
-      });
+      trackFormSubmitFailed('contact_quote_form', 'network_error', buildContactFormContext(formData.typeService));
       setResult({ 
         type: 'error', 
         message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.' 
@@ -229,7 +273,12 @@ export default function DevisForm() {
         <h2 className={styles.hook}>Obtenez votre devis personnalisé</h2>
         <h4 className={styles.description}>Remplissez le formulaire ci-dessous pour recevoir votre devis dans les plus brefs délais.</h4>
       </div>
-      <form ref={formRef} className={styles.formContainer} onSubmit={handleSubmit}>
+      <form
+        ref={formRef}
+        className={styles.formContainer}
+        onSubmit={handleSubmit}
+        onFocusCapture={handleFieldFocusCapture}
+      >
         {/* Type de personne */}
         <select 
           className={styles.formGroup} 

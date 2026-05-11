@@ -47,13 +47,48 @@ export default function LeadCTA({
   whatsappMessage = "Bonjour, je souhaite un devis gratuit pour un nettoyage. Merci !"
 }) {
   const sectionRef = useRef(null);
+  const ctaContext = {
+    page_type: 'service_page',
+    business_line: 'b2c',
+    service_type: serviceType
+  };
+  const ctaLocation = 'service_cta_block';
+  const whatsappCtaId = 'service_whatsapp_primary';
+  const quoteCtaId = 'service_quote_primary';
+  const phoneCtaId = 'service_phone_primary';
 
   useEffect(() => {
+    const impressionContext = {
+      page_type: 'service_page',
+      business_line: 'b2c',
+      service_type: serviceType
+    };
+
     // Track CTA impression when visible
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          trackCTAImpression(`${serviceName} CTA Block`, `service_page_${serviceType}`, 'lead_cta');
+          trackCTAImpression({
+            ctaText: 'WhatsApp',
+            ctaId: whatsappCtaId,
+            ctaLocation,
+            ctaType: 'contact',
+            additionalData: impressionContext
+          });
+          trackCTAImpression({
+            ctaText: 'Devis Gratuit',
+            ctaId: quoteCtaId,
+            ctaLocation,
+            ctaType: 'lead_cta',
+            additionalData: impressionContext
+          });
+          trackCTAImpression({
+            ctaText: 'Appeler',
+            ctaId: phoneCtaId,
+            ctaLocation,
+            ctaType: 'contact',
+            additionalData: impressionContext
+          });
           observer.disconnect();
         }
       },
@@ -61,30 +96,64 @@ export default function LeadCTA({
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
-  }, [serviceName, serviceType]);
+  }, [serviceType]);
 
   const whatsappUrl = `https://wa.me/21698557766?text=${encodeURIComponent(whatsappMessage)}`;
-  const whatsappEventLabel = `${serviceType}_page_cta_block`;
+  const whatsappEventLabel = whatsappCtaId;
   const trackedWhatsAppUrl = buildTrackedWhatsAppHref({
     href: whatsappUrl,
     eventLabel: whatsappEventLabel
   });
   const phoneUrl = 'tel:+21698557766';
 
-  const handleWhatsAppClick = (location) => {
-    trackWhatsAppClick(`${serviceType}_page_${location}`, '+21698557766', {}, {
+  const handleWhatsAppClick = () => {
+    trackWhatsAppClick(whatsappCtaId, '+21698557766', {
+      ...ctaContext,
+      cta_id: whatsappCtaId,
+      cta_location: ctaLocation,
+      cta_type: 'contact'
+    }, {
       persistServerClick: false
     });
-    trackCTAClick('WhatsApp', `service_page_${serviceType}`, whatsappUrl, 5);
+    trackCTAClick({
+      ctaText: 'WhatsApp',
+      ctaId: whatsappCtaId,
+      ctaLocation,
+      ctaType: 'contact',
+      ctaDestination: whatsappUrl,
+      value: 5,
+      additionalData: ctaContext
+    });
   };
 
   const handleDevisClick = () => {
-    trackCTAClick('Devis Gratuit', `service_page_${serviceType}`, '/devis', 3);
+    trackCTAClick({
+      ctaText: 'Devis Gratuit',
+      ctaId: quoteCtaId,
+      ctaLocation,
+      ctaType: 'lead_cta',
+      ctaDestination: '/devis',
+      value: 3,
+      additionalData: ctaContext
+    });
   };
 
-  const handlePhoneClick = (location) => {
-    trackPhoneReveal(`${serviceType}_page_${location}`);
-    trackCTAClick('Appeler', `service_page_${serviceType}`, phoneUrl, 5);
+  const handlePhoneClick = () => {
+    trackPhoneReveal(phoneCtaId, {
+      ...ctaContext,
+      cta_id: phoneCtaId,
+      cta_location: ctaLocation,
+      cta_type: 'contact'
+    });
+    trackCTAClick({
+      ctaText: 'Appeler',
+      ctaId: phoneCtaId,
+      ctaLocation,
+      ctaType: 'contact',
+      ctaDestination: phoneUrl,
+      value: 5,
+      additionalData: ctaContext
+    });
   };
 
   return (
@@ -109,7 +178,7 @@ export default function LeadCTA({
             target="_blank" 
             rel="noopener noreferrer"
             className={`${styles.ctaBtn} ${styles.ctaBtnWhatsapp}`}
-            onClick={() => handleWhatsAppClick('cta_block')}
+            onClick={handleWhatsAppClick}
             data-analytics-handled="true"
             data-analytics-label={whatsappEventLabel}
             title={`Demander un devis ${serviceName} via WhatsApp`}
@@ -131,9 +200,9 @@ export default function LeadCTA({
           <a 
             href={phoneUrl}
             className={`${styles.ctaBtn} ${styles.ctaBtnPhone}`}
-            onClick={() => handlePhoneClick('cta_block')}
+            onClick={handlePhoneClick}
             data-analytics-handled="true"
-            data-analytics-label={`${serviceType}_cta_phone`}
+            data-analytics-label={phoneCtaId}
             title="Appelez CCI Services maintenant"
           >
             <PhoneIcon className={styles.ctaBtnIcon} />

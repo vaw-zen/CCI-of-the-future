@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { applyGoogleConsentStatus } from '@/utils/consent/consent';
 import { GTM_CONTAINER_ID, GTM_LOADER_ID } from '@/utils/consent/consent.constants';
-import { persistSessionAttribution, pushAnalyticsEvent } from '@/utils/analyticsGateway';
+import { getAnalyticsContext, persistSessionAttribution, pushAnalyticsEvent } from '@/utils/analyticsGateway';
 
 const GA_LOADER_ID = 'ga4-loader';
 
@@ -67,6 +67,7 @@ function trackPageView(path) {
   }
 
   pushAnalyticsEvent('page_view', {
+    ...getAnalyticsContext(),
     page_title: document.title,
     page_location: window.location.href,
     page_path: path
@@ -93,7 +94,8 @@ function trackUtmArrival() {
     utm_content: urlParams.get('utm_content'),
     utm_term: urlParams.get('utm_term'),
     page_location: window.location.href,
-    page_path: getCurrentPagePath()
+    page_path: getCurrentPagePath(),
+    ...getAnalyticsContext()
   });
 }
 

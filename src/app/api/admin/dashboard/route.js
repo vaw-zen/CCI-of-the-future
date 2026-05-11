@@ -16,6 +16,7 @@ const ADMIN_DASHBOARD_RATE_LIMIT = {
 const NORMALIZED_EXTERNAL_METRIC_VIEW = 'growth_channel_daily_metrics_normalized';
 const NORMALIZED_EXTERNAL_METRIC_VIEW_WARNINGS = new Set();
 const GROWTH_QUERY_METRIC_WARNINGS = new Set();
+const GROWTH_BEHAVIOR_METRIC_WARNINGS = new Set();
 const OPTIONAL_GROWTH_EVENTS_WARNINGS = new Set();
 
 const DASHBOARD_SELECT_FIELDS = {
@@ -437,6 +438,61 @@ async function fetchQueryMetricRows(supabase, range) {
   };
 }
 
+async function fetchBehaviorMetricRows(supabase, range) {
+  const select = [
+    'event_date',
+    'event_name',
+    'page_type',
+    'dashboard_page_type',
+    'landing_page',
+    'business_line',
+    'service_type',
+    'form_name',
+    'form_placement',
+    'funnel_name',
+    'step_name',
+    'step_number',
+    'cta_id',
+    'cta_location',
+    'cta_type',
+    'contact_method',
+    'content_type',
+    'content_cluster',
+    'session_source',
+    'session_medium',
+    'session_campaign',
+    'source_class',
+    'event_count',
+    'unique_client_count'
+  ].join(',');
+
+  const { data, error } = await supabase
+    .from('growth_behavior_daily_metrics')
+    .select(select)
+    .gte('event_date', range.from)
+    .lte('event_date', range.to)
+    .order('event_date', { ascending: true });
+
+  if (error) {
+    if (!GROWTH_BEHAVIOR_METRIC_WARNINGS.has('growth_behavior_daily_metrics')) {
+      GROWTH_BEHAVIOR_METRIC_WARNINGS.add('growth_behavior_daily_metrics');
+      console.warn(
+        `[admin][dashboard] growth_behavior_daily_metrics unavailable, Stage 3 behavior panels will stay empty: ${error.message}`
+      );
+    }
+
+    return {
+      rows: [],
+      error
+    };
+  }
+
+  return {
+    rows: data || [],
+    error: null
+  };
+}
+
 async function fetchWhatsAppClickRows(supabase, range) {
   const { data, error } = await supabase
     .from('whatsapp_click_events')
@@ -550,6 +606,7 @@ export async function GET(request) {
       auditEvents,
       externalMetricsResult,
       queryMetricsResult,
+      behaviorMetricsResult,
       whatsappClickResult,
       keywordCatalogResult,
       keywordRankingResult,
@@ -561,6 +618,7 @@ export async function GET(request) {
       fetchAuditEvents(supabase),
       fetchExternalMetricRows(supabase, rangeResult.range),
       fetchQueryMetricRows(supabase, rangeResult.range),
+      fetchBehaviorMetricRows(supabase, rangeResult.range),
       fetchWhatsAppClickRows(supabase, rangeResult.range),
       fetchKeywordCatalogRows(supabase),
       fetchKeywordRankingRows(supabase, rangeResult.range),
@@ -569,6 +627,7 @@ export async function GET(request) {
     const reportingWarnings = [
       externalMetricsResult.error ? 'growth_channel_daily_metrics_unavailable' : null,
       queryMetricsResult.error ? 'growth_query_daily_metrics_unavailable' : null,
+      behaviorMetricsResult.error ? 'growth_behavior_daily_metrics_unavailable' : null,
       whatsappClickResult.error ? 'whatsapp_click_events_unavailable' : null,
       keywordCatalogResult.error ? 'growth_keyword_catalog_unavailable' : null,
       keywordRankingResult.error ? 'growth_keyword_rankings_daily_unavailable' : null,
@@ -580,6 +639,7 @@ export async function GET(request) {
       universeRows,
       externalMetricRows: externalMetricsResult.rows,
       queryMetricRows: queryMetricsResult.rows,
+      behaviorMetricRows: behaviorMetricsResult.rows,
       whatsappClickRows: whatsappClickResult.rows,
       keywordCatalogRows: keywordCatalogResult.rows,
       keywordRankingRows: keywordRankingResult.rows,

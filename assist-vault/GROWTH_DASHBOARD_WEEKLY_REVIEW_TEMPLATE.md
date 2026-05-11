@@ -36,9 +36,12 @@ Follow this order every week:
 6. `Content opportunities`
 7. `Landing-page scorecard`
 8. `Funnel diagnostics`
-9. `Acquisition sources / campaigns`
-10. `Operations / stale queue / SLA`
-11. `Actions and sprint candidates`
+9. `CTA performance` once `growth_behavior_daily_metrics` is live
+10. `Form health` once `growth_behavior_daily_metrics` is live
+11. `Contact intent` once `growth_behavior_daily_metrics` is live
+12. `Acquisition sources / campaigns`
+13. `Operations / stale queue / SLA`
+14. `Actions and sprint candidates`
 
 ## Evidence Capture
 
@@ -94,6 +97,24 @@ Answer these every week:
 - Is the issue acquisition intent, page experience, or follow-up quality?
 - Is the drop-off large enough to justify sprint capacity this week?
 
+### CTA performance
+
+- Once the behavior mart is live, which `cta_id` and `cta_location` combinations have the weakest impression-to-click conversion?
+- Is the issue low visibility, weak copy, poor placement, or weak audience intent?
+- Which CTA problem should feed the next CRO sprint candidate?
+
+### Form health
+
+- Once the behavior mart is live, which form has the highest validation-failure or abandonment rate?
+- Do failure hotspots cluster by field, form placement, or service intent?
+- Is the friction strong enough to justify an engineering fix or a CRO change this week?
+
+### Contact intent
+
+- Once the behavior mart is live, which contact method is attracting intent on the highest-value pages?
+- Are users preferring `form`, `phone`, `email`, or `whatsapp` in a way that should change CTA hierarchy?
+- Does contact-intent behavior align with qualified lead outcomes or point to a follow-up mismatch?
+
 ## Required Outputs
 
 Leave the meeting with:
@@ -121,4 +142,5 @@ The review is complete only if:
 - every action references a dashboard panel
 - attribution trust is explicitly recorded
 - at least one Stage 3 panel affected the week’s prioritization
+- once the behavior mart is live, at least one CRO action references `CTA performance`, `Form health`, or `Contact intent`
 - no action is phrased as a generic “monitor performance”

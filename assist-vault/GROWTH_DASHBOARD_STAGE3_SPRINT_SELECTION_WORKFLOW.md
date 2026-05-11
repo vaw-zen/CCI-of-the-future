@@ -19,8 +19,8 @@ Do not select work unless all relevant panels were reviewed:
 | Work type | Required panels |
 | --- | --- |
 | SEO refresh | `seoQueries`, `contentOpportunities`, `Organic search evidence`, `landingPageScorecard` |
-| CRO sprint | `landingPageScorecard`, `funnelDiagnostics`, `Executive summary`, `Attribution review leads` |
-| Mixed SEO + CRO | All of the above |
+| CRO sprint | `landingPageScorecard`, `funnelDiagnostics`, `Executive summary`, `Attribution review leads`, and once `growth_behavior_daily_metrics` ships: `ctaPerformance`, `formHealth`, `contactIntent` |
+| Mixed SEO + CRO | All of the above, plus behavior panels when the mart is live |
 
 ## Decision Rules
 
@@ -52,7 +52,8 @@ A page or segment can be selected only if:
 
 1. Attribution trust is not `not decision-safe`.
 2. The issue appears in `landingPageScorecard` or `funnelDiagnostics`.
-3. The problem is specific enough to turn into a hypothesis next week.
+3. Once the behavior mart is live, the issue is also visible in `ctaPerformance`, `formHealth`, or `contactIntent`.
+4. The problem is specific enough to turn into a hypothesis next week.
 
 Choose the primary CRO sprint by this priority order:
 
@@ -94,6 +95,7 @@ Defer the candidate if any of these are true:
 - the page is in `Query gap` and the decision depends on page-level evidence
 - traffic is too thin to be decision-safe this week
 - the segment is stale because source freshness is missing
+- once the behavior mart is live, the CRO candidate has no supporting behavior evidence
 - the issue is operational follow-up quality, not page or acquisition quality
 
 ## Weekly Output Format
@@ -131,6 +133,7 @@ Produce this summary every week:
 This workflow supports Stage 3 stabilization, not Stage 4 experimentation yet.
 
 - Use this to choose work.
+- Once the behavior mart is live, treat behavior evidence as mandatory for CRO selection, not an optional extra.
 - Do not create a formal experiment registry requirement until Stage 4 starts.
 - Do not add alerts or anomaly routing on top of unstable heuristics yet.
 - Keep tuning decay, CTR, cannibalization, and drop-off thresholds through the next two review cycles.

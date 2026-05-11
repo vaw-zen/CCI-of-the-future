@@ -1,6 +1,6 @@
 # Growth Dashboard Metric Definitions
 
-Date: 2026-05-09
+Date: 2026-05-10
 
 This sheet is the source of truth for the upgraded admin growth dashboard. It defines what each KPI means, where it comes from, how often it refreshes, and what decision it is meant to support.
 
@@ -84,6 +84,20 @@ This sheet is the source of truth for the upgraded admin growth dashboard. It de
 | Lifecycle trend | Daily counts of `created_at`, `qualified_at`, `closed_at` in range | Lead tables | Admin ops | Live | Is throughput improving across the lifecycle? |
 | Recent admin activity | Latest rows from `admin_lead_status_events` | `admin_lead_status_events` | Engineering / Admin ops | Live | Are status changes happening as expected, and were any rejected? |
 
+## Planned behavior metrics
+
+These definitions are locked for the Stage 3 behavior layer but are not yet live runtime KPIs. They should be implemented on top of `growth_behavior_daily_metrics`, and where needed reconciled with upgraded `growth_funnel_daily_metrics`.
+
+| KPI | Formula | Planned source table / API | Owner | Refresh cadence | Intended decision |
+| --- | --- | --- | --- | --- | --- |
+| CTA impression rate | `unique_clients_with_cta_impression / unique_clients_with_page_view` grouped by `landing_page`, `page_type`, `cta_id`, and `cta_location` | `growth_behavior_daily_metrics` | Growth owner | Daily once behavior mart ships | Are the right CTAs actually being seen on the pages that matter? |
+| CTA click-through rate | `unique_clients_with_cta_click / unique_clients_with_cta_impression` grouped by `cta_id` and `cta_location` | `growth_behavior_daily_metrics` | Growth owner | Daily once behavior mart ships | Which CTA copy or placement turns visibility into intent? |
+| Form-start rate | `unique_clients_with_form_start / unique_clients_with_page_view` grouped by `form_name`, `landing_page`, and `form_placement` | `growth_behavior_daily_metrics` | Growth owner | Daily once behavior mart ships | Which pages and placements are strong enough to make visitors begin the form? |
+| Validation-failure rate | `unique_clients_with_validation_failed / unique_clients_with_form_start` grouped by `form_name` and `field_name` when available | `growth_behavior_daily_metrics` | Engineering + Growth owner | Daily once behavior mart ships | Which forms or fields create avoidable friction? |
+| Form abandonment rate | `unique_clients_with_form_abandonment / unique_clients_with_form_start` grouped by `form_name` and `form_placement` | `growth_behavior_daily_metrics` | Growth owner | Daily once behavior mart ships | Where do users start but fail to finish the funnel? |
+| Submit-success rate | `unique_clients_with_submit_success / unique_clients_with_form_start` grouped by `form_name`, `service_type`, and `landing_page` | `growth_behavior_daily_metrics` + upgraded `growth_funnel_daily_metrics` | Growth owner | Daily once behavior mart ships | Which forms turn intent into successful submission before lead-quality review? |
+| Contact-intent rate by method | `unique_clients_with_contact_intent / unique_clients_with_page_view` grouped by `contact_method` (`form`, `phone`, `email`, `whatsapp`) and page context | `growth_behavior_daily_metrics` | Growth owner | Daily once behavior mart ships | Which contact method should be prioritized by page, audience, and business line? |
+
 ## Data health
 
 | KPI | Formula | Source table / API | Owner | Refresh cadence | Intended decision |
@@ -101,6 +115,8 @@ This sheet is the source of truth for the upgraded admin growth dashboard. It de
 - Attribution quality should be reviewed whenever unattributed lead rate exceeds `25%`, and escalated immediately above `40%`.
 - Executive summary attribution risk should be treated as directional only when the filtered cohort is below `5 leads`, even if the unattributed rate is high.
 - Weekly attribution QA should be run with `npm run growth:audit:attribution -- --days 7` before using CPL, CPA, or landing-page efficiency in the growth review.
+- Planned behavior metrics should use canonical names from `WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md`, especially `contact_quote_form`, `cta_click`, `cta_id`, and `cta_location`.
+- Pipeline and revenue decisions should continue to use server-confirmed lifecycle metrics even after behavior metrics ship; behavior data explains intent and friction but does not replace business outcomes.
 - Keyword reference fields in `growth_keyword_catalog` such as imported position, CTR, and CSV trend labels are baseline reference metadata only.
 - Live keyword KPIs and keyword trend charts in the dashboard come from `growth_keyword_rankings_daily`.
 - The dashboard now separates keyword visibility trend from keyword average position trend. The old `trend` payload key remains only as a backward-compatible alias to visibility.

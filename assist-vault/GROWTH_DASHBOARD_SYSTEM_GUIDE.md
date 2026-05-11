@@ -2,7 +2,7 @@
 
 Date: 2026-05-10
 
-This guide documents the full growth dashboard system that now powers `/admin/dashboard`. It covers the shipped dashboard UI, API contract, Supabase reporting model, keyword catalog flow, dual-device SERP tracking, attribution hygiene, data-health behavior, and the admin auth stability fix that keeps admin pages usable during background session refreshes.
+This guide documents the full growth dashboard system that now powers `/admin/dashboard`. It covers the shipped dashboard UI, API contract, Supabase reporting model, keyword catalog flow, dual-device SERP tracking, attribution hygiene, the locked behavior-tracking roadmap layer, data-health behavior, and the admin auth stability fix that keeps admin pages usable during background session refreshes.
 
 ## Scope
 
@@ -22,6 +22,7 @@ The completed work includes:
 - Adding attribution hygiene normalization plus a named weekly audit for `direct/(none)` rows, landing-page capture, and campaign naming drift
 - Adding normalized Supabase reporting views for acquisition and lead-dimension rollups
 - Adding the first Stage 3 growth intelligence layer with query-level Search Console persistence, content opportunities, landing-page scoring, and lifecycle funnel diagnostics
+- Locking the next behavior-tracking layer through `WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md` so CTA, form, and contact-intent reporting extend Stage 3 instead of creating a second analytics system
 
 ## Core Files
 
@@ -97,6 +98,12 @@ It now returns these top-level sections:
 - `operations`
 - `dataHealth`
 
+Planned next top-level additions after the behavior mart ships:
+
+- `ctaPerformance`
+- `contactIntent`
+- `formHealth`
+
 The dashboard is intentionally PII-safe. It uses aggregates, keyword summaries, landing-page rollups, and safe drilldown rows rather than raw lead payloads.
 
 Important Stage 2 scope note:
@@ -120,6 +127,42 @@ Use the audit command below to review attribution quality before weekly growth d
 - missing `entry_path`
 - campaign naming drift
 
+## Behavior Tracking Layer
+
+Behavior tracking is now a locked roadmap layer for the existing dashboard, not a separate analytics product.
+
+Canonical behavior spec:
+
+- `assist-vault/WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md`
+
+Current reality:
+
+- browser event transport already exists through `src/utils/analyticsGateway.js`
+- CTA and contact-intent tracking already exists through `src/utils/analytics.js`
+- page view and UTM transport already exist through `src/utils/components/GoogleAnalytics.jsx`
+- server-confirmed lifecycle measurement already exists through `src/libs/analyticsLifecycle.js`
+- the missing layer is persisted behavior reporting that the dashboard can read
+
+Planned reporting flow:
+
+1. browser and server behavior events emit canonical context
+2. behavior events are normalized into `growth_behavior_daily_metrics`
+3. `growth_funnel_daily_metrics` is rebuilt on top of behavior + lifecycle joins
+4. `/admin/dashboard` upgrades `funnelDiagnostics` and adds `ctaPerformance`, `contactIntent`, and `formHealth`
+
+Modeling principle:
+
+- behavior data explains intent, friction, and on-site drop-off
+- lifecycle data confirms pipeline quality and business outcomes
+- both layers stay inside the same `/admin/dashboard` reporting surface
+
+Planned next reporting artifact:
+
+| Artifact | Role |
+| --- | --- |
+| `growth_behavior_daily_metrics` | Canonical behavior mart keyed by `event_date`, `event_name`, `page_type`, `landing_page`, `business_line`, `service_type`, `form_name`, `step_name`, `cta_id`, `cta_location`, `session_source`, `session_medium`, and `session_campaign`, with `event_count` and `unique_client_count` |
+| Upgraded `growth_funnel_daily_metrics` | Funnel model joining CTA, form, submit, qualified, and closed-won states by `ga_client_id`, landing page, and normalized attribution dimensions |
+
 ## Stage 3 Intelligence Layer
 
 The first Stage 3 slice adds four decision-oriented payloads on top of the Stage 2 segmented dashboard:
@@ -132,7 +175,8 @@ The first Stage 3 slice adds four decision-oriented payloads on top of the Stage
 Important Stage 3 scope notes:
 
 - `funnelDiagnostics` currently starts at lead creation, not CTA click or form start
-- CTA/form-step diagnostics require persisted event marts that do not exist yet
+- CTA/form-step diagnostics require a persisted behavior mart that does not exist yet
+- The locked graduation path is `growth_behavior_daily_metrics` -> upgraded `growth_funnel_daily_metrics` -> `funnelDiagnostics`, `ctaPerformance`, `contactIntent`, and `formHealth`
 - `landingPageScorecard` is directional prioritization, not financial forecasting
 - `contentOpportunities` uses heuristics that should be reviewed after each weekly growth review until the thresholds stabilize
 

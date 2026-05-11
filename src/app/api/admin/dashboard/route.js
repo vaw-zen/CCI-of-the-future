@@ -5,6 +5,7 @@ import { getClientIp, rateLimitRequest } from '@/libs/security';
 import { buildAdminDashboardData, getDashboardRange } from '@/libs/adminDashboardMetrics.mjs';
 import { fetchGrowthKeywordCatalogRows } from '@/libs/growthKeywordCatalog.mjs';
 import { runLeadSelectWithOptionalTrackingFallback } from '@/libs/leadTrackingSchemaCompat.mjs';
+import { filterTrackedWhatsAppClicks } from '@/libs/whatsappAttribution.mjs';
 import {
   isMissingWhatsAppDirectLeadSchemaError,
   WHATSAPP_DIRECT_LEAD_SELECT_FIELDS
@@ -383,7 +384,7 @@ async function fetchExternalMetricRows(supabase, range) {
   }
 
   return {
-    rows: data || [],
+    rows: filterTrackedWhatsAppClicks(data || []),
     error: null
   };
 }

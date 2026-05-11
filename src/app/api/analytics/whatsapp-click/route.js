@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/libs/supabase';
 import { guardMutationRequest } from '@/libs/security';
-import { normalizeWhatsAppClickPayload } from '@/libs/whatsappAttribution.mjs';
+import {
+  normalizeWhatsAppClickPayload,
+  shouldTrackWhatsAppClick
+} from '@/libs/whatsappAttribution.mjs';
 
 const WHATSAPP_CLICK_RATE_LIMIT = {
   scope: 'analytics-whatsapp-click',
@@ -50,6 +53,14 @@ export async function POST(request) {
   try {
     const body = await readRequestBody(request);
     const payload = normalizeWhatsAppClickPayload(body, new Date().toISOString());
+
+    if (!shouldTrackWhatsAppClick(payload)) {
+      return NextResponse.json({
+        status: 'ignored',
+        message: 'Clic WhatsApp admin ignoré.',
+        data: null
+      });
+    }
 
     const { data, error } = await supabase
       .from('whatsapp_click_events')

@@ -86,6 +86,37 @@ export function getWhatsAppMatchWindowStart(beforeIso, lookbackDays = WHATSAPP_M
   return new Date(beforeDate.getTime() - (lookbackDays * DAY_MS)).toISOString();
 }
 
+function normalizePathnameOnly(value) {
+  const text = normalizeText(value, '');
+  if (!text) {
+    return '/';
+  }
+
+  try {
+    return new URL(text, 'https://cciservices.online').pathname || '/';
+  } catch (error) {
+    return text.startsWith('/')
+      ? text.split(/[?#]/, 1)[0] || '/'
+      : `/${text.split(/[?#]/, 1)[0] || ''}`;
+  }
+}
+
+function isAdminPathname(value) {
+  const pathname = normalizePathnameOnly(value);
+  return pathname === '/admin' || pathname.startsWith('/admin/');
+}
+
+export function shouldTrackWhatsAppClick(value = {}) {
+  const pagePath = getLeadField(value, 'page_path', 'pagePath');
+  const landingPage = getLeadField(value, 'landing_page', 'landingPage');
+
+  return !isAdminPathname(pagePath) && !isAdminPathname(landingPage);
+}
+
+export function filterTrackedWhatsAppClicks(rows = []) {
+  return (rows || []).filter((row) => shouldTrackWhatsAppClick(row));
+}
+
 export function isWithinWhatsAppMatchWindow(clickedAt, leadCreatedAt, lookbackDays = WHATSAPP_MATCH_WINDOW_DAYS) {
   const clickDate = new Date(clickedAt);
   const leadDate = new Date(leadCreatedAt);

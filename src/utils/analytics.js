@@ -60,6 +60,10 @@ function persistWhatsAppClick(location = 'general') {
     return;
   }
 
+  if (window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/')) {
+    return;
+  }
+
   const context = getAnalyticsContext();
   const payload = {
     ga_client_id: context.ga_client_id,

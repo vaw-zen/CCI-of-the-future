@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/libs/supabase';
-import { normalizeWhatsAppClickPayload } from '@/libs/whatsappAttribution.mjs';
+import {
+  normalizeWhatsAppClickPayload,
+  shouldTrackWhatsAppClick
+} from '@/libs/whatsappAttribution.mjs';
 import {
   DEFAULT_WHATSAPP_PHONE_NUMBER,
   SESSION_ATTRIBUTION_COOKIE_KEY,
@@ -46,17 +49,19 @@ export async function GET(request) {
     referrer_host: sessionAttribution.referrer_host || getHostnameFromUrl(requestReferrer)
   }, new Date().toISOString());
 
-  try {
-    const supabase = createServiceClient();
-    const { error } = await supabase
-      .from('whatsapp_click_events')
-      .insert(clickPayload);
+  if (shouldTrackWhatsAppClick(clickPayload)) {
+    try {
+      const supabase = createServiceClient();
+      const { error } = await supabase
+        .from('whatsapp_click_events')
+        .insert(clickPayload);
 
-    if (error) {
-      console.error('[outbound][whatsapp] insert failed:', error);
+      if (error) {
+        console.error('[outbound][whatsapp] insert failed:', error);
+      }
+    } catch (error) {
+      console.error('[outbound][whatsapp] tracking failed:', error);
     }
-  } catch (error) {
-    console.error('[outbound][whatsapp] tracking failed:', error);
   }
 
   return buildRedirectResponse(destinationUrl);

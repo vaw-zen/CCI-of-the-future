@@ -1,4 +1,7 @@
-import { normalizeWhatsAppClickRow } from './whatsappAttribution.mjs';
+import {
+  normalizeWhatsAppClickRow,
+  shouldTrackWhatsAppClick
+} from './whatsappAttribution.mjs';
 
 export const WHATSAPP_INTENT_SELECT_FIELDS = [
   'id',
@@ -39,6 +42,7 @@ export function buildUnclaimedWhatsAppIntents(clickRows = [], claimedClickIds = 
     : new Set(claimedClickIds || []);
 
   return (clickRows || [])
+    .filter((row) => shouldTrackWhatsAppClick(row))
     .map((row) => normalizeWhatsAppClickRow(row))
     .filter((row) => row.id && !claimedIds.has(row.id))
     .sort((left, right) => (

@@ -4,12 +4,14 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  filterTrackedWhatsAppClicks,
   WHATSAPP_MATCH_WINDOW_DAYS,
   buildWhatsAppManualTagPatch,
   getWhatsAppAttributionMode,
   isWithinWhatsAppMatchWindow,
   matchesWhatsAppFilter,
   normalizeWhatsAppClickPayload,
+  shouldTrackWhatsAppClick,
   pickLatestEligibleWhatsAppClick
 } from '../src/libs/whatsappAttribution.mjs';
 import {
@@ -46,6 +48,29 @@ test('normalizeWhatsAppClickPayload keeps only safe WhatsApp attribution fields'
     referrer_host: 'instagram.com',
     clicked_at: '2026-05-07T12:00:00.000Z'
   });
+});
+
+test('shouldTrackWhatsAppClick ignores admin-surface payloads and keeps public ones', () => {
+  assert.equal(shouldTrackWhatsAppClick({
+    page_path: '/admin/dashboard',
+    landing_page: '/admin/dashboard'
+  }), false);
+  assert.equal(shouldTrackWhatsAppClick({
+    page_path: 'https://cciservices.online/admin/whatsapp',
+    landing_page: '/salon'
+  }), false);
+  assert.equal(shouldTrackWhatsAppClick({
+    page_path: '/contact',
+    landing_page: '/services'
+  }), true);
+
+  assert.deepEqual(
+    filterTrackedWhatsAppClicks([
+      { id: 'admin-1', page_path: '/admin/dashboard', landing_page: '/admin/dashboard' },
+      { id: 'public-1', page_path: '/contact', landing_page: '/contact' }
+    ]).map((row) => row.id),
+    ['public-1']
+  );
 });
 
 test('pickLatestEligibleWhatsAppClick returns the latest click inside the 30 day match window', () => {
@@ -149,4 +174,16 @@ test('main WhatsApp CTA surfaces use analytics-aware links instead of raw wa.me 
     assert.match(contents, /AnalyticsLink/);
     assert.doesNotMatch(contents, /<a\s+[^>]*href=["']https:\/\/wa\.me/i);
   }
+});
+
+test('admin navigation WhatsApp tab stays internal and never uses tracked outbound WhatsApp links', async () => {
+  const contents = await readFile(
+    path.join(repoRoot, 'src/app/admin/_components/AdminNavTabs.jsx'),
+    'utf8'
+  );
+
+  assert.match(contents, /href:\s*['"]\/admin\/whatsapp['"]/);
+  assert.doesNotMatch(contents, /AnalyticsLink/);
+  assert.doesNotMatch(contents, /buildTrackedWhatsAppHref/);
+  assert.doesNotMatch(contents, /wa\.me|api\.whatsapp\.com|\/out\/whatsapp/);
 });

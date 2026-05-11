@@ -18,6 +18,16 @@ test('collectClaimedWhatsAppClickIds merges click ids from multiple lead tables'
 test('buildUnclaimedWhatsAppIntents excludes already claimed clicks and sorts newest first', () => {
   const intents = buildUnclaimedWhatsAppIntents([
     {
+      id: 'admin-1',
+      clicked_at: '2026-05-11T11:00:00.000Z',
+      event_label: 'sticky_header_whatsapp',
+      page_path: '/admin/dashboard',
+      landing_page: '/admin/dashboard',
+      session_source: 'direct',
+      session_medium: '(none)',
+      session_campaign: '(not set)'
+    },
+    {
       id: 'wa-1',
       clicked_at: '2026-05-11T09:00:00.000Z',
       event_label: 'sticky_header_whatsapp',

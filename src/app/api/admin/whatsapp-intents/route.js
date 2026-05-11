@@ -25,6 +25,10 @@ import {
   runLeadSelectWithOptionalTrackingFallback,
   WHATSAPP_TRACKING_MIGRATION_HINT
 } from '@/libs/leadTrackingSchemaCompat.mjs';
+import {
+  filterTrackedWhatsAppClicks,
+  shouldTrackWhatsAppClick
+} from '@/libs/whatsappAttribution.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -199,7 +203,8 @@ export async function GET(request) {
       return getErrorResponse('fetch_failed', 'Impossible de charger les intentions WhatsApp.', 500);
     }
 
-    const clickIds = (clickRows || []).map((row) => row.id).filter(Boolean);
+    const filteredClickRows = filterTrackedWhatsAppClicks(clickRows || []);
+    const clickIds = filteredClickRows.map((row) => row.id).filter(Boolean);
     const claimedResult = await fetchClaimedClickIds(supabase, clickIds);
     if (claimedResult.error) {
       if (claimedResult.missingHint) {
@@ -216,7 +221,7 @@ export async function GET(request) {
 
     return NextResponse.json({
       status: 'success',
-      data: buildUnclaimedWhatsAppIntents(clickRows || [], claimedResult.claimedIds)
+      data: buildUnclaimedWhatsAppIntents(filteredClickRows, claimedResult.claimedIds)
     });
   } catch (error) {
     console.error('[admin][whatsapp-intents] list unexpected error:', error);
@@ -271,6 +276,10 @@ export async function POST(request) {
       }
 
       return getErrorResponse('not_found', 'Clic WhatsApp introuvable.', 404);
+    }
+
+    if (!shouldTrackWhatsAppClick(clickRow)) {
+      return getErrorResponse('admin_click_ignored', 'Ce clic WhatsApp provient de l’interface admin et ne peut pas être converti en lead.', 409);
     }
 
     const claimedResult = await fetchClaimedClickIds(supabase, [clickId]);

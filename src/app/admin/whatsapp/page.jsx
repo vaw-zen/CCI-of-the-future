@@ -119,7 +119,7 @@ export default function AdminWhatsAppPage() {
       setRequests(data);
     } catch (loadError) {
       console.error(loadError);
-      setError('Erreur lors du chargement des leads WhatsApp');
+      setError(loadError.message || 'Erreur lors du chargement des leads WhatsApp');
     } finally {
       setLoading(false);
     }

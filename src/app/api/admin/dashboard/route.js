@@ -5,7 +5,10 @@ import { getClientIp, rateLimitRequest } from '@/libs/security';
 import { buildAdminDashboardData, getDashboardRange } from '@/libs/adminDashboardMetrics.mjs';
 import { fetchGrowthKeywordCatalogRows } from '@/libs/growthKeywordCatalog.mjs';
 import { runLeadSelectWithOptionalTrackingFallback } from '@/libs/leadTrackingSchemaCompat.mjs';
-import { WHATSAPP_DIRECT_LEAD_SELECT_FIELDS } from '@/libs/whatsappDirectLeads.mjs';
+import {
+  isMissingWhatsAppDirectLeadSchemaError,
+  WHATSAPP_DIRECT_LEAD_SELECT_FIELDS
+} from '@/libs/whatsappDirectLeads.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -147,14 +150,21 @@ async function fetchLeadRows(supabase, range) {
     throw conventionResult.error;
   }
 
-  if (whatsappResult.error) {
+  const warnings = [];
+
+  if (whatsappResult.error && isMissingWhatsAppDirectLeadSchemaError(whatsappResult.error)) {
+    warnings.push('whatsapp_direct_leads_unavailable');
+  } else if (whatsappResult.error) {
     throw whatsappResult.error;
   }
 
   return {
-    devis: devisResult.data || [],
-    conventions: conventionResult.data || [],
-    whatsapp: whatsappResult.data || []
+    rows: {
+      devis: devisResult.data || [],
+      conventions: conventionResult.data || [],
+      whatsapp: warnings.includes('whatsapp_direct_leads_unavailable') ? [] : (whatsappResult.data || [])
+    },
+    warnings
   };
 }
 
@@ -188,14 +198,21 @@ async function fetchAllLeadRows(supabase) {
     throw conventionResult.error;
   }
 
-  if (whatsappResult.error) {
+  const warnings = [];
+
+  if (whatsappResult.error && isMissingWhatsAppDirectLeadSchemaError(whatsappResult.error)) {
+    warnings.push('whatsapp_direct_leads_unavailable');
+  } else if (whatsappResult.error) {
     throw whatsappResult.error;
   }
 
   return {
-    devis: devisResult.data || [],
-    conventions: conventionResult.data || [],
-    whatsapp: whatsappResult.data || []
+    rows: {
+      devis: devisResult.data || [],
+      conventions: conventionResult.data || [],
+      whatsapp: warnings.includes('whatsapp_direct_leads_unavailable') ? [] : (whatsappResult.data || [])
+    },
+    warnings
   };
 }
 
@@ -629,9 +646,9 @@ export async function GET(request) {
 
   try {
     const [
-      currentRows,
-      previousRows,
-      universeRows,
+      currentRowsResult,
+      previousRowsResult,
+      universeRowsResult,
       auditEvents,
       externalMetricsResult,
       queryMetricsResult,
@@ -653,7 +670,10 @@ export async function GET(request) {
       fetchKeywordRankingRows(supabase, rangeResult.range),
       fetchGrowthSourceHealth(supabase)
     ]);
-    const reportingWarnings = [
+    const reportingWarnings = Array.from(new Set([
+      ...(currentRowsResult.warnings || []),
+      ...(previousRowsResult.warnings || []),
+      ...(universeRowsResult.warnings || []),
       externalMetricsResult.error ? 'growth_channel_daily_metrics_unavailable' : null,
       queryMetricsResult.error ? 'growth_query_daily_metrics_unavailable' : null,
       behaviorMetricsResult.error ? 'growth_behavior_daily_metrics_unavailable' : null,
@@ -661,11 +681,11 @@ export async function GET(request) {
       keywordCatalogResult.error ? 'growth_keyword_catalog_unavailable' : null,
       keywordRankingResult.error ? 'growth_keyword_rankings_daily_unavailable' : null,
       sourceHealthResult.error ? 'growth_reporting_source_health_unavailable' : null
-    ].filter(Boolean);
+    ].filter(Boolean)));
     const dashboardData = buildAdminDashboardData({
-      currentRows,
-      previousRows,
-      universeRows,
+      currentRows: currentRowsResult.rows,
+      previousRows: previousRowsResult.rows,
+      universeRows: universeRowsResult.rows,
       externalMetricRows: externalMetricsResult.rows,
       queryMetricRows: queryMetricsResult.rows,
       behaviorMetricRows: behaviorMetricsResult.rows,

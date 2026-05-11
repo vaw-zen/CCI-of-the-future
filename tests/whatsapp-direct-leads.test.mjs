@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   buildWhatsAppDirectLeadInsert,
+  isMissingWhatsAppDirectLeadSchemaError,
   matchesWhatsAppDirectPhone,
   validateWhatsAppDirectLeadPayload
 } from '../src/libs/whatsappDirectLeads.mjs';
@@ -82,4 +83,21 @@ test('buildWhatsAppDirectLeadInsert backdates lifecycle timestamps from lead_cap
 test('matchesWhatsAppDirectPhone ignores spaces and punctuation when filtering by phone', () => {
   assert.equal(matchesWhatsAppDirectPhone('+216 20 000 002', '20000002'), true);
   assert.equal(matchesWhatsAppDirectPhone('+216 20 000 002', '333'), false);
+});
+
+test('isMissingWhatsAppDirectLeadSchemaError recognizes missing-table responses from Postgres and PostgREST', () => {
+  assert.equal(isMissingWhatsAppDirectLeadSchemaError({
+    code: '42P01',
+    message: 'relation "public.whatsapp_direct_leads" does not exist'
+  }), true);
+
+  assert.equal(isMissingWhatsAppDirectLeadSchemaError({
+    code: 'PGRST205',
+    message: 'Could not find the table public.whatsapp_direct_leads in the schema cache'
+  }), true);
+
+  assert.equal(isMissingWhatsAppDirectLeadSchemaError({
+    code: '42703',
+    message: 'column whatsapp_direct_leads.foo does not exist'
+  }), false);
 });

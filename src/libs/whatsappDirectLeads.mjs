@@ -8,6 +8,7 @@ import {
 export const WHATSAPP_DIRECT_LEAD_TABLE = 'whatsapp_direct_leads';
 export const WHATSAPP_DIRECT_LEAD_KIND = 'whatsapp';
 export const WHATSAPP_DIRECT_ATTRIBUTION_LABEL = 'Manuel (direct chat)';
+export const WHATSAPP_DIRECT_LEAD_MIGRATION_HINT = 'Appliquez la migration `supabase/20260511_whatsapp_direct_leads.sql` sur la base ciblée.';
 
 export const WHATSAPP_DIRECT_LEAD_BUSINESS_LINES = [
   { value: 'b2c', label: 'B2C' },
@@ -169,6 +170,19 @@ export function matchesWhatsAppDirectPhone(value, searchTerm) {
   }
 
   return normalizePhoneDigits(value).includes(normalizedSearch);
+}
+
+export function isMissingWhatsAppDirectLeadSchemaError(error) {
+  const message = `${error?.message || ''} ${error?.details || ''} ${error?.hint || ''}`.toLowerCase();
+  const referencesTable = message.includes('whatsapp_direct_leads');
+  const missingRelation = message.includes('relation') && message.includes('does not exist');
+  const missingSchemaCacheEntry = message.includes('schema cache') || message.includes('could not find the table');
+
+  return (
+    error?.code === '42P01'
+    || (referencesTable && missingRelation)
+    || (referencesTable && missingSchemaCacheEntry)
+  );
 }
 
 export function validateWhatsAppDirectLeadPayload(rawPayload = {}) {

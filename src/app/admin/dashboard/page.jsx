@@ -1158,6 +1158,7 @@ function AcquisitionSection({ dashboardData }) {
   const acquisitionCards = dashboardData.acquisition.cards || [];
   const whatsappData = dashboardData.acquisition.whatsapp;
   const whatsappSourceUnavailable = dashboardData.diagnostics?.reportingWarnings?.includes('whatsapp_click_events_unavailable');
+  const whatsappDirectLeadSourceUnavailable = dashboardData.diagnostics?.reportingWarnings?.includes('whatsapp_direct_leads_unavailable');
 
   return (
     <>
@@ -1219,6 +1220,11 @@ function AcquisitionSection({ dashboardData }) {
           {whatsappSourceUnavailable && (
             <p className={styles.healthError}>
               Le tracking serveur des clics WhatsApp est actuellement indisponible. Les zéros affichés ici ne sont pas fiables tant que cette source n&apos;est pas rétablie.
+            </p>
+          )}
+          {whatsappDirectLeadSourceUnavailable && (
+            <p className={styles.healthError}>
+              Les leads WhatsApp directs ne sont pas encore disponibles dans cette base. Le dashboard continue de charger, mais la partie “leads WhatsApp directs” restera vide tant que la migration correspondante n&apos;est pas appliquée.
             </p>
           )}
           <p className={styles.inlineNote}>{whatsappData.notes.clickBasis}</p>

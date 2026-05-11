@@ -3,6 +3,8 @@ import { authenticateAdminRequest } from '@/libs/adminApiAuth';
 import { createServiceClient } from '@/libs/supabase';
 import {
   buildWhatsAppDirectLeadInsert,
+  isMissingWhatsAppDirectLeadSchemaError,
+  WHATSAPP_DIRECT_LEAD_MIGRATION_HINT,
   WHATSAPP_DIRECT_LEAD_SELECT_FIELDS,
   WHATSAPP_DIRECT_LEAD_TABLE
 } from '@/libs/whatsappDirectLeads.mjs';
@@ -116,6 +118,13 @@ export async function GET(request) {
     const { data, error } = await query;
 
     if (error) {
+      if (isMissingWhatsAppDirectLeadSchemaError(error)) {
+        return getErrorResponse(
+          'schema_missing',
+          `Le schéma WhatsApp direct n’est pas encore appliqué. ${WHATSAPP_DIRECT_LEAD_MIGRATION_HINT}`,
+          409
+        );
+      }
       console.error('[admin][whatsapp-leads] list failed:', error);
       return getErrorResponse('fetch_failed', 'Impossible de charger les leads WhatsApp.', 500);
     }
@@ -167,6 +176,13 @@ export async function POST(request) {
       .single();
 
     if (error || !data) {
+      if (isMissingWhatsAppDirectLeadSchemaError(error)) {
+        return getErrorResponse(
+          'schema_missing',
+          `Le schéma WhatsApp direct n’est pas encore appliqué. ${WHATSAPP_DIRECT_LEAD_MIGRATION_HINT}`,
+          409
+        );
+      }
       console.error('[admin][whatsapp-leads] create failed:', error);
       return getErrorResponse('create_failed', 'Impossible de créer le lead WhatsApp.', 500);
     }

@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { combineGrowthMetricRows } from '../src/libs/growthReporting.mjs';
+import {
+  combineGrowthMetricRows,
+  getSearchConsoleSyncWindow,
+  SEARCH_CONSOLE_RECENT_SYNC_WINDOW_DAYS
+} from '../src/libs/growthReporting.mjs';
 
 test('combineGrowthMetricRows merges duplicate normalized growth metric keys before upsert', () => {
   const rows = combineGrowthMetricRows([
@@ -64,4 +68,42 @@ test('combineGrowthMetricRows merges duplicate normalized growth metric keys bef
   assert.ok(gscRow);
   assert.equal(gscRow.clicks, 18);
   assert.equal(gscRow.impressions, 180);
+});
+
+test('getSearchConsoleSyncWindow defaults to a rolling Los Angeles date window', () => {
+  const syncWindow = getSearchConsoleSyncWindow({
+    now: new Date('2026-05-12T06:30:00.000Z')
+  });
+
+  assert.deepEqual(syncWindow, {
+    startDate: '2026-05-07',
+    endDate: '2026-05-11',
+    mode: 'rolling_recent'
+  });
+  assert.equal(SEARCH_CONSOLE_RECENT_SYNC_WINDOW_DAYS, 5);
+});
+
+test('getSearchConsoleSyncWindow preserves explicit dates and normalizes reversed ranges', () => {
+  const syncWindow = getSearchConsoleSyncWindow({
+    startDate: '2026-05-12',
+    endDate: '2026-05-10'
+  });
+
+  assert.deepEqual(syncWindow, {
+    startDate: '2026-05-10',
+    endDate: '2026-05-12',
+    mode: 'custom'
+  });
+});
+
+test('getSearchConsoleSyncWindow collapses a single explicit date into a one-day custom range', () => {
+  const syncWindow = getSearchConsoleSyncWindow({
+    startDate: '2026-05-12'
+  });
+
+  assert.deepEqual(syncWindow, {
+    startDate: '2026-05-12',
+    endDate: '2026-05-12',
+    mode: 'custom'
+  });
 });

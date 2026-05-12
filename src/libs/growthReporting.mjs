@@ -28,6 +28,8 @@ export const GROWTH_SOURCE_HEALTH_KEYS = {
 };
 
 const SEARCH_CONSOLE_ROW_LIMIT = 25000;
+export const SEARCH_CONSOLE_RECENT_SYNC_WINDOW_DAYS = 5;
+export const SEARCH_CONSOLE_TIME_ZONE = 'America/Los_Angeles';
 const BRAND_QUERY_PATTERNS = [
   'cci',
   'cci services',
@@ -77,6 +79,91 @@ function toDateString(value) {
   }
 
   return parsedDate.toISOString().slice(0, 10);
+}
+
+function getDatePartsInTimeZone(value, timeZone) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  const parts = formatter.formatToParts(date);
+  const year = Number(parts.find((part) => part.type === 'year')?.value);
+  const month = Number(parts.find((part) => part.type === 'month')?.value);
+  const day = Number(parts.find((part) => part.type === 'day')?.value);
+
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+    return null;
+  }
+
+  return { year, month, day };
+}
+
+export function formatDateInTimeZone(value, timeZone) {
+  const parts = getDatePartsInTimeZone(value, timeZone);
+  if (!parts) {
+    return '';
+  }
+
+  return `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')}`;
+}
+
+export function shiftDateString(dateString, days = 0) {
+  const normalizedDate = toDateString(dateString);
+  if (!normalizedDate) {
+    return '';
+  }
+
+  const date = new Date(`${normalizedDate}T00:00:00.000Z`);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  date.setUTCDate(date.getUTCDate() + Number(days || 0));
+  return toDateString(date);
+}
+
+export function getSearchConsoleSyncWindow({
+  startDate,
+  endDate,
+  now = new Date(),
+  recentWindowDays = SEARCH_CONSOLE_RECENT_SYNC_WINDOW_DAYS
+} = {}) {
+  const explicitStartDate = toDateString(startDate);
+  const explicitEndDate = toDateString(endDate);
+
+  if (explicitStartDate || explicitEndDate) {
+    const resolvedStartDate = explicitStartDate || explicitEndDate;
+    const resolvedEndDate = explicitEndDate || explicitStartDate;
+
+    return resolvedStartDate <= resolvedEndDate
+      ? {
+        startDate: resolvedStartDate,
+        endDate: resolvedEndDate,
+        mode: 'custom'
+      }
+      : {
+        startDate: resolvedEndDate,
+        endDate: resolvedStartDate,
+        mode: 'custom'
+      };
+  }
+
+  const windowDays = Math.max(1, Number(recentWindowDays) || 1);
+  const resolvedEndDate = formatDateInTimeZone(now, SEARCH_CONSOLE_TIME_ZONE);
+  const resolvedStartDate = shiftDateString(resolvedEndDate, -(windowDays - 1));
+
+  return {
+    startDate: resolvedStartDate,
+    endDate: resolvedEndDate,
+    mode: 'rolling_recent'
+  };
 }
 
 function normalizeText(value, fallback = '') {
@@ -748,7 +835,8 @@ export async function fetchGa4SnapshotRows({ startDate, endDate }) {
 async function fetchSearchConsoleRows({
   startDate,
   endDate,
-  dimensions = []
+  dimensions = [],
+  dataState = 'all'
 } = {}) {
   const property = getSearchConsoleProperty();
   const auth = createGrowthGoogleAuth(['https://www.googleapis.com/auth/webmasters.readonly']);
@@ -758,6 +846,7 @@ async function fetchSearchConsoleRows({
     auth: authClient
   });
   const rows = [];
+  let metadata = null;
   let startRow = 0;
 
   while (true) {
@@ -769,11 +858,13 @@ async function fetchSearchConsoleRows({
         dimensions,
         rowLimit: SEARCH_CONSOLE_ROW_LIMIT,
         startRow,
-        type: 'web'
+        type: 'web',
+        dataState
       }
     });
 
     const batchRows = response.data.rows || [];
+    metadata = response.data.metadata || metadata;
     rows.push(...batchRows);
 
     if (batchRows.length < SEARCH_CONSOLE_ROW_LIMIT) {
@@ -783,7 +874,10 @@ async function fetchSearchConsoleRows({
     startRow += batchRows.length;
   }
 
-  return rows;
+  return {
+    rows,
+    metadata
+  };
 }
 
 function getKeywordClusterLabelFromCatalogRow(catalogRow = {}) {
@@ -847,93 +941,108 @@ function resolveQueryCatalogRow(query, landingPage, catalogLookup) {
   return catalogLookup.get(lookupKey) || null;
 }
 
-export async function fetchSearchConsoleSnapshotRows({ startDate, endDate }) {
-  const rows = await fetchSearchConsoleRows({
+export async function fetchSearchConsoleSnapshotRows({
+  startDate,
+  endDate,
+  dataState = 'all'
+} = {}) {
+  const { rows, metadata } = await fetchSearchConsoleRows({
     startDate,
     endDate,
-    dimensions: ['date', 'page']
+    dimensions: ['date', 'page'],
+    dataState
   });
 
-  return rows.map((row) => {
-    const [metricDate, pageUrl] = row.keys || [];
+  return {
+    rows: rows.map((row) => {
+      const [metricDate, pageUrl] = row.keys || [];
 
-    return normalizeGrowthMetricRow({
-      metric_date: metricDate,
-      metric_source: GROWTH_METRIC_SOURCES.GSC,
-      source: 'google',
-      medium: 'organic',
-      campaign: '(not set)',
-      landing_page: pageUrl,
-      clicks: row.clicks,
-      impressions: row.impressions,
-      metadata: {
-        ctr: typeof row.ctr === 'number'
-          ? Math.round(row.ctr * 10000) / 100
-          : 0,
-        position: typeof row.position === 'number'
-          ? Math.round(row.position * 100) / 100
-          : null,
-        source_connector: 'search_console'
-      }
-    });
-  });
+      return normalizeGrowthMetricRow({
+        metric_date: metricDate,
+        metric_source: GROWTH_METRIC_SOURCES.GSC,
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: pageUrl,
+        clicks: row.clicks,
+        impressions: row.impressions,
+        metadata: {
+          ctr: typeof row.ctr === 'number'
+            ? Math.round(row.ctr * 10000) / 100
+            : 0,
+          position: typeof row.position === 'number'
+            ? Math.round(row.position * 100) / 100
+            : null,
+          source_connector: 'search_console',
+          data_state: dataState
+        }
+      });
+    }),
+    metadata: metadata || null
+  };
 }
 
 export async function fetchSearchConsoleQuerySnapshotRows({
   startDate,
   endDate,
+  dataState = 'all',
   supabase,
   keywordCatalogRows
 } = {}) {
-  const rows = await fetchSearchConsoleRows({
+  const { rows, metadata } = await fetchSearchConsoleRows({
     startDate,
     endDate,
-    dimensions: ['date', 'page', 'query']
+    dimensions: ['date', 'page', 'query'],
+    dataState
   });
   const resolvedCatalogRows = Array.isArray(keywordCatalogRows)
     ? keywordCatalogRows
     : await loadKeywordCatalogRowsOrEmpty(supabase);
   const catalogLookup = buildKeywordCatalogLookup(resolvedCatalogRows);
 
-  return rows.map((row) => {
-    const [metricDate, pageUrl, query] = row.keys || [];
-    const normalizedLandingPage = normalizePathname(pageUrl, '/');
-    const matchedCatalogRow = resolveQueryCatalogRow(query, normalizedLandingPage, catalogLookup);
-    const clusterMetadata = buildQueryClusterMetadata({
-      cluster_key: matchedCatalogRow?.clusterKey,
-      cluster_label: matchedCatalogRow?.clusterLabel,
-      business_line: matchedCatalogRow?.businessLine,
-      service_key: matchedCatalogRow?.serviceKey,
-      page_type: matchedCatalogRow?.pageType
-    }, normalizedLandingPage);
+  return {
+    rows: rows.map((row) => {
+      const [metricDate, pageUrl, query] = row.keys || [];
+      const normalizedLandingPage = normalizePathname(pageUrl, '/');
+      const matchedCatalogRow = resolveQueryCatalogRow(query, normalizedLandingPage, catalogLookup);
+      const clusterMetadata = buildQueryClusterMetadata({
+        cluster_key: matchedCatalogRow?.clusterKey,
+        cluster_label: matchedCatalogRow?.clusterLabel,
+        business_line: matchedCatalogRow?.businessLine,
+        service_key: matchedCatalogRow?.serviceKey,
+        page_type: matchedCatalogRow?.pageType
+      }, normalizedLandingPage);
 
-    return normalizeGrowthQueryMetricRow({
-      metric_date: metricDate,
-      query,
-      normalized_query: normalizeKeywordForKey(query),
-      landing_page: pageUrl,
-      normalized_landing_page: normalizedLandingPage,
-      keyword_catalog_id: matchedCatalogRow?.id || null,
-      cluster_key: matchedCatalogRow?.clusterKey || clusterMetadata.clusterKey,
-      cluster_label: matchedCatalogRow?.clusterLabel || clusterMetadata.clusterLabel,
-      business_line: matchedCatalogRow?.businessLine || clusterMetadata.businessLine,
-      service_key: matchedCatalogRow?.serviceKey || clusterMetadata.serviceKey,
-      page_type: matchedCatalogRow?.pageType || clusterMetadata.pageType,
-      clicks: row.clicks,
-      impressions: row.impressions,
-      ctr: typeof row.ctr === 'number'
-        ? Math.round(row.ctr * 10000) / 100
-        : null,
-      position: typeof row.position === 'number'
-        ? Math.round(row.position * 100) / 100
-        : null,
-      is_branded: isBrandedGrowthQuery(query),
-      metadata: {
-        source_connector: 'search_console',
-        matched_catalog: Boolean(matchedCatalogRow)
-      }
-    });
-  });
+      return normalizeGrowthQueryMetricRow({
+        metric_date: metricDate,
+        query,
+        normalized_query: normalizeKeywordForKey(query),
+        landing_page: pageUrl,
+        normalized_landing_page: normalizedLandingPage,
+        keyword_catalog_id: matchedCatalogRow?.id || null,
+        cluster_key: matchedCatalogRow?.clusterKey || clusterMetadata.clusterKey,
+        cluster_label: matchedCatalogRow?.clusterLabel || clusterMetadata.clusterLabel,
+        business_line: matchedCatalogRow?.businessLine || clusterMetadata.businessLine,
+        service_key: matchedCatalogRow?.serviceKey || clusterMetadata.serviceKey,
+        page_type: matchedCatalogRow?.pageType || clusterMetadata.pageType,
+        clicks: row.clicks,
+        impressions: row.impressions,
+        ctr: typeof row.ctr === 'number'
+          ? Math.round(row.ctr * 10000) / 100
+          : null,
+        position: typeof row.position === 'number'
+          ? Math.round(row.position * 100) / 100
+          : null,
+        is_branded: isBrandedGrowthQuery(query),
+        metadata: {
+          source_connector: 'search_console',
+          matched_catalog: Boolean(matchedCatalogRow),
+          data_state: dataState
+        }
+      });
+    }),
+    metadata: metadata || null
+  };
 }
 
 function parseSerpOrganicResult(result, index) {
@@ -1154,21 +1263,27 @@ export async function syncSearchConsoleGrowthReporting({
   keywordCatalogRows
 } = {}) {
   const client = supabase || createGrowthServiceClient();
+  const syncWindow = getSearchConsoleSyncWindow({
+    startDate,
+    endDate
+  });
   const resolvedCatalogRows = Array.isArray(keywordCatalogRows)
     ? keywordCatalogRows
     : await loadKeywordCatalogRowsOrEmpty(client);
-  const [pageRows, queryRows] = await Promise.all([
+  const [pageResult, queryResult] = await Promise.all([
     fetchSearchConsoleSnapshotRows({
-      startDate,
-      endDate
+      startDate: syncWindow.startDate,
+      endDate: syncWindow.endDate
     }),
     fetchSearchConsoleQuerySnapshotRows({
-      startDate,
-      endDate,
+      startDate: syncWindow.startDate,
+      endDate: syncWindow.endDate,
       supabase: client,
       keywordCatalogRows: resolvedCatalogRows
     })
   ]);
+  const pageRows = pageResult.rows || [];
+  const queryRows = queryResult.rows || [];
   const [pageUpsertResult, queryUpsertResult] = await Promise.all([
     upsertGrowthMetricRows(client, pageRows),
     upsertGrowthQueryMetricRows(client, queryRows)
@@ -1176,7 +1291,7 @@ export async function syncSearchConsoleGrowthReporting({
   const freshestMetricDate = [
     pageUpsertResult.freshestMetricDate,
     queryUpsertResult.freshestMetricDate,
-    toDateString(endDate)
+    syncWindow.endDate
   ]
     .filter(Boolean)
     .sort()
@@ -1190,7 +1305,10 @@ export async function syncSearchConsoleGrowthReporting({
     pageRowCount: pageRows.length,
     queryRowCount: queryRows.length,
     matchedCatalogQueryCount: queryRows.filter((row) => row.keyword_catalog_id).length,
-    keywordCatalogRowCount: resolvedCatalogRows.length
+    keywordCatalogRowCount: resolvedCatalogRows.length,
+    syncWindow,
+    pageMetadata: pageResult.metadata || null,
+    queryMetadata: queryResult.metadata || null
   };
 }
 
@@ -1246,9 +1364,11 @@ export async function refreshGrowthReporting({
   supabase
 } = {}) {
   const client = supabase || createGrowthServiceClient();
+  const requestedStartDate = toDateString(startDate);
+  const requestedEndDate = toDateString(endDate);
   const fallbackRange = getDefaultSnapshotRange();
-  const resolvedStartDate = toDateString(startDate) || fallbackRange.startDate;
-  const resolvedEndDate = toDateString(endDate) || fallbackRange.endDate;
+  const resolvedStartDate = requestedStartDate || fallbackRange.startDate;
+  const resolvedEndDate = requestedEndDate || fallbackRange.endDate;
   const serpMetricDate = toDateString(new Date());
 
   const tasks = [
@@ -1272,16 +1392,23 @@ export async function refreshGrowthReporting({
       sourceLabel: 'Search Console',
       connectorType: 'api',
       run: () => syncSearchConsoleGrowthReporting({
-        startDate: resolvedStartDate,
-        endDate: resolvedEndDate,
+        startDate: requestedStartDate,
+        endDate: requestedEndDate,
         supabase: client
       }),
-      freshestMetricDate: resolvedEndDate,
+      freshestMetricDate: requestedEndDate || null,
       metadata: {
-        startDate: resolvedStartDate,
-        endDate: resolvedEndDate
+        startDate: requestedStartDate || null,
+        endDate: requestedEndDate || null,
+        syncMode: requestedStartDate || requestedEndDate ? 'custom' : 'rolling_recent'
       },
       buildSuccessMetadata: (_rows, executionResult) => ({
+        startDate: executionResult.syncWindow?.startDate || null,
+        endDate: executionResult.syncWindow?.endDate || null,
+        syncMode: executionResult.syncWindow?.mode || 'custom',
+        firstIncompleteDate: executionResult.pageMetadata?.firstIncompleteDate
+          || executionResult.queryMetadata?.firstIncompleteDate
+          || null,
         pageRowCount: executionResult.pageRowCount,
         queryRowCount: executionResult.queryRowCount,
         matchedCatalogQueryCount: executionResult.matchedCatalogQueryCount,

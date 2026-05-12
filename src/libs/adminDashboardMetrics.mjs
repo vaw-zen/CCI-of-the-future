@@ -3733,7 +3733,7 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
     whatsapp: buildWhatsAppAcquisition(currentLeads, whatsappClickRows),
     notes: {
       leadBasis: 'Leads créés sur la période',
-      externalMetricBasis: 'Sessions, events, clics, impressions et spend issus des snapshots externes journaliers'
+      externalMetricBasis: 'Sessions, events, clics, impressions et spend issus des snapshots externes journaliers. Search Console inclut aussi les dates récentes partielles quand Google les expose, mais le dashboard reste agrégé par date et non en fenêtre glissante de 24 h.'
     }
   };
 }

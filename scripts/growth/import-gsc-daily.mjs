@@ -2,7 +2,6 @@
 
 import {
   createGrowthServiceClient,
-  getDefaultSnapshotRange,
   loadGrowthEnv,
   syncSearchConsoleGrowthReporting,
   upsertGrowthSourceHealth,
@@ -12,15 +11,14 @@ import {
 async function main() {
   loadGrowthEnv();
 
-  const { startDate, endDate } = getDefaultSnapshotRange();
-  const resolvedStartDate = process.argv[2] || startDate;
-  const resolvedEndDate = process.argv[3] || resolvedStartDate || endDate;
+  const startDate = process.argv[2];
+  const endDate = process.argv[3];
   const startedAt = new Date().toISOString();
 
   const supabase = createGrowthServiceClient();
   const syncResult = await syncSearchConsoleGrowthReporting({
-    startDate: resolvedStartDate,
-    endDate: resolvedEndDate,
+    startDate,
+    endDate,
     supabase
   });
 
@@ -31,11 +29,15 @@ async function main() {
     status: 'fresh',
     last_attempt_at: startedAt,
     last_success_at: new Date().toISOString(),
-    freshest_metric_date: syncResult.freshestMetricDate || resolvedEndDate,
+    freshest_metric_date: syncResult.freshestMetricDate || syncResult.syncWindow?.endDate,
     message: `${syncResult.count} lignes Search Console synchronisées (${syncResult.pageRowCount} pages, ${syncResult.queryRowCount} requêtes)`,
     metadata: {
-      startDate: resolvedStartDate,
-      endDate: resolvedEndDate,
+      startDate: syncResult.syncWindow?.startDate || null,
+      endDate: syncResult.syncWindow?.endDate || null,
+      syncMode: syncResult.syncWindow?.mode || 'custom',
+      firstIncompleteDate: syncResult.pageMetadata?.firstIncompleteDate
+        || syncResult.queryMetadata?.firstIncompleteDate
+        || null,
       pageRowCount: syncResult.pageRowCount,
       queryRowCount: syncResult.queryRowCount,
       matchedCatalogQueryCount: syncResult.matchedCatalogQueryCount,
@@ -43,7 +45,7 @@ async function main() {
     }
   }]);
 
-  console.log(`Search Console sync complete: ${syncResult.count} rows (${syncResult.pageRowCount} page rows, ${syncResult.queryRowCount} query rows) (${resolvedStartDate} -> ${resolvedEndDate})`);
+  console.log(`Search Console sync complete: ${syncResult.count} rows (${syncResult.pageRowCount} page rows, ${syncResult.queryRowCount} query rows) (${syncResult.syncWindow?.startDate} -> ${syncResult.syncWindow?.endDate})`);
 }
 
 main().catch((error) => {

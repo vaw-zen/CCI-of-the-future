@@ -1,7 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  buildAdminDashboardAcquisitionSectionData,
+  buildAdminDashboardCoreData,
   buildAdminDashboardData,
+  buildAdminDashboardOperationsSectionData,
+  buildAdminDashboardOverviewSectionData,
+  buildAdminDashboardPipelineSectionData,
+  buildAdminDashboardSeoSectionData,
   buildCombinedChannelPerformance,
   buildLifecycleTrend,
   getDashboardRange,
@@ -1785,4 +1791,112 @@ test('stage-three growth intelligence surfaces query opportunities, content risk
   assert.equal(data.funnelDiagnostics.summary.createdLeads, 3);
   assert.equal(data.funnelDiagnostics.topDropoffs.some((row) => row.stageLabel === 'Created -> Qualified'), true);
   assert.match(data.funnelDiagnostics.notes.coverage, /CTA click, form-start, and form-completion/);
+});
+
+test('section builders stay aligned with the full dashboard payload for the same slice', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const sharedInput = {
+    currentRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-direct',
+          created_at: '2026-05-02T10:00:00.000Z',
+          session_source: 'direct',
+          session_medium: '(none)',
+          landing_page: '/salon',
+          calculator_estimate: 180
+        }),
+        buildDevisRow({
+          id: 'devis-organic',
+          created_at: '2026-05-03T09:00:00.000Z',
+          session_source: 'google',
+          session_medium: 'organic',
+          referrer_host: 'google.com',
+          landing_page: '/salon',
+          calculator_estimate: 260
+        })
+      ],
+      conventions: [],
+      whatsapp: []
+    },
+    previousRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-previous',
+          created_at: '2026-04-25T09:00:00.000Z',
+          session_source: 'direct',
+          session_medium: '(none)',
+          landing_page: '/salon',
+          calculator_estimate: 90
+        })
+      ],
+      conventions: [],
+      whatsapp: []
+    },
+    universeRows: {
+      devis: [
+        buildDevisRow({
+          id: 'devis-direct',
+          created_at: '2026-05-02T10:00:00.000Z',
+          session_source: 'direct',
+          session_medium: '(none)',
+          landing_page: '/salon',
+          calculator_estimate: 180
+        }),
+        buildDevisRow({
+          id: 'devis-organic',
+          created_at: '2026-05-03T09:00:00.000Z',
+          session_source: 'google',
+          session_medium: 'organic',
+          referrer_host: 'google.com',
+          landing_page: '/salon',
+          calculator_estimate: 260
+        })
+      ],
+      conventions: [],
+      whatsapp: []
+    },
+    externalMetricRows: [],
+    queryMetricRows: [],
+    behaviorMetricRows: [],
+    whatsappClickRows: [],
+    facebookSnapshot: null,
+    keywordCatalogRows: [],
+    keywordRankingRows: [],
+    sourceHealthRows: [],
+    auditEvents: [],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  };
+
+  const fullData = buildAdminDashboardData(sharedInput);
+  const coreData = buildAdminDashboardCoreData(sharedInput);
+  const overviewData = buildAdminDashboardOverviewSectionData(sharedInput);
+  const pipelineData = buildAdminDashboardPipelineSectionData(sharedInput);
+  const acquisitionData = buildAdminDashboardAcquisitionSectionData(sharedInput);
+  const seoData = buildAdminDashboardSeoSectionData(sharedInput);
+  const operationsData = buildAdminDashboardOperationsSectionData(sharedInput);
+
+  assert.deepEqual(coreData.range, fullData.range);
+  assert.deepEqual(coreData.filters, fullData.filters);
+  assert.deepEqual(coreData.executiveSummary, fullData.executiveSummary);
+  assert.deepEqual(coreData.dataHealth, fullData.dataHealth);
+
+  assert.deepEqual(overviewData.overview, fullData.overview);
+  assert.deepEqual(overviewData.pipeline, fullData.pipeline);
+
+  assert.deepEqual(pipelineData.pipeline, fullData.pipeline);
+  assert.deepEqual(pipelineData.ctaPerformance, fullData.ctaPerformance);
+  assert.deepEqual(pipelineData.contactIntent, fullData.contactIntent);
+  assert.deepEqual(pipelineData.formHealth, fullData.formHealth);
+  assert.deepEqual(pipelineData.funnelDiagnostics, fullData.funnelDiagnostics);
+
+  assert.deepEqual(acquisitionData.acquisition, fullData.acquisition);
+
+  assert.deepEqual(seoData.seoQueries, fullData.seoQueries);
+  assert.deepEqual(seoData.contentOpportunities, fullData.contentOpportunities);
+  assert.deepEqual(seoData.landingPageScorecard, fullData.landingPageScorecard);
+  assert.deepEqual(seoData.seoContent, fullData.seoContent);
+
+  assert.deepEqual(operationsData.operations, fullData.operations);
 });

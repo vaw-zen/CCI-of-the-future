@@ -2,7 +2,7 @@
 
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getAdminDashboardData } from '@/services/adminLeadService';
@@ -43,6 +43,10 @@ const DEFAULT_FILTER_OPTIONS = {
   ],
   pageType: []
 };
+const DASHBOARD_CORE_SECTION = 'core';
+const DASHBOARD_SECTION_KEYS = SECTION_OPTIONS.map((section) => section.key);
+const DASHBOARD_CACHE_SECTIONS = [DASHBOARD_CORE_SECTION, ...DASHBOARD_SECTION_KEYS];
+const DASHBOARD_MUTATED_SECTIONS = ['core', 'overview', 'pipeline', 'acquisition', 'operations'];
 
 function toDateInputValue(date) {
   return date.toISOString().slice(0, 10);
@@ -72,6 +76,83 @@ function buildInitialDashboardQuery() {
 
 function formatNumber(value) {
   return new Intl.NumberFormat('fr-FR').format(value || 0);
+}
+
+function serializeDashboardQuery(query = {}) {
+  return JSON.stringify({
+    from: query.from || '',
+    to: query.to || '',
+    businessLine: query.businessLine || '',
+    service: query.service || '',
+    sourceClass: query.sourceClass || '',
+    device: query.device || '',
+    pageType: query.pageType || ''
+  });
+}
+
+function getDashboardCacheKey(queryKey, section) {
+  return `${queryKey}::${section}`;
+}
+
+function mergeReportingWarnings(currentWarnings = [], nextWarnings = []) {
+  return Array.from(new Set([
+    ...(currentWarnings || []),
+    ...(nextWarnings || [])
+  ]));
+}
+
+function mergeDashboardPayload(currentPayload, nextPayload) {
+  if (!nextPayload) {
+    return currentPayload;
+  }
+
+  const mergedWarnings = mergeReportingWarnings(
+    currentPayload?.diagnostics?.reportingWarnings || [],
+    nextPayload?.diagnostics?.reportingWarnings || []
+  );
+  const diagnostics = {
+    ...(currentPayload?.diagnostics || {}),
+    ...(nextPayload?.diagnostics || {}),
+    reportingWarnings: mergedWarnings
+  };
+
+  return {
+    ...(currentPayload || {}),
+    ...nextPayload,
+    range: nextPayload.range || currentPayload?.range,
+    filters: nextPayload.filters || currentPayload?.filters,
+    executiveSummary: nextPayload.executiveSummary || currentPayload?.executiveSummary,
+    dataHealth: nextPayload.dataHealth || currentPayload?.dataHealth,
+    diagnostics,
+    loadedSections: Array.from(new Set([
+      ...(currentPayload?.loadedSections || []),
+      ...(nextPayload?.loadedSections || [])
+    ]))
+  };
+}
+
+function hasLoadedSection(dashboardData, section) {
+  return Boolean(dashboardData?.loadedSections?.includes(section));
+}
+
+function getSectionLoadingLabel(section) {
+  if (section === 'pipeline') {
+    return 'Chargement du pipeline et des signaux comportementaux...';
+  }
+
+  if (section === 'acquisition') {
+    return 'Chargement de l’acquisition et des touchpoints WhatsApp...';
+  }
+
+  if (section === 'seo') {
+    return 'Chargement des données SEO et du contenu...';
+  }
+
+  if (section === 'operations') {
+    return 'Chargement des opérations et de l’activité lifecycle...';
+  }
+
+  return 'Chargement de la vue dashboard...';
 }
 
 function formatOptionalNumber(value) {
@@ -1735,24 +1816,247 @@ export default function AdminDashboardPage() {
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
   const initialDashboardQuery = useMemo(() => buildInitialDashboardQuery(), []);
   const [dashboardQuery, setDashboardQuery] = useState(initialDashboardQuery);
+  const [appliedDashboardQuery, setAppliedDashboardQuery] = useState(initialDashboardQuery);
   const [dashboardData, setDashboardData] = useState(null);
   const [activeSection, setActiveSection] = useState('overview');
   const [loading, setLoading] = useState(true);
+  const [coreRefreshing, setCoreRefreshing] = useState(false);
+  const [sectionRefreshing, setSectionRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const dashboardDataRef = useRef(null);
+  const cacheRef = useRef(new Map());
+  const controllerRef = useRef(new Map());
+  const lastAppliedQueryKeyRef = useRef('');
+  const activeQueryKeyRef = useRef(serializeDashboardQuery(initialDashboardQuery));
+  const appliedQueryKey = useMemo(
+    () => serializeDashboardQuery(appliedDashboardQuery),
+    [appliedDashboardQuery]
+  );
 
-  const fetchDashboard = useCallback(async (query) => {
-    try {
-      setLoading(true);
-      setError('');
-      const data = await getAdminDashboardData(query);
-      setDashboardData(data);
-    } catch (loadError) {
-      console.error(loadError);
-      setError(loadError.message || 'Erreur lors du chargement du dashboard');
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    dashboardDataRef.current = dashboardData;
+  }, [dashboardData]);
+
+  const abortAllRequests = useCallback(() => {
+    controllerRef.current.forEach((controller) => {
+      controller.abort();
+    });
+    controllerRef.current.clear();
+  }, []);
+
+  const abortSectionRequests = useCallback(() => {
+    Array.from(controllerRef.current.entries()).forEach(([cacheKey, controller]) => {
+      if (cacheKey.endsWith(`::${DASHBOARD_CORE_SECTION}`)) {
+        return;
+      }
+
+      controller.abort();
+      controllerRef.current.delete(cacheKey);
+    });
+  }, []);
+
+  const getMergedCachedDashboardData = useCallback((queryKey) => {
+    let merged = null;
+
+    DASHBOARD_CACHE_SECTIONS.forEach((section) => {
+      const cachedSection = cacheRef.current.get(getDashboardCacheKey(queryKey, section));
+      merged = mergeDashboardPayload(merged, cachedSection);
+    });
+
+    return merged;
+  }, []);
+
+  const syncDashboardDataFromCache = useCallback((queryKey) => {
+    const merged = getMergedCachedDashboardData(queryKey);
+
+    if (activeQueryKeyRef.current === queryKey) {
+      setDashboardData(merged);
     }
+
+    return merged;
+  }, [getMergedCachedDashboardData]);
+
+  const fetchDashboardSection = useCallback(async (query, section, { force = false } = {}) => {
+    const queryKey = serializeDashboardQuery(query);
+    const cacheKey = getDashboardCacheKey(queryKey, section);
+
+    if (!force) {
+      const cachedPayload = cacheRef.current.get(cacheKey);
+      if (cachedPayload) {
+        return cachedPayload;
+      }
+    }
+
+    const existingController = controllerRef.current.get(cacheKey);
+    if (existingController) {
+      existingController.abort();
+      controllerRef.current.delete(cacheKey);
+    }
+
+    const controller = new AbortController();
+    controllerRef.current.set(cacheKey, controller);
+
+    try {
+      const payload = await getAdminDashboardData({
+        ...query,
+        sections: section,
+        signal: controller.signal
+      });
+
+      cacheRef.current.set(cacheKey, payload);
+      return payload;
+    } catch (loadError) {
+      if (loadError?.name === 'AbortError') {
+        return null;
+      }
+
+      throw loadError;
+    } finally {
+      if (controllerRef.current.get(cacheKey) === controller) {
+        controllerRef.current.delete(cacheKey);
+      }
+    }
+  }, []);
+
+  const loadDashboardQuery = useCallback(async (
+    query,
+    {
+      forceCore = false,
+      forceSection = false,
+      section = activeSection
+    } = {}
+  ) => {
+    const queryKey = serializeDashboardQuery(query);
+    const coreCacheKey = getDashboardCacheKey(queryKey, DASHBOARD_CORE_SECTION);
+    const sectionCacheKey = section ? getDashboardCacheKey(queryKey, section) : '';
+    const hasCoreCached = cacheRef.current.has(coreCacheKey);
+    const hasSectionCached = section ? cacheRef.current.has(sectionCacheKey) : true;
+    const cachedPayload = getMergedCachedDashboardData(queryKey);
+
+    activeQueryKeyRef.current = queryKey;
+    setError('');
+
+    if (cachedPayload) {
+      setDashboardData(cachedPayload);
+      setLoading(false);
+    } else if (!dashboardDataRef.current) {
+      setLoading(true);
+    }
+
+    abortAllRequests();
+
+    try {
+      if (forceCore || !hasCoreCached) {
+        setCoreRefreshing(Boolean(cachedPayload || dashboardDataRef.current));
+        const corePayload = await fetchDashboardSection(query, DASHBOARD_CORE_SECTION, {
+          force: forceCore
+        });
+
+        if (!corePayload || activeQueryKeyRef.current !== queryKey) {
+          return;
+        }
+
+        syncDashboardDataFromCache(queryKey);
+      } else {
+        syncDashboardDataFromCache(queryKey);
+      }
+
+      if (activeQueryKeyRef.current !== queryKey) {
+        return;
+      }
+
+      setLoading(false);
+
+      if (section) {
+        if (forceSection || !hasSectionCached) {
+          setSectionRefreshing(true);
+          const sectionPayload = await fetchDashboardSection(query, section, {
+            force: forceSection
+          });
+
+          if (!sectionPayload || activeQueryKeyRef.current !== queryKey) {
+            return;
+          }
+        }
+
+        syncDashboardDataFromCache(queryKey);
+      }
+    } catch (loadError) {
+      if (loadError?.name === 'AbortError') {
+        return;
+      }
+
+      console.error(loadError);
+      if (activeQueryKeyRef.current === queryKey) {
+        setError(loadError.message || 'Erreur lors du chargement du dashboard');
+      }
+    } finally {
+      if (activeQueryKeyRef.current === queryKey) {
+        setLoading(false);
+        setCoreRefreshing(false);
+        setSectionRefreshing(false);
+      }
+    }
+  }, [activeSection, abortAllRequests, fetchDashboardSection, getMergedCachedDashboardData, syncDashboardDataFromCache]);
+
+  const ensureSectionData = useCallback(async (section, { force = false } = {}) => {
+    if (!section) {
+      return;
+    }
+
+    const query = appliedDashboardQuery;
+    const queryKey = serializeDashboardQuery(query);
+    const cacheKey = getDashboardCacheKey(queryKey, section);
+
+    activeQueryKeyRef.current = queryKey;
+
+    if (!force && cacheRef.current.has(cacheKey)) {
+      syncDashboardDataFromCache(queryKey);
+      return;
+    }
+
+    setError('');
+    setSectionRefreshing(true);
+    abortSectionRequests();
+
+    try {
+      const sectionPayload = await fetchDashboardSection(query, section, { force });
+      if (!sectionPayload || activeQueryKeyRef.current !== queryKey) {
+        return;
+      }
+
+      syncDashboardDataFromCache(queryKey);
+    } catch (loadError) {
+      if (loadError?.name === 'AbortError') {
+        return;
+      }
+
+      console.error(loadError);
+      if (activeQueryKeyRef.current === queryKey) {
+        setError(loadError.message || 'Erreur lors du chargement du dashboard');
+      }
+    } finally {
+      if (activeQueryKeyRef.current === queryKey) {
+        setLoading(false);
+        setSectionRefreshing(false);
+      }
+    }
+  }, [abortSectionRequests, appliedDashboardQuery, fetchDashboardSection, syncDashboardDataFromCache]);
+
+  const invalidateDashboardSections = useCallback((query, sections = []) => {
+    const queryKey = serializeDashboardQuery(query);
+
+    sections.forEach((section) => {
+      const cacheKey = getDashboardCacheKey(queryKey, section);
+      cacheRef.current.delete(cacheKey);
+
+      const controller = controllerRef.current.get(cacheKey);
+      if (controller) {
+        controller.abort();
+        controllerRef.current.delete(cacheKey);
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -1762,10 +2066,39 @@ export default function AdminDashboardPage() {
   }, [user, isAdmin, authLoading, router]);
 
   useEffect(() => {
-    if (!authLoading && user && isAdmin) {
-      fetchDashboard(initialDashboardQuery);
+    if (authLoading || !user || !isAdmin) {
+      return;
     }
-  }, [user, isAdmin, authLoading, fetchDashboard, initialDashboardQuery]);
+
+    const queryChanged = lastAppliedQueryKeyRef.current !== appliedQueryKey;
+
+    if (queryChanged) {
+      lastAppliedQueryKeyRef.current = appliedQueryKey;
+      void loadDashboardQuery(appliedDashboardQuery, {
+        forceCore: false,
+        forceSection: false,
+        section: activeSection
+      });
+      return;
+    }
+
+    void ensureSectionData(activeSection);
+  }, [
+    activeSection,
+    appliedDashboardQuery,
+    appliedQueryKey,
+    authLoading,
+    ensureSectionData,
+    isAdmin,
+    loadDashboardQuery,
+    user
+  ]);
+
+  useEffect(() => (
+    () => {
+      abortAllRequests();
+    }
+  ), [abortAllRequests]);
 
   const handleLogout = async () => {
     const result = await signOut();
@@ -1781,12 +2114,34 @@ export default function AdminDashboardPage() {
     }));
   };
 
-  const handleWhatsAppLeadCreated = useCallback(async () => {
-    await fetchDashboard(dashboardQuery);
+  const handleApplyFilters = useCallback(() => {
+    setAppliedDashboardQuery({
+      ...dashboardQuery
+    });
+  }, [dashboardQuery]);
+
+  const handleRefresh = useCallback(() => {
+    void loadDashboardQuery(appliedDashboardQuery, {
+      forceCore: true,
+      forceSection: true,
+      section: activeSection
+    });
+  }, [activeSection, appliedDashboardQuery, loadDashboardQuery]);
+
+  const handleWhatsAppLeadCreated = useCallback(() => {
+    invalidateDashboardSections(appliedDashboardQuery, DASHBOARD_MUTATED_SECTIONS);
     setIsCreateModalOpen(false);
-  }, [dashboardQuery, fetchDashboard]);
+
+    void loadDashboardQuery(appliedDashboardQuery, {
+      forceCore: true,
+      forceSection: true,
+      section: activeSection
+    });
+  }, [activeSection, appliedDashboardQuery, invalidateDashboardSections, loadDashboardQuery]);
 
   const availableFilterOptions = dashboardData?.filters?.options || DEFAULT_FILTER_OPTIONS;
+  const isActiveSectionLoaded = hasLoadedSection(dashboardData, activeSection);
+  const isRefreshing = coreRefreshing || sectionRefreshing;
 
   if (authLoading) {
     return (
@@ -1816,7 +2171,7 @@ export default function AdminDashboardPage() {
             <button type="button" onClick={() => setIsCreateModalOpen(true)} className={styles.saveButton}>
               Ajouter lead WhatsApp
             </button>
-            <button onClick={() => fetchDashboard(dashboardQuery)} className={styles.refreshButton}>
+            <button type="button" onClick={handleRefresh} className={styles.refreshButton}>
               Actualiser
             </button>
             <button onClick={handleLogout} className={styles.logoutButton}>
@@ -1863,39 +2218,56 @@ export default function AdminDashboardPage() {
               </select>
             </div>
           ))}
-          <button onClick={() => fetchDashboard(dashboardQuery)} className={styles.clearFiltersButton}>
+          <button type="button" onClick={handleApplyFilters} className={styles.clearFiltersButton}>
             Appliquer
           </button>
         </div>
 
-        {loading && <div className={styles.loading}>Chargement des KPI...</div>}
+        {loading && !dashboardData && <div className={styles.loading}>Chargement du socle dashboard...</div>}
         {error && (
           <div>
             <div className={styles.error}>{error}</div>
-            <button onClick={() => fetchDashboard(dashboardQuery)} className={styles.refreshButton}>
+            <button type="button" onClick={handleRefresh} className={styles.refreshButton}>
               Réessayer
             </button>
           </div>
         )}
 
-        {!loading && !error && dashboardData && (
+        {dashboardData && (
           <>
             <div className={styles.resultsMeta}>
               Période: {dashboardData.range.from} au {dashboardData.range.to} - {dashboardData.range.days} jours
               {' · '}
               Segment: {dashboardData.filters.segmentLabel}
               {dashboardData.filters.seoDeviceLabel ? ` · SEO device: ${dashboardData.filters.seoDeviceLabel}` : ''}
+              {isRefreshing ? ' · Actualisation en cours' : ''}
             </div>
 
             <ExecutiveSummary executiveSummary={dashboardData.executiveSummary} filters={dashboardData.filters} />
             <HealthGrid dataHealth={dashboardData.dataHealth} />
             <SectionTabs activeSection={activeSection} onChange={setActiveSection} />
 
-            {activeSection === 'overview' && <OverviewSection dashboardData={dashboardData} />}
-            {activeSection === 'pipeline' && <PipelineSection dashboardData={dashboardData} />}
-            {activeSection === 'acquisition' && <AcquisitionSection dashboardData={dashboardData} />}
-            {activeSection === 'seo' && <SeoSection dashboardData={dashboardData} />}
-            {activeSection === 'operations' && <OperationsSection dashboardData={dashboardData} />}
+            {coreRefreshing && (
+              <p className={styles.inlineNote}>
+                Actualisation du socle dashboard, du résumé exécutif et de la data health...
+              </p>
+            )}
+
+            {sectionRefreshing && (
+              <p className={styles.inlineNote}>
+                {getSectionLoadingLabel(activeSection)}
+              </p>
+            )}
+
+            {!isActiveSectionLoaded && (
+              <div className={styles.loading}>{getSectionLoadingLabel(activeSection)}</div>
+            )}
+
+            {isActiveSectionLoaded && activeSection === 'overview' && <OverviewSection dashboardData={dashboardData} />}
+            {isActiveSectionLoaded && activeSection === 'pipeline' && <PipelineSection dashboardData={dashboardData} />}
+            {isActiveSectionLoaded && activeSection === 'acquisition' && <AcquisitionSection dashboardData={dashboardData} />}
+            {isActiveSectionLoaded && activeSection === 'seo' && <SeoSection dashboardData={dashboardData} />}
+            {isActiveSectionLoaded && activeSection === 'operations' && <OperationsSection dashboardData={dashboardData} />}
           </>
         )}
 

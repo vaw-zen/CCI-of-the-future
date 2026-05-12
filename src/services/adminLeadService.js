@@ -18,141 +18,111 @@ async function getAccessToken() {
   return accessToken;
 }
 
-export async function updateLeadStatus(kind, id, payload) {
+async function fetchAdminJson(path, {
+  method = 'GET',
+  body,
+  signal
+} = {}) {
   const accessToken = await getAccessToken();
-
-  const response = await fetch(`/api/admin/leads/${kind}/${id}/status`, {
-    method: 'PATCH',
+  const response = await fetch(path, {
+    method,
     headers: {
-      'Content-Type': 'application/json',
+      ...(body ? { 'Content-Type': 'application/json' } : {}),
       Authorization: `Bearer ${accessToken}`
     },
-    body: JSON.stringify(payload)
+    body: body ? JSON.stringify(body) : undefined,
+    signal
   });
 
   const result = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(result.message || 'Lead status update failed');
+    throw new Error(result.message || 'Admin request failed');
   }
+
+  return result;
+}
+
+export async function updateLeadStatus(kind, id, payload) {
+  const result = await fetchAdminJson(`/api/admin/leads/${kind}/${id}/status`, {
+    method: 'PATCH',
+    body: payload
+  });
 
   return result.data;
 }
 
 export async function updateLeadAttribution(kind, id, payload) {
-  const accessToken = await getAccessToken();
-
-  const response = await fetch(`/api/admin/leads/${kind}/${id}/attribution`, {
+  const result = await fetchAdminJson(`/api/admin/leads/${kind}/${id}/attribution`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`
-    },
-    body: JSON.stringify(payload)
+    body: payload
   });
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.message || 'Lead attribution update failed');
-  }
 
   return result.data;
 }
 
 export async function updateLeadOperations(kind, id, payload) {
-  const accessToken = await getAccessToken();
-
-  const response = await fetch(`/api/admin/leads/${kind}/${id}/ops`, {
+  const result = await fetchAdminJson(`/api/admin/leads/${kind}/${id}/ops`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`
-    },
-    body: JSON.stringify(payload)
+    body: payload
   });
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.message || 'Lead operations update failed');
-  }
 
   return result.data;
 }
 
-export async function getWhatsAppDirectLeads({
-  leadStatus,
-  businessLine,
-  phone,
-  leadOwner,
-  dateFrom,
-  dateTo,
-  leadId,
-  limit
+export async function getAdminLeadSummaries(kind, {
+  limit,
+  cursor,
+  signal,
+  ...filters
 } = {}) {
-  const accessToken = await getAccessToken();
   const params = new URLSearchParams();
 
-  if (leadStatus) {
-    params.set('leadStatus', leadStatus);
-  }
-
-  if (businessLine) {
-    params.set('businessLine', businessLine);
-  }
-
-  if (phone) {
-    params.set('phone', phone);
-  }
-
-  if (leadOwner) {
-    params.set('leadOwner', leadOwner);
-  }
-
-  if (dateFrom) {
-    params.set('dateFrom', dateFrom);
-  }
-
-  if (dateTo) {
-    params.set('dateTo', dateTo);
-  }
-
-  if (leadId) {
-    params.set('leadId', leadId);
-  }
-
+  params.set('kind', kind);
   if (limit) {
     params.set('limit', String(limit));
   }
 
-  const response = await fetch(`/api/admin/whatsapp-leads${params.toString() ? `?${params.toString()}` : ''}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
+  if (cursor !== undefined && cursor !== null && cursor !== '') {
+    params.set('cursor', String(cursor));
+  }
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') {
+      return;
     }
+
+    params.set(key, String(value));
   });
 
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.message || 'WhatsApp leads load failed');
-  }
+  const result = await fetchAdminJson(`/api/admin/leads?${params.toString()}`, {
+    signal
+  });
+
+  return {
+    rows: result.data || [],
+    nextCursor: result.details?.nextCursor || null,
+    hasMore: Boolean(result.details?.hasMore)
+  };
+}
+
+export async function getAdminLeadDetail(kind, id, { signal } = {}) {
+  const result = await fetchAdminJson(`/api/admin/leads/${kind}/${id}`, {
+    signal
+  });
 
   return result.data;
 }
 
+export async function getWhatsAppDirectLeads(options = {}) {
+  const result = await getAdminLeadSummaries('whatsapp', options);
+  return result.rows;
+}
+
 export async function createWhatsAppDirectLead(payload) {
-  const accessToken = await getAccessToken();
-
-  const response = await fetch('/api/admin/whatsapp-leads', {
+  const result = await fetchAdminJson('/api/admin/whatsapp-leads', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`
-    },
-    body: JSON.stringify(payload)
+    body: payload
   });
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.message || 'WhatsApp lead creation failed');
-  }
 
   return result.data;
 }
@@ -160,9 +130,9 @@ export async function createWhatsAppDirectLead(payload) {
 export async function getWhatsAppIntents({
   dateFrom,
   dateTo,
-  limit
+  limit,
+  signal
 } = {}) {
-  const accessToken = await getAccessToken();
   const params = new URLSearchParams();
 
   if (dateFrom) {
@@ -177,36 +147,18 @@ export async function getWhatsAppIntents({
     params.set('limit', String(limit));
   }
 
-  const response = await fetch(`/api/admin/whatsapp-intents${params.toString() ? `?${params.toString()}` : ''}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
+  const result = await fetchAdminJson(`/api/admin/whatsapp-intents${params.toString() ? `?${params.toString()}` : ''}`, {
+    signal
   });
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.message || 'WhatsApp intents load failed');
-  }
 
   return result.data;
 }
 
 export async function convertWhatsAppIntentToLead(payload) {
-  const accessToken = await getAccessToken();
-
-  const response = await fetch('/api/admin/whatsapp-intents', {
+  const result = await fetchAdminJson('/api/admin/whatsapp-intents', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`
-    },
-    body: JSON.stringify(payload)
+    body: payload
   });
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.message || 'WhatsApp intent conversion failed');
-  }
 
   return result.data;
 }
@@ -218,9 +170,10 @@ export async function getAdminDashboardData({
   service,
   sourceClass,
   device,
-  pageType
+  pageType,
+  sections,
+  signal
 } = {}) {
-  const accessToken = await getAccessToken();
   const params = new URLSearchParams();
 
   if (from) {
@@ -251,16 +204,15 @@ export async function getAdminDashboardData({
     params.set('pageType', pageType);
   }
 
-  const response = await fetch(`/api/admin/dashboard${params.toString() ? `?${params.toString()}` : ''}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(result.message || 'Dashboard load failed');
+  if (Array.isArray(sections) && sections.length > 0) {
+    params.set('sections', sections.join(','));
+  } else if (typeof sections === 'string' && sections.trim()) {
+    params.set('sections', sections);
   }
+
+  const result = await fetchAdminJson(`/api/admin/dashboard${params.toString() ? `?${params.toString()}` : ''}`, {
+    signal
+  });
 
   return result.data;
 }

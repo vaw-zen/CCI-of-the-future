@@ -733,6 +733,12 @@
   gap: 15px;
 }
 
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
 .requestCard {
   background: var(--bg-elevated);
   border-radius: 8px;
@@ -1127,6 +1133,31 @@ border-color: var(--ac-primary); box-shadow: 0 0 2.08vw rgba(203, 251, 66, 0.15)
 .copyStatus {
   color: var(--t-secondary);
   font-size: 12px;
+}
+
+.modalState {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--t-secondary);
+}
+
+.errorInlineRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 138, 138, 0.18);
+  border-radius: 10px;
+  background: rgba(220, 53, 69, 0.08);
+}
+
+.errorInlineRow .statusError {
+  margin: 0;
 }
 
 /* Responsive Design */

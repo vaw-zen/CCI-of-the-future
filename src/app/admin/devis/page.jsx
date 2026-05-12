@@ -4,9 +4,10 @@ import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
-import { getDevisRequests } from '@/services/devisService';
 import { updateLeadAttribution, updateLeadOperations, updateLeadStatus } from '@/services/adminLeadService';
+import AdminModalShell from '@/app/admin/_components/AdminModalShell';
 import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
+import { useAdminLeadList } from '@/app/admin/_components/useAdminLeadList';
 import {
   deriveLeadQualityOutcomeFromStatus,
   formatDateTimeLocalInputValue,
@@ -33,9 +34,6 @@ const LEAD_QUALITY_LABELS = LEAD_QUALITY_OUTCOME_LABELS;
 export default function AdminDevisPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
-  const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
   const [leadQualityDraft, setLeadQualityDraft] = useState(LEAD_QUALITY_OUTCOMES.UNREVIEWED);
@@ -59,6 +57,47 @@ export default function AdminDevisPage() {
     dateTo: ''
   });
   const [leadIdParam, setLeadIdParam] = useState('');
+  const serverFilters = useMemo(() => ({
+    leadStatus: filters.leadStatus,
+    leadQualityOutcome: filters.leadQualityOutcome,
+    serviceType: filters.serviceType,
+    leadOwner: filters.leadOwner,
+    sessionSource: filters.sessionSource,
+    sessionMedium: filters.sessionMedium,
+    dateFrom: filters.dateFrom,
+    dateTo: filters.dateTo
+  }), [filters]);
+  const {
+    requests,
+    loading,
+    loadingMore,
+    error,
+    hasMore,
+    refresh,
+    loadMore,
+    getDetail,
+    getCachedDetail,
+    upsertLead,
+    detailLoadingId,
+    detailErrorById
+  } = useAdminLeadList('devis', {
+    filters: serverFilters,
+    limit: 50
+  });
+
+  const applyLeadDrafts = useCallback((request) => {
+    if (!request) {
+      return;
+    }
+
+    setLeadStatusDraft(request.lead_status || LEAD_STATUSES.SUBMITTED);
+    setLeadQualityDraft(
+      request.lead_quality_outcome
+      || deriveLeadQualityOutcomeFromStatus(request.lead_status || LEAD_STATUSES.SUBMITTED)
+    );
+    setLeadOwnerDraft(request.lead_owner || '');
+    setFollowUpSlaDraft(formatDateTimeLocalInputValue(request.follow_up_sla_at));
+  }, []);
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -67,17 +106,18 @@ export default function AdminDevisPage() {
   }, [user, isAdmin, authLoading, router]);
 
   useEffect(() => {
-    if (!authLoading && user && isAdmin) {
-      loadRequests();
+    if (authLoading || !user || !isAdmin) {
+      return undefined;
     }
-  }, [user, isAdmin, authLoading]);
 
-  useEffect(() => {
-    document.body.style.overflow = selectedRequest ? 'hidden' : 'unset';
+    const timeoutId = window.setTimeout(() => {
+      refresh();
+    }, 180);
+
     return () => {
-      document.body.style.overflow = 'unset';
+      window.clearTimeout(timeoutId);
     };
-  }, [selectedRequest]);
+  }, [authLoading, isAdmin, refresh, user]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -96,20 +136,6 @@ export default function AdminDevisPage() {
       window.removeEventListener('popstate', updateLeadIdFromLocation);
     };
   }, []);
-
-  const loadRequests = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getDevisRequests({ limit: 50 });
-      setRequests(data);
-    } catch (err) {
-      console.error(err);
-      setError('Erreur lors du chargement des demandes');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
     const result = await signOut();
@@ -136,15 +162,10 @@ export default function AdminDevisPage() {
     setLeadIdParam(leadId || '');
   }, []);
 
-  const openRequest = useCallback((request, { syncQuery = true } = {}) => {
-    setSelectedRequest(request);
-    setLeadStatusDraft(request.lead_status || LEAD_STATUSES.SUBMITTED);
-    setLeadQualityDraft(
-      request.lead_quality_outcome
-      || deriveLeadQualityOutcomeFromStatus(request.lead_status || LEAD_STATUSES.SUBMITTED)
-    );
-    setLeadOwnerDraft(request.lead_owner || '');
-    setFollowUpSlaDraft(formatDateTimeLocalInputValue(request.follow_up_sla_at));
+  const openRequest = useCallback(async (request, { syncQuery = true } = {}) => {
+    const cachedRequest = getCachedDetail(request.id) || request;
+    setSelectedRequest(cachedRequest);
+    applyLeadDrafts(cachedRequest);
     setStatusError('');
     setOperationsError('');
     setAttributionError('');
@@ -152,7 +173,15 @@ export default function AdminDevisPage() {
     if (syncQuery && leadIdParam !== request.id) {
       syncLeadQuery(request.id);
     }
-  }, [leadIdParam, syncLeadQuery]);
+
+    try {
+      const detail = await getDetail(request.id);
+      setSelectedRequest(detail);
+      applyLeadDrafts(detail);
+    } catch (loadError) {
+      setSelectedRequest((current) => current || cachedRequest);
+    }
+  }, [applyLeadDrafts, getCachedDetail, getDetail, leadIdParam, syncLeadQuery]);
 
   const closeRequest = useCallback(() => {
     setSelectedRequest(null);
@@ -188,16 +217,9 @@ export default function AdminDevisPage() {
         leadStatus: leadStatusDraft
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
+      upsertLead(updatedLead);
       setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setStatusError(saveError.message || 'Impossible de mettre à jour le statut.');
@@ -218,16 +240,9 @@ export default function AdminDevisPage() {
         whatsappManualTag: !Boolean(selectedRequest.whatsapp_manual_tag)
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
+      upsertLead(updatedLead);
       setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setAttributionError(saveError.message || 'Impossible de mettre à jour l’attribution WhatsApp.');
@@ -250,16 +265,9 @@ export default function AdminDevisPage() {
         followUpSlaAt: parseDateTimeLocalInputValue(followUpSlaDraft)
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
+      upsertLead(updatedLead);
       setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setOperationsError(saveError.message || 'Impossible de mettre à jour le suivi du lead.');
@@ -280,16 +288,9 @@ export default function AdminDevisPage() {
         lastWorkedAt: new Date().toISOString()
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
+      upsertLead(updatedLead);
       setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setOperationsError(saveError.message || 'Impossible de marquer le lead comme travaillé.');
@@ -359,49 +360,13 @@ export default function AdminDevisPage() {
     });
   };
 
-  const filteredRequests = useMemo(() => requests.filter((request) => {
-    const requestDate = request.created_at ? new Date(request.created_at) : null;
-    const dateFrom = filters.dateFrom ? new Date(`${filters.dateFrom}T00:00:00`) : null;
-    const dateTo = filters.dateTo ? new Date(`${filters.dateTo}T23:59:59`) : null;
-
-    if (filters.leadStatus !== 'all' && getLeadStatus(request) !== filters.leadStatus) {
-      return false;
-    }
-
-    if (filters.leadQualityOutcome !== 'all' && getLeadQualityOutcome(request) !== filters.leadQualityOutcome) {
-      return false;
-    }
-
-    if (filters.serviceType !== 'all' && request.type_service !== filters.serviceType) {
-      return false;
-    }
-
-    if (!matchesWhatsAppFilter(request, filters.whatsappAttribution)) {
-      return false;
-    }
-
-    if (filters.sessionSource && !String(request.session_source || 'direct').toLowerCase().includes(filters.sessionSource.toLowerCase())) {
-      return false;
-    }
-
-    if (filters.sessionMedium && !String(request.session_medium || '(none)').toLowerCase().includes(filters.sessionMedium.toLowerCase())) {
-      return false;
-    }
-
-    if (filters.leadOwner && !String(request.lead_owner || '').toLowerCase().includes(filters.leadOwner.toLowerCase())) {
-      return false;
-    }
-
-    if (dateFrom && (!requestDate || requestDate < dateFrom)) {
-      return false;
-    }
-
-    if (dateTo && (!requestDate || requestDate > dateTo)) {
-      return false;
-    }
-
-    return true;
-  }), [requests, filters, getLeadQualityOutcome, getLeadStatus]);
+  const filteredRequests = useMemo(() => requests.filter((request) => (
+    matchesWhatsAppFilter(request, filters.whatsappAttribution)
+  )), [filters.whatsappAttribution, requests]);
+  const selectedRequestLoading = selectedRequest
+    ? detailLoadingId === selectedRequest.id && !getCachedDetail(selectedRequest.id)
+    : false;
+  const selectedRequestError = selectedRequest ? detailErrorById[selectedRequest.id] || '' : '';
 
   if (authLoading) {
     return (
@@ -459,7 +424,7 @@ export default function AdminDevisPage() {
     return (
       <div className={styles.container}>
         <div className={styles.error}>{error}</div>
-        <button onClick={loadRequests} className={styles.refreshButton}>
+        <button onClick={refresh} className={styles.refreshButton}>
           Réessayer
         </button>
       </div>
@@ -473,7 +438,7 @@ export default function AdminDevisPage() {
         <div className={styles.header}>
           <h1>Administration - Demandes de Devis</h1>
           <div className={styles.headerActions}>
-            <button onClick={loadRequests} className={styles.refreshButton}>
+            <button onClick={refresh} className={styles.refreshButton}>
               Actualiser
             </button>
             <button onClick={handleLogout} className={styles.logoutButton}>
@@ -635,7 +600,8 @@ export default function AdminDevisPage() {
         </div>
 
         <div className={styles.resultsMeta}>
-          {filteredRequests.length} demande{filteredRequests.length > 1 ? 's' : ''} affichée{filteredRequests.length > 1 ? 's' : ''}
+          {filteredRequests.length} demande{filteredRequests.length > 1 ? 's' : ''} chargée{filteredRequests.length > 1 ? 's' : ''}
+          {hasMore ? ' • plus de résultats disponibles' : ''}
         </div>
 
         <div className={styles.requestsList}>
@@ -691,17 +657,51 @@ export default function AdminDevisPage() {
           )}
         </div>
 
-        {selectedRequest && (
-          <div className={styles.modal} onClick={closeRequest}>
-            <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
-              <div className={styles.modalHeader}>
-                <h2>Détails de la demande</h2>
-                <button className={styles.closeButton} onClick={closeRequest}>
-                  ×
-                </button>
-              </div>
+        {hasMore && (
+          <div className={styles.loadMoreRow}>
+            <button type="button" className={styles.secondaryButton} onClick={loadMore} disabled={loadingMore}>
+              {loadingMore ? 'Chargement...' : 'Afficher 50 de plus'}
+            </button>
+          </div>
+        )}
 
-              <div className={styles.modalBody}>
+        {selectedRequest && (
+          <AdminModalShell
+            isOpen={Boolean(selectedRequest)}
+            onClose={closeRequest}
+            eyebrow="Lead devis"
+            title="Détails de la demande"
+            subtitle={selectedRequest.email ? `${selectedRequest.nom} ${selectedRequest.prenom} • ${selectedRequest.email}` : `${selectedRequest.nom} ${selectedRequest.prenom}`}
+            headerMeta={(
+              <>
+                <span className={styles.metricBadge}>
+                  <strong>Statut</strong> {LEAD_STATUS_LABELS[getLeadStatus(selectedRequest)]}
+                </span>
+                <span className={styles.metricBadge}>
+                  <strong>Créé</strong> {formatDate(selectedRequest.created_at)}
+                </span>
+                <span className={styles.metricBadge}>
+                  <strong>Source</strong> {selectedRequest.session_source || 'direct'} / {selectedRequest.session_medium || '(none)'}
+                </span>
+              </>
+            )}
+          >
+            {selectedRequestLoading ? (
+              <div className={styles.modalState}>Chargement du détail du lead...</div>
+            ) : (
+              <>
+                {selectedRequestError && (
+                  <div className={styles.errorInlineRow}>
+                    <p className={styles.statusError}>{selectedRequestError}</p>
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={() => openRequest(selectedRequest, { syncQuery: false })}
+                    >
+                      Réessayer
+                    </button>
+                  </div>
+                )}
                 <div className={styles.section}>
                   <h3>Statut du lead</h3>
                   <div className={styles.lifecycleControls}>
@@ -904,9 +904,9 @@ export default function AdminDevisPage() {
                   <p><strong>Newsletter :</strong> {selectedRequest.newsletter ? 'Oui' : 'Non'}</p>
                   <p><strong>ID :</strong> {selectedRequest.id}</p>
                 </div>
-              </div>
-            </div>
-          </div>
+              </>
+            )}
+          </AdminModalShell>
         )}
       </div>
     </>

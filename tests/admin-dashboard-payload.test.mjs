@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildAdminDashboardData, getDashboardRange } from '../src/libs/adminDashboardMetrics.mjs';
+import {
+  buildAdminDashboardCoreData,
+  buildAdminDashboardData,
+  buildAdminDashboardOperationsSectionData,
+  buildAdminDashboardOverviewSectionData,
+  buildAdminDashboardPipelineSectionData,
+  buildAdminDashboardSeoSectionData,
+  getDashboardRange
+} from '../src/libs/adminDashboardMetrics.mjs';
 
 test('dashboard payload exposes sectioned contract and data-health fallbacks', () => {
   const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
@@ -113,4 +121,74 @@ test('dashboard payload exposes sectioned contract and data-health fallbacks', (
   assert.equal(data.dataHealth.items.find((item) => item.key === 'ga4')?.status, 'missing');
   assert.equal(data.dataHealth.items.find((item) => item.key === 'search_console')?.status, 'missing');
   assert.equal(data.dataHealth.items.find((item) => item.key === 'serp_keyword_rankings')?.status, 'missing');
+});
+
+test('dashboard section builders expose partial payloads without breaking the full contract', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const sharedInput = {
+    currentRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: []
+    },
+    externalMetricRows: [],
+    queryMetricRows: [],
+    behaviorMetricRows: [],
+    keywordCatalogRows: [],
+    keywordRankingRows: [],
+    sourceHealthRows: [],
+    auditEvents: [],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T06:00:00.000Z'
+  };
+
+  const core = buildAdminDashboardCoreData(sharedInput);
+  const overview = buildAdminDashboardOverviewSectionData(sharedInput);
+  const pipeline = buildAdminDashboardPipelineSectionData(sharedInput);
+  const seo = buildAdminDashboardSeoSectionData(sharedInput);
+  const operations = buildAdminDashboardOperationsSectionData(sharedInput);
+
+  assert.ok(core.range);
+  assert.ok(core.filters);
+  assert.ok(core.executiveSummary);
+  assert.ok(core.dataHealth);
+  assert.equal('overview' in core, false);
+  assert.equal('operations' in core, false);
+
+  assert.ok(overview.overview);
+  assert.ok(overview.pipeline);
+  assert.equal('range' in overview, false);
+  assert.equal('filters' in overview, false);
+
+  assert.ok(pipeline.pipeline);
+  assert.ok(pipeline.funnelDiagnostics);
+  assert.ok(pipeline.ctaPerformance);
+  assert.ok(pipeline.contactIntent);
+  assert.ok(pipeline.formHealth);
+  assert.equal('dataHealth' in pipeline, false);
+
+  assert.ok(seo.seoQueries);
+  assert.ok(seo.contentOpportunities);
+  assert.ok(seo.landingPageScorecard);
+  assert.ok(seo.seoContent);
+  assert.equal('executiveSummary' in seo, false);
+
+  assert.ok(operations.operations);
+  assert.equal('overview' in operations, false);
+
+  const fullData = buildAdminDashboardData(sharedInput);
+  assert.ok(fullData.executiveSummary);
+  assert.ok(fullData.overview);
+  assert.ok(fullData.pipeline);
+  assert.ok(fullData.operations);
 });

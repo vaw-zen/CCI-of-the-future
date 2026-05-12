@@ -4,9 +4,10 @@ import HeroHeader from "@/utils/components/reusableHeader/HeroHeader";
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
-import { getConventionRequests } from '@/services/conventionService';
 import { updateLeadAttribution, updateLeadOperations, updateLeadStatus } from '@/services/adminLeadService';
+import AdminModalShell from '@/app/admin/_components/AdminModalShell';
 import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
+import { useAdminLeadList } from '@/app/admin/_components/useAdminLeadList';
 import {
   CONVENTION_OPERATIONAL_STATUSES,
   deriveLeadQualityOutcomeFromStatus,
@@ -43,9 +44,6 @@ const LEAD_QUALITY_LABELS = LEAD_QUALITY_OUTCOME_LABELS;
 export default function AdminConventionsPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
-  const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [operationalStatusDraft, setOperationalStatusDraft] = useState('nouveau');
   const [leadQualityDraft, setLeadQualityDraft] = useState(LEAD_QUALITY_OUTCOMES.UNREVIEWED);
@@ -70,6 +68,50 @@ export default function AdminConventionsPage() {
     dateTo: ''
   });
   const [leadIdParam, setLeadIdParam] = useState('');
+  const serverFilters = useMemo(() => ({
+    leadStatus: filters.leadStatus,
+    leadQualityOutcome: filters.leadQualityOutcome,
+    operationalStatus: filters.operationalStatus,
+    sector: filters.sector,
+    leadOwner: filters.leadOwner,
+    sessionSource: filters.sessionSource,
+    sessionMedium: filters.sessionMedium,
+    dateFrom: filters.dateFrom,
+    dateTo: filters.dateTo
+  }), [filters]);
+  const {
+    requests,
+    loading,
+    loadingMore,
+    error,
+    hasMore,
+    refresh,
+    loadMore,
+    getDetail,
+    getCachedDetail,
+    upsertLead,
+    detailLoadingId,
+    detailErrorById
+  } = useAdminLeadList('convention', {
+    filters: serverFilters,
+    limit: 50
+  });
+
+  const applyLeadDrafts = useCallback((request) => {
+    if (!request) {
+      return;
+    }
+
+    setOperationalStatusDraft(request.statut || 'nouveau');
+    setLeadQualityDraft(
+      request.lead_quality_outcome
+      || deriveLeadQualityOutcomeFromStatus(
+        request.lead_status || deriveLeadStatusFromConventionStatus(request.statut)
+      )
+    );
+    setLeadOwnerDraft(request.lead_owner || '');
+    setFollowUpSlaDraft(formatDateTimeLocalInputValue(request.follow_up_sla_at));
+  }, []);
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -78,17 +120,18 @@ export default function AdminConventionsPage() {
   }, [user, isAdmin, authLoading, router]);
 
   useEffect(() => {
-    if (!authLoading && user && isAdmin) {
-      loadRequests();
+    if (authLoading || !user || !isAdmin) {
+      return undefined;
     }
-  }, [user, isAdmin, authLoading]);
 
-  useEffect(() => {
-    document.body.style.overflow = selectedRequest ? 'hidden' : 'unset';
+    const timeoutId = window.setTimeout(() => {
+      refresh();
+    }, 180);
+
     return () => {
-      document.body.style.overflow = 'unset';
+      window.clearTimeout(timeoutId);
     };
-  }, [selectedRequest]);
+  }, [authLoading, isAdmin, refresh, user]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -107,20 +150,6 @@ export default function AdminConventionsPage() {
       window.removeEventListener('popstate', updateLeadIdFromLocation);
     };
   }, []);
-
-  const loadRequests = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getConventionRequests({ limit: 50 });
-      setRequests(data);
-    } catch (err) {
-      console.error(err);
-      setError('Erreur lors du chargement des conventions');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
     const result = await signOut();
@@ -147,25 +176,26 @@ export default function AdminConventionsPage() {
     setLeadIdParam(leadId || '');
   }, []);
 
-  const openRequest = useCallback((request, { syncQuery = true } = {}) => {
-    setSelectedRequest(request);
-    setOperationalStatusDraft(request.statut || 'nouveau');
+  const openRequest = useCallback(async (request, { syncQuery = true } = {}) => {
+    const cachedRequest = getCachedDetail(request.id) || request;
+    setSelectedRequest(cachedRequest);
+    applyLeadDrafts(cachedRequest);
     setStatusError('');
-    setLeadQualityDraft(
-      request.lead_quality_outcome
-      || deriveLeadQualityOutcomeFromStatus(
-        request.lead_status || deriveLeadStatusFromConventionStatus(request.statut)
-      )
-    );
-    setLeadOwnerDraft(request.lead_owner || '');
-    setFollowUpSlaDraft(formatDateTimeLocalInputValue(request.follow_up_sla_at));
     setOperationsError('');
     setAttributionError('');
 
     if (syncQuery && leadIdParam !== request.id) {
       syncLeadQuery(request.id);
     }
-  }, [leadIdParam, syncLeadQuery]);
+
+    try {
+      const detail = await getDetail(request.id);
+      setSelectedRequest(detail);
+      applyLeadDrafts(detail);
+    } catch (loadError) {
+      setSelectedRequest((current) => current || cachedRequest);
+    }
+  }, [applyLeadDrafts, getCachedDetail, getDetail, leadIdParam, syncLeadQuery]);
 
   const closeRequest = useCallback(() => {
     setSelectedRequest(null);
@@ -203,18 +233,9 @@ export default function AdminConventionsPage() {
         leadStatus: deriveLeadStatusFromConventionStatus(operationalStatusDraft)
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
+      upsertLead(updatedLead);
       setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(
-          updatedLead.lead_status || deriveLeadStatusFromConventionStatus(updatedLead.statut)
-        )
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setStatusError(saveError.message || 'Impossible de mettre à jour le statut.');
@@ -235,18 +256,9 @@ export default function AdminConventionsPage() {
         whatsappManualTag: !Boolean(selectedRequest.whatsapp_manual_tag)
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
+      upsertLead(updatedLead);
       setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(
-          updatedLead.lead_status || deriveLeadStatusFromConventionStatus(updatedLead.statut)
-        )
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setAttributionError(saveError.message || 'Impossible de mettre à jour l’attribution WhatsApp.');
@@ -269,18 +281,9 @@ export default function AdminConventionsPage() {
         followUpSlaAt: parseDateTimeLocalInputValue(followUpSlaDraft)
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
+      upsertLead(updatedLead);
       setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(
-          updatedLead.lead_status || deriveLeadStatusFromConventionStatus(updatedLead.statut)
-        )
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setOperationsError(saveError.message || 'Impossible de mettre à jour le suivi du lead.');
@@ -301,18 +304,9 @@ export default function AdminConventionsPage() {
         lastWorkedAt: new Date().toISOString()
       });
 
-      setRequests((currentRequests) => currentRequests.map((request) => (
-        request.id === updatedLead.id ? updatedLead : request
-      )));
+      upsertLead(updatedLead);
       setSelectedRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(
-          updatedLead.lead_status || deriveLeadStatusFromConventionStatus(updatedLead.statut)
-        )
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setOperationsError(saveError.message || 'Impossible de marquer le lead comme travaillé.');
@@ -372,53 +366,13 @@ export default function AdminConventionsPage() {
     });
   };
 
-  const filteredRequests = useMemo(() => requests.filter((request) => {
-    const requestDate = request.created_at ? new Date(request.created_at) : null;
-    const dateFrom = filters.dateFrom ? new Date(`${filters.dateFrom}T00:00:00`) : null;
-    const dateTo = filters.dateTo ? new Date(`${filters.dateTo}T23:59:59`) : null;
-
-    if (filters.leadStatus !== 'all' && getLeadStatus(request) !== filters.leadStatus) {
-      return false;
-    }
-
-    if (filters.leadQualityOutcome !== 'all' && getLeadQualityOutcome(request) !== filters.leadQualityOutcome) {
-      return false;
-    }
-
-    if (filters.operationalStatus !== 'all' && request.statut !== filters.operationalStatus) {
-      return false;
-    }
-
-    if (filters.sector !== 'all' && request.secteur_activite !== filters.sector) {
-      return false;
-    }
-
-    if (!matchesWhatsAppFilter(request, filters.whatsappAttribution)) {
-      return false;
-    }
-
-    if (filters.sessionSource && !String(request.session_source || 'direct').toLowerCase().includes(filters.sessionSource.toLowerCase())) {
-      return false;
-    }
-
-    if (filters.sessionMedium && !String(request.session_medium || '(none)').toLowerCase().includes(filters.sessionMedium.toLowerCase())) {
-      return false;
-    }
-
-    if (filters.leadOwner && !String(request.lead_owner || '').toLowerCase().includes(filters.leadOwner.toLowerCase())) {
-      return false;
-    }
-
-    if (dateFrom && (!requestDate || requestDate < dateFrom)) {
-      return false;
-    }
-
-    if (dateTo && (!requestDate || requestDate > dateTo)) {
-      return false;
-    }
-
-    return true;
-  }), [requests, filters, getLeadQualityOutcome, getLeadStatus]);
+  const filteredRequests = useMemo(() => requests.filter((request) => (
+    matchesWhatsAppFilter(request, filters.whatsappAttribution)
+  )), [filters.whatsappAttribution, requests]);
+  const selectedRequestLoading = selectedRequest
+    ? detailLoadingId === selectedRequest.id && !getCachedDetail(selectedRequest.id)
+    : false;
+  const selectedRequestError = selectedRequest ? detailErrorById[selectedRequest.id] || '' : '';
 
   if (authLoading) {
     return (
@@ -476,7 +430,7 @@ export default function AdminConventionsPage() {
     return (
       <div className={styles.container}>
         <div className={styles.error}>{error}</div>
-        <button onClick={loadRequests} className={styles.refreshButton}>
+        <button onClick={refresh} className={styles.refreshButton}>
           Réessayer
         </button>
       </div>
@@ -490,7 +444,7 @@ export default function AdminConventionsPage() {
         <div className={styles.header}>
           <h1>Administration - Conventions</h1>
           <div className={styles.headerActions}>
-            <button onClick={loadRequests} className={styles.refreshButton}>
+            <button onClick={refresh} className={styles.refreshButton}>
               Actualiser
             </button>
             <button onClick={handleLogout} className={styles.logoutButton}>
@@ -670,7 +624,8 @@ export default function AdminConventionsPage() {
         </div>
 
         <div className={styles.resultsMeta}>
-          {filteredRequests.length} convention{filteredRequests.length > 1 ? 's' : ''} affichée{filteredRequests.length > 1 ? 's' : ''}
+          {filteredRequests.length} convention{filteredRequests.length > 1 ? 's' : ''} chargée{filteredRequests.length > 1 ? 's' : ''}
+          {hasMore ? ' • plus de résultats disponibles' : ''}
         </div>
 
         <div className={styles.requestsList}>
@@ -726,17 +681,51 @@ export default function AdminConventionsPage() {
           )}
         </div>
 
-        {selectedRequest && (
-          <div className={styles.modal} onClick={closeRequest}>
-            <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
-              <div className={styles.modalHeader}>
-                <h2>Détails de la convention</h2>
-                <button className={styles.closeButton} onClick={closeRequest}>
-                  ×
-                </button>
-              </div>
+        {hasMore && (
+          <div className={styles.loadMoreRow}>
+            <button type="button" className={styles.secondaryButton} onClick={loadMore} disabled={loadingMore}>
+              {loadingMore ? 'Chargement...' : 'Afficher 50 de plus'}
+            </button>
+          </div>
+        )}
 
-              <div className={styles.modalBody}>
+        {selectedRequest && (
+          <AdminModalShell
+            isOpen={Boolean(selectedRequest)}
+            onClose={closeRequest}
+            eyebrow="Lead convention"
+            title="Détails de la convention"
+            subtitle={selectedRequest.contact_nom ? `${selectedRequest.raison_sociale} • ${selectedRequest.contact_nom} ${selectedRequest.contact_prenom || ''}`.trim() : selectedRequest.raison_sociale}
+            headerMeta={(
+              <>
+                <span className={styles.metricBadge}>
+                  <strong>Statut</strong> {LEAD_STATUS_LABELS[getLeadStatus(selectedRequest)]}
+                </span>
+                <span className={styles.metricBadge}>
+                  <strong>Créé</strong> {formatDate(selectedRequest.created_at)}
+                </span>
+                <span className={styles.metricBadge}>
+                  <strong>Source</strong> {selectedRequest.session_source || 'direct'} / {selectedRequest.session_medium || '(none)'}
+                </span>
+              </>
+            )}
+          >
+            {selectedRequestLoading ? (
+              <div className={styles.modalState}>Chargement du détail de la convention...</div>
+            ) : (
+              <>
+                {selectedRequestError && (
+                  <div className={styles.errorInlineRow}>
+                    <p className={styles.statusError}>{selectedRequestError}</p>
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={() => openRequest(selectedRequest, { syncQuery: false })}
+                    >
+                      Réessayer
+                    </button>
+                  </div>
+                )}
                 <div className={styles.section}>
                   <h3>Statuts</h3>
                   <div className={styles.lifecycleControls}>
@@ -918,9 +907,9 @@ export default function AdminConventionsPage() {
                     <p>{selectedRequest.message}</p>
                   </div>
                 )}
-              </div>
-            </div>
-          </div>
+              </>
+            )}
+          </AdminModalShell>
         )}
       </div>
     </>

@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import {
   convertWhatsAppIntentToLead,
-  getWhatsAppDirectLeads,
   getWhatsAppIntents,
   updateLeadOperations,
   updateLeadStatus
@@ -21,11 +20,12 @@ import {
   LEAD_STATUSES,
   parseDateTimeLocalInputValue
 } from '@/utils/leadLifecycle';
+import AdminModalShell from '@/app/admin/_components/AdminModalShell';
 import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
+import { useAdminLeadList } from '@/app/admin/_components/useAdminLeadList';
 import WhatsAppLeadCreateModal from '@/app/admin/_components/WhatsAppLeadCreateModal';
 import {
   getWhatsAppDirectLeadAttributionLabel,
-  matchesWhatsAppDirectPhone,
   WHATSAPP_DIRECT_LEAD_BUSINESS_LINES,
   WHATSAPP_DIRECT_LEAD_SCHEDULE_TYPES,
   filterWhatsAppServiceOptions
@@ -50,10 +50,8 @@ const SCHEDULE_TYPE_LABELS = Object.fromEntries(
 export default function AdminWhatsAppPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
-  const [requests, setRequests] = useState([]);
   const [intents, setIntents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [intentsLoading, setIntentsLoading] = useState(true);
   const [intentError, setIntentError] = useState('');
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
@@ -78,6 +76,47 @@ export default function AdminWhatsAppPage() {
     dateFrom: '',
     dateTo: ''
   });
+  const serverFilters = useMemo(() => ({
+    leadStatus: filters.leadStatus,
+    businessLine: filters.businessLine,
+    scheduledType: filters.scheduledType,
+    leadQualityOutcome: filters.leadQualityOutcome,
+    leadOwner: filters.leadOwner,
+    phone: filters.phone,
+    dateFrom: filters.dateFrom,
+    dateTo: filters.dateTo
+  }), [filters]);
+  const {
+    requests,
+    loading,
+    loadingMore,
+    error,
+    hasMore,
+    refresh,
+    loadMore,
+    getDetail,
+    getCachedDetail,
+    upsertLead,
+    detailLoadingId,
+    detailErrorById
+  } = useAdminLeadList('whatsapp', {
+    filters: serverFilters,
+    limit: 50
+  });
+
+  const applyLeadDrafts = useCallback((request) => {
+    if (!request) {
+      return;
+    }
+
+    setLeadStatusDraft(request.lead_status || LEAD_STATUSES.SUBMITTED);
+    setLeadQualityDraft(
+      request.lead_quality_outcome
+      || deriveLeadQualityOutcomeFromStatus(request.lead_status || LEAD_STATUSES.SUBMITTED)
+    );
+    setLeadOwnerDraft(request.lead_owner || '');
+    setFollowUpSlaDraft(formatDateTimeLocalInputValue(request.follow_up_sla_at));
+  }, []);
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -86,17 +125,48 @@ export default function AdminWhatsAppPage() {
   }, [user, isAdmin, authLoading, router]);
 
   useEffect(() => {
-    if (!authLoading && user && isAdmin) {
-      loadRequests();
+    if (authLoading || !user || !isAdmin) {
+      return undefined;
     }
-  }, [user, isAdmin, authLoading]);
 
-  useEffect(() => {
-    document.body.style.overflow = selectedRequest || isCreateModalOpen ? 'hidden' : 'unset';
+    let cancelled = false;
+    const timeoutId = window.setTimeout(async () => {
+      await refresh();
+
+      if (cancelled) {
+        return;
+      }
+
+      try {
+        setIntentsLoading(true);
+        setIntentError('');
+        const data = await getWhatsAppIntents({
+          dateFrom: filters.dateFrom || undefined,
+          dateTo: filters.dateTo || undefined,
+          limit: 50
+        });
+
+        if (!cancelled) {
+          setIntents(data);
+        }
+      } catch (loadError) {
+        console.error(loadError);
+        if (!cancelled) {
+          setIntents([]);
+          setIntentError(loadError.message || 'Impossible de charger les intentions site WhatsApp.');
+        }
+      } finally {
+        if (!cancelled) {
+          setIntentsLoading(false);
+        }
+      }
+    }, 180);
+
     return () => {
-      document.body.style.overflow = 'unset';
+      cancelled = true;
+      window.clearTimeout(timeoutId);
     };
-  }, [selectedRequest, isCreateModalOpen]);
+  }, [authLoading, filters.dateFrom, filters.dateTo, isAdmin, refresh, user]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -115,38 +185,6 @@ export default function AdminWhatsAppPage() {
       window.removeEventListener('popstate', updateLeadIdFromLocation);
     };
   }, []);
-
-  const loadRequests = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      setIntentError('');
-
-      const [leadsResult, intentsResult] = await Promise.allSettled([
-        getWhatsAppDirectLeads({ limit: 500 }),
-        getWhatsAppIntents({ limit: 250 })
-      ]);
-
-      if (leadsResult.status !== 'fulfilled') {
-        throw leadsResult.reason;
-      }
-
-      setRequests(leadsResult.value);
-
-      if (intentsResult.status === 'fulfilled') {
-        setIntents(intentsResult.value);
-      } else {
-        console.error(intentsResult.reason);
-        setIntents([]);
-        setIntentError(intentsResult.reason?.message || 'Impossible de charger les intentions site WhatsApp.');
-      }
-    } catch (loadError) {
-      console.error(loadError);
-      setError(loadError.message || 'Erreur lors du chargement des leads WhatsApp');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
     const result = await signOut();
@@ -173,15 +211,10 @@ export default function AdminWhatsAppPage() {
     setLeadIdParam(leadId || '');
   }, []);
 
-  const openRequest = useCallback((request, { syncQuery = true } = {}) => {
-    setSelectedRequest(request);
-    setLeadStatusDraft(request.lead_status || LEAD_STATUSES.SUBMITTED);
-    setLeadQualityDraft(
-      request.lead_quality_outcome
-      || deriveLeadQualityOutcomeFromStatus(request.lead_status || LEAD_STATUSES.SUBMITTED)
-    );
-    setLeadOwnerDraft(request.lead_owner || '');
-    setFollowUpSlaDraft(formatDateTimeLocalInputValue(request.follow_up_sla_at));
+  const openRequest = useCallback(async (request, { syncQuery = true } = {}) => {
+    const cachedRequest = getCachedDetail(request.id) || request;
+    setSelectedRequest(cachedRequest);
+    applyLeadDrafts(cachedRequest);
     setStatusError('');
     setOperationsError('');
     setPhoneCopyState('');
@@ -189,7 +222,15 @@ export default function AdminWhatsAppPage() {
     if (syncQuery && leadIdParam !== request.id) {
       syncLeadQuery(request.id);
     }
-  }, [leadIdParam, syncLeadQuery]);
+
+    try {
+      const detail = await getDetail(request.id);
+      setSelectedRequest(detail);
+      applyLeadDrafts(detail);
+    } catch (loadError) {
+      setSelectedRequest((current) => current || cachedRequest);
+    }
+  }, [applyLeadDrafts, getCachedDetail, getDetail, leadIdParam, syncLeadQuery]);
 
   const closeRequest = useCallback(() => {
     setSelectedRequest(null);
@@ -213,21 +254,6 @@ export default function AdminWhatsAppPage() {
     }
   }, [leadIdParam, openRequest, requests, selectedRequest?.id]);
 
-  const upsertRequest = useCallback((updatedLead) => {
-    setRequests((currentRequests) => {
-      const nextRequests = [
-        updatedLead,
-        ...currentRequests.filter((request) => request.id !== updatedLead.id)
-      ];
-
-      return nextRequests.sort(
-        (left, right) => new Date(right.lead_captured_at || right.created_at || 0)
-          - new Date(left.lead_captured_at || left.created_at || 0)
-      );
-    });
-    setSelectedRequest(updatedLead);
-  }, []);
-
   const handleStatusSave = async () => {
     if (!selectedRequest || !leadStatusDraft) {
       return;
@@ -241,13 +267,9 @@ export default function AdminWhatsAppPage() {
         leadStatus: leadStatusDraft
       });
 
-      upsertRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      upsertLead(updatedLead);
+      setSelectedRequest(updatedLead);
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setStatusError(saveError.message || 'Impossible de mettre à jour le statut.');
@@ -271,13 +293,9 @@ export default function AdminWhatsAppPage() {
         followUpSlaAt: parseDateTimeLocalInputValue(followUpSlaDraft)
       });
 
-      upsertRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      upsertLead(updatedLead);
+      setSelectedRequest(updatedLead);
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setOperationsError(saveError.message || 'Impossible de mettre à jour le suivi du lead.');
@@ -298,13 +316,9 @@ export default function AdminWhatsAppPage() {
         lastWorkedAt: new Date().toISOString()
       });
 
-      upsertRequest(updatedLead);
-      setLeadQualityDraft(
-        updatedLead.lead_quality_outcome
-        || deriveLeadQualityOutcomeFromStatus(updatedLead.lead_status || LEAD_STATUSES.SUBMITTED)
-      );
-      setLeadOwnerDraft(updatedLead.lead_owner || '');
-      setFollowUpSlaDraft(formatDateTimeLocalInputValue(updatedLead.follow_up_sla_at));
+      upsertLead(updatedLead);
+      setSelectedRequest(updatedLead);
+      applyLeadDrafts(updatedLead);
     } catch (saveError) {
       console.error(saveError);
       setOperationsError(saveError.message || 'Impossible de marquer le lead comme travaillé.');
@@ -333,7 +347,7 @@ export default function AdminWhatsAppPage() {
       setIntents((currentIntents) => currentIntents.filter((intent) => intent.id !== selectedIntentForConversion.id));
     }
 
-    upsertRequest(createdLead);
+    upsertLead(createdLead);
     closeCreateModal();
     openRequest(createdLead);
   };
@@ -452,45 +466,11 @@ export default function AdminWhatsAppPage() {
     });
   };
 
-  const filteredRequests = useMemo(() => requests.filter((request) => {
-    const requestDate = request.lead_captured_at ? new Date(request.lead_captured_at) : null;
-    const dateFrom = filters.dateFrom ? new Date(`${filters.dateFrom}T00:00:00`) : null;
-    const dateTo = filters.dateTo ? new Date(`${filters.dateTo}T23:59:59`) : null;
-
-    if (filters.leadStatus !== 'all' && getLeadStatus(request) !== filters.leadStatus) {
-      return false;
-    }
-
-    if (filters.businessLine !== 'all' && request.business_line !== filters.businessLine) {
-      return false;
-    }
-
-    if (filters.scheduledType !== 'all' && (request.scheduled_type || 'none') !== filters.scheduledType) {
-      return false;
-    }
-
-    if (filters.leadQualityOutcome !== 'all' && getLeadQualityOutcome(request) !== filters.leadQualityOutcome) {
-      return false;
-    }
-
-    if (filters.leadOwner && !String(request.lead_owner || '').toLowerCase().includes(filters.leadOwner.toLowerCase())) {
-      return false;
-    }
-
-    if (!matchesWhatsAppDirectPhone(request.telephone, filters.phone)) {
-      return false;
-    }
-
-    if (dateFrom && (!requestDate || requestDate < dateFrom)) {
-      return false;
-    }
-
-    if (dateTo && (!requestDate || requestDate > dateTo)) {
-      return false;
-    }
-
-    return true;
-  }), [requests, filters, getLeadQualityOutcome, getLeadStatus]);
+  const filteredRequests = requests;
+  const selectedRequestLoading = selectedRequest
+    ? detailLoadingId === selectedRequest.id && !getCachedDetail(selectedRequest.id)
+    : false;
+  const selectedRequestError = selectedRequest ? detailErrorById[selectedRequest.id] || '' : '';
 
   if (authLoading) {
     return (
@@ -522,7 +502,7 @@ export default function AdminWhatsAppPage() {
     return (
       <div className={styles.container}>
         <div className={styles.error}>{error}</div>
-        <button onClick={loadRequests} className={styles.refreshButton}>
+        <button onClick={refresh} className={styles.refreshButton}>
           Réessayer
         </button>
       </div>
@@ -539,7 +519,7 @@ export default function AdminWhatsAppPage() {
             <button type="button" onClick={openManualCreateModal} className={styles.saveButton}>
               Ajouter lead WhatsApp
             </button>
-            <button onClick={loadRequests} className={styles.refreshButton}>
+            <button onClick={refresh} className={styles.refreshButton}>
               Actualiser
             </button>
             <button onClick={handleLogout} className={styles.logoutButton}>
@@ -587,6 +567,7 @@ export default function AdminWhatsAppPage() {
             <p className={styles.inlineHelp}>
               Ces clics viennent du site mais ne comptent pas encore comme des leads. Convertissez-les seulement quand une vraie conversation WhatsApp existe et que vous connaissez le téléphone du contact.
             </p>
+            {intentsLoading && <p className={styles.mutedText}>Chargement des intentions site WhatsApp...</p>}
             {intentError ? (
               <p className={styles.statusError}>{intentError}</p>
             ) : intents.length === 0 ? (
@@ -734,7 +715,8 @@ export default function AdminWhatsAppPage() {
         </div>
 
         <div className={styles.resultsMeta}>
-          {filteredRequests.length} lead{filteredRequests.length > 1 ? 's' : ''} WhatsApp affiché{filteredRequests.length > 1 ? 's' : ''}
+          {filteredRequests.length} lead{filteredRequests.length > 1 ? 's' : ''} WhatsApp chargé{filteredRequests.length > 1 ? 's' : ''}
+          {hasMore ? ' • plus de résultats disponibles' : ''}
         </div>
 
         <div className={styles.requestsList}>
@@ -789,28 +771,62 @@ export default function AdminWhatsAppPage() {
           )}
         </div>
 
-        {selectedRequest && (
-          <div className={styles.modal} onClick={closeRequest}>
-            <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
-              <div className={styles.modalHeader}>
-                <div className={styles.headerTitleBlock}>
-                  <h2>{selectedRequest.company_name ? `${selectedRequest.company_name} • ${selectedRequest.contact_name}` : selectedRequest.contact_name}</h2>
-                  <div className={styles.headerMetaLine}>
-                    <a href={`tel:${selectedRequest.telephone}`} className={styles.phoneLink}>
-                      {selectedRequest.telephone}
-                    </a>
-                    <button type="button" className={styles.secondaryButton} onClick={handleCopyPhone}>
-                      Copier le numéro
-                    </button>
-                    {phoneCopyState && <span className={styles.copyStatus}>{phoneCopyState}</span>}
-                  </div>
-                </div>
-                <button className={styles.closeButton} onClick={closeRequest}>
-                  ×
-                </button>
-              </div>
+        {hasMore && (
+          <div className={styles.loadMoreRow}>
+            <button type="button" className={styles.secondaryButton} onClick={loadMore} disabled={loadingMore}>
+              {loadingMore ? 'Chargement...' : 'Afficher 50 de plus'}
+            </button>
+          </div>
+        )}
 
-              <div className={styles.modalBody}>
+        {selectedRequest && (
+          <AdminModalShell
+            isOpen={Boolean(selectedRequest)}
+            onClose={closeRequest}
+            eyebrow="Lead WhatsApp"
+            title={selectedRequest.company_name ? `${selectedRequest.company_name} • ${selectedRequest.contact_name}` : selectedRequest.contact_name}
+            subtitle={selectedRequest.email || getServiceLabel(selectedRequest.service_key, selectedRequest.business_line)}
+            headerMeta={(
+              <>
+                <span className={styles.metricBadge}>
+                  <strong>Statut</strong> {LEAD_STATUS_LABELS[getLeadStatus(selectedRequest)]}
+                </span>
+                <span className={styles.metricBadge}>
+                  <strong>Business line</strong> {getBusinessLineLabel(selectedRequest.business_line)}
+                </span>
+                <span className={styles.metricBadge}>
+                  <strong>Source</strong> {selectedRequest.session_source || 'whatsapp'} / {selectedRequest.session_medium || 'messaging'}
+                </span>
+              </>
+            )}
+            headerActions={(
+              <>
+                <a href={`tel:${selectedRequest.telephone}`} className={styles.phoneLink}>
+                  {selectedRequest.telephone}
+                </a>
+                <button type="button" className={styles.secondaryButton} onClick={handleCopyPhone}>
+                  Copier le numéro
+                </button>
+                {phoneCopyState && <span className={styles.copyStatus}>{phoneCopyState}</span>}
+              </>
+            )}
+          >
+            {selectedRequestLoading ? (
+              <div className={styles.modalState}>Chargement du détail du lead WhatsApp...</div>
+            ) : (
+              <>
+                {selectedRequestError && (
+                  <div className={styles.errorInlineRow}>
+                    <p className={styles.statusError}>{selectedRequestError}</p>
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={() => openRequest(selectedRequest, { syncQuery: false })}
+                    >
+                      Réessayer
+                    </button>
+                  </div>
+                )}
                 <div className={styles.section}>
                   <h3>Statut du lead</h3>
                   <div className={styles.lifecycleControls}>
@@ -964,9 +980,9 @@ export default function AdminWhatsAppPage() {
                   <p><strong>Dernière mise à jour :</strong> {formatDate(selectedRequest.updated_at)}</p>
                   <p><strong>ID :</strong> {selectedRequest.id}</p>
                 </div>
-              </div>
-            </div>
-          </div>
+              </>
+            )}
+          </AdminModalShell>
         )}
 
         <WhatsAppLeadCreateModal

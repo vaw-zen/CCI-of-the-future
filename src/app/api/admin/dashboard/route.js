@@ -2,7 +2,16 @@ import { NextResponse } from 'next/server';
 import { authenticateAdminRequest } from '@/libs/adminApiAuth';
 import { createServiceClient } from '@/libs/supabase';
 import { getClientIp, rateLimitRequest } from '@/libs/security';
-import { buildAdminDashboardData, getDashboardRange } from '@/libs/adminDashboardMetrics.mjs';
+import {
+  buildAdminDashboardAcquisitionSectionData,
+  buildAdminDashboardCoreData,
+  buildAdminDashboardData,
+  buildAdminDashboardOperationsSectionData,
+  buildAdminDashboardOverviewSectionData,
+  buildAdminDashboardPipelineSectionData,
+  buildAdminDashboardSeoSectionData,
+  getDashboardRange
+} from '@/libs/adminDashboardMetrics.mjs';
 import { fetchFacebookAdminSnapshot } from '@/libs/facebookAdminSnapshot.mjs';
 import { fetchGrowthKeywordCatalogRows } from '@/libs/growthKeywordCatalog.mjs';
 import { runLeadSelectWithOptionalTrackingFallback } from '@/libs/leadTrackingSchemaCompat.mjs';
@@ -24,6 +33,7 @@ const NORMALIZED_EXTERNAL_METRIC_VIEW_WARNINGS = new Set();
 const GROWTH_QUERY_METRIC_WARNINGS = new Set();
 const GROWTH_BEHAVIOR_METRIC_WARNINGS = new Set();
 const OPTIONAL_GROWTH_EVENTS_WARNINGS = new Set();
+const DASHBOARD_SECTION_KEYS = ['core', 'overview', 'pipeline', 'acquisition', 'seo', 'operations'];
 
 const DASHBOARD_SELECT_FIELDS = {
   devis: [
@@ -603,6 +613,58 @@ async function fetchGrowthSourceHealth(supabase) {
   };
 }
 
+function parseDashboardSections(value) {
+  const normalized = String(value || '').trim();
+  if (!normalized) {
+    return {
+      hasSectionRequest: false,
+      sections: [],
+      invalidSections: []
+    };
+  }
+
+  const rawSections = normalized
+    .split(',')
+    .map((section) => section.trim().toLowerCase())
+    .filter(Boolean);
+  const sections = Array.from(new Set(rawSections));
+  const invalidSections = sections.filter((section) => !DASHBOARD_SECTION_KEYS.includes(section));
+
+  return {
+    hasSectionRequest: true,
+    sections: sections.filter((section) => DASHBOARD_SECTION_KEYS.includes(section)),
+    invalidSections
+  };
+}
+
+function buildReportingWarnings({
+  currentRowsResult,
+  previousRowsResult,
+  universeRowsResult,
+  externalMetricsResult,
+  queryMetricsResult,
+  behaviorMetricsResult,
+  whatsappClickResult,
+  facebookSnapshot,
+  keywordCatalogResult,
+  keywordRankingResult,
+  sourceHealthResult
+}) {
+  return Array.from(new Set([
+    ...(currentRowsResult?.warnings || []),
+    ...(previousRowsResult?.warnings || []),
+    ...(universeRowsResult?.warnings || []),
+    externalMetricsResult?.error ? 'growth_channel_daily_metrics_unavailable' : null,
+    queryMetricsResult?.error ? 'growth_query_daily_metrics_unavailable' : null,
+    behaviorMetricsResult?.error ? 'growth_behavior_daily_metrics_unavailable' : null,
+    whatsappClickResult?.error ? 'whatsapp_click_events_unavailable' : null,
+    ...((facebookSnapshot?.warnings || []).map((warning) => warning.key)),
+    keywordCatalogResult?.error ? 'growth_keyword_catalog_unavailable' : null,
+    keywordRankingResult?.error ? 'growth_keyword_rankings_daily_unavailable' : null,
+    sourceHealthResult?.error ? 'growth_reporting_source_health_unavailable' : null
+  ].filter(Boolean)));
+}
+
 export async function GET(request) {
   const rateLimitResponse = rateLimitRequest(request, ADMIN_DASHBOARD_RATE_LIMIT);
   if (rateLimitResponse) {
@@ -645,8 +707,141 @@ export async function GET(request) {
     device: searchParams.get('device'),
     pageType: searchParams.get('pageType')
   };
+  const sectionParseResult = parseDashboardSections(searchParams.get('sections'));
+
+  if (sectionParseResult.invalidSections.length > 0) {
+    return getErrorResponse(
+      'invalid_sections',
+      `Sections dashboard invalides: ${sectionParseResult.invalidSections.join(', ')}.`,
+      400
+    );
+  }
 
   try {
+    const nowIso = new Date().toISOString();
+
+    if (!sectionParseResult.hasSectionRequest) {
+      const [
+        currentRowsResult,
+        previousRowsResult,
+        universeRowsResult,
+        auditEvents,
+        externalMetricsResult,
+        queryMetricsResult,
+        behaviorMetricsResult,
+        whatsappClickResult,
+        facebookSnapshot,
+        keywordCatalogResult,
+        keywordRankingResult,
+        sourceHealthResult
+      ] = await Promise.all([
+        fetchLeadRows(supabase, rangeResult.range),
+        fetchLeadRows(supabase, rangeResult.previousRange),
+        fetchAllLeadRows(supabase),
+        fetchAuditEvents(supabase),
+        fetchExternalMetricRows(supabase, rangeResult.range),
+        fetchQueryMetricRows(supabase, rangeResult.range),
+        fetchBehaviorMetricRows(supabase, rangeResult.range),
+        fetchWhatsAppClickRows(supabase, rangeResult.range),
+        fetchFacebookAdminSnapshot(),
+        fetchKeywordCatalogRows(supabase),
+        fetchKeywordRankingRows(supabase, rangeResult.range),
+        fetchGrowthSourceHealth(supabase)
+      ]);
+      const reportingWarnings = buildReportingWarnings({
+        currentRowsResult,
+        previousRowsResult,
+        universeRowsResult,
+        externalMetricsResult,
+        queryMetricsResult,
+        behaviorMetricsResult,
+        whatsappClickResult,
+        facebookSnapshot,
+        keywordCatalogResult,
+        keywordRankingResult,
+        sourceHealthResult
+      });
+      const dashboardData = buildAdminDashboardData({
+        currentRows: currentRowsResult.rows,
+        previousRows: previousRowsResult.rows,
+        universeRows: universeRowsResult.rows,
+        externalMetricRows: externalMetricsResult.rows,
+        queryMetricRows: queryMetricsResult.rows,
+        behaviorMetricRows: behaviorMetricsResult.rows,
+        whatsappClickRows: whatsappClickResult.rows,
+        facebookSnapshot,
+        keywordCatalogRows: keywordCatalogResult.rows,
+        keywordRankingRows: keywordRankingResult.rows,
+        sourceHealthRows: sourceHealthResult.rows,
+        auditEvents,
+        range: rangeResult.range,
+        filters,
+        nowIso
+      });
+
+      return NextResponse.json({
+        status: 'success',
+        message: 'Dashboard KPI chargé.',
+        data: {
+          ...dashboardData,
+          loadedSections: DASHBOARD_SECTION_KEYS,
+          diagnostics: {
+            reportingWarnings
+          }
+        },
+        details: {
+          piiExcluded: true,
+          reportingWarnings,
+          loadedSections: DASHBOARD_SECTION_KEYS
+        }
+      });
+    }
+
+    const requestedSections = sectionParseResult.sections;
+    const sectionSet = new Set(requestedSections);
+    const currentRowsPromise = (
+      sectionSet.has('core')
+      || sectionSet.has('overview')
+      || sectionSet.has('pipeline')
+      || sectionSet.has('acquisition')
+      || sectionSet.has('seo')
+    )
+      ? fetchLeadRows(supabase, rangeResult.range)
+      : Promise.resolve(null);
+    const previousRowsPromise = (sectionSet.has('core') || sectionSet.has('overview'))
+      ? fetchLeadRows(supabase, rangeResult.previousRange)
+      : Promise.resolve(null);
+    const universeRowsPromise = (sectionSet.has('overview') || sectionSet.has('operations'))
+      ? fetchAllLeadRows(supabase)
+      : Promise.resolve(null);
+    const auditEventsPromise = sectionSet.has('operations')
+      ? fetchAuditEvents(supabase)
+      : Promise.resolve([]);
+    const externalMetricsPromise = (sectionSet.has('core') || sectionSet.has('acquisition') || sectionSet.has('seo'))
+      ? fetchExternalMetricRows(supabase, rangeResult.range)
+      : Promise.resolve(null);
+    const queryMetricsPromise = sectionSet.has('seo')
+      ? fetchQueryMetricRows(supabase, rangeResult.range)
+      : Promise.resolve(null);
+    const behaviorMetricsPromise = sectionSet.has('pipeline')
+      ? fetchBehaviorMetricRows(supabase, rangeResult.range)
+      : Promise.resolve(null);
+    const whatsappClickPromise = sectionSet.has('acquisition')
+      ? fetchWhatsAppClickRows(supabase, rangeResult.range)
+      : Promise.resolve(null);
+    const facebookSnapshotPromise = sectionSet.has('acquisition')
+      ? fetchFacebookAdminSnapshot()
+      : Promise.resolve(null);
+    const keywordCatalogPromise = sectionSet.has('seo')
+      ? fetchKeywordCatalogRows(supabase)
+      : Promise.resolve(null);
+    const keywordRankingPromise = sectionSet.has('seo')
+      ? fetchKeywordRankingRows(supabase, rangeResult.range)
+      : Promise.resolve(null);
+    const sourceHealthPromise = sectionSet.has('core')
+      ? fetchGrowthSourceHealth(supabase)
+      : Promise.resolve(null);
+
     const [
       currentRowsResult,
       previousRowsResult,
@@ -661,62 +856,108 @@ export async function GET(request) {
       keywordRankingResult,
       sourceHealthResult
     ] = await Promise.all([
-      fetchLeadRows(supabase, rangeResult.range),
-      fetchLeadRows(supabase, rangeResult.previousRange),
-      fetchAllLeadRows(supabase),
-      fetchAuditEvents(supabase),
-      fetchExternalMetricRows(supabase, rangeResult.range),
-      fetchQueryMetricRows(supabase, rangeResult.range),
-      fetchBehaviorMetricRows(supabase, rangeResult.range),
-      fetchWhatsAppClickRows(supabase, rangeResult.range),
-      fetchFacebookAdminSnapshot(),
-      fetchKeywordCatalogRows(supabase),
-      fetchKeywordRankingRows(supabase, rangeResult.range),
-      fetchGrowthSourceHealth(supabase)
+      currentRowsPromise,
+      previousRowsPromise,
+      universeRowsPromise,
+      auditEventsPromise,
+      externalMetricsPromise,
+      queryMetricsPromise,
+      behaviorMetricsPromise,
+      whatsappClickPromise,
+      facebookSnapshotPromise,
+      keywordCatalogPromise,
+      keywordRankingPromise,
+      sourceHealthPromise
     ]);
-    const reportingWarnings = Array.from(new Set([
-      ...(currentRowsResult.warnings || []),
-      ...(previousRowsResult.warnings || []),
-      ...(universeRowsResult.warnings || []),
-      externalMetricsResult.error ? 'growth_channel_daily_metrics_unavailable' : null,
-      queryMetricsResult.error ? 'growth_query_daily_metrics_unavailable' : null,
-      behaviorMetricsResult.error ? 'growth_behavior_daily_metrics_unavailable' : null,
-      whatsappClickResult.error ? 'whatsapp_click_events_unavailable' : null,
-      ...(facebookSnapshot?.warnings || []).map((warning) => warning.key),
-      keywordCatalogResult.error ? 'growth_keyword_catalog_unavailable' : null,
-      keywordRankingResult.error ? 'growth_keyword_rankings_daily_unavailable' : null,
-      sourceHealthResult.error ? 'growth_reporting_source_health_unavailable' : null
-    ].filter(Boolean)));
-    const dashboardData = buildAdminDashboardData({
-      currentRows: currentRowsResult.rows,
-      previousRows: previousRowsResult.rows,
-      universeRows: universeRowsResult.rows,
-      externalMetricRows: externalMetricsResult.rows,
-      queryMetricRows: queryMetricsResult.rows,
-      behaviorMetricRows: behaviorMetricsResult.rows,
-      whatsappClickRows: whatsappClickResult.rows,
+    const reportingWarnings = buildReportingWarnings({
+      currentRowsResult,
+      previousRowsResult,
+      universeRowsResult,
+      externalMetricsResult,
+      queryMetricsResult,
+      behaviorMetricsResult,
+      whatsappClickResult,
       facebookSnapshot,
-      keywordCatalogRows: keywordCatalogResult.rows,
-      keywordRankingRows: keywordRankingResult.rows,
-      sourceHealthRows: sourceHealthResult.rows,
+      keywordCatalogResult,
+      keywordRankingResult,
+      sourceHealthResult
+    });
+    const sectionInput = {
+      currentRows: currentRowsResult?.rows,
+      previousRows: previousRowsResult?.rows,
+      universeRows: universeRowsResult?.rows,
+      externalMetricRows: externalMetricsResult?.rows,
+      queryMetricRows: queryMetricsResult?.rows,
+      behaviorMetricRows: behaviorMetricsResult?.rows,
+      whatsappClickRows: whatsappClickResult?.rows,
+      facebookSnapshot,
+      keywordCatalogRows: keywordCatalogResult?.rows,
+      keywordRankingRows: keywordRankingResult?.rows,
+      sourceHealthRows: sourceHealthResult?.rows,
       auditEvents,
       range: rangeResult.range,
       filters,
-      nowIso: new Date().toISOString()
-    });
+      nowIso
+    };
+
+    let dashboardData = {};
+
+    if (sectionSet.has('core')) {
+      dashboardData = {
+        ...dashboardData,
+        ...buildAdminDashboardCoreData(sectionInput)
+      };
+    }
+
+    if (sectionSet.has('overview')) {
+      dashboardData = {
+        ...dashboardData,
+        ...buildAdminDashboardOverviewSectionData(sectionInput)
+      };
+    }
+
+    if (sectionSet.has('pipeline')) {
+      dashboardData = {
+        ...dashboardData,
+        ...buildAdminDashboardPipelineSectionData(sectionInput)
+      };
+    }
+
+    if (sectionSet.has('acquisition')) {
+      dashboardData = {
+        ...dashboardData,
+        ...buildAdminDashboardAcquisitionSectionData(sectionInput)
+      };
+    }
+
+    if (sectionSet.has('seo')) {
+      dashboardData = {
+        ...dashboardData,
+        ...buildAdminDashboardSeoSectionData(sectionInput)
+      };
+    }
+
+    if (sectionSet.has('operations')) {
+      dashboardData = {
+        ...dashboardData,
+        ...buildAdminDashboardOperationsSectionData(sectionInput)
+      };
+    }
 
     return NextResponse.json({
       status: 'success',
-      message: 'Dashboard KPI chargé.',
+      message: 'Dashboard section chargé.',
       data: {
         ...dashboardData,
+        loadedSections: requestedSections,
         diagnostics: {
           reportingWarnings
         }
       },
       details: {
         piiExcluded: true,
-        reportingWarnings
+        reportingWarnings,
+        loadedSections: requestedSections
       }
     });
   } catch (error) {

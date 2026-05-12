@@ -4838,15 +4838,14 @@ function buildExecutiveSummary({
   };
 }
 
-export function buildAdminDashboardData({
-  currentRows,
-  previousRows,
-  universeRows,
+function createAdminDashboardBuildContext({
+  currentRows = { devis: [], conventions: [], whatsapp: [] },
+  previousRows = { devis: [], conventions: [], whatsapp: [] },
+  universeRows = { devis: [], conventions: [], whatsapp: [] },
   externalMetricRows = [],
   queryMetricRows = [],
   behaviorMetricRows = [],
   whatsappClickRows = [],
-  facebookSnapshot = null,
   keywordCatalogRows = [],
   keywordRankingRows = [],
   sourceHealthRows = [],
@@ -4882,38 +4881,256 @@ export function buildAdminDashboardData({
   const filteredKeywordRankingRows = keywordRankingRows.filter((row) => matchesKeywordRankingFilters(row, normalizedFilters));
   const filteredAuditEvents = filterAuditEvents(auditEvents, filteredUniverseLeads);
   const dataHealth = buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRows, keywordRankingRows, nowIso);
-  const overviewCards = buildOverviewCards(filteredCurrentLeads, filteredPreviousLeads, filteredUniverseLeads, range);
-  const pipeline = buildPipeline(filteredCurrentLeads, range);
-  const acquisition = {
-    ...buildAcquisition(filteredCurrentLeads, filteredExternalMetricRows, filteredWhatsAppClickRows),
-    facebook: buildFacebookAcquisition(facebookSnapshot)
-  };
-  const seoQueries = buildSeoQueries(filteredQueryMetricRows, normalizedFilters);
-  const landingPageScorecard = buildLandingPageScorecard(
+
+  return {
+    currentLeads,
+    previousLeads,
+    universeLeads,
+    normalizedFilters,
+    filterOptions,
+    activeFilters,
     filteredCurrentLeads,
+    filteredPreviousLeads,
+    filteredUniverseLeads,
     filteredExternalMetricRows,
-    filteredQueryMetricRows
-  );
-  const contentOpportunities = buildContentOpportunities(
     filteredQueryMetricRows,
-    landingPageScorecard,
-    range
-  );
-  const ctaPerformance = buildCtaPerformance(filteredBehaviorMetricRows);
-  const contactIntent = buildContactIntent(filteredBehaviorMetricRows);
-  const formHealth = buildFormHealth(filteredBehaviorMetricRows);
-  const funnelDiagnostics = buildFunnelDiagnostics(filteredCurrentLeads, range, filteredBehaviorMetricRows);
-  const seoContent = buildSeoContent(
-    filteredCurrentLeads,
-    filteredExternalMetricRows,
+    filteredBehaviorMetricRows,
+    filteredWhatsAppClickRows,
     filteredKeywordCatalogRows,
     filteredKeywordRankingRows,
-    normalizedFilters
+    filteredAuditEvents,
+    dataHealth,
+    range,
+    nowIso
+  };
+}
+
+function buildAdminDashboardScaffold(context) {
+  return {
+    range: {
+      from: context.range.from,
+      to: context.range.to,
+      days: context.range.days,
+      staleLeadHours: STALE_OPEN_LEAD_HOURS
+    },
+    filters: {
+      applied: context.normalizedFilters,
+      active: context.activeFilters,
+      segmentLabel: buildDashboardFilterLabel(context.normalizedFilters),
+      seoDeviceLabel: context.normalizedFilters.device ? getDeviceLabel(context.normalizedFilters.device) : null,
+      notes: buildDashboardFilterNotes(context.normalizedFilters),
+      options: context.filterOptions
+    }
+  };
+}
+
+export function buildAdminDashboardCoreData(input) {
+  const context = createAdminDashboardBuildContext(input);
+  const overviewCards = buildOverviewCards(
+    context.filteredCurrentLeads,
+    context.filteredPreviousLeads,
+    context.filteredUniverseLeads,
+    context.range
   );
-  const operations = buildOperations(filteredUniverseLeads, filteredAuditEvents, range, nowIso);
+  const pipeline = buildPipeline(context.filteredCurrentLeads, context.range);
+  const acquisition = {
+    ...buildAcquisition(context.filteredCurrentLeads, context.filteredExternalMetricRows, []),
+    facebook: buildFacebookAcquisition(null)
+  };
+  const landingPageScorecard = buildLandingPageScorecard(
+    context.filteredCurrentLeads,
+    context.filteredExternalMetricRows,
+    []
+  );
   const executiveSummary = buildExecutiveSummary({
-    currentLeads: filteredCurrentLeads,
-    previousLeads: filteredPreviousLeads,
+    currentLeads: context.filteredCurrentLeads,
+    previousLeads: context.filteredPreviousLeads,
+    overviewCards,
+    pipeline,
+    acquisition,
+    seoQueries: null,
+    seoContent: null,
+    landingPageScorecard,
+    operations: null,
+    dataHealth: context.dataHealth,
+    externalMetricRows: context.filteredExternalMetricRows,
+    queryMetricRows: [],
+    filters: context.normalizedFilters
+  });
+
+  return {
+    ...buildAdminDashboardScaffold(context),
+    executiveSummary,
+    dataHealth: context.dataHealth
+  };
+}
+
+export function buildAdminDashboardOverviewSectionData(input) {
+  const context = createAdminDashboardBuildContext(input);
+  const overviewCards = buildOverviewCards(
+    context.filteredCurrentLeads,
+    context.filteredPreviousLeads,
+    context.filteredUniverseLeads,
+    context.range
+  );
+  const pipeline = buildPipeline(context.filteredCurrentLeads, context.range);
+
+  return {
+    overview: {
+      cards: overviewCards,
+      cohort: {
+        currentLeads: context.filteredCurrentLeads.length,
+        qualifiedReached: context.filteredCurrentLeads.filter(hasReachedQualified).length,
+        won: context.filteredCurrentLeads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_WON).length,
+        unattributed: context.filteredCurrentLeads.filter(isUnattributedLead).length
+      }
+    },
+    pipeline
+  };
+}
+
+export function buildAdminDashboardPipelineSectionData(input) {
+  const context = createAdminDashboardBuildContext(input);
+  const pipeline = buildPipeline(context.filteredCurrentLeads, context.range);
+
+  return {
+    pipeline,
+    ctaPerformance: buildCtaPerformance(context.filteredBehaviorMetricRows),
+    contactIntent: buildContactIntent(context.filteredBehaviorMetricRows),
+    formHealth: buildFormHealth(context.filteredBehaviorMetricRows),
+    funnelDiagnostics: buildFunnelDiagnostics(context.filteredCurrentLeads, context.range, context.filteredBehaviorMetricRows)
+  };
+}
+
+export function buildAdminDashboardAcquisitionSectionData(input) {
+  const context = createAdminDashboardBuildContext(input);
+
+  return {
+    acquisition: {
+      ...buildAcquisition(context.filteredCurrentLeads, context.filteredExternalMetricRows, context.filteredWhatsAppClickRows),
+      facebook: buildFacebookAcquisition(input.facebookSnapshot || null)
+    }
+  };
+}
+
+export function buildAdminDashboardSeoSectionData(input) {
+  const context = createAdminDashboardBuildContext(input);
+  const seoQueries = buildSeoQueries(context.filteredQueryMetricRows, context.normalizedFilters);
+  const landingPageScorecard = buildLandingPageScorecard(
+    context.filteredCurrentLeads,
+    context.filteredExternalMetricRows,
+    context.filteredQueryMetricRows
+  );
+
+  return {
+    seoQueries,
+    contentOpportunities: buildContentOpportunities(
+      context.filteredQueryMetricRows,
+      landingPageScorecard,
+      context.range
+    ),
+    landingPageScorecard,
+    seoContent: buildSeoContent(
+      context.filteredCurrentLeads,
+      context.filteredExternalMetricRows,
+      context.filteredKeywordCatalogRows,
+      context.filteredKeywordRankingRows,
+      context.normalizedFilters
+    )
+  };
+}
+
+export function buildAdminDashboardOperationsSectionData(input) {
+  const context = createAdminDashboardBuildContext(input);
+
+  return {
+    operations: buildOperations(context.filteredUniverseLeads, context.filteredAuditEvents, context.range, context.nowIso)
+  };
+}
+
+export function buildAdminDashboardData({
+  currentRows,
+  previousRows,
+  universeRows,
+  externalMetricRows = [],
+  queryMetricRows = [],
+  behaviorMetricRows = [],
+  whatsappClickRows = [],
+  facebookSnapshot = null,
+  keywordCatalogRows = [],
+  keywordRankingRows = [],
+  sourceHealthRows = [],
+  auditEvents = [],
+  range,
+  filters = {},
+  nowIso = new Date().toISOString()
+}) {
+  const context = createAdminDashboardBuildContext({
+    currentRows,
+    previousRows,
+    universeRows,
+    externalMetricRows,
+    queryMetricRows,
+    behaviorMetricRows,
+    whatsappClickRows,
+    keywordCatalogRows,
+    keywordRankingRows,
+    sourceHealthRows,
+    auditEvents,
+    range,
+    filters,
+    nowIso
+  });
+  const overviewCards = buildOverviewCards(
+    context.filteredCurrentLeads,
+    context.filteredPreviousLeads,
+    context.filteredUniverseLeads,
+    context.range
+  );
+  const pipeline = buildPipeline(context.filteredCurrentLeads, context.range);
+  const acquisition = {
+    ...buildAcquisition(
+      context.filteredCurrentLeads,
+      context.filteredExternalMetricRows,
+      context.filteredWhatsAppClickRows
+    ),
+    facebook: buildFacebookAcquisition(facebookSnapshot)
+  };
+  const seoQueries = buildSeoQueries(context.filteredQueryMetricRows, context.normalizedFilters);
+  const landingPageScorecard = buildLandingPageScorecard(
+    context.filteredCurrentLeads,
+    context.filteredExternalMetricRows,
+    context.filteredQueryMetricRows
+  );
+  const contentOpportunities = buildContentOpportunities(
+    context.filteredQueryMetricRows,
+    landingPageScorecard,
+    context.range
+  );
+  const ctaPerformance = buildCtaPerformance(context.filteredBehaviorMetricRows);
+  const contactIntent = buildContactIntent(context.filteredBehaviorMetricRows);
+  const formHealth = buildFormHealth(context.filteredBehaviorMetricRows);
+  const funnelDiagnostics = buildFunnelDiagnostics(
+    context.filteredCurrentLeads,
+    context.range,
+    context.filteredBehaviorMetricRows
+  );
+  const seoContent = buildSeoContent(
+    context.filteredCurrentLeads,
+    context.filteredExternalMetricRows,
+    context.filteredKeywordCatalogRows,
+    context.filteredKeywordRankingRows,
+    context.normalizedFilters
+  );
+  const operations = buildOperations(
+    context.filteredUniverseLeads,
+    context.filteredAuditEvents,
+    context.range,
+    context.nowIso
+  );
+  const executiveSummary = buildExecutiveSummary({
+    currentLeads: context.filteredCurrentLeads,
+    previousLeads: context.filteredPreviousLeads,
     overviewCards,
     pipeline,
     acquisition,
@@ -4924,36 +5141,23 @@ export function buildAdminDashboardData({
     contactIntent,
     formHealth,
     operations,
-    dataHealth,
-    externalMetricRows: filteredExternalMetricRows,
-    queryMetricRows: filteredQueryMetricRows,
-    behaviorMetricRows: filteredBehaviorMetricRows,
-    filters: normalizedFilters
+    dataHealth: context.dataHealth,
+    externalMetricRows: context.filteredExternalMetricRows,
+    queryMetricRows: context.filteredQueryMetricRows,
+    behaviorMetricRows: context.filteredBehaviorMetricRows,
+    filters: context.normalizedFilters
   });
 
   return {
-    range: {
-      from: range.from,
-      to: range.to,
-      days: range.days,
-      staleLeadHours: STALE_OPEN_LEAD_HOURS
-    },
-    filters: {
-      applied: normalizedFilters,
-      active: activeFilters,
-      segmentLabel: buildDashboardFilterLabel(normalizedFilters),
-      seoDeviceLabel: normalizedFilters.device ? getDeviceLabel(normalizedFilters.device) : null,
-      notes: buildDashboardFilterNotes(normalizedFilters),
-      options: filterOptions
-    },
+    ...buildAdminDashboardScaffold(context),
     executiveSummary,
     overview: {
       cards: overviewCards,
       cohort: {
-        currentLeads: filteredCurrentLeads.length,
-        qualifiedReached: filteredCurrentLeads.filter(hasReachedQualified).length,
-        won: filteredCurrentLeads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_WON).length,
-        unattributed: filteredCurrentLeads.filter(isUnattributedLead).length
+        currentLeads: context.filteredCurrentLeads.length,
+        qualifiedReached: context.filteredCurrentLeads.filter(hasReachedQualified).length,
+        won: context.filteredCurrentLeads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_WON).length,
+        unattributed: context.filteredCurrentLeads.filter(isUnattributedLead).length
       }
     },
     pipeline,
@@ -4967,6 +5171,6 @@ export function buildAdminDashboardData({
     funnelDiagnostics,
     seoContent,
     operations,
-    dataHealth
+    dataHealth: context.dataHealth
   };
 }

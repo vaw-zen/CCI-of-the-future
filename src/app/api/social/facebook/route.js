@@ -19,12 +19,24 @@ async function fetchJson(url) {
 function normalizePostPrefix(message) {
   if (typeof message !== 'string') return '';
 
-  return message
+  let normalized = message
     .normalize('NFC')
-    .replace(/^[^A-Za-zÀ-ÿ0-9]+/u, '')
     .replace(/\s+/g, ' ')
     .trim()
-    .toLocaleLowerCase('fr-FR');
+    .replace(/^[^\p{L}\p{N}]+/gu, '');
+
+  const [firstToken, ...rest] = normalized.split(' ');
+  if (firstToken && rest.length > 0) {
+    const strippedToken = firstToken.replace(/[^\p{L}\p{N}]/gu, '');
+    const asciiLetterCount = (strippedToken.match(/[A-Za-z]/g) || []).length;
+
+    // Drop short mojibake-like lead tokens such as "ð¡" or "âœ¨"
+    if (strippedToken && asciiLetterCount === 0 && strippedToken.length <= 2) {
+      normalized = rest.join(' ').replace(/^[^\p{L}\p{N}]+/gu, '');
+    }
+  }
+
+  return normalized.toLocaleLowerCase('fr-FR');
 }
 
 function shouldHideFacebookPost(message) {

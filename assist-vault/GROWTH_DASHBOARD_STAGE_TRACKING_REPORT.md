@@ -1,8 +1,8 @@
 # Growth Dashboard Stage Tracking Report
 
-Date: 2026-05-10
+Date: 2026-05-12
 
-This report tracks what has been shipped in the growth dashboard program so far, what remains open, and what should happen next. It is meant to be the current execution checkpoint for engineering, Growth, and Admin ops.
+This report is the current execution checkpoint for engineering, Growth, and Admin ops. It tracks what is shipped, what remains open, and what must happen before Stage 4 experimentation can begin.
 
 ## Delivery Snapshot
 
@@ -10,9 +10,9 @@ This report tracks what has been shipped in the growth dashboard program so far,
 | --- | --- | --- | --- |
 | Stage 0 | Complete | Program, semantics, taxonomy, and thresholds are locked in docs | Ready and in use |
 | Stage 1 | Complete | Lead quality, ownership, SLA, stale-queue readiness, normalized dimensions, KPI semantics, trust signals, and attribution QA workflow are implemented | Ready to support segmented reviews |
-| Stage 2 | Product complete, workflow adoption pending | Dashboard filters, segmented section outputs, executive summary, and dedicated pipeline navigation are implemented | Weekly review should now move to segment-first usage |
-| Stage 3 | In progress, first slice shipped | Query intelligence, content opportunities, landing-page scorecard, lifecycle funnel diagnostics, GA4 event-aware organic evidence, and the behavior tracking schema lock are now live in docs/product | Needs behavior persistence plus two review cycles of stability before downstream automation |
-| Stage 4 | Not started | Experiment operating system not yet built | Depends on stable Stage 3 evidence |
+| Stage 2 | Product complete, workflow adoption pending | Dashboard filters, segmented section outputs, executive summary, and dedicated pipeline navigation are implemented | Weekly review should continue moving to segment-first usage |
+| Stage 3 | In progress, behavior layer shipped, stabilization pending | Query intelligence, content opportunities, landing-page scorecard, lifecycle funnel diagnostics, behavior persistence, and Stage 3 behavior panels are now live in product | Stage 3 gate remains open until live validation, workflow adoption, and heuristic tuning are completed across two review cycles |
+| Stage 4 | Not started | Experiment operating system not yet built | Depends on stable Stage 3 evidence and formal gate review |
 | Stage 5 | Not started | Alerts, digests, and proactive monitoring not yet built | Depends on stable Stage 3 baselines |
 | Stage 6 | Deferred | Forecasting, ROI, attribution, and modeled planning remain deferred | Wait for 90+ days of stable segmented history |
 
@@ -47,7 +47,7 @@ This report tracks what has been shipped in the growth dashboard program so far,
 - A named weekly attribution QA workflow now exists through:
   - `npm run growth:audit:attribution -- --days 7`
   - `assist-vault/GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md`
-- WhatsApp attribution compatibility/fallback support is in place.
+- WhatsApp attribution compatibility and fallback support are in place.
 
 ### Stage 2
 
@@ -77,55 +77,64 @@ This report tracks what has been shipped in the growth dashboard program so far,
   - `risk`
   - `opportunity`
   - `nextAction`
-- Segment-first review workflow is now scaffolded in docs through:
+- Segment-first review workflow is scaffolded in:
   - `assist-vault/GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md`
 
 ### Stage 3
 
-- Search Console reporting now persists query-level data into `growth_query_daily_metrics`.
-- Supabase migration scaffolding now exists for:
+- Search Console reporting persists query-level data into `growth_query_daily_metrics`.
+- Supabase migration scaffolding exists for:
   - `growth_query_daily_metrics`
   - `growth_keyword_clusters`
-  - `growth_funnel_daily_metrics`
   - `growth_landing_page_scores_daily`
-- `GET /api/admin/dashboard` now returns Stage 3 intelligence payloads:
+  - upgraded `growth_funnel_daily_metrics`
+- `GET /api/admin/dashboard` returns Stage 3 intelligence payloads:
   - `seoQueries`
   - `contentOpportunities`
   - `landingPageScorecard`
   - `funnelDiagnostics`
-- The dashboard UI now exposes:
+  - `ctaPerformance`
+  - `contactIntent`
+  - `formHealth`
+- The dashboard UI exposes:
   - query intelligence summary
   - cluster rollups
   - non-branded query opportunities
   - content decay / cannibalization / CTR / conversion-gap opportunity lists
   - landing-page scorecard
   - lifecycle funnel diagnostics and top drop-offs
-- Manual and scheduled Search Console refresh paths now sync both page-level and query-level rows.
-- Funnel diagnostics are intentionally labeled as lifecycle-based `v1` because CTA/form-start/form-completion events are not yet persisted in the reporting mart.
-- GA4 evidence now surfaces sessions, users, and events separately from Search Console clicks and impressions.
-- GA4 import hardening now deduplicates normalized snapshot conflicts before upsert so large backfills do not fail on `ON CONFLICT DO UPDATE`.
-- Stage 3 sprint-selection workflow is now scaffolded in docs through:
+  - CTA performance rows
+  - form-health rows
+  - contact-intent rows
+- Manual and scheduled Search Console refresh paths sync both page-level and query-level rows.
+- GA4 evidence surfaces sessions, users, and events separately from Search Console clicks and impressions.
+- GA4 import hardening deduplicates normalized snapshot conflicts before upsert so large backfills do not fail on `ON CONFLICT DO UPDATE`.
+- Behavior capture now persists through:
+  - `src/app/api/analytics/behavior/route.js`
+  - `public.growth_behavior_events`
+  - `public.growth_behavior_daily_metrics`
+- Stage 3 sprint-selection workflow is scaffolded in:
   - `assist-vault/GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md`
 
 ### Behavior tracking integration
 
-- `assist-vault/WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md` is now the canonical measurement spec for the next Stage 3 extension.
-- Current repo reality is now explicit:
-  - browser and server behavior instrumentation already exists
-  - persisted behavior reporting does not exist yet
-  - `funnelDiagnostics` therefore remains lifecycle-based `v1`
-- The locked graduation path is:
-  - standardize behavior context and naming
-  - persist behavior into `growth_behavior_daily_metrics`
-  - rebuild `growth_funnel_daily_metrics` and `funnelDiagnostics`
-  - add `ctaPerformance`, `contactIntent`, and `formHealth` panels
+- `assist-vault/WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md` is the canonical measurement spec.
+- Current repo reality is now:
+  - canonical behavior taxonomy is implemented in runtime normalization
+  - behavior events are persisted into `growth_behavior_events`
+  - dashboard-ready aggregates are exposed through `growth_behavior_daily_metrics`
+  - `ctaPerformance`, `contactIntent`, and `formHealth` are live dashboard panels
+  - `funnelDiagnostics` still remains lifecycle-based `v1` in the dashboard while the combined funnel read path stabilizes
+- The closeout focus is now validation and adoption, not net-new Stage 3 feature invention.
 
 ## Verification Status
 
 | Check | Result | Notes |
 | --- | --- | --- |
-| `npm run test:dashboard` | Pass | `37/37` green including attribution hygiene, Stage 3 intelligence coverage, and GA4 snapshot dedupe regression coverage |
+| `npm run test:dashboard` | Pass | `41/41` green including behavior tracking, attribution hygiene, Stage 3 intelligence, and GA4 snapshot dedupe regression coverage |
 | `npm run build` | Pass | Production build validates the shipped contract and UI |
+| Behavior persistence route | Implemented | `/api/analytics/behavior` now ingests canonical behavior events |
+| Behavior mart migration | Implemented in repo | `supabase/20260511_growth_behavior_tracking.sql` creates the raw table, daily mart, and upgraded funnel view |
 | Admin auth redirect loop / stuck verification | Resolved | Admin auth now resolves server-side and avoids endless client-side verification |
 | Dev startup lag caused by remote font boot dependency | Resolved | App shell no longer blocks dev startup on remote Google font fetch |
 | Dev image optimizer `LRUCache` issue | Mitigated in development | Dev uses unoptimized images to avoid local optimizer failure |
@@ -137,7 +146,8 @@ This report tracks what has been shipped in the growth dashboard program so far,
 | --- | --- | --- |
 | Stage 1 gate | Satisfied | Attribution QA is implemented in capture, server fallback, dashboard normalization, and weekly ops workflow |
 | Stage 2 gate | Satisfied in product | Filters and executive summary work across overview, pipeline, acquisition, and SEO |
-| Stage 3 gate | In progress | Stage 3 marts and payloads now exist; the remaining gate is semantic stability across at least two weekly review cycles for both query/page intelligence and the future behavior/funnel mart |
+| Stage 3 gate | In progress | Query intelligence, behavior persistence, and behavior panels are shipped; the remaining gate is live validation of behavior joins plus two weekly review cycles of stable usage and threshold tuning |
+| Stage 4 gate | Blocked | Experiments should not open until Stage 3 closeout is signed off |
 | Stage 5 gate | Not yet open | Alert calibration should wait until Stage 3 is stable for at least two review cycles |
 
 ## Known Scope Notes
@@ -147,7 +157,8 @@ This report tracks what has been shipped in the growth dashboard program so far,
 - Lead, pipeline, acquisition, and operations metrics remain cross-device until device-aware lead/acquisition inputs exist in the reporting model.
 - The dashboard remains the only internal reporting surface; no parallel dashboard has been introduced.
 - GA4 `events` extend the existing acquisition evidence model but do not change stage sequencing, ownership, or stage-gate criteria.
-- Behavior events already exist in transport layers, but dashboard CRO reporting is not decision-complete until those events are persisted into a mart and joined to lifecycle outcomes.
+- `ctaPerformance`, `contactIntent`, and `formHealth` now provide pre-lead behavior evidence, but `funnelDiagnostics` is still intentionally labeled lifecycle-based `v1`.
+- Stage 3 is not complete until the behavior mart is validated in the target environment and the weekly operating cadence actually uses the new panels.
 
 ## Roadmap Alignment
 
@@ -155,6 +166,7 @@ This report tracks what has been shipped in the growth dashboard program so far,
 - They strengthen existing stages instead of creating a new one:
   - attribution hygiene and import dedupe reinforce Stage 1 trust
   - GA4 events improve Stage 3 evidence quality
+  - behavior persistence and panels extend Stage 3 rather than creating a separate analytics track
   - dev/build cache isolation protects delivery reliability across all active stages
 - Stage 4, Stage 5, and Stage 6 remain unchanged in scope and timing.
 
@@ -163,61 +175,77 @@ This report tracks what has been shipped in the growth dashboard program so far,
 | ID | Type | Owner | Status | Next step |
 | --- | --- | --- | --- | --- |
 | S2-05 | Workflow | Growth owner | Scaffolded in docs, adoption pending | Run the next two weekly reviews from the segment-first template and keep action logs tied to explicit segments |
-| S3-07 | Workflow | Growth owner | Scaffolded in docs, adoption pending | Use the Stage 3 sprint-selection workflow to choose the next SEO refresh and CRO sprint candidates |
-| S3-08 | Validation | Engineering + Growth owner | Open | Validate Stage 3 outputs across two weekly review cycles and tune heuristics for decay, CTR lift, and drop-off prioritization |
-| S3-09 | Tracking | Engineering + Growth owner | Open | Freeze canonical behavior dimensions in runtime implementation and QA using `WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md` |
-| S3-10 | Tracking | Engineering | Open | Close behavior instrumentation gaps on `/contact`, `/devis`, `/entreprises`, service CTAs, and article CTAs |
-| S3-11 | Schema / ETL | Engineering | Open | Create `growth_behavior_daily_metrics` and validate joins on `ga_client_id`, landing page, and normalized attribution dimensions |
-| S3-12 | Metric-builder | Engineering | Open | Upgrade `growth_funnel_daily_metrics` and `funnelDiagnostics` from lifecycle `v1` to behavior + lifecycle |
-| S3-13 | UI | Engineering | Open | Add `ctaPerformance`, `contactIntent`, and `formHealth` panels to support CRO review from the main dashboard |
+| S3-07 | Workflow | Growth owner | Scaffolded in docs, adoption pending | Use the Stage 3 sprint-selection workflow to choose the next SEO refresh and CRO sprint candidates from Stage 3 evidence |
+| S3-08 | Validation | Engineering + Growth owner | Open | Complete the Stage 3 closeout checklist, validate live data paths, and tune heuristics across two review cycles |
+| S3-09 | Tracking | Engineering + Growth owner | Implemented in product, QA pending | Spot-check canonical behavior dimensions against live captures and fix any drift from `WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md` |
+| S3-10 | Tracking | Engineering | Implemented in product, live QA pending | Validate `/contact`, `/devis`, `/entreprises`, service CTAs, and article CTAs under real traffic and capture any missing context |
+| S3-11 | Schema / ETL | Engineering | Implemented in repo, target DB validation pending | Confirm `growth_behavior_daily_metrics` is applied, fresh, and populated in the target environment |
+| S3-12 | Metric-builder | Engineering | Partially implemented, stabilization pending | Keep dashboard `funnelDiagnostics` on lifecycle `v1` until the combined behavior + lifecycle read path is validated as decision-safe |
+| S3-13 | UI | Engineering + Growth owner | Implemented in product, adoption pending | Make `ctaPerformance`, `contactIntent`, and `formHealth` mandatory CRO inputs in the next two weekly reviews |
 
 ## Recommended Next Implementation
 
-### Next build target: Stage 3 behavior layer
+### Next build target: Stage 3 closeout
 
 Priority order:
 
-1. Freeze canonical behavior dimensions in implementation and QA using `assist-vault/WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md`.
-2. Close instrumentation gaps on `/contact`, `/devis`, `/entreprises`, service CTAs, and article CTAs so commercial flows emit decision-safe context.
-3. Build `growth_behavior_daily_metrics` and validate safe joins on `ga_client_id`, landing page, and normalized attribution dimensions.
-4. Upgrade `growth_funnel_daily_metrics` and `funnelDiagnostics` from lifecycle-only `v1` to CTA -> form -> submit -> qualified -> won coverage.
-5. Add `ctaPerformance`, `contactIntent`, and `formHealth` as Stage 3 dashboard panels.
-6. Run two weekly growth reviews directly from `seoQueries`, `contentOpportunities`, `landingPageScorecard`, the upgraded `funnelDiagnostics`, and the new behavior panels.
-7. Tune Stage 3 heuristics with real review feedback:
+1. Confirm `supabase/20260511_growth_behavior_tracking.sql` is applied in the target database.
+2. Validate that these reporting artifacts exist and are populated for the active review window:
+   - `growth_query_daily_metrics`
+   - `growth_landing_page_scores_daily`
+   - `growth_behavior_daily_metrics`
+   - `growth_funnel_daily_metrics`
+3. Validate live behavior capture on:
+   - `/contact`
+   - `/devis`
+   - `/entreprises`
+   - service CTA blocks
+   - article CTA blocks
+4. Validate joinability from behavior rows to lifecycle evidence through `ga_client_id`, landing page, and normalized attribution dimensions.
+5. Run two weekly growth reviews directly from:
+   - `seoQueries`
+   - `contentOpportunities`
+   - `landingPageScorecard`
+   - `funnelDiagnostics`
+   - `ctaPerformance`
+   - `formHealth`
+   - `contactIntent`
+6. Record threshold updates after each review:
    - decay thresholds
    - CTR lift scoring
    - cannibalization detection
-   - lifecycle and behavior drop-off thresholds
-8. Make Stage 3 outputs mandatory inputs for SEO refresh selection and CRO sprint planning.
-9. Only after that stability window, open Stage 4 experimentation work and Stage 5 alert calibration.
+   - CTA drop-off thresholds
+   - form-friction thresholds
+   - contact-intent interpretation
+7. Hold a formal Stage 3 gate review using:
+   - `assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md`
+8. Only after that sign-off, open Stage 4 experimentation work and Stage 5 alert calibration.
 
-### Why the Stage 3 behavior layer next
+### Why Stage 3 closeout next
 
 - Stage 1 restored trust.
 - Stage 2 created a usable segmented decision surface.
-- Stage 3 is the first stage that turns the dashboard from reporting into prioritization.
-- The site already emits CTA, form, and engagement signals, so the next leverage point is persisting and modeling that behavior instead of adding another reporting surface.
-- Experimentation and alerting should be built on top of stable segmented intelligence, not before it.
-- Stage 1 attribution hygiene now has a named ops workflow, so it should stay in cadence rather than remain a backlog item.
+- Stage 3 now has both the query-intelligence layer and the behavior layer in product.
+- The next leverage point is not more Stage 3 surface area. It is proving that the shipped Stage 3 evidence is trustworthy, adopted, and stable enough to become the experiment baseline.
 
 ## Current Program Assessment
 
 | Dimension | Status |
 | --- | --- |
-| Trust in dashboard semantics | Stronger than baseline and now production-usable |
+| Trust in dashboard semantics | Strong and production-usable |
 | Executive readability | Materially improved with `executiveSummary` |
 | Segmentation readiness | Live for Stage 2 dimensions |
-| SEO usefulness | Materially improved with query-level opportunity, cluster rollups, and content-opportunity scaffolding now live |
-| CRO usefulness | Improved through segmented pipeline views plus lifecycle funnel diagnostics and landing-page scorecard prioritization |
-| Experiment readiness | Not yet operationalized |
+| SEO usefulness | Materially improved with query-level opportunity, cluster rollups, and content-opportunity scaffolding |
+| CRO usefulness | Improved materially with landing-page scorecard, lifecycle funnel diagnostics, and the shipped behavior panels |
+| Experiment readiness | Not yet operationalized; blocked on Stage 3 closeout |
 | Automation maturity | Connector/source health exists, but proactive alerting and digests are not yet live |
 
 ## Checkpoint Summary
 
-The program has completed the foundational architecture, the first decision-making layer, and the first Stage 3 prioritization slice.
+The program has completed the foundational architecture, the segmented decision layer, the first Stage 3 intelligence slice, and the first Stage 3 behavior slice.
 
 - Stages shipped in product: Stage 1 and Stage 2
-- Stage 3 status: first intelligence slice shipped, stabilization pending
+- Stage 3 status: behavior layer shipped, closeout pending
 - Stages documented and locked: Stage 0 through Stage 6
-- Highest-leverage next engineering move: build the Stage 3 behavior layer and graduate `funnelDiagnostics` from lifecycle `v1`
-- Highest-leverage next operating move: make weekly reviews segment-first, keep attribution QA in weekly ops cadence, and require Stage 3 evidence in sprint selection
+- Highest-leverage next engineering move: validate the live behavior mart and close the Stage 3 gate
+- Highest-leverage next operating move: run the next two weekly reviews from Stage 3 evidence and document any threshold changes before opening Stage 4

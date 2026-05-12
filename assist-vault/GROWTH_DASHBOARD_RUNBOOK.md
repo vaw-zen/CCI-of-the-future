@@ -1,6 +1,6 @@
 # Growth Dashboard Launch Runbook
 
-Date: 2026-05-10
+Date: 2026-05-12
 
 ## Before Launch
 
@@ -8,6 +8,9 @@ Date: 2026-05-10
    - `supabase/20260506_growth_reporting.sql`
    - `supabase/20260506_growth_keyword_rankings.sql`
    - `supabase/20260506_growth_keyword_catalog.sql`
+   - `supabase/20260509_stage1_lead_quality_dimensions.sql`
+   - `supabase/20260509_stage3_growth_intelligence.sql`
+   - `supabase/20260511_growth_behavior_tracking.sql`
 2. Confirm required env vars are present in the target environment:
    - Supabase service credentials
    - `GA4_PROPERTY_ID`
@@ -61,7 +64,7 @@ Date: 2026-05-10
   - Check stale queue count and oldest lead age.
   - Review suspicious `direct / (none)` rows with external referrers and landing-page capture gaps.
   - Check campaign naming drift and fix source links or imports when variants appear.
-  - Once `growth_behavior_daily_metrics` is live, confirm freshness and spot-check missing `page_type`, `business_line`, `cta_id`, and `form_name` on commercial behavior rows.
+  - Confirm freshness and spot-check missing `page_type`, `business_line`, `cta_id`, and `form_name` on commercial behavior rows.
   - Flag any KPI card carrying a thin-volume warning and treat it as directional only.
   - Note keyword-target mismatches or catalog rows that should move to better landing pages.
   - Capture any KPI mismatches in a short engineering follow-up list.
@@ -70,6 +73,7 @@ Date: 2026-05-10
 
 - Use [GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md) as the default meeting format.
 - Use [GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md) to choose the weekly SEO refresh and CRO sprint candidates.
+- Use [GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md) to record Stage 3 validation status and gate evidence.
 - Order of review:
   - Data health first
   - Attribution audit second
@@ -84,7 +88,7 @@ Date: 2026-05-10
   - Every action references a dashboard segment or taxonomy slice, not only a top-line total
   - Attribution review is marked `trusted`, `trusted with caveats`, or `not decision-safe`
   - The selected SEO refresh and CRO sprint candidates each reference at least one Stage 3 evidence panel
-  - Once the behavior mart is live, CRO actions should also reference `ctaPerformance`, `formHealth`, or `contactIntent` when the issue is on-site funnel friction
+  - CRO actions should also reference `ctaPerformance`, `formHealth`, or `contactIntent` when the issue is on-site funnel friction
 
 ## Weekly Attribution QA
 
@@ -97,7 +101,7 @@ Date: 2026-05-10
 
 ## Weekly Behavior QA
 
-Activate this section once `growth_behavior_daily_metrics` is live.
+Use this section for Stage 3 closeout in any environment where `supabase/20260511_growth_behavior_tracking.sql` has been applied.
 
 - Confirm the behavior mart is fresh for the selected review window.
 - Review missing canonical context on commercial behavior rows:
@@ -111,6 +115,27 @@ Activate this section once `growth_behavior_daily_metrics` is live.
   - a commercial form emits missing `form_name` or `business_line`
   - a tracked CTA emits missing `cta_id` or `cta_location`
   - the behavior mart is stale enough to make CRO review non-decision-safe
+
+## Stage 3 Closeout
+
+Use this section to formally close Stage 3 and open Stage 4.
+
+1. Confirm the target environment has all Stage 3 migrations applied, including `supabase/20260511_growth_behavior_tracking.sql`.
+2. Confirm these reporting artifacts are present and populated for the active review window:
+   - `growth_query_daily_metrics`
+   - `growth_landing_page_scores_daily`
+   - `growth_behavior_daily_metrics`
+   - `growth_funnel_daily_metrics`
+3. Validate live behavior capture on:
+   - `/contact`
+   - `/devis`
+   - `/entreprises`
+   - service CTA blocks
+   - article CTA blocks
+4. Validate joinability between behavior events and lead outcomes using `ga_client_id`, landing page, and normalized attribution dimensions.
+5. Run two weekly reviews using the Stage 3 template and selection workflow, and record any threshold changes after each review.
+6. Hold a formal gate review using [GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md).
+7. Do not open Stage 4 until all five Stage 3 gate criteria are explicitly marked passed in that checklist.
 
 ## Weekly Friday Closeout
 

@@ -1,6 +1,6 @@
 # Growth Dashboard System Guide
 
-Date: 2026-05-10
+Date: 2026-05-12
 
 This guide documents the full growth dashboard system that now powers `/admin/dashboard`. It covers the shipped dashboard UI, API contract, Supabase reporting model, keyword catalog flow, dual-device SERP tracking, attribution hygiene, the locked behavior-tracking roadmap layer, data-health behavior, and the admin auth stability fix that keeps admin pages usable during background session refreshes.
 
@@ -22,7 +22,7 @@ The completed work includes:
 - Adding attribution hygiene normalization plus a named weekly audit for `direct/(none)` rows, landing-page capture, and campaign naming drift
 - Adding normalized Supabase reporting views for acquisition and lead-dimension rollups
 - Adding the first Stage 3 growth intelligence layer with query-level Search Console persistence, content opportunities, landing-page scoring, and lifecycle funnel diagnostics
-- Locking the next behavior-tracking layer through `WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md` so CTA, form, and contact-intent reporting extend Stage 3 instead of creating a second analytics system
+- Persisting the Stage 3 behavior-tracking layer through `WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md`, `growth_behavior_events`, and `growth_behavior_daily_metrics` so CTA, form, and contact-intent reporting extend Stage 3 instead of creating a second analytics system
 
 ## Core Files
 
@@ -32,6 +32,7 @@ The completed work includes:
 | Dashboard API | `src/app/api/admin/dashboard/route.js` |
 | Lead ops APIs | `src/app/api/admin/leads/[kind]/[id]/status/route.js`, `src/app/api/admin/leads/[kind]/[id]/attribution/route.js`, `src/app/api/admin/leads/[kind]/[id]/ops/route.js` |
 | Dashboard metric builders | `src/libs/adminDashboardMetrics.mjs` |
+| Behavior normalization and persistence | `src/libs/behaviorTracking.mjs`, `src/app/api/analytics/behavior/route.js` |
 | Attribution normalization and audit helpers | `src/libs/attributionHygiene.mjs` |
 | Growth reporting connectors and sync logic | `src/libs/growthReporting.mjs` |
 | Keyword catalog normalization and import logic | `src/libs/growthKeywordCatalog.mjs` |
@@ -39,12 +40,12 @@ The completed work includes:
 | Site inventory / valid target discovery | `src/libs/sitePathInventory.mjs` |
 | Admin auth stability | `src/hooks/useAdminAuth.js` |
 | Growth scripts | `scripts/growth/*` |
-| Growth SQL migrations | `supabase/20260506_growth_reporting.sql`, `supabase/20260506_growth_keyword_rankings.sql`, `supabase/20260506_growth_keyword_catalog.sql`, `supabase/20260509_stage1_lead_quality_dimensions.sql`, `supabase/20260509_stage3_growth_intelligence.sql` |
+| Growth SQL migrations | `supabase/20260506_growth_reporting.sql`, `supabase/20260506_growth_keyword_rankings.sql`, `supabase/20260506_growth_keyword_catalog.sql`, `supabase/20260509_stage1_lead_quality_dimensions.sql`, `supabase/20260509_stage3_growth_intelligence.sql`, `supabase/20260511_growth_behavior_tracking.sql` |
 | Consolidated schema | `supabase/schema.sql` |
 
 ## Supabase Model
 
-The growth dashboard is now backed by seven reporting tables plus five reporting views:
+The growth dashboard is now backed by eight reporting tables plus six reporting views:
 
 | Table | Purpose |
 | --- | --- |
@@ -55,10 +56,12 @@ The growth dashboard is now backed by seven reporting tables plus five reporting
 | `growth_keyword_catalog` | Canonical active/inactive keyword catalog keyed by normalized keyword plus canonical target |
 | `growth_keyword_rankings_daily` | Daily live SERP ranking snapshots per keyword, per device, linked back to the canonical catalog row |
 | `growth_query_daily_metrics` | Daily query-level Search Console rows linked to landing pages, clusters, business lines, services, and page types |
+| `growth_behavior_events` | Raw persisted CTA, form, contact-intent, and engagement events with canonical behavior context and `ga_client_id` when available |
 | `growth_channel_daily_metrics_normalized` | Normalized source / medium / campaign / landing-page view with `source_class` and `page_type` ready for segmentation |
 | `growth_lead_reporting_dimensions` | Unified lead-dimension view across `devis_requests` and `convention_requests` including `business_line`, `lead_quality_outcome`, `lead_owner`, `follow_up_sla_at`, and `last_worked_at` |
 | `growth_keyword_clusters` | Active keyword catalog rollup view that maps keywords into reusable query/content clusters |
-| `growth_funnel_daily_metrics` | Lifecycle-based funnel view by date, business line, service, source class, and page type |
+| `growth_behavior_daily_metrics` | Daily behavior mart grouped by canonical event, page, funnel, form, CTA, and attribution context with `event_count` and `unique_client_count` |
+| `growth_funnel_daily_metrics` | Combined reporting view blending behavior and lifecycle counts by date, business line, service, source class, and page type |
 | `growth_landing_page_scores_daily` | Landing-page scoring view blending traffic, qualified demand, wins, and estimated pipeline value |
 
 Apply these migrations in order on any new environment:
@@ -68,6 +71,7 @@ Apply these migrations in order on any new environment:
 3. `supabase/20260506_growth_keyword_catalog.sql`
 4. `supabase/20260509_stage1_lead_quality_dimensions.sql`
 5. `supabase/20260509_stage3_growth_intelligence.sql`
+6. `supabase/20260511_growth_behavior_tracking.sql`
 
 ## Dashboard API Contract
 
@@ -94,15 +98,12 @@ It now returns these top-level sections:
 - `contentOpportunities`
 - `landingPageScorecard`
 - `funnelDiagnostics`
-- `seoContent`
-- `operations`
-- `dataHealth`
-
-Planned next top-level additions after the behavior mart ships:
-
 - `ctaPerformance`
 - `contactIntent`
 - `formHealth`
+- `seoContent`
+- `operations`
+- `dataHealth`
 
 The dashboard is intentionally PII-safe. It uses aggregates, keyword summaries, landing-page rollups, and safe drilldown rows rather than raw lead payloads.
 
@@ -141,14 +142,20 @@ Current reality:
 - CTA and contact-intent tracking already exists through `src/utils/analytics.js`
 - page view and UTM transport already exist through `src/utils/components/GoogleAnalytics.jsx`
 - server-confirmed lifecycle measurement already exists through `src/libs/analyticsLifecycle.js`
-- the missing layer is persisted behavior reporting that the dashboard can read
+- persisted behavior ingestion now exists through `src/app/api/analytics/behavior/route.js`
+- raw behavior events now land in `growth_behavior_events`
+- dashboard-ready behavior aggregates now land in `growth_behavior_daily_metrics`
+- `ctaPerformance`, `contactIntent`, and `formHealth` are now live dashboard sections
+- the remaining gap is production validation plus the final cutover of `funnelDiagnostics` away from lifecycle-only `v1`
 
-Planned reporting flow:
+Current reporting flow:
 
 1. browser and server behavior events emit canonical context
-2. behavior events are normalized into `growth_behavior_daily_metrics`
-3. `growth_funnel_daily_metrics` is rebuilt on top of behavior + lifecycle joins
-4. `/admin/dashboard` upgrades `funnelDiagnostics` and adds `ctaPerformance`, `contactIntent`, and `formHealth`
+2. `/api/analytics/behavior` normalizes and persists events into `growth_behavior_events`
+3. `growth_behavior_daily_metrics` aggregates events by date, page, CTA, form, funnel, and attribution context
+4. `growth_funnel_daily_metrics` combines behavior aggregates with lifecycle outcomes
+5. `/admin/dashboard` surfaces `ctaPerformance`, `contactIntent`, and `formHealth`
+6. `funnelDiagnostics` remains lifecycle-based `v1` until the combined behavior + lifecycle read path is validated and promoted
 
 Modeling principle:
 
@@ -156,27 +163,33 @@ Modeling principle:
 - lifecycle data confirms pipeline quality and business outcomes
 - both layers stay inside the same `/admin/dashboard` reporting surface
 
-Planned next reporting artifact:
+Stage 3 closeout note:
 
-| Artifact | Role |
-| --- | --- |
-| `growth_behavior_daily_metrics` | Canonical behavior mart keyed by `event_date`, `event_name`, `page_type`, `landing_page`, `business_line`, `service_type`, `form_name`, `step_name`, `cta_id`, `cta_location`, `session_source`, `session_medium`, and `session_campaign`, with `event_count` and `unique_client_count` |
-| Upgraded `growth_funnel_daily_metrics` | Funnel model joining CTA, form, submit, qualified, and closed-won states by `ga_client_id`, landing page, and normalized attribution dimensions |
+- The behavior mart and behavior panels are now implemented in product.
+- Stage 3 is still not complete until the target environment validates:
+  - event freshness
+  - canonical context coverage
+  - safe joins to lifecycle evidence
+  - useful behavior panels under real filters
+  - stable heuristics across two weekly reviews
 
 ## Stage 3 Intelligence Layer
 
-The first Stage 3 slice adds four decision-oriented payloads on top of the Stage 2 segmented dashboard:
+Stage 3 now exposes seven decision-oriented payloads on top of the Stage 2 segmented dashboard:
 
 - `seoQueries`: query-level demand, non-branded opportunity, and cluster rollups
 - `contentOpportunities`: CTR lift, decay-risk, cannibalization-watch, and conversion-gap candidates
 - `landingPageScorecard`: ranked landing pages scored by demand, qualified pipeline, wins, and estimated value
 - `funnelDiagnostics`: lifecycle-based funnel `v1` with top drop-off segments
+- `ctaPerformance`: CTA impressions, clicks, and direct-intent summaries by CTA and placement
+- `formHealth`: form starts, validation failures, abandonment, and submit-success summaries
+- `contactIntent`: phone, email, WhatsApp, and form-intent summaries by method and touchpoint
 
 Important Stage 3 scope notes:
 
 - `funnelDiagnostics` currently starts at lead creation, not CTA click or form start
-- CTA/form-step diagnostics require a persisted behavior mart that does not exist yet
-- The locked graduation path is `growth_behavior_daily_metrics` -> upgraded `growth_funnel_daily_metrics` -> `funnelDiagnostics`, `ctaPerformance`, `contactIntent`, and `formHealth`
+- CTA/form-step diagnostics now exist through `ctaPerformance`, `formHealth`, and `contactIntent`
+- The remaining graduation path is `growth_behavior_daily_metrics` -> validated upgraded `growth_funnel_daily_metrics` -> promoted behavior-aware `funnelDiagnostics`
 - `landingPageScorecard` is directional prioritization, not financial forecasting
 - `contentOpportunities` uses heuristics that should be reviewed after each weekly growth review until the thresholds stabilize
 

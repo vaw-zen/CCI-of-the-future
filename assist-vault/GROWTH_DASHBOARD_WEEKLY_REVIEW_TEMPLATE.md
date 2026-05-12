@@ -1,6 +1,6 @@
 # Growth Dashboard Weekly Review Template
 
-Date: 2026-05-10
+Date: 2026-05-12
 
 Use this template to operationalize Stage 2 and Stage 3 in the weekly growth review. The goal is to force every decision to reference a dashboard segment and a concrete evidence panel, not a generic top-line observation.
 
@@ -36,9 +36,9 @@ Follow this order every week:
 6. `Content opportunities`
 7. `Landing-page scorecard`
 8. `Funnel diagnostics`
-9. `CTA performance` once `growth_behavior_daily_metrics` is live
-10. `Form health` once `growth_behavior_daily_metrics` is live
-11. `Contact intent` once `growth_behavior_daily_metrics` is live
+9. `CTA performance`
+10. `Form health`
+11. `Contact intent`
 12. `Acquisition sources / campaigns`
 13. `Operations / stale queue / SLA`
 14. `Actions and sprint candidates`
@@ -99,19 +99,19 @@ Answer these every week:
 
 ### CTA performance
 
-- Once the behavior mart is live, which `cta_id` and `cta_location` combinations have the weakest impression-to-click conversion?
+- Which `cta_id` and `cta_location` combinations have the weakest impression-to-click conversion?
 - Is the issue low visibility, weak copy, poor placement, or weak audience intent?
 - Which CTA problem should feed the next CRO sprint candidate?
 
 ### Form health
 
-- Once the behavior mart is live, which form has the highest validation-failure or abandonment rate?
+- Which form has the highest validation-failure or abandonment rate?
 - Do failure hotspots cluster by field, form placement, or service intent?
 - Is the friction strong enough to justify an engineering fix or a CRO change this week?
 
 ### Contact intent
 
-- Once the behavior mart is live, which contact method is attracting intent on the highest-value pages?
+- Which contact method is attracting intent on the highest-value pages?
 - Are users preferring `form`, `phone`, `email`, or `whatsapp` in a way that should change CTA hierarchy?
 - Does contact-intent behavior align with qualified lead outcomes or point to a follow-up mismatch?
 
@@ -125,6 +125,7 @@ Leave the meeting with:
 4. 1 SEO refresh candidate
 5. 1 CRO sprint candidate
 6. 1 issue explicitly deferred with a reason
+7. Any threshold or heuristic changes recorded explicitly
 
 ## Action Log Template
 
@@ -142,5 +143,6 @@ The review is complete only if:
 - every action references a dashboard panel
 - attribution trust is explicitly recorded
 - at least one Stage 3 panel affected the week’s prioritization
-- once the behavior mart is live, at least one CRO action references `CTA performance`, `Form health`, or `Contact intent`
+- at least one CRO action references `CTA performance`, `Form health`, or `Contact intent`, or the notes explicitly record why those panels were empty or unusable in the active environment
+- any threshold or heuristic change is written down instead of being left implicit
 - no action is phrased as a generic “monitor performance”

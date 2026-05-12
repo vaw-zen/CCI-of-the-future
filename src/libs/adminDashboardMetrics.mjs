@@ -235,6 +235,26 @@ const KPI_SEMANTICS = {
     owner: 'Growth owner',
     decisionIntent: 'Which channels are producing actual acquisitions?'
   },
+  facebook_likes: {
+    canonicalLabel: 'Facebook likes',
+    owner: 'Growth owner',
+    decisionIntent: 'Which recent Facebook content is generating reactions?'
+  },
+  facebook_comments: {
+    canonicalLabel: 'Facebook comments',
+    owner: 'Growth owner',
+    decisionIntent: 'Which recent Facebook content is generating conversation?'
+  },
+  facebook_shares: {
+    canonicalLabel: 'Facebook shares',
+    owner: 'Growth owner',
+    decisionIntent: 'Which recent Facebook content is being redistributed?'
+  },
+  facebook_reel_views: {
+    canonicalLabel: 'Facebook reel views',
+    owner: 'Growth owner',
+    decisionIntent: 'Which recent reels are earning video consumption?'
+  },
   landing_pages_tracked: {
     canonicalLabel: 'Landing pages tracked',
     owner: 'Growth owner',
@@ -3738,6 +3758,78 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
   };
 }
 
+function sumFacebookMetric(items, key) {
+  return items.reduce((total, item) => (
+    total + (typeof item?.[key] === 'number' ? item[key] : 0)
+  ), 0);
+}
+
+function sortFacebookSnapshotItems(items = []) {
+  return [...items].sort((left, right) => (
+    Date.parse(right?.createdTime || 0) - Date.parse(left?.createdTime || 0)
+  ));
+}
+
+function buildFacebookAcquisition(facebookSnapshot = null) {
+  const posts = Array.isArray(facebookSnapshot?.posts) ? facebookSnapshot.posts : [];
+  const reels = Array.isArray(facebookSnapshot?.reels) ? facebookSnapshot.reels : [];
+  const warnings = Array.isArray(facebookSnapshot?.warnings) ? facebookSnapshot.warnings : [];
+  const allItems = sortFacebookSnapshotItems([...posts, ...reels]);
+  const recentContent = allItems.slice(0, 10);
+
+  const likes = sumFacebookMetric(allItems, 'likes');
+  const comments = sumFacebookMetric(allItems, 'comments');
+  const shares = sumFacebookMetric(allItems, 'shares');
+  const reelViews = sumFacebookMetric(reels, 'views');
+
+  return {
+    cards: [
+      buildKpiCard({
+        key: 'facebook_likes',
+        label: 'Facebook likes',
+        value: likes,
+        type: 'number',
+        meta: 'Snapshot horaire des derniers contenus Facebook'
+      }),
+      buildKpiCard({
+        key: 'facebook_comments',
+        label: 'Facebook comments',
+        value: comments,
+        type: 'number',
+        meta: 'Snapshot horaire des derniers contenus Facebook'
+      }),
+      buildKpiCard({
+        key: 'facebook_shares',
+        label: 'Facebook shares',
+        value: shares,
+        type: 'number',
+        meta: 'Snapshot horaire des derniers contenus Facebook'
+      }),
+      buildKpiCard({
+        key: 'facebook_reel_views',
+        label: 'Reel views',
+        value: reelViews,
+        type: 'number',
+        meta: 'Vues vidéo disponibles sur les reels'
+      })
+    ],
+    summary: {
+      postsAnalyzed: posts.length,
+      reelsAnalyzed: reels.length,
+      itemsAnalyzed: allItems.length,
+      recentContentCount: recentContent.length,
+      snapshotUpdatedAt: facebookSnapshot?.fetchedAt || null
+    },
+    recentContent,
+    notes: {
+      snapshotBasis: 'Snapshot Facebook mis en cache sur 1 heure, basé sur les 50 derniers posts et 50 derniers reels disponibles.',
+      rangeIndependence: 'Ce bloc Facebook est indépendant de la période sélectionnée dans le dashboard.',
+      coverage: `${posts.length} posts et ${reels.length} reels analysés dans le snapshot courant.`
+    },
+    warnings
+  };
+}
+
 function buildSeoContent(currentLeads, externalMetricRows, keywordCatalogRows, keywordRankingRows, filters = {}) {
   const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
   const pageRows = aggregateCombinedRows(
@@ -4754,6 +4846,7 @@ export function buildAdminDashboardData({
   queryMetricRows = [],
   behaviorMetricRows = [],
   whatsappClickRows = [],
+  facebookSnapshot = null,
   keywordCatalogRows = [],
   keywordRankingRows = [],
   sourceHealthRows = [],
@@ -4791,7 +4884,10 @@ export function buildAdminDashboardData({
   const dataHealth = buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRows, keywordRankingRows, nowIso);
   const overviewCards = buildOverviewCards(filteredCurrentLeads, filteredPreviousLeads, filteredUniverseLeads, range);
   const pipeline = buildPipeline(filteredCurrentLeads, range);
-  const acquisition = buildAcquisition(filteredCurrentLeads, filteredExternalMetricRows, filteredWhatsAppClickRows);
+  const acquisition = {
+    ...buildAcquisition(filteredCurrentLeads, filteredExternalMetricRows, filteredWhatsAppClickRows),
+    facebook: buildFacebookAcquisition(facebookSnapshot)
+  };
   const seoQueries = buildSeoQueries(filteredQueryMetricRows, normalizedFilters);
   const landingPageScorecard = buildLandingPageScorecard(
     filteredCurrentLeads,

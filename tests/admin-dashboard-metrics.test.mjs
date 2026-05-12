@@ -129,6 +129,34 @@ function buildKeywordCatalogRow(overrides = {}) {
   };
 }
 
+function buildFacebookPostSnapshot(overrides = {}) {
+  return {
+    id: overrides.id || 'fb-post-1',
+    kind: 'post',
+    createdTime: overrides.createdTime || '2026-05-07T10:00:00.000Z',
+    permalinkUrl: overrides.permalinkUrl || 'https://facebook.com/post-1',
+    messagePreview: overrides.messagePreview || 'Publication Facebook test',
+    likes: overrides.likes ?? 0,
+    comments: overrides.comments ?? 0,
+    shares: overrides.shares ?? 0,
+    views: overrides.views ?? null
+  };
+}
+
+function buildFacebookReelSnapshot(overrides = {}) {
+  return {
+    id: overrides.id || 'fb-reel-1',
+    kind: 'reel',
+    createdTime: overrides.createdTime || '2026-05-07T12:00:00.000Z',
+    permalinkUrl: overrides.permalinkUrl || 'https://facebook.com/reel-1',
+    messagePreview: overrides.messagePreview || 'Reel Facebook test',
+    likes: overrides.likes ?? 0,
+    comments: overrides.comments ?? 0,
+    shares: overrides.shares ?? 0,
+    views: overrides.views ?? 0
+  };
+}
+
 test('dashboard data uses global open leads for stale queue and keeps service breakdown semantics explicit', () => {
   const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
   assert.equal(rangeResult.ok, true);
@@ -195,6 +223,70 @@ test('dashboard data uses global open leads for stale queue and keeps service br
   assert.equal(data.pipeline.breakdowns.serviceMentions.find((item) => item.key === 'clinique')?.count, 1);
   assert.equal(data.pipeline.breakdowns.primaryService.find((item) => item.key === 'hotel')?.count, 1);
   assert.equal(data.overview.cards.find((card) => card.key === 'unattributed_rate')?.value, 50);
+});
+
+test('facebook acquisition snapshot aggregates cards, caps recent content, and keeps post views unavailable', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const posts = Array.from({ length: 6 }, (_, index) => buildFacebookPostSnapshot({
+    id: `fb-post-${index + 1}`,
+    createdTime: `2026-05-0${Math.min(index + 1, 7)}T0${index}:00:00.000Z`,
+    messagePreview: `Publication Facebook ${index + 1}`,
+    likes: 2 + index,
+    comments: 1,
+    shares: index
+  }));
+  const reels = Array.from({ length: 5 }, (_, index) => buildFacebookReelSnapshot({
+    id: `fb-reel-${index + 1}`,
+    createdTime: `2026-05-0${Math.min(index + 2, 7)}T1${index}:30:00.000Z`,
+    messagePreview: `Reel Facebook ${index + 1}`,
+    likes: 10 + index,
+    comments: 2 + index,
+    shares: 1,
+    views: 100 * (index + 1)
+  }));
+
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [],
+      conventions: []
+    },
+    previousRows: {
+      devis: [],
+      conventions: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: []
+    },
+    facebookSnapshot: {
+      posts,
+      reels,
+      fetchedAt: '2026-05-07T13:45:00.000Z',
+      warnings: [
+        {
+          key: 'facebook_metrics_partial',
+          level: 'warning',
+          message: 'Certaines métriques Facebook n’ont pas pu être récupérées.'
+        }
+      ]
+    },
+    range: rangeResult.range,
+    nowIso: '2026-05-07T14:00:00.000Z'
+  });
+
+  assert.equal(data.acquisition.facebook.cards.find((card) => card.key === 'facebook_likes')?.value, 87);
+  assert.equal(data.acquisition.facebook.cards.find((card) => card.key === 'facebook_comments')?.value, 26);
+  assert.equal(data.acquisition.facebook.cards.find((card) => card.key === 'facebook_shares')?.value, 20);
+  assert.equal(data.acquisition.facebook.cards.find((card) => card.key === 'facebook_reel_views')?.value, 1500);
+  assert.equal(data.acquisition.facebook.summary.postsAnalyzed, 6);
+  assert.equal(data.acquisition.facebook.summary.reelsAnalyzed, 5);
+  assert.equal(data.acquisition.facebook.summary.itemsAnalyzed, 11);
+  assert.equal(data.acquisition.facebook.summary.recentContentCount, 10);
+  assert.equal(data.acquisition.facebook.recentContent.length, 10);
+  assert.equal(data.acquisition.facebook.recentContent[0]?.kind, 'reel');
+  assert.equal(data.acquisition.facebook.recentContent.find((item) => item.kind === 'post')?.views, null);
+  assert.equal(data.acquisition.facebook.warnings[0]?.key, 'facebook_metrics_partial');
+  assert.match(data.acquisition.facebook.notes.rangeIndependence, /indépendant/i);
 });
 
 test('stage-one lead operations use last_worked_at for stale queue and surface SLA and quality summaries', () => {

@@ -74,6 +74,14 @@ function formatNumber(value) {
   return new Intl.NumberFormat('fr-FR').format(value || 0);
 }
 
+function formatOptionalNumber(value) {
+  if (value === null || value === undefined) {
+    return 'N/A';
+  }
+
+  return formatNumber(value);
+}
+
 function formatPercent(value) {
   return `${Number(value || 0).toLocaleString('fr-FR', {
     maximumFractionDigits: 1
@@ -1157,6 +1165,7 @@ function PipelineSection({ dashboardData }) {
 function AcquisitionSection({ dashboardData }) {
   const acquisitionCards = dashboardData.acquisition.cards || [];
   const whatsappData = dashboardData.acquisition.whatsapp;
+  const facebookData = dashboardData.acquisition.facebook;
   const whatsappSourceUnavailable = dashboardData.diagnostics?.reportingWarnings?.includes('whatsapp_click_events_unavailable');
   const whatsappDirectLeadSourceUnavailable = dashboardData.diagnostics?.reportingWarnings?.includes('whatsapp_direct_leads_unavailable');
 
@@ -1211,6 +1220,90 @@ function AcquisitionSection({ dashboardData }) {
               ]} />
             </div>
           )}
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>Facebook snapshot</h2>
+          {facebookData.warnings.map((warning) => (
+            <p key={warning.key} className={styles.healthError}>
+              {warning.message}
+            </p>
+          ))}
+          <p className={styles.inlineNote}>{facebookData.notes.snapshotBasis}</p>
+          <p className={styles.mutedText}>{facebookData.notes.rangeIndependence}</p>
+
+          <div className={styles.stats}>
+            {facebookData.cards.map((card) => (
+              <KpiCard key={card.key} card={card} />
+            ))}
+          </div>
+
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(facebookData.summary.postsAnalyzed)}</strong>
+              <span>Posts analysés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(facebookData.summary.reelsAnalyzed)}</strong>
+              <span>Reels analysés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(facebookData.summary.recentContentCount)}</strong>
+              <span>Contenus affichés</span>
+            </div>
+          </div>
+          <p className={styles.mutedText}>{facebookData.notes.coverage}</p>
+          <p className={styles.mutedText}>
+            {facebookData.summary.snapshotUpdatedAt
+              ? `Dernière mise à jour : ${formatDateTime(facebookData.summary.snapshotUpdatedAt)}`
+              : 'Dernière mise à jour indisponible.'}
+          </p>
+        </div>
+
+        <MetricListPanel
+          title="Contenus Facebook récents"
+          note={facebookData.notes.snapshotBasis}
+          rows={facebookData.recentContent}
+          emptyText="Aucun contenu Facebook récent disponible."
+          renderRow={(row) => {
+            const rowBody = (
+              <>
+                <div>
+                  <strong>{row.kind === 'reel' ? 'Reel Facebook' : 'Publication Facebook'}</strong>
+                  <span>{formatDateTime(row.createdTime)}</span>
+                  <span>{row.messagePreview}</span>
+                </div>
+                <MetricBadges items={[
+                  { label: 'Likes', value: formatOptionalNumber(row.likes) },
+                  { label: 'Comments', value: formatOptionalNumber(row.comments) },
+                  { label: 'Shares', value: formatOptionalNumber(row.shares) },
+                  { label: 'Views', value: formatOptionalNumber(row.views) }
+                ]} />
+              </>
+            );
+
+            if (row.permalinkUrl) {
+              return (
+                <a
+                  key={`${row.kind}-${row.id}`}
+                  href={row.permalinkUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${styles.metricRow} ${styles.metricRowLink}`}
+                >
+                  {rowBody}
+                </a>
+              );
+            }
+
+            return (
+              <div key={`${row.kind}-${row.id}`} className={styles.metricRow}>
+                {rowBody}
+              </div>
+            );
+          }}
         />
       </div>
 

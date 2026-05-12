@@ -3,6 +3,7 @@ import { authenticateAdminRequest } from '@/libs/adminApiAuth';
 import { createServiceClient } from '@/libs/supabase';
 import { getClientIp, rateLimitRequest } from '@/libs/security';
 import { buildAdminDashboardData, getDashboardRange } from '@/libs/adminDashboardMetrics.mjs';
+import { fetchFacebookAdminSnapshot } from '@/libs/facebookAdminSnapshot.mjs';
 import { fetchGrowthKeywordCatalogRows } from '@/libs/growthKeywordCatalog.mjs';
 import { runLeadSelectWithOptionalTrackingFallback } from '@/libs/leadTrackingSchemaCompat.mjs';
 import { filterTrackedWhatsAppClicks } from '@/libs/whatsappAttribution.mjs';
@@ -655,6 +656,7 @@ export async function GET(request) {
       queryMetricsResult,
       behaviorMetricsResult,
       whatsappClickResult,
+      facebookSnapshot,
       keywordCatalogResult,
       keywordRankingResult,
       sourceHealthResult
@@ -667,6 +669,7 @@ export async function GET(request) {
       fetchQueryMetricRows(supabase, rangeResult.range),
       fetchBehaviorMetricRows(supabase, rangeResult.range),
       fetchWhatsAppClickRows(supabase, rangeResult.range),
+      fetchFacebookAdminSnapshot(),
       fetchKeywordCatalogRows(supabase),
       fetchKeywordRankingRows(supabase, rangeResult.range),
       fetchGrowthSourceHealth(supabase)
@@ -679,6 +682,7 @@ export async function GET(request) {
       queryMetricsResult.error ? 'growth_query_daily_metrics_unavailable' : null,
       behaviorMetricsResult.error ? 'growth_behavior_daily_metrics_unavailable' : null,
       whatsappClickResult.error ? 'whatsapp_click_events_unavailable' : null,
+      ...(facebookSnapshot?.warnings || []).map((warning) => warning.key),
       keywordCatalogResult.error ? 'growth_keyword_catalog_unavailable' : null,
       keywordRankingResult.error ? 'growth_keyword_rankings_daily_unavailable' : null,
       sourceHealthResult.error ? 'growth_reporting_source_health_unavailable' : null
@@ -691,6 +695,7 @@ export async function GET(request) {
       queryMetricRows: queryMetricsResult.rows,
       behaviorMetricRows: behaviorMetricsResult.rows,
       whatsappClickRows: whatsappClickResult.rows,
+      facebookSnapshot,
       keywordCatalogRows: keywordCatalogResult.rows,
       keywordRankingRows: keywordRankingResult.rows,
       sourceHealthRows: sourceHealthResult.rows,

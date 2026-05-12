@@ -567,6 +567,15 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+.metricRowLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.metricRowLink:hover {
+  border-color: var(--ac-primary);
+}
+
 .metricRow > div:first-child {
   display: flex;
   flex-direction: column;

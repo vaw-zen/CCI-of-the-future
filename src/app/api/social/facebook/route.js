@@ -4,6 +4,7 @@ import { getVideoPlaceholderDataUrl } from '@/utils/videoPlaceholder';
 const FB_API_VERSION = process.env.FB_API_VERSION || 'v17.0';
 const FB_PAGE_ID = process.env.FB_PAGE_ID;
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
+const HIDDEN_POST_PREFIXES = ['conseil du vendredi'];
 
 let cache = { ts: 0, data: null };
 const CACHE_TTL = 60; // seconds
@@ -13,6 +14,22 @@ async function fetchJson(url) {
   const text = await res.text();
   if (!res.ok) throw new Error(`Fetch error ${res.status}: ${text}`);
   return JSON.parse(text);
+}
+
+function normalizePostPrefix(message) {
+  if (typeof message !== 'string') return '';
+
+  return message
+    .normalize('NFC')
+    .replace(/^[^A-Za-zÀ-ÿ0-9]+/u, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLocaleLowerCase('fr-FR');
+}
+
+function shouldHideFacebookPost(message) {
+  const normalizedMessage = normalizePostPrefix(message);
+  return HIDDEN_POST_PREFIXES.some(prefix => normalizedMessage.startsWith(prefix));
 }
 
 function normalizeFbPosts(raw) {
@@ -163,6 +180,39 @@ function normalizeFbReels(raw) {
     };
   });
 }
+
+async function fetchFilteredFbPosts({ limit, after }) {
+  const maxPagesToScan = limit ? 10 : 1;
+  const filteredPosts = [];
+  let paging = null;
+  let nextAfter = after;
+  let pagesFetched = 0;
+
+  while (pagesFetched < maxPagesToScan) {
+    const pageLimit = limit ? Math.max(1, limit - filteredPosts.length) : null;
+    let fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
+    if (pageLimit) fbPostsUrl += `&limit=${pageLimit}`;
+    if (nextAfter) fbPostsUrl += `&after=${encodeURIComponent(nextAfter)}`;
+
+    const facebookPosts = await fetchJson(fbPostsUrl);
+    const visiblePosts = normalizeFbPosts(facebookPosts)
+      .filter((post) => !shouldHideFacebookPost(post.message));
+
+    filteredPosts.push(...visiblePosts);
+    paging = facebookPosts?.paging || null;
+    pagesFetched += 1;
+
+    const hasMore = Boolean(paging?.next && paging?.cursors?.after);
+    if (!limit || filteredPosts.length >= limit || !hasMore) {
+      break;
+    }
+
+    nextAfter = paging.cursors.after;
+  }
+
+  return { posts: filteredPosts, posts_paging: paging };
+}
+
 export async function GET(request) {
   try {
     if (!FB_PAGE_ID || !FB_PAGE_ACCESS_TOKEN) {
@@ -190,22 +240,19 @@ export async function GET(request) {
       });
     }
 
-    let fbPostsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/posts?fields=message,created_time,permalink_url,attachments{media,media_url,subattachments},thumbnails&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
-    if (postsLimit) fbPostsUrl += `&limit=${postsLimit}`;
-    if (postsAfter) fbPostsUrl += `&after=${encodeURIComponent(postsAfter)}`;
     let fbReelsUrl = `https://graph.facebook.com/${FB_API_VERSION}/${FB_PAGE_ID}/video_reels?fields=id,created_time,permalink_url,perma_link,source,description,picture,thumbnails,insights.metric(video_views,post_engaged_users),likes.summary(true)&access_token=${encodeURIComponent(FB_PAGE_ACCESS_TOKEN)}`;
     if (reelsLimit) fbReelsUrl += `&limit=${reelsLimit}`;
     if (reelsAfter) fbReelsUrl += `&after=${encodeURIComponent(reelsAfter)}`;
 
     // Fetch both in parallel
-    const [facebookPosts, facebookReels] = await Promise.all([
-      fetchJson(fbPostsUrl),
+    const [postsResult, facebookReels] = await Promise.all([
+      fetchFilteredFbPosts({ limit: postsLimit, after: postsAfter }),
       fetchJson(fbReelsUrl)
     ]);
 
-    const posts = normalizeFbPosts(facebookPosts);
+    const posts = postsResult.posts;
     const reels = normalizeFbReels(facebookReels);
-    const posts_paging = facebookPosts?.paging || null;
+    const posts_paging = postsResult.posts_paging || null;
     const reels_paging = facebookReels?.paging || null;
 
     if (canUseCache) {

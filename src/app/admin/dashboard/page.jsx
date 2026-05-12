@@ -701,27 +701,31 @@ function ExecutiveSummary({ executiveSummary, filters }) {
       {organicEvidence && (
         <div className={styles.executiveFollowup}>
           <div className={styles.executiveFollowupHeader}>
-            <div>
+            <div className={styles.executiveFollowupIntro}>
               <h3>Organic search evidence</h3>
-              <p className={styles.inlineNote}>{organicEvidence.joinHealth.note}</p>
+              <p className={styles.executiveFollowupNote}>{organicEvidence.joinHealth.note}</p>
             </div>
-            <span className={`${styles.healthBadge} ${joinHealthBadge.className}`}>
-              {joinHealthBadge.label}
-            </span>
+            <div className={styles.executiveFollowupHeaderMeta}>
+              <span className={`${styles.healthBadge} ${joinHealthBadge.className}`}>
+                {joinHealthBadge.label}
+              </span>
+            </div>
           </div>
 
-          <MetricBadges items={[
-            { label: 'GSC clicks', value: formatNumber(organicEvidence.summary.organicClicks) },
-            { label: 'GSC impressions', value: formatNumber(organicEvidence.summary.organicImpressions) },
-            { label: 'GA4 sessions', value: formatNumber(organicEvidence.summary.organicSessions) },
-            { label: 'GA4 users', value: formatNumber(organicEvidence.summary.organicUsers) },
-            { label: 'GA4 events', value: formatNumber(organicEvidence.summary.organicEvents) },
-            { label: 'GSC query clicks', value: formatNumber(organicEvidence.summary.queryClicks) },
-            { label: 'Lead pages', value: formatNumber(organicEvidence.joinHealth.leadPageCount) }
-          ]} />
-          <p className={styles.inlineNote}>
-            GA4 sessions, users, and events are shown separately from Search Console clicks and impressions.
-          </p>
+          <div className={styles.executiveFollowupSummary}>
+            <MetricBadges items={[
+              { label: 'GSC clicks', value: formatNumber(organicEvidence.summary.organicClicks) },
+              { label: 'GSC impressions', value: formatNumber(organicEvidence.summary.organicImpressions) },
+              { label: 'GA4 sessions', value: formatNumber(organicEvidence.summary.organicSessions) },
+              { label: 'GA4 users', value: formatNumber(organicEvidence.summary.organicUsers) },
+              { label: 'GA4 events', value: formatNumber(organicEvidence.summary.organicEvents) },
+              { label: 'GSC query clicks', value: formatNumber(organicEvidence.summary.queryClicks) },
+              { label: 'Lead pages', value: formatNumber(organicEvidence.joinHealth.leadPageCount) }
+            ]} />
+            <p className={styles.executiveFollowupNote}>
+              GA4 sessions, users, and events are shown separately from Search Console clicks and impressions.
+            </p>
+          </div>
 
           {organicEvidence.topLandingPages.length > 0 ? (
             <div className={styles.metricList}>
@@ -747,8 +751,14 @@ function ExecutiveSummary({ executiveSummary, filters }) {
           )}
 
           {organicEvidence.joinHealth.problemPages.length > 0 && (
-            <>
-              <p className={joinHealthStatus === 'warning' ? styles.healthError : styles.inlineNote}>
+            <div className={styles.executiveFollowupMeta}>
+              <p
+                className={
+                  joinHealthStatus === 'warning'
+                    ? `${styles.executiveFollowupNote} ${styles.executiveFollowupNoteError}`
+                    : styles.executiveFollowupNote
+                }
+              >
                 Landing-page coverage check for current lead pages.
               </p>
               <div className={styles.metricList}>
@@ -774,7 +784,7 @@ function ExecutiveSummary({ executiveSummary, filters }) {
                   </div>
                 ))}
               </div>
-            </>
+            </div>
           )}
         </div>
       )}
@@ -782,48 +792,50 @@ function ExecutiveSummary({ executiveSummary, filters }) {
       {attributionDrilldown?.leads?.length > 0 && (
         <div className={styles.executiveFollowup}>
           <div className={styles.executiveFollowupHeader}>
-            <div>
+            <div className={styles.executiveFollowupIntro}>
               <h3>{attributionDrilldown.title}</h3>
-              <p className={styles.inlineNote}>{attributionDrilldown.note}</p>
+              <p className={styles.executiveFollowupNote}>{attributionDrilldown.note}</p>
             </div>
-            <span className={styles.metricBadge}>
-              <strong>Rows</strong> {formatNumber(attributionDrilldown.totalCount)}
-            </span>
+            <div className={styles.executiveFollowupHeaderMeta}>
+              <MetricBadge label="Rows" value={formatNumber(attributionDrilldown.totalCount)} />
+            </div>
           </div>
-          {attributionDrilldown.hiddenCount > 0 && (
-            <p className={styles.mutedText}>
-              Showing the {formatNumber(attributionDrilldown.leads.length)} most recent rows. {formatNumber(attributionDrilldown.hiddenCount)} older row{attributionDrilldown.hiddenCount > 1 ? 's remain' : ' remains'} in this filtered cohort.
-            </p>
-          )}
-          <div className={styles.compactList}>
-            {attributionDrilldown.leads.map((lead) => {
-              const fallbackOpsMeta = [
-                lead.leadQualityLabel || null,
-                lead.leadOwner ? `Owner: ${lead.leadOwner}` : null,
-                lead.followUpSlaAt ? `SLA: ${formatDateTime(lead.followUpSlaAt)}` : null
-              ].filter(Boolean).join(' • ');
+          <div className={styles.executiveFollowupMeta}>
+            {attributionDrilldown.hiddenCount > 0 && (
+              <p className={styles.executiveFollowupNote}>
+                Showing the {formatNumber(attributionDrilldown.leads.length)} most recent rows. {formatNumber(attributionDrilldown.hiddenCount)} older row{attributionDrilldown.hiddenCount > 1 ? 's remain' : ' remains'} in this filtered cohort.
+              </p>
+            )}
+            <div className={styles.compactList}>
+              {attributionDrilldown.leads.map((lead) => {
+                const fallbackOpsMeta = [
+                  lead.leadQualityLabel || null,
+                  lead.leadOwner ? `Owner: ${lead.leadOwner}` : null,
+                  lead.followUpSlaAt ? `SLA: ${formatDateTime(lead.followUpSlaAt)}` : null
+                ].filter(Boolean).join(' • ');
 
-              return (
-                <Link
-                  key={`${lead.kind}-${lead.id}`}
-                  href={getLeadDrilldownHref(lead)}
-                  className={styles.compactItem}
-                >
-                  <div>
-                    <strong>{lead.title || `${lead.kindLabel} - ${lead.serviceLabel}`}</strong>
-                    <span>{lead.metaLinePrimary || `${lead.source} / ${lead.medium}`}</span>
-                    <span>{lead.metaLineSecondary || lead.landingPage}</span>
-                    {(lead.metaLineTertiary || fallbackOpsMeta) && <small>{lead.metaLineTertiary || fallbackOpsMeta}</small>}
-                  </div>
-                  <div className={styles.compactMeta}>
-                    <span className={`${styles.statusBadge} ${styles[`status_${lead.status}`]}`}>
-                      {lead.statusLabel}
-                    </span>
-                    <small>{lead.metaDateTime ? formatDateTime(lead.metaDateTime) : formatHours(lead.ageHours)}</small>
-                  </div>
-                </Link>
-              );
-            })}
+                return (
+                  <Link
+                    key={`${lead.kind}-${lead.id}`}
+                    href={getLeadDrilldownHref(lead)}
+                    className={styles.compactItem}
+                  >
+                    <div>
+                      <strong>{lead.title || `${lead.kindLabel} - ${lead.serviceLabel}`}</strong>
+                      <span>{lead.metaLinePrimary || `${lead.source} / ${lead.medium}`}</span>
+                      <span>{lead.metaLineSecondary || lead.landingPage}</span>
+                      {(lead.metaLineTertiary || fallbackOpsMeta) && <small>{lead.metaLineTertiary || fallbackOpsMeta}</small>}
+                    </div>
+                    <div className={styles.compactMeta}>
+                      <span className={`${styles.statusBadge} ${styles[`status_${lead.status}`]}`}>
+                        {lead.statusLabel}
+                      </span>
+                      <small>{lead.metaDateTime ? formatDateTime(lead.metaDateTime) : formatHours(lead.ageHours)}</small>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
@@ -831,13 +843,20 @@ function ExecutiveSummary({ executiveSummary, filters }) {
   );
 }
 
+function MetricBadge({ label, value, emphasizeValue = true }) {
+  return (
+    <span className={styles.metricBadge}>
+      <span className={styles.metricBadgeLabel}>{label}</span>
+      <span className={emphasizeValue ? styles.metricBadgeValue : styles.metricBadgeText}>{value}</span>
+    </span>
+  );
+}
+
 function MetricBadges({ items = [] }) {
   return (
     <div className={styles.metricBadges}>
       {items.map((item) => (
-        <span key={item.label} className={styles.metricBadge}>
-          <strong>{item.label}</strong> {item.value}
-        </span>
+        <MetricBadge key={`${item.label}-${item.value}`} label={item.label} value={item.value} />
       ))}
     </div>
   );
@@ -997,14 +1016,10 @@ function OverviewSection({ dashboardData }) {
           </p>
           <div className={styles.metricBadges}>
             {(dashboardData.filters.active || []).length === 0 ? (
-              <span className={styles.metricBadge}>
-                <strong>Scope</strong> All traffic and lead cohorts
-              </span>
+              <MetricBadge label="Scope" value="All traffic and lead cohorts" emphasizeValue={false} />
             ) : (
               dashboardData.filters.active.map((item) => (
-                <span key={item.key} className={styles.metricBadge}>
-                  <strong>{item.label}</strong> {item.value}
-                </span>
+                <MetricBadge key={item.key} label={item.label} value={item.value} emphasizeValue={false} />
               ))
             )}
           </div>

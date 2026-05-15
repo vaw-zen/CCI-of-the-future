@@ -1,8 +1,12 @@
 {
   "metadata": {
-    "title": "Conventions Nettoyage Entreprises Tunis | Contrats Annuels B2B | CCI Services",
-    "description": "Conventions de nettoyage annuelles pour entreprises à Tunis ✓ Banques, assurances, cliniques, hôtels ✓ Contrats sur mesure ✓ Audit gratuit ✓ CCI Services",
+    "title": "Conventions Nettoyage Entreprises Tunis | Contrats B2B & Nettoyage Professionnel | CCI Services",
+    "description": "Contrats de nettoyage annuels pour entreprises à Tunis et en Tunisie : bureaux, immeubles, banques, cliniques, commerces et désinfection professionnelle des locaux. Audit gratuit.",
     "keywords": [
+      "contrats nettoyage réguliers immeubles",
+      "service désinfection professionnelle locaux commerciaux",
+      "entreprise nettoyage industriel fiable tunisie",
+      "nettoyage professionnel tunisie",
       "convention nettoyage entreprise tunis",
       "contrat nettoyage annuel tunisie",
       "société nettoyage professionnel tunisie",
@@ -24,8 +28,8 @@
       "sous-traitance nettoyage entreprise"
     ]
   },
-  "heroTitle": "Conventions de Nettoyage pour Entreprises",
-  "heroSubtitle": "Des contrats annuels sur mesure pour banques, assurances, cliniques et entreprises à Tunis",
+  "heroTitle": "Conventions de Nettoyage pour Entreprises à Tunis",
+  "heroSubtitle": "Contrats B2B sur mesure pour bureaux, immeubles, commerces, cliniques et nettoyage professionnel en Tunisie.",
   "images": [
     {
       "src": "/gallery/conventions.jpg",
@@ -241,17 +245,21 @@
   ],
   "sections": {
     "mainService": {
-      "title": "Conventions de nettoyage annuelles pour professionnels",
-      "text": "CCI Services propose des conventions de nettoyage sur mesure aux entreprises, banques, compagnies d'assurances, cliniques, hôtels et grandes surfaces à Tunis et dans le Grand Tunis. Nos contrats annuels couvrent l'ensemble de vos besoins d'entretien : nettoyage quotidien des locaux, entretien du mobilier textile, shampooing des moquettes, polissage des sols en marbre et nettoyage des vitres et façades. Chaque convention est précédée d'un audit gratuit pour garantir une prestation parfaitement adaptée à votre environnement professionnel.",
+      "title": "Conventions de nettoyage annuelles et contrats B2B",
+      "text": "CCI Services propose des conventions de nettoyage sur mesure aux entreprises, banques, compagnies d'assurances, cliniques, hôtels, commerces et immeubles à Tunis et dans toute la Tunisie. Nos contrats B2B couvrent le nettoyage quotidien des locaux, l'entretien du mobilier textile, le shampooing des moquettes, le polissage des sols en marbre, la désinfection des espaces sensibles et le nettoyage des vitres et façades. Nous prenons aussi en charge les contrats de nettoyage réguliers d'immeubles, l'entretien de bureaux et la désinfection professionnelle des locaux commerciaux avec un planning conçu pour limiter l'impact sur votre activité. Chaque convention est précédée d'un audit gratuit pour garantir une prestation adaptée à votre environnement professionnel, à vos fréquences et à vos contraintes d'exploitation.",
       "image": {
         "src": "/gallery/conventions.jpg",
         "alt": "Convention de nettoyage professionnel pour entreprises à Tunis",
         "title": "Conventions de nettoyage annuelles pour professionnels"
       }
     },
+    "commercialCleaning": {
+      "title": "Nettoyage professionnel Tunisie : immeubles, bureaux et locaux commerciaux",
+      "text": "Nos conventions couvrent les contrats de nettoyage réguliers d'immeubles, l'entretien de bureaux, la remise en état des zones de passage et la désinfection professionnelle des locaux commerciaux. Nous intervenons comme entreprise de nettoyage industriel fiable en Tunisie pour les accueils, open spaces, sanitaires, vitrages, moquettes et surfaces sensibles avec des plannings qui limitent l'impact sur votre activité."
+    },
     "whyChooseUs": {
       "title": "Un partenaire de confiance pour l'entretien de vos locaux",
-      "text": "Fort de plus de 10 ans d'expérience dans le nettoyage professionnel en Tunisie, CCI Services s'est imposé comme le partenaire privilégié des entreprises exigeantes. Nos conventions annuelles offrent une qualité constante grâce à des équipes dédiées formées à vos protocoles, des équipements professionnels de pointe et un suivi qualité rigoureux. Nous intervenons dans tout le Grand Tunis (Tunis, Ariana, Ben Arous, Manouba) avec des horaires flexibles adaptés à votre activité.",
+      "text": "Fort de plus de 10 ans d'expérience dans le nettoyage professionnel en Tunisie, CCI Services s'est imposé comme le partenaire privilégié des entreprises exigeantes. Si vous cherchez une entreprise de nettoyage industriel fiable en Tunisie, nos conventions annuelles offrent une qualité constante grâce à des équipes dédiées formées à vos protocoles, des équipements professionnels de pointe et un suivi qualité rigoureux. Nous intervenons dans tout le Grand Tunis (Tunis, Ariana, Ben Arous, Manouba) avec des horaires flexibles adaptés à votre activité.",
       "image": {
         "src": "/gallery/conventions.jpg",
         "alt": "Prestataire de nettoyage B2B pour bureaux et locaux professionnels",
@@ -285,10 +293,10 @@
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": "https://cciservices.online/entreprises",
-    "name": "Conventions de Nettoyage Entreprises - CCI Tunisie",
-    "description": "Conventions de nettoyage annuelles pour entreprises à Tunis. Contrats sur mesure pour banques, assurances, cliniques, hôtels. Audit gratuit, interlocuteur dédié, rapports qualité mensuels.",
+    "name": "Conventions de Nettoyage Entreprises Tunis - CCI Services",
+    "description": "CCI Services propose des conventions de nettoyage entreprises à Tunis : contrats B2B, nettoyage professionnel, immeubles, bureaux, commerces et désinfection des locaux après audit gratuit.",
     "url": "https://cciservices.online/entreprises",
-    "serviceType": "Nettoyage professionnel B2B",
+    "serviceType": "Conventions de nettoyage B2B et désinfection professionnelle",
     "areaServed": [
       { "@type": "City", "name": "Tunis" },
       { "@type": "City", "name": "Ariana" },

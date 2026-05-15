@@ -35,9 +35,6 @@ export default function MarbreLayout({ children }) {
   return (
     <>
       {children}
-      {marbreData.localBusinessJSONLD && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(marbreData.localBusinessJSONLD) }} />
-      )}
       {marbreData.breadcrumbJSONLD && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(marbreData.breadcrumbJSONLD) }} />
       )}

@@ -14,7 +14,7 @@ export async function generateMetadata() {
       canonical
     },
     openGraph: {
-      title: "Nettoyage Moquette Tunis | Injection Extraction & Devis Gratuit | CCI",
+      title: tapisData.metadata.title,
       description: tapisData.metadata.description,
       url: canonical,
       type: 'website',
@@ -24,7 +24,7 @@ export async function generateMetadata() {
     },
     twitter: {
       card: 'summary_large_image',
-      title: "Nettoyage Moquette Tunis | CCI Services",
+      title: tapisData.metadata.title,
       description: tapisData.metadata.description,
       images: ogImage ? [ogImage] : []
     }
@@ -35,9 +35,6 @@ export default function TapisLayout({ children }) {
   return (
     <>
       {children}
-      {tapisData.localBusinessJSONLD && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisData.localBusinessJSONLD) }} />
-      )}
       {tapisData.breadcrumbJSONLD && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tapisData.breadcrumbJSONLD) }} />
       )}

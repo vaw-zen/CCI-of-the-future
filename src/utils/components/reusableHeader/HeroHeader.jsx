@@ -4,7 +4,7 @@ import styles from './HeroHeader.module.css'
 import { LineMdHomeTwotone } from '../icons'
 import Link from 'next/link'
 
-export default function HeroHeader({ title, bgAlt }) {
+export default function HeroHeader({ title, subtitle, bgAlt }) {
   return (
     <div className={styles.heroContainer}>
       <div className={styles.backgroundImages}>
@@ -16,6 +16,7 @@ export default function HeroHeader({ title, bgAlt }) {
         />
         <div className={styles.titleContainer}>
           <h1>{title}</h1>
+          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
           <div className={styles.title}>
             <Link href='/' className={styles.anchors}>
               <LineMdHomeTwotone className={styles.icon} />

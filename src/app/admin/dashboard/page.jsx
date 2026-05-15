@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { getAdminDashboardData } from '@/services/adminLeadService';
+import { buildSeoAuditPrompt } from '@/libs/seoAuditPrompt.mjs';
 import AdminNavTabs from '@/app/admin/_components/AdminNavTabs';
 import WhatsAppLeadCreateModal from '@/app/admin/_components/WhatsAppLeadCreateModal';
 import styles from '../devis/admin.module.css';
@@ -1839,9 +1840,12 @@ export default function AdminDashboardPage() {
   const [sectionRefreshing, setSectionRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [copyingSeoPrompt, setCopyingSeoPrompt] = useState(false);
+  const [seoPromptCopyState, setSeoPromptCopyState] = useState('');
   const dashboardDataRef = useRef(null);
   const cacheRef = useRef(new Map());
   const controllerRef = useRef(new Map());
+  const seoPromptStatusTimeoutRef = useRef(null);
   const lastAppliedQueryKeyRef = useRef('');
   const activeQueryKeyRef = useRef(serializeDashboardQuery(initialDashboardQuery));
   const appliedQueryKey = useMemo(
@@ -2112,8 +2116,28 @@ export default function AdminDashboardPage() {
   useEffect(() => (
     () => {
       abortAllRequests();
+      if (seoPromptStatusTimeoutRef.current) {
+        window.clearTimeout(seoPromptStatusTimeoutRef.current);
+      }
     }
   ), [abortAllRequests]);
+
+  const setSeoPromptFeedback = useCallback((message) => {
+    if (seoPromptStatusTimeoutRef.current) {
+      window.clearTimeout(seoPromptStatusTimeoutRef.current);
+    }
+
+    setSeoPromptCopyState(message);
+
+    if (!message) {
+      return;
+    }
+
+    seoPromptStatusTimeoutRef.current = window.setTimeout(() => {
+      setSeoPromptCopyState('');
+      seoPromptStatusTimeoutRef.current = null;
+    }, 4000);
+  }, []);
 
   const handleLogout = async () => {
     const result = await signOut();
@@ -2142,6 +2166,29 @@ export default function AdminDashboardPage() {
       section: activeSection
     });
   }, [activeSection, appliedDashboardQuery, loadDashboardQuery]);
+
+  const handleCopySeoAuditPrompt = useCallback(async () => {
+    setCopyingSeoPrompt(true);
+    setSeoPromptFeedback('');
+
+    try {
+      await ensureSectionData('seo');
+      const queryKey = serializeDashboardQuery(appliedDashboardQuery);
+      const latestDashboardData = getMergedCachedDashboardData(queryKey) || dashboardDataRef.current;
+      const prompt = buildSeoAuditPrompt({
+        query: appliedDashboardQuery,
+        dashboardData: latestDashboardData
+      });
+
+      await navigator.clipboard.writeText(prompt);
+      setSeoPromptFeedback('Prompt SEO copié.');
+    } catch (copyError) {
+      console.error(copyError);
+      setSeoPromptFeedback('Impossible de copier le prompt SEO.');
+    } finally {
+      setCopyingSeoPrompt(false);
+    }
+  }, [appliedDashboardQuery, ensureSectionData, getMergedCachedDashboardData, setSeoPromptFeedback]);
 
   const handleWhatsAppLeadCreated = useCallback(() => {
     invalidateDashboardSections(appliedDashboardQuery, DASHBOARD_MUTATED_SECTIONS);
@@ -2189,11 +2236,23 @@ export default function AdminDashboardPage() {
             <button type="button" onClick={handleRefresh} className={styles.refreshButton}>
               Actualiser
             </button>
+            <button
+              type="button"
+              onClick={handleCopySeoAuditPrompt}
+              className={styles.secondaryButton}
+              disabled={!dashboardData || copyingSeoPrompt}
+            >
+              {copyingSeoPrompt ? 'Préparation du prompt...' : 'Copier prompt SEO'}
+            </button>
             <button onClick={handleLogout} className={styles.logoutButton}>
               Déconnexion
             </button>
           </div>
         </div>
+
+        {seoPromptCopyState && (
+          <div className={styles.resultsMeta}>{seoPromptCopyState}</div>
+        )}
 
         <AdminNavTabs active="dashboard" />
 

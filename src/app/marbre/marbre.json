@@ -1,26 +1,25 @@
 {
   "metadata": {
-    "title": "Polissage & Restauration Marbre Tunis | Prix dès 8 DT/m² | Devis Gratuit - CCI",
-    "description": "Restauration marbre à Tunis ✓ Ponçage, polissage, cristallisation ✓ Résultats avant/après garantis ✓ Prix compétitifs dès 8 DT/m² ✓ Devis gratuit ✆ +216 98 557 766",
+    "title": "Restauration Marbre Tunis | Ponçage, Polissage & Cristallisation | CCI Services",
+    "description": "Restauration marbre Tunis et traitement marbre Tunisie : ponçage, polissage, cristallisation, lustrage et protection. Devis gratuit pour sols, escaliers et plans de travail.",
     "keywords": [
       "restauration marbre tunis",
       "traitement marbre tunisie",
+      "ponçage marbre tunisie",
+      "polissage marbre tunisie",
+      "cristallisation marbre tunisie",
+      "lustrage marbre tunisie",
+      "protection marbre tunisie",
+      "entretien marbre tunis",
+      "nettoyage marbre tunis",
+      "détartrage marbre cuisine",
       "ponçage marbre",
       "polissage marbre",
       "cristallisation marbre",
       "entretien marbre",
-      "marbre blanc",
       "protection marbre",
-      "polissage marbre tunisie",
-      "ponçage marbre tunisie",
-      "lustrage marbre tunisie",
-      "protection marbre tunisie",
-      "cristallisation marbre tunisie",
-      "nettoyage marbre tunis",
       "détachage marbre tunis",
       "lavage marbre tunis",
-      "entretien marbre tunis",
-      "détartrage marbre cuisine",
       "entretien marbre cuisine tunis",
       "nettoyer plan travail marbre",
       "marbre cuisine calcaire",
@@ -35,7 +34,8 @@
       "travertin"
     ]
   },
-  "heroTitle": "Restauration et Entretien de Marbre à Tunis - CCI",
+  "heroTitle": "Restauration Marbre Tunis : Ponçage, Polissage et Cristallisation",
+  "heroSubtitle": "Traitement marbre Tunisie pour sols, escaliers et plans de travail : diagnostic, ponçage, polissage, cristallisation et protection.",
   "tabData": [
     {
       "id": "mission",
@@ -118,9 +118,10 @@
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": "https://cciservices.online/marbre",
-    "name": "Restauration Marbre Tunis - CCI Tunisie",
-    "description": "CCI Tunisie - Ponçage, polissage, cristallisation et protection marbre à Tunis. Services professionnels pour particuliers et entreprises. CCI Tunis : Expert restauration marbre.",
+    "name": "Restauration Marbre Tunis, Ponçage & Polissage - CCI Services",
+    "description": "CCI Services réalise la restauration marbre à Tunis et le traitement marbre en Tunisie : ponçage, polissage, cristallisation, lustrage et protection pour sols, escaliers et plans de travail.",
     "url": "https://cciservices.online/marbre",
+    "serviceType": "Restauration et traitement marbre",
     "areaServed": [
       { "@type": "City", "name": "Tunis" },
       { "@type": "City", "name": "Ariana" },
@@ -190,19 +191,19 @@
   },
   "sections": {
     "mainService": {
-      "title": "Restauration et entretien de marbre - CCI Tunisie",
-      "text": "CCI Tunisie vous propose des services spécialisés pour la restauration et l'entretien de vos surfaces en marbre à Tunis et toute la Tunisie : ponçage marbre tunisie, polissage marbre tunisie, cristallisation marbre tunisie, lustrage marbre tunisie et protection marbre tunisie. L'équipe CCI Tunis utilise des techniques professionnelles et des produits adaptés pour redonner éclat, brillance et durabilité à vos sols et surfaces. Confiez vos projets à CCI Tunisie pour un résultat haut de gamme et durable."
+      "title": "Restauration marbre Tunis et traitement marbre Tunisie",
+      "text": "CCI Tunisie vous propose des services spécialisés pour la restauration et l'entretien de vos surfaces en marbre à Tunis et toute la Tunisie : ponçage marbre tunisie, polissage marbre tunisie, cristallisation marbre tunisie, lustrage marbre tunisie et protection marbre tunisie. L'équipe CCI Tunis utilise des techniques professionnelles et des produits adaptés pour redonner éclat, brillance et durabilité à vos sols et surfaces. Basée à El Aouina, notre équipe intervient dans tout le Grand Tunis pour les sols, escaliers, halls et plans de travail en marbre avec devis gratuit et diagnostic sur place."
     },
     "secondaryService": {
-      "title": "L'expertise CCI Tunisie - Polissage et Cristallisation",
-      "text": "L'équipe CCI Tunisie maîtrise toutes les étapes de la restauration et de l'entretien du marbre à Tunis : du diagnostic précis à la mise en œuvre des techniques les plus adaptées, CCI Tunis assure un accompagnement personnalisé pour chaque projet. Nous utilisons des matériaux et équipements de qualité afin de garantir la durabilité, la brillance et la protection optimale de vos surfaces. Faites confiance à CCI Tunisie pour redonner vie et éclat à vos sols, escaliers ou plans de travail."
+      "title": "Ponçage, polissage, cristallisation et protection du marbre",
+      "text": "L'équipe CCI Tunisie maîtrise toutes les étapes de la restauration et de l'entretien du marbre à Tunis : du diagnostic précis à la mise en œuvre des techniques les plus adaptées, CCI Tunis assure un accompagnement personnalisé pour chaque projet. Nous combinons ponçage progressif pour corriger rayures et taches, polissage marbre tunisie pour retrouver la brillance, cristallisation marbre tunisie pour renforcer la finition et protection anti-taches selon l'usage de la surface. Nous utilisons des matériaux et équipements de qualité afin de garantir la durabilité, la brillance et la protection optimale de vos surfaces."
     },
     "techniques": {
-      "title": "Techniques Professionnelles de Restauration Marbre",
+      "title": "Techniques de ponçage, polissage et cristallisation",
       "text": "CCI Tunisie maîtrise l'ensemble des techniques de restauration marbre : ponçage marbre tunisie pour éliminer rayures et taches, polissage marbre tunisie pour retrouver la brillance d'origine, lustrage marbre tunisie pour une finition parfaite, cristallisation marbre tunisie pour une protection durable, et protection marbre tunisie contre les agressions quotidiennes. Chaque intervention est adaptée au type de marbre et à son état."
     },
     "localService": {
-      "title": "Services Marbre El Aouina et Grand Tunis",
+      "title": "Intervention marbre à Tunis, El Aouina et Grand Tunis",
       "text": "Basée à El Aouina, CCI Tunisie intervient dans tout le Grand Tunis pour vos projets de restauration marbre. Nos équipes se déplacent chez vous avec tout l'équipement nécessaire pour réaliser ponçage, polissage, cristallisation et protection de vos surfaces en marbre. Service professionnel et devis gratuit sur El Aouina et environs."
     }
   },
@@ -212,37 +213,37 @@
     "visionText": "Être la référence en Tunisie pour la rénovation et la préservation du marbre, reconnue pour notre savoir-faire, notre accompagnement personnalisé et la qualité de nos finitions."
   },
   "serviceList": {
-    "title": "Nos services pour l'entretien et la réstauration marbre",
-    "text": "Des solutions professionnelles pour la restauration et l'entretien du marbre.",
+    "title": "Nos services pour le traitement et la restauration du marbre",
+    "text": "Des solutions professionnelles pour le ponçage, le polissage, la cristallisation et la protection de vos surfaces en marbre.",
     "items": [
       {
         "id": "1",
-        "text": "Ponçage",
+        "text": "Ponçage marbre",
         "icon": "/icons/polisher.png"
       },
       {
         "id": "2",
-        "text": "Lustrage",
+        "text": "Polissage marbre",
         "icon": "/icons/polisher1.png"
       },
       {
         "id": "3",
-        "text": "Cristallisation",
+        "text": "Cristallisation marbre",
         "icon": "/icons/crystal3.png"
       },
       {
         "id": "4",
-        "text": "Protection",
+        "text": "Protection anti-taches",
         "icon": "/icons/shield.png"
       },
       {
         "id": "5",
-        "text": "Réstauration",
+        "text": "Restauration complète",
         "icon": "/icons/shield.png"
       },
       {
         "id": "6",
-        "text": "Ebauche",
+        "text": "Réparation et reprise des défauts",
         "icon": "/icons/shield.png"
       }
     ],
@@ -257,6 +258,13 @@
       "tags": ["lustrage", "techniques", "professionnel"]
     },
     {
+      "link": "/conseils/poncage-marbre-tunis-2025",
+      "title": "Ponçage Marbre Tunis",
+      "category": "Marbre",
+      "excerpt": "Comprenez quand un ponçage marbre est nécessaire, ce qu'il corrige et comment préparer la suite du traitement.",
+      "tags": ["ponçage", "marbre", "surface"]
+    },
+    {
       "link": "/conseils/cristallisation-marbre-tunisie-guide-complet",
       "title": "Cristallisation Marbre Tunisie : Guide Complet 2025",
       "category": "Marbre",
@@ -269,6 +277,13 @@
       "category": "Marbre",
       "excerpt": "Faites le point sur les techniques de polissage, les niveaux de finition et les critères qui influencent le budget d'une intervention.",
       "tags": ["polissage", "tarifs", "finitions"]
+    },
+    {
+      "link": "/conseils/detartrage-marbre-cuisine-tunisie-guide-expert",
+      "title": "Détartrage Marbre Cuisine Tunisie",
+      "category": "Marbre",
+      "excerpt": "Comment gérer le calcaire, protéger un plan de travail en marbre et éviter les erreurs d'entretien sur les zones alimentaires.",
+      "tags": ["détartrage", "cuisine", "marbre"]
     }
   ]
 }

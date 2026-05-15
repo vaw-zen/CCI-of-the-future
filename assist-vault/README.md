@@ -211,6 +211,7 @@ node updated-email-automation.cjs social-platforms
 - **`GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md`**: Weekly pass/fail workflow for auditing direct traffic, landing-page capture, and campaign naming hygiene
 - **`GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md`**: Segment-first weekly growth review template tied to dashboard evidence panels
 - **`GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md`**: Workflow for choosing SEO refreshes and CRO sprint candidates from Stage 3 panels
+- **`GROWTH_DASHBOARD_SEO_AUDIT_MASTER_PROMPT.md`**: Copy-paste master prompt and strict output contract for generating a repo-aware SEO and organic-search action plan from dashboard, GSC, GA4, and SERP evidence
 - **`WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md`**: Canonical behavior tracking schema that extends Stage 3 with CTA, form, and contact-intent measurement
 - **`GROWTH_DASHBOARD_METRIC_DEFINITIONS.md`**: KPI formulas, ownership, refresh cadence, and decision intent
 - **`GROWTH_DASHBOARD_SEMANTICS_AND_THRESHOLDS.md`**: Stage 0 KPI glossary, taxonomy lock, thresholds, owner model, and stage gates

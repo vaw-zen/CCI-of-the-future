@@ -35,9 +35,6 @@ export default function SalonLayout({ children }) {
   return (
     <>
       {children}
-      {salonData.localBusinessJSONLD && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(salonData.localBusinessJSONLD) }} />
-      )}
       {salonData.breadcrumbJSONLD && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(salonData.breadcrumbJSONLD) }} />
       )}

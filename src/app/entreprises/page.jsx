@@ -69,7 +69,7 @@ export default function Page() {
 
         <RelatedArticles 
           articles={entreprisesData.relatedArticles} 
-          serviceName="Conventions Entreprises"
+          sectionTitle="Guides Contrats & Nettoyage Professionnel B2B"
         />
       </main>
     </>

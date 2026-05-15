@@ -1,13 +1,14 @@
 {
   "metadata": {
-    "title": "Nettoyage Salon Tunis | Canapé, Microfibre & Tissus d'ameublement | CCI",
-    "description": "Nettoyage salon Tunis et Grand Tunis : canapé tissu, microfibre, cuir et tissus d'ameublement. Détachage, shampooing, désinfection et devis gratuit.",
+    "title": "Nettoyage Salon Tunis | Canapé à Domicile, Microfibre & Shampooing | CCI Services",
+    "description": "Nettoyage salon Tunis et Grand Tunis : nettoyage canapé à domicile, shampooing canapé, microfibre, cuir, détachage, désinfection et devis gratuit.",
     "keywords": [
       "nettoyage salon tunis",
       "nettoyage canapé tunis",
       "nettoyage salon domicile tunis",
       "shampooing canapé tunis",
       "détachage salon tunis",
+      "désinfection salon tunis",
       "nettoyage tissus d'ameublement tunis",
       "nettoyage canapé microfibre tunis",
       "comment nettoyer canapé cuir tunis",
@@ -16,6 +17,7 @@
     ]
   },
   "heroTitle": "Nettoyage Salon, Canapé & Tissus d'ameublement à Tunis",
+  "heroSubtitle": "Nettoyage canapé à domicile, shampooing canapé, détachage, désinfection et entretien microfibre dans tout le Grand Tunis.",
   "tabData": [
     {
       "id": "mission",
@@ -96,9 +98,10 @@
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": "https://cciservices.online/salon",
-    "name": "Nettoyage Salon & Ameublement Tunis - CCI Tunisie",
-    "description": "CCI Tunisie - Nettoyage professionnel canapés, rideaux et textiles d'ameublement à Tunis. Détachage, désodorisation et protection des fibres. CCI Tunis : experts nettoyage textile.",
+    "name": "Nettoyage Salon Tunis, Canapé & Ameublement - CCI Services",
+    "description": "CCI Services assure le nettoyage salon à Tunis : canapé à domicile, shampooing canapé, détachage, désinfection et entretien microfibre, cuir et tissus d'ameublement.",
     "url": "https://cciservices.online/salon",
+    "serviceType": "Nettoyage salon et canapé à domicile",
     "areaServed": [
       {
         "@type": "City",
@@ -207,11 +210,11 @@
   },
   "sections": {
     "mainService": {
-      "title": "Nettoyage salon et canapé : un protocole adapté à chaque matière",
+      "title": "Nettoyage salon Tunis et nettoyage canapé à domicile",
       "text": "Nous commençons par identifier la fibre et vérifier sa réaction aux produits. Selon le support, nous utilisons l'injection-extraction, le shampooing des fibres, la vapeur basse pression ou une méthode faible humidité. L'objectif est d'enlever les salissures, réduire les odeurs, traiter les taches et préserver le toucher du tissu. Nous nettoyons les canapés tissu, les fauteuils, les banquettes, la microfibre, les textiles d'ameublement et certains cuirs pigmentés avec un protocole spécifique."
     },
     "secondaryService": {
-      "title": "Détachage, odeurs et remise en fraîcheur du canapé",
+      "title": "Shampooing canapé, détachage et désinfection du salon",
       "text": "Le vrai sujet n'est pas seulement de laver : il faut aussi gérer les taches grasses, les auréoles, les odeurs organiques et les zones très sollicitées comme les accoudoirs et les assises centrales. Nous travaillons donc par étapes : aspiration profonde, pré-détachage ciblé, nettoyage principal, récupération maximale d'humidité puis remise en ordre des fibres pour un rendu homogène."
     },
     "whyChooseUs": {
@@ -219,7 +222,7 @@
       "text": "Nous ne traitons pas un canapé tissu comme une microfibre ni une microfibre comme un cuir. Notre différence est dans le diagnostic, le contrôle de l'humidité et le choix de la bonne méthode. Nous travaillons avec des produits à pH contrôlé, des injecteurs-extracteurs performants et des protocoles de détachage sélectif pour limiter les auréoles, préserver le toucher du textile et optimiser le séchage à domicile."
     },
     "localProof": {
-      "title": "Interventions à domicile dans tout le Grand Tunis",
+      "title": "Nettoyage salon à domicile dans tout le Grand Tunis",
       "text": "CCI intervient à domicile à Tunis, El Aouina, Ariana, La Soukra, La Marsa, Carthage, Ben Arous et Manouba pour le nettoyage de salons, canapés, fauteuils et tissus d'ameublement.\n\nLes demandes les plus fréquentes concernent les canapés tachés, les assises ternies, les odeurs persistantes, la microfibre qui marque vite et les canapés cuir qui nécessitent un nettoyage doux."
     },
     "materials": {
@@ -227,7 +230,7 @@
       "text": "Chaque matière demande sa logique.\n\n• Microfibre : humidité contrôlée pour éviter les auréoles et les fibres tassées.\n• Tissu d'ameublement : injection-extraction ou shampooing selon la densité du textile.\n• Cuir pigmenté : nettoyage doux, sans agresser la finition.\n• Banquettes et fauteuils professionnels : traitement par zones et remise en service rapide.\n\nCette approche évite les erreurs classiques du nettoyage maison et sécurise le résultat."
     },
     "pricing": {
-      "title": "Prix et devis pour le nettoyage de salon à Tunis",
+      "title": "Prix et devis pour le nettoyage salon à domicile à Tunis",
       "text": "Le tarif dépend du nombre de places, du type de tissu, du niveau de taches et des options demandées : désinfection, traitement anti-odeurs, nettoyage du cuir ou travail sur microfibre. Nous donnons une estimation claire puis un devis gratuit, sans engagement, pour que vous sachiez précisément quelle méthode sera utilisée et pourquoi."
     }
   },
@@ -283,6 +286,28 @@
         "guide",
         "salon",
         "canapé"
+      ]
+    },
+    {
+      "link": "/conseils/shampooing-canape-tunis-2025",
+      "title": "Shampooing Canapé Tunis",
+      "category": "Salon",
+      "excerpt": "Quand privilégier le shampooing canapé, comment éviter les auréoles et quelles matières demandent un protocole plus doux.",
+      "tags": [
+        "shampooing",
+        "canapé",
+        "méthode"
+      ]
+    },
+    {
+      "link": "/conseils/desinfection-salon-tunis-2025",
+      "title": "Désinfection Salon Tunis",
+      "category": "Salon",
+      "excerpt": "Dans quels cas ajouter une désinfection salon, comment elle s'intègre au nettoyage et quand elle est vraiment utile.",
+      "tags": [
+        "désinfection",
+        "salon",
+        "hygiène"
       ]
     },
     {

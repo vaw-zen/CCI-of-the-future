@@ -1,22 +1,23 @@
 {
   "metadata": {
-    "title": "Nettoyage Moquette Tunis | Shampouinage, Détachage & Moquette Bureau | CCI",
-    "description": "Nettoyage moquette Tunis et Grand Tunis : shampouinage, injection-extraction, détachage, moquette bureau et moquette à domicile. Devis gratuit avec CCI Services.",
+    "title": "Nettoyage Moquette Tunis | Shampouinage, Moquette Bureau & Détachage | CCI Services",
+    "description": "Nettoyage moquette Tunis et Grand Tunis : shampouinage moquette, injection-extraction, détachage ciblé, moquette bureau et moquette à domicile. Devis gratuit avec CCI Services.",
     "keywords": [
       "nettoyage moquette tunis",
       "nettoyage moquettes tunisie",
       "shampouinage moquette tunis",
-      "détachage moquette tunis",
       "entreprise nettoyage moquette tunis",
+      "détachage moquette tunis",
       "nettoyage moquette bureau tunis",
       "nettoyage moquette domicile tunis",
+      "nettoyage tapis tunis",
       "prix nettoyage moquette tunis",
       "injection extraction moquette tunis",
       "devis nettoyage moquette tunis"
     ]
   },
   "heroTitle": "Nettoyage Moquette Tunis, Bureau & Domicile",
-  "heroSubtitle": "Service professionnel de nettoyage moquette Tunis par injection-extraction, shampooing et détachage | Devis gratuit",
+  "heroSubtitle": "Shampouinage moquette, injection-extraction, détachage et entretien de moquette bureau à Tunis et dans le Grand Tunis.",
   "tabData": [
     {
       "id": "mission",
@@ -97,9 +98,10 @@
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": "https://cciservices.online/tapis",
-    "name": "Nettoyage Moquette Tunis et Tapis - CCI Tunisie",
-    "description": "CCI Tunisie propose le nettoyage moquette Tunis par injection-extraction, shampooing, détachage et désinfection. Moquettes de bureaux, hôtels, maisons et espaces professionnels avec séchage rapide.",
+    "name": "Nettoyage Moquette Tunis, Bureau & Domicile - CCI Services",
+    "description": "CCI Services propose le nettoyage moquette à Tunis par injection-extraction, shampouinage, détachage ciblé et entretien de moquette bureau ou à domicile avec séchage rapide.",
     "url": "https://cciservices.online/tapis",
+    "serviceType": "Nettoyage moquette et tapis",
     "areaServed": [
       {
         "@type": "City",
@@ -228,16 +230,16 @@
       "text": "CCI est spécialisée dans le nettoyage moquette à Tunis et dans le Grand Tunis. Nous traitons les moquettes de maison, de bureau, d'hôtel et de commerce avec une méthode adaptée : injection-extraction pour le nettoyage en profondeur, shampouinage pour raviver les fibres, détachage ciblé pour les zones critiques et encapsulation basse humidité pour les espaces qui doivent rouvrir rapidement. Chaque intervention commence par un diagnostic de la fibre, du niveau d'encrassement et du temps de séchage acceptable."
     },
     "secondaryService": {
-      "title": "Moquette bureau, moquette à domicile et zones de passage",
-      "text": "Nous adaptons le protocole selon l'usage du lieu.\n\n• Moquette bureau : intervention hors horaires, réduction du temps d'arrêt et entretien cyclique des zones de passage.\n• Moquette à domicile : priorité au confort, à la neutralisation des odeurs et au traitement anti-acariens si besoin.\n• Hôtels et accueils : gestion des taches récurrentes, remise en ordre des fibres et image soignée dès l'entrée.\n• Espaces sensibles : travail contrôlé en humidité, séchage rapide et conseils d'entretien pour prolonger la durée de vie du revêtement."
+      "title": "Moquette bureau, moquette à domicile et détachage ciblé",
+      "text": "Nous adaptons le protocole selon l'usage du lieu.\n\n• Moquette bureau : intervention hors horaires, réduction du temps d'arrêt et entretien cyclique des zones de passage.\n• Moquette à domicile : priorité au confort, à la neutralisation des odeurs et au traitement anti-acariens si besoin.\n• Hôtels et accueils : gestion des taches récurrentes, remise en ordre des fibres et image soignée dès l'entrée.\n• Détachage moquette à Tunis : traitement des taches de boissons, graisse, encre, sang et salissures incrustées avec un protocole adapté à la fibre.\n• Espaces sensibles : travail contrôlé en humidité, séchage rapide et conseils d'entretien pour prolonger la durée de vie du revêtement."
     },
     "whyChooseUs": {
       "title": "Pourquoi choisir CCI pour votre moquette à Tunis",
-      "text": "Notre valeur ajoutée tient au diagnostic, pas seulement à la machine. Nous analysons l'état de la fibre, la densité, les zones de trafic, les odeurs et les taches avant de choisir la bonne méthode. Nous utilisons des injecteurs-extracteurs haute performance, des solutions de shampouinage adaptées, des pads basse humidité pour encapsulation et des protocoles de détachage sélectif. Résultat : une moquette plus propre, un séchage maîtrisé et moins de risque de résidus ou d'auréoles."
+      "text": "Notre valeur ajoutée tient au diagnostic, pas seulement à la machine. Nous analysons l'état de la fibre, la densité, les zones de trafic, les odeurs et les taches avant de choisir la bonne méthode. Nous utilisons des injecteurs-extracteurs haute performance, des solutions de shampouinage adaptées, des pads basse humidité pour encapsulation et des protocoles de détachage sélectif pour la moquette bureau comme pour la moquette à domicile. Résultat : une moquette plus propre, un séchage maîtrisé et moins de risque de résidus ou d'auréoles."
     },
     "stainRemoval": {
-      "title": "Détachage Tapis Tunis - Expertise CCI",
-      "text": "Spécialistes du détachage tapis Tunis, nous traitons tous types de taches : alimentaires, boissons, encre, sang, urine d'animaux. Notre service de détachage tapis tunis utilise des techniques professionnelles et des produits spécialisés selon la nature de la tache et du textile. Intervention rapide garantie dans tout le Grand Tunis pour un détachage efficace et respectueux des fibres."
+      "title": "Détachage moquette et tapis à Tunis",
+      "text": "Spécialistes du détachage moquette à Tunis, nous traitons les taches alimentaires, boissons, encre, sang, graisse et accidents domestiques avec des protocoles adaptés à la fibre. Nous combinons pré-traitement, détachage ciblé et injection-extraction pour limiter les auréoles, récupérer les zones critiques et remettre rapidement la moquette en service."
     },
     "pricing": {
       "title": "Prix et devis pour le nettoyage de moquette à Tunis",
@@ -343,6 +345,28 @@
         "détachage",
         "taches",
         "profondeur"
+      ]
+    },
+    {
+      "link": "/conseils/shampouinage-moquette-tunis-2026",
+      "title": "Shampouinage Moquette Tunis",
+      "category": "Moquette",
+      "excerpt": "Quand choisir le shampouinage moquette, quelles limites connaître et comment garder une fibre propre sans résidus.",
+      "tags": [
+        "shampouinage",
+        "moquette",
+        "méthode"
+      ]
+    },
+    {
+      "link": "/conseils/nettoyage-moquette-bureau-tunis-2026",
+      "title": "Nettoyage Moquette Bureau Tunis",
+      "category": "Moquette",
+      "excerpt": "Planifier le nettoyage des moquettes de bureaux, réduire le temps d'arrêt et traiter les zones de passage sans gêner l'activité.",
+      "tags": [
+        "bureau",
+        "moquette",
+        "entreprise"
       ]
     },
     {

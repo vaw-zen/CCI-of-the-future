@@ -55,34 +55,34 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-  const SITE_NAME = "CCI"; // or "Chaabane's Cleaning Intelligence"
-  const SITE_LOGO = `${SITE_URL}/home/1-hero/main.webp`;
+  const SITE_NAME = "CCI Services";
+  const SITE_LOGO = `${SITE_URL}/logo.png`;
   const GA_MEASUREMENT_ID =
     process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.GA4_MEASUREMENT_ID || '';
 
-  // WebSite schema with SearchAction
   const websiteJSONLD = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE_URL}#website`,
     "name": SITE_NAME,
     "url": SITE_URL,
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": `${SITE_URL}/?s={search_term_string}`,
-      "query-input": "required name=search_term_string"
+    "publisher": {
+      "@id": `${SITE_URL}#localbusiness`
     }
   };
 
-  // LocalBusiness schema
   const localBusinessJSONLD = {
     "@id": `${SITE_URL}#localbusiness`,
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
-    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
+    "name": "CCI Services - Chaabane's Cleaning Intelligence",
+    "alternateName": ["CCI Tunis", "CCI Services Tunisie", "CCI Tunisie"],
+    "description": "Entreprise de nettoyage professionnel a Tunis specialisee dans le nettoyage de moquettes, salons, marbre et conventions de nettoyage pour entreprises.",
     "url": SITE_URL,
     "logo": SITE_LOGO,
+    "image": SITE_LOGO,
     "telephone": "+216-98-557-766",
+    "priceRange": "$$",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "06 Rue Galant de nuit, El Aouina",
@@ -110,6 +110,12 @@ export default function RootLayout({ children }) {
         "closes": "18:00"
       }
     ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5"
+    },
     "sameAs": [
       "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
       "https://www.instagram.com/cci.services/",

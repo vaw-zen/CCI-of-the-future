@@ -104,6 +104,7 @@ Date: 2026-05-12
 Use this section for Stage 3 closeout in any environment where `supabase/20260511_growth_behavior_tracking.sql` has been applied.
 
 - Confirm the behavior mart is fresh for the selected review window.
+- Run `npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30` and attach the result to the closeout log.
 - Review missing canonical context on commercial behavior rows:
   - `page_type`
   - `business_line`
@@ -126,16 +127,17 @@ Use this section to formally close Stage 3 and open Stage 4.
    - `growth_landing_page_scores_daily`
    - `growth_behavior_daily_metrics`
    - `growth_funnel_daily_metrics`
-3. Validate live behavior capture on:
+3. Run `npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30` and record the output in the Stage 3 closeout checklist.
+4. Validate live behavior capture on:
    - `/contact`
    - `/devis`
    - `/entreprises`
    - service CTA blocks
    - article CTA blocks
-4. Validate joinability between behavior events and lead outcomes using `ga_client_id`, landing page, and normalized attribution dimensions.
-5. Run two weekly reviews using the Stage 3 template and selection workflow, and record any threshold changes after each review.
-6. Hold a formal gate review using [GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md).
-7. Do not open Stage 4 until all five Stage 3 gate criteria are explicitly marked passed in that checklist.
+5. Validate joinability between behavior events and lead outcomes using `ga_client_id`, landing page, and normalized attribution dimensions.
+6. Run two weekly reviews using the Stage 3 template and selection workflow, and record any threshold changes after each review.
+7. Hold a formal gate review using [GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md).
+8. Do not open Stage 4 until all five Stage 3 gate criteria are explicitly marked passed in that checklist.
 
 ## Weekly Friday Closeout
 

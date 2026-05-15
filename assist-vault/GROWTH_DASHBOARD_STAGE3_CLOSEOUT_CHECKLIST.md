@@ -26,12 +26,19 @@ Complete these before starting the closeout window:
 3. Confirm the shipped contract still passes locally:
    - `npm run test:dashboard`
    - `npm run build`
+   - `npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30`
 4. Lock the review window that will be used for both weekly reviews.
 5. Confirm Growth owner and Admin ops know the next two weekly reviews are part of the Stage 3 gate, not ordinary status meetings.
 
 ## Baseline Lock
 
 Mark each item `pass`, `warn`, or `fail`.
+
+Use the Stage 3 audit command as the default evidence source for these checks:
+
+```bash
+npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30
+```
 
 | Check | Result | Notes |
 | --- | --- | --- |

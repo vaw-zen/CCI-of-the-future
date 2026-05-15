@@ -6,6 +6,7 @@ import {
   extractAnalyticsContext,
   sendLifecycleMeasurementEvent
 } from '@/libs/analyticsLifecycle';
+import { persistServerTerminalBehaviorEvent } from '@/libs/behaviorTrackingServer.mjs';
 import {
   buildWhatsAppAttributionColumns,
   findLatestWhatsAppClickMatch
@@ -20,6 +21,7 @@ import {
   withoutOptionalLeadOperationFields
 } from '@/libs/leadTrackingSchemaCompat.mjs';
 import { guardMutationRequest } from '@/libs/security';
+import { isStage3TestSubmission, STAGE3_TEST_MARKER } from '@/libs/stage3TestMarker.mjs';
 
 const CONVENTIONS_RATE_LIMIT = {
   scope: 'convention-submit',
@@ -27,12 +29,22 @@ const CONVENTIONS_RATE_LIMIT = {
   windowMs: 10 * 60 * 1000
 };
 
+function buildStage3TestBehaviorPayload(isStage3Test = false, additionalPayload = {}) {
+  return {
+    ...additionalPayload,
+    stage3_test: isStage3Test || undefined,
+    test_marker: isStage3Test ? STAGE3_TEST_MARKER : undefined
+  };
+}
+
 async function sendConventionFailureMeasurement(analyticsContext, failureType, servicesCount = 0) {
   return sendLifecycleMeasurementEvent({
     clientId: analyticsContext.ga_client_id,
-    eventName: 'form_submit_failed',
+    eventName: failureType === 'validation_failed' ? 'form_validation_failed' : 'form_submit_failed',
     eventParams: {
-      form_name: 'convention_request',
+      form_name: 'convention_form',
+      form_placement: 'entreprises_page',
+      funnel_name: 'convention_request',
       failure_type: failureType,
       lead_type: 'convention_request',
       business_line: 'b2b',
@@ -45,6 +57,34 @@ async function sendConventionFailureMeasurement(analyticsContext, failureType, s
   });
 }
 
+async function persistConventionTerminalBehaviorEvent({
+  supabase,
+  analyticsContext,
+  rawEventName,
+  requestedServices = [],
+  occurredAt = new Date().toISOString(),
+  isStage3Test = false,
+  additionalPayload = {}
+} = {}) {
+  return persistServerTerminalBehaviorEvent({
+    supabase,
+    rawEventName,
+    analyticsContext,
+    formName: 'convention_form',
+    formPlacement: 'entreprises_page',
+    funnelName: 'convention_request',
+    businessLine: 'b2b',
+    serviceType: requestedServices[0] || 'convention',
+    leadType: 'convention_request',
+    occurredAt,
+    additionalPayload: buildStage3TestBehaviorPayload(isStage3Test, {
+      selected_services: requestedServices,
+      services_count: requestedServices.length || undefined,
+      ...additionalPayload
+    })
+  });
+}
+
 export async function POST(request) {
   const guardResponse = guardMutationRequest(request, CONVENTIONS_RATE_LIMIT);
   if (guardResponse) {
@@ -53,6 +93,7 @@ export async function POST(request) {
 
   let analyticsContext = {};
   let requestedServices = [];
+  let isStage3Test = false;
 
   try {
     let supabase;
@@ -91,10 +132,27 @@ export async function POST(request) {
       dateDebutSouhaitee, message, conditions
     } = formData;
     requestedServices = Array.isArray(servicesSouhaites) ? servicesSouhaites : [];
+    isStage3Test = isStage3TestSubmission(
+      raisonSociale,
+      contactNom,
+      contactPrenom,
+      email,
+      message
+    );
 
     // Validation
     if (!raisonSociale || !matriculeFiscale || !secteurActivite || !contactNom || !contactPrenom || !email || !telephone || !frequence || !dureeContrat) {
       await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
+      await persistConventionTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_validation_failed',
+        requestedServices,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'validation_failed'
+        }
+      });
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Tous les champs obligatoires doivent être remplis.',
@@ -106,6 +164,16 @@ export async function POST(request) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
+      await persistConventionTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_validation_failed',
+        requestedServices,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'validation_failed'
+        }
+      });
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Veuillez fournir une adresse email valide.',
@@ -116,6 +184,16 @@ export async function POST(request) {
 
     if (!servicesSouhaites || servicesSouhaites.length === 0) {
       await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
+      await persistConventionTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_validation_failed',
+        requestedServices,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'validation_failed'
+        }
+      });
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Veuillez sélectionner au moins un service.',
@@ -126,6 +204,16 @@ export async function POST(request) {
 
     if (!conditions) {
       await sendConventionFailureMeasurement(analyticsContext, 'validation_failed', requestedServices.length);
+      await persistConventionTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_validation_failed',
+        requestedServices,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'validation_failed'
+        }
+      });
       return NextResponse.json({
         status: 'validation_failed',
         message: 'Vous devez accepter les conditions générales.',
@@ -192,6 +280,17 @@ export async function POST(request) {
         hint: supabaseError.hint
       });
       await sendConventionFailureMeasurement(analyticsContext, 'database_error', requestedServices.length);
+      await persistConventionTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_submit_failed',
+        requestedServices,
+        occurredAt: submittedAt,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'database_error'
+        }
+      });
       return NextResponse.json({
         status: 'database_error',
         message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.',
@@ -199,6 +298,21 @@ export async function POST(request) {
         details: { failureType: 'database_error' }
       }, { status: 500 });
     }
+
+    await persistConventionTerminalBehaviorEvent({
+      supabase,
+      analyticsContext,
+      rawEventName: 'checkout_progress',
+      requestedServices,
+      occurredAt: submittedAt,
+      isStage3Test,
+      additionalPayload: {
+        lead_id: supabaseData.id,
+        lead_kind: 'convention',
+        step_name: 'submit_success',
+        step_number: 3
+      }
+    });
 
     await sendLifecycleMeasurementEvent({
       clientId: analyticsContext.ga_client_id,
@@ -481,6 +595,15 @@ export async function POST(request) {
       stack: error?.stack?.split('\n').slice(0, 3).join('\n')
     });
     await sendConventionFailureMeasurement(analyticsContext, 'unexpected_error', requestedServices.length);
+    await persistConventionTerminalBehaviorEvent({
+      analyticsContext,
+      rawEventName: 'form_submit_failed',
+      requestedServices,
+      isStage3Test,
+      additionalPayload: {
+        failure_type: 'unexpected_error'
+      }
+    });
     return NextResponse.json({
       status: 'unexpected_error',
       message: 'Erreur lors de l\'envoi de votre demande. Veuillez réessayer.',

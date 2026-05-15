@@ -6,6 +6,7 @@ import {
   extractAnalyticsContext,
   sendLifecycleMeasurementEvent
 } from '@/libs/analyticsLifecycle';
+import { persistServerTerminalBehaviorEvent } from '@/libs/behaviorTrackingServer.mjs';
 import {
   buildWhatsAppAttributionColumns,
   findLatestWhatsAppClickMatch
@@ -20,6 +21,7 @@ import {
   withoutOptionalLeadOperationFields
 } from '@/libs/leadTrackingSchemaCompat.mjs';
 import { guardMutationRequest } from '@/libs/security';
+import { isStage3TestSubmission, STAGE3_TEST_MARKER } from '@/libs/stage3TestMarker.mjs';
 
 const DEVIS_RATE_LIMIT = {
   scope: 'devis-submit',
@@ -27,12 +29,22 @@ const DEVIS_RATE_LIMIT = {
   windowMs: 10 * 60 * 1000
 };
 
+function buildStage3TestBehaviorPayload(isStage3Test = false, additionalPayload = {}) {
+  return {
+    ...additionalPayload,
+    stage3_test: isStage3Test || undefined,
+    test_marker: isStage3Test ? STAGE3_TEST_MARKER : undefined
+  };
+}
+
 async function sendDevisFailureMeasurement(analyticsContext, failureType, serviceType = '') {
   return sendLifecycleMeasurementEvent({
     clientId: analyticsContext.ga_client_id,
-    eventName: 'form_submit_failed',
+    eventName: failureType === 'validation_failed' ? 'form_validation_failed' : 'form_submit_failed',
     eventParams: {
-      form_name: 'devis_request',
+      form_name: 'devis_form',
+      form_placement: 'devis_page',
+      funnel_name: 'quote_request',
       failure_type: failureType,
       lead_type: 'quote_request',
       business_line: 'b2c',
@@ -45,6 +57,30 @@ async function sendDevisFailureMeasurement(analyticsContext, failureType, servic
   });
 }
 
+async function persistDevisTerminalBehaviorEvent({
+  supabase,
+  analyticsContext,
+  rawEventName,
+  serviceType = '',
+  occurredAt = new Date().toISOString(),
+  isStage3Test = false,
+  additionalPayload = {}
+} = {}) {
+  return persistServerTerminalBehaviorEvent({
+    supabase,
+    rawEventName,
+    analyticsContext,
+    formName: 'devis_form',
+    formPlacement: 'devis_page',
+    funnelName: 'quote_request',
+    businessLine: 'b2c',
+    serviceType,
+    leadType: 'quote_request',
+    occurredAt,
+    additionalPayload: buildStage3TestBehaviorPayload(isStage3Test, additionalPayload)
+  });
+}
+
 export async function POST(request) {
   const guardResponse = guardMutationRequest(request, DEVIS_RATE_LIMIT);
   if (guardResponse) {
@@ -53,6 +89,7 @@ export async function POST(request) {
 
   let analyticsContext = {};
   let requestedServiceType = '';
+  let isStage3Test = false;
 
   try {
     let supabase;
@@ -88,10 +125,21 @@ export async function POST(request) {
       typeService, newsletter, conditions
     } = formData;
     requestedServiceType = typeService || '';
+    isStage3Test = isStage3TestSubmission(nom, prenom, email, formData.message);
 
     // Basic validation
     if (!nom || !prenom || !email || !telephone || !adresse || !ville || !typeService) {
       await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
+      await persistDevisTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_validation_failed',
+        serviceType: typeService,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'validation_failed'
+        }
+      });
       return NextResponse.json({ 
         status: 'validation_failed', 
         message: 'Tous les champs obligatoires doivent être remplis.',
@@ -103,6 +151,16 @@ export async function POST(request) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
+      await persistDevisTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_validation_failed',
+        serviceType: typeService,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'validation_failed'
+        }
+      });
       return NextResponse.json({ 
         status: 'validation_failed', 
         message: 'Veuillez fournir une adresse email valide.',
@@ -113,6 +171,16 @@ export async function POST(request) {
 
     if (!conditions) {
       await sendDevisFailureMeasurement(analyticsContext, 'validation_failed', typeService);
+      await persistDevisTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_validation_failed',
+        serviceType: typeService,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'validation_failed'
+        }
+      });
       return NextResponse.json({ 
         status: 'validation_failed', 
         message: 'Vous devez accepter les conditions générales.',
@@ -188,6 +256,17 @@ export async function POST(request) {
     if (supabaseError) {
       console.error('Supabase error:', supabaseError);
       await sendDevisFailureMeasurement(analyticsContext, 'database_error', typeService);
+      await persistDevisTerminalBehaviorEvent({
+        supabase,
+        analyticsContext,
+        rawEventName: 'form_submit_failed',
+        serviceType: typeService,
+        occurredAt: submittedAt,
+        isStage3Test,
+        additionalPayload: {
+          failure_type: 'database_error'
+        }
+      });
       return NextResponse.json({ 
         status: 'database_error', 
         message: 'Erreur lors de l\'enregistrement de votre demande. Veuillez réessayer.',
@@ -195,6 +274,21 @@ export async function POST(request) {
         details: { failureType: 'database_error' }
       }, { status: 500 });
     }
+
+    await persistDevisTerminalBehaviorEvent({
+      supabase,
+      analyticsContext,
+      rawEventName: 'checkout_progress',
+      serviceType: typeService,
+      occurredAt: submittedAt,
+      isStage3Test,
+      additionalPayload: {
+        lead_id: supabaseData.id,
+        lead_kind: 'devis',
+        step_name: 'submit_success',
+        step_number: 3
+      }
+    });
 
     await sendLifecycleMeasurementEvent({
       clientId: analyticsContext.ga_client_id,
@@ -469,6 +563,15 @@ export async function POST(request) {
   } catch (error) {
     console.error('Devis submission error:', error);
     await sendDevisFailureMeasurement(analyticsContext, 'unexpected_error', requestedServiceType);
+    await persistDevisTerminalBehaviorEvent({
+      analyticsContext,
+      rawEventName: 'form_submit_failed',
+      serviceType: requestedServiceType,
+      isStage3Test,
+      additionalPayload: {
+        failure_type: 'unexpected_error'
+      }
+    });
     return NextResponse.json({ 
       status: 'unexpected_error',
       message: 'Erreur lors de l\'envoi de votre demande. Veuillez réessayer.', 

@@ -606,7 +606,11 @@ function buildBehaviorMetadata(rawEventName = '', payload = {}) {
     'contract_frequency',
     'contract_duration',
     'surface_total',
-    'faq_question'
+    'faq_question',
+    'lead_id',
+    'lead_kind',
+    'stage3_test',
+    'test_marker'
   ];
 
   allowlistedFields.forEach((field) => {

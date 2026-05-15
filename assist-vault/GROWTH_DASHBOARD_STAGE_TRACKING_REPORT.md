@@ -190,19 +190,20 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
 Priority order:
 
 1. Confirm `supabase/20260511_growth_behavior_tracking.sql` is applied in the target database.
-2. Validate that these reporting artifacts exist and are populated for the active review window:
+2. Run `npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30` and use its output as the default Stage 3 closeout evidence pack.
+3. Validate that these reporting artifacts exist and are populated for the active review window:
    - `growth_query_daily_metrics`
    - `growth_landing_page_scores_daily`
    - `growth_behavior_daily_metrics`
    - `growth_funnel_daily_metrics`
-3. Validate live behavior capture on:
+4. Validate live behavior capture on:
    - `/contact`
    - `/devis`
    - `/entreprises`
    - service CTA blocks
    - article CTA blocks
-4. Validate joinability from behavior rows to lifecycle evidence through `ga_client_id`, landing page, and normalized attribution dimensions.
-5. Run two weekly growth reviews directly from:
+5. Validate joinability from behavior rows to lifecycle evidence through `ga_client_id`, landing page, and normalized attribution dimensions.
+6. Run two weekly growth reviews directly from:
    - `seoQueries`
    - `contentOpportunities`
    - `landingPageScorecard`
@@ -210,16 +211,16 @@ Priority order:
    - `ctaPerformance`
    - `formHealth`
    - `contactIntent`
-6. Record threshold updates after each review:
+7. Record threshold updates after each review:
    - decay thresholds
    - CTR lift scoring
    - cannibalization detection
    - CTA drop-off thresholds
    - form-friction thresholds
    - contact-intent interpretation
-7. Hold a formal Stage 3 gate review using:
+8. Hold a formal Stage 3 gate review using:
    - `assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md`
-8. Only after that sign-off, open Stage 4 experimentation work and Stage 5 alert calibration.
+9. Only after that sign-off, open Stage 4 experimentation work and Stage 5 alert calibration.
 
 ### Why Stage 3 closeout next
 

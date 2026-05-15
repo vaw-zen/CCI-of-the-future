@@ -207,6 +207,7 @@ node updated-email-automation.cjs social-platforms
 - **`GROWTH_DASHBOARD_SYSTEM_GUIDE.md`**: End-to-end dashboard, reporting, keyword, and connector architecture
 - **`GROWTH_DASHBOARD_STAGE_TRACKING_REPORT.md`**: Current delivery checkpoint across Stages 0-6, shipped scope, verification, and next recommended implementation
 - **`GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md`**: Formal Stage 3 gate checklist for validating behavior data, running two review cycles, and deciding when Stage 4 can open
+- **`GROWTH_DASHBOARD_ALL_FUNNELS_ENHANCEMENT_PLAN.md`**: Follow-on plan for extending Stage 3 into a complete multi-funnel operating model across lead forms, CTAs, calculator, contact-intent, and newsletter paths
 - **`GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md`**: Weekly pass/fail workflow for auditing direct traffic, landing-page capture, and campaign naming hygiene
 - **`GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md`**: Segment-first weekly growth review template tied to dashboard evidence panels
 - **`GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md`**: Workflow for choosing SEO refreshes and CRO sprint candidates from Stage 3 panels
@@ -232,6 +233,6 @@ This project is developed for **CCI Services** - Professional cleaning company i
 **Built with ❤️ for CCI Services**  
 *Professional cleaning excellence in Tunis since 2015*
 
-**Last Updated**: May 12, 2026  
+**Last Updated**: May 15, 2026  
 **Version**: 2.0  
 **Status**: Production Ready

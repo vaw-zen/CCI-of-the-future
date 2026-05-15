@@ -221,6 +221,7 @@ Priority order:
 8. Hold a formal Stage 3 gate review using:
    - `assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md`
 9. Only after that sign-off, open Stage 4 experimentation work and Stage 5 alert calibration.
+10. Use `assist-vault/GROWTH_DASHBOARD_ALL_FUNNELS_ENHANCEMENT_PLAN.md` as the scoped follow-on once the controlled tests prove the terminal event path.
 
 ### Why Stage 3 closeout next
 

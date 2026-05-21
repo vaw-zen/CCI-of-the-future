@@ -246,6 +246,7 @@ export function useConventionFormLogic() {
           frequence: formData.frequence,
           duree: formData.dureeContrat,
           surfaceTotale: formData.surfaceTotale,
+          meta_event_id: result.details?.metaEventId,
           ...buildConventionFormContext(formData.secteurActivite)
         });
         trackFunnelComplete('convention_request', 'submit_success', 3, buildConventionFormContext(formData.secteurActivite));

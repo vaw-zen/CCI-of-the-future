@@ -232,7 +232,10 @@ export function useDevisFormLogic() {
           formData.typeService,
           formData.surfaceService || formData.nombrePlaces || 0,
           'form',
-          buildDevisFormContext(formData.typeService)
+          {
+            ...buildDevisFormContext(formData.typeService),
+            meta_event_id: result.details?.metaEventId
+          }
         );
         trackFunnelComplete('quote_request', 'submit_success', 3, buildDevisFormContext(formData.typeService));
 

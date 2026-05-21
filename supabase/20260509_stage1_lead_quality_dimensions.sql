@@ -284,7 +284,18 @@ SELECT
   lead.whatsapp_click_page,
   lead.whatsapp_manual_tag,
   lead.whatsapp_manual_tagged_at,
-  NULL::TEXT AS operational_status
+  NULL::TEXT AS operational_status,
+  lead.fbclid,
+  lead.meta_fbc,
+  lead.meta_fbp,
+  lead.meta_platform,
+  lead.meta_lead_source,
+  lead.meta_campaign_id,
+  lead.meta_adset_id,
+  lead.meta_ad_id,
+  lead.meta_leadgen_id,
+  lead.meta_form_id,
+  lead.meta_page_id
 FROM public.devis_requests AS lead
 
 UNION ALL
@@ -324,5 +335,16 @@ SELECT
   lead.whatsapp_click_page,
   lead.whatsapp_manual_tag,
   lead.whatsapp_manual_tagged_at,
-  lead.statut AS operational_status
+  lead.statut AS operational_status,
+  lead.fbclid,
+  lead.meta_fbc,
+  lead.meta_fbp,
+  lead.meta_platform,
+  lead.meta_lead_source,
+  lead.meta_campaign_id,
+  lead.meta_adset_id,
+  lead.meta_ad_id,
+  lead.meta_leadgen_id,
+  lead.meta_form_id,
+  lead.meta_page_id
 FROM public.convention_requests AS lead;

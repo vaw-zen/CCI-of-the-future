@@ -609,6 +609,7 @@ function buildBehaviorMetadata(rawEventName = '', payload = {}) {
     'faq_question',
     'lead_id',
     'lead_kind',
+    'meta_event_id',
     'stage3_test',
     'test_marker'
   ];

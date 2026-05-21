@@ -29,6 +29,16 @@ import {
   matchesBehaviorDashboardPageType
 } from './behaviorTracking.mjs';
 import {
+  META_LEAD_SOURCES,
+  META_PLATFORMS,
+  isMetaAdsSource,
+  isMetaLeadAd,
+  isMetaReferralSource,
+  isMetaWebsiteLead,
+  normalizeMetaLeadSource,
+  normalizeMetaPlatform
+} from './metaAttribution.mjs';
+import {
   LEAD_QUALITY_OUTCOME_LABELS,
   LEAD_QUALITY_OUTCOMES,
   normalizeLeadQualityOutcome
@@ -134,6 +144,11 @@ const CONTACT_METHOD_LABELS = {
   email: 'Email',
   whatsapp: 'WhatsApp',
   form: 'Form'
+};
+
+const META_PLATFORM_LABELS = {
+  [META_PLATFORMS.FACEBOOK]: 'Facebook',
+  [META_PLATFORMS.INSTAGRAM]: 'Instagram'
 };
 
 const WHATSAPP_DIRECT_SCHEDULE_LABELS = {
@@ -372,6 +387,20 @@ function endOfUtcDay(date) {
 
 export function formatDateKey(date) {
   return date.toISOString().slice(0, 10);
+}
+
+function formatDateTimeLabel(value) {
+  if (!value) {
+    return 'Non renseigné';
+  }
+
+  return new Date(value).toLocaleString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 export function parseDateParam(value, { endOfDay = false } = {}) {
@@ -960,6 +989,14 @@ export function normalizeLead(row, kind, nowIso) {
   const sourceClass = normalizeText(row.source_class, getSourceClass({ source, medium }));
   const pageType = normalizeText(row.page_type, getPageTypeForPath(landingPage));
   const businessLine = normalizeText(row.business_line, getBusinessLineForLeadKind(kind));
+  const metaPlatform = normalizeMetaPlatform(row.meta_platform, {
+    source,
+    referrerHost: canonicalAttribution.referrerHost
+  });
+  const metaLeadSource = normalizeMetaLeadSource(
+    row.meta_lead_source,
+    metaPlatform ? META_LEAD_SOURCES.WEBSITE : ''
+  );
   const leadQualityOutcome = normalizeLeadQualityOutcome(
     row.lead_quality_outcome,
     status === LEAD_STATUSES.CLOSED_WON
@@ -1006,6 +1043,24 @@ export function normalizeLead(row, kind, nowIso) {
     pageTypeLabel: PAGE_TYPE_LABELS[pageType] || pageType,
     businessLine,
     businessLineLabel: BUSINESS_LINE_LABELS[businessLine] || businessLine,
+    fbclid: row.fbclid || null,
+    metaFbc: row.meta_fbc || null,
+    metaFbp: row.meta_fbp || null,
+    metaPlatform,
+    metaPlatformLabel: META_PLATFORM_LABELS[metaPlatform] || metaPlatform || null,
+    metaLeadSource,
+    metaCampaignId: row.meta_campaign_id || null,
+    metaAdsetId: row.meta_adset_id || null,
+    metaAdId: row.meta_ad_id || null,
+    metaLeadgenId: row.meta_leadgen_id || null,
+    metaFormId: row.meta_form_id || null,
+    metaPageId: row.meta_page_id || null,
+    isMetaWebsiteLead: isMetaWebsiteLead({
+      meta_lead_source: metaLeadSource
+    }),
+    isMetaLeadAd: isMetaLeadAd({
+      meta_lead_source: metaLeadSource
+    }),
     leadQualityOutcome,
     leadQualityLabel: LEAD_QUALITY_OUTCOME_LABELS[leadQualityOutcome] || leadQualityOutcome,
     leadOwner: normalizeText(row.lead_owner, ''),
@@ -1084,6 +1139,7 @@ function buildDashboardFilterOptions({
   universeLeads = [],
   externalMetricRows = [],
   behaviorMetricRows = [],
+  metaLeadAdRows = [],
   keywordCatalogRows = [],
   keywordRankingRows = []
 } = {}) {
@@ -1119,6 +1175,13 @@ function buildDashboardFilterOptions({
     addFilterOption(sourceClass, normalizedRow.sourceClass, normalizedRow.sourceClassLabel);
     addFilterOption(pageType, normalizedRow.pageType, normalizedRow.pageTypeLabel);
     addFilterOption(service, normalizedRow.serviceKey, normalizedRow.serviceKey ? getServiceLabel(normalizedRow.serviceKey) : null);
+  });
+
+  metaLeadAdRows.forEach((row) => {
+    const source = normalizeText(row.session_source, 'facebook');
+    const medium = normalizeText(row.session_medium, 'paid_social');
+    const sourceClassValue = getSourceClass({ source, medium });
+    addFilterOption(sourceClass, sourceClassValue, SOURCE_CLASS_LABELS[sourceClassValue] || sourceClassValue);
   });
 
   keywordCatalogRows.forEach((row) => {
@@ -1420,6 +1483,60 @@ function matchesWhatsAppClickFilters(row = {}, filters = {}) {
   }
 
   if (filters.pageType && pageType !== filters.pageType) {
+    return false;
+  }
+
+  return true;
+}
+
+function matchesMetaLeadAdFilters(row = {}, filters = {}) {
+  const landingPage = normalizeText(row.landing_page, '');
+  const businessLine = normalizeText(row.business_line, '');
+  const serviceKey = normalizeText(row.service_type || row.default_service_type, '');
+  const source = normalizeText(row.session_source, 'facebook');
+  const medium = normalizeText(row.session_medium, 'paid_social');
+  const sourceClass = getSourceClass({ source, medium });
+  const inferredPageType = landingPage ? getPageTypeForPath(landingPage) : 'other';
+
+  if (filters.businessLine && businessLine && businessLine !== filters.businessLine) {
+    return false;
+  }
+
+  if (filters.service && serviceKey && serviceKey !== filters.service) {
+    return false;
+  }
+
+  if (filters.sourceClass && sourceClass !== filters.sourceClass) {
+    return false;
+  }
+
+  if (filters.pageType && inferredPageType !== filters.pageType && landingPage) {
+    return false;
+  }
+
+  return true;
+}
+
+function matchesMetaConversionFilters(row = {}, filters = {}) {
+  if (!filters.sourceClass && !filters.businessLine) {
+    return true;
+  }
+
+  const responseSummary = row.response_summary && typeof row.response_summary === 'object'
+    ? row.response_summary
+    : {};
+  const requestPayload = responseSummary.request || responseSummary.request_payload || {};
+  const customData = requestPayload.custom_data || {};
+  const source = normalizeText(customData.session_source, '');
+  const medium = normalizeText(customData.session_medium, '');
+  const sourceClass = source || medium ? getSourceClass({ source, medium }) : '';
+  const businessLine = normalizeText(customData.business_line, '');
+
+  if (filters.sourceClass && sourceClass && sourceClass !== filters.sourceClass) {
+    return false;
+  }
+
+  if (filters.businessLine && businessLine && businessLine !== filters.businessLine) {
     return false;
   }
 
@@ -3655,7 +3772,253 @@ function aggregateCombinedRows(rows, keyGetter, labelGetter, { limit = 8 } = {})
     .slice(0, limit);
 }
 
-function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = []) {
+function getMetaAcquisitionPlatform(source = '', metaPlatform = '') {
+  const normalizedPlatform = normalizeMetaPlatform(metaPlatform, { source });
+  if (normalizedPlatform) {
+    return normalizedPlatform;
+  }
+
+  const normalizedSource = normalizeText(source, '').toLowerCase();
+  if (normalizedSource === META_PLATFORMS.FACEBOOK || normalizedSource === META_PLATFORMS.INSTAGRAM) {
+    return normalizedSource;
+  }
+
+  return '';
+}
+
+function buildMetaLandingPageRows(rows = [], { limit = 6 } = {}) {
+  return aggregateCombinedRows(
+    rows,
+    (row) => row.landingPage,
+    (row) => row.landingPage,
+    { limit }
+  );
+}
+
+function buildMetaCampaignRows(rows = [], { limit = 6 } = {}) {
+  return aggregateCombinedRows(
+    rows,
+    (row) => `${row.source}||${row.campaign}`,
+    (row) => `${row.source} / ${row.campaign}`,
+    { limit }
+  );
+}
+
+function buildMetaAdsetRows(leads = [], { limit = 6 } = {}) {
+  const map = new Map();
+
+  leads.forEach((lead) => {
+    const adsetKey = normalizeText(lead.metaAdsetId, '');
+    if (!adsetKey) {
+      return;
+    }
+
+    const current = map.get(adsetKey) || {
+      key: adsetKey,
+      label: adsetKey,
+      platform: lead.metaPlatformLabel || lead.metaPlatform || 'Meta',
+      leads: 0,
+      qualifiedLeads: 0,
+      wonLeads: 0
+    };
+    current.leads += 1;
+    current.qualifiedLeads += hasReachedQualified(lead) ? 1 : 0;
+    current.wonLeads += lead.status === LEAD_STATUSES.CLOSED_WON ? 1 : 0;
+    map.set(adsetKey, current);
+  });
+
+  return Array.from(map.values())
+    .sort((a, b) => b.leads - a.leads || b.qualifiedLeads - a.qualifiedLeads || a.label.localeCompare(b.label))
+    .slice(0, limit);
+}
+
+function summarizeMetaLeadAdStatus(leads = []) {
+  const openLeads = leads.filter((lead) => isOpenLead(lead));
+  const contactedLeadCount = leads.filter((lead) => hasReachedQualified(lead) || Boolean(lead.lastWorkedAt)).length;
+  const qualifiedLeadCount = leads.filter((lead) => hasReachedQualified(lead)).length;
+  const winLeadCount = leads.filter((lead) => lead.status === LEAD_STATUSES.CLOSED_WON).length;
+  const slaHours = leads
+    .map((lead) => getHoursBetween(lead.submittedAt, lead.followUpSlaAt))
+    .filter((value) => value !== null);
+  const sortedSlaHours = [...slaHours].sort((left, right) => left - right);
+  const medianFirstTouchSlaHours = sortedSlaHours.length === 0
+    ? null
+    : sortedSlaHours[Math.floor(sortedSlaHours.length / 2)];
+
+  return {
+    openLeadCount: openLeads.length,
+    contactedLeadCount,
+    qualifiedLeadCount,
+    winLeadCount,
+    medianFirstTouchSlaHours
+  };
+}
+
+function buildMetaLeadAdFormRows(rows = [], { limit = 6 } = {}) {
+  const map = new Map();
+
+  rows.forEach((row) => {
+    const formId = normalizeText(row.meta_form_id, 'unknown_form');
+    const current = map.get(formId) || {
+      key: formId,
+      label: formId,
+      campaignLabel: normalizeText(row.campaign_name || row.session_campaign, '(not set)'),
+      newLeads: 0,
+      mappedCreated: 0,
+      unmapped: 0
+    };
+    current.newLeads += 1;
+    current.mappedCreated += row.mapping_status === 'mapped_created' ? 1 : 0;
+    current.unmapped += row.mapping_status === 'unmapped' ? 1 : 0;
+    map.set(formId, current);
+  });
+
+  return Array.from(map.values())
+    .sort((a, b) => b.newLeads - a.newLeads || b.mappedCreated - a.mappedCreated || a.label.localeCompare(b.label))
+    .slice(0, limit);
+}
+
+function buildMetaLeadAdCampaignRows(rows = [], { limit = 6 } = {}) {
+  const map = new Map();
+
+  rows.forEach((row) => {
+    const platform = getMetaAcquisitionPlatform(row.session_source, row.meta_platform);
+    const campaign = normalizeText(row.campaign_name || row.session_campaign, '(not set)');
+    const key = `${platform || 'meta'}||${campaign}`;
+    const current = map.get(key) || {
+      key,
+      label: `${META_PLATFORM_LABELS[platform] || formatSlugLabel(platform || 'meta', 'Meta')} / ${campaign}`,
+      newLeads: 0,
+      mappedCreated: 0,
+      pending: 0
+    };
+    current.newLeads += 1;
+    current.mappedCreated += row.mapping_status === 'mapped_created' ? 1 : 0;
+    current.pending += ['mapped_pending', 'partial', 'fetch_pending'].includes(row.mapping_status) ? 1 : 0;
+    map.set(key, current);
+  });
+
+  return Array.from(map.values())
+    .sort((a, b) => b.newLeads - a.newLeads || b.mappedCreated - a.mappedCreated || a.label.localeCompare(b.label))
+    .slice(0, limit);
+}
+
+function buildMetaAcquisition(currentLeads, externalMetricRows, metaLeadAdRows = [], metaConversionEventRows = []) {
+  const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
+  const facebookReferralRows = combinedRows.filter((row) => isMetaReferralSource({
+    source: row.source,
+    medium: row.medium
+  }));
+  const metaAdsRows = combinedRows.filter((row) => isMetaAdsSource({
+    source: row.source,
+    medium: row.medium,
+    sourceClass: row.sourceClass,
+    campaign: row.campaign
+  }));
+  const metaWebsiteLeads = currentLeads.filter((lead) => (
+    lead.isMetaWebsiteLead
+    && (
+      isMetaAdsSource({
+        source: lead.source,
+        medium: lead.medium,
+        sourceClass: lead.sourceClass,
+        campaign: lead.campaign,
+        metaPlatform: lead.metaPlatform,
+        metaLeadSource: lead.metaLeadSource
+      })
+      || isMetaReferralSource({
+        source: lead.source,
+        medium: lead.medium,
+        metaPlatform: lead.metaPlatform,
+        metaLeadSource: lead.metaLeadSource
+      })
+    )
+  ));
+  const metaLeadAdLeads = currentLeads.filter((lead) => lead.isMetaLeadAd);
+  const metaConversionStatuses = metaConversionEventRows.reduce((accumulator, row) => {
+    const status = normalizeText(row.send_status, 'unknown');
+    accumulator[status] = (accumulator[status] || 0) + 1;
+    return accumulator;
+  }, {});
+  const metaAdsLeadCount = metaWebsiteLeads.filter((lead) => isMetaAdsSource({
+    source: lead.source,
+    medium: lead.medium,
+    sourceClass: lead.sourceClass,
+    campaign: lead.campaign,
+    metaPlatform: lead.metaPlatform,
+    metaLeadSource: lead.metaLeadSource
+  })).length;
+  const metaWebsiteMatchedLeadCount = metaWebsiteLeads.filter((lead) => lead.metaFbc || lead.metaFbp).length;
+  const metaAdsSpend = metaAdsRows.reduce((sum, row) => sum + row.spend, 0);
+  const metaAdsClicks = metaAdsRows.reduce((sum, row) => sum + row.clicks, 0);
+  const metaAdsSessions = metaAdsRows.reduce((sum, row) => sum + row.sessions, 0);
+  const metaAdsImpressions = metaAdsRows.reduce((sum, row) => sum + row.impressions, 0);
+  const metaLeadAdSummary = summarizeMetaLeadAdStatus(metaLeadAdLeads);
+  const pendingMetaLeadAdCount = metaLeadAdRows.filter((row) => row.mapping_status !== 'mapped_created').length;
+
+  return {
+    facebookReferral: {
+      summary: {
+        sessions: facebookReferralRows.reduce((sum, row) => sum + row.sessions, 0),
+        events: facebookReferralRows.reduce((sum, row) => sum + row.events, 0),
+        leads: facebookReferralRows.reduce((sum, row) => sum + row.leads, 0),
+        qualifiedLeads: facebookReferralRows.reduce((sum, row) => sum + row.qualifiedLeads, 0),
+        wins: facebookReferralRows.reduce((sum, row) => sum + row.wonLeads, 0)
+      },
+      topLandingPages: buildMetaLandingPageRows(facebookReferralRows),
+      topCampaigns: buildMetaCampaignRows(facebookReferralRows),
+      notes: {
+        basis: 'Organic/referral Facebook and Instagram traffic and leads from the normalized acquisition rows.'
+      }
+    },
+    metaAds: {
+      summary: {
+        spend: metaAdsSpend,
+        clicks: metaAdsClicks,
+        sessions: metaAdsSessions,
+        leads: metaAdsLeadCount,
+        costPerLead: buildCombinedDerivedMetrics({
+          spend: metaAdsSpend,
+          leads: metaAdsLeadCount,
+          wonLeads: 0,
+          sessions: metaAdsSessions,
+          clicks: metaAdsClicks,
+          impressions: metaAdsImpressions
+        }).costPerLead,
+        websiteLeadMatchRate: getPercent(metaWebsiteMatchedLeadCount, metaAdsLeadCount)
+      },
+      topCampaigns: buildMetaCampaignRows(metaAdsRows),
+      topAdsets: buildMetaAdsetRows(metaWebsiteLeads),
+      notes: {
+        basis: 'Meta paid website performance uses the existing manual/social acquisition rows plus on-site leads with first-party Meta identifiers.'
+      }
+    },
+    metaLeadAds: {
+      summary: {
+        newLeads: metaLeadAdRows.length,
+        unworkedLeads: Math.max(metaLeadAdSummary.openLeadCount, pendingMetaLeadAdCount),
+        contactedLeads: metaLeadAdSummary.contactedLeadCount,
+        qualifiedLeads: metaLeadAdSummary.qualifiedLeadCount,
+        wins: metaLeadAdSummary.winLeadCount,
+        medianFirstTouchSlaHours: metaLeadAdSummary.medianFirstTouchSlaHours,
+        unmappedFormsCount: new Set(
+          metaLeadAdRows
+            .filter((row) => row.mapping_status === 'unmapped')
+            .map((row) => row.meta_form_id)
+            .filter(Boolean)
+        ).size
+      },
+      topForms: buildMetaLeadAdFormRows(metaLeadAdRows),
+      topCampaigns: buildMetaLeadAdCampaignRows(metaLeadAdRows),
+      notes: {
+        basis: 'Native Meta Lead Ads are stored raw first, then optionally promoted into the main ops queues through explicit form mappings.'
+      }
+    },
+    conversionLog: metaConversionStatuses
+  };
+}
+
+function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = [], metaLeadAdRows = [], metaConversionEventRows = []) {
   const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
   const totalsBase = combinedRows.reduce((accumulator, row) => ({
     sessions: accumulator.sessions + row.sessions,
@@ -3682,6 +4045,12 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
     ...totalsBase,
     ...buildCombinedDerivedMetrics(totalsBase)
   };
+  const meta = buildMetaAcquisition(
+    currentLeads,
+    externalMetricRows,
+    metaLeadAdRows,
+    metaConversionEventRows
+  );
 
   return {
     totals,
@@ -3750,6 +4119,10 @@ function buildAcquisition(currentLeads, externalMetricRows, whatsappClickRows = 
       (row) => `${row.source} / ${row.medium} / ${row.campaign}`,
       { limit: 10 }
     ),
+    facebookReferral: meta.facebookReferral,
+    metaAds: meta.metaAds,
+    metaLeadAds: meta.metaLeadAds,
+    metaConversionLog: meta.conversionLog,
     whatsapp: buildWhatsAppAcquisition(currentLeads, whatsappClickRows),
     notes: {
       leadBasis: 'Leads créés sur la période',
@@ -4110,7 +4483,66 @@ function getFreshnessStatus({
   return explicitStatus || 'fresh';
 }
 
-function buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRows, keywordRankingRows, nowIso) {
+function buildMetaDataHealth(currentLeads = [], metaLeadAdRows = [], metaConversionEventRows = [], nowIso) {
+  const metaWebsiteLeads = currentLeads.filter((lead) => lead.isMetaWebsiteLead);
+  const missingIdentifierCount = metaWebsiteLeads.filter((lead) => !lead.metaFbc && !lead.metaFbp).length;
+  const browserServerMismatchCount = Math.max(
+    metaWebsiteLeads.length - metaConversionEventRows.length,
+    0
+  );
+  const failedSendCount = metaConversionEventRows.filter((row) => normalizeText(row.send_status, '') !== 'sent').length;
+  const unmappedFormsCount = new Set(
+    metaLeadAdRows
+      .filter((row) => row.mapping_status === 'unmapped')
+      .map((row) => row.meta_form_id)
+      .filter(Boolean)
+  ).size;
+  const latestLeadSyncAt = metaLeadAdRows
+    .map((row) => row.synced_at || row.updated_at || row.created_at)
+    .filter(Boolean)
+    .sort()
+    .at(-1) || null;
+  const staleLeadSyncStatus = getFreshnessStatus({
+    freshestMetricDate: null,
+    lastSuccessAt: latestLeadSyncAt,
+    staleAfterHours: 24,
+    nowIso
+  });
+
+  const overallStatus = failedSendCount > 0 || staleLeadSyncStatus === 'stale'
+    ? 'stale'
+    : missingIdentifierCount > 0 || unmappedFormsCount > 0 || browserServerMismatchCount > 0
+      ? 'warning'
+      : 'fresh';
+
+  return {
+    status: overallStatus,
+    latestLeadSyncAt,
+    summary: {
+      websiteMetaLeads: metaWebsiteLeads.length,
+      missingIdentifierCount,
+      browserServerMismatchCount,
+      failedSendCount,
+      unmappedFormsCount
+    },
+    notes: {
+      staleLeadSync: latestLeadSyncAt
+        ? `Dernière synchro Lead Ads Meta : ${formatDateTimeLabel(latestLeadSyncAt)}`
+        : 'Aucune synchro Lead Ads Meta disponible.'
+    }
+  };
+}
+
+function buildDataHealth(
+  sourceHealthRows,
+  externalMetricRows,
+  keywordCatalogRows,
+  keywordRankingRows,
+  currentLeads,
+  metaLeadAdRows,
+  metaConversionEventRows,
+  nowIso
+) {
   const rowByKey = new Map(
     (sourceHealthRows || []).map((row) => [row.source_key, row])
   );
@@ -4167,8 +4599,29 @@ function buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRow
     error: 3,
     stale: 2,
     missing: 1,
+    warning: 1,
     fresh: 0
   };
+  const meta = buildMetaDataHealth(currentLeads, metaLeadAdRows, metaConversionEventRows, nowIso);
+  items.push({
+    key: 'meta',
+    label: 'Meta leads',
+    connectorType: 'api',
+    status: meta.status === 'warning' ? 'stale' : meta.status,
+    asOf: meta.latestLeadSyncAt,
+    freshestMetricDate: null,
+    message: `${meta.summary.websiteMetaLeads} leads site Meta, ${meta.summary.unmappedFormsCount} formulaires Lead Ads non mappés`,
+    lastError: meta.summary.failedSendCount > 0
+      ? `${meta.summary.failedSendCount} envois CAPI en échec`
+      : null,
+    recordCount: metaLeadAdRows.length,
+    metadata: {
+      missingIdentifierCount: meta.summary.missingIdentifierCount,
+      browserServerMismatchCount: meta.summary.browserServerMismatchCount,
+      failedSendCount: meta.summary.failedSendCount,
+      unmappedFormsCount: meta.summary.unmappedFormsCount
+    }
+  });
 
   const overallStatus = items
     .map((item) => item.status)
@@ -4177,7 +4630,8 @@ function buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRow
   return {
     generatedAt: nowIso,
     overallStatus,
-    items
+    items,
+    meta
   };
 }
 
@@ -4846,6 +5300,8 @@ function createAdminDashboardBuildContext({
   queryMetricRows = [],
   behaviorMetricRows = [],
   whatsappClickRows = [],
+  metaLeadAdRows = [],
+  metaConversionEventRows = [],
   keywordCatalogRows = [],
   keywordRankingRows = [],
   sourceHealthRows = [],
@@ -4862,6 +5318,7 @@ function createAdminDashboardBuildContext({
     universeLeads,
     externalMetricRows,
     behaviorMetricRows,
+    metaLeadAdRows,
     keywordCatalogRows,
     keywordRankingRows
   });
@@ -4877,10 +5334,21 @@ function createAdminDashboardBuildContext({
   const filteredBehaviorMetricRows = behaviorMetricRows
     .filter((row) => matchesBehaviorMetricFilters(row, normalizedFilters));
   const filteredWhatsAppClickRows = whatsappClickRows.filter((row) => matchesWhatsAppClickFilters(row, normalizedFilters));
+  const filteredMetaLeadAdRows = metaLeadAdRows.filter((row) => matchesMetaLeadAdFilters(row, normalizedFilters));
+  const filteredMetaConversionEventRows = metaConversionEventRows.filter((row) => matchesMetaConversionFilters(row, normalizedFilters));
   const filteredKeywordCatalogRows = keywordCatalogRows.filter((row) => matchesKeywordCatalogFilters(row, normalizedFilters));
   const filteredKeywordRankingRows = keywordRankingRows.filter((row) => matchesKeywordRankingFilters(row, normalizedFilters));
   const filteredAuditEvents = filterAuditEvents(auditEvents, filteredUniverseLeads);
-  const dataHealth = buildDataHealth(sourceHealthRows, externalMetricRows, keywordCatalogRows, keywordRankingRows, nowIso);
+  const dataHealth = buildDataHealth(
+    sourceHealthRows,
+    externalMetricRows,
+    keywordCatalogRows,
+    keywordRankingRows,
+    filteredCurrentLeads,
+    filteredMetaLeadAdRows,
+    filteredMetaConversionEventRows,
+    nowIso
+  );
 
   return {
     currentLeads,
@@ -4896,6 +5364,8 @@ function createAdminDashboardBuildContext({
     filteredQueryMetricRows,
     filteredBehaviorMetricRows,
     filteredWhatsAppClickRows,
+    filteredMetaLeadAdRows,
+    filteredMetaConversionEventRows,
     filteredKeywordCatalogRows,
     filteredKeywordRankingRows,
     filteredAuditEvents,
@@ -4934,7 +5404,13 @@ export function buildAdminDashboardCoreData(input) {
   );
   const pipeline = buildPipeline(context.filteredCurrentLeads, context.range);
   const acquisition = {
-    ...buildAcquisition(context.filteredCurrentLeads, context.filteredExternalMetricRows, []),
+    ...buildAcquisition(
+      context.filteredCurrentLeads,
+      context.filteredExternalMetricRows,
+      [],
+      context.filteredMetaLeadAdRows,
+      context.filteredMetaConversionEventRows
+    ),
     facebook: buildFacebookAcquisition(null)
   };
   const landingPageScorecard = buildLandingPageScorecard(
@@ -5007,7 +5483,13 @@ export function buildAdminDashboardAcquisitionSectionData(input) {
 
   return {
     acquisition: {
-      ...buildAcquisition(context.filteredCurrentLeads, context.filteredExternalMetricRows, context.filteredWhatsAppClickRows),
+      ...buildAcquisition(
+        context.filteredCurrentLeads,
+        context.filteredExternalMetricRows,
+        context.filteredWhatsAppClickRows,
+        context.filteredMetaLeadAdRows,
+        context.filteredMetaConversionEventRows
+      ),
       facebook: buildFacebookAcquisition(input.facebookSnapshot || null)
     }
   };
@@ -5056,6 +5538,8 @@ export function buildAdminDashboardData({
   queryMetricRows = [],
   behaviorMetricRows = [],
   whatsappClickRows = [],
+  metaLeadAdRows = [],
+  metaConversionEventRows = [],
   facebookSnapshot = null,
   keywordCatalogRows = [],
   keywordRankingRows = [],
@@ -5073,6 +5557,8 @@ export function buildAdminDashboardData({
     queryMetricRows,
     behaviorMetricRows,
     whatsappClickRows,
+    metaLeadAdRows,
+    metaConversionEventRows,
     keywordCatalogRows,
     keywordRankingRows,
     sourceHealthRows,
@@ -5092,7 +5578,9 @@ export function buildAdminDashboardData({
     ...buildAcquisition(
       context.filteredCurrentLeads,
       context.filteredExternalMetricRows,
-      context.filteredWhatsAppClickRows
+      context.filteredWhatsAppClickRows,
+      context.filteredMetaLeadAdRows,
+      context.filteredMetaConversionEventRows
     ),
     facebook: buildFacebookAcquisition(facebookSnapshot)
   };

@@ -33,6 +33,7 @@ This document operationalizes the audit strategy into a delivery program that en
 | Behavior persistence and dashboard panels | Implemented in product, live validation pending | Behavior events now persist into Supabase, `growth_behavior_daily_metrics` exists in migration form, and `ctaPerformance`, `contactIntent`, and `formHealth` are live in the dashboard |
 | GA4 events completeness | Implemented as a reporting enhancement | GA4 snapshots now support `events`, the dashboard surfaces GA4 events alongside sessions/users, and imports dedupe normalized conflicts before upsert |
 | Dev/build artifact isolation | Implemented as an engineering reliability enhancement | `next dev` now writes to `.next-dev` while production builds keep using `.next`, preventing cache collisions from breaking admin routes |
+| Meta / Facebook lead integration | Implemented in product, live validation pending | Website Meta identifiers, Lead Ads intake, Conversions API logging, and Meta acquisition/data-health panels are live without adding a second dashboard or CRM |
 | Stage 4+ intelligence and automation backlog | Pending | Tracked in backlog below |
 
 ## Delivery order
@@ -97,6 +98,10 @@ This document operationalizes the audit strategy into a delivery program that en
 | S3-11 | `schema/ETL` | Engineering | Create `growth_behavior_daily_metrics` as the persisted behavior mart keyed by event/date/context dimensions plus `event_count` and `unique_client_count` | S3-09, S3-10 | CTA, form, and contact-intent behavior can be aggregated in the reporting layer | Implemented in repo, target DB validation pending |
 | S3-12 | `metric-builder` | Engineering | Rebuild `growth_funnel_daily_metrics` and `funnelDiagnostics` on top of behavior + lifecycle joins | S3-11 | Funnel diagnostics start at CTA and form steps instead of lead creation only | Partially implemented; reporting view upgraded, dashboard cutover still gated |
 | S3-13 | `UI` | Engineering | Add Stage 3 panels for `ctaPerformance`, `contactIntent`, and `formHealth` inside `/admin/dashboard` | S3-12 | CRO review can inspect CTA leaks, form friction, and contact-method intent without leaving the dashboard | Implemented in product, adoption pending |
+| S3-14 | `tracking` | Engineering | Capture first-party Meta identifiers (`fbclid`, `meta_fbc`, `meta_fbp`, `meta_platform`, campaign/ad ids) in session context and website lead rows | S1-06, S2-01 | Meta-sourced website leads keep usable join keys for attribution and CAPI feedback | Implemented in product, live validation pending |
+| S3-15 | `schema/ETL` | Engineering | Add raw Meta Lead Ads intake (`meta_lead_ad_submissions`), form mappings, and conversion-event log persistence | S3-14 | Native Lead Ads are visible and deduped before optional promotion into ops queues | Implemented in repo, target DB validation pending |
+| S3-16 | `metric-builder` | Engineering | Extend `acquisition` and `dataHealth` with `facebookReferral`, `metaAds`, `metaLeadAds`, and Meta diagnostics | S3-14, S3-15 | Meta referral, paid website, and native lead-form performance can be reviewed inside the existing dashboard | Implemented in product, live validation pending |
+| S3-17 | `validation` | Engineering + Growth owner | Validate Meta website lead capture, Lead Ads intake, and Conversions API logging with `npm run growth:audit:meta` before Stage 4 baselines rely on Meta cohorts | S3-14 to S3-16 | Meta acquisition is trusted enough to use in weekly review and future experiment baselines | Open |
 
 ### Stage 4
 
@@ -115,9 +120,10 @@ This document operationalizes the audit strategy into a delivery program that en
 | S5-01 | `schema` | Engineering | Create `growth_reporting_run_history` | Stage 3 | Run outcomes persist historically |
 | S5-02 | `schema` | Engineering | Create `growth_alert_events` | S5-01 | Alert history exists for analysis and tuning |
 | S5-03 | `automation` | Engineering | Persist run-level outcomes from `src/libs/growthReporting.mjs` | S5-01 | Connector freshness and run failures become auditable |
-| S5-04 | `automation` | Engineering | Add freshness and anomaly alerts for direct spikes, qualified lead drops, landing-page collapse, CTA collapse, validation-failure spikes, abandonment spikes, submit-success drops, and stale SERP states | S5-02, S3-11, S3-12 | Growth issues are surfaced proactively across attribution, behavior, and lifecycle layers |
+| S5-04 | `automation` | Engineering | Add freshness and anomaly alerts for direct spikes, qualified lead drops, landing-page collapse, CTA collapse, validation-failure spikes, abandonment spikes, submit-success drops, stale SERP states, stale Meta Lead Ads sync, missing Meta identifiers, and Conversions API send failures | S5-02, S3-11, S3-12, S3-17 | Growth issues are surfaced proactively across attribution, behavior, lifecycle, and Meta acquisition layers |
 | S5-05 | `workflow` | Growth owner + Admin ops | Add weekly executive digest and daily operational notifications | S5-03, S5-04 | Weekly and daily reporting no longer require manual assembly |
 | S5-06 | `ETL` | Engineering | Automate paid/social imports if connector access exists, otherwise harden manual SLA | S5-03 | Freshness responsibility is explicit and measurable |
+| S5-07 | `ETL` | Engineering | Replace manual Meta Lead Ads gap fills with scheduled sync once access, volume, and webhook stability justify it | S3-15, S3-17 | Meta intake freshness no longer depends on manual recovery imports |
 
 ### Stage 6
 
@@ -162,6 +168,35 @@ Remaining dashboard contract change:
 
 - `funnelDiagnostics` graduates from lifecycle-only `v1` to behavior-aware funnel reporting after Stage 3 closeout
 
+## Meta acquisition interfaces
+
+Meta tracking extends the existing dashboard and lead model. It does not create a second dashboard, a second CRM, or a separate source taxonomy.
+
+Current reporting additions:
+
+| Artifact | Current shape |
+| --- | --- |
+| `meta_lead_form_mappings` | Mapping table from `meta_form_id` to `target_kind`, `business_line`, optional default service, and auto-create behavior |
+| `meta_lead_ad_submissions` | Raw Lead Ads intake keyed by `meta_leadgen_id`, with mapping state, normalized attribution fields, and optional linked ops lead |
+| `meta_conversion_event_log` | Server-side Meta Conversions API log keyed by `event_id` and `event_name`, including linked lead ids and send status |
+| Website lead Meta fields | `fbclid`, `meta_fbc`, `meta_fbp`, `meta_platform`, `meta_lead_source`, `meta_campaign_id`, `meta_adset_id`, `meta_ad_id`, `meta_leadgen_id`, `meta_form_id`, `meta_page_id` on `devis_requests`, `convention_requests`, and `growth_lead_reporting_dimensions` |
+
+Current dashboard additions:
+
+- `acquisition.facebookReferral`
+- `acquisition.metaAds`
+- `acquisition.metaLeadAds`
+- `dataHealth.meta`
+
+Locked v1 Meta rules:
+
+- `acquisition.facebook` remains the content snapshot for posts and reels
+- `facebookReferral` models organic/social visits and leads from page links, posts, reels, stories, and Instagram profile traffic
+- `metaAds` models website traffic and on-site leads sourced from Meta paid campaigns
+- `metaLeadAds` models native Lead Ads submissions that may or may not be promoted into the normal ops queues
+- GTM/dataLayer remains the browser transport; no direct `fbq` calls should be added in React components
+- `growth_channel_daily_metrics` remains the acquisition fact table for spend, clicks, impressions, sessions, users, and events; Meta paid spend stays on the existing manual `social_manual` path until Stage 5 automation is justified
+
 ## Dependency map
 
 | Unlock | Depends on |
@@ -171,6 +206,9 @@ Remaining dashboard contract change:
 | Funnel diagnostics | Lifecycle tracking + lead-quality fields + stage definitions |
 | Behavior-aware funnel diagnostics | Canonical behavior taxonomy + instrumentation parity + `growth_behavior_daily_metrics` + lifecycle joins |
 | CTA and form-health panels | Behavior mart + upgraded funnel metrics + stable segment filters |
+| Meta website lead attribution | Stage 1 attribution hygiene + Stage 3 Meta identifier capture + website lead routes |
+| Meta Lead Ads intake | Raw Lead Ads tables + explicit form mappings + webhook/import stability |
+| Meta data health and dashboards | Meta identifier capture + Lead Ads intake + Conversions API logging + existing dashboard contract |
 | Experiment OS | Stable segmentation and evidence-backed prioritization |
 | Experiment baselines | Stable behavior mart + upgraded funnel diagnostics |
 | Alerts and digests | Stable marts, calibrated thresholds, and run-history persistence |
@@ -212,5 +250,6 @@ Remaining dashboard contract change:
 - No dependency gate has been relaxed or bypassed.
 - GA4 `events` support enhances the existing acquisition and SEO evidence model inside Stage 3 without changing the program sequence.
 - Behavior tracking is now explicitly shipped as a Stage 3 extension that upgrades CRO evidence and unlocks later experiment and alert layers without creating a new phase.
+- Meta / Facebook lead integration is now explicitly shipped as a Stage 3 acquisition extension that strengthens attribution, paid-social visibility, and Lead Ads intake without creating a second dashboard or CRM.
 - `GET /api/admin/dashboard` remains the only dashboard endpoint; behavior tracking extends its payload instead of introducing a second reporting contract.
 - GA4 import deduplication and dev/build cache isolation are delivery hardening changes that protect Stage 1 trust and Stage 3 stability; they do not create new roadmap scope.

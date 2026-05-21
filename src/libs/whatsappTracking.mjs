@@ -37,6 +37,17 @@ function getSanitizedAttributionFields(rawValue = {}) {
       campaign: normalizeNullableText(rawValue?.campaign || rawValue?.session_campaign),
       landing_page: normalizeNullableText(rawValue?.landing_page || rawValue?.landingPage),
       referrer_host: normalizeNullableText(rawValue?.referrer_host || rawValue?.referrerHost),
+      fbclid: normalizeNullableText(rawValue?.fbclid),
+      meta_fbc: normalizeNullableText(rawValue?.meta_fbc || rawValue?.metaFbc),
+      meta_fbp: normalizeNullableText(rawValue?.meta_fbp || rawValue?.metaFbp),
+      meta_platform: normalizeNullableText(rawValue?.meta_platform || rawValue?.metaPlatform),
+      meta_lead_source: normalizeNullableText(rawValue?.meta_lead_source || rawValue?.metaLeadSource),
+      meta_campaign_id: normalizeNullableText(rawValue?.meta_campaign_id || rawValue?.metaCampaignId),
+      meta_adset_id: normalizeNullableText(rawValue?.meta_adset_id || rawValue?.metaAdsetId),
+      meta_ad_id: normalizeNullableText(rawValue?.meta_ad_id || rawValue?.metaAdId),
+      meta_leadgen_id: normalizeNullableText(rawValue?.meta_leadgen_id || rawValue?.metaLeadgenId),
+      meta_form_id: normalizeNullableText(rawValue?.meta_form_id || rawValue?.metaFormId),
+      meta_page_id: normalizeNullableText(rawValue?.meta_page_id || rawValue?.metaPageId),
       captured_at: normalizeNullableText(rawValue?.captured_at || rawValue?.capturedAt)
     }).filter(([, value]) => value !== null)
   );

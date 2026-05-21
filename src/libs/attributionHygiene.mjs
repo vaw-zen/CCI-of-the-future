@@ -1,4 +1,10 @@
 import {
+  buildMetaAttributionFields,
+  extractMetaCookieFields,
+  normalizeMetaLeadSource,
+  normalizeMetaPlatform
+} from './metaAttribution.mjs';
+import {
   extractGaClientIdFromGaCookie,
   getHostnameFromUrl,
   getPathFromUrl,
@@ -337,6 +343,7 @@ export function extractRequestAttributionFallback(request = null) {
   const sessionAttribution = parseSessionAttributionCookie(
     readCookieFromHeader(cookieHeader, SESSION_ATTRIBUTION_COOKIE_KEY)
   );
+  const metaCookieFields = extractMetaCookieFields(cookieHeader);
   const gaClientId = extractGaClientIdFromGaCookie(
     readCookieFromHeader(cookieHeader, '_ga')
   );
@@ -369,7 +376,15 @@ export function extractRequestAttributionFallback(request = null) {
     referrer_host: referrerHost || null,
     session_source: resolvedSession.source,
     session_medium: resolvedSession.medium,
-    session_campaign: resolvedSession.campaign
+    session_campaign: resolvedSession.campaign,
+    ...buildMetaAttributionFields({
+      ...sessionAttribution,
+      ...metaCookieFields
+    }, {
+      source: resolvedSession.source,
+      referrerHost,
+      fallbackLeadSource: normalizeMetaLeadSource(sessionAttribution.meta_lead_source, '')
+    })
   };
 }
 
@@ -412,6 +427,29 @@ export function normalizeAnalyticsAttributionContext(rawContext = {}, {
     landingPage,
     { includeSearch: true }
   );
+  const metaFields = buildMetaAttributionFields({
+    fbclid: rawContext.fbclid || fallbackContext.fbclid,
+    meta_fbc: rawContext.meta_fbc || fallbackContext.meta_fbc,
+    meta_fbp: rawContext.meta_fbp || fallbackContext.meta_fbp,
+    meta_platform: rawContext.meta_platform || fallbackContext.meta_platform,
+    meta_lead_source: rawContext.meta_lead_source || fallbackContext.meta_lead_source,
+    meta_campaign_id: rawContext.meta_campaign_id || fallbackContext.meta_campaign_id,
+    meta_adset_id: rawContext.meta_adset_id || fallbackContext.meta_adset_id,
+    meta_ad_id: rawContext.meta_ad_id || fallbackContext.meta_ad_id,
+    meta_leadgen_id: rawContext.meta_leadgen_id || fallbackContext.meta_leadgen_id,
+    meta_form_id: rawContext.meta_form_id || fallbackContext.meta_form_id,
+    meta_page_id: rawContext.meta_page_id || fallbackContext.meta_page_id,
+    captured_at: rawContext.captured_at || fallbackContext.captured_at || Date.now()
+  }, {
+    source: canonicalAttribution.source,
+    referrerHost,
+    fallbackLeadSource: normalizeMetaPlatform(rawContext.meta_platform || fallbackContext.meta_platform, {
+      source: canonicalAttribution.source,
+      referrerHost
+    })
+      ? 'website'
+      : normalizeMetaLeadSource(rawContext.meta_lead_source || fallbackContext.meta_lead_source, '')
+  });
 
   return {
     ga_client_id: normalizeText(rawContext.ga_client_id || fallbackContext.ga_client_id, '') || null,
@@ -420,7 +458,8 @@ export function normalizeAnalyticsAttributionContext(rawContext = {}, {
     session_medium: canonicalAttribution.medium,
     session_campaign: canonicalAttribution.campaign,
     referrer_host: referrerHost || null,
-    entry_path: entryPath
+    entry_path: entryPath,
+    ...metaFields
   };
 }
 

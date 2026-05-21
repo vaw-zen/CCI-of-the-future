@@ -17,11 +17,14 @@ import {
   LEAD_STATUSES
 } from '@/utils/leadLifecycle';
 import {
+  isMissingOptionalLeadTrackingColumnError,
   isMissingOptionalLeadOperationFieldError,
+  withoutOptionalLeadTrackingFields,
   withoutOptionalLeadOperationFields
 } from '@/libs/leadTrackingSchemaCompat.mjs';
 import { guardMutationRequest } from '@/libs/security';
 import { isStage3TestSubmission, STAGE3_TEST_MARKER } from '@/libs/stage3TestMarker.mjs';
+import { createMetaLeadEventId, sendMetaLeadConversion } from '@/libs/metaConversions.mjs';
 
 const DEVIS_RATE_LIMIT = {
   scope: 'devis-submit',
@@ -238,17 +241,29 @@ export async function POST(request) {
     };
 
     // Save to Supabase first
+    let insertPayload = devisData;
     let { data: supabaseData, error: supabaseError } = await supabase
       .from('devis_requests')
-      .insert([devisData])
+      .insert([insertPayload])
       .select()
       .single();
 
-    if (supabaseError && isMissingOptionalLeadOperationFieldError(supabaseError)) {
-      console.warn('[devis] retrying insert without optional lead-operations columns:', supabaseError.message);
+    if (supabaseError && isMissingOptionalLeadTrackingColumnError(supabaseError)) {
+      console.warn('[devis] retrying insert without optional tracking columns:', supabaseError.message);
+      insertPayload = withoutOptionalLeadTrackingFields(insertPayload);
       ({ data: supabaseData, error: supabaseError } = await supabase
         .from('devis_requests')
-        .insert([withoutOptionalLeadOperationFields(devisData)])
+        .insert([insertPayload])
+        .select()
+        .single());
+    }
+
+    if (supabaseError && isMissingOptionalLeadOperationFieldError(supabaseError)) {
+      console.warn('[devis] retrying insert without optional lead-operations columns:', supabaseError.message);
+      insertPayload = withoutOptionalLeadOperationFields(insertPayload);
+      ({ data: supabaseData, error: supabaseError } = await supabase
+        .from('devis_requests')
+        .insert([insertPayload])
         .select()
         .single());
     }
@@ -298,6 +313,15 @@ export async function POST(request) {
         leadType: 'devis',
         businessLine: 'b2c'
       })
+    });
+    const metaEventId = createMetaLeadEventId('devis_lead');
+    const metaConversionResult = await sendMetaLeadConversion({
+      supabase,
+      request,
+      leadKind: 'devis',
+      leadRecord: supabaseData,
+      analyticsContext,
+      eventId: metaEventId
     });
 
     let emailSent = false;
@@ -555,6 +579,8 @@ export async function POST(request) {
         devisSaved: true,
         devisId: supabaseData.id,
         emailSent,
+        metaEventId,
+        metaConversionStatus: metaConversionResult.status,
         ...(emailError && { emailNote: 'Demande enregistrée, notification email en attente.' }),
         newsletterSubscribed: newsletter ? (newsletterResult?.success || false) : false
       },

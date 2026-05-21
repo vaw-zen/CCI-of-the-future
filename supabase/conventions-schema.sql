@@ -52,6 +52,17 @@ CREATE TABLE IF NOT EXISTS convention_requests (
   session_campaign TEXT,
   referrer_host TEXT,
   entry_path TEXT,
+  fbclid TEXT,
+  meta_fbc TEXT,
+  meta_fbp TEXT,
+  meta_platform TEXT CHECK (meta_platform IN ('facebook', 'instagram')),
+  meta_lead_source TEXT CHECK (meta_lead_source IN ('website', 'lead_ad')),
+  meta_campaign_id TEXT,
+  meta_adset_id TEXT,
+  meta_ad_id TEXT,
+  meta_leadgen_id TEXT,
+  meta_form_id TEXT,
+  meta_page_id TEXT,
   calculator_estimate DECIMAL,
   selected_services TEXT[],
   whatsapp_click_id UUID,
@@ -75,6 +86,9 @@ CREATE INDEX IF NOT EXISTS idx_convention_requests_follow_up_sla_at ON conventio
 CREATE INDEX IF NOT EXISTS idx_convention_requests_last_worked_at ON convention_requests(last_worked_at DESC);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_session_source ON convention_requests(session_source);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_session_medium ON convention_requests(session_medium);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_meta_platform ON convention_requests(meta_platform);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_meta_lead_source ON convention_requests(meta_lead_source);
+CREATE INDEX IF NOT EXISTS idx_convention_requests_meta_leadgen_id ON convention_requests(meta_leadgen_id);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_whatsapp_click_id ON convention_requests(whatsapp_click_id);
 CREATE INDEX IF NOT EXISTS idx_convention_requests_whatsapp_manual_tag ON convention_requests(whatsapp_manual_tag);
 

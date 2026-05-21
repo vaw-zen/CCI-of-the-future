@@ -11,7 +11,7 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
 | Stage 0 | Complete | Program, semantics, taxonomy, and thresholds are locked in docs | Ready and in use |
 | Stage 1 | Complete | Lead quality, ownership, SLA, stale-queue readiness, normalized dimensions, KPI semantics, trust signals, and attribution QA workflow are implemented | Ready to support segmented reviews |
 | Stage 2 | Product complete, workflow adoption pending | Dashboard filters, segmented section outputs, executive summary, and dedicated pipeline navigation are implemented | Weekly review should continue moving to segment-first usage |
-| Stage 3 | In progress, behavior layer shipped, stabilization pending | Query intelligence, content opportunities, landing-page scorecard, lifecycle funnel diagnostics, behavior persistence, and Stage 3 behavior panels are now live in product | Stage 3 gate remains open until live validation, workflow adoption, and heuristic tuning are completed across two review cycles |
+| Stage 3 | In progress, behavior + Meta acquisition layers shipped, stabilization pending | Query intelligence, content opportunities, landing-page scorecard, lifecycle funnel diagnostics, behavior persistence, Stage 3 behavior panels, Meta website attribution, and Meta Lead Ads intake are now live in product | Stage 3 gate remains open until live validation, workflow adoption, and heuristic tuning are completed across two review cycles |
 | Stage 4 | Not started | Experiment operating system not yet built | Depends on stable Stage 3 evidence and formal gate review |
 | Stage 5 | Not started | Alerts, digests, and proactive monitoring not yet built | Depends on stable Stage 3 baselines |
 | Stage 6 | Deferred | Forecasting, ROI, attribution, and modeled planning remain deferred | Wait for 90+ days of stable segmented history |
@@ -115,6 +115,23 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
   - `public.growth_behavior_daily_metrics`
 - Stage 3 sprint-selection workflow is scaffolded in:
   - `assist-vault/GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md`
+- Meta / Facebook lead integration now ships through:
+  - website lead fields for `fbclid`, `meta_fbc`, `meta_fbp`, platform, lead source, and campaign/ad ids
+  - raw Lead Ads intake in `public.meta_lead_ad_submissions`
+  - form mapping rules in `public.meta_lead_form_mappings`
+  - Conversions API send logging in `public.meta_conversion_event_log`
+  - `/api/webhooks/meta/leadgen`
+  - `npm run growth:import:meta-leads`
+  - `npm run growth:audit:meta`
+- `acquisition` now separates:
+  - `facebookReferral`
+  - `metaAds`
+  - `metaLeadAds`
+- `dataHealth.meta` now exposes:
+  - stale Meta lead sync
+  - missing `meta_fbc` / `meta_fbp` on Meta-sourced website leads
+  - browser/server `Lead` mismatch
+  - unmapped Meta Lead Ads forms
 
 ### Behavior tracking integration
 
@@ -127,14 +144,31 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
   - `funnelDiagnostics` still remains lifecycle-based `v1` in the dashboard while the combined funnel read path stabilizes
 - The closeout focus is now validation and adoption, not net-new Stage 3 feature invention.
 
+### Meta acquisition integration
+
+- Meta and Facebook are now modeled as acquisition signals, not SEO backlinks.
+- Current repo reality is now:
+  - `facebookReferral` captures organic/social Facebook and Instagram traffic and leads
+  - `metaAds` captures website traffic and on-site leads from Meta paid campaigns
+  - `metaLeadAds` captures native Lead Ads submissions before optional promotion into the ops queues
+  - website lead routes persist first-party Meta identifiers directly into lead rows
+  - server-side `Lead` sends are logged through `meta_conversion_event_log`
+  - native Lead Ads intake is deduped by `meta_leadgen_id`
+- The closeout focus is now live validation of:
+  - website lead identifier capture
+  - raw Lead Ads freshness and mapping state
+  - Conversions API send health
+  - dashboard separation between referral, paid website, and native lead-form cohorts
+
 ## Verification Status
 
 | Check | Result | Notes |
 | --- | --- | --- |
-| `npm run test:dashboard` | Pass | `41/41` green including behavior tracking, attribution hygiene, Stage 3 intelligence, and GA4 snapshot dedupe regression coverage |
+| `npm run test:dashboard` | Pass | `82/82` green including behavior tracking, attribution hygiene, Stage 3 intelligence, GA4 snapshot dedupe, Meta attribution, Meta CAPI, and Meta Lead Ads regression coverage |
 | `npm run build` | Pass | Production build validates the shipped contract and UI |
 | Behavior persistence route | Implemented | `/api/analytics/behavior` now ingests canonical behavior events |
 | Behavior mart migration | Implemented in repo | `supabase/20260511_growth_behavior_tracking.sql` creates the raw table, daily mart, and upgraded funnel view |
+| Meta lead integration migration | Implemented in repo | `supabase/20260520_meta_lead_integration.sql` adds lead fields, Lead Ads intake tables, and Conversions API logging |
 | Admin auth redirect loop / stuck verification | Resolved | Admin auth now resolves server-side and avoids endless client-side verification |
 | Dev startup lag caused by remote font boot dependency | Resolved | App shell no longer blocks dev startup on remote Google font fetch |
 | Dev image optimizer `LRUCache` issue | Mitigated in development | Dev uses unoptimized images to avoid local optimizer failure |
@@ -158,6 +192,8 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
 - The dashboard remains the only internal reporting surface; no parallel dashboard has been introduced.
 - GA4 `events` extend the existing acquisition evidence model but do not change stage sequencing, ownership, or stage-gate criteria.
 - `ctaPerformance`, `contactIntent`, and `formHealth` now provide pre-lead behavior evidence, but `funnelDiagnostics` is still intentionally labeled lifecycle-based `v1`.
+- Meta `facebookReferral`, `metaAds`, and `metaLeadAds` are separate cohorts on purpose; mapped Lead Ads should not be counted as website Meta leads.
+- Native Meta Lead Ads remain inside the same growth system and ops queues, but raw intake stays visible before mapping so the program does not create a second CRM.
 - Stage 3 is not complete until the behavior mart is validated in the target environment and the weekly operating cadence actually uses the new panels.
 
 ## Roadmap Alignment
@@ -167,6 +203,7 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
   - attribution hygiene and import dedupe reinforce Stage 1 trust
   - GA4 events improve Stage 3 evidence quality
   - behavior persistence and panels extend Stage 3 rather than creating a separate analytics track
+  - Meta website attribution and Lead Ads intake extend Stage 3 acquisition visibility without creating a second dashboard or CRM
   - dev/build cache isolation protects delivery reliability across all active stages
 - Stage 4, Stage 5, and Stage 6 remain unchanged in scope and timing.
 
@@ -182,6 +219,10 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
 | S3-11 | Schema / ETL | Engineering | Implemented in repo, target DB validation pending | Confirm `growth_behavior_daily_metrics` is applied, fresh, and populated in the target environment |
 | S3-12 | Metric-builder | Engineering | Partially implemented, stabilization pending | Keep dashboard `funnelDiagnostics` on lifecycle `v1` until the combined behavior + lifecycle read path is validated as decision-safe |
 | S3-13 | UI | Engineering + Growth owner | Implemented in product, adoption pending | Make `ctaPerformance`, `contactIntent`, and `formHealth` mandatory CRO inputs in the next two weekly reviews |
+| S3-14 | Tracking | Engineering | Implemented in product, live validation pending | Confirm website Meta leads retain `fbclid`, `meta_fbc` or `meta_fbp`, and `meta_lead_source=website` on real post-click submissions |
+| S3-15 | Schema / ETL | Engineering | Implemented in repo, target DB validation pending | Confirm `meta_lead_ad_submissions`, `meta_lead_form_mappings`, and `meta_conversion_event_log` exist and are populated in the target environment |
+| S3-16 | Metric-builder | Engineering + Growth owner | Implemented in product, QA pending | Review `facebookReferral`, `metaAds`, `metaLeadAds`, and `dataHealth.meta` in the next weekly review and confirm the cohort split matches operator expectations |
+| S3-17 | Validation | Engineering + Growth owner | Open | Run `npm run growth:audit:meta`, validate one website Meta lead path plus one Lead Ads test submission, and log any mapping or CAPI issues before Stage 4 |
 
 ## Recommended Next Implementation
 
@@ -190,20 +231,26 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
 Priority order:
 
 1. Confirm `supabase/20260511_growth_behavior_tracking.sql` is applied in the target database.
-2. Run `npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30` and use its output as the default Stage 3 closeout evidence pack.
-3. Validate that these reporting artifacts exist and are populated for the active review window:
+2. Confirm `supabase/20260520_meta_lead_integration.sql` is applied in the target database.
+3. Run `npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30` and use its output as the default Stage 3 closeout evidence pack.
+4. Run `npm run growth:audit:meta` and attach its output alongside the Stage 3 closeout evidence pack.
+5. Validate that these reporting artifacts exist and are populated for the active review window:
    - `growth_query_daily_metrics`
    - `growth_landing_page_scores_daily`
    - `growth_behavior_daily_metrics`
    - `growth_funnel_daily_metrics`
-4. Validate live behavior capture on:
+   - `meta_lead_ad_submissions`
+   - `meta_conversion_event_log`
+6. Validate live behavior capture on:
    - `/contact`
    - `/devis`
    - `/entreprises`
    - service CTA blocks
    - article CTA blocks
-5. Validate joinability from behavior rows to lifecycle evidence through `ga_client_id`, landing page, and normalized attribution dimensions.
-6. Run two weekly growth reviews directly from:
+7. Validate website Meta lead capture using one Facebook or Instagram UTM + `fbclid` landing and confirm the lead keeps Meta identifiers.
+8. Validate one Meta Lead Ads test submission and confirm it appears in `meta_lead_ad_submissions` even if no mapping exists yet.
+9. Validate joinability from behavior rows to lifecycle evidence through `ga_client_id`, landing page, and normalized attribution dimensions.
+10. Run two weekly growth reviews directly from:
    - `seoQueries`
    - `contentOpportunities`
    - `landingPageScorecard`
@@ -211,17 +258,23 @@ Priority order:
    - `ctaPerformance`
    - `formHealth`
    - `contactIntent`
-7. Record threshold updates after each review:
+   - `acquisition.facebookReferral`
+   - `acquisition.metaAds`
+   - `acquisition.metaLeadAds`
+   - `dataHealth.meta`
+11. Record threshold updates after each review:
    - decay thresholds
    - CTR lift scoring
    - cannibalization detection
    - CTA drop-off thresholds
    - form-friction thresholds
    - contact-intent interpretation
-8. Hold a formal Stage 3 gate review using:
+   - Meta identifier coverage thresholds
+   - Lead Ads mapping / sync thresholds
+12. Hold a formal Stage 3 gate review using:
    - `assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md`
-9. Only after that sign-off, open Stage 4 experimentation work and Stage 5 alert calibration.
-10. Use `assist-vault/GROWTH_DASHBOARD_ALL_FUNNELS_ENHANCEMENT_PLAN.md` as the scoped follow-on once the controlled tests prove the terminal event path.
+13. Only after that sign-off, open Stage 4 experimentation work and Stage 5 alert calibration.
+14. Use `assist-vault/GROWTH_DASHBOARD_ALL_FUNNELS_ENHANCEMENT_PLAN.md` as the scoped follow-on once the controlled tests prove the terminal event path.
 
 ### Why Stage 3 closeout next
 
@@ -244,10 +297,10 @@ Priority order:
 
 ## Checkpoint Summary
 
-The program has completed the foundational architecture, the segmented decision layer, the first Stage 3 intelligence slice, and the first Stage 3 behavior slice.
+The program has completed the foundational architecture, the segmented decision layer, the first Stage 3 intelligence slice, the first Stage 3 behavior slice, and the Stage 3 Meta acquisition slice.
 
 - Stages shipped in product: Stage 1 and Stage 2
-- Stage 3 status: behavior layer shipped, closeout pending
+- Stage 3 status: behavior + Meta acquisition layers shipped, closeout pending
 - Stages documented and locked: Stage 0 through Stage 6
-- Highest-leverage next engineering move: validate the live behavior mart and close the Stage 3 gate
+- Highest-leverage next engineering move: validate the live behavior mart, Meta lead paths, and close the Stage 3 gate
 - Highest-leverage next operating move: run the next two weekly reviews from Stage 3 evidence and document any threshold changes before opening Stage 4

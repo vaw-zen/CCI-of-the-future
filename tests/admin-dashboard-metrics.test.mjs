@@ -33,6 +33,17 @@ function buildDevisRow(overrides = {}) {
     session_campaign: overrides.session_campaign || '(not set)',
     referrer_host: overrides.referrer_host || null,
     entry_path: overrides.entry_path || '/salon',
+    fbclid: overrides.fbclid || null,
+    meta_fbc: overrides.meta_fbc || null,
+    meta_fbp: overrides.meta_fbp || null,
+    meta_platform: overrides.meta_platform || null,
+    meta_lead_source: overrides.meta_lead_source || null,
+    meta_campaign_id: overrides.meta_campaign_id || null,
+    meta_adset_id: overrides.meta_adset_id || null,
+    meta_ad_id: overrides.meta_ad_id || null,
+    meta_leadgen_id: overrides.meta_leadgen_id || null,
+    meta_form_id: overrides.meta_form_id || null,
+    meta_page_id: overrides.meta_page_id || null,
     selected_services: overrides.selected_services || null,
     calculator_estimate: overrides.calculator_estimate || null,
     whatsapp_click_id: overrides.whatsapp_click_id || null,
@@ -65,6 +76,17 @@ function buildConventionRow(overrides = {}) {
     session_campaign: overrides.session_campaign || '(not set)',
     referrer_host: overrides.referrer_host || 'google.com',
     entry_path: overrides.entry_path || '/entreprises',
+    fbclid: overrides.fbclid || null,
+    meta_fbc: overrides.meta_fbc || null,
+    meta_fbp: overrides.meta_fbp || null,
+    meta_platform: overrides.meta_platform || null,
+    meta_lead_source: overrides.meta_lead_source || null,
+    meta_campaign_id: overrides.meta_campaign_id || null,
+    meta_adset_id: overrides.meta_adset_id || null,
+    meta_ad_id: overrides.meta_ad_id || null,
+    meta_leadgen_id: overrides.meta_leadgen_id || null,
+    meta_form_id: overrides.meta_form_id || null,
+    meta_page_id: overrides.meta_page_id || null,
     selected_services: overrides.selected_services || null,
     calculator_estimate: overrides.calculator_estimate || null,
     whatsapp_click_id: overrides.whatsapp_click_id || null,
@@ -1899,4 +1921,162 @@ test('section builders stay aligned with the full dashboard payload for the same
   assert.deepEqual(seoData.seoContent, fullData.seoContent);
 
   assert.deepEqual(operationsData.operations, fullData.operations);
+});
+
+test('normalizeLead preserves Meta attribution identifiers for website leads', () => {
+  const lead = normalizeLead(buildDevisRow({
+    session_source: 'facebook',
+    session_medium: 'cpc',
+    session_campaign: 'meta_ads_launch',
+    meta_platform: 'facebook',
+    meta_lead_source: 'website',
+    meta_fbc: 'fb.1.123.test-click',
+    meta_fbp: 'fb.1.123.browser',
+    meta_campaign_id: 'cmp_1',
+    meta_adset_id: 'adset_1',
+    meta_ad_id: 'ad_1'
+  }), 'devis', '2026-05-20T10:00:00.000Z');
+
+  assert.equal(lead.metaPlatform, 'facebook');
+  assert.equal(lead.metaLeadSource, 'website');
+  assert.equal(lead.metaFbc, 'fb.1.123.test-click');
+  assert.equal(lead.metaFbp, 'fb.1.123.browser');
+  assert.equal(lead.metaCampaignId, 'cmp_1');
+  assert.equal(lead.metaAdsetId, 'adset_1');
+  assert.equal(lead.metaAdId, 'ad_1');
+  assert.equal(lead.isMetaWebsiteLead, true);
+  assert.equal(lead.isMetaLeadAd, false);
+});
+
+test('acquisition section exposes separate Meta referral, paid website, and native lead-ad blocks', () => {
+  const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
+  const acquisitionData = buildAdminDashboardAcquisitionSectionData({
+    currentRows: {
+      devis: [
+        buildDevisRow({
+          id: 'meta-site-lead',
+          created_at: '2026-05-03T09:00:00.000Z',
+          landing_page: '/contact',
+          session_source: 'facebook',
+          session_medium: 'cpc',
+          session_campaign: 'meta_ads_launch',
+          meta_platform: 'facebook',
+          meta_lead_source: 'website',
+          meta_fbc: 'fb.1.123.test-click',
+          meta_adset_id: 'adset_1'
+        }),
+        buildDevisRow({
+          id: 'meta-referral-lead',
+          created_at: '2026-05-04T09:00:00.000Z',
+          landing_page: '/salon',
+          session_source: 'instagram',
+          session_medium: 'social',
+          session_campaign: 'organic_reel',
+          meta_platform: 'instagram',
+          meta_lead_source: 'website'
+        })
+      ],
+      conventions: [
+        buildConventionRow({
+          id: 'meta-lead-ad',
+          created_at: '2026-05-05T09:00:00.000Z',
+          secteur_activite: 'hotel',
+          services_souhaites: ['hotel'],
+          session_source: 'facebook',
+          session_medium: 'paid_social',
+          session_campaign: 'lead_ad_campaign',
+          meta_platform: 'facebook',
+          meta_lead_source: 'lead_ad',
+          meta_leadgen_id: 'leadgen_1',
+          meta_form_id: 'form_1'
+        })
+      ],
+      whatsapp: []
+    },
+    previousRows: { devis: [], conventions: [], whatsapp: [] },
+    universeRows: { devis: [], conventions: [], whatsapp: [] },
+    externalMetricRows: [
+      {
+        metric_date: '2026-05-03',
+        metric_source: 'social_manual',
+        source: 'facebook',
+        medium: 'cpc',
+        campaign: 'meta_ads_launch',
+        landing_page: '/contact',
+        normalized_source: 'facebook',
+        normalized_medium: 'cpc',
+        normalized_campaign: 'meta_ads_launch',
+        normalized_landing_page: '/contact',
+        source_class: 'paid_social',
+        page_type: 'contact',
+        sessions: 12,
+        users: 8,
+        events: 24,
+        clicks: 10,
+        impressions: 120,
+        spend: 45,
+        metadata: {}
+      },
+      {
+        metric_date: '2026-05-04',
+        metric_source: 'social_manual',
+        source: 'instagram',
+        medium: 'social',
+        campaign: 'organic_reel',
+        landing_page: '/salon',
+        normalized_source: 'instagram',
+        normalized_medium: 'social',
+        normalized_campaign: 'organic_reel',
+        normalized_landing_page: '/salon',
+        source_class: 'organic_social',
+        page_type: 'service',
+        sessions: 9,
+        users: 7,
+        events: 18,
+        clicks: 0,
+        impressions: 0,
+        spend: 0,
+        metadata: {}
+      }
+    ],
+    metaLeadAdRows: [
+      {
+        id: 'raw-meta-1',
+        lead_created_at: '2026-05-05T09:00:00.000Z',
+        synced_at: '2026-05-05T10:00:00.000Z',
+        meta_form_id: 'form_1',
+        meta_platform: 'facebook',
+        campaign_name: 'lead_ad_campaign',
+        mapping_status: 'mapped_created',
+        session_source: 'facebook',
+        session_medium: 'paid_social',
+        session_campaign: 'lead_ad_campaign'
+      }
+    ],
+    metaConversionEventRows: [
+      {
+        id: 'meta-log-1',
+        created_at: '2026-05-03T10:00:00.000Z',
+        send_status: 'sent',
+        response_summary: {}
+      }
+    ],
+    whatsappClickRows: [],
+    facebookSnapshot: null,
+    keywordCatalogRows: [],
+    keywordRankingRows: [],
+    sourceHealthRows: [],
+    auditEvents: [],
+    range: rangeResult.range,
+    nowIso: '2026-05-07T12:00:00.000Z'
+  });
+
+  assert.equal(acquisitionData.acquisition.facebookReferral.summary.sessions, 9);
+  assert.equal(acquisitionData.acquisition.facebookReferral.summary.leads, 1);
+  assert.equal(acquisitionData.acquisition.metaAds.summary.spend, 45);
+  assert.equal(acquisitionData.acquisition.metaAds.summary.leads, 1);
+  assert.equal(acquisitionData.acquisition.metaAds.summary.websiteLeadMatchRate, 100);
+  assert.equal(acquisitionData.acquisition.metaLeadAds.summary.newLeads, 1);
+  assert.equal(acquisitionData.acquisition.metaLeadAds.summary.qualifiedLeads, 0);
+  assert.equal(acquisitionData.acquisition.metaLeadAds.summary.unmappedFormsCount, 0);
 });

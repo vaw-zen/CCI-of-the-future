@@ -6,6 +6,12 @@ import {
   resolveCanonicalAttribution
 } from '../libs/attributionHygiene.mjs';
 import {
+  buildMetaAttributionFields,
+  deriveMetaFbc,
+  extractMetaQueryFields,
+  normalizeMetaPlatform
+} from '../libs/metaAttribution.mjs';
+import {
   SESSION_ATTRIBUTION_COOKIE_KEY,
   serializeSessionAttributionCookie
 } from '../libs/whatsappTracking.mjs';
@@ -221,6 +227,32 @@ export function inferSessionAttribution() {
     referrerHost,
     siteHost: currentHost
   });
+  const metaQueryFields = extractMetaQueryFields(urlParams);
+  const metaFields = buildMetaAttributionFields({
+    ...metaQueryFields,
+    meta_fbc: deriveMetaFbc({
+      fbclid: metaQueryFields.fbclid,
+      existingFbc: getCookieValue('_fbc'),
+      capturedAt: Date.now()
+    }),
+    meta_fbp: getCookieValue('_fbp'),
+    meta_platform: normalizeMetaPlatform(urlParams.get('meta_platform'), {
+      source: canonicalAttribution.source,
+      referrerHost
+    }),
+    meta_lead_source: normalizeMetaPlatform(urlParams.get('meta_platform'), {
+      source: canonicalAttribution.source,
+      referrerHost
+    }) ? 'website' : '',
+    captured_at: new Date().toISOString()
+  }, {
+    source: canonicalAttribution.source,
+    referrerHost,
+    fallbackLeadSource: normalizeMetaPlatform(urlParams.get('meta_platform'), {
+      source: canonicalAttribution.source,
+      referrerHost
+    }) ? 'website' : ''
+  });
 
   return sanitizePayload({
     source: canonicalAttribution.source,
@@ -231,6 +263,7 @@ export function inferSessionAttribution() {
     landing_page: normalizeAttributionPath(window.location.pathname, ATTRIBUTION_DEFAULTS.landingPage),
     landing_location: window.location.href,
     referrer_host: referrerHost || undefined,
+    ...metaFields,
     captured_at: new Date().toISOString()
   });
 }
@@ -242,6 +275,22 @@ function hasExplicitUtmAttribution() {
 
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.has('utm_source') || urlParams.has('utm_medium') || urlParams.has('utm_campaign');
+}
+
+function hasExplicitMetaAttribution() {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  return (
+    urlParams.has('fbclid')
+    || urlParams.has('meta_platform')
+    || urlParams.has('campaign_id')
+    || urlParams.has('adset_id')
+    || urlParams.has('ad_id')
+    || urlParams.has('utm_id')
+  );
 }
 
 function persistSessionAttributionCookie(value = {}) {
@@ -267,6 +316,7 @@ export function persistSessionAttribution() {
   const inferred = inferSessionAttribution();
   const shouldRefresh = !existing
     || hasExplicitUtmAttribution()
+    || hasExplicitMetaAttribution()
     || !existing.landing_page
     || !existing.source
     || !existing.medium;
@@ -354,6 +404,27 @@ export function getAnalyticsContext(additionalData = {}) {
     landingPage,
     { includeSearch: true }
   );
+  const metaFields = buildMetaAttributionFields({
+    fbclid: sessionAttribution.fbclid,
+    meta_fbc: sessionAttribution.meta_fbc || getCookieValue('_fbc'),
+    meta_fbp: sessionAttribution.meta_fbp || getCookieValue('_fbp'),
+    meta_platform: sessionAttribution.meta_platform,
+    meta_lead_source: sessionAttribution.meta_lead_source,
+    meta_campaign_id: sessionAttribution.meta_campaign_id,
+    meta_adset_id: sessionAttribution.meta_adset_id,
+    meta_ad_id: sessionAttribution.meta_ad_id,
+    meta_leadgen_id: sessionAttribution.meta_leadgen_id,
+    meta_form_id: sessionAttribution.meta_form_id,
+    meta_page_id: sessionAttribution.meta_page_id,
+    captured_at: sessionAttribution.captured_at || Date.now()
+  }, {
+    source: canonicalAttribution.source,
+    referrerHost,
+    fallbackLeadSource: normalizeMetaPlatform(sessionAttribution.meta_platform, {
+      source: canonicalAttribution.source,
+      referrerHost
+    }) ? 'website' : ''
+  });
 
   return sanitizePayload({
     ga_client_id: getGaClientId(),
@@ -367,6 +438,7 @@ export function getAnalyticsContext(additionalData = {}) {
     session_campaign: canonicalAttribution.campaign,
     referrer_host: referrerHost || undefined,
     entry_path: entryPath,
+    ...metaFields,
     ...additionalData
   });
 }

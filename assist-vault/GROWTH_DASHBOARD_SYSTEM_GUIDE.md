@@ -2,7 +2,7 @@
 
 Date: 2026-05-12
 
-This guide documents the full growth dashboard system that now powers `/admin/dashboard`. It covers the shipped dashboard UI, API contract, Supabase reporting model, keyword catalog flow, dual-device SERP tracking, attribution hygiene, the locked behavior-tracking roadmap layer, data-health behavior, and the admin auth stability fix that keeps admin pages usable during background session refreshes.
+This guide documents the full growth dashboard system that now powers `/admin/dashboard`. It covers the shipped dashboard UI, API contract, Supabase reporting model, keyword catalog flow, dual-device SERP tracking, attribution hygiene, the locked behavior-tracking roadmap layer, Meta acquisition and Lead Ads intake, data-health behavior, and the admin auth stability fix that keeps admin pages usable during background session refreshes.
 
 ## Scope
 
@@ -23,6 +23,7 @@ The completed work includes:
 - Adding normalized Supabase reporting views for acquisition and lead-dimension rollups
 - Adding the first Stage 3 growth intelligence layer with query-level Search Console persistence, content opportunities, landing-page scoring, and lifecycle funnel diagnostics
 - Persisting the Stage 3 behavior-tracking layer through `WEBSITE_BEHAVIOR_TRACKING_SCHEMA.md`, `growth_behavior_events`, and `growth_behavior_daily_metrics` so CTA, form, and contact-intent reporting extend Stage 3 instead of creating a second analytics system
+- Capturing first-party Meta identifiers on website leads, logging server-side Meta `Lead` sends, ingesting native Meta Lead Ads, and surfacing those cohorts inside the existing acquisition and data-health sections
 
 ## Core Files
 
@@ -34,18 +35,19 @@ The completed work includes:
 | Dashboard metric builders | `src/libs/adminDashboardMetrics.mjs` |
 | Behavior normalization and persistence | `src/libs/behaviorTracking.mjs`, `src/app/api/analytics/behavior/route.js` |
 | Attribution normalization and audit helpers | `src/libs/attributionHygiene.mjs` |
+| Meta attribution, Lead Ads, and CAPI helpers | `src/libs/metaAttribution.mjs`, `src/libs/metaLeadAds.mjs`, `src/libs/metaConversions.mjs`, `src/app/api/webhooks/meta/leadgen/route.js` |
 | Growth reporting connectors and sync logic | `src/libs/growthReporting.mjs` |
 | Keyword catalog normalization and import logic | `src/libs/growthKeywordCatalog.mjs` |
 | Lead schema compatibility helpers | `src/libs/leadTrackingSchemaCompat.mjs` |
 | Site inventory / valid target discovery | `src/libs/sitePathInventory.mjs` |
 | Admin auth stability | `src/hooks/useAdminAuth.js` |
 | Growth scripts | `scripts/growth/*` |
-| Growth SQL migrations | `supabase/20260506_growth_reporting.sql`, `supabase/20260506_growth_keyword_rankings.sql`, `supabase/20260506_growth_keyword_catalog.sql`, `supabase/20260509_stage1_lead_quality_dimensions.sql`, `supabase/20260509_stage3_growth_intelligence.sql`, `supabase/20260511_growth_behavior_tracking.sql` |
+| Growth SQL migrations | `supabase/20260506_growth_reporting.sql`, `supabase/20260506_growth_keyword_rankings.sql`, `supabase/20260506_growth_keyword_catalog.sql`, `supabase/20260509_stage1_lead_quality_dimensions.sql`, `supabase/20260509_stage3_growth_intelligence.sql`, `supabase/20260511_growth_behavior_tracking.sql`, `supabase/20260520_meta_lead_integration.sql` |
 | Consolidated schema | `supabase/schema.sql` |
 
 ## Supabase Model
 
-The growth dashboard is now backed by eight reporting tables plus six reporting views:
+The growth dashboard is now backed by eleven reporting tables plus six reporting views:
 
 | Table | Purpose |
 | --- | --- |
@@ -57,6 +59,9 @@ The growth dashboard is now backed by eight reporting tables plus six reporting 
 | `growth_keyword_rankings_daily` | Daily live SERP ranking snapshots per keyword, per device, linked back to the canonical catalog row |
 | `growth_query_daily_metrics` | Daily query-level Search Console rows linked to landing pages, clusters, business lines, services, and page types |
 | `growth_behavior_events` | Raw persisted CTA, form, contact-intent, and engagement events with canonical behavior context and `ga_client_id` when available |
+| `meta_lead_form_mappings` | Explicit mapping rules that decide whether a native Meta Lead Ad stays standalone or can be promoted into `devis_requests` / `convention_requests` |
+| `meta_lead_ad_submissions` | Raw Meta Lead Ads intake keyed by `meta_leadgen_id`, including mapping state, normalized attribution fields, and optional linked ops lead |
+| `meta_conversion_event_log` | Server-side Meta Conversions API log for website `Lead` sends, including send status and linked lead ids when available |
 | `growth_channel_daily_metrics_normalized` | Normalized source / medium / campaign / landing-page view with `source_class` and `page_type` ready for segmentation |
 | `growth_lead_reporting_dimensions` | Unified lead-dimension view across `devis_requests` and `convention_requests` including `business_line`, `lead_quality_outcome`, `lead_owner`, `follow_up_sla_at`, and `last_worked_at` |
 | `growth_keyword_clusters` | Active keyword catalog rollup view that maps keywords into reusable query/content clusters |
@@ -72,6 +77,7 @@ Apply these migrations in order on any new environment:
 4. `supabase/20260509_stage1_lead_quality_dimensions.sql`
 5. `supabase/20260509_stage3_growth_intelligence.sql`
 6. `supabase/20260511_growth_behavior_tracking.sql`
+7. `supabase/20260520_meta_lead_integration.sql`
 
 ## Dashboard API Contract
 
@@ -107,6 +113,14 @@ It now returns these top-level sections:
 
 The dashboard is intentionally PII-safe. It uses aggregates, keyword summaries, landing-page rollups, and safe drilldown rows rather than raw lead payloads.
 
+Current acquisition and health sub-blocks include:
+
+- `acquisition.facebook`
+- `acquisition.facebookReferral`
+- `acquisition.metaAds`
+- `acquisition.metaLeadAds`
+- `dataHealth.meta`
+
 Important Stage 2 scope note:
 
 - `device` currently scopes keyword visibility and ranking snapshots only
@@ -127,6 +141,35 @@ Use the audit command below to review attribution quality before weekly growth d
 - missing `landing_page`
 - missing `entry_path`
 - campaign naming drift
+
+## Meta Acquisition Layer
+
+Meta tracking is implemented inside the same growth operating system. It does not create a second dashboard, and native Lead Ads do not create a second CRM.
+
+The model is intentionally split into three cohorts:
+
+- `facebookReferral`: organic/social visits and leads from Facebook or Instagram links, posts, reels, stories, and profile traffic
+- `metaAds`: website visits and on-site leads from Meta paid campaigns
+- `metaLeadAds`: native Lead Ads submissions that may later be mapped into the main ops queues
+
+Current runtime behavior:
+
+- browser/session context stores `fbclid`, `meta_fbc`, `meta_fbp`, `meta_platform`, `meta_campaign_id`, `meta_adset_id`, and `meta_ad_id` when available
+- website lead routes persist those fields directly onto `devis_requests` and `convention_requests`
+- successful on-site lead submits generate a server-side Meta `Lead` payload and log the send into `meta_conversion_event_log`
+- native Lead Ads first land raw in `meta_lead_ad_submissions`
+- explicit `meta_lead_form_mappings` decide whether a Lead Ad can auto-create a normal ops lead or must remain in the intake queue
+
+Important v1 rules:
+
+- GTM/dataLayer remains the browser transport; no direct `fbq` calls are added in React components
+- paid vs organic is still driven by normalized `source` / `medium` and lead-source flags, not by `fbclid` alone
+- `acquisition.facebook` remains the content snapshot for posts and reels and is intentionally separate from referral and lead reporting
+
+Operational commands:
+
+- `npm run growth:audit:meta`
+- `npm run growth:import:meta-leads -- --since <date>`
 
 ## Behavior Tracking Layer
 
@@ -172,6 +215,8 @@ Stage 3 closeout note:
   - safe joins to lifecycle evidence
   - useful behavior panels under real filters
   - stable heuristics across two weekly reviews
+  - Meta identifier coverage on real website leads
+  - Meta Lead Ads sync and mapping stability
 
 ## Stage 3 Intelligence Layer
 
@@ -329,16 +374,32 @@ Required for the protected refresh route:
 
 Paid and social connectors are manual in this version. Populate them by importing CSV snapshots into `growth_channel_daily_metrics`.
 
+### Meta / Facebook
+
+Required for website lead feedback and Lead Ads intake:
+
+- `META_PIXEL_ID` or `FB_PIXEL_ID`
+- `META_CONVERSIONS_API_ACCESS_TOKEN`
+- `META_PAGE_ID` or `FB_PAGE_ID`
+- `META_PAGE_ACCESS_TOKEN` or `FB_PAGE_ACCESS_TOKEN`
+- `META_WEBHOOK_VERIFY_TOKEN`
+- optional: `META_TEST_EVENT_CODE`
+- optional: `META_API_VERSION`
+
+The website side uses first-party Meta identifiers captured on-site plus server-side `Lead` sends. Lead Ads intake can run through the webhook path or the fallback importer.
+
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
 | `npm run analytics:validate` | Validate analytics event wiring |
 | `npm run growth:audit:attribution -- --days 7` | Audit direct / unattributed rows, landing-page capture, and campaign naming hygiene |
+| `npm run growth:audit:meta` | Audit Meta website lead identifiers, Lead Ads intake freshness, and Conversions API health |
 | `npm run growth:refresh` | Refresh GA4 and GSC reporting snapshots together |
 | `npm run growth:import:ga4` | Import GA4 daily snapshots |
 | `npm run growth:import:gsc` | Import Search Console daily snapshots |
 | `npm run growth:import:csv -- <csvPath> <channelGroup> <metricSource>` | Import paid or social manual CSV snapshots |
+| `npm run growth:import:meta-leads -- --since <date>` | Backfill or gap-fill native Meta Lead Ads into the raw intake table |
 | `npm run growth:prepare:keyword-csv -- <csvPath>` | Clean keyword CSV, rebuild catalog, and upsert Supabase rows |
 | `npm run growth:prepare:keyword-csv -- <csvPath> --skip-supabase` | Dry-run keyword cleaning without writing to Supabase |
 | `npm run growth:import:serp` | Fetch live keyword rankings for active catalog rows on desktop and mobile |

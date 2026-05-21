@@ -33,6 +33,8 @@ const NORMALIZED_EXTERNAL_METRIC_VIEW_WARNINGS = new Set();
 const GROWTH_QUERY_METRIC_WARNINGS = new Set();
 const GROWTH_BEHAVIOR_METRIC_WARNINGS = new Set();
 const OPTIONAL_GROWTH_EVENTS_WARNINGS = new Set();
+const META_LEAD_AD_WARNINGS = new Set();
+const META_CONVERSION_WARNINGS = new Set();
 const DASHBOARD_SECTION_KEYS = ['core', 'overview', 'pipeline', 'acquisition', 'seo', 'operations'];
 
 const DASHBOARD_SELECT_FIELDS = {
@@ -55,6 +57,17 @@ const DASHBOARD_SELECT_FIELDS = {
     'session_campaign',
     'referrer_host',
     'entry_path',
+    'fbclid',
+    'meta_fbc',
+    'meta_fbp',
+    'meta_platform',
+    'meta_lead_source',
+    'meta_campaign_id',
+    'meta_adset_id',
+    'meta_ad_id',
+    'meta_leadgen_id',
+    'meta_form_id',
+    'meta_page_id',
     'selected_services',
     'whatsapp_click_id',
     'whatsapp_clicked_at',
@@ -84,6 +97,17 @@ const DASHBOARD_SELECT_FIELDS = {
     'session_campaign',
     'referrer_host',
     'entry_path',
+    'fbclid',
+    'meta_fbc',
+    'meta_fbp',
+    'meta_platform',
+    'meta_lead_source',
+    'meta_campaign_id',
+    'meta_adset_id',
+    'meta_ad_id',
+    'meta_leadgen_id',
+    'meta_form_id',
+    'meta_page_id',
     'selected_services',
     'whatsapp_click_id',
     'whatsapp_clicked_at',
@@ -251,6 +275,96 @@ async function fetchAuditEvents(supabase) {
   }
 
   return data || [];
+}
+
+async function fetchMetaLeadAdRows(supabase, range) {
+  const { data, error } = await supabase
+    .from('meta_lead_ad_submissions')
+    .select([
+      'id',
+      'created_at',
+      'updated_at',
+      'synced_at',
+      'lead_created_at',
+      'meta_leadgen_id',
+      'meta_form_id',
+      'meta_page_id',
+      'meta_platform',
+      'meta_campaign_id',
+      'meta_adset_id',
+      'meta_ad_id',
+      'campaign_name',
+      'adset_name',
+      'ad_name',
+      'contact_name',
+      'company_name',
+      'email',
+      'telephone',
+      'field_payload',
+      'mapping_status',
+      'mapped_lead_kind',
+      'mapped_lead_id',
+      'auto_created_at',
+      'last_error',
+      'session_source',
+      'session_medium',
+      'session_campaign'
+    ].join(','))
+    .gte('lead_created_at', range.fromIso)
+    .lte('lead_created_at', range.toIso)
+    .order('lead_created_at', { ascending: true });
+
+  if (error) {
+    if (!META_LEAD_AD_WARNINGS.has('meta_lead_ad_submissions')) {
+      META_LEAD_AD_WARNINGS.add('meta_lead_ad_submissions');
+      console.warn(`[admin][dashboard] meta_lead_ad_submissions unavailable: ${error.message}`);
+    }
+    return {
+      rows: [],
+      error
+    };
+  }
+
+  return {
+    rows: data || [],
+    error: null
+  };
+}
+
+async function fetchMetaConversionEventRows(supabase, range) {
+  const { data, error } = await supabase
+    .from('meta_conversion_event_log')
+    .select([
+      'id',
+      'created_at',
+      'event_id',
+      'event_name',
+      'lead_kind',
+      'lead_id',
+      'meta_fbc',
+      'meta_fbp',
+      'send_status',
+      'response_summary'
+    ].join(','))
+    .gte('created_at', range.fromIso)
+    .lte('created_at', range.toIso)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    if (!META_CONVERSION_WARNINGS.has('meta_conversion_event_log')) {
+      META_CONVERSION_WARNINGS.add('meta_conversion_event_log');
+      console.warn(`[admin][dashboard] meta_conversion_event_log unavailable: ${error.message}`);
+    }
+    return {
+      rows: [],
+      error
+    };
+  }
+
+  return {
+    rows: data || [],
+    error: null
+  };
 }
 
 async function fetchExternalMetricRows(supabase, range) {
@@ -648,7 +762,9 @@ function buildReportingWarnings({
   facebookSnapshot,
   keywordCatalogResult,
   keywordRankingResult,
-  sourceHealthResult
+  sourceHealthResult,
+  metaLeadAdResult,
+  metaConversionResult
 }) {
   return Array.from(new Set([
     ...(currentRowsResult?.warnings || []),
@@ -661,7 +777,9 @@ function buildReportingWarnings({
     ...((facebookSnapshot?.warnings || []).map((warning) => warning.key)),
     keywordCatalogResult?.error ? 'growth_keyword_catalog_unavailable' : null,
     keywordRankingResult?.error ? 'growth_keyword_rankings_daily_unavailable' : null,
-    sourceHealthResult?.error ? 'growth_reporting_source_health_unavailable' : null
+    sourceHealthResult?.error ? 'growth_reporting_source_health_unavailable' : null,
+    metaLeadAdResult?.error ? 'meta_lead_ad_submissions_unavailable' : null,
+    metaConversionResult?.error ? 'meta_conversion_event_log_unavailable' : null
   ].filter(Boolean)));
 }
 
@@ -731,6 +849,8 @@ export async function GET(request) {
         behaviorMetricsResult,
         whatsappClickResult,
         facebookSnapshot,
+        metaLeadAdResult,
+        metaConversionResult,
         keywordCatalogResult,
         keywordRankingResult,
         sourceHealthResult
@@ -744,6 +864,8 @@ export async function GET(request) {
         fetchBehaviorMetricRows(supabase, rangeResult.range),
         fetchWhatsAppClickRows(supabase, rangeResult.range),
         fetchFacebookAdminSnapshot(),
+        fetchMetaLeadAdRows(supabase, rangeResult.range),
+        fetchMetaConversionEventRows(supabase, rangeResult.range),
         fetchKeywordCatalogRows(supabase),
         fetchKeywordRankingRows(supabase, rangeResult.range),
         fetchGrowthSourceHealth(supabase)
@@ -757,6 +879,8 @@ export async function GET(request) {
         behaviorMetricsResult,
         whatsappClickResult,
         facebookSnapshot,
+        metaLeadAdResult,
+        metaConversionResult,
         keywordCatalogResult,
         keywordRankingResult,
         sourceHealthResult
@@ -770,6 +894,8 @@ export async function GET(request) {
         behaviorMetricRows: behaviorMetricsResult.rows,
         whatsappClickRows: whatsappClickResult.rows,
         facebookSnapshot,
+        metaLeadAdRows: metaLeadAdResult.rows,
+        metaConversionEventRows: metaConversionResult.rows,
         keywordCatalogRows: keywordCatalogResult.rows,
         keywordRankingRows: keywordRankingResult.rows,
         sourceHealthRows: sourceHealthResult.rows,
@@ -832,6 +958,12 @@ export async function GET(request) {
     const facebookSnapshotPromise = sectionSet.has('acquisition')
       ? fetchFacebookAdminSnapshot()
       : Promise.resolve(null);
+    const metaLeadAdPromise = (sectionSet.has('core') || sectionSet.has('acquisition'))
+      ? fetchMetaLeadAdRows(supabase, rangeResult.range)
+      : Promise.resolve(null);
+    const metaConversionPromise = (sectionSet.has('core') || sectionSet.has('acquisition'))
+      ? fetchMetaConversionEventRows(supabase, rangeResult.range)
+      : Promise.resolve(null);
     const keywordCatalogPromise = sectionSet.has('seo')
       ? fetchKeywordCatalogRows(supabase)
       : Promise.resolve(null);
@@ -852,6 +984,8 @@ export async function GET(request) {
       behaviorMetricsResult,
       whatsappClickResult,
       facebookSnapshot,
+      metaLeadAdResult,
+      metaConversionResult,
       keywordCatalogResult,
       keywordRankingResult,
       sourceHealthResult
@@ -865,6 +999,8 @@ export async function GET(request) {
       behaviorMetricsPromise,
       whatsappClickPromise,
       facebookSnapshotPromise,
+      metaLeadAdPromise,
+      metaConversionPromise,
       keywordCatalogPromise,
       keywordRankingPromise,
       sourceHealthPromise
@@ -878,6 +1014,8 @@ export async function GET(request) {
       behaviorMetricsResult,
       whatsappClickResult,
       facebookSnapshot,
+      metaLeadAdResult,
+      metaConversionResult,
       keywordCatalogResult,
       keywordRankingResult,
       sourceHealthResult
@@ -891,6 +1029,8 @@ export async function GET(request) {
       behaviorMetricRows: behaviorMetricsResult?.rows,
       whatsappClickRows: whatsappClickResult?.rows,
       facebookSnapshot,
+      metaLeadAdRows: metaLeadAdResult?.rows,
+      metaConversionEventRows: metaConversionResult?.rows,
       keywordCatalogRows: keywordCatalogResult?.rows,
       keywordRankingRows: keywordRankingResult?.rows,
       sourceHealthRows: sourceHealthResult?.rows,

@@ -17,11 +17,14 @@ import {
   LEAD_STATUSES
 } from '@/utils/leadLifecycle';
 import {
+  isMissingOptionalLeadTrackingColumnError,
   isMissingOptionalLeadOperationFieldError,
+  withoutOptionalLeadTrackingFields,
   withoutOptionalLeadOperationFields
 } from '@/libs/leadTrackingSchemaCompat.mjs';
 import { guardMutationRequest } from '@/libs/security';
 import { isStage3TestSubmission, STAGE3_TEST_MARKER } from '@/libs/stage3TestMarker.mjs';
+import { createMetaLeadEventId, sendMetaLeadConversion } from '@/libs/metaConversions.mjs';
 
 const CONVENTIONS_RATE_LIMIT = {
   scope: 'convention-submit',
@@ -257,17 +260,29 @@ export async function POST(request) {
     };
 
     // Save to Supabase
+    let insertPayload = conventionData;
     let { data: supabaseData, error: supabaseError } = await supabase
       .from('convention_requests')
-      .insert([conventionData])
+      .insert([insertPayload])
       .select()
       .single();
 
-    if (supabaseError && isMissingOptionalLeadOperationFieldError(supabaseError)) {
-      console.warn('[conventions] retrying insert without optional lead-operations columns:', supabaseError.message);
+    if (supabaseError && isMissingOptionalLeadTrackingColumnError(supabaseError)) {
+      console.warn('[conventions] retrying insert without optional tracking columns:', supabaseError.message);
+      insertPayload = withoutOptionalLeadTrackingFields(insertPayload);
       ({ data: supabaseData, error: supabaseError } = await supabase
         .from('convention_requests')
-        .insert([withoutOptionalLeadOperationFields(conventionData)])
+        .insert([insertPayload])
+        .select()
+        .single());
+    }
+
+    if (supabaseError && isMissingOptionalLeadOperationFieldError(supabaseError)) {
+      console.warn('[conventions] retrying insert without optional lead-operations columns:', supabaseError.message);
+      insertPayload = withoutOptionalLeadOperationFields(insertPayload);
+      ({ data: supabaseData, error: supabaseError } = await supabase
+        .from('convention_requests')
+        .insert([insertPayload])
         .select()
         .single());
     }
@@ -325,6 +340,15 @@ export async function POST(request) {
           services_count: Array.isArray(supabaseData?.services_souhaites) ? supabaseData.services_souhaites.length : requestedServices.length
         }
       })
+    });
+    const metaEventId = createMetaLeadEventId('convention_lead');
+    const metaConversionResult = await sendMetaLeadConversion({
+      supabase,
+      request,
+      leadKind: 'convention',
+      leadRecord: supabaseData,
+      analyticsContext,
+      eventId: metaEventId
     });
 
     // === Email sending (non-blocking — DB insert already succeeded) ===
@@ -584,6 +608,8 @@ export async function POST(request) {
         conventionSaved: true,
         conventionId: supabaseData.id,
         emailSent,
+        metaEventId,
+        metaConversionStatus: metaConversionResult.status,
         ...(emailError && { emailNote: 'Demande enregistrée, notification email en attente.' })
       },
     });

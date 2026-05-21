@@ -4,7 +4,18 @@ const OPTIONAL_LEAD_TRACKING_FIELDS = [
   'whatsapp_click_label',
   'whatsapp_click_page',
   'whatsapp_manual_tag',
-  'whatsapp_manual_tagged_at'
+  'whatsapp_manual_tagged_at',
+  'fbclid',
+  'meta_fbc',
+  'meta_fbp',
+  'meta_platform',
+  'meta_lead_source',
+  'meta_campaign_id',
+  'meta_adset_id',
+  'meta_ad_id',
+  'meta_leadgen_id',
+  'meta_form_id',
+  'meta_page_id'
 ];
 const OPTIONAL_LEAD_OPERATION_FIELDS = [
   'lead_quality_outcome',
@@ -25,6 +36,8 @@ const LEGACY_LEAD_SELECT_WARNINGS = new Set();
 
 const WHATSAPP_TRACKING_MIGRATION_HINT =
   'Apply supabase/20260507_whatsapp_funnel_attribution.sql to enable WhatsApp attribution fields.';
+const META_TRACKING_MIGRATION_HINT =
+  'Apply supabase/20260520_meta_lead_integration.sql to enable Meta attribution and Lead Ads fields.';
 const LEAD_OPERATIONS_MIGRATION_HINT =
   'Apply supabase/20260509_stage1_lead_quality_dimensions.sql to enable lead operations fields.';
 
@@ -64,8 +77,8 @@ function getOptionalLeadCompatWarning(error) {
 
   if (missingTrackingFields && missingOperationFields) {
     return {
-      summary: 'optional WhatsApp attribution and lead operations columns are missing.',
-      hint: `${WHATSAPP_TRACKING_MIGRATION_HINT} ${LEAD_OPERATIONS_MIGRATION_HINT}`
+      summary: 'optional attribution tracking and lead operations columns are missing.',
+      hint: `${WHATSAPP_TRACKING_MIGRATION_HINT} ${META_TRACKING_MIGRATION_HINT} ${LEAD_OPERATIONS_MIGRATION_HINT}`
     };
   }
 
@@ -77,8 +90,8 @@ function getOptionalLeadCompatWarning(error) {
   }
 
   return {
-    summary: 'optional WhatsApp tracking columns are missing.',
-    hint: WHATSAPP_TRACKING_MIGRATION_HINT
+    summary: 'optional attribution tracking columns are missing.',
+    hint: `${WHATSAPP_TRACKING_MIGRATION_HINT} ${META_TRACKING_MIGRATION_HINT}`
   };
 }
 
@@ -142,5 +155,6 @@ export {
   OPTIONAL_LEAD_TRACKING_FIELDS,
   OPTIONAL_LEAD_OPERATION_FIELDS,
   LEAD_OPERATIONS_MIGRATION_HINT,
+  META_TRACKING_MIGRATION_HINT,
   WHATSAPP_TRACKING_MIGRATION_HINT
 };

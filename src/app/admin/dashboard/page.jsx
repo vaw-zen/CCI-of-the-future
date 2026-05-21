@@ -1263,6 +1263,25 @@ function AcquisitionSection({ dashboardData }) {
   const acquisitionCards = dashboardData.acquisition.cards || [];
   const whatsappData = dashboardData.acquisition.whatsapp;
   const facebookData = dashboardData.acquisition.facebook;
+  const facebookReferralData = dashboardData.acquisition.facebookReferral || {
+    summary: {},
+    topLandingPages: [],
+    topCampaigns: [],
+    notes: {}
+  };
+  const metaAdsData = dashboardData.acquisition.metaAds || {
+    summary: {},
+    topCampaigns: [],
+    topAdsets: [],
+    notes: {}
+  };
+  const metaLeadAdsData = dashboardData.acquisition.metaLeadAds || {
+    summary: {},
+    topForms: [],
+    topCampaigns: [],
+    notes: {}
+  };
+  const metaHealth = dashboardData.dataHealth?.meta;
   const whatsappSourceUnavailable = dashboardData.diagnostics?.reportingWarnings?.includes('whatsapp_click_events_unavailable');
   const whatsappDirectLeadSourceUnavailable = dashboardData.diagnostics?.reportingWarnings?.includes('whatsapp_direct_leads_unavailable');
 
@@ -1314,6 +1333,257 @@ function AcquisitionSection({ dashboardData }) {
                 { label: 'CTR', value: formatPercent(row.ctr) },
                 { label: 'Spend', value: formatCurrency(row.spend) },
                 { label: 'CPA', value: row.costPerAcquisition === null ? 'N/A' : formatCurrency(row.costPerAcquisition) }
+              ]} />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>Facebook / Instagram referrals</h2>
+          <p className={styles.inlineNote}>{facebookReferralData.notes.basis}</p>
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(facebookReferralData.summary.sessions)}</strong>
+              <span>Sessions</span>
+            </div>
+            <div>
+              <strong>{formatNumber(facebookReferralData.summary.events)}</strong>
+              <span>Events</span>
+            </div>
+            <div>
+              <strong>{formatNumber(facebookReferralData.summary.leads)}</strong>
+              <span>Leads</span>
+            </div>
+            <div>
+              <strong>{formatNumber(facebookReferralData.summary.qualifiedLeads)}</strong>
+              <span>Qualifiés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(facebookReferralData.summary.wins)}</strong>
+              <span>Gagnés</span>
+            </div>
+          </div>
+        </div>
+
+        <MetricListPanel
+          title="Top landing pages Meta referrals"
+          note={facebookReferralData.notes.basis}
+          rows={facebookReferralData.topLandingPages}
+          emptyText="Aucune landing page Meta referral sur la période."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.leads} leads, {row.qualifiedLeads} qualifiés</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Sessions', value: formatNumber(row.sessions) },
+                { label: 'Events', value: formatNumber(row.events) },
+                { label: 'Wins', value: formatNumber(row.wonLeads) }
+              ]} />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>Meta paid website leads</h2>
+          <p className={styles.inlineNote}>{metaAdsData.notes.basis}</p>
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatCurrency(metaAdsData.summary.spend)}</strong>
+              <span>Spend</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaAdsData.summary.clicks)}</strong>
+              <span>Clicks</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaAdsData.summary.sessions)}</strong>
+              <span>Sessions</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaAdsData.summary.leads)}</strong>
+              <span>Leads</span>
+            </div>
+            <div>
+              <strong>{metaAdsData.summary.costPerLead === null ? 'N/A' : formatCurrency(metaAdsData.summary.costPerLead)}</strong>
+              <span>CPL</span>
+            </div>
+            <div>
+              <strong>{formatPercent(metaAdsData.summary.websiteLeadMatchRate)}</strong>
+              <span>Lead match rate</span>
+            </div>
+          </div>
+        </div>
+
+        <MetricListPanel
+          title="Top campaigns Meta ads"
+          note={metaAdsData.notes.basis}
+          rows={metaAdsData.topCampaigns}
+          emptyText="Aucune campagne Meta paid sur la période."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.leads} leads, {row.qualifiedLeads} qualifiés, {row.wonLeads} gagnés</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Spend', value: formatCurrency(row.spend) },
+                { label: 'Clicks', value: formatNumber(row.clicks) },
+                { label: 'Sessions', value: formatNumber(row.sessions) },
+                { label: 'CPL', value: row.costPerLead === null ? 'N/A' : formatCurrency(row.costPerLead) }
+              ]} />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <MetricListPanel
+          title="Top Meta ad sets"
+          note={metaAdsData.notes.basis}
+          rows={metaAdsData.topAdsets}
+          emptyText="Aucun ad set Meta encore lié à des leads site."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.platform}</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Leads', value: formatNumber(row.leads) },
+                { label: 'Qualifiés', value: formatNumber(row.qualifiedLeads) },
+                { label: 'Wins', value: formatNumber(row.wonLeads) }
+              ]} />
+            </div>
+          )}
+        />
+
+        <div className={styles.panel}>
+          <h2>Meta data health</h2>
+          <p className={styles.inlineNote}>
+            {metaHealth?.notes?.staleLeadSync || 'Aucune donnée Meta health disponible.'}
+          </p>
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(metaHealth?.summary?.websiteMetaLeads || 0)}</strong>
+              <span>Leads site Meta</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaHealth?.summary?.missingIdentifierCount || 0)}</strong>
+              <span>IDs manquants</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaHealth?.summary?.browserServerMismatchCount || 0)}</strong>
+              <span>Mismatches Lead</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaHealth?.summary?.failedSendCount || 0)}</strong>
+              <span>Échecs CAPI</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaHealth?.summary?.unmappedFormsCount || 0)}</strong>
+              <span>Forms non mappés</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <div className={styles.panel}>
+          <h2>Meta Lead Ads intake</h2>
+          <p className={styles.inlineNote}>{metaLeadAdsData.notes.basis}</p>
+          <div className={styles.miniStats}>
+            <div>
+              <strong>{formatNumber(metaLeadAdsData.summary.newLeads)}</strong>
+              <span>Nouveaux leads</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaLeadAdsData.summary.unworkedLeads)}</strong>
+              <span>Non travaillés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaLeadAdsData.summary.contactedLeads)}</strong>
+              <span>Contactés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaLeadAdsData.summary.qualifiedLeads)}</strong>
+              <span>Qualifiés</span>
+            </div>
+            <div>
+              <strong>{formatNumber(metaLeadAdsData.summary.wins)}</strong>
+              <span>Gagnés</span>
+            </div>
+            <div>
+              <strong>{metaLeadAdsData.summary.medianFirstTouchSlaHours === null ? 'N/A' : formatHours(metaLeadAdsData.summary.medianFirstTouchSlaHours)}</strong>
+              <span>SLA médian</span>
+            </div>
+          </div>
+          <p className={styles.mutedText}>
+            {formatNumber(metaLeadAdsData.summary.unmappedFormsCount)} formulaires Meta Lead Ads restent sans mapping explicite.
+          </p>
+        </div>
+
+        <MetricListPanel
+          title="Top Lead Ads forms"
+          note={metaLeadAdsData.notes.basis}
+          rows={metaLeadAdsData.topForms}
+          emptyText="Aucun formulaire Meta Lead Ads sur la période."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.campaignLabel}</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Nouveaux', value: formatNumber(row.newLeads) },
+                { label: 'Créés', value: formatNumber(row.mappedCreated) },
+                { label: 'Non mappés', value: formatNumber(row.unmapped) }
+              ]} />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className={styles.dashboardGrid}>
+        <MetricListPanel
+          title="Top campaigns Meta Lead Ads"
+          note={metaLeadAdsData.notes.basis}
+          rows={metaLeadAdsData.topCampaigns}
+          emptyText="Aucune campagne Lead Ads Meta sur la période."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.newLeads} leads intake</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Créés', value: formatNumber(row.mappedCreated) },
+                { label: 'En attente', value: formatNumber(row.pending) }
+              ]} />
+            </div>
+          )}
+        />
+
+        <MetricListPanel
+          title="Top campaigns Meta referrals"
+          note={facebookReferralData.notes.basis}
+          rows={facebookReferralData.topCampaigns}
+          emptyText="Aucune campagne referral Meta sur la période."
+          renderRow={(row) => (
+            <div key={row.key} className={styles.metricRow}>
+              <div>
+                <strong>{row.label}</strong>
+                <span>{row.leads} leads, {row.qualifiedLeads} qualifiés</span>
+              </div>
+              <MetricBadges items={[
+                { label: 'Sessions', value: formatNumber(row.sessions) },
+                { label: 'Events', value: formatNumber(row.events) },
+                { label: 'Wins', value: formatNumber(row.wonLeads) }
               ]} />
             </div>
           )}

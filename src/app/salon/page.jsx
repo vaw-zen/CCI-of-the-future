@@ -15,7 +15,6 @@ import salonData from "./salon.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
 import { trackServiceInteraction, SERVICE_TYPES } from '@/utils/analytics';
-import { trackViewContent } from '@/utils/facebook-pixel-helper';
 
 // Metadata is now in layout.jsx (server component) - this page is client for analytics
 
@@ -29,8 +28,6 @@ export default function Page() {
     trackServiceInteraction(SERVICE_TYPES.SALON, 'view_service_page', {
       page_title: salonData.metadata.title
     });
-    // Facebook Pixel ViewContent for retargeting
-    trackViewContent('service_page', 'Nettoyage Salon', 'salon');
   }, []);
 
   return (
@@ -40,7 +37,7 @@ export default function Page() {
         @media (max-width: 900px) { .responsive-padding { padding: 60px 0px; } }
         @media (max-width: 600px) { .responsive-padding { padding: 0px 0px; } }
       `}</style>
-      <HeroHeader title={salonData.heroTitle} />
+      <HeroHeader title={salonData.heroTitle} subtitle={salonData.heroSubtitle} />
       <script type="application/ld+json">{JSON.stringify(salonData.serviceJSONLD)}</script>
       <main className="responsive-padding">
         {salonData.sections.localProof && (

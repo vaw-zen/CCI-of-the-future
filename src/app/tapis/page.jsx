@@ -15,7 +15,6 @@ import tapisData from "./tapis.json";
 import { useScrollTracking } from '@/hooks/useScrollTracking';
 import { useTimeTracking } from '@/hooks/useTimeTracking';
 import { trackServiceInteraction, SERVICE_TYPES } from '@/utils/analytics';
-import { trackViewContent } from '@/utils/facebook-pixel-helper';
 
 // Metadata is now in layout.jsx (server component) - this page is client for analytics
 
@@ -29,8 +28,6 @@ export default function Page() {
     trackServiceInteraction(SERVICE_TYPES.TAPIS, 'view_service_page', {
       page_title: tapisData.metadata.title
     });
-    // Facebook Pixel ViewContent for retargeting
-    trackViewContent('service_page', 'Nettoyage Moquette Tunis', 'tapis');
   }, []);
 
   return (
@@ -50,7 +47,7 @@ export default function Page() {
           }
         }
       `}</style>
-      <HeroHeader title={tapisData.heroTitle} />
+      <HeroHeader title={tapisData.heroTitle} subtitle={tapisData.heroSubtitle} />
       <script type="application/ld+json">{JSON.stringify(tapisData.serviceJSONLD)}</script>
       <main className="responsive-padding">
         {tapisData.sections.localProof && (

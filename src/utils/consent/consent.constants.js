@@ -7,3 +7,11 @@ export const OPEN_COOKIE_PREFERENCES_EVENT = 'cci:cookie-preferences-open';
 
 export const GTM_CONTAINER_ID = process.env.NEXT_PUBLIC_GTM_ID || '';
 export const GTM_LOADER_ID = 'gtm-loader';
+export const GA_MEASUREMENT_ID =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ||
+  process.env.GA_MEASUREMENT_ID ||
+  '';
+export const GOOGLE_ADS_ID =
+  process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ||
+  process.env.GOOGLE_ADS_ID ||
+  '';

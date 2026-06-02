@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Tapisserie Sur Mesure Tunis & El Aouina - Retapissage | CCI Tunisie",
-    "description": "CCI Tunisie - Tapisserie sur mesure Tunis & El Aouina : retapissage, rembourrage canapés, tissus ignifuges. Devis gratuit ☎ 98-557-766",
+    "title": "Tapissier Tunis & Tapisserie Sur Mesure | Retapissage, Rembourrage | CCI Tunisie",
+    "description": "Tapissier à Tunis et El Aouina : retapissage, rembourrage canapés, changement mousse et tissus ignifuges. Devis gratuit CCI Tunisie.",
     "keywords": [
       "tapisserie sur mesure tunis",
       "retapissage",
@@ -14,7 +14,8 @@
       "services tapisserie tunisie"
     ]
   },
-  "heroTitle": "Tapisserie Sur Mesure - CCI Tunisie",
+  "heroTitle": "Tapissier Tunis : Tapisserie Sur Mesure & Retapissage",
+  "heroSubtitle": "Retapissage, rembourrage, changement mousse et confection sur mesure à Tunis, El Aouina et dans le Grand Tunis.",
   "tabData": [
     {
       "id": "mission",
@@ -97,8 +98,8 @@
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": "https://cciservices.online/tapisserie",
-    "name": "Tapisserie Sur Mesure Tunis - CCI Tunisie",
-    "description": "CCI Tunisie - Retapissage, remplacement mousse, rembourrage et tissus ignifuges à Tunis. Solutions sur mesure mobiliers, bateaux et yachts. CCI Tunis : Expert tapisserie.",
+    "name": "Tapissier Tunis - Tapisserie Sur Mesure & Retapissage | CCI Tunisie",
+    "description": "CCI Tunisie assure le retapissage, le remplacement de mousse, le rembourrage et la tapisserie sur mesure à Tunis. Solutions pour mobilier résidentiel, professionnel, bateaux et yachts.",
     "url": "https://cciservices.online/tapisserie",
     "areaServed": [
       { "@type": "City", "name": "Tunis" },

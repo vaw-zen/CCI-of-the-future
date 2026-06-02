@@ -82,7 +82,7 @@ export default function ConseilsPage() {
       <ServiceDetails 
         title={"Découvrez nos articles et guides d'expert"} 
         text={"Plongez dans nos conseils professionnels pour le nettoyage de tapis, le ponçage de marbre et le retapissage de salons. Des astuces pratiques, des tutoriels détaillés et des recommandations d'entretien pour prolonger la vie de vos biens. Tout ce que vous devez savoir sur le nettoyage et la rénovation à Tunis. Techniques professionnelles, tarifs 2025 et astuces d'entretien."} 
-        image={"/home/cleaning-tunis.jpg"} 
+        image={"/home/1-hero/main.webp"} 
         imageAlt={"Conseils nettoyage professionnel Tunis"} 
       />
       

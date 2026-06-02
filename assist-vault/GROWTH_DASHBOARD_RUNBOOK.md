@@ -72,8 +72,10 @@ Date: 2026-05-12
 ## Weekly Monday Review
 
 - Use [GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_WEEKLY_REVIEW_TEMPLATE.md) as the default meeting format.
+- Use [GROWTH_DASHBOARD_ORGANIC_SEARCH_REVIEW_PLAYBOOK.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_ORGANIC_SEARCH_REVIEW_PLAYBOOK.md) as the default workflow for the organic-search and SEO portion of the review.
 - Use [GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_SPRINT_SELECTION_WORKFLOW.md) to choose the weekly SEO refresh and CRO sprint candidates.
 - Use [GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md) to record Stage 3 validation status and gate evidence.
+- Use [GROWTH_DASHBOARD_STAGE3_CONTROLLED_TEST_MATRIX.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CONTROLLED_TEST_MATRIX.md) when the audit still shows zero terminal outcomes or zero controlled post-baseline leads.
 - Order of review:
   - Data health first
   - Attribution audit second
@@ -85,6 +87,7 @@ Date: 2026-05-12
   - 3 KPIs that moved
   - 3 suspected causes
   - 3 actions with owners and due dates
+  - One explicit paid-marketing decision: `not needed yet`, `test later`, or `launch pilot`
   - Every action references a dashboard segment or taxonomy slice, not only a top-line total
   - Attribution review is marked `trusted`, `trusted with caveats`, or `not decision-safe`
   - The selected SEO refresh and CRO sprint candidates each reference at least one Stage 3 evidence panel
@@ -134,6 +137,7 @@ Use this section to formally close Stage 3 and open Stage 4.
    - `/entreprises`
    - service CTA blocks
    - article CTA blocks
+   - use [GROWTH_DASHBOARD_STAGE3_CONTROLLED_TEST_MATRIX.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CONTROLLED_TEST_MATRIX.md) if terminal funnel evidence is still missing
 5. Validate joinability between behavior events and lead outcomes using `ga_client_id`, landing page, and normalized attribution dimensions.
 6. Run two weekly reviews using the Stage 3 template and selection workflow, and record any threshold changes after each review.
 7. Hold a formal gate review using [GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md).

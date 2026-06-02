@@ -41,7 +41,8 @@ Follow this order every week:
 11. `Contact intent`
 12. `Acquisition sources / campaigns`
 13. `Operations / stale queue / SLA`
-14. `Actions and sprint candidates`
+14. `Paid campaign decision`
+15. `Actions and sprint candidates`
 
 ## Evidence Capture
 
@@ -91,6 +92,12 @@ Answer these every week:
 - Is the bottleneck traffic, conversion, or lead quality?
 - Does the page belong in SEO refresh, CRO sprint, or both?
 
+### Paid campaign decision
+
+- Is paid currently blocked by attribution, CRO, or thin-volume evidence?
+- If not blocked, is there proven commercial demand that SEO still cannot capture fast enough?
+- Should the answer this week be `not needed yet`, `test later`, or `launch pilot`?
+
 ### Funnel diagnostics
 
 - Which segment has the worst drop-off?
@@ -124,8 +131,9 @@ Leave the meeting with:
 3. 3 actions with owners and due dates
 4. 1 SEO refresh candidate
 5. 1 CRO sprint candidate
-6. 1 issue explicitly deferred with a reason
-7. Any threshold or heuristic changes recorded explicitly
+6. 1 paid-marketing decision recorded explicitly
+7. 1 issue explicitly deferred with a reason
+8. Any threshold or heuristic changes recorded explicitly
 
 ## Action Log Template
 

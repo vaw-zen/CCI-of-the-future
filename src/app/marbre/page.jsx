@@ -47,7 +47,7 @@ export default function Page() {
           }
         }
       `}</style>
-      <HeroHeader title={marbreData.heroTitle} />
+      <HeroHeader title={marbreData.heroTitle} subtitle={marbreData.heroSubtitle} />
       <script type="application/ld+json">{JSON.stringify(marbreData.serviceJSONLD)}</script>
       <main className="responsive-padding">
         <ServiceDetails

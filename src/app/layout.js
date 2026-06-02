@@ -1,3 +1,4 @@
+import { DM_Sans, Roboto_Condensed } from 'next/font/google';
 import "./globals.css";
 import Script from 'next/script';
 import { Suspense } from 'react';
@@ -7,8 +8,26 @@ import ClientHeader from '@/layout/header/ClientHeader';
 import HydrationSuppressor from '@/utils/HydrationSuppressor';
 import Footer from '@/layout/footer/footer';
 import CookieBanner from '@/utils/components/cookieBanner/cookieBanner';
+import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID } from '@/utils/consent/consent.constants';
 
-const APP_HEADER_FONT_CLASS = 'appCondensed';
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  display: 'optional',
+  weight: ['400', '500', '600', '700'],
+  preload: true,
+  fallback: ['system-ui', 'arial'],
+  adjustFontFallback: true,
+});
+
+const roboto = Roboto_Condensed({
+  subsets: ['latin'],
+  display: 'optional',
+  weight: ['400'],
+  preload: true,
+  fallback: ['sans-serif'],
+  adjustFontFallback: true,
+});
 
 export const metadata = {
   title: "CCI Services — Leader du Nettoyage Professionnel en Tunisie | Moquettes, Salons & Marbre",
@@ -55,34 +74,42 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://cciservices.online';
-  const SITE_NAME = "CCI Services";
-  const SITE_LOGO = `${SITE_URL}/logo.png`;
-  const GA_MEASUREMENT_ID =
-    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.GA4_MEASUREMENT_ID || '';
+  const SITE_NAME = "CCI"; // or "Chaabane's Cleaning Intelligence"
+  const SITE_LOGO = `${SITE_URL}/home/1-hero/main.webp`;
+  const analyticsDisableFlags = [
+    GA_MEASUREMENT_ID
+      ? `window['ga-disable-${GA_MEASUREMENT_ID}'] = true;`
+      : '',
+    GOOGLE_ADS_ID
+      ? `window['ga-disable-${GOOGLE_ADS_ID}'] = true;`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
 
+  // WebSite schema with SearchAction
   const websiteJSONLD = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": `${SITE_URL}#website`,
     "name": SITE_NAME,
     "url": SITE_URL,
-    "publisher": {
-      "@id": `${SITE_URL}#localbusiness`
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${SITE_URL}/?s={search_term_string}`,
+      "query-input": "required name=search_term_string"
     }
   };
 
+  // LocalBusiness schema
   const localBusinessJSONLD = {
     "@id": `${SITE_URL}#localbusiness`,
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "CCI Services - Chaabane's Cleaning Intelligence",
-    "alternateName": ["CCI Tunis", "CCI Services Tunisie", "CCI Tunisie"],
-    "description": "Entreprise de nettoyage professionnel a Tunis specialisee dans le nettoyage de moquettes, salons, marbre et conventions de nettoyage pour entreprises.",
+    "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
+    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
     "url": SITE_URL,
     "logo": SITE_LOGO,
-    "image": SITE_LOGO,
     "telephone": "+216-98-557-766",
-    "priceRange": "$$",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "06 Rue Galant de nuit, El Aouina",
@@ -110,12 +137,6 @@ export default function RootLayout({ children }) {
         "closes": "18:00"
       }
     ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5.0",
-      "reviewCount": "4",
-      "bestRating": "5"
-    },
     "sameAs": [
       "https://www.facebook.com/Chaabanes.Cleaning.Intelligence/",
       "https://www.instagram.com/cci.services/",
@@ -123,7 +144,7 @@ export default function RootLayout({ children }) {
     ]
   };
   return (
-    <html lang="fr-TN" className="appSans" suppressHydrationWarning>
+    <html lang="fr-TN" className={dmSans.className} suppressHydrationWarning>
       <head>
         <HydrationSuppressor />
         <Script
@@ -132,14 +153,25 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
+              window.__cciConsentGranted = false;
               window.gtag = window.gtag || function gtag() {
-                window.dataLayer.push(arguments);
+                var args = Array.prototype.slice.call(arguments);
+                var command = args[0];
+                if (command === 'consent') {
+                  window.dataLayer.push(args);
+                  return;
+                }
+                if (window.__cciConsentGranted) {
+                  window.dataLayer.push(args);
+                }
               };
+              ${analyticsDisableFlags}
               window.gtag('consent', 'default', {
-                analytics_storage: 'granted',
-                ad_storage: 'granted',
-                ad_user_data: 'granted',
-                ad_personalization: 'granted'
+                analytics_storage: 'denied',
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied',
+                wait_for_update: 500
               });
             `
           }}
@@ -177,13 +209,13 @@ export default function RootLayout({ children }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJSONLD) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJSONLD) }} />
       </head>
+      <Initializer />
       <body suppressHydrationWarning>
-        <Initializer />
         <Suspense fallback={null}>
-          <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+          <GoogleAnalytics />
         </Suspense>
       
-        <ClientHeader robotoClassName={APP_HEADER_FONT_CLASS} />
+        <ClientHeader roboto={roboto} />
         {children}
         <Footer />
         <CookieBanner />

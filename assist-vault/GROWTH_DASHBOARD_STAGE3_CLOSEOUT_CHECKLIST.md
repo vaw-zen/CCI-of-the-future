@@ -29,6 +29,7 @@ Complete these before starting the closeout window:
    - `npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30`
 4. Lock the review window that will be used for both weekly reviews.
 5. Confirm Growth owner and Admin ops know the next two weekly reviews are part of the Stage 3 gate, not ordinary status meetings.
+6. If terminal outcomes are still zero, prepare the exact checks in [GROWTH_DASHBOARD_STAGE3_CONTROLLED_TEST_MATRIX.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CONTROLLED_TEST_MATRIX.md).
 
 ## Baseline Lock
 
@@ -143,6 +144,20 @@ SELECT
       AND landing_page_matches = 0
   ) AS unmatched_leads
 FROM lead_matches;
+```
+
+## Controlled Test Fallback
+
+If the audit still shows:
+
+- `submit_success = 0`
+- `form_validation_failed = 0`
+- controlled post-baseline leads = `0`
+
+run the exact six checks in [GROWTH_DASHBOARD_STAGE3_CONTROLLED_TEST_MATRIX.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CONTROLLED_TEST_MATRIX.md), then rerun:
+
+```bash
+npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30
 ```
 
 ## Live Capture Validation Matrix

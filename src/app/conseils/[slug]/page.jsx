@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getArticleBySlug, getAllArticles } from '../data/articles.js';
+import { getArticleView } from '../articleOverrides.mjs';
 import styles from './article.module.css';
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
 import RelatedServices from '@/utils/components/relatedServices/relatedServices';
@@ -16,7 +17,7 @@ import {
 // Générer les métadonnées pour chaque article
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
-  const article = getArticleBySlug(resolvedParams.slug);
+  const article = getArticleView(getArticleBySlug(resolvedParams.slug));
   
   if (!article) {
     return {
@@ -81,7 +82,7 @@ export async function generateStaticParams() {
 
 export default async function ArticlePage({ params }) {
   const resolvedParams = await params;
-  const article = getArticleBySlug(resolvedParams.slug);
+  const article = getArticleView(getArticleBySlug(resolvedParams.slug));
 
   if (!article) {
     notFound();

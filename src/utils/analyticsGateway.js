@@ -11,6 +11,7 @@ import {
   extractMetaQueryFields,
   normalizeMetaPlatform
 } from '../libs/metaAttribution.mjs';
+import { buildMetaPixelTrackCall } from '../libs/metaPixelBridge.mjs';
 import {
   SESSION_ATTRIBUTION_COOKIE_KEY,
   serializeSessionAttributionCookie
@@ -462,6 +463,37 @@ function pushToGoogleAnalytics(name, payload) {
   return true;
 }
 
+function pushToMetaPixel(name, payload) {
+  if (typeof window === 'undefined' || typeof window.fbq !== 'function') {
+    return false;
+  }
+
+  const trackCall = buildMetaPixelTrackCall(name, payload);
+  if (!trackCall) {
+    return false;
+  }
+
+  try {
+    if (trackCall.options && trackCall.params) {
+      window.fbq(trackCall.method, trackCall.eventName, trackCall.params, trackCall.options);
+      return true;
+    }
+
+    if (trackCall.params) {
+      window.fbq(trackCall.method, trackCall.eventName, trackCall.params);
+      return true;
+    }
+
+    window.fbq(trackCall.method, trackCall.eventName);
+    return true;
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(`[analytics] Meta Pixel delivery failed for "${name}"`, error);
+    }
+    return false;
+  }
+}
+
 function persistBehaviorEvent(name, payload) {
   if (
     typeof window === 'undefined'
@@ -508,6 +540,7 @@ export function pushAnalyticsEvent(name, payload = {}) {
   }
 
   const sanitizedPayload = sanitizePayload(payload);
+  const sentToMetaPixel = pushToMetaPixel(name, sanitizedPayload);
   const sentToGoogleAnalytics = pushToGoogleAnalytics(name, sanitizedPayload);
   const sentToDataLayer = pushToDataLayer({
     event: name,
@@ -516,7 +549,7 @@ export function pushAnalyticsEvent(name, payload = {}) {
   });
   const persistedBehaviorEvent = persistBehaviorEvent(name, sanitizedPayload);
 
-  return sentToGoogleAnalytics || sentToDataLayer || persistedBehaviorEvent;
+  return sentToMetaPixel || sentToGoogleAnalytics || sentToDataLayer || persistedBehaviorEvent;
 }
 
 export function pushConsentEvent(command, action, payload = {}) {

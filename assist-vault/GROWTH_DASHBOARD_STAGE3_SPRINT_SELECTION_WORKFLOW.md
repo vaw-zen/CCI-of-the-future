@@ -4,6 +4,8 @@ Date: 2026-05-12
 
 This workflow operationalizes Stage 3 stabilization. It makes the Stage 3 panels the required input for SEO refresh selection and CRO sprint planning without changing the roadmap order or pulling Stage 4 work forward.
 
+Run [GROWTH_DASHBOARD_ORGANIC_SEARCH_REVIEW_PLAYBOOK.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_ORGANIC_SEARCH_REVIEW_PLAYBOOK.md) first when the weekly selection depends on organic-search performance, SEO strengths and weaknesses, or whether paid should stay blocked.
+
 ## Goal
 
 Use Stage 3 evidence to choose:

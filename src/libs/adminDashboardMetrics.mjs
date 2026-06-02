@@ -586,28 +586,30 @@ function getBusinessLineLabel(value) {
 function getServiceKeyForPath(path = '') {
   const normalizedPath = normalizePathForClassification(path).toLowerCase();
   const servicePatterns = [
-    ['tapisserie', 'tapisserie'],
-    ['salon', 'salon'],
-    ['tapis', 'tapis'],
-    ['marbre', 'marbre'],
-    ['tfc', 'tfc'],
-    ['hotel', 'hotel'],
-    ['banque', 'banque'],
-    ['assurance', 'assurance'],
-    ['clinique', 'clinique'],
-    ['bureau', 'bureau'],
-    ['commerce', 'commerce']
+    [['tapisserie', 'retapissage', 'rembourrage', 'tapissier'], 'tapisserie'],
+    [['salon', 'canape', 'canapé', 'sellerie'], 'salon'],
+    [['tapis'], 'tapis'],
+    [['marbre'], 'marbre'],
+    [['tfc'], 'tfc'],
+    [['hotel'], 'hotel'],
+    [['banque'], 'banque'],
+    [['assurance'], 'assurance'],
+    [['clinique'], 'clinique'],
+    [['bureau'], 'bureau'],
+    [['commerce'], 'commerce']
   ];
 
-  for (const [pattern, serviceKey] of servicePatterns) {
-    if (
-      normalizedPath === `/${pattern}`
-      || normalizedPath.startsWith(`/${pattern}/`)
-      || normalizedPath.includes(`/${pattern}-`)
-      || normalizedPath.includes(`-${pattern}`)
-      || normalizedPath.includes(pattern)
-    ) {
-      return serviceKey;
+  for (const [patterns, serviceKey] of servicePatterns) {
+    for (const pattern of patterns) {
+      if (
+        normalizedPath === `/${pattern}`
+        || normalizedPath.startsWith(`/${pattern}/`)
+        || normalizedPath.includes(`/${pattern}-`)
+        || normalizedPath.includes(`-${pattern}`)
+        || normalizedPath.includes(pattern)
+      ) {
+        return serviceKey;
+      }
     }
   }
 
@@ -1996,6 +1998,133 @@ function normalizeBehaviorMetricDashboardRow(row = {}) {
   };
 }
 
+function normalizeAssociatedPage(value, fallback = '') {
+  const normalized = normalizeText(
+    normalizeAttributionPath(value, fallback || '/'),
+    ''
+  );
+
+  if (!normalized || normalized === '/whatsapp') {
+    return fallback || '';
+  }
+
+  return normalized;
+}
+
+function getLeadAssociatedPages(lead = {}) {
+  const pages = new Set();
+  const landingPage = normalizeAssociatedPage(lead.landingPage, '');
+  const whatsappClickPage = normalizeAssociatedPage(lead.whatsappClickPage, '');
+
+  if (landingPage) {
+    pages.add(landingPage);
+  }
+
+  if (whatsappClickPage) {
+    pages.add(whatsappClickPage);
+  }
+
+  return Array.from(pages.values());
+}
+
+function buildWhatsAppLandingPageAssistMap(currentLeads = [], whatsappClickRows = []) {
+  const map = new Map();
+
+  const getCurrent = (landingPage) => {
+    const normalizedPage = normalizeAssociatedPage(landingPage, '');
+    if (!normalizedPage) {
+      return null;
+    }
+
+    const current = map.get(normalizedPage) || {
+      landingPage: normalizedPage,
+      whatsappClicks: 0,
+      uniqueClickers: new Set(),
+      whatsappAttributedLeads: 0,
+      whatsappAttributedQualifiedLeads: 0,
+      whatsappAttributedWonLeads: 0,
+      whatsappSiteAttributedLeads: 0,
+      whatsappSiteAttributedQualifiedLeads: 0,
+      whatsappDirectLeads: 0,
+      whatsappDirectQualifiedLeads: 0,
+      whatsappDirectWonLeads: 0,
+      incrementalLeads: 0,
+      incrementalQualifiedLeads: 0,
+      incrementalWonLeads: 0
+    };
+
+    map.set(normalizedPage, current);
+    return current;
+  };
+
+  (whatsappClickRows || [])
+    .map(normalizeWhatsAppClickRow)
+    .forEach((row) => {
+      const landingPage = normalizeAssociatedPage(row.pagePath || row.landingPage, '');
+      const current = getCurrent(landingPage);
+
+      if (!current) {
+        return;
+      }
+
+      current.whatsappClicks += 1;
+      if (row.gaClientId) {
+        current.uniqueClickers.add(row.gaClientId);
+      }
+    });
+
+  currentLeads
+    .filter((lead) => lead.kind === 'whatsapp' || isWhatsAppAttributed(lead))
+    .forEach((lead) => {
+      const associatedPages = getLeadAssociatedPages(lead);
+      const normalizedLeadLandingPage = normalizeAssociatedPage(lead.landingPage, '');
+
+      associatedPages.forEach((landingPage) => {
+        const current = getCurrent(landingPage);
+        if (!current) {
+          return;
+        }
+
+        const isIncrementalForPage = normalizedLeadLandingPage !== landingPage;
+        const isQualified = hasReachedQualified(lead);
+        const isWon = lead.status === LEAD_STATUSES.CLOSED_WON;
+
+        if (lead.kind === 'whatsapp') {
+          current.whatsappDirectLeads += 1;
+          current.whatsappDirectQualifiedLeads += isQualified ? 1 : 0;
+          current.whatsappDirectWonLeads += isWon ? 1 : 0;
+        }
+
+        if (isWhatsAppAttributed(lead)) {
+          current.whatsappAttributedLeads += 1;
+          current.whatsappAttributedQualifiedLeads += isQualified ? 1 : 0;
+          current.whatsappAttributedWonLeads += isWon ? 1 : 0;
+
+          if (lead.kind !== 'whatsapp') {
+            current.whatsappSiteAttributedLeads += 1;
+            current.whatsappSiteAttributedQualifiedLeads += isQualified ? 1 : 0;
+          }
+        }
+
+        if (isIncrementalForPage) {
+          current.incrementalLeads += 1;
+          current.incrementalQualifiedLeads += isQualified ? 1 : 0;
+          current.incrementalWonLeads += isWon ? 1 : 0;
+        }
+      });
+    });
+
+  return new Map(
+    Array.from(map.entries()).map(([landingPage, row]) => [
+      landingPage,
+      {
+        ...row,
+        uniqueClickers: row.uniqueClickers.size
+      }
+    ])
+  );
+}
+
 function buildWhatsAppTouchpoints(clickRows = [], attributedLeads = []) {
   const map = new Map();
 
@@ -2980,7 +3109,7 @@ function buildSeoQueries(queryMetricRows = [], filters = {}) {
   };
 }
 
-function buildLandingPageScorecard(currentLeads, externalMetricRows, queryMetricRows = []) {
+function buildLandingPageScorecard(currentLeads, externalMetricRows, queryMetricRows = [], whatsappClickRows = []) {
   const combinedRows = buildCombinedChannelPerformance(currentLeads, externalMetricRows);
   const pageRows = aggregateCombinedRows(
     combinedRows,
@@ -2989,6 +3118,7 @@ function buildLandingPageScorecard(currentLeads, externalMetricRows, queryMetric
     { limit: 250 }
   );
   const queryCoverage = new Map();
+  const whatsappAssistMap = buildWhatsAppLandingPageAssistMap(currentLeads, whatsappClickRows);
 
   queryMetricRows.forEach((row) => {
     const current = queryCoverage.get(row.landingPage) || {
@@ -3018,16 +3148,23 @@ function buildLandingPageScorecard(currentLeads, externalMetricRows, queryMetric
       const businessLine = getBusinessLineForPath(row.label);
       const pageType = getPageTypeForPath(row.label);
       const coverage = queryCoverage.get(row.label) || null;
+      const whatsappAssist = whatsappAssistMap.get(row.label) || null;
       const dominantCluster = coverage
         ? Array.from(coverage.clusterCounts.values()).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))[0]
         : null;
+      const effectiveLeads = row.leads + (whatsappAssist?.incrementalLeads || 0);
+      const effectiveQualifiedLeads = row.qualifiedLeads + (whatsappAssist?.incrementalQualifiedLeads || 0);
+      const effectiveWonLeads = row.wonLeads + (whatsappAssist?.incrementalWonLeads || 0);
       const opportunityScore = roundMetric(
-        (row.qualifiedLeads * 25)
-        + (row.wonLeads * 50)
+        (effectiveQualifiedLeads * 25)
+        + (effectiveWonLeads * 50)
         + (Math.min(row.clicks, 500) / 10)
         + (Math.min(row.revenueProxy, 5000) / 250)
         + row.leadRate
-        + ((coverage?.nonBrandedClicks || 0) / 20),
+        + ((coverage?.nonBrandedClicks || 0) / 20)
+        + ((whatsappAssist?.whatsappClicks || 0) / 12)
+        + ((whatsappAssist?.incrementalLeads || 0) * 12)
+        + ((whatsappAssist?.incrementalQualifiedLeads || 0) * 20),
         1
       ) || 0;
 
@@ -3042,13 +3179,30 @@ function buildLandingPageScorecard(currentLeads, externalMetricRows, queryMetric
         queryCount: coverage?.queryKeys.size || 0,
         nonBrandedClicks: coverage?.nonBrandedClicks || 0,
         dominantClusterLabel: dominantCluster?.label || 'Other',
+        whatsappClicks: whatsappAssist?.whatsappClicks || 0,
+        whatsappUniqueClickers: whatsappAssist?.uniqueClickers || 0,
+        whatsappAttributedLeads: whatsappAssist?.whatsappAttributedLeads || 0,
+        whatsappAttributedQualifiedLeads: whatsappAssist?.whatsappAttributedQualifiedLeads || 0,
+        whatsappAttributedWonLeads: whatsappAssist?.whatsappAttributedWonLeads || 0,
+        whatsappSiteAttributedLeads: whatsappAssist?.whatsappSiteAttributedLeads || 0,
+        whatsappSiteAttributedQualifiedLeads: whatsappAssist?.whatsappSiteAttributedQualifiedLeads || 0,
+        whatsappDirectLeads: whatsappAssist?.whatsappDirectLeads || 0,
+        whatsappDirectQualifiedLeads: whatsappAssist?.whatsappDirectQualifiedLeads || 0,
+        whatsappDirectWonLeads: whatsappAssist?.whatsappDirectWonLeads || 0,
+        incrementalWhatsAppLeads: whatsappAssist?.incrementalLeads || 0,
+        incrementalWhatsAppQualifiedLeads: whatsappAssist?.incrementalQualifiedLeads || 0,
+        incrementalWhatsAppWonLeads: whatsappAssist?.incrementalWonLeads || 0,
+        effectiveLeads,
+        effectiveQualifiedLeads,
+        effectiveWonLeads,
         opportunityScore
       };
     })
     .sort((a, b) => (
       b.opportunityScore - a.opportunityScore
-      || b.qualifiedLeads - a.qualifiedLeads
-      || b.leads - a.leads
+      || b.effectiveQualifiedLeads - a.effectiveQualifiedLeads
+      || b.effectiveWonLeads - a.effectiveWonLeads
+      || b.effectiveLeads - a.effectiveLeads
       || b.clicks - a.clicks
       || a.label.localeCompare(b.label)
     ))
@@ -3058,7 +3212,8 @@ function buildLandingPageScorecard(currentLeads, externalMetricRows, queryMetric
     rows,
     notes: {
       basis: 'Landing-page score blends traffic, qualified demand, wins, non-branded search support, and estimated pipeline value.',
-      scoreDefinition: 'Opportunity score is directional and should be used to rank sprint candidates, not as a financial forecast.'
+      scoreDefinition: 'Opportunity score is directional and should be used to rank sprint candidates, not as a financial forecast.',
+      whatsappDefinition: 'WhatsApp-assisted counts credit landing pages for WhatsApp leads and site-intent matches even when the lead is ultimately captured in the WhatsApp queue instead of a form.'
     }
   };
 }
@@ -3177,7 +3332,12 @@ function buildContentOpportunities(queryMetricRows = [], landingPageScorecard = 
     });
 
   (landingPageScorecard.rows || [])
-    .filter((row) => (row.clicks >= 50 || row.sessions >= 50) && row.qualifiedLeads === 0)
+    .filter((row) => (
+      (row.clicks >= 50 || row.sessions >= 50)
+      && row.effectiveQualifiedLeads === 0
+      && row.whatsappAttributedLeads === 0
+      && row.whatsappDirectLeads === 0
+    ))
     .slice(0, 6)
     .forEach((row) => {
       rows.push({
@@ -4838,15 +4998,21 @@ function buildExecutiveOpportunity({
   };
 
   const topScorecardPage = (landingPageScorecard?.rows || []).find((row) => (
-    row.qualifiedLeads > 0 || row.leads > 0 || row.clicks > 0 || row.sessions > 0
+    row.effectiveQualifiedLeads > 0
+    || row.effectiveLeads > 0
+    || row.clicks > 0
+    || row.sessions > 0
   ));
   if (topScorecardPage) {
+    const whatsappAssistDetail = topScorecardPage.whatsappAttributedLeads > 0 || topScorecardPage.whatsappDirectLeads > 0
+      ? `, ${formatSummaryCount(topScorecardPage.whatsappAttributedLeads)} WhatsApp-attributed leads, ${formatSummaryCount(topScorecardPage.whatsappDirectLeads)} direct WhatsApp leads`
+      : '';
     return {
       key: 'seo_landing_page',
       title: 'Opportunity',
       headline: `${topScorecardPage.label} is the highest-leverage landing-page candidate right now.`,
-      detail: `${formatOpportunityTrafficDetail(topScorecardPage)}, ${formatSummaryCount(topScorecardPage.qualifiedLeads)} qualified leads, ${formatSummaryPercent(topScorecardPage.leadRate)} lead rate, ${formatSummaryCurrency(topScorecardPage.revenueProxy)} estimated pipeline value.`,
-      tone: topScorecardPage.qualifiedLeads > 0 ? 'positive' : 'neutral',
+      detail: `${formatOpportunityTrafficDetail(topScorecardPage)}, ${formatSummaryCount(topScorecardPage.effectiveQualifiedLeads)} effective qualified leads${whatsappAssistDetail}, ${formatSummaryPercent(topScorecardPage.leadRate)} form lead rate, ${formatSummaryCurrency(topScorecardPage.revenueProxy)} estimated pipeline value.`,
+      tone: topScorecardPage.effectiveQualifiedLeads > 0 || topScorecardPage.whatsappDirectLeads > 0 ? 'positive' : 'neutral',
       owner: 'Growth owner'
     };
   }
@@ -5035,11 +5201,13 @@ function buildExecutiveOrganicEvidence({
   seoContent,
   seoQueries,
   externalMetricRows = [],
-  queryMetricRows = []
+  queryMetricRows = [],
+  whatsappClickRows = []
 } = {}) {
   const organicExternalRows = externalMetricRows
     .map(normalizeExternalMetricRow)
     .filter((row) => row.sourceClass === 'organic_search');
+  const normalizedWhatsAppClickRows = (whatsappClickRows || []).map(normalizeWhatsAppClickRow);
   const organicExternalByPage = new Map();
 
   organicExternalRows.forEach((row) => {
@@ -5061,6 +5229,7 @@ function buildExecutiveOrganicEvidence({
     });
 
   const queryByPage = new Map();
+  const whatsappAssistMap = buildWhatsAppLandingPageAssistMap(currentLeads, whatsappClickRows);
   queryMetricRows.forEach((row) => {
     const current = queryByPage.get(row.landingPage) || {
       landingPage: row.landingPage,
@@ -5131,6 +5300,33 @@ function buildExecutiveOrganicEvidence({
     pageEvidenceMap.set(lead.landingPage, current);
   });
 
+  whatsappAssistMap.forEach((assist, landingPage) => {
+    const current = pageEvidenceMap.get(landingPage) || {
+      landingPage,
+      clicks: 0,
+      impressions: 0,
+      sessions: 0,
+      users: 0,
+      events: 0,
+      queryClicks: 0,
+      queryImpressions: 0,
+      queryCount: 0,
+      leads: 0,
+      qualifiedLeads: 0
+    };
+
+    current.whatsappClicks = assist.whatsappClicks;
+    current.whatsappAttributedLeads = assist.whatsappAttributedLeads;
+    current.whatsappAttributedQualifiedLeads = assist.whatsappAttributedQualifiedLeads;
+    current.whatsappDirectLeads = assist.whatsappDirectLeads;
+    current.whatsappDirectQualifiedLeads = assist.whatsappDirectQualifiedLeads;
+    current.incrementalWhatsAppLeads = assist.incrementalLeads;
+    current.incrementalWhatsAppQualifiedLeads = assist.incrementalQualifiedLeads;
+    current.effectiveLeads = current.leads + assist.incrementalLeads;
+    current.effectiveQualifiedLeads = current.qualifiedLeads + assist.incrementalQualifiedLeads;
+    pageEvidenceMap.set(landingPage, current);
+  });
+
   const topLandingPages = Array.from(pageEvidenceMap.values())
     .filter((row) => (
       row.clicks > 0
@@ -5139,6 +5335,8 @@ function buildExecutiveOrganicEvidence({
       || row.events > 0
       || row.queryClicks > 0
       || row.leads > 0
+      || (row.whatsappAttributedLeads || 0) > 0
+      || (row.whatsappDirectLeads || 0) > 0
     ))
     .sort((a, b) => (
       b.clicks - a.clicks
@@ -5147,8 +5345,8 @@ function buildExecutiveOrganicEvidence({
       || b.sessions - a.sessions
       || b.users - a.users
       || b.events - a.events
-      || b.qualifiedLeads - a.qualifiedLeads
-      || b.leads - a.leads
+      || (b.effectiveQualifiedLeads || b.qualifiedLeads || 0) - (a.effectiveQualifiedLeads || a.qualifiedLeads || 0)
+      || (b.effectiveLeads || b.leads || 0) - (a.effectiveLeads || a.leads || 0)
       || a.landingPage.localeCompare(b.landingPage)
     ))
     .slice(0, 5);
@@ -5193,7 +5391,12 @@ function buildExecutiveOrganicEvidence({
       events: pageMetrics?.events || 0,
       queryClicks: queryMetrics?.queryClicks || 0,
       queryImpressions: queryMetrics?.queryImpressions || 0,
-      queryCount: queryMetrics?.queryKeys?.size || 0
+      queryCount: queryMetrics?.queryKeys?.size || 0,
+      whatsappClicks: whatsappAssistMap.get(landingPage)?.whatsappClicks || 0,
+      whatsappAttributedLeads: whatsappAssistMap.get(landingPage)?.whatsappAttributedLeads || 0,
+      whatsappAttributedQualifiedLeads: whatsappAssistMap.get(landingPage)?.whatsappAttributedQualifiedLeads || 0,
+      whatsappDirectLeads: whatsappAssistMap.get(landingPage)?.whatsappDirectLeads || 0,
+      whatsappDirectQualifiedLeads: whatsappAssistMap.get(landingPage)?.whatsappDirectQualifiedLeads || 0
     };
   });
   const queryOnlyPages = pageCoverageRows.filter((row) => row.status === 'query_only');
@@ -5221,6 +5424,23 @@ function buildExecutiveOrganicEvidence({
       organicUsers: organicExternalRows.reduce((total, row) => total + row.users, 0),
       organicEvents: organicExternalRows.reduce((total, row) => total + row.events, 0),
       qualifiedLeads: seoContent?.totals?.qualifiedLeads || 0,
+      whatsappClicks: normalizedWhatsAppClickRows.length,
+      whatsappAttributedLeads: currentLeads.filter((lead) => (
+        isWhatsAppAttributed(lead) && getLeadAssociatedPages(lead).length > 0
+      )).length,
+      whatsappAttributedQualifiedLeads: currentLeads.filter((lead) => (
+        isWhatsAppAttributed(lead)
+        && hasReachedQualified(lead)
+        && getLeadAssociatedPages(lead).length > 0
+      )).length,
+      whatsappDirectLeads: currentLeads.filter((lead) => (
+        lead.kind === 'whatsapp' && getLeadAssociatedPages(lead).length > 0
+      )).length,
+      whatsappDirectQualifiedLeads: currentLeads.filter((lead) => (
+        lead.kind === 'whatsapp'
+        && hasReachedQualified(lead)
+        && getLeadAssociatedPages(lead).length > 0
+      )).length,
       organicLandingPages: organicExternalByPage.size,
       queryClicks: seoQueries?.summary?.totalClicks || 0,
       nonBrandedClicks: seoQueries?.summary?.nonBrandedClicks || 0
@@ -5250,6 +5470,7 @@ function buildExecutiveSummary({
   dataHealth,
   externalMetricRows = [],
   queryMetricRows = [],
+  whatsappClickRows = [],
   filters = {}
 }) {
   const trend = buildExecutiveTrend(currentLeads, previousLeads);
@@ -5277,7 +5498,8 @@ function buildExecutiveSummary({
     seoContent,
     seoQueries,
     externalMetricRows,
-    queryMetricRows
+    queryMetricRows,
+    whatsappClickRows
   });
 
   return {
@@ -5416,7 +5638,8 @@ export function buildAdminDashboardCoreData(input) {
   const landingPageScorecard = buildLandingPageScorecard(
     context.filteredCurrentLeads,
     context.filteredExternalMetricRows,
-    []
+    [],
+    context.filteredWhatsAppClickRows
   );
   const executiveSummary = buildExecutiveSummary({
     currentLeads: context.filteredCurrentLeads,
@@ -5431,6 +5654,7 @@ export function buildAdminDashboardCoreData(input) {
     dataHealth: context.dataHealth,
     externalMetricRows: context.filteredExternalMetricRows,
     queryMetricRows: [],
+    whatsappClickRows: context.filteredWhatsAppClickRows,
     filters: context.normalizedFilters
   });
 
@@ -5501,7 +5725,8 @@ export function buildAdminDashboardSeoSectionData(input) {
   const landingPageScorecard = buildLandingPageScorecard(
     context.filteredCurrentLeads,
     context.filteredExternalMetricRows,
-    context.filteredQueryMetricRows
+    context.filteredQueryMetricRows,
+    context.filteredWhatsAppClickRows
   );
 
   return {
@@ -5588,7 +5813,8 @@ export function buildAdminDashboardData({
   const landingPageScorecard = buildLandingPageScorecard(
     context.filteredCurrentLeads,
     context.filteredExternalMetricRows,
-    context.filteredQueryMetricRows
+    context.filteredQueryMetricRows,
+    context.filteredWhatsAppClickRows
   );
   const contentOpportunities = buildContentOpportunities(
     context.filteredQueryMetricRows,
@@ -5632,6 +5858,7 @@ export function buildAdminDashboardData({
     dataHealth: context.dataHealth,
     externalMetricRows: context.filteredExternalMetricRows,
     queryMetricRows: context.filteredQueryMetricRows,
+    whatsappClickRows: context.filteredWhatsAppClickRows,
     behaviorMetricRows: context.filteredBehaviorMetricRows,
     filters: context.normalizedFilters
   });

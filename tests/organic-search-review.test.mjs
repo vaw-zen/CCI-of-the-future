@@ -110,6 +110,10 @@ function buildDashboardData(overrides = {}) {
           clicks: 34,
           sessions: 40,
           qualifiedLeads: 2,
+          effectiveQualifiedLeads: 2,
+          whatsappClicks: 0,
+          whatsappAttributedLeads: 0,
+          whatsappDirectLeads: 0,
           leadRate: 5,
           opportunityScore: 90
         }
@@ -236,4 +240,83 @@ test('buildOrganicSearchReview blocks paid when traffic rises but qualified dema
   const markdown = formatOrganicSearchReviewMarkdown(review);
   assert.match(markdown, /\*\*Paid campaign decision\*\*/);
   assert.match(markdown, /Decision: not needed yet/);
+});
+
+test('buildOrganicSearchReview reclassifies WhatsApp-assisted article demand as a strength', () => {
+  const articlePath = '/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure';
+  const currentDashboardData = buildDashboardData({
+    seoContent: {
+      totals: {
+        clicks: 96,
+        impressions: 1800,
+        sessions: 88,
+        qualifiedLeads: 0,
+        leadRate: 0
+      }
+    },
+    landingPageScorecard: {
+      rows: [
+        {
+          key: articlePath,
+          label: articlePath,
+          clicks: 44,
+          sessions: 39,
+          qualifiedLeads: 0,
+          effectiveQualifiedLeads: 1,
+          whatsappClicks: 6,
+          whatsappAttributedLeads: 1,
+          whatsappDirectLeads: 1,
+          leadRate: 0,
+          opportunityScore: 125
+        }
+      ]
+    },
+    contentOpportunities: {
+      rows: []
+    },
+    formHealth: {
+      summary: {
+        starts: 4,
+        submitSuccesses: 0
+      }
+    }
+  });
+  const previousDashboardData = buildDashboardData({
+    seoContent: {
+      totals: {
+        clicks: 70,
+        impressions: 1400,
+        sessions: 61,
+        qualifiedLeads: 0,
+        leadRate: 0
+      }
+    }
+  });
+
+  const review = buildOrganicSearchReview({
+    currentDashboardData,
+    previousDashboardData,
+    segmentSnapshots: {
+      businessLine: [],
+      service: [],
+      pageType: []
+    },
+    range: currentDashboardData.range,
+    previousRange: previousDashboardData.range
+  });
+
+  assert.equal(review.executiveSummary.overallStatus, 'assisted-conversion');
+  assert.equal(review.strongPoints[0]?.classification, 'mixed SEO + WhatsApp strength');
+  assert.match(review.strongPoints[0]?.detail || '', /WhatsApp-assisted paths/i);
+  assert.equal(
+    review.weakPoints.some((item) => /not turning into qualified demand/i.test(item.title)),
+    false
+  );
+  assert.equal(
+    review.paidDecision.blockers.includes('form completion is not yet proven'),
+    false
+  );
+
+  const markdown = formatOrganicSearchReviewMarkdown(review);
+  assert.match(markdown, /WhatsApp-assisted demand: 1 attributed site leads, 1 direct WhatsApp leads/);
 });

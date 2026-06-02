@@ -721,10 +721,12 @@ function ExecutiveSummary({ executiveSummary, filters }) {
               { label: 'GA4 users', value: formatNumber(organicEvidence.summary.organicUsers) },
               { label: 'GA4 events', value: formatNumber(organicEvidence.summary.organicEvents) },
               { label: 'GSC query clicks', value: formatNumber(organicEvidence.summary.queryClicks) },
+              { label: 'WA clicks', value: formatNumber(organicEvidence.summary.whatsappClicks) },
+              { label: 'WA leads', value: formatNumber(organicEvidence.summary.whatsappAttributedLeads + organicEvidence.summary.whatsappDirectLeads) },
               { label: 'Lead pages', value: formatNumber(organicEvidence.joinHealth.leadPageCount) }
             ]} />
             <p className={styles.executiveFollowupNote}>
-              GA4 sessions, users, and events are shown separately from Search Console clicks and impressions.
+              GA4 sessions, users, and events are shown separately from Search Console clicks and impressions. WhatsApp-assisted demand is tracked separately so service articles are not judged only on form submissions.
             </p>
           </div>
 
@@ -734,7 +736,7 @@ function ExecutiveSummary({ executiveSummary, filters }) {
                 <div key={row.landingPage} className={styles.metricRow}>
                   <div>
                     <strong>{row.landingPage}</strong>
-                    <span>{row.queryCount} queries • {row.leads} leads • {row.qualifiedLeads} qualified</span>
+                    <span>{row.queryCount} queries • {row.effectiveLeads ?? row.leads} effective leads • {row.effectiveQualifiedLeads ?? row.qualifiedLeads} effective qualified</span>
                   </div>
                   <MetricBadges items={[
                     { label: 'GSC page clicks', value: formatNumber(row.clicks) },
@@ -742,7 +744,9 @@ function ExecutiveSummary({ executiveSummary, filters }) {
                     { label: 'GA4 sessions', value: formatNumber(row.sessions) },
                     { label: 'GA4 users', value: formatNumber(row.users) },
                     { label: 'GA4 events', value: formatNumber(row.events) },
-                    { label: 'GSC query clicks', value: formatNumber(row.queryClicks) }
+                    { label: 'GSC query clicks', value: formatNumber(row.queryClicks) },
+                    { label: 'WA clicks', value: formatNumber(row.whatsappClicks) },
+                    { label: 'WA direct', value: formatNumber(row.whatsappDirectLeads) }
                   ]} />
                 </div>
               ))}
@@ -1918,13 +1922,46 @@ function SeoSection({ dashboardData }) {
               <strong>{row.label}</strong>
               <span>{row.businessLineLabel} • {row.pageTypeLabel} • {row.serviceLabel}</span>
               <span>{row.queryCount} queries • {row.dominantClusterLabel}</span>
+              {(row.whatsappAttributedLeads > 0 || row.whatsappDirectLeads > 0 || row.whatsappClicks > 0) && (
+                <span>
+                  {row.whatsappClicks} WhatsApp clicks • {row.whatsappAttributedLeads} attributed • {row.whatsappDirectLeads} direct leads
+                </span>
+              )}
             </div>
             <MetricBadges items={[
               { label: 'Sessions', value: formatNumber(row.sessions) },
               { label: 'Clicks', value: formatNumber(row.clicks) },
-              { label: 'Qual.', value: formatNumber(row.qualifiedLeads) },
+              { label: 'Qual.', value: formatNumber(row.effectiveQualifiedLeads ?? row.qualifiedLeads) },
               { label: 'Lead rate', value: formatPercent(row.leadRate) },
+              { label: 'WA leads', value: formatNumber(row.whatsappAttributedLeads + row.whatsappDirectLeads) },
               { label: 'Value', value: formatCurrency(row.revenueProxy) },
+              { label: 'Score', value: formatNumber(row.opportunityScore) }
+            ]} />
+          </div>
+        )}
+      />
+
+      <MetricListPanel
+        title="WhatsApp-assisted landing pages"
+        note={dashboardData.landingPageScorecard.notes.whatsappDefinition}
+        rows={dashboardData.landingPageScorecard.rows.filter((row) => (
+          row.whatsappClicks > 0
+          || row.whatsappAttributedLeads > 0
+          || row.whatsappDirectLeads > 0
+        ))}
+        emptyText="Aucune landing page avec conversion WhatsApp assistée sur cette période."
+        renderRow={(row) => (
+          <div key={`${row.key}-whatsapp`} className={styles.metricRow}>
+            <div>
+              <strong>{row.label}</strong>
+              <span>{row.businessLineLabel} • {row.pageTypeLabel} • {row.serviceLabel}</span>
+              <span>{row.queryCount} queries • {row.dominantClusterLabel}</span>
+            </div>
+            <MetricBadges items={[
+              { label: 'WA clicks', value: formatNumber(row.whatsappClicks) },
+              { label: 'WA attr.', value: formatNumber(row.whatsappAttributedLeads) },
+              { label: 'WA direct', value: formatNumber(row.whatsappDirectLeads) },
+              { label: 'Eff. qual.', value: formatNumber(row.effectiveQualifiedLeads ?? row.qualifiedLeads) },
               { label: 'Score', value: formatNumber(row.opportunityScore) }
             ]} />
           </div>

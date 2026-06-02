@@ -137,6 +137,27 @@ function getSegmentWeaknesses(segmentSnapshots = {}) {
     .slice(0, 3);
 }
 
+function getWhatsAppAssistSummary(landingPageRows = []) {
+  return (landingPageRows || []).reduce((summary, row) => ({
+    whatsappClicks: summary.whatsappClicks + toNumber(row.whatsappClicks, 0),
+    whatsappAttributedLeads: summary.whatsappAttributedLeads + toNumber(row.whatsappAttributedLeads, 0),
+    whatsappAttributedQualifiedLeads: summary.whatsappAttributedQualifiedLeads + toNumber(row.whatsappAttributedQualifiedLeads, 0),
+    whatsappDirectLeads: summary.whatsappDirectLeads + toNumber(row.whatsappDirectLeads, 0),
+    whatsappDirectQualifiedLeads: summary.whatsappDirectQualifiedLeads + toNumber(row.whatsappDirectQualifiedLeads, 0),
+    effectiveQualifiedLeads: summary.effectiveQualifiedLeads + toNumber(
+      row.effectiveQualifiedLeads ?? row.qualifiedLeads,
+      0
+    )
+  }), {
+    whatsappClicks: 0,
+    whatsappAttributedLeads: 0,
+    whatsappAttributedQualifiedLeads: 0,
+    whatsappDirectLeads: 0,
+    whatsappDirectQualifiedLeads: 0,
+    effectiveQualifiedLeads: 0
+  });
+}
+
 export function getLastCompleteDateRange({ now = new Date(), days = 28 } = {}) {
   const endDate = new Date(Date.UTC(
     now.getUTCFullYear(),
@@ -237,6 +258,7 @@ function buildExecutiveSummarySection({
   const previousTotals = previousDashboardData?.seoContent?.totals || {};
   const currentQueries = currentDashboardData?.seoQueries?.summary || {};
   const previousQueries = previousDashboardData?.seoQueries?.summary || {};
+  const whatsappAssist = getWhatsAppAssistSummary(currentDashboardData?.landingPageScorecard?.rows || []);
   const clicks = compareMetric(currentTotals.clicks, previousTotals.clicks);
   const impressions = compareMetric(currentTotals.impressions, previousTotals.impressions);
   const sessions = compareMetric(currentTotals.sessions, previousTotals.sessions);
@@ -250,6 +272,12 @@ function buildExecutiveSummarySection({
   if (currentTotals.clicks === 0 && currentTotals.sessions === 0 && currentQueries.totalClicks === 0) {
     overallStatus = 'thin-volume';
     mainTakeaway = 'Organic evidence is still too thin in this slice to make a strong growth call.';
+  } else if (
+    currentTotals.qualifiedLeads === 0
+    && (whatsappAssist.whatsappAttributedLeads > 0 || whatsappAssist.whatsappDirectLeads > 0)
+  ) {
+    overallStatus = 'assisted-conversion';
+    mainTakeaway = 'Organic content is generating real demand, but a meaningful share of conversion is happening through WhatsApp-assisted paths rather than form submissions.';
   } else if (
     isMeaningfulMovement(clicks.percentChange)
     && clicks.percentChange > 0
@@ -285,7 +313,19 @@ function buildExecutiveSummarySection({
       sessions,
       qualifiedLeads,
       ctr,
-      nonBrandedClicks
+      nonBrandedClicks,
+      whatsappAttributedLeads: {
+        current: whatsappAssist.whatsappAttributedLeads,
+        previous: 0,
+        delta: whatsappAssist.whatsappAttributedLeads,
+        percentChange: null
+      },
+      whatsappDirectLeads: {
+        current: whatsappAssist.whatsappDirectLeads,
+        previous: 0,
+        delta: whatsappAssist.whatsappDirectLeads,
+        percentChange: null
+      }
     }
   };
 }
@@ -300,18 +340,25 @@ function buildStrongPointsSection({ currentDashboardData, previousDashboardData,
     .filter((row) => row.qualifiedLeads > 0 || row.clicks > 0 || row.sessions > 0)
     .slice(0, 2)
     .forEach((row) => {
-      const classification = row.qualifiedLeads > 0
+      const classification = row.whatsappDirectLeads > 0 || row.whatsappAttributedLeads > 0
+        ? 'mixed SEO + WhatsApp strength'
+        : row.qualifiedLeads > 0
         ? 'mixed SEO + CRO strength'
         : row.clicks >= 20
           ? 'traffic strength'
           : 'CTR strength';
+      const whatsappDetail = row.whatsappDirectLeads > 0 || row.whatsappAttributedLeads > 0
+        ? `, ${row.whatsappClicks} WhatsApp clicks, ${row.whatsappAttributedLeads} WhatsApp-attributed leads, ${row.whatsappDirectLeads} direct WhatsApp leads`
+        : '';
 
       strengths.push({
         title: row.label,
         classification,
         evidencePanel: 'landingPageScorecard.rows',
-        metric: `${row.clicks} clicks, ${row.sessions} sessions, ${row.qualifiedLeads} qualified leads, ${row.leadRate}% lead rate`,
-        detail: `${row.label} is one of the strongest current landing pages for organic capture and commercial density.`,
+        metric: `${row.clicks} clicks, ${row.sessions} sessions, ${row.effectiveQualifiedLeads ?? row.qualifiedLeads} effective qualified leads${whatsappDetail}, ${row.leadRate}% form lead rate`,
+        detail: row.whatsappDirectLeads > 0 || row.whatsappAttributedLeads > 0
+          ? `${row.label} is already converting search demand through WhatsApp-assisted paths, so it should be treated as a commercial content asset instead of a form-only page.`
+          : `${row.label} is one of the strongest current landing pages for organic capture and commercial density.`,
         priority: (row.qualifiedLeads * 40) + row.clicks + row.sessions
       });
     });
@@ -378,6 +425,7 @@ function buildWeakPointsSection({ currentDashboardData, previousDashboardData, t
   const currentTotals = currentDashboardData?.seoContent?.totals || {};
   const previousTotals = previousDashboardData?.seoContent?.totals || {};
   const formHealth = currentDashboardData?.formHealth?.summary || {};
+  const whatsappAssist = getWhatsAppAssistSummary(currentDashboardData?.landingPageScorecard?.rows || []);
 
   contentRows.slice(0, 4).forEach((row) => {
     weaknesses.push({
@@ -401,7 +449,11 @@ function buildWeakPointsSection({ currentDashboardData, previousDashboardData, t
     });
   }
 
-  if (currentTotals.sessions > 0 && currentTotals.qualifiedLeads === 0) {
+  if (
+    currentTotals.sessions > 0
+    && currentTotals.qualifiedLeads === 0
+    && whatsappAssist.effectiveQualifiedLeads === 0
+  ) {
     weaknesses.push({
       title: 'Organic traffic is not turning into qualified demand',
       classification: 'conversion gap',
@@ -412,7 +464,12 @@ function buildWeakPointsSection({ currentDashboardData, previousDashboardData, t
     });
   }
 
-  if (formHealth.starts > 0 && formHealth.submitSuccesses === 0) {
+  if (
+    formHealth.starts > 0
+    && formHealth.submitSuccesses === 0
+    && whatsappAssist.whatsappAttributedLeads === 0
+    && whatsappAssist.whatsappDirectLeads === 0
+  ) {
     weaknesses.push({
       title: 'Organic traffic reaches forms, but form completion is not proven',
       classification: 'conversion gap',
@@ -528,7 +585,31 @@ function buildOpportunitiesSection({ currentDashboardData }) {
     });
 
   landingPageRows
-    .filter((row) => row.clicks >= 20 && row.qualifiedLeads === 0)
+    .filter((row) => (
+      (row.whatsappDirectLeads > 0 || row.whatsappAttributedLeads > 0)
+      && row.clicks >= 20
+    ))
+    .slice(0, 2)
+    .forEach((row) => {
+      opportunities.push({
+        title: row.label,
+        route: 'Mixed SEO + CRO',
+        owner: 'Growth owner',
+        kpi: 'WhatsApp-assisted qualified demand',
+        evidencePanel: 'landingPageScorecard.rows',
+        whyNow: `${row.whatsappClicks} WhatsApp clicks, ${row.whatsappAttributedLeads} attributed leads, and ${row.whatsappDirectLeads} direct WhatsApp leads suggest this page should be optimized as a WhatsApp-first commercial asset.`,
+        priority: (row.opportunityScore || 0) + (row.whatsappDirectLeads * 10) + (row.whatsappAttributedLeads * 5),
+        action: 'WhatsApp CTA and service handoff optimization'
+      });
+    });
+
+  landingPageRows
+    .filter((row) => (
+      row.clicks >= 20
+      && (row.effectiveQualifiedLeads ?? row.qualifiedLeads) === 0
+      && row.whatsappAttributedLeads === 0
+      && row.whatsappDirectLeads === 0
+    ))
     .slice(0, 2)
     .forEach((row) => {
       opportunities.push({
@@ -586,13 +667,19 @@ function buildPaidDecisionSection({ currentDashboardData, trust, opportunities, 
   const seoSummary = currentDashboardData?.seoQueries?.summary || {};
   const ctaSummary = currentDashboardData?.ctaPerformance?.summary || {};
   const formSummary = currentDashboardData?.formHealth?.summary || {};
+  const whatsappAssist = getWhatsAppAssistSummary(currentDashboardData?.landingPageScorecard?.rows || []);
   const blockers = [];
 
   if (trust.state !== 'trusted') {
     blockers.push('organic trust state is not fully clean');
   }
 
-  if (formSummary.starts > 0 && formSummary.submitSuccesses === 0) {
+  if (
+    formSummary.starts > 0
+    && formSummary.submitSuccesses === 0
+    && whatsappAssist.whatsappAttributedLeads === 0
+    && whatsappAssist.whatsappDirectLeads === 0
+  ) {
     blockers.push('form completion is not yet proven');
   }
 
@@ -600,7 +687,11 @@ function buildPaidDecisionSection({ currentDashboardData, trust, opportunities, 
     blockers.push('CTA engagement is weak');
   }
 
-  if (seoTotals.sessions > 0 && seoTotals.qualifiedLeads === 0) {
+  if (
+    seoTotals.sessions > 0
+    && seoTotals.qualifiedLeads === 0
+    && whatsappAssist.effectiveQualifiedLeads === 0
+  ) {
     blockers.push('organic traffic is not yet proving qualified demand');
   }
 
@@ -756,7 +847,8 @@ export function formatOrganicSearchReviewMarkdown(review = {}) {
     `- Clicks: ${review.executiveSummary?.metrics?.clicks?.current ?? 0} vs ${review.executiveSummary?.metrics?.clicks?.previous ?? 0} (${formatPercentChange(review.executiveSummary?.metrics?.clicks?.percentChange)})`,
     `- Impressions: ${review.executiveSummary?.metrics?.impressions?.current ?? 0} vs ${review.executiveSummary?.metrics?.impressions?.previous ?? 0} (${formatPercentChange(review.executiveSummary?.metrics?.impressions?.percentChange)})`,
     `- Sessions: ${review.executiveSummary?.metrics?.sessions?.current ?? 0} vs ${review.executiveSummary?.metrics?.sessions?.previous ?? 0} (${formatPercentChange(review.executiveSummary?.metrics?.sessions?.percentChange)})`,
-    `- Qualified organic demand: ${review.executiveSummary?.metrics?.qualifiedLeads?.current ?? 0} vs ${review.executiveSummary?.metrics?.qualifiedLeads?.previous ?? 0} (${formatPercentChange(review.executiveSummary?.metrics?.qualifiedLeads?.percentChange)})`
+    `- Qualified organic demand: ${review.executiveSummary?.metrics?.qualifiedLeads?.current ?? 0} vs ${review.executiveSummary?.metrics?.qualifiedLeads?.previous ?? 0} (${formatPercentChange(review.executiveSummary?.metrics?.qualifiedLeads?.percentChange)})`,
+    `- WhatsApp-assisted demand: ${review.executiveSummary?.metrics?.whatsappAttributedLeads?.current ?? 0} attributed site leads, ${review.executiveSummary?.metrics?.whatsappDirectLeads?.current ?? 0} direct WhatsApp leads`
   ];
 
   if ((review.trust?.blockers || []).length > 0) {

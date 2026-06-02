@@ -1815,6 +1815,135 @@ test('stage-three growth intelligence surfaces query opportunities, content risk
   assert.match(data.funnelDiagnostics.notes.coverage, /CTA click, form-start, and form-completion/);
 });
 
+test('landing page scorecard credits article pages for WhatsApp-assisted direct demand', () => {
+  const articlePath = '/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure';
+  const rangeResult = getDashboardRange({ from: '2026-05-10', to: '2026-05-16' });
+  const data = buildAdminDashboardData({
+    currentRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: [
+        buildWhatsAppDirectRow({
+          id: 'wa-tapisserie-article',
+          lead_captured_at: '2026-05-13T09:00:00.000Z',
+          submitted_at: '2026-05-13T09:00:00.000Z',
+          qualified_at: '2026-05-14T09:00:00.000Z',
+          lead_status: 'qualified',
+          business_line: 'b2c',
+          service_key: 'tapisserie',
+          landing_page: null,
+          entry_path: null,
+          whatsapp_click_id: 'wa-article-click-1',
+          whatsapp_clicked_at: '2026-05-13T08:55:00.000Z',
+          whatsapp_click_label: 'article_tapisserie_whatsapp',
+          whatsapp_click_page: articlePath,
+          whatsapp_manual_tag: false,
+          whatsapp_manual_tagged_at: null
+        })
+      ]
+    },
+    previousRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: []
+    },
+    universeRows: {
+      devis: [],
+      conventions: [],
+      whatsapp: [
+        buildWhatsAppDirectRow({
+          id: 'wa-tapisserie-article',
+          lead_captured_at: '2026-05-13T09:00:00.000Z',
+          submitted_at: '2026-05-13T09:00:00.000Z',
+          qualified_at: '2026-05-14T09:00:00.000Z',
+          lead_status: 'qualified',
+          business_line: 'b2c',
+          service_key: 'tapisserie',
+          landing_page: null,
+          entry_path: null,
+          whatsapp_click_id: 'wa-article-click-1',
+          whatsapp_clicked_at: '2026-05-13T08:55:00.000Z',
+          whatsapp_click_label: 'article_tapisserie_whatsapp',
+          whatsapp_click_page: articlePath,
+          whatsapp_manual_tag: false,
+          whatsapp_manual_tagged_at: null
+        })
+      ]
+    },
+    externalMetricRows: [
+      {
+        metric_date: '2026-05-13',
+        metric_source: 'ga4',
+        source: 'google',
+        medium: 'organic',
+        campaign: '(not set)',
+        landing_page: articlePath,
+        normalized_landing_page: articlePath,
+        source_class: 'organic_search',
+        page_type: 'article',
+        sessions: 18,
+        users: 14,
+        events: 37,
+        clicks: 0,
+        impressions: 0,
+        spend: 0
+      }
+    ],
+    queryMetricRows: [
+      {
+        metric_date: '2026-05-13',
+        query: 'retapissage tunis',
+        normalized_query: 'retapissage tunis',
+        landing_page: articlePath,
+        normalized_landing_page: articlePath,
+        cluster_key: 'tapisserie',
+        cluster_label: 'Tapisserie',
+        business_line: 'b2c',
+        service_key: 'tapisserie',
+        page_type: 'article',
+        clicks: 16,
+        impressions: 180,
+        ctr: 8.9,
+        position: 6.4,
+        is_branded: false,
+        metadata: {}
+      }
+    ],
+    whatsappClickRows: [
+      {
+        id: 'wa-article-click-1',
+        clicked_at: '2026-05-13T08:55:00.000Z',
+        ga_client_id: 'ga-article-1',
+        event_label: 'article_tapisserie_whatsapp',
+        page_path: articlePath,
+        landing_page: articlePath,
+        session_source: 'google',
+        session_medium: 'organic',
+        session_campaign: '(not set)',
+        referrer_host: 'google.com'
+      }
+    ],
+    range: rangeResult.range,
+    nowIso: '2026-05-16T12:00:00.000Z'
+  });
+
+  const articleRow = data.landingPageScorecard.rows.find((row) => row.label === articlePath);
+  assert.ok(articleRow);
+  assert.equal(articleRow.whatsappClicks, 1);
+  assert.equal(articleRow.whatsappDirectLeads, 1);
+  assert.equal(articleRow.incrementalWhatsAppQualifiedLeads, 1);
+  assert.equal(articleRow.effectiveQualifiedLeads, 1);
+  assert.equal(articleRow.serviceLabel, 'Tapisserie');
+  assert.equal(
+    data.contentOpportunities.rows.some((row) => row.key === `conversion:${articlePath}`),
+    false
+  );
+  const articleEvidence = data.executiveSummary.organicEvidence.topLandingPages.find((row) => row.landingPage === articlePath);
+  assert.ok(articleEvidence);
+  assert.equal(articleEvidence.whatsappDirectLeads, 1);
+  assert.equal(articleEvidence.effectiveQualifiedLeads, 1);
+});
+
 test('section builders stay aligned with the full dashboard payload for the same slice', () => {
   const rangeResult = getDashboardRange({ from: '2026-05-01', to: '2026-05-07' });
   const sharedInput = {

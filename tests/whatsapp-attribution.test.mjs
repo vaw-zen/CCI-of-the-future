@@ -20,6 +20,7 @@ import {
   parseSessionAttributionCookie,
   serializeSessionAttributionCookie
 } from '../src/libs/whatsappTracking.mjs';
+import { getWhatsAppAttributionDiagnosis } from '../src/libs/whatsappAttributionDiagnostics.mjs';
 
 const testDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(testDirectory, '..');
@@ -159,6 +160,75 @@ test('session attribution cookie serializer keeps only the non-PII fields needed
     landing_page: '/services',
     referrer_host: 'instagram.com'
   });
+});
+
+test('whatsapp attribution diagnosis distinguishes captured, true direct, fallback direct, and manual direct leads', () => {
+  assert.deepEqual(
+    getWhatsAppAttributionDiagnosis({
+      session_source: 'google',
+      session_medium: 'organic',
+      session_campaign: '(not set)',
+      page_path: '/conseils/tarif-nettoyage-tapis-tunis-2025',
+      landing_page: '/conseils/tarif-nettoyage-tapis-tunis-2025',
+      referrer_host: 'google.com'
+    }),
+    {
+      key: 'attributed_session',
+      label: 'Source capturée',
+      detail: 'Source de session capturée sans fallback direct.',
+      isFallbackDirect: false
+    }
+  );
+
+  assert.deepEqual(
+    getWhatsAppAttributionDiagnosis({
+      session_source: 'direct',
+      session_medium: '(none)',
+      session_campaign: '(not set)',
+      page_path: '/',
+      landing_page: '/',
+      referrer_host: null
+    }),
+    {
+      key: 'fallback_direct_missing_context',
+      label: 'Fallback direct',
+      detail: 'Classification directe par défaut car le cookie ou le referrer d’attribution était absent.',
+      isFallbackDirect: true
+    }
+  );
+
+  assert.deepEqual(
+    getWhatsAppAttributionDiagnosis({
+      session_source: 'direct',
+      session_medium: '(none)',
+      session_campaign: '(not set)',
+      whatsapp_click_page: '/salon',
+      landing_page: '/salon',
+      referrer_host: null
+    }),
+    {
+      key: 'true_direct',
+      label: 'True direct',
+      detail: 'Session directe avec contexte de page conservé.',
+      isFallbackDirect: false
+    }
+  );
+
+  assert.deepEqual(
+    getWhatsAppAttributionDiagnosis({
+      session_source: 'whatsapp',
+      session_medium: 'messaging',
+      landing_page: '/tapisserie'
+    }, {
+      manualLead: true
+    }),
+    {
+      key: 'manual_whatsapp',
+      label: 'Manual direct lead',
+      detail: 'Lead WhatsApp créé sans clic site associé.',
+      isFallbackDirect: false
+    }
+  );
 });
 
 test('main WhatsApp CTA surfaces use analytics-aware links instead of raw wa.me anchors', async () => {

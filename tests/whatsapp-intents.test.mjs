@@ -53,4 +53,47 @@ test('buildUnclaimedWhatsAppIntents excludes already claimed clicks and sorts ne
   assert.equal(intents[0]?.id, 'wa-2');
   assert.equal(intents[0]?.eventLabel, 'home_hero_whatsapp_main');
   assert.equal(intents[0]?.sessionSource, 'google');
+  assert.equal(intents[0]?.attributionDiagnosisKey, 'attributed_session');
+  assert.equal(intents[0]?.attributionDiagnosisLabel, 'Source capturée');
+  assert.equal(intents[0]?.isFallbackDirect, false);
+});
+
+test('buildUnclaimedWhatsAppIntents marks root direct clicks without referrer as fallback direct', () => {
+  const [intent] = buildUnclaimedWhatsAppIntents([
+    {
+      id: 'wa-1',
+      clicked_at: '2026-06-08T14:30:00.000Z',
+      event_label: 'sticky_header_whatsapp',
+      page_path: '/',
+      landing_page: '/',
+      session_source: 'direct',
+      session_medium: '(none)',
+      session_campaign: '(not set)',
+      referrer_host: null
+    }
+  ], new Set());
+
+  assert.equal(intent?.attributionDiagnosisKey, 'fallback_direct_missing_context');
+  assert.equal(intent?.attributionDiagnosisLabel, 'Fallback direct');
+  assert.equal(intent?.isFallbackDirect, true);
+});
+
+test('buildUnclaimedWhatsAppIntents marks direct clicks with preserved page context as true direct', () => {
+  const [intent] = buildUnclaimedWhatsAppIntents([
+    {
+      id: 'wa-1',
+      clicked_at: '2026-06-08T15:31:00.000Z',
+      event_label: 'sticky_header_whatsapp',
+      page_path: '/conseils/tarif-nettoyage-tapis-tunis-2025',
+      landing_page: '/conseils/tarif-nettoyage-tapis-tunis-2025',
+      session_source: 'direct',
+      session_medium: '(none)',
+      session_campaign: '(not set)',
+      referrer_host: null
+    }
+  ], new Set());
+
+  assert.equal(intent?.attributionDiagnosisKey, 'true_direct');
+  assert.equal(intent?.attributionDiagnosisLabel, 'True direct');
+  assert.equal(intent?.isFallbackDirect, false);
 });

@@ -643,6 +643,18 @@
   line-height: 1.5;
 }
 
+.intentDiagnostic {
+  display: block;
+  margin: 0;
+  color: var(--t-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.intentDiagnostic_warning {
+  color: #ffb86b;
+}
+
 .metricBadges {
   display: flex;
   flex-wrap: wrap;

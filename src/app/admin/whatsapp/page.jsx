@@ -26,10 +26,12 @@ import { useAdminLeadList } from '@/app/admin/_components/useAdminLeadList';
 import WhatsAppLeadCreateModal from '@/app/admin/_components/WhatsAppLeadCreateModal';
 import {
   getWhatsAppDirectLeadAttributionLabel,
+  getWhatsAppDirectLeadAttributionMode,
   WHATSAPP_DIRECT_LEAD_BUSINESS_LINES,
   WHATSAPP_DIRECT_LEAD_SCHEDULE_TYPES,
   filterWhatsAppServiceOptions
 } from '@/libs/whatsappDirectLeads.mjs';
+import { getWhatsAppAttributionDiagnosis } from '@/libs/whatsappAttributionDiagnostics.mjs';
 import styles from '../devis/admin.module.css';
 
 const LEAD_STATUS_LABELS = {
@@ -399,6 +401,11 @@ export default function AdminWhatsAppPage() {
     (request) => getWhatsAppDirectLeadAttributionLabel(request),
     []
   );
+  const getLeadAttributionDiagnosis = useCallback((request) => (
+    getWhatsAppAttributionDiagnosis(request, {
+      manualLead: getWhatsAppDirectLeadAttributionMode(request) === 'manual'
+    })
+  ), []);
   const isFollowUpOverdue = useCallback((request) => isLeadFollowUpOverdue({
     leadStatus: getLeadStatus(request),
     followUpSlaAt: request.follow_up_sla_at,
@@ -471,6 +478,9 @@ export default function AdminWhatsAppPage() {
     ? detailLoadingId === selectedRequest.id && !getCachedDetail(selectedRequest.id)
     : false;
   const selectedRequestError = selectedRequest ? detailErrorById[selectedRequest.id] || '' : '';
+  const selectedRequestAttributionDiagnosis = useMemo(() => (
+    selectedRequest ? getLeadAttributionDiagnosis(selectedRequest) : null
+  ), [getLeadAttributionDiagnosis, selectedRequest]);
 
   if (authLoading) {
     return (
@@ -581,10 +591,16 @@ export default function AdminWhatsAppPage() {
                       <span>{intent.pagePath || '/'} • {formatDate(intent.clickedAt || intent.createdAt)}</span>
                       <span>{intent.sessionSource || 'direct'} / {intent.sessionMedium || '(none)'} • {intent.sessionCampaign || '(not set)'}</span>
                       <span>{intent.landingPage || '/'} • {intent.referrerHost || 'Referrer non renseigné'}</span>
+                      <span className={`${styles.intentDiagnostic} ${intent.isFallbackDirect ? styles.intentDiagnostic_warning : ''}`}>
+                        {intent.attributionDiagnosisLabel || 'Source capturée'}: {intent.attributionDiagnosisDetail || 'Source de session capturée sans fallback direct.'}
+                      </span>
                     </div>
                     <div className={styles.metricBadges}>
                       <span className={styles.metricBadge}>
                         <strong>Type</strong> Clic site
+                      </span>
+                      <span className={styles.metricBadge}>
+                        <strong>Diagnostic</strong> {intent.attributionDiagnosisLabel || 'Source capturée'}
                       </span>
                       <button
                         type="button"
@@ -964,6 +980,14 @@ export default function AdminWhatsAppPage() {
                   )}
                   {selectedRequest.whatsapp_clicked_at && (
                     <p><strong>Clic enregistré le :</strong> {formatDate(selectedRequest.whatsapp_clicked_at)}</p>
+                  )}
+                  {selectedRequestAttributionDiagnosis && (
+                    <>
+                      <p><strong>Diagnostic attribution :</strong> {selectedRequestAttributionDiagnosis.label}</p>
+                      <p className={`${styles.intentDiagnostic} ${selectedRequestAttributionDiagnosis.isFallbackDirect ? styles.intentDiagnostic_warning : ''}`}>
+                        {selectedRequestAttributionDiagnosis.detail}
+                      </p>
+                    </>
                   )}
                 </div>
 

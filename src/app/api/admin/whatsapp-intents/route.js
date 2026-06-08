@@ -45,7 +45,7 @@ const ADMIN_WHATSAPP_INTENTS_CONVERT_RATE_LIMIT = {
 };
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const DEFAULT_INTENT_LIMIT = 50;
+const DEFAULT_INTENT_LIMIT = 25;
 const MAX_INTENT_QUERY_BATCHES = 12;
 
 function getErrorResponse(status, message, httpStatus) {

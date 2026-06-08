@@ -48,7 +48,7 @@ const BUSINESS_LINE_LABELS = Object.fromEntries(
 const SCHEDULE_TYPE_LABELS = Object.fromEntries(
   WHATSAPP_DIRECT_LEAD_SCHEDULE_TYPES.map((option) => [option.value, option.label])
 );
-const INTENT_PAGE_LIMIT = 50;
+const INTENT_PAGE_LIMIT = 25;
 
 export default function AdminWhatsAppPage() {
   const router = useRouter();

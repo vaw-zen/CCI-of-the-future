@@ -131,6 +131,7 @@ export async function getWhatsAppIntents({
   dateFrom,
   dateTo,
   limit,
+  cursor,
   signal
 } = {}) {
   const params = new URLSearchParams();
@@ -147,11 +148,19 @@ export async function getWhatsAppIntents({
     params.set('limit', String(limit));
   }
 
+  if (cursor !== undefined && cursor !== null && cursor !== '') {
+    params.set('cursor', String(cursor));
+  }
+
   const result = await fetchAdminJson(`/api/admin/whatsapp-intents${params.toString() ? `?${params.toString()}` : ''}`, {
     signal
   });
 
-  return result.data;
+  return {
+    rows: result.data || [],
+    nextCursor: result.details?.nextCursor || null,
+    hasMore: Boolean(result.details?.hasMore)
+  };
 }
 
 export async function convertWhatsAppIntentToLead(payload) {

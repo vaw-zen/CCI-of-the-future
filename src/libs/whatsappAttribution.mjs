@@ -1,6 +1,7 @@
 import { sanitizePayload } from '../utils/analyticsGateway.js';
 
 export const WHATSAPP_MATCH_WINDOW_DAYS = 30;
+export const WHATSAPP_CLICK_DEDUPE_WINDOW_MS = 10 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function normalizeText(value, fallback = '') {
@@ -101,6 +102,22 @@ function normalizePathnameOnly(value) {
   }
 }
 
+function getWhatsAppClickSelectFields() {
+  return [
+    'id',
+    'created_at',
+    'clicked_at',
+    'ga_client_id',
+    'event_label',
+    'page_path',
+    'landing_page',
+    'session_source',
+    'session_medium',
+    'session_campaign',
+    'referrer_host'
+  ].join(',');
+}
+
 function isAdminPathname(value) {
   const pathname = normalizePathnameOnly(value);
   return pathname === '/admin' || pathname.startsWith('/admin/');
@@ -115,6 +132,146 @@ export function shouldTrackWhatsAppClick(value = {}) {
 
 export function filterTrackedWhatsAppClicks(rows = []) {
   return (rows || []).filter((row) => shouldTrackWhatsAppClick(row));
+}
+
+export function buildWhatsAppClickDedupeSignature(value = {}) {
+  const normalized = normalizeWhatsAppClickPayload(
+    value,
+    getLeadField(value, 'clicked_at', 'clickedAt') || new Date().toISOString()
+  );
+
+  return {
+    ga_client_id: normalizeNullableText(normalized.ga_client_id),
+    event_label: normalizeText(normalized.event_label, 'unknown'),
+    page_path: normalizePathnameOnly(normalized.page_path),
+    landing_page: normalizePathnameOnly(normalized.landing_page),
+    session_source: normalizeText(normalized.session_source, 'direct'),
+    session_medium: normalizeText(normalized.session_medium, '(none)'),
+    session_campaign: normalizeText(normalized.session_campaign, '(not set)'),
+    referrer_host: normalizeNullableText(normalized.referrer_host),
+    clicked_at: normalizeIsoTimestamp(normalized.clicked_at)
+  };
+}
+
+export function isRecentWhatsAppClickDuplicate(existingRow = {}, incomingPayload = {}, windowMs = WHATSAPP_CLICK_DEDUPE_WINDOW_MS) {
+  const existing = buildWhatsAppClickDedupeSignature(existingRow);
+  const incoming = buildWhatsAppClickDedupeSignature(incomingPayload);
+
+  if (!existing.clicked_at || !incoming.clicked_at) {
+    return false;
+  }
+
+  const existingTime = new Date(existing.clicked_at).getTime();
+  const incomingTime = new Date(incoming.clicked_at).getTime();
+  if (!Number.isFinite(existingTime) || !Number.isFinite(incomingTime)) {
+    return false;
+  }
+
+  if (Math.abs(incomingTime - existingTime) > windowMs) {
+    return false;
+  }
+
+  return (
+    existing.ga_client_id === incoming.ga_client_id
+    && existing.event_label === incoming.event_label
+    && existing.page_path === incoming.page_path
+    && existing.landing_page === incoming.landing_page
+    && existing.session_source === incoming.session_source
+    && existing.session_medium === incoming.session_medium
+    && existing.session_campaign === incoming.session_campaign
+    && existing.referrer_host === incoming.referrer_host
+  );
+}
+
+export async function findRecentDuplicateWhatsAppClick(supabase, payload = {}, {
+  dedupeWindowMs = WHATSAPP_CLICK_DEDUPE_WINDOW_MS
+} = {}) {
+  if (!supabase) {
+    return null;
+  }
+
+  const signature = buildWhatsAppClickDedupeSignature(payload);
+  if (!signature.clicked_at) {
+    return null;
+  }
+
+  const clickedAtMs = new Date(signature.clicked_at).getTime();
+  if (!Number.isFinite(clickedAtMs)) {
+    return null;
+  }
+
+  const fromIso = new Date(clickedAtMs - dedupeWindowMs).toISOString();
+
+  let query = supabase
+    .from('whatsapp_click_events')
+    .select(getWhatsAppClickSelectFields())
+    .eq('event_label', signature.event_label)
+    .eq('page_path', signature.page_path)
+    .eq('landing_page', signature.landing_page)
+    .eq('session_source', signature.session_source)
+    .eq('session_medium', signature.session_medium)
+    .eq('session_campaign', signature.session_campaign)
+    .gte('clicked_at', fromIso)
+    .lte('clicked_at', signature.clicked_at)
+    .order('clicked_at', { ascending: false })
+    .limit(5);
+
+  if (signature.ga_client_id) {
+    query = query.eq('ga_client_id', signature.ga_client_id);
+  } else {
+    query = query.is('ga_client_id', null);
+  }
+
+  if (signature.referrer_host) {
+    query = query.eq('referrer_host', signature.referrer_host);
+  } else {
+    query = query.is('referrer_host', null);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    throw error;
+  }
+
+  return (data || []).find((row) => isRecentWhatsAppClickDuplicate(row, signature, dedupeWindowMs)) || null;
+}
+
+export async function persistWhatsAppClickEvent(supabase, payload = {}, {
+  dedupeWindowMs = WHATSAPP_CLICK_DEDUPE_WINDOW_MS,
+  selectFields = getWhatsAppClickSelectFields()
+} = {}) {
+  if (!supabase) {
+    throw new Error('Supabase client is required.');
+  }
+
+  const normalizedPayload = normalizeWhatsAppClickPayload(payload, new Date().toISOString());
+  const duplicateRow = await findRecentDuplicateWhatsAppClick(supabase, normalizedPayload, {
+    dedupeWindowMs
+  });
+
+  if (duplicateRow) {
+    return {
+      data: duplicateRow,
+      error: null,
+      duplicate: true,
+      inserted: false,
+      payload: normalizedPayload
+    };
+  }
+
+  const { data, error } = await supabase
+    .from('whatsapp_click_events')
+    .insert(normalizedPayload)
+    .select(selectFields)
+    .single();
+
+  return {
+    data,
+    error,
+    duplicate: false,
+    inserted: !error,
+    payload: normalizedPayload
+  };
 }
 
 export function isWithinWhatsAppMatchWindow(clickedAt, leadCreatedAt, lookbackDays = WHATSAPP_MATCH_WINDOW_DAYS) {
@@ -158,19 +315,7 @@ export async function findLatestWhatsAppClickMatch(supabase, {
 
   const { data, error } = await supabase
     .from('whatsapp_click_events')
-    .select([
-      'id',
-      'created_at',
-      'clicked_at',
-      'ga_client_id',
-      'event_label',
-      'page_path',
-      'landing_page',
-      'session_source',
-      'session_medium',
-      'session_campaign',
-      'referrer_host'
-    ].join(','))
+    .select(getWhatsAppClickSelectFields())
     .eq('ga_client_id', cleanClientId)
     .gte('clicked_at', fromIso)
     .lte('clicked_at', cleanBeforeIso)

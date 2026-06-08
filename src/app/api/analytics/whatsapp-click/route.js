@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/libs/supabase';
 import { guardMutationRequest } from '@/libs/security';
 import {
+  persistWhatsAppClickEvent,
   normalizeWhatsAppClickPayload,
   shouldTrackWhatsAppClick
 } from '@/libs/whatsappAttribution.mjs';
@@ -62,16 +63,14 @@ export async function POST(request) {
       });
     }
 
-    const { data, error } = await supabase
-      .from('whatsapp_click_events')
-      .insert(payload)
-      .select([
+    const { data, error, duplicate } = await persistWhatsAppClickEvent(supabase, payload, {
+      selectFields: [
         'id',
         'clicked_at',
         'event_label',
         'page_path'
-      ].join(','))
-      .single();
+      ].join(',')
+    });
 
     if (error) {
       console.error('[analytics][whatsapp-click] insert failed:', error);
@@ -79,8 +78,8 @@ export async function POST(request) {
     }
 
     return NextResponse.json({
-      status: 'success',
-      message: 'Clic WhatsApp enregistré.',
+      status: duplicate ? 'duplicate' : 'success',
+      message: duplicate ? 'Clic WhatsApp déjà enregistré récemment.' : 'Clic WhatsApp enregistré.',
       data
     });
   } catch (error) {

@@ -45,6 +45,8 @@ const ADMIN_WHATSAPP_INTENTS_CONVERT_RATE_LIMIT = {
 };
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const DEFAULT_INTENT_LIMIT = 50;
+const MAX_INTENT_QUERY_BATCHES = 12;
 
 function getErrorResponse(status, message, httpStatus) {
   return NextResponse.json({
@@ -57,13 +59,40 @@ function getErrorResponse(status, message, httpStatus) {
   }, { status: httpStatus });
 }
 
-function getSafeLimit(value, fallback = 200) {
+function getSafeLimit(value, fallback = DEFAULT_INTENT_LIMIT) {
   const numericValue = Number(value);
   if (!Number.isFinite(numericValue)) {
     return fallback;
   }
 
-  return Math.max(1, Math.min(500, Math.round(numericValue)));
+  return Math.max(1, Math.min(200, Math.round(numericValue)));
+}
+
+function getSafeCursor(value, fallback = 0) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return fallback;
+  }
+
+  return Math.max(0, Math.round(numericValue));
+}
+
+function normalizeIntentTimestamp(value, { endOfDay = false } = {}) {
+  const text = String(value || '').trim();
+  if (!text) {
+    return '';
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    return `${text}${endOfDay ? 'T23:59:59.999Z' : 'T00:00:00.000Z'}`;
+  }
+
+  const parsed = new Date(text);
+  if (!Number.isFinite(parsed.getTime())) {
+    return '';
+  }
+
+  return parsed.toISOString();
 }
 
 function isMissingWhatsAppClickSchemaError(error) {
@@ -146,6 +175,107 @@ async function fetchClaimedClickIds(supabase, clickIds = []) {
   };
 }
 
+async function fetchWhatsAppIntentPage(supabase, {
+  cursor = 0,
+  limit = DEFAULT_INTENT_LIMIT,
+  clickedAtFrom = '',
+  clickedAtTo = ''
+} = {}) {
+  const batchSize = Math.min(Math.max(limit * 2, 50), 200);
+  const visibleRows = [];
+  let rawCursor = getSafeCursor(cursor);
+  let nextCursor = null;
+  let hasMore = false;
+
+  for (let batchIndex = 0; batchIndex < MAX_INTENT_QUERY_BATCHES; batchIndex += 1) {
+    let clickQuery = supabase
+      .from('whatsapp_click_events')
+      .select(WHATSAPP_INTENT_SELECT_FIELDS)
+      .order('clicked_at', { ascending: false })
+      .order('id', { ascending: false })
+      .range(rawCursor, rawCursor + batchSize - 1);
+
+    if (clickedAtFrom) {
+      clickQuery = clickQuery.gte('clicked_at', clickedAtFrom);
+    }
+
+    if (clickedAtTo) {
+      clickQuery = clickQuery.lte('clicked_at', clickedAtTo);
+    }
+
+    const { data: clickRows, error: clickError } = await clickQuery;
+    if (clickError) {
+      return {
+        rows: [],
+        nextCursor: null,
+        hasMore: false,
+        error: clickError,
+        missingHint: null
+      };
+    }
+
+    const batchRows = clickRows || [];
+    if (batchRows.length === 0) {
+      break;
+    }
+
+    const filteredClickRows = filterTrackedWhatsAppClicks(batchRows);
+    const clickIds = filteredClickRows.map((row) => row.id).filter(Boolean);
+    const claimedResult = await fetchClaimedClickIds(supabase, clickIds);
+    if (claimedResult.error) {
+      return {
+        rows: [],
+        nextCursor: null,
+        hasMore: false,
+        error: claimedResult.error,
+        missingHint: claimedResult.missingHint
+      };
+    }
+
+    const batchIntents = buildUnclaimedWhatsAppIntents(filteredClickRows, claimedResult.claimedIds);
+    const batchIntentMap = new Map(batchIntents.map((intent) => [intent.id, intent]));
+
+    for (let index = 0; index < batchRows.length; index += 1) {
+      const row = batchRows[index];
+      const intent = batchIntentMap.get(row.id);
+      if (!intent) {
+        continue;
+      }
+
+      visibleRows.push(intent);
+
+      if (visibleRows.length === limit) {
+        nextCursor = String(rawCursor + index + 1);
+      }
+
+      if (visibleRows.length > limit) {
+        hasMore = true;
+        return {
+          rows: visibleRows.slice(0, limit),
+          nextCursor,
+          hasMore,
+          error: null,
+          missingHint: null
+        };
+      }
+    }
+
+    rawCursor += batchRows.length;
+
+    if (batchRows.length < batchSize) {
+      break;
+    }
+  }
+
+  return {
+    rows: visibleRows.slice(0, limit),
+    nextCursor: hasMore ? nextCursor : null,
+    hasMore,
+    error: null,
+    missingHint: null
+  };
+}
+
 export async function GET(request) {
   const rateLimitResponse = rateLimitRequest(request, ADMIN_WHATSAPP_INTENTS_LIST_RATE_LIMIT);
   if (rateLimitResponse) {
@@ -170,28 +300,20 @@ export async function GET(request) {
 
   const searchParams = request.nextUrl.searchParams;
   const limit = getSafeLimit(searchParams.get('limit'));
-  const dateFrom = searchParams.get('dateFrom') || '';
-  const dateTo = searchParams.get('dateTo') || '';
+  const cursor = getSafeCursor(searchParams.get('cursor'));
+  const dateFrom = normalizeIntentTimestamp(searchParams.get('dateFrom') || '', { endOfDay: false });
+  const dateTo = normalizeIntentTimestamp(searchParams.get('dateTo') || '', { endOfDay: true });
 
   try {
-    let clickQuery = supabase
-      .from('whatsapp_click_events')
-      .select(WHATSAPP_INTENT_SELECT_FIELDS)
-      .order('clicked_at', { ascending: false })
-      .limit(limit);
+    const pageResult = await fetchWhatsAppIntentPage(supabase, {
+      cursor,
+      limit,
+      clickedAtFrom: dateFrom,
+      clickedAtTo: dateTo
+    });
 
-    if (dateFrom) {
-      clickQuery = clickQuery.gte('clicked_at', `${dateFrom}T00:00:00.000Z`);
-    }
-
-    if (dateTo) {
-      clickQuery = clickQuery.lte('clicked_at', `${dateTo}T23:59:59.999Z`);
-    }
-
-    const { data: clickRows, error: clickError } = await clickQuery;
-
-    if (clickError) {
-      if (isMissingWhatsAppClickSchemaError(clickError)) {
+    if (pageResult.error) {
+      if (isMissingWhatsAppClickSchemaError(pageResult.error)) {
         return getErrorResponse(
           'schema_missing',
           `Le tracking des clics WhatsApp n’est pas encore appliqué. ${WHATSAPP_TRACKING_MIGRATION_HINT}`,
@@ -199,29 +321,28 @@ export async function GET(request) {
         );
       }
 
-      console.error('[admin][whatsapp-intents] click fetch failed:', clickError);
-      return getErrorResponse('fetch_failed', 'Impossible de charger les intentions WhatsApp.', 500);
-    }
-
-    const filteredClickRows = filterTrackedWhatsAppClicks(clickRows || []);
-    const clickIds = filteredClickRows.map((row) => row.id).filter(Boolean);
-    const claimedResult = await fetchClaimedClickIds(supabase, clickIds);
-    if (claimedResult.error) {
-      if (claimedResult.missingHint) {
+      if (pageResult.missingHint) {
         return getErrorResponse(
           'schema_missing',
-          `Le rattachement des intentions WhatsApp n’est pas encore appliqué. ${claimedResult.missingHint}`,
+          `Le rattachement des intentions WhatsApp n’est pas encore appliqué. ${pageResult.missingHint}`,
           409
         );
       }
 
-      console.error('[admin][whatsapp-intents] claimed ids fetch failed:', claimedResult.error);
+      console.error('[admin][whatsapp-intents] page fetch failed:', pageResult.error);
       return getErrorResponse('fetch_failed', 'Impossible de charger les intentions WhatsApp.', 500);
     }
 
     return NextResponse.json({
       status: 'success',
-      data: buildUnclaimedWhatsAppIntents(filteredClickRows, claimedResult.claimedIds)
+      data: pageResult.rows,
+      details: {
+        cursor: String(cursor),
+        nextCursor: pageResult.nextCursor,
+        hasMore: pageResult.hasMore,
+        limit,
+        returnedCount: pageResult.rows.length
+      }
     });
   } catch (error) {
     console.error('[admin][whatsapp-intents] list unexpected error:', error);

@@ -1,7 +1,7 @@
 'use client';
 
 import HeroHeader from '@/utils/components/reusableHeader/HeroHeader';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import {
@@ -48,13 +48,25 @@ const BUSINESS_LINE_LABELS = Object.fromEntries(
 const SCHEDULE_TYPE_LABELS = Object.fromEntries(
   WHATSAPP_DIRECT_LEAD_SCHEDULE_TYPES.map((option) => [option.value, option.label])
 );
+const INTENT_PAGE_LIMIT = 50;
 
 export default function AdminWhatsAppPage() {
   const router = useRouter();
   const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAdminAuth();
   const [intents, setIntents] = useState([]);
   const [intentsLoading, setIntentsLoading] = useState(true);
+  const [intentsLoadingMore, setIntentsLoadingMore] = useState(false);
+  const [intentsHasMore, setIntentsHasMore] = useState(false);
+  const [intentsNextCursor, setIntentsNextCursor] = useState(null);
   const [intentError, setIntentError] = useState('');
+  const [intentFilters, setIntentFilters] = useState({
+    dateFrom: '',
+    dateTo: ''
+  });
+  const [intentFilterDraft, setIntentFilterDraft] = useState({
+    dateFrom: '',
+    dateTo: ''
+  });
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [leadStatusDraft, setLeadStatusDraft] = useState(LEAD_STATUSES.SUBMITTED);
   const [leadQualityDraft, setLeadQualityDraft] = useState(LEAD_QUALITY_OUTCOMES.UNREVIEWED);
@@ -68,6 +80,7 @@ export default function AdminWhatsAppPage() {
   const [phoneCopyState, setPhoneCopyState] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedIntentForConversion, setSelectedIntentForConversion] = useState(null);
+  const intentListRequestIdRef = useRef(0);
   const [filters, setFilters] = useState({
     leadStatus: 'all',
     businessLine: 'all',
@@ -131,44 +144,14 @@ export default function AdminWhatsAppPage() {
       return undefined;
     }
 
-    let cancelled = false;
     const timeoutId = window.setTimeout(async () => {
       await refresh();
-
-      if (cancelled) {
-        return;
-      }
-
-      try {
-        setIntentsLoading(true);
-        setIntentError('');
-        const data = await getWhatsAppIntents({
-          dateFrom: filters.dateFrom || undefined,
-          dateTo: filters.dateTo || undefined,
-          limit: 50
-        });
-
-        if (!cancelled) {
-          setIntents(data);
-        }
-      } catch (loadError) {
-        console.error(loadError);
-        if (!cancelled) {
-          setIntents([]);
-          setIntentError(loadError.message || 'Impossible de charger les intentions site WhatsApp.');
-        }
-      } finally {
-        if (!cancelled) {
-          setIntentsLoading(false);
-        }
-      }
     }, 180);
 
     return () => {
-      cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [authLoading, filters.dateFrom, filters.dateTo, isAdmin, refresh, user]);
+  }, [authLoading, isAdmin, refresh, user]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -194,6 +177,81 @@ export default function AdminWhatsAppPage() {
       router.push('/admin/login');
     }
   };
+
+  const handleRefreshAll = async () => {
+    await Promise.all([
+      refresh(),
+      loadIntents({ append: false, cursor: null })
+    ]);
+  };
+
+  const loadIntents = useCallback(async ({
+    append = false,
+    cursor = append ? intentsNextCursor : null
+  } = {}) => {
+    const requestId = intentListRequestIdRef.current + 1;
+    intentListRequestIdRef.current = requestId;
+
+    if (append) {
+      setIntentsLoadingMore(true);
+    } else {
+      setIntentsLoading(true);
+      setIntentError('');
+    }
+
+    try {
+      const result = await getWhatsAppIntents({
+        dateFrom: parseDateTimeLocalInputValue(intentFilters.dateFrom) || undefined,
+        dateTo: parseDateTimeLocalInputValue(intentFilters.dateTo) || undefined,
+        limit: INTENT_PAGE_LIMIT,
+        cursor: cursor || undefined
+      });
+
+      if (intentListRequestIdRef.current !== requestId) {
+        return;
+      }
+
+      setIntents((currentIntents) => (
+        append
+          ? [...currentIntents, ...result.rows.filter((intent) => !currentIntents.some((current) => current.id === intent.id))]
+          : result.rows
+      ));
+      setIntentsNextCursor(result.nextCursor);
+      setIntentsHasMore(result.hasMore);
+      setIntentError('');
+    } catch (loadError) {
+      if (intentListRequestIdRef.current !== requestId) {
+        return;
+      }
+
+      console.error(loadError);
+      setIntentError(loadError.message || 'Impossible de charger les intentions site WhatsApp.');
+      if (!append) {
+        setIntents([]);
+        setIntentsNextCursor(null);
+        setIntentsHasMore(false);
+      }
+    } finally {
+      if (intentListRequestIdRef.current === requestId) {
+        setIntentsLoading(false);
+        setIntentsLoadingMore(false);
+      }
+    }
+  }, [intentFilters.dateFrom, intentFilters.dateTo, intentsNextCursor]);
+
+  useEffect(() => {
+    if (authLoading || !user || !isAdmin) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(async () => {
+      await loadIntents({ append: false, cursor: null });
+    }, 180);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [authLoading, isAdmin, loadIntents, user]);
 
   const syncLeadQuery = useCallback((leadId) => {
     if (typeof window === 'undefined') {
@@ -460,6 +518,51 @@ export default function AdminWhatsAppPage() {
     }));
   };
 
+  const updateIntentFilterDraft = (key, value) => {
+    setIntentFilterDraft((currentFilters) => ({
+      ...currentFilters,
+      [key]: value
+    }));
+  };
+
+  const applyIntentFilters = () => {
+    const fromIso = parseDateTimeLocalInputValue(intentFilterDraft.dateFrom);
+    const toIso = parseDateTimeLocalInputValue(intentFilterDraft.dateTo);
+
+    if (fromIso && toIso && fromIso > toIso) {
+      setIntentError('La date/heure de début doit être antérieure à la fin.');
+      return;
+    }
+
+    setIntentError('');
+    setIntentFilters({ ...intentFilterDraft });
+  };
+
+  const setIntentFiltersToToday = () => {
+    const now = new Date();
+    const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60 * 1000)).toISOString().slice(0, 10);
+    const nextFilters = {
+      dateFrom: `${localDate}T00:00`,
+      dateTo: `${localDate}T23:59`
+    };
+
+    setIntentError('');
+    setIntentFilterDraft(nextFilters);
+    setIntentFilters(nextFilters);
+  };
+
+  const resetIntentFilters = () => {
+    setIntentError('');
+    setIntentFilterDraft({
+      dateFrom: '',
+      dateTo: ''
+    });
+    setIntentFilters({
+      dateFrom: '',
+      dateTo: ''
+    });
+  };
+
   const resetFilters = () => {
     setFilters({
       leadStatus: 'all',
@@ -471,6 +574,14 @@ export default function AdminWhatsAppPage() {
       dateFrom: '',
       dateTo: ''
     });
+  };
+
+  const loadMoreIntents = async () => {
+    if (!intentsHasMore || intentsLoadingMore) {
+      return;
+    }
+
+    await loadIntents({ append: true, cursor: intentsNextCursor });
   };
 
   const filteredRequests = requests;
@@ -529,7 +640,7 @@ export default function AdminWhatsAppPage() {
             <button type="button" onClick={openManualCreateModal} className={styles.saveButton}>
               Ajouter lead WhatsApp
             </button>
-            <button onClick={refresh} className={styles.refreshButton}>
+            <button onClick={handleRefreshAll} className={styles.refreshButton}>
               Actualiser
             </button>
             <button onClick={handleLogout} className={styles.logoutButton}>
@@ -547,7 +658,7 @@ export default function AdminWhatsAppPage() {
           </div>
           <div className={styles.statCard}>
             <h3>{intents.length}</h3>
-            <p>Intentions site à traiter</p>
+            <p>Intentions affichées</p>
           </div>
           <div className={styles.statCard}>
             <h3>{requests.filter((request) => getLeadStatus(request) === LEAD_STATUSES.SUBMITTED).length}</h3>
@@ -577,6 +688,44 @@ export default function AdminWhatsAppPage() {
             <p className={styles.inlineHelp}>
               Ces clics viennent du site mais ne comptent pas encore comme des leads. Convertissez-les seulement quand une vraie conversation WhatsApp existe et que vous connaissez le téléphone du contact.
             </p>
+            <div className={styles.filtersPanel}>
+              <div className={styles.filterField}>
+                <label htmlFor="whatsapp-intent-date-from">Depuis (clic)</label>
+                <input
+                  id="whatsapp-intent-date-from"
+                  type="datetime-local"
+                  value={intentFilterDraft.dateFrom}
+                  onChange={(event) => updateIntentFilterDraft('dateFrom', event.target.value)}
+                />
+              </div>
+
+              <div className={styles.filterField}>
+                <label htmlFor="whatsapp-intent-date-to">Jusqu&apos;au (clic)</label>
+                <input
+                  id="whatsapp-intent-date-to"
+                  type="datetime-local"
+                  value={intentFilterDraft.dateTo}
+                  onChange={(event) => updateIntentFilterDraft('dateTo', event.target.value)}
+                />
+              </div>
+
+              <button type="button" className={styles.saveButton} onClick={applyIntentFilters}>
+                Appliquer
+              </button>
+              <button type="button" className={styles.secondaryButton} onClick={setIntentFiltersToToday}>
+                Aujourd&apos;hui
+              </button>
+              <button type="button" className={styles.clearFiltersButton} onClick={resetIntentFilters}>
+                Réinitialiser
+              </button>
+            </div>
+            <p className={styles.inlineNote}>
+              Utilisez 00:00 → 23:59 pour isoler une journée complète, ou définissez une plage horaire précise.
+            </p>
+            <div className={styles.resultsMeta}>
+              {intents.length} intention{intents.length > 1 ? 's' : ''} affichée{intents.length > 1 ? 's' : ''}
+              {intentsHasMore ? ' • plus de résultats disponibles' : ''}
+            </div>
             {intentsLoading && <p className={styles.mutedText}>Chargement des intentions site WhatsApp...</p>}
             {intentError ? (
               <p className={styles.statusError}>{intentError}</p>
@@ -612,6 +761,18 @@ export default function AdminWhatsAppPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+            {intentsHasMore && !intentError && (
+              <div className={styles.loadMoreRow}>
+                <button
+                  type="button"
+                  className={styles.secondaryButton}
+                  onClick={loadMoreIntents}
+                  disabled={intentsLoadingMore}
+                >
+                  {intentsLoadingMore ? 'Chargement...' : `Afficher ${INTENT_PAGE_LIMIT} de plus`}
+                </button>
               </div>
             )}
           </div>

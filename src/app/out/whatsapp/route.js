@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/libs/supabase';
 import {
+  persistWhatsAppClickEvent,
   normalizeWhatsAppClickPayload,
   shouldTrackWhatsAppClick
 } from '@/libs/whatsappAttribution.mjs';
@@ -52,9 +53,7 @@ export async function GET(request) {
   if (shouldTrackWhatsAppClick(clickPayload)) {
     try {
       const supabase = createServiceClient();
-      const { error } = await supabase
-        .from('whatsapp_click_events')
-        .insert(clickPayload);
+      const { error } = await persistWhatsAppClickEvent(supabase, clickPayload);
 
       if (error) {
         console.error('[outbound][whatsapp] insert failed:', error);

@@ -4,13 +4,17 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  buildWhatsAppClickDedupeSignature,
   filterTrackedWhatsAppClicks,
   WHATSAPP_MATCH_WINDOW_DAYS,
+  WHATSAPP_CLICK_DEDUPE_WINDOW_MS,
   buildWhatsAppManualTagPatch,
+  isRecentWhatsAppClickDuplicate,
   getWhatsAppAttributionMode,
   isWithinWhatsAppMatchWindow,
   matchesWhatsAppFilter,
   normalizeWhatsAppClickPayload,
+  persistWhatsAppClickEvent,
   shouldTrackWhatsAppClick,
   pickLatestEligibleWhatsAppClick
 } from '../src/libs/whatsappAttribution.mjs';
@@ -24,6 +28,115 @@ import { getWhatsAppAttributionDiagnosis } from '../src/libs/whatsappAttribution
 
 const testDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(testDirectory, '..');
+
+function createFakeWhatsAppClickSupabase(initialRows = []) {
+  const rows = [...initialRows];
+  const inserts = [];
+
+  const applyFilters = (inputRows, filters) => inputRows.filter((row) => filters.every((filter) => {
+    const value = row[filter.column] ?? null;
+
+    if (filter.type === 'eq') {
+      return value === filter.value;
+    }
+
+    if (filter.type === 'is') {
+      return value === filter.value;
+    }
+
+    if (filter.type === 'gte') {
+      return String(value || '') >= String(filter.value);
+    }
+
+    if (filter.type === 'lte') {
+      return String(value || '') <= String(filter.value);
+    }
+
+    return true;
+  }));
+
+  return {
+    inserts,
+    rows,
+    from(table) {
+      assert.equal(table, 'whatsapp_click_events');
+
+      return {
+        select() {
+          const state = {
+            filters: [],
+            limitCount: Infinity
+          };
+
+          const query = {
+            eq(column, value) {
+              state.filters.push({ type: 'eq', column, value });
+              return query;
+            },
+            is(column, value) {
+              state.filters.push({ type: 'is', column, value });
+              return query;
+            },
+            gte(column, value) {
+              state.filters.push({ type: 'gte', column, value });
+              return query;
+            },
+            lte(column, value) {
+              state.filters.push({ type: 'lte', column, value });
+              return query;
+            },
+            order() {
+              return query;
+            },
+            limit(limitCount) {
+              state.limitCount = limitCount;
+              return query;
+            },
+            then(resolve, reject) {
+              try {
+                const filteredRows = applyFilters(rows, state.filters)
+                  .sort((left, right) => String(right.clicked_at || '').localeCompare(String(left.clicked_at || '')))
+                  .slice(0, state.limitCount);
+                resolve({ data: filteredRows, error: null });
+              } catch (error) {
+                if (reject) {
+                  reject(error);
+                  return;
+                }
+
+                throw error;
+              }
+            }
+          };
+
+          return query;
+        },
+        insert(payload) {
+          inserts.push(payload);
+          const insertedRow = {
+            id: `wa-${rows.length + 1}`,
+            created_at: payload.clicked_at,
+            ...payload
+          };
+          rows.push(insertedRow);
+
+          return {
+            select() {
+              return {
+                async single() {
+                  return {
+                    data: insertedRow,
+                    error: null
+                  };
+                }
+              };
+            }
+          };
+        }
+      };
+    }
+  };
+}
 
 test('normalizeWhatsAppClickPayload keeps only safe WhatsApp attribution fields', () => {
   const payload = normalizeWhatsAppClickPayload({
@@ -229,6 +342,83 @@ test('whatsapp attribution diagnosis distinguishes captured, true direct, fallba
       isFallbackDirect: false
     }
   );
+});
+
+test('dedupe signature normalizes query strings away so the same WhatsApp click can be matched across routes', () => {
+  const signature = buildWhatsAppClickDedupeSignature({
+    ga_client_id: '123.456',
+    event_label: 'sticky_header_whatsapp',
+    page_path: '/conseils/tarif-nettoyage-tapis-tunis-2025?utm_source=google',
+    landing_page: '/conseils/tarif-nettoyage-tapis-tunis-2025?utm_source=google',
+    session_source: 'google',
+    session_medium: 'organic',
+    session_campaign: '(not set)',
+    referrer_host: 'google.com',
+    clicked_at: '2026-06-08T15:31:00.000Z'
+  });
+
+  assert.equal(signature.page_path, '/conseils/tarif-nettoyage-tapis-tunis-2025');
+  assert.equal(signature.landing_page, '/conseils/tarif-nettoyage-tapis-tunis-2025');
+});
+
+test('recent duplicate detection matches equivalent WhatsApp clicks inside the dedupe window', () => {
+  const duplicate = isRecentWhatsAppClickDuplicate({
+    ga_client_id: '123.456',
+    event_label: 'sticky_header_whatsapp',
+    page_path: '/conseils/tarif-nettoyage-tapis-tunis-2025',
+    landing_page: '/conseils/tarif-nettoyage-tapis-tunis-2025',
+    session_source: 'google',
+    session_medium: 'organic',
+    session_campaign: '(not set)',
+    referrer_host: 'google.com',
+    clicked_at: '2026-06-08T15:31:00.000Z'
+  }, {
+    ga_client_id: '123.456',
+    event_label: 'sticky_header_whatsapp',
+    page_path: '/conseils/tarif-nettoyage-tapis-tunis-2025?utm_source=google',
+    landing_page: '/conseils/tarif-nettoyage-tapis-tunis-2025?utm_source=google',
+    session_source: 'google',
+    session_medium: 'organic',
+    session_campaign: '(not set)',
+    referrer_host: 'google.com',
+    clicked_at: '2026-06-08T15:31:05.000Z'
+  }, WHATSAPP_CLICK_DEDUPE_WINDOW_MS);
+
+  assert.equal(duplicate, true);
+});
+
+test('persistWhatsAppClickEvent suppresses duplicate inserts inside the dedupe window', async () => {
+  const fakeSupabase = createFakeWhatsAppClickSupabase();
+
+  const firstInsert = await persistWhatsAppClickEvent(fakeSupabase, {
+    ga_client_id: '123.456',
+    event_label: 'sticky_header_whatsapp',
+    page_path: '/conseils/tarif-nettoyage-tapis-tunis-2025',
+    landing_page: '/conseils/tarif-nettoyage-tapis-tunis-2025',
+    session_source: 'google',
+    session_medium: 'organic',
+    session_campaign: '(not set)',
+    referrer_host: 'google.com',
+    clicked_at: '2026-06-08T15:31:00.000Z'
+  });
+
+  const secondInsert = await persistWhatsAppClickEvent(fakeSupabase, {
+    ga_client_id: '123.456',
+    event_label: 'sticky_header_whatsapp',
+    page_path: '/conseils/tarif-nettoyage-tapis-tunis-2025?utm_source=google',
+    landing_page: '/conseils/tarif-nettoyage-tapis-tunis-2025?utm_source=google',
+    session_source: 'google',
+    session_medium: 'organic',
+    session_campaign: '(not set)',
+    referrer_host: 'google.com',
+    clicked_at: '2026-06-08T15:31:03.000Z'
+  });
+
+  assert.equal(firstInsert.inserted, true);
+  assert.equal(firstInsert.duplicate, false);
+  assert.equal(secondInsert.inserted, false);
+  assert.equal(secondInsert.duplicate, true);
+  assert.equal(fakeSupabase.inserts.length, 1);
 });
 
 test('main WhatsApp CTA surfaces use analytics-aware links instead of raw wa.me anchors', async () => {

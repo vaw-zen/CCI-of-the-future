@@ -101,7 +101,8 @@ export async function getAdminLeadSummaries(kind, {
   return {
     rows: result.data || [],
     nextCursor: result.details?.nextCursor || null,
-    hasMore: Boolean(result.details?.hasMore)
+    hasMore: Boolean(result.details?.hasMore),
+    totalCount: Number.isFinite(result.details?.totalCount) ? result.details.totalCount : null
   };
 }
 

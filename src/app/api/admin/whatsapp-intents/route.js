@@ -47,6 +47,8 @@ const ADMIN_WHATSAPP_INTENTS_CONVERT_RATE_LIMIT = {
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const DEFAULT_INTENT_LIMIT = 25;
 const MAX_INTENT_QUERY_BATCHES = 12;
+const INTENT_COUNT_BATCH_SIZE = 200;
+const MAX_INTENT_COUNT_BATCHES = 25;
 
 function getErrorResponse(status, message, httpStatus) {
   return NextResponse.json({
@@ -276,6 +278,69 @@ async function fetchWhatsAppIntentPage(supabase, {
   };
 }
 
+async function countWhatsAppIntents(supabase, {
+  clickedAtFrom = '',
+  clickedAtTo = ''
+} = {}) {
+  let totalCount = 0;
+  let rawCursor = 0;
+
+  for (let batchIndex = 0; batchIndex < MAX_INTENT_COUNT_BATCHES; batchIndex += 1) {
+    let clickQuery = supabase
+      .from('whatsapp_click_events')
+      .select(WHATSAPP_INTENT_SELECT_FIELDS)
+      .order('clicked_at', { ascending: false })
+      .order('id', { ascending: false })
+      .range(rawCursor, rawCursor + INTENT_COUNT_BATCH_SIZE - 1);
+
+    if (clickedAtFrom) {
+      clickQuery = clickQuery.gte('clicked_at', clickedAtFrom);
+    }
+
+    if (clickedAtTo) {
+      clickQuery = clickQuery.lte('clicked_at', clickedAtTo);
+    }
+
+    const { data: clickRows, error: clickError } = await clickQuery;
+    if (clickError) {
+      return {
+        totalCount: 0,
+        error: clickError,
+        missingHint: null
+      };
+    }
+
+    const batchRows = clickRows || [];
+    if (batchRows.length === 0) {
+      break;
+    }
+
+    const filteredClickRows = filterTrackedWhatsAppClicks(batchRows);
+    const clickIds = filteredClickRows.map((row) => row.id).filter(Boolean);
+    const claimedResult = await fetchClaimedClickIds(supabase, clickIds);
+    if (claimedResult.error) {
+      return {
+        totalCount: 0,
+        error: claimedResult.error,
+        missingHint: claimedResult.missingHint
+      };
+    }
+
+    totalCount += buildUnclaimedWhatsAppIntents(filteredClickRows, claimedResult.claimedIds).length;
+    rawCursor += batchRows.length;
+
+    if (batchRows.length < INTENT_COUNT_BATCH_SIZE) {
+      break;
+    }
+  }
+
+  return {
+    totalCount,
+    error: null,
+    missingHint: null
+  };
+}
+
 export async function GET(request) {
   const rateLimitResponse = rateLimitRequest(request, ADMIN_WHATSAPP_INTENTS_LIST_RATE_LIMIT);
   if (rateLimitResponse) {
@@ -305,6 +370,39 @@ export async function GET(request) {
   const dateTo = normalizeIntentTimestamp(searchParams.get('dateTo') || '', { endOfDay: true });
 
   try {
+    const shouldIncludeTotalCount = cursor === 0;
+    let totalCount = null;
+
+    if (shouldIncludeTotalCount) {
+      const totalResult = await countWhatsAppIntents(supabase, {
+        clickedAtFrom: dateFrom,
+        clickedAtTo: dateTo
+      });
+
+      if (totalResult.error) {
+        if (isMissingWhatsAppClickSchemaError(totalResult.error)) {
+          return getErrorResponse(
+            'schema_missing',
+            `Le tracking des clics WhatsApp n’est pas encore appliqué. ${WHATSAPP_TRACKING_MIGRATION_HINT}`,
+            409
+          );
+        }
+
+        if (totalResult.missingHint) {
+          return getErrorResponse(
+            'schema_missing',
+            `Le rattachement des intentions WhatsApp n’est pas encore appliqué. ${totalResult.missingHint}`,
+            409
+          );
+        }
+
+        console.error('[admin][whatsapp-intents] count fetch failed:', totalResult.error);
+        return getErrorResponse('fetch_failed', 'Impossible de compter les intentions WhatsApp.', 500);
+      }
+
+      totalCount = totalResult.totalCount;
+    }
+
     const pageResult = await fetchWhatsAppIntentPage(supabase, {
       cursor,
       limit,
@@ -341,7 +439,8 @@ export async function GET(request) {
         nextCursor: pageResult.nextCursor,
         hasMore: pageResult.hasMore,
         limit,
-        returnedCount: pageResult.rows.length
+        returnedCount: pageResult.rows.length,
+        totalCount
       }
     });
   } catch (error) {

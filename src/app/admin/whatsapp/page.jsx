@@ -58,6 +58,7 @@ export default function AdminWhatsAppPage() {
   const [intentsLoadingMore, setIntentsLoadingMore] = useState(false);
   const [intentsHasMore, setIntentsHasMore] = useState(false);
   const [intentsNextCursor, setIntentsNextCursor] = useState(null);
+  const [intentsTotalCount, setIntentsTotalCount] = useState(0);
   const [intentError, setIntentError] = useState('');
   const [intentFilters, setIntentFilters] = useState({
     dateFrom: '',
@@ -218,6 +219,11 @@ export default function AdminWhatsAppPage() {
       ));
       setIntentsNextCursor(result.nextCursor);
       setIntentsHasMore(result.hasMore);
+      if (Number.isFinite(result.totalCount)) {
+        setIntentsTotalCount(result.totalCount);
+      } else if (!append) {
+        setIntentsTotalCount(result.rows.length);
+      }
       setIntentError('');
     } catch (loadError) {
       if (intentListRequestIdRef.current !== requestId) {
@@ -230,6 +236,7 @@ export default function AdminWhatsAppPage() {
         setIntents([]);
         setIntentsNextCursor(null);
         setIntentsHasMore(false);
+        setIntentsTotalCount(0);
       }
     } finally {
       if (intentListRequestIdRef.current === requestId) {
@@ -405,6 +412,7 @@ export default function AdminWhatsAppPage() {
   const handleCreateSuccess = async (createdLead) => {
     if (selectedIntentForConversion?.id) {
       setIntents((currentIntents) => currentIntents.filter((intent) => intent.id !== selectedIntentForConversion.id));
+      setIntentsTotalCount((currentCount) => Math.max(0, currentCount - 1));
     }
 
     upsertLead(createdLead);
@@ -657,8 +665,8 @@ export default function AdminWhatsAppPage() {
             <p>Leads WhatsApp</p>
           </div>
           <div className={styles.statCard}>
-            <h3>{intents.length}</h3>
-            <p>Intentions affichées</p>
+            <h3>{intentsTotalCount}</h3>
+            <p>Intentions en attente</p>
           </div>
           <div className={styles.statCard}>
             <h3>{requests.filter((request) => getLeadStatus(request) === LEAD_STATUSES.SUBMITTED).length}</h3>
@@ -723,7 +731,7 @@ export default function AdminWhatsAppPage() {
               Utilisez 00:00 → 23:59 pour isoler une journée complète, ou définissez une plage horaire précise.
             </p>
             <div className={styles.resultsMeta}>
-              {intents.length} intention{intents.length > 1 ? 's' : ''} affichée{intents.length > 1 ? 's' : ''}
+              {intents.length} intention{intents.length > 1 ? 's' : ''} affichée{intents.length > 1 ? 's' : ''} sur {intentsTotalCount}
               {intentsHasMore ? ' • plus de résultats disponibles' : ''}
             </div>
             {intentsLoading && <p className={styles.mutedText}>Chargement des intentions site WhatsApp...</p>}

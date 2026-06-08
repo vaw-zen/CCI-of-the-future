@@ -2,14 +2,14 @@
   "welcomeCards": [
     {
       "imageSrc": "/contact/chaabmaher.png",
-      "title": "Observez les clients, pas les concurrents.",
+      "title": "Décrivez votre besoin, nous revenons avec un devis clair.",
       "name": "Chaabane Maher",
       "position": "PDG",
       "email": "contact@cciservices.online"
     },
     {
       "imageSrc": "/our-team/ceo.jpg",
-      "title": "Nos clients, toujours notre priorité.",
+      "title": "Un contact rapide, un diagnostic simple, puis un devis adapté.",
       "name": "Chaabane Fares",
       "position": "CEO",
       "email": "contact@cciservices.online"

@@ -61,6 +61,25 @@ test('withoutOptionalLeadOperationFields strips operational-only write fields fr
   });
 });
 
+test('withoutOptionalLeadTrackingFields also strips optional tracking and lead-operations fields from write payloads', () => {
+  const strippedPayload = withoutOptionalLeadTrackingFields({
+    whatsapp_click_id: 'click-1',
+    whatsapp_click_page: '/conseils/test',
+    meta_platform: 'facebook',
+    lead_quality_outcome: 'unreviewed',
+    follow_up_sla_at: '2026-05-10T08:00:00.000Z',
+    submitted_at: '2026-05-09T07:00:00.000Z',
+    session_source: 'google',
+    type_service: 'salon'
+  });
+
+  assert.deepEqual(strippedPayload, {
+    submitted_at: '2026-05-09T07:00:00.000Z',
+    session_source: 'google',
+    type_service: 'salon'
+  });
+});
+
 test('runLeadSelectWithOptionalTrackingFallback retries with a legacy select and logs only once per channel/table', async () => {
   resetLeadTrackingSchemaCompatWarningsForTests();
 

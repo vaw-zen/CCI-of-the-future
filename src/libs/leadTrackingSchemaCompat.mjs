@@ -41,13 +41,23 @@ const META_TRACKING_MIGRATION_HINT =
 const LEAD_OPERATIONS_MIGRATION_HINT =
   'Apply supabase/20260509_stage1_lead_quality_dimensions.sql to enable lead operations fields.';
 
-export function withoutOptionalLeadTrackingFields(selectClause = '') {
-  return selectClause
-    .split(',')
-    .map((field) => field.trim())
-    .filter(Boolean)
-    .filter((field) => !OPTIONAL_LEAD_TRACKING_FIELD_SET.has(field))
-    .join(',');
+export function withoutOptionalLeadTrackingFields(value = '') {
+  if (typeof value === 'string') {
+    return value
+      .split(',')
+      .map((field) => field.trim())
+      .filter(Boolean)
+      .filter((field) => !OPTIONAL_LEAD_TRACKING_FIELD_SET.has(field))
+      .join(',');
+  }
+
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    return Object.fromEntries(
+      Object.entries(value).filter(([key]) => !OPTIONAL_LEAD_TRACKING_FIELD_SET.has(key))
+    );
+  }
+
+  return value;
 }
 
 export function isMissingOptionalLeadTrackingColumnError(error) {

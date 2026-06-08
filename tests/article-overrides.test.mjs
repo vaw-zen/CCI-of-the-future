@@ -12,6 +12,7 @@ test('car interior article routes into the salon/service path', () => {
   assert.match(article.metaTitle, /Sellerie/i);
   assert.match(article.content, /service nettoyage textiles & sellerie/i);
   assert.match(article.content, /Voir le service sellerie/i);
+  assert.match(article.content, /href="\/contact"/i);
   assert.match(article.content, /cluster-links-2026/);
 });
 
@@ -23,6 +24,7 @@ test('retapissage article promotes the tapisserie service path earlier', () => {
   assert.match(article.content, /service principal à Tunis/i);
   assert.match(article.content, /service tapisserie sur mesure/i);
   assert.match(article.content, /Intervention Grand Tunis/i);
+  assert.match(article.content, /href="\/contact"/i);
   assert.match(article.content, /Devis gratuit/i);
 });
 
@@ -33,4 +35,5 @@ test('pricing article behaves more like a transactional moquette asset', () => {
   assert.match(article.content, /services nettoyage tapis & moquette/i);
   assert.match(article.content, /Repères Grand Tunis/i);
   assert.match(article.content, /Service moquette/i);
+  assert.match(article.content, /href="\/contact"/i);
 });

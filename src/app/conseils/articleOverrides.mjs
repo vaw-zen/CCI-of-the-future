@@ -42,7 +42,7 @@ function enhancePricingArticle(content) {
         <p>🔗 <strong>Guides détaillés :</strong> Consultez notre guide complet <a href="/conseils/guide-nettoyage-tapis-tunis-2025" style="color: var(--ac-primary); font-weight: 600;">nettoyage tapis tunis</a>, découvrez nos techniques de <a href="/conseils/nettoyage-salon-canape-tunis-2026" style="color: var(--ac-primary); font-weight: 600;">shampouinage moquette tunis</a> et nos services <a href="/conseils/nettoyage-post-chantier-tunisie-fin-travaux" style="color: var(--ac-primary); font-weight: 600;">nettoyage post-chantier tunisie</a>.</p>
       </div>`,
     `<div class="info-box">
-        <p>📞 <strong>Devis Express :</strong> comparez nos <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">services nettoyage tapis & moquette</a>, appelez le <a href="tel:+21698557766" style="color: var(--ac-primary); font-weight: 600;">+216 98-557-766</a> ou demandez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis en ligne gratuit</a>.</p>
+        <p>📞 <strong>Devis Express :</strong> comparez nos <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">services nettoyage tapis & moquette</a>, appelez le <a href="tel:+21698557766" style="color: var(--ac-primary); font-weight: 600;">+216 98-557-766</a> ou lancez votre <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">demande de devis sur la page contact</a>.</p>
       </div>
 
       <div class="related-services">
@@ -50,7 +50,7 @@ function enhancePricingArticle(content) {
       </div>
 
       <div class="info-box">
-        <p>📍 <strong>Repères Grand Tunis :</strong> nous intervenons à Tunis, Ariana, La Marsa, Carthage et Ben Arous. Pour un budget rapide, envoyez les dimensions et 1 à 3 photos via <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">notre demande de devis</a> ou appelez-nous directement.</p>
+        <p>📍 <strong>Repères Grand Tunis :</strong> nous intervenons à Tunis, Ariana, La Marsa, Carthage et Ben Arous. Pour un budget rapide, envoyez les dimensions et 1 à 3 photos via <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">notre formulaire de devis</a> ou appelez-nous directement.</p>
       </div>`
   );
 
@@ -60,7 +60,7 @@ function enhancePricingArticle(content) {
         <p>🔗 <strong>Services Complémentaires :</strong> Profitez aussi de nos tarifs préférentiels pour le <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de salons</a> et <a href="/marbre" style="color: var(--ac-primary); font-weight: 600;">traitement du marbre</a>.</p>
       </div>`,
     `<div class="info-box">
-        <p>🧭 <strong>Passage à l'action :</strong> ce guide prix est notre page d'intention tarifaire. Si vous êtes prêt à réserver, allez vers <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">le service nettoyage tapis & moquette</a> puis lancez votre <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
+        <p>🧭 <strong>Passage à l'action :</strong> ce guide prix est notre page d'intention tarifaire. Si vous êtes prêt à réserver, allez vers <a href="/tapis" style="color: var(--ac-primary); font-weight: 600;">le service nettoyage tapis & moquette</a> puis lancez votre <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p>
       </div>`
   );
 
@@ -90,7 +90,7 @@ function enhanceVoitureArticle(content) {
   </div>
 
   <div class="info-box">
-    <p>🚗 <strong>Parcours le plus rapide :</strong> si votre besoin concerne la sellerie textile, les sièges, les moquettes ou une désinfection d'habitacle dans le Grand Tunis, passez par notre <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">service nettoyage textiles & sellerie</a> ou demandez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis rapide</a>.</p>
+    <p>🚗 <strong>Parcours le plus rapide :</strong> si votre besoin concerne la sellerie textile, les sièges, les moquettes ou une désinfection d'habitacle dans le Grand Tunis, passez par notre <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">service nettoyage textiles & sellerie</a> ou demandez un <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">devis rapide</a>.</p>
   </div>`
   );
 
@@ -113,7 +113,7 @@ function enhanceVoitureArticle(content) {
     </div>`,
     `<div class="contact-section">
         <a href="tel:+21698557766" class="button">Appeler maintenant (+216 98-557-766)</a>
-        <a href="/devis" class="button">Demander un devis</a>
+        <a href="/contact" class="button">Demander un devis</a>
         <a href="/salon" class="button">Voir le service sellerie</a>
         <p><b>CCI Services Tunisie</b><br>06 Rue Galant de nuit, L'Aouina, Tunis 2045</p>
     </div>`
@@ -126,7 +126,7 @@ function enhanceVoitureArticle(content) {
     `  <p>N'oubliez pas, un <b>nettoyage voiture intérieur</b> régulier est un investissement dans le confort, l'hygiène et la valeur de votre véhicule. Confiez cette tâche à des professionnels pour un résultat impeccable!</p>
 </div>
 
-<div class="info-box cluster-links-2026"><p>🔗 <strong>Continuer :</strong> comparez notre <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">service nettoyage salon & sellerie</a>, le guide <a href="/conseils/nettoyage-salon-canape-tunis-2026" style="color: var(--ac-primary); font-weight: 600;">salon & canapé</a>, les <a href="/conseils/tarif-nettoyage-salon-tunis-2026" style="color: var(--ac-primary); font-weight: 600;">tarifs nettoyage salon</a> et lancez votre <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p></div>`
+<div class="info-box cluster-links-2026"><p>🔗 <strong>Continuer :</strong> comparez notre <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">service nettoyage salon & sellerie</a>, le guide <a href="/conseils/nettoyage-salon-canape-tunis-2026" style="color: var(--ac-primary); font-weight: 600;">salon & canapé</a>, les <a href="/conseils/tarif-nettoyage-salon-tunis-2026" style="color: var(--ac-primary); font-weight: 600;">tarifs nettoyage salon</a> et lancez votre <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">devis gratuit</a>.</p></div>`
   );
 
   return next;
@@ -145,7 +145,7 @@ function enhanceRetapissageArticle(content) {
         <p>🔗 <strong>Services connexes :</strong> Maîtrisez l'<a href="/conseils/comment-nettoyer-canape-cuir-tunis-guide-complet" style="color: var(--ac-primary); font-weight: 600;">entretien canapé cuir</a>, découvrez le <a href="/conseils/nettoyage-salon-canape-tunis-2026" style="color: var(--ac-primary); font-weight: 600;">nettoyage tissus d'ameublement</a> et consultez nos <a href="/conseils/prix-nettoyage-tapis-tunis-tarifs-2025" style="color: var(--ac-primary); font-weight: 600;">tarifs transparents</a>.</p>
       </div>`,
     `<div class="info-box">
-        <p>🧵 <strong>Service principal à Tunis :</strong> si vous cherchez un tapissier à Tunis pour retapissage, changement de mousse ou rénovation d'assises, allez directement vers notre <a href="/tapisserie" style="color: var(--ac-primary); font-weight: 600;">service tapisserie sur mesure</a>, demandez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis personnalisé</a> ou utilisez notre <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">contact rapide</a>.</p>
+        <p>🧵 <strong>Service principal à Tunis :</strong> si vous cherchez un tapissier à Tunis pour retapissage, changement de mousse ou rénovation d'assises, allez directement vers notre <a href="/tapisserie" style="color: var(--ac-primary); font-weight: 600;">service tapisserie sur mesure</a>, demandez un <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">devis personnalisé</a> ou utilisez notre <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">contact rapide</a>.</p>
       </div>
 
       <div class="related-services">
@@ -163,7 +163,7 @@ function enhanceRetapissageArticle(content) {
         <p>📋 <strong>Vous avez des sièges de bureau usés ?</strong> Nous rénovons les chaises, fauteuils direction, assises d'accueil et banquettes professionnelles. <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">Demander un devis</a>.</p>
       </div>`,
     `<div class="info-box">
-        <p>📋 <strong>Vous avez des sièges de bureau usés ?</strong> Nous rénovons les chaises, fauteuils direction, assises d'accueil et banquettes professionnelles. <a href="/tapisserie" style="color: var(--ac-primary); font-weight: 600;">Voir le service tapisserie</a> ou <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">demander un devis</a>.</p>
+        <p>📋 <strong>Vous avez des sièges de bureau usés ?</strong> Nous rénovons les chaises, fauteuils direction, assises d'accueil et banquettes professionnelles. <a href="/tapisserie" style="color: var(--ac-primary); font-weight: 600;">Voir le service tapisserie</a> ou <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">demander un devis</a>.</p>
       </div>`
   );
 
@@ -178,7 +178,7 @@ function enhanceRetapissageArticle(content) {
     `<a href="mailto:contact@cciservices.online" class="btn-email">
             📧 contact@cciservices.online
           </a>`,
-    `<a href="/devis" class="btn-email">
+    `<a href="/contact" class="btn-email">
             📧 Devis gratuit
           </a>`
   );

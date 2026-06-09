@@ -25,6 +25,7 @@ import {
 import { guardMutationRequest } from '@/libs/security';
 import { isStage3TestSubmission, STAGE3_TEST_MARKER } from '@/libs/stage3TestMarker.mjs';
 import { createMetaLeadEventId, sendMetaLeadConversion } from '@/libs/metaConversions.mjs';
+import { getLegacySafeDevisFieldDefaults } from '@/libs/devisInsertPayload.mjs';
 
 const DEVIS_RATE_LIMIT = {
   scope: 'devis-submit',
@@ -198,6 +199,7 @@ export async function POST(request) {
       beforeIso: submittedAt
     });
     const whatsappAttributionColumns = buildWhatsAppAttributionColumns(matchedWhatsAppClick);
+    const legacySafeDefaults = getLegacySafeDevisFieldDefaults(formData);
 
     // Transform form data to match Supabase schema
     const devisData = {
@@ -213,7 +215,7 @@ export async function POST(request) {
       adresse: adresse,
       ville: ville,
       code_postal: formData.codePostal || null,
-      type_logement: formData.typeLogement || null,
+      type_logement: legacySafeDefaults.type_logement,
       surface: formData.surface ? parseInt(formData.surface) : null,
       
       // Service Information
@@ -223,7 +225,7 @@ export async function POST(request) {
       
       // Appointment Preferences
       date_preferee: formData.datePreferee || null,
-      heure_preferee: formData.heurePreferee || null,
+      heure_preferee: legacySafeDefaults.heure_preferee,
       
       // Additional Information
       message: formData.message || null,

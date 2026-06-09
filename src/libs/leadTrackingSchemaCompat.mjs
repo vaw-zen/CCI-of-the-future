@@ -1,4 +1,6 @@
 const OPTIONAL_LEAD_TRACKING_FIELDS = [
+  'calculator_estimate',
+  'selected_services',
   'whatsapp_click_id',
   'whatsapp_clicked_at',
   'whatsapp_click_label',
@@ -33,6 +35,7 @@ const OPTIONAL_LEAD_TRACKING_ERROR_PATTERN = new RegExp(`\\b(?:${OPTIONAL_LEAD_C
 const OPTIONAL_LEAD_TRACKING_ONLY_ERROR_PATTERN = new RegExp(`\\b(?:${OPTIONAL_LEAD_TRACKING_FIELDS.join('|')})\\b`, 'i');
 const OPTIONAL_LEAD_OPERATIONS_ONLY_ERROR_PATTERN = new RegExp(`\\b(?:${OPTIONAL_LEAD_OPERATION_FIELDS.join('|')})\\b`, 'i');
 const LEGACY_LEAD_SELECT_WARNINGS = new Set();
+const MISSING_COLUMN_LIKE_ERROR_PATTERN = /(does not exist|schema cache|Could not find the '.*' column)/i;
 
 const WHATSAPP_TRACKING_MIGRATION_HINT =
   'Apply supabase/20260507_whatsapp_funnel_attribution.sql to enable WhatsApp attribution fields.';
@@ -61,7 +64,18 @@ export function withoutOptionalLeadTrackingFields(value = '') {
 }
 
 export function isMissingOptionalLeadTrackingColumnError(error) {
-  return error?.code === '42703' && OPTIONAL_LEAD_TRACKING_ERROR_PATTERN.test(String(error?.message || ''));
+  const errorText = [
+    error?.message,
+    error?.details,
+    error?.hint
+  ].filter(Boolean).join(' ');
+
+  const isMissingColumnLikeError =
+    error?.code === '42703'
+    || error?.code === 'PGRST204'
+    || MISSING_COLUMN_LIKE_ERROR_PATTERN.test(errorText);
+
+  return isMissingColumnLikeError && OPTIONAL_LEAD_TRACKING_ERROR_PATTERN.test(errorText);
 }
 
 export function withoutOptionalLeadOperationFields(value = {}) {

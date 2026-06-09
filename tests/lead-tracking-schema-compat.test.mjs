@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   LEAD_OPERATIONS_MIGRATION_HINT,
   WHATSAPP_TRACKING_MIGRATION_HINT,
+  isMissingOptionalLeadTrackingColumnError,
   resetLeadTrackingSchemaCompatWarningsForTests,
   runLeadSelectWithOptionalTrackingFallback,
   withoutOptionalLeadOperationFields,
@@ -63,6 +64,8 @@ test('withoutOptionalLeadOperationFields strips operational-only write fields fr
 
 test('withoutOptionalLeadTrackingFields also strips optional tracking and lead-operations fields from write payloads', () => {
   const strippedPayload = withoutOptionalLeadTrackingFields({
+    calculator_estimate: 320,
+    selected_services: ['salon'],
     whatsapp_click_id: 'click-1',
     whatsapp_click_page: '/conseils/test',
     meta_platform: 'facebook',
@@ -78,6 +81,24 @@ test('withoutOptionalLeadTrackingFields also strips optional tracking and lead-o
     session_source: 'google',
     type_service: 'salon'
   });
+});
+
+test('isMissingOptionalLeadTrackingColumnError detects both Postgres and PostgREST missing-column responses', () => {
+  assert.equal(
+    isMissingOptionalLeadTrackingColumnError({
+      code: '42703',
+      message: 'column devis_requests.fbclid does not exist'
+    }),
+    true
+  );
+
+  assert.equal(
+    isMissingOptionalLeadTrackingColumnError({
+      code: 'PGRST204',
+      message: "Could not find the 'fbclid' column of 'devis_requests' in the schema cache"
+    }),
+    true
+  );
 });
 
 test('runLeadSelectWithOptionalTrackingFallback retries with a legacy select and logs only once per channel/table', async () => {

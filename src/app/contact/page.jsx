@@ -66,7 +66,7 @@ export default function ContactPage() {
 
   return (
     <>
-      <HeroHeader title="Contact & Devis - CCI Tunisie" />
+      <HeroHeader title="Contactez-nous -CCI Tunisie" />
 
       <script
         type="application/ld+json"

@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Tapissier Tunis & Tapisserie Sur Mesure | Retapissage, Rembourrage | CCI Tunisie",
-    "description": "Tapissier à Tunis et El Aouina : retapissage, rembourrage canapés, changement mousse et tissus ignifuges. Devis gratuit CCI Tunisie.",
+    "description": "Tapissier à Tunis et El Aouina : retapissage, rembourrage, changement de mousse, rénovation d'assises et devis gratuit CCI Tunisie.",
     "keywords": [
       "tapisserie sur mesure tunis",
       "retapissage",
@@ -15,7 +15,7 @@
     ]
   },
   "heroTitle": "Tapissier Tunis : Tapisserie Sur Mesure & Retapissage",
-  "heroSubtitle": "Retapissage, rembourrage, changement mousse et confection sur mesure à Tunis, El Aouina et dans le Grand Tunis.",
+  "heroSubtitle": "Retapissage, rembourrage, changement de mousse et confection sur mesure à Tunis, El Aouina et dans tout le Grand Tunis.",
   "tabData": [
     {
       "id": "mission",
@@ -70,7 +70,10 @@
     "@type": "LocalBusiness",
     "@id": "https://cciservices.online#localbusiness",
     "name": "CCI Tunisie - Chaabane's Cleaning Intelligence",
-    "alternateName": ["CCI Tunis", "CCI Services Tunisie"],
+    "alternateName": [
+      "CCI Tunis",
+      "CCI Services Tunisie"
+    ],
     "url": "https://cciservices.online/",
     "logo": "https://cciservices.online/logo.png",
     "telephone": "+216-98-557-766",
@@ -102,13 +105,34 @@
     "description": "CCI Tunisie assure le retapissage, le remplacement de mousse, le rembourrage et la tapisserie sur mesure à Tunis. Solutions pour mobilier résidentiel, professionnel, bateaux et yachts.",
     "url": "https://cciservices.online/tapisserie",
     "areaServed": [
-      { "@type": "City", "name": "Tunis" },
-      { "@type": "City", "name": "Ariana" },
-      { "@type": "City", "name": "El Aouina" },
-      { "@type": "City", "name": "Ben Arous" },
-      { "@type": "City", "name": "La Marsa" },
-      { "@type": "City", "name": "Carthage" },
-      { "@type": "City", "name": "Manouba" }
+      {
+        "@type": "City",
+        "name": "Tunis"
+      },
+      {
+        "@type": "City",
+        "name": "Ariana"
+      },
+      {
+        "@type": "City",
+        "name": "El Aouina"
+      },
+      {
+        "@type": "City",
+        "name": "Ben Arous"
+      },
+      {
+        "@type": "City",
+        "name": "La Marsa"
+      },
+      {
+        "@type": "City",
+        "name": "Carthage"
+      },
+      {
+        "@type": "City",
+        "name": "Manouba"
+      }
     ],
     "provider": {
       "@id": "https://cciservices.online#localbusiness"
@@ -118,8 +142,18 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://cciservices.online/" },
-      { "@type": "ListItem", "position": 2, "name": "Tapisserie", "item": "https://cciservices.online/tapisserie" }
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Accueil",
+        "item": "https://cciservices.online/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Tapisserie",
+        "item": "https://cciservices.online/tapisserie"
+      }
     ]
   },
   "faqJSONLD": {
@@ -185,7 +219,7 @@
   },
   "serviceList": {
     "title": "Nos solutions",
-    "text": "Des solutions de tapisserie adaptées à tous vos besoins",
+    "text": "Des solutions de tapisserie sur mesure pour assises résidentielles et professionnelles : retapissage, changement de mousse, rembourrage et rénovation complète.",
     "items": [
       {
         "id": "1",
@@ -225,21 +259,33 @@
       "title": "Tapisserie Nautique Ignifuge Carthage & Tanit Ferry",
       "category": "Tapisserie",
       "excerpt": "Expertise CCI Services depuis 2010 pour Ferry Carthage et 2023 pour Ferry Tanit. Tissus anti-feu M1, retapissage professionnel, rembourrage nautique.",
-      "tags": ["nautique", "ignifuge", "ferry"]
+      "tags": [
+        "nautique",
+        "ignifuge",
+        "ferry"
+      ]
     },
     {
       "link": "/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure",
       "title": "Retapissage et Rembourrage Professionnel Tunis",
       "category": "Tapisserie",
       "excerpt": "Confection sur mesure, changement mousse, rénovation complète. Expertise tapisserie CCI Services pour tous types de mobiliers.",
-      "tags": ["retapissage", "rembourrage", "sur-mesure"]
+      "tags": [
+        "retapissage",
+        "rembourrage",
+        "sur-mesure"
+      ]
     },
     {
       "link": "/conseils/changement-mousse-siege-professionnel-tunis-renovation",
       "title": "Changement Mousse Siège Professionnel Tunis",
       "category": "Tapisserie",
       "excerpt": "Rénovation complète avec mousses haute résilience. Expertise changement mousse pour fauteuils bureau, canapés d'accueil et banquettes.",
-      "tags": ["mousse", "siège", "rénovation"]
+      "tags": [
+        "mousse",
+        "siège",
+        "rénovation"
+      ]
     }
   ]
 }

@@ -132,7 +132,7 @@ export default function LeadCTA({
       ctaId: quoteCtaId,
       ctaLocation,
       ctaType: 'lead_cta',
-      ctaDestination: '/devis',
+      ctaDestination: '/contact',
       value: 3,
       additionalData: ctaContext
     });
@@ -188,10 +188,10 @@ export default function LeadCTA({
           </a>
 
           <Link 
-            href="/devis" 
+            href="/contact" 
             className={`${styles.ctaBtn} ${styles.ctaBtnDevis}`}
             onClick={handleDevisClick}
-            title={`Simuler votre devis ${serviceName}`}
+            title={`Demander votre devis ${serviceName}`}
           >
             <ClipboardIcon className={styles.ctaBtnIcon} />
             Devis Gratuit

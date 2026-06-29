@@ -39,6 +39,14 @@ Important repo semantics:
 - `landingPageScorecard` is directional prioritization, not forecasting
 - behavior panels should block bad SEO conclusions when the real issue is CRO
 
+Current seasonal commercial focus:
+
+- `tapis / moquette / carpet cleaning`
+- `salon / canape / sofa cleaning`
+- `tapisserie / retapissage / rembourrage`
+
+During this season, review should prioritize those families before marble or broader informational expansion.
+
 ## Trust Hierarchy
 
 Use the current dashboard trust order and record the trust state before any recommendation:
@@ -124,6 +132,12 @@ Classify every strength as one of:
 
 Only keep strengths that are decision-relevant, not vanity movement.
 
+During the current season, explicitly call out whether a strength belongs to:
+
+- `tapis / moquette`
+- `salon / canape`
+- `tapisserie / retapissage`
+
 ### 5. Weak points
 
 Pull losses and risks from:
@@ -161,6 +175,13 @@ Route each opportunity to one of:
 - `CRO-only`
 - `Mixed SEO + CRO`
 
+During the current season, opportunity ranking should prefer:
+
+1. proven tapis / moquette traffic with weak conversion proof
+2. proven upholstery / retapissage traffic with weak conversion proof
+3. sofa-cleaning demand with route-to-service ambiguity
+4. secondary SEO room only after the core seasonal owners are stable
+
 ### 7. Paid campaign decision gate
 
 The paid section is a gate, not a campaign plan.
@@ -172,6 +193,7 @@ Recommend paid only if all of these are true:
 - follow-up quality is acceptable
 - there is proven commercial demand
 - SEO ranking or coverage is still a real bottleneck
+- at least one upholstery path and one tapis/moquette path already prove lead capture or WhatsApp-assisted demand
 
 Block paid if the issue is really:
 
@@ -181,6 +203,12 @@ Block paid if the issue is really:
 - weak lead quality or follow-up operations
 - thin-volume SEO evidence
 - under-optimized organic pages with cheaper SEO wins still available
+
+If paid is eventually allowed, the first seasonal pilot should default to:
+
+1. `tapis / moquette`
+2. `tapisserie / retapissage`
+3. `salon / canape`
 
 Paid decision states:
 

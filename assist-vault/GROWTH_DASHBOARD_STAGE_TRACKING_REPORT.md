@@ -11,7 +11,7 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
 | Stage 0 | Complete | Program, semantics, taxonomy, and thresholds are locked in docs | Ready and in use |
 | Stage 1 | Complete | Lead quality, ownership, SLA, stale-queue readiness, normalized dimensions, KPI semantics, trust signals, and attribution QA workflow are implemented | Ready to support segmented reviews |
 | Stage 2 | Product complete, workflow adoption pending | Dashboard filters, segmented section outputs, executive summary, and dedicated pipeline navigation are implemented | Weekly review should continue moving to segment-first usage |
-| Stage 3 | In progress, behavior + Meta acquisition layers shipped, stabilization pending | Query intelligence, content opportunities, landing-page scorecard, lifecycle funnel diagnostics, behavior persistence, Stage 3 behavior panels, Meta website attribution, and Meta Lead Ads intake are now live in product | Stage 3 gate remains open until live validation, workflow adoption, and heuristic tuning are completed across two review cycles |
+| Stage 3 | In progress, behavior + Meta acquisition layers shipped, stabilization pending | Query intelligence, content opportunities, landing-page scorecard, lifecycle funnel diagnostics, behavior persistence, Stage 3 behavior panels, Meta website attribution, and Meta Lead Ads intake are now live in product | Stage 3 gate remains open until live validation, workflow adoption, seasonal WhatsApp claiming discipline, and heuristic tuning are completed across two review cycles |
 | Stage 4 | Not started | Experiment operating system not yet built | Depends on stable Stage 3 evidence and formal gate review |
 | Stage 5 | Not started | Alerts, digests, and proactive monitoring not yet built | Depends on stable Stage 3 baselines |
 | Stage 6 | Deferred | Forecasting, ROI, attribution, and modeled planning remain deferred | Wait for 90+ days of stable segmented history |
@@ -180,7 +180,7 @@ This report is the current execution checkpoint for engineering, Growth, and Adm
 | --- | --- | --- |
 | Stage 1 gate | Satisfied | Attribution QA is implemented in capture, server fallback, dashboard normalization, and weekly ops workflow |
 | Stage 2 gate | Satisfied in product | Filters and executive summary work across overview, pipeline, acquisition, and SEO |
-| Stage 3 gate | In progress | Query intelligence, behavior persistence, and behavior panels are shipped; the remaining gate is live validation of behavior joins plus two weekly review cycles of stable usage and threshold tuning |
+| Stage 3 gate | In progress | Query intelligence, behavior persistence, and behavior panels are shipped; the remaining gate is live validation of behavior joins, WhatsApp-assisted seasonal demand proof, plus two weekly review cycles of stable usage and threshold tuning |
 | Stage 4 gate | Blocked | Experiments should not open until Stage 3 closeout is signed off |
 | Stage 5 gate | Not yet open | Alert calibration should wait until Stage 3 is stable for at least two review cycles |
 
@@ -302,5 +302,29 @@ The program has completed the foundational architecture, the segmented decision 
 - Stages shipped in product: Stage 1 and Stage 2
 - Stage 3 status: behavior + Meta acquisition layers shipped, closeout pending
 - Stages documented and locked: Stage 0 through Stage 6
-- Highest-leverage next engineering move: validate the live behavior mart, Meta lead paths, and close the Stage 3 gate
+- Highest-leverage next engineering move: prove the seasonal quote and WhatsApp paths on `/contact`, `/entreprises`, `/tapis`, `/salon`, `/tapisserie`, and the strongest tapis / retapissage articles, then close the Stage 3 gate
+
+## Peak-Season Readiness Focus
+
+This stage tracker now treats the current season as a high-intent harvest window. The current commercial focus is:
+
+- sofas / salon / canape cleaning
+- upholstery / retapissage / tapisserie
+- tapis / moquette / carpet cleaning
+
+Marble remains in the business mix, but it is not the primary seasonal scaling focus for the current execution window.
+
+### Seasonal blockers that still keep paid constrained
+
+- terminal funnel proof is still weaker than traffic growth
+- WhatsApp-assisted demand is real, but claiming discipline is not yet consistent enough to treat it as fully trusted reporting
+- SERP freshness and ranking trust must stay current during the season
+- cannibalization still dilutes ownership across tapis, tapisserie, and pricing-intent clusters
+
+### What must be true before a seasonal pilot opens
+
+- Stage 3 is mechanically validated on `/contact` and `/entreprises`
+- at least one upholstery path and one tapis/moquette path show attributable demand, including WhatsApp-assisted demand where relevant
+- weekly review includes a seasonal check on claimed WhatsApp leads by origin page
+- paid is extending a working path, not discovering whether the path works
 - Highest-leverage next operating move: run the next two weekly reviews from Stage 3 evidence and document any threshold changes before opening Stage 4

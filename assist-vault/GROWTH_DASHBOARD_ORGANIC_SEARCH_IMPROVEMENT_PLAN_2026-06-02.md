@@ -14,6 +14,14 @@ Secondary objective:
 
 - strengthen page ownership and service-page capture so existing visibility becomes more commercially useful
 
+Seasonal commercial focus for this cycle:
+
+- `tapis / moquette / carpet cleaning`
+- `salon / canape / sofa cleaning`
+- `tapisserie / retapissage / rembourrage`
+
+`/contact` is the canonical B2C quote path for this cycle. WhatsApp is treated as a first-class conversion path and must be counted in the review when article or service demand is claimed from `/admin/whatsapp`.
+
 ## Current Priorities
 
 Order of execution:
@@ -21,7 +29,7 @@ Order of execution:
 1. restore trust for ranking and page-target decisions
 2. fix mixed SEO + CRO bottlenecks on the two strongest organic pages
 3. reduce cannibalization across non-branded service intent
-4. upgrade the secondary SEO room on `/marbre`, the tapis pricing article, and the tapisserie / voiture-intent queries
+4. tighten the seasonal cluster owners for `/tapis`, `/salon`, `/tapisserie`, and the tapis pricing article before expanding supporting content
 5. keep paid blocked until the funnel is healthier
 
 ## Workstream 1 — Trust And Measurement Cleanup
@@ -63,7 +71,7 @@ Make the organic review fully decision-safe for ranking and page-priority choice
 ### Plan
 
 1. Make the primary commercial outcome explicit above the fold.
-2. Add a stronger direct path from the article to `/tapisserie` and `/devis`.
+2. Add a stronger direct path from the article to `/tapisserie` and `/contact`.
 3. Move at least one quote CTA higher on the page.
 4. Add a Tunis-specific trust block:
    - zone served
@@ -77,6 +85,7 @@ Make the organic review fully decision-safe for ranking and page-priority choice
 
 - `contactIntent`
 - `ctaPerformance.clicks`
+- claimed WhatsApp leads from this page
 - `formHealth.submitSuccesses`
 - qualified organic leads from this page
 
@@ -90,7 +99,7 @@ Make the organic review fully decision-safe for ranking and page-priority choice
 
 - meaningful traffic
 - no qualified demand
-- commercial fit may be weaker or less explicit than the tapisserie/tapis families
+- commercial fit may be weaker or less explicit than the tapis, moquette, and upholstery families
 
 ### Plan
 
@@ -130,13 +139,13 @@ Choose one primary page per commercial intent family and make the supporting pag
 
 1. `tapis / moquette` family
    - primary service target should remain `/tapis`
-2. `marbre` family
-   - primary service target should remain `/marbre`
+2. `salon / canape / sofa cleaning` family
+   - primary service target should remain `/salon`
 3. `tapisserie / retapissage` family
    - primary service target should remain `/tapisserie`
 4. `pricing` family
    - transactional price-intent should likely stay anchored to `/conseils/prix-nettoyage-tapis-tunis-tarifs-2025`
-   - but must route strongly into `/tapis` and `/devis`
+   - but must route strongly into `/tapis` and `/contact`
 
 ### Actions
 
@@ -158,63 +167,58 @@ Choose one primary page per commercial intent family and make the supporting pag
 
 ## Workstream 4 — Secondary SEO Improvement Room
 
-## 4A. `/marbre`
+## 4A. `/conseils/prix-nettoyage-tapis-tunis-tarifs-2025`
 
 ### Why it matters
 
-- the page already has real traffic
-- the marbre family in the keyword inventory is commercially meaningful
+- it already gets organic traffic
+- price-intent is commercially strong in the current season
+- it should carry moquette and tapis tariff intent without forcing users to search again for the service path
 
 ### Plan
 
-1. Tighten the page around the highest-value commercial variants:
-   - restauration marbre tunis
-   - traitement marbre tunisie
-   - nettoyage marbre tunis
-2. Strengthen local intent sections:
-   - Tunis
-   - Ariana
-   - La Marsa when relevant
-3. Add internal links from marbre articles back into `/marbre`.
-4. Review title, description, and service promise for higher commercial clarity.
-5. Use FAQ/supporting proof to strengthen conversion readiness before pushing more traffic.
+1. Treat it as the primary tariff-intent asset for the tapis and moquette family, not a generic article.
+2. Make the commercial route explicit inside the current layout:
+   - pricing framework
+   - quote CTA
+   - clear route to `/tapis`
+   - clear route to `/contact`
+3. Add stronger internal links from related tapis and moquette articles.
+4. Review title, description, and service promise for higher local-commercial clarity.
+5. Make moquette a first-class use case in the copy instead of a secondary mention.
 
 ### KPI
 
-- non-branded clicks to `/marbre`
-- CTR on marbre family terms
-- qualified organic leads from `/marbre`
+- CTR on pricing queries
+- WhatsApp clicks and contact intent from this page
+- quote starts and attributable leads from this page
 
 ### Route
 
 - `SEO-only` first, then `Mixed` if traffic rises without conversion
 
-## 4B. `/conseils/prix-nettoyage-tapis-tunis-tarifs-2025`
+## 4B. `/salon`
 
 ### Why it matters
 
-- it already gets organic traffic
-- price-intent is usually commercially strong
+- sofa and salon cleaning stay one of the clearest seasonal commercial use cases
+- the service page should own the family instead of leaving demand stranded in supporting pages
 
 ### Plan
 
-1. Treat it as the primary pricing-intent asset, not a generic blog post.
-2. Make the page more transactional:
-   - pricing framework
-   - quote CTA
-   - clear route to `/tapis`
-   - local trust signals
-3. Align titles/meta for:
-   - `prix nettoyage tapis tunis`
-   - `tarif nettoyage tapis`
-4. Add stronger internal links from service and related articles.
-5. Measure whether pricing-intent traffic produces better contact intent than generic article traffic.
+1. Preserve the current layout and tighten the commercial hierarchy:
+   - cleaner service promise
+   - stronger quote / WhatsApp emphasis
+   - clearer local trust copy
+2. Review internal links from sofa- and salon-related articles so they reinforce `/salon`.
+3. Use weekly review to judge it on contact intent and WhatsApp-assisted demand, not just direct qualified leads.
 
 ### KPI
 
-- CTR
-- clicks on pricing queries
-- contact intent and form starts from this page
+- contact intent
+- WhatsApp clicks
+- quote starts
+- attributable leads from the salon family
 
 ### Route
 
@@ -245,7 +249,7 @@ Choose one primary page per commercial intent family and make the supporting pag
 
 - `SEO-only`
 
-## 4D. Query: `lavage interieur voiture`
+## 4D. Secondary room: `lavage interieur voiture`
 
 ### Current read
 
@@ -281,9 +285,9 @@ Choose one primary page per commercial intent family and make the supporting pag
 Paid remains blocked until all of these are true:
 
 1. SERP freshness is restored.
-2. At least one of the two primary mixed pages produces real form success or direct qualified intent improvement.
-3. Organic traffic-to-qualified-demand is no longer stuck at zero.
-4. The first cannibalization cleanup wave has assigned primary targets to the main service families.
+2. Stage 3 is mechanically validated on `/contact` and `/entreprises`.
+3. At least one upholstery path and one tapis/moquette path produce real lead capture or WhatsApp-assisted demand proof.
+4. The first cannibalization cleanup wave has assigned primary targets to the main seasonal service families.
 
 Paid can move from `not needed yet` to `test later` only after those four conditions are satisfied.
 
@@ -297,19 +301,21 @@ Paid can move from `not needed yet` to `test later` only after those four condit
 
 ### Week 2
 
-- CRO pass on `/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure`
-- CRO pass on `/conseils/nettoyage-voiture-interieur-tunis-2025`
+- CRO and CTA-routing pass on `/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure`
+- seasonal tightening of `/conseils/prix-nettoyage-tapis-tunis-tarifs-2025`
+- confirm `/salon` remains the owner page for sofa demand
 
 ### Week 3
 
-- cannibalization mapping for `tapis`, `marbre`, `tapisserie`, and pricing clusters
+- cannibalization mapping for `tapis`, `salon`, `tapisserie`, and pricing clusters
 - internal-link adjustments
+- weekly WhatsApp claiming review for seasonal pages
 
 ### Week 4
 
-- secondary SEO work on `/marbre`
-- transactional tightening of the tapis pricing article
+- `/tapis` moquette emphasis and routing cleanup
 - `/tapisserie` ownership reinforcement for `tapissier tunis`
+- secondary SEO work on non-core pages only after the seasonal owner pages are stable
 
 ## Weekly Tracking
 
@@ -327,6 +333,6 @@ This plan is working if, within the next review cycle, we see:
 
 1. better trust on SEO ranking evidence
 2. at least one increase in `ctaPerformance` or `formHealth` on the top two pages
-3. fewer unresolved cannibalization cases in the primary service families
-4. stronger commercial routing from article pages into service paths
-5. a cleaner basis for deciding whether paid should stay blocked or move to `test later`
+3. fewer unresolved cannibalization cases in the primary seasonal service families
+4. stronger commercial routing from seasonal articles into `/tapis`, `/salon`, `/tapisserie`, and `/contact`
+5. a cleaner basis for deciding whether paid should stay blocked or move to a small seasonal pilot

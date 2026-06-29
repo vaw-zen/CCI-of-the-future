@@ -47,10 +47,19 @@ Date: 2026-05-12
    - `npm run growth:audit:attribution -- --days 30`
 12. For the behavior layer rollout, confirm canonical behavior context coverage on key commercial flows:
    - `/contact` uses `contact_quote_form`
-   - `/devis` uses explicit `page_type=quote_page`, `business_line=b2c`, and `form_placement=devis_page`
    - `/entreprises` uses explicit `page_type=b2b_page`, `business_line=b2b`, and `form_placement=entreprises_page`
    - service and article CTAs emit stable `cta_id` and `cta_location`
 13. Run `npm run analytics:validate`, `npm run test:dashboard`, and `npm run build`.
+
+## Peak Season Focus
+
+The current in-season commercial focus is:
+
+- `tapis / moquette / carpet cleaning`
+- `salon / canape / sofa cleaning`
+- `tapisserie / retapissage / rembourrage`
+
+Marble remains active, but it is not the primary scaling focus for the current seasonal window.
 
 ## Week 1 Stabilization
 
@@ -92,11 +101,35 @@ Date: 2026-05-12
   - Attribution review is marked `trusted`, `trusted with caveats`, or `not decision-safe`
   - The selected SEO refresh and CRO sprint candidates each reference at least one Stage 3 evidence panel
   - CRO actions should also reference `ctaPerformance`, `formHealth`, or `contactIntent` when the issue is on-site funnel friction
+  - Seasonal pages are reviewed explicitly before broader expansion work
+
+## Weekly Seasonal Demand Review
+
+Add this block to the Monday review during the current season.
+
+- Review tapis / moquette demand first:
+  - `/tapis`
+  - `/conseils/prix-nettoyage-tapis-tunis-tarifs-2025`
+  - any moquette-supporting article with current organic traffic
+- Review sofa and upholstery demand second:
+  - `/salon`
+  - `/tapisserie`
+  - `/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure`
+- Review article-origin WhatsApp demand third:
+  - unclaimed site-origin intents
+  - claimed leads by origin page
+  - pages with clicks but no claimed leads yet
+
+Escalate if either of these patterns appears:
+
+- strong seasonal traffic with zero quote starts or zero claimed WhatsApp leads
+- repeated WhatsApp intent rows from seasonal pages are left unclaimed while operators create manual leads separately
 
 ## Weekly Attribution QA
 
 - Run `npm run growth:audit:attribution -- --days 7`.
 - Use [GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_ATTRIBUTION_QA_CHECKLIST.md) as the named pass/fail workflow.
+- Treat a zero-lead pass as clean instrumentation, not as campaign-readiness proof.
 - Escalate immediately if:
   - unattributed rate is `>= 40%`
   - landing-page capture is missing on new leads
@@ -115,6 +148,7 @@ Use this section for Stage 3 closeout in any environment where `supabase/2026051
   - `form_name`
 - Confirm service and article CTA rows are grouped by stable `cta_id` and `cta_location`, not ad-hoc labels.
 - Confirm behavior rows can still be joined to lead outcomes through `ga_client_id`, landing page, and normalized attribution dimensions.
+- If terminal outcomes are still flat, run one controlled validation failure and one controlled success on `/contact` before the next paid decision.
 - Escalate immediately if:
   - a commercial form emits missing `form_name` or `business_line`
   - a tracked CTA emits missing `cta_id` or `cta_location`
@@ -133,7 +167,6 @@ Use this section to formally close Stage 3 and open Stage 4.
 3. Run `npm run growth:audit:stage3 -- --baseline-date=2026-05-12 --window-days=14 --lead-window-days=30` and record the output in the Stage 3 closeout checklist.
 4. Validate live behavior capture on:
    - `/contact`
-   - `/devis`
    - `/entreprises`
    - service CTA blocks
    - article CTA blocks
@@ -142,6 +175,20 @@ Use this section to formally close Stage 3 and open Stage 4.
 6. Run two weekly reviews using the Stage 3 template and selection workflow, and record any threshold changes after each review.
 7. Hold a formal gate review using [GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md](/Users/fareschaabane/Documents/dev/CCI-of-the-future/assist-vault/GROWTH_DASHBOARD_STAGE3_CLOSEOUT_CHECKLIST.md).
 8. Do not open Stage 4 until all five Stage 3 gate criteria are explicitly marked passed in that checklist.
+
+## Weekly WhatsApp Claiming Discipline
+
+Use `/admin/whatsapp` as the operator surface for site-origin WhatsApp demand.
+
+- If a site-origin WhatsApp conversation becomes a real lead, create it from the intent row.
+- Do not recreate the same conversation manually from scratch when a site intent already exists.
+- Review the diagnostic mix weekly:
+  - `Source capturee`
+  - `True direct`
+  - `Fallback direct`
+- Treat high-volume `Fallback direct` rows on seasonal pages as an attribution follow-up, not as proof that the visit was truly direct.
+
+Seasonal success means at least one upholstery path and one tapis/moquette path are visibly credited for real demand, including WhatsApp-assisted demand where applicable.
 
 ## Weekly Friday Closeout
 

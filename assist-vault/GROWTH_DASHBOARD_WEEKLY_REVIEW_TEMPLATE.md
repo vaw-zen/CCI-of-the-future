@@ -44,6 +44,22 @@ Follow this order every week:
 14. `Paid campaign decision`
 15. `Actions and sprint candidates`
 
+## Seasonal Priority Overlay
+
+During the current season, review these families before broader exploration:
+
+1. `Tapis / moquette`
+2. `Salon / canape`
+3. `Tapisserie / retapissage`
+
+Use these owner pages and feeder assets as the default seasonal checkpoints:
+
+- `/tapis`
+- `/conseils/prix-nettoyage-tapis-tunis-tarifs-2025`
+- `/salon`
+- `/tapisserie`
+- `/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure`
+
 ## Evidence Capture
 
 Every action must include all fields below:
@@ -92,11 +108,25 @@ Answer these every week:
 - Is the bottleneck traffic, conversion, or lead quality?
 - Does the page belong in SEO refresh, CRO sprint, or both?
 
+### Seasonal WhatsApp review
+
+- Which seasonal pages generated site-origin WhatsApp intents this week?
+- How many of those intents were claimed into real leads from `/admin/whatsapp`?
+- Are any high-intent article or service pages getting clicks but zero claimed WhatsApp leads?
+
+### Seasonal cluster ownership
+
+- Is `/tapis` still the clear owner for tapis / moquette intent?
+- Is `/salon` still the clear owner for sofa cleaning intent?
+- Is `/tapisserie` still the clear owner for retapissage / tapissier tunis intent?
+- Are supporting articles reinforcing those owners or competing with them?
+
 ### Paid campaign decision
 
 - Is paid currently blocked by attribution, CRO, or thin-volume evidence?
 - If not blocked, is there proven commercial demand that SEO still cannot capture fast enough?
 - Should the answer this week be `not needed yet`, `test later`, or `launch pilot`?
+- If paid is allowed, does the first pilot belong to `tapis / moquette`, `tapisserie`, or `salon`, in that order?
 
 ### Funnel diagnostics
 

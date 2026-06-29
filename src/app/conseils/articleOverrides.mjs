@@ -135,10 +135,25 @@ function enhanceVoitureArticle(content) {
 function enhanceRetapissageArticle(content) {
   let next = content;
 
+  if (!next.includes('Service principal à Tunis')) {
+    next = next.replace(
+      `<p>Que ce soit pour un fauteuil vintage de famille, un canapé designer ou des banquettes professionnelles, notre expertise en retapissage garantit un résultat à la hauteur de vos attentes, alliant esthétique, confort et durabilité.</p>`,
+      `<p>Que ce soit pour un fauteuil vintage de famille, un canapé designer ou des banquettes professionnelles, notre expertise en retapissage garantit un résultat à la hauteur de vos attentes, alliant esthétique, confort et durabilité.</p>
+
+      <div class="info-box">
+        <p>🧵 <strong>Service principal à Tunis :</strong> si vous cherchez un tapissier à Tunis pour retapissage, changement de mousse ou rénovation d'assises, allez directement vers notre <a href="/tapisserie" style="color: var(--ac-primary); font-weight: 600;">service tapisserie sur mesure</a>, demandez un <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">devis personnalisé</a> ou utilisez notre <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">contact rapide</a>.</p>
+      </div>
+
+      <div class="info-box">
+        <p>📍 <strong>Intervention Grand Tunis :</strong> L'Aouina, Tunis, Ariana, La Marsa et Carthage. Nous prenons en charge fauteuils, chaises de bureau, banquettes, têtes de lit et assises commerciales avec diagnostic atelier avant devis.</p>
+      </div>`
+    );
+  }
+
   next = replaceSegment(
     next,
     `<div class="info-box">
-        <p>🛋️ <strong>Expertise complète :</strong> Découvrez nos spécialités en <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de mobilier</a>, <a href="/conseils/tapisserie-nautique-ignifuge-carthage-tanit-ferry" style="color: var(--ac-primary); font-weight: 600;">tapisserie nautique</a> et obtenez un <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">devis personnalisé</a>.</p>
+        <p>🛋️ <strong>Expertise complète :</strong> Découvrez nos spécialités en <a href="/salon" style="color: var(--ac-primary); font-weight: 600;">nettoyage de mobilier</a>, <a href="/conseils/tapisserie-nautique-ignifuge-carthage-tanit-ferry" style="color: var(--ac-primary); font-weight: 600;">tapisserie nautique</a> et obtenez un <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">devis personnalisé</a>.</p>
       </div>
 
       <div class="related-services">
@@ -160,7 +175,7 @@ function enhanceRetapissageArticle(content) {
   next = replaceSegment(
     next,
     `<div class="info-box">
-        <p>📋 <strong>Vous avez des sièges de bureau usés ?</strong> Nous rénovons les chaises, fauteuils direction, assises d'accueil et banquettes professionnelles. <a href="/devis" style="color: var(--ac-primary); font-weight: 600;">Demander un devis</a>.</p>
+        <p>📋 <strong>Vous avez des sièges de bureau usés ?</strong> Nous rénovons les chaises, fauteuils direction, assises d'accueil et banquettes professionnelles. <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">Demander un devis</a>.</p>
       </div>`,
     `<div class="info-box">
         <p>📋 <strong>Vous avez des sièges de bureau usés ?</strong> Nous rénovons les chaises, fauteuils direction, assises d'accueil et banquettes professionnelles. <a href="/tapisserie" style="color: var(--ac-primary); font-weight: 600;">Voir le service tapisserie</a> ou <a href="/contact" style="color: var(--ac-primary); font-weight: 600;">demander un devis</a>.</p>

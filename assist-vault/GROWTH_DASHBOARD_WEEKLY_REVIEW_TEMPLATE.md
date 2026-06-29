@@ -60,6 +60,14 @@ Use these owner pages and feeder assets as the default seasonal checkpoints:
 - `/tapisserie`
 - `/conseils/retapissage-rembourrage-professionnel-tunis-sur-mesure`
 
+Use this conversion-proof order during the current season:
+
+1. claimed WhatsApp leads
+2. WhatsApp clicks and unclaimed high-intent site-origin intents
+3. phone intent / phone clicks
+4. form starts and submit success
+5. qualified leads
+
 ## Evidence Capture
 
 Every action must include all fields below:
@@ -89,6 +97,7 @@ Answer these every week:
 - Do GA4 sessions, users, and events support the same narrative as GSC clicks and impressions?
 - Are any lead pages in `Query gap` or `Check pages` status?
 - If yes, should the decision be blocked until page evidence is reconciled?
+- Is the page generating WhatsApp or phone intent even if form submissions are still light?
 
 ### SEO query intelligence
 
@@ -107,12 +116,19 @@ Answer these every week:
 - Which page has the highest leverage right now?
 - Is the bottleneck traffic, conversion, or lead quality?
 - Does the page belong in SEO refresh, CRO sprint, or both?
+- Is the page commercially working through WhatsApp or phone even if form outcomes are secondary?
 
 ### Seasonal WhatsApp review
 
 - Which seasonal pages generated site-origin WhatsApp intents this week?
 - How many of those intents were claimed into real leads from `/admin/whatsapp`?
 - Are any high-intent article or service pages getting clicks but zero claimed WhatsApp leads?
+
+### Seasonal phone review
+
+- Which seasonal pages generated the strongest phone intent this week?
+- Are phone-first pages being treated as real commercial proof in the review notes?
+- Does phone intent align with the same pages that are strong on WhatsApp or contact intent?
 
 ### Seasonal cluster ownership
 
@@ -151,6 +167,8 @@ Answer these every week:
 - Which contact method is attracting intent on the highest-value pages?
 - Are users preferring `form`, `phone`, `email`, or `whatsapp` in a way that should change CTA hierarchy?
 - Does contact-intent behavior align with qualified lead outcomes or point to a follow-up mismatch?
+
+For seasonal B2C pages, explicitly record whether `whatsapp` and `phone` should be considered the primary success signal for that page.
 
 ## Required Outputs
 

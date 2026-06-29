@@ -61,6 +61,14 @@ The current in-season commercial focus is:
 
 Marble remains active, but it is not the primary scaling focus for the current seasonal window.
 
+For seasonal B2C pages, treat the commercial path in this order:
+
+1. `WhatsApp`
+2. `Phone`
+3. `Form`
+
+Do not block seasonal scaling only because form volume is lighter if tracked site-origin WhatsApp or phone intent is proving real demand.
+
 ## Week 1 Stabilization
 
 - Daily 15-minute review at 09:00 Africa/Tunis.
@@ -119,6 +127,10 @@ Add this block to the Monday review during the current season.
   - unclaimed site-origin intents
   - claimed leads by origin page
   - pages with clicks but no claimed leads yet
+- Review phone-first demand fourth:
+  - top pages for phone intent
+  - whether those pages overlap with WhatsApp-heavy pages
+  - whether the review notes are still over-weighting forms
 
 Escalate if either of these patterns appears:
 
@@ -189,6 +201,18 @@ Use `/admin/whatsapp` as the operator surface for site-origin WhatsApp demand.
 - Treat high-volume `Fallback direct` rows on seasonal pages as an attribution follow-up, not as proof that the visit was truly direct.
 
 Seasonal success means at least one upholstery path and one tapis/moquette path are visibly credited for real demand, including WhatsApp-assisted demand where applicable.
+
+## Seasonal Conversion Interpretation Rule
+
+During the current season, use this interpretation order for public B2C pages:
+
+- `claimed WhatsApp lead` = strongest proof
+- `repeated site-origin WhatsApp clicks` = strong directional proof
+- `phone intent` = strong directional proof
+- `form start / submit success` = supporting proof
+- `qualified lead` = downstream proof after ops follow-up
+
+This prevents the weekly review from under-valuing pages that convert through conversation rather than form completion.
 
 ## Weekly Friday Closeout
 

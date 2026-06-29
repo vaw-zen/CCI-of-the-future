@@ -22,6 +22,14 @@ Seasonal commercial focus for this cycle:
 
 `/contact` is the canonical B2C quote path for this cycle. WhatsApp is treated as a first-class conversion path and must be counted in the review when article or service demand is claimed from `/admin/whatsapp`.
 
+Seasonal conversion proof should be read in this order:
+
+1. claimed WhatsApp leads
+2. WhatsApp clicks and unclaimed high-intent intents
+3. phone intent
+4. form starts and submit success
+5. qualified leads
+
 ## Current Priorities
 
 Order of execution:
@@ -86,6 +94,7 @@ Make the organic review fully decision-safe for ranking and page-priority choice
 - `contactIntent`
 - `ctaPerformance.clicks`
 - claimed WhatsApp leads from this page
+- phone intent from this page
 - `formHealth.submitSuccesses`
 - qualified organic leads from this page
 
@@ -191,6 +200,7 @@ Choose one primary page per commercial intent family and make the supporting pag
 
 - CTR on pricing queries
 - WhatsApp clicks and contact intent from this page
+- phone intent from this page
 - quote starts and attributable leads from this page
 
 ### Route
@@ -217,6 +227,7 @@ Choose one primary page per commercial intent family and make the supporting pag
 
 - contact intent
 - WhatsApp clicks
+- phone intent
 - quote starts
 - attributable leads from the salon family
 
@@ -286,7 +297,7 @@ Paid remains blocked until all of these are true:
 
 1. SERP freshness is restored.
 2. Stage 3 is mechanically validated on `/contact` and `/entreprises`.
-3. At least one upholstery path and one tapis/moquette path produce real lead capture or WhatsApp-assisted demand proof.
+3. At least one upholstery path and one tapis/moquette path produce real lead capture, WhatsApp-assisted demand proof, or phone-assisted demand proof.
 4. The first cannibalization cleanup wave has assigned primary targets to the main seasonal service families.
 
 Paid can move from `not needed yet` to `test later` only after those four conditions are satisfied.

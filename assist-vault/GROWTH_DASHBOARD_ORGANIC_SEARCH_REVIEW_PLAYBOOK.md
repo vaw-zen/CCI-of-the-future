@@ -39,6 +39,14 @@ Important repo semantics:
 - `landingPageScorecard` is directional prioritization, not forecasting
 - behavior panels should block bad SEO conclusions when the real issue is CRO
 
+Commercial intent priority for the current site mix:
+
+1. `whatsapp`
+2. `phone`
+3. `form`
+
+For seasonal pages, do not treat form submissions as the only proof of demand. Use WhatsApp clicks, claimed WhatsApp leads, phone intent, and contact-intent mix before concluding that a page is underperforming.
+
 Current seasonal commercial focus:
 
 - `tapis / moquette / carpet cleaning`
@@ -98,6 +106,12 @@ Answer:
 - is growth quality improving, not only volume?
 - do GSC and GA4 tell the same story, or is there a page/query alignment caveat?
 
+For B2C seasonal pages, read `qualified demand` as:
+
+- claimed WhatsApp leads first
+- phone and contact intent second
+- form submits and qualified leads third
+
 ### 3. Segment diagnosis
 
 Repeat the top-line read in this order:
@@ -130,6 +144,14 @@ Classify every strength as one of:
 - qualified-demand strength
 - mixed SEO + CRO strength
 
+When conversion is involved, prefer these signals in this order:
+
+1. claimed WhatsApp leads
+2. repeated WhatsApp clicks on high-intent pages
+3. phone intent on high-intent pages
+4. form starts and submit success
+5. qualified leads
+
 Only keep strengths that are decision-relevant, not vanity movement.
 
 During the current season, explicitly call out whether a strength belongs to:
@@ -159,6 +181,8 @@ Classify every weakness as one of:
 
 If the weakness is actually on-page funnel friction, route it to CRO instead of treating it as pure SEO.
 
+Do not call a seasonal page weak only because form leads are low if WhatsApp-assisted or phone-assisted demand is clearly present and being claimed operationally.
+
 ### 6. Opportunities
 
 Prioritize only decision-safe opportunities:
@@ -182,6 +206,8 @@ During the current season, opportunity ranking should prefer:
 3. sofa-cleaning demand with route-to-service ambiguity
 4. secondary SEO room only after the core seasonal owners are stable
 
+If a page has strong WhatsApp or phone intent but weak form completion, route it to `Mixed SEO + CRO` rather than treating it as an SEO failure.
+
 ### 7. Paid campaign decision gate
 
 The paid section is a gate, not a campaign plan.
@@ -194,6 +220,8 @@ Recommend paid only if all of these are true:
 - there is proven commercial demand
 - SEO ranking or coverage is still a real bottleneck
 - at least one upholstery path and one tapis/moquette path already prove lead capture or WhatsApp-assisted demand
+
+Phone or WhatsApp-assisted demand counts as valid commercial proof for this gate if the lead is being claimed from the tracked site-origin path.
 
 Block paid if the issue is really:
 
@@ -236,6 +264,8 @@ Capture:
 - why they are working
 - which KPI proves it
 
+When applicable, state whether the strength is driven by WhatsApp, phone, form, or a mixed path.
+
 ### Weak points
 
 Capture:
@@ -243,6 +273,8 @@ Capture:
 - biggest SEO risks and drag points
 - why they matter now
 - whether they are SEO-first or CRO-first
+
+Call out when a page is strong on contact intent but weak only on form completion so the team does not misclassify it as a reach problem.
 
 ### Opportunities
 
